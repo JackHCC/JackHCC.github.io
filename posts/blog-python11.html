@@ -1,0 +1,4461 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="Python-机器学习模块PyTorch, JackHCC">
+    <meta name="description" content="PyTorch机器学习模块详解">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Python-机器学习模块PyTorch | JackHCC</title>
+    <link rel="icon" type="image/png" href="/medias/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+    
+    <script src="/libs/jquery/jquery.min.js"></script>
+    
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper head-container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/images/loading.gif" data-original="/medias/me.jpg" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">JackHCC</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>留言板</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>友情链接</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/images/loading.gif" data-original="/medias/me.jpg" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">JackHCC</div>
+        <div class="logo-desc">
+            
+            Make the world betterrrr!!!
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			留言板
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			友情链接
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/JackHCC/JackHCC.github.io" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/JackHCC/JackHCC.github.io" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/12.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">Python-机器学习模块PyTorch</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="container content">
+
+    
+    <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">
+                                <span class="chip bg-color">机器学习</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/Python/" class="post-category">
+                                Python
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2020-02-28
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2020-02-28
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    22.8k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    110 分
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <p><a href="https://github.com/JackHCC/API-for-PyTorch" target="_blank" rel="noopener">点击访问：PyTorch中文API应用具体代码地址</a></p>
+<h1 id="自动求导机制"><a href="#自动求导机制" class="headerlink" title="自动求导机制"></a>自动求导机制</h1><p>本说明将概述Autograd如何工作并记录操作。了解这些并不是绝对必要的，但我们建议您熟悉它，因为它将帮助您编写更高效，更简洁的程序，并可帮助您进行调试。</p>
+<h2 id="从后向中排除子图"><a href="#从后向中排除子图" class="headerlink" title="从后向中排除子图"></a>从后向中排除子图</h2><p>每个变量都有两个标志：<code>requires_grad</code>和<code>volatile</code>。它们都允许从梯度计算中精细地排除子图，并可以提高效率。</p>
+<h3 id="requires-grad"><a href="#requires-grad" class="headerlink" title="requires_grad"></a><code>requires_grad</code></h3><p>如果有一个单一的输入操作需要梯度，它的输出也需要梯度。相反，只有所有输入都不需要梯度，输出才不需要。如果其中所有的变量都不需要梯度进行，后向计算不会在子图中执行。</p>
+<pre><code>&gt;&gt;&gt; x = Variable(torch.randn(5, 5))
+&gt;&gt;&gt; y = Variable(torch.randn(5, 5))
+&gt;&gt;&gt; z = Variable(torch.randn(5, 5), requires_grad=True)
+&gt;&gt;&gt; a = x + y
+&gt;&gt;&gt; a.requires_grad
+False
+&gt;&gt;&gt; b = a + z
+&gt;&gt;&gt; b.requires_grad
+True
+</code></pre><p>这个标志特别有用，当您想要冻结部分模型时，或者您事先知道不会使用某些参数的梯度。例如，如果要对预先训练的CNN进行优化，只要切换冻结模型中的<code>requires_grad</code>标志就足够了，直到计算到最后一层才会保存中间缓冲区，其中的仿射变换将使用需要梯度的权重并且网络的输出也将需要它们。</p>
+<pre><code>model = torchvision.models.resnet18(pretrained=True)
+for param in model.parameters():
+    param.requires_grad = False
+# Replace the last fully-connected layer
+# Parameters of newly constructed modules have requires_grad=True by default
+model.fc = nn.Linear(512, 100)
+
+# Optimize only the classifier
+optimizer = optim.SGD(model.fc.parameters(), lr=1e-2, momentum=0.9)
+</code></pre><h3 id="volatile"><a href="#volatile" class="headerlink" title="volatile"></a><code>volatile</code></h3><p>纯粹的inference模式下推荐使用<code>volatile</code>，当你确定你甚至不会调用<code>.backward()</code>时。它比任何其他自动求导的设置更有效——它将使用绝对最小的内存来评估模型。<code>volatile</code>也决定了<code>require_grad is False</code>。</p>
+<p><code>volatile</code>不同于<code>require_grad</code>的传递。如果一个操作甚至只有有一个<code>volatile</code>的输入，它的输出也将是<code>volatile</code>。<code>Volatility</code>比“不需要梯度”更容易传递——只需要一个<code>volatile</code>的输入即可得到一个<code>volatile</code>的输出，相对的，需要所有的输入“不需要梯度”才能得到不需要梯度的输出。使用volatile标志，您不需要更改模型参数的任何设置来用于inference。创建一个<code>volatile</code>的输入就够了，这将保证不会保存中间状态。</p>
+<pre><code>&gt;&gt;&gt; regular_input = Variable(torch.randn(5, 5))
+&gt;&gt;&gt; volatile_input = Variable(torch.randn(5, 5), volatile=True)
+&gt;&gt;&gt; model = torchvision.models.resnet18(pretrained=True)
+&gt;&gt;&gt; model(regular_input).requires_grad
+True
+&gt;&gt;&gt; model(volatile_input).requires_grad
+False
+&gt;&gt;&gt; model(volatile_input).volatile
+True
+&gt;&gt;&gt; model(volatile_input).creator is None
+True
+</code></pre><h2 id="自动求导如何编码历史信息"><a href="#自动求导如何编码历史信息" class="headerlink" title="自动求导如何编码历史信息"></a>自动求导如何编码历史信息</h2><p>每个变量都有一个<code>.creator</code>属性，它指向把它作为输出的函数。这是一个由<code>Function</code>对象作为节点组成的有向无环图（DAG）的入口点，它们之间的引用就是图的边。每次执行一个操作时，一个表示它的新<code>Function</code>就被实例化，它的<code>forward()</code>方法被调用，并且它输出的<code>Variable</code>的创建者被设置为这个<code>Function</code>。然后，通过跟踪从任何变量到叶节点的路径，可以重建创建数据的操作序列，并自动计算梯度。</p>
+<p>需要注意的一点是，整个图在每次迭代时都是从头开始重新创建的，这就允许使用任意的Python控制流语句，这样可以在每次迭代时改变图的整体形状和大小。在启动训练之前不必对所有可能的路径进行编码—— what you run is what you differentiate.</p>
+<h2 id="Variable上的In-place操作"><a href="#Variable上的In-place操作" class="headerlink" title="Variable上的In-place操作"></a>Variable上的In-place操作</h2><p>在自动求导中支持in-place操作是一件很困难的事情，我们在大多数情况下都不鼓励使用它们。Autograd的缓冲区释放和重用非常高效，并且很少场合下in-place操作能实际上明显降低内存的使用量。除非您在内存压力很大的情况下，否则您可能永远不需要使用它们。</p>
+<p>限制in-place操作适用性主要有两个原因：</p>
+<p>１．覆盖梯度计算所需的值。这就是为什么变量不支持<code>log_</code>。它的梯度公式需要原始输入，而虽然通过计算反向操作可以重新创建它，但在数值上是不稳定的，并且需要额外的工作，这往往会与使用这些功能的目的相悖。</p>
+<p>２．每个in-place操作实际上需要实现重写计算图。不合适的版本只需分配新对象并保留对旧图的引用，而in-place操作则需要将所有输入的<code>creator</code>更改为表示此操作的<code>Function</code>。这就比较棘手，特别是如果有许多变量引用相同的存储（例如通过索引或转置创建的），并且如果被修改输入的存储被任何其他<code>Variable</code>引用，则in-place函数实际上会抛出错误。</p>
+<h2 id="In-place正确性检查"><a href="#In-place正确性检查" class="headerlink" title="In-place正确性检查"></a>In-place正确性检查</h2><p>每个变量保留有version counter，它每次都会递增，当在任何操作中被使用时。当<code>Function</code>保存任何用于后向的tensor时，还会保存其包含变量的version counter。一旦访问<code>self.saved_tensors</code>，它将被检查，如果它大于保存的值，则会引起错误。</p>
+<h1 id="CUDA语义"><a href="#CUDA语义" class="headerlink" title="CUDA语义"></a>CUDA语义</h1><p><code>torch.cuda</code>会记录当前选择的GPU，并且分配的所有CUDA张量将在上面创建。可以使用<code>torch.cuda.device</code>上下文管理器更改所选设备。</p>
+<p>但是，一旦张量被分配，您可以直接对其进行操作，而不考虑所选择的设备，结果将始终放在与张量相同的设备上。</p>
+<p>默认情况下，不支持跨GPU操作，唯一的例外是<code>copy_()</code>。 除非启用对等存储器访问，否则对分布不同设备上的张量任何启动操作的尝试都将会引发错误。</p>
+<p>下面你可以找到一个展示如下的小例子：</p>
+<pre><code>x = torch.cuda.FloatTensor(1)
+# x.get_device() == 0
+y = torch.FloatTensor(1).cuda()
+# y.get_device() == 0
+
+with torch.cuda.device(1):
+    # allocates a tensor on GPU 1
+    a = torch.cuda.FloatTensor(1)
+
+    # transfers a tensor from CPU to GPU 1
+    b = torch.FloatTensor(1).cuda()
+    # a.get_device() == b.get_device() == 1
+
+    c = a + b
+    # c.get_device() == 1
+
+    z = x + y
+    # z.get_device() == 0
+
+    # even within a context, you can give a GPU id to the .cuda call
+    d = torch.randn(2).cuda(2)
+    # d.get_device() == 2
+</code></pre><h2 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h2><h3 id="使用固定的内存缓冲区"><a href="#使用固定的内存缓冲区" class="headerlink" title="使用固定的内存缓冲区"></a>使用固定的内存缓冲区</h3><p>当副本来自固定（页锁）内存时，主机到GPU的复制速度要快很多。CPU张量和存储开放了一个<code>pin_memory()</code>方法，它返回该对象的副本，而它的数据放在固定区域中。</p>
+<p>另外，一旦固定了张量或存储，就可以使用异步的GPU副本。只需传递一个额外的<code>async=True</code>参数到<code>cuda()</code>的调用。这可以用于将数据传输与计算重叠。</p>
+<p>通过将<code>pin_memory=True</code>传递给其构造函数，可以使<code>DataLoader</code>将batch返回到固定内存中。</p>
+<h3 id="使用-nn-DataParallel-替代-multiprocessing"><a href="#使用-nn-DataParallel-替代-multiprocessing" class="headerlink" title="使用 nn.DataParallel 替代 multiprocessing"></a>使用 nn.DataParallel 替代 multiprocessing</h3><p>大多数涉及批量输入和多个GPU的情况应默认使用<code>DataParallel</code>来使用多个GPU。尽管有GIL的存在，单个python进程也可能使多个GPU饱和。</p>
+<p>从0.1.9版本开始，大量的GPU(8+)可能未被充分利用。然而，这是一个已知的问题，也正在积极开发。和往常一样，测试你的用例吧。</p>
+<p>调用<code>multiprocessing</code>来利用CUDA模型存在重要的注意事项；使用具有多处理功能的CUDA模型有重要的注意事项; 除非就是需要谨慎地满足数据处理需求，否则您的程序很可能会出现错误或未定义的行为。</p>
+<h1 id="扩展PyTorch"><a href="#扩展PyTorch" class="headerlink" title="扩展PyTorch"></a>扩展PyTorch</h1><h2 id="扩展-torch-autograd"><a href="#扩展-torch-autograd" class="headerlink" title="扩展 torch.autograd"></a>扩展 torch.autograd</h2><p>如果你想要添加一个新的 <code>Operation</code> 到<code>autograd</code>的话，你的<code>Operation</code>需要继承 <code>class Function</code>。<code>autograd</code>使用<code>Function</code>计算结果和梯度，同时编码 <code>operation</code>的历史。每个新的 <code>operation(function)</code> 都需要实现三个方法：</p>
+<ul>
+<li><p><code>__init__ (optional)</code> - 如果你的<code>operation</code>包含非<code>Variable</code>参数，那么就将其作为<code>__init__</code>的参数传入到<code>operation</code>中。例如：<code>AddConstant Function</code>加一个常数，<code>Transpose Function</code>需要指定哪两个维度需要交换。如果你的<code>operation</code>不需要额外的参数，你可以忽略<code>__init__</code>。</p>
+</li>
+<li><p><code>forward()</code> - 在里面写执行此<code>operation</code>的代码。可以有任意数量的参数。如果你对某些参数指定了默认值，则这些参数是可传可不传的。记住：<code>forward()</code>的参数只能是<code>Variable</code>。函数的返回值既可以是 <code>Variable</code>也可以是<code>Variables</code>的<code>tuple</code>。同时，请参考 <code>Function</code>[function]的 <code>doc</code>，查阅有哪些 方法是只能在<code>forward</code>中调用的。</p>
+</li>
+<li><p><code>backward()</code> - 梯度计算公式。 参数的个数和<code>forward</code>返回值的个数一样，每个参数代表传回到此<code>operation</code>的梯度. <code>backward()</code>的返回值的个数应该和此<code>operation</code>输入的个数一样，每个返回值对应了输入值的梯度。如果<code>operation</code>的输入不需要梯度，或者不可导，你可以返回<code>None</code>。 如果<code>forward()</code>存在可选参数，你可以返回比输入更多的梯度，只是返回的是<code>None</code>。</p>
+</li>
+</ul>
+<p>下面是 <code>Linear</code> 的实现代码：</p>
+<pre><code># Inherit from Function
+class Linear(Function):
+
+    # bias is an optional argument
+    def forward(self, input, weight, bias=None):
+        self.save_for_backward(input, weight, bias)
+        output = input.mm(weight.t())
+        if bias is not None:
+            output += bias.unsqueeze(0).expand_as(output)
+        return output
+
+    # This function has only a single output, so it gets only one gradient
+    def backward(self, grad_output):
+        # This is a pattern that is very convenient - at the top of backward
+        # unpack saved_tensors and initialize all gradients w.r.t. inputs to
+        # None. Thanks to the fact that additional trailing Nones are
+        # ignored, the return statement is simple even when the function has
+        # optional inputs.
+        input, weight, bias = self.saved_tensors
+        grad_input = grad_weight = grad_bias = None
+
+        # These needs_input_grad checks are optional and there only to
+        # improve efficiency. If you want to make your code simpler, you can
+        # skip them. Returning gradients for inputs that don't require it is
+        # not an error.
+        if self.needs_input_grad[0]:
+            grad_input = grad_output.mm(weight)
+        if self.needs_input_grad[1]:
+            grad_weight = grad_output.t().mm(input)
+        if bias is not None and self.needs_input_grad[2]:
+            grad_bias = grad_output.sum(0).squeeze(0)
+
+        return grad_input, grad_weight, grad_bias
+</code></pre><p>现在，为了可以更简单的使用自定义的<code>operation</code>，我们建议将其用一个简单的 <code>helper function</code> 包装起来。 functions:</p>
+<pre><code>def linear(input, weight, bias=None):
+    # First braces create a Function object. Any arguments given here
+    # will be passed to __init__. Second braces will invoke the __call__
+    # operator, that will then use forward() to compute the result and
+    # return it.
+    return Linear()(input, weight, bias)
+</code></pre><p>你可能想知道你刚刚实现的 <code>backward</code>方法是否正确的计算了梯度。你可以使用 小的有限的差分进行数值估计。</p>
+<pre><code>from torch.autograd import gradcheck
+
+# gradchek takes a tuple of tensor as input, check if your gradient
+# evaluated with these tensors are close enough to numerical
+# approximations and returns True if they all verify this condition.
+input = (Variable(torch.randn(20,20).double(), requires_grad=True),)
+test = gradcheck.gradcheck(Linear(), input, eps=1e-6, atol=1e-4)
+print(test)
+</code></pre><h2 id="扩展-torch-nn"><a href="#扩展-torch-nn" class="headerlink" title="扩展 torch.nn"></a>扩展 torch.nn</h2><p><code>nn</code> 包含两种接口 - <code>modules</code>和他们的<code>functional</code>版本。通过这两个接口，你都可以扩展<code>nn</code>。但是我们建议，在扩展<code>layer</code>的时候，使用<code>modules</code>， 因为<code>modules</code>保存着参数和<code>buffer</code>。如果不需要参数的话，那么建议使用<code>functional</code>(激活函数，pooling，这些都不需要参数)。</p>
+<p>增加一个<code>operation</code>的 <code>functional</code>版本已经在上面一节介绍完毕。</p>
+<p>增加一个模块(<code>module</code>)。 由于<code>nn</code>重度使用<code>autograd</code>。所以，添加一个新<code>module</code>需要实现一个 用来执行 计算 和 计算梯度 的<code>Function</code>。从现在开始，假定我们想要实现一个<code>Linear module</code>，记得之前我们已经实现了一个<code>Linear Funciton</code>。 只需要很少的代码就可以完成这个工作。 现在，我们需要实现两个方法：</p>
+<ul>
+<li><p><code>__init__ (optional)</code> - 输入参数，例如<code>kernel sizes</code>, <code>numbers of features</code>, 等等。同时初始化 <code>parameters</code>和<code>buffers</code>。</p>
+</li>
+<li><p><code>forward()</code> - 实例化一个执行<code>operation</code>的<code>Function</code>，使用它执行<code>operation</code>。和<code>functional wrapper(上面实现的那个简单的wrapper)</code>十分类似。</p>
+</li>
+</ul>
+<p><code>Linear module</code>实现代码:</p>
+<pre><code>class Linear(nn.Module):
+    def __init__(self, input_features, output_features, bias=True):
+        self.input_features = input_features
+        self.output_features = output_features
+
+        # nn.Parameter is a special kind of Variable, that will get
+        # automatically registered as Module's parameter once it's assigned
+        # as an attribute. Parameters and buffers need to be registered, or
+        # they won't appear in .parameters() (doesn't apply to buffers), and
+        # won't be converted when e.g. .cuda() is called. You can use
+        # .register_buffer() to register buffers.
+        # nn.Parameters can never be volatile and, different than Variables,
+        # they require gradients by default.
+        self.weight = nn.Parameter(torch.Tensor(input_features, output_features))
+        if bias:
+            self.bias = nn.Parameter(torch.Tensor(output_features))
+        else:
+            # You should always register all possible parameters, but the
+            # optional ones can be None if you want.
+            self.register_parameter('bias', None)
+
+        # Not a very smart way to initialize weights
+        self.weight.data.uniform_(-0.1, 0.1)
+        if bias is not None:
+            self.bias.data.uniform_(-0.1, 0.1)
+
+    def forward(self, input):
+        # See the autograd section for explanation of what happens here.
+        return Linear()(input, self.weight, self.bias)
+        #注意这个Linear是之前实现过的Linear
+</code></pre><h2 id="编写自定义C扩展"><a href="#编写自定义C扩展" class="headerlink" title="编写自定义C扩展"></a>编写自定义<code>C</code>扩展</h2><p>Coming soon. For now you can find an example at <a href="https://github.com/pytorch/extension-ffi" target="_blank" rel="noopener">GitHub</a>.</p>
+<h1 id="多进程最佳实践"><a href="#多进程最佳实践" class="headerlink" title="多进程最佳实践"></a>多进程最佳实践</h1><p><code>torch.multiprocessing</code>是Python<code>multiprocessing</code>的替代品。它支持完全相同的操作，但扩展了它以便通过<code>multiprocessing.Queue</code>发送的所有张量将其数据移动到共享内存中，并且只会向其他进程发送一个句柄。</p>
+<blockquote>
+<p><strong>Note</strong></p>
+<p>当<code>Variable</code>发送到另一个进程时，<code>Variable.data</code>和<code>Variable.grad.data</code>都将被共享。</p>
+</blockquote>
+<p>这允许实现各种训练方法，如Hogwild，A3C或需要异步操作的任何其他方法。</p>
+<h2 id="共享CUDA张量"><a href="#共享CUDA张量" class="headerlink" title="共享CUDA张量"></a>共享CUDA张量</h2><p>仅在Python 3中使用<code>spawn</code>或<code>forkserver</code>启动方法才支持在进程之间共享CUDA张量。Python 2中的<code>multiprocessing</code>只能使用<code>fork</code>创建子进程，并且不被CUDA运行时所支持。</p>
+<blockquote>
+<p><strong>Warning</strong></p>
+<p>CUDA API要求导出到其他进程的分配，只要它们被使用就要一直保持有效。您应该小心，确保您共享的CUDA张量只要有必要就不要超出范围。这不是共享模型参数的问题，但传递其他类型的数据应该小心。注意，此限制不适用于共享CPU内存。</p>
+</blockquote>
+<h2 id="最佳实践和提示"><a href="#最佳实践和提示" class="headerlink" title="最佳实践和提示"></a>最佳实践和提示</h2><h3 id="避免和抵制死锁"><a href="#避免和抵制死锁" class="headerlink" title="避免和抵制死锁"></a>避免和抵制死锁</h3><p>当一个新进程被产生时，有很多事情可能会出错，最常见的死锁原因是后台线程。如果有任何线程持有锁或导入模块，并且<code>fork</code>被调用，则子进程很可能处于损坏的状态，并以不同的方式死锁或失败。注意，即使您没有，Python内置的库也可能会这样做 —— 不需要看得比<code>multiprocessing</code>更远。<code>multiprocessing.Queue</code>实际上是一个非常复杂的类，它产生用于序列化，发送和接收对象的多个线程，它们也可能引起上述问题。如果您发现自己处于这种情况，请尝试使用<code>multiprocessing.queues.SimpleQueue</code>，这不会使用任何其他线程。</p>
+<p>我们正在竭尽全力把它设计得更简单，并确保这些死锁不会发生，但有些事情无法控制。如果有任何问题您无法一时无法解决，请尝试在论坛上提出，我们将看看是否可以解决问题。</p>
+<h3 id="重用经过队列的缓冲区"><a href="#重用经过队列的缓冲区" class="headerlink" title="重用经过队列的缓冲区"></a>重用经过队列的缓冲区</h3><p>记住每次将<code>Tensor</code>放入<code>multiprocessing.Queue</code>时，必须将其移动到共享内存中。如果它已经被共享，它是一个无效的操作，否则会产生一个额外的内存副本，这会减缓整个进程。即使你有一个进程池来发送数据到一个进程，使它返回缓冲区 —— 这几乎是免费的，并且允许你在发送下一个batch时避免产生副本。</p>
+<h3 id="异步多进程训练（例如Hogwild）"><a href="#异步多进程训练（例如Hogwild）" class="headerlink" title="异步多进程训练（例如Hogwild）"></a>异步多进程训练（例如Hogwild）</h3><p>使用<code>torch.multiprocessing</code>，可以异步地训练模型，参数可以一直共享，也可以定期同步。在第一种情况下，我们建议发送整个模型对象，而在后者中，我们建议只发送<code>state_dict()</code>。</p>
+<p>我们建议使用<code>multiprocessing.Queue</code>来在进程之间传递各种PyTorch对象。例如， 当使用fork启动方法时，可能会继承共享内存中的张量和存储器，但这是非常容易出错的，应谨慎使用，而且只能由高级用户使用。队列虽然有时是一个较不优雅的解决方案，但基本上能在所有情况下正常工作。</p>
+<blockquote>
+<p><strong>Warning</strong> 你应该注意有关全局语句，它们没有被<code>if __name__ == '__main__'</code>保护。如果使用与<code>fork</code>不同的启动方法，则它们将在所有子进程中执行。</p>
+</blockquote>
+<h4 id="Hogwild"><a href="#Hogwild" class="headerlink" title="Hogwild"></a>Hogwild</h4><p>在<a href="https://github.com/pytorch/examples/tree/master/mnist_hogwild" target="_blank" rel="noopener">examples repository</a>中可以找到具体的Hogwild实现，可以展示代码的整体结构。下面也有一个小例子：</p>
+<pre><code>import torch.multiprocessing as mp
+from model import MyModel
+
+def train(model):
+    # Construct data_loader, optimizer, etc.
+    for data, labels in data_loader:
+        optimizer.zero_grad()
+        loss_fn(model(data), labels).backward()
+        optimizer.step()  # This will update the shared parameters
+
+if __name__ == '__main__':
+    num_processes = 4
+    model = MyModel()
+    # NOTE: this is required for the ``fork`` method to work
+    model.share_memory()
+    processes = []
+    for rank in range(num_processes):
+        p = mp.Process(target=train, args=(model,))
+        p.start()
+        processes.append(p)
+    for p in processes:
+      p.join()</code></pre><h1 id="序列化语义"><a href="#序列化语义" class="headerlink" title="序列化语义"></a>序列化语义</h1><h2 id="最佳实践-1"><a href="#最佳实践-1" class="headerlink" title="最佳实践"></a>最佳实践</h2><h3 id="保存模型的推荐方法"><a href="#保存模型的推荐方法" class="headerlink" title="保存模型的推荐方法"></a>保存模型的推荐方法</h3><p>这主要有两种方法序列化和恢复模型。</p>
+<p>第一种（推荐）只保存和加载模型参数：</p>
+<pre><code>torch.save(the_model.state_dict(), PATH)
+</code></pre><p>然后：</p>
+<pre><code>the_model = TheModelClass(*args, **kwargs)
+the_model.load_state_dict(torch.load(PATH))
+</code></pre><p>第二种保存和加载整个模型：</p>
+<pre><code>torch.save(the_model, PATH)
+</code></pre><p>然后：</p>
+<pre><code>the_model = torch.load(PATH)
+</code></pre><p>然而，在这种情况下，序列化的数据被绑定到特定的类和固定的目录结构，所以当在其他项目中使用时，或者在一些严重的重构器之后它可能会以各种方式break。</p>
+<h1 id="torch"><a href="#torch" class="headerlink" title="torch"></a>torch</h1><p>包 <code>torch</code> 包含了多维张量的数据结构以及基于其上的多种数学操作。另外，它也提供了多种工具，其中一些可以更有效地对张量和任意类型进行序列化。</p>
+<p>它有CUDA 的对应实现，可以在NVIDIA GPU上进行张量运算(计算能力&gt;=2.0)。</p>
+<h1 id="张量-Tensors"><a href="#张量-Tensors" class="headerlink" title="张量 Tensors"></a>张量 Tensors</h1><p><strong>torch.is_tensor</strong><a href="http://pytorch.org/docs/_modules/torch.html#is_tensor" target="_blank" rel="noopener">[source]</a></p>
+<pre><code>torch.is_tensor(obj)
+</code></pre><p>如果<em>obj</em> 是一个pytorch张量，则返回True</p>
+<ul>
+<li>参数： obj (Object) – 判断对象</li>
+</ul>
+<hr>
+<p><strong>torch.is_storage</strong> <a href="http://pytorch.org/docs/_modules/torch.html#is_storage" target="_blank" rel="noopener">[source]</a></p>
+<pre><code>torch.is_storage(obj)
+</code></pre><p>如何<em>obj</em> 是一个pytorch storage对象，则返回True</p>
+<ul>
+<li>参数： input (Object) – 判断对象</li>
+</ul>
+<hr>
+<p><strong>torch.</strong>set_default_tensor_type****<a href="http://pytorch.org/docs/_modules/torch.html#set_default_tensor_type" target="_blank" rel="noopener">[source]</a></p>
+<pre><code>torch.set_default_tensor_type(t)
+</code></pre><hr>
+<p><strong>torch.numel</strong></p>
+<pre><code>torch.numel(input)-&gt;int
+</code></pre><p>返回<code>input</code> 张量中的元素个数</p>
+<ul>
+<li>参数: input (<a href="http://pytorch.org/docs/tensors.html#torch.Tensor" target="_blank" rel="noopener"><em>Tensor</em></a>) – 输入张量</li>
+</ul>
+<p>例子:</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(1,2,3,4,5)
+&gt;&gt;&gt; torch.numel(a)
+120
+&gt;&gt;&gt; a = torch.zeros(4,4)
+&gt;&gt;&gt; torch.numel(a)
+16
+</code></pre><hr>
+<p><strong>torch.set_printoptions</strong><a href="http://pytorch.org/docs/_modules/torch/_tensor_str.html#set_printoptions" target="_blank" rel="noopener">[source]</a></p>
+<pre><code>torch.set_printoptions(precision=None, threshold=None, edgeitems=None, linewidth=None, profile=None)
+</code></pre><p>设置打印选项。 完全参考自<a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.set_printoptions.html" target="_blank" rel="noopener"> Numpy</a>。</p>
+<p>参数:</p>
+<ul>
+<li>precision – 浮点数输出的精度位数 (默认为8 )</li>
+<li>threshold – 阈值，触发汇总显示而不是完全显示(repr)的数组元素的总数 （默认为1000）</li>
+<li>edgeitems – 汇总显示中，每维（轴）两端显示的项数（默认值为3）</li>
+<li>linewidth – 用于插入行间隔的每行字符数（默认为80）。Thresholded matricies will ignore this parameter.</li>
+<li>profile – pretty打印的完全默认值。 可以覆盖上述所有选项 (默认为short, full)</li>
+</ul>
+<h2 id="创建操作-Creation-Ops"><a href="#创建操作-Creation-Ops" class="headerlink" title="创建操作 Creation Ops"></a>创建操作 Creation Ops</h2><p><strong>torch.eye</strong></p>
+<pre><code>torch.eye(n, m=None, out=None)
+</code></pre><p>返回一个2维张量，对角线位置全1，其它位置全0</p>
+<p>参数:</p>
+<ul>
+<li>n (<a href="https://docs.python.org/2/library/functions.html#int" target="_blank" rel="noopener">int</a> ) – 行数</li>
+<li>m (<a href="https://docs.python.org/2/library/functions.html#int" target="_blank" rel="noopener">int</a>, <em>optional</em>) – 列数.如果为None,则默认为<em>n</em></li>
+<li>out (<a href="http://pytorch.org/docs/tensors.html#torch.Tensor" target="_blank" rel="noopener"><em>Tensor</em></a>, <em>optinal</em>) - Output tensor</li>
+</ul>
+<p>返回值: 对角线位置全1，其它位置全0的2维张量</p>
+<p>返回值类型: <a href="http://pytorch.org/docs/tensors.html#torch.Tensor" target="_blank" rel="noopener">Tensor</a></p>
+<p>例子:</p>
+<pre><code>&gt;&gt;&gt; torch.eye(3)
+ 1  0  0
+ 0  1  0
+ 0  0  1
+[torch.FloatTensor of size 3x3]
+</code></pre><hr>
+<p><strong>from_numpy</strong></p>
+<pre><code>torch.from_numpy(ndarray) → Tensor
+</code></pre><p>Numpy桥，将<code>numpy.ndarray</code> 转换为pytorch的 <code>Tensor</code>。 返回的张量tensor和numpy的ndarray共享同一内存空间。修改一个会导致另外一个也被修改。返回的张量不能改变大小。</p>
+<p>例子:</p>
+<pre><code>&gt;&gt;&gt; a = numpy.array([1, 2, 3])
+&gt;&gt;&gt; t = torch.from_numpy(a)
+&gt;&gt;&gt; t
+torch.LongTensor([1, 2, 3])
+&gt;&gt;&gt; t[0] = -1
+&gt;&gt;&gt; a
+array([-1,  2,  3])
+</code></pre><p><strong>torch.linspace</strong></p>
+<pre><code>torch.linspace(start, end, steps=100, out=None) → Tensor
+</code></pre><p>返回一个1维张量，包含在区间<code>start</code> 和 <code>end</code> 上均匀间隔的<code>steps</code>个点。 输出1维张量的长度为<code>steps</code>。</p>
+<p>参数:</p>
+<ul>
+<li>start (float) – 序列的起始点</li>
+<li>end (float) – 序列的最终值</li>
+<li>steps (int) – 在<code>start</code> 和 <code>end</code>间生成的样本数</li>
+<li>out (Tensor, optional) – 结果张量</li>
+</ul>
+<p>例子:</p>
+<pre><code>&gt;&gt;&gt; torch.linspace(3, 10, steps=5)
+
+  3.0000
+  4.7500
+  6.5000
+  8.2500
+ 10.0000
+[torch.FloatTensor of size 5]
+
+&gt;&gt;&gt; torch.linspace(-10, 10, steps=5)
+
+-10
+ -5
+  0
+  5
+ 10
+[torch.FloatTensor of size 5]
+
+&gt;&gt;&gt; torch.linspace(start=-10, end=10, steps=5)
+
+-10
+ -5
+  0
+  5
+ 10
+[torch.FloatTensor of size 5]
+</code></pre><hr>
+<p><strong>torch.logspace</strong></p>
+<pre><code>torch.logspace(start, end, steps=100, out=None) → Tensor
+</code></pre><p>返回一个1维张量，包含在区间 10的start次方到10的end次方上以对数刻度均匀间隔的<code>steps</code>个点。 输出1维张量的长度为<code>steps</code>。</p>
+<p>参数:</p>
+<ul>
+<li>start (float) – 序列的起始点</li>
+<li>end (float) – 序列的最终值</li>
+<li>steps (int) – 在<code>start</code> 和 <code>end</code>间生成的样本数</li>
+<li>out (Tensor, optional) – 结果张量</li>
+</ul>
+<p>例子:</p>
+<pre><code>&gt;&gt;&gt; torch.logspace(start=-10, end=10, steps=5)
+
+ 1.0000e-10
+ 1.0000e-05
+ 1.0000e+00
+ 1.0000e+05
+ 1.0000e+10
+[torch.FloatTensor of size 5]
+
+&gt;&gt;&gt; torch.logspace(start=0.1, end=1.0, steps=5)
+
+  1.2589
+  2.1135
+  3.5481
+  5.9566
+ 10.0000
+[torch.FloatTensor of size 5]
+</code></pre><p><strong>torch.ones</strong></p>
+<pre><code>torch.ones(*sizes, out=None) → Tensor
+</code></pre><p>返回一个全为1 的张量，形状由可变参数<code>sizes</code>定义。</p>
+<p>参数:</p>
+<ul>
+<li>sizes (int…) – 整数序列，定义了输出形状</li>
+<li>out (Tensor, optional) – 结果张量 例子:</li>
+</ul>
+<pre><code>&gt;&gt;&gt; torch.ones(2, 3)
+
+ 1  1  1
+ 1  1  1
+[torch.FloatTensor of size 2x3]
+
+&gt;&gt;&gt; torch.ones(5)
+
+ 1
+ 1
+ 1
+ 1
+ 1
+[torch.FloatTensor of size 5]
+</code></pre><hr>
+<p><strong>torch.rand</strong></p>
+<pre><code>torch.rand(*sizes, out=None) → Tensor
+</code></pre><p>返回一个张量，包含了从区间[0,1)的均匀分布中抽取的一组随机数，形状由可变参数<code>sizes</code> 定义。</p>
+<p>参数:</p>
+<ul>
+<li>sizes (int…) – 整数序列，定义了输出形状</li>
+<li>out (<a href="http://pytorch.org/docs/tensors.html#torch.Tensor" target="_blank" rel="noopener"><em>Tensor</em></a>, <em>optinal</em>) - 结果张量 例子：</li>
+</ul>
+<pre><code>&gt;&gt;&gt; torch.rand(4)
+
+ 0.9193
+ 0.3347
+ 0.3232
+ 0.7715
+[torch.FloatTensor of size 4]
+
+&gt;&gt;&gt; torch.rand(2, 3)
+
+ 0.5010  0.5140  0.0719
+ 0.1435  0.5636  0.0538
+[torch.FloatTensor of size 2x3]
+</code></pre><hr>
+<p><strong>torch.randn</strong></p>
+<pre><code>torch.randn(*sizes, out=None) → Tensor
+</code></pre><p>返回一个张量，包含了从标准正态分布(均值为0，方差为 1，即高斯白噪声)中抽取一组随机数，形状由可变参数<code>sizes</code>定义。 参数:</p>
+<ul>
+<li>sizes (int…) – 整数序列，定义了输出形状</li>
+<li>out (<a href="http://pytorch.org/docs/tensors.html#torch.Tensor" target="_blank" rel="noopener"><em>Tensor</em></a>, <em>optinal</em>) - 结果张量</li>
+</ul>
+<p>例子：:</p>
+<pre><code>&gt;&gt;&gt; torch.randn(4)
+
+-0.1145
+ 0.0094
+-1.1717
+ 0.9846
+[torch.FloatTensor of size 4]
+
+&gt;&gt;&gt; torch.randn(2, 3)
+
+ 1.4339  0.3351 -1.0999
+ 1.5458 -0.9643 -0.3558
+[torch.FloatTensor of size 2x3]
+</code></pre><hr>
+<p><strong>torch.randperm</strong></p>
+<pre><code>torch.randperm(n, out=None) → LongTensor
+</code></pre><p>给定参数<code>n</code>，返回一个从<code>0</code> 到<code>n -1</code> 的随机整数排列。</p>
+<p>参数:</p>
+<ul>
+<li>n (int) – 上边界(不包含)</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; torch.randperm(4)
+
+ 2
+ 1
+ 3
+ 0
+[torch.LongTensor of size 4]
+</code></pre><hr>
+<p><strong>torch.arange</strong></p>
+<pre><code>torch.arange(start, end, step=1, out=None) → Tensor
+</code></pre><p>参数:</p>
+<ul>
+<li>start (float) – 序列的起始点</li>
+<li>end (float) – 序列的终止点</li>
+<li>step (float) – 相邻点的间隔大小</li>
+<li>out (Tensor, optional) – 结果张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; torch.arange(1, 4)
+
+ 1
+ 2
+ 3
+[torch.FloatTensor of size 3]
+
+&gt;&gt;&gt; torch.arange(1, 2.5, 0.5)
+
+ 1.0000
+ 1.5000
+ 2.0000
+[torch.FloatTensor of size 3]
+</code></pre><hr>
+<p><strong>torch.range</strong></p>
+<pre><code>torch.range(start, end, step=1, out=None) → Tensor
+</code></pre><p><strong>警告</strong>：建议使用函数 <code>torch.arange()</code></p>
+<p>参数:</p>
+<ul>
+<li>start (float) – 序列的起始点</li>
+<li>end (float) – 序列的最终值</li>
+<li>step (int) – 相邻点的间隔大小</li>
+<li>out (Tensor, optional) – 结果张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; torch.range(1, 4)
+
+ 1
+ 2
+ 3
+ 4
+[torch.FloatTensor of size 4]
+
+&gt;&gt;&gt; torch.range(1, 4, 0.5)
+
+ 1.0000
+ 1.5000
+ 2.0000
+ 2.5000
+ 3.0000
+ 3.5000
+ 4.0000
+[torch.FloatTensor of size 7]
+</code></pre><hr>
+<p><strong>torch.zeros</strong></p>
+<pre><code>torch.zeros(*sizes, out=None) → Tensor
+</code></pre><p>返回一个全为标量 0 的张量，形状由可变参数<code>sizes</code> 定义。</p>
+<p>参数:</p>
+<ul>
+<li>sizes (int…) – 整数序列，定义了输出形状</li>
+<li>out (<a href="http://pytorch.org/docs/tensors.html#torch.Tensor" target="_blank" rel="noopener">Tensor</a>, <em>optional</em>) – 结果张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; torch.zeros(2, 3)
+
+ 0  0  0
+ 0  0  0
+[torch.FloatTensor of size 2x3]
+
+&gt;&gt;&gt; torch.zeros(5)
+
+ 0
+ 0
+ 0
+ 0
+ 0
+[torch.FloatTensor of size 5]
+</code></pre><hr>
+<h2 id="索引-切片-连接-换位Indexing-Slicing-Joining-Mutating-Ops"><a href="#索引-切片-连接-换位Indexing-Slicing-Joining-Mutating-Ops" class="headerlink" title="索引,切片,连接,换位Indexing, Slicing, Joining, Mutating Ops"></a>索引,切片,连接,换位Indexing, Slicing, Joining, Mutating Ops</h2><h3 id="torch-cat"><a href="#torch-cat" class="headerlink" title="torch.cat"></a>torch.cat</h3><pre><code>torch.cat(inputs, dimension=0) → Tensor
+</code></pre><p>在给定维度上对输入的张量序列<code>seq</code> 进行连接操作。</p>
+<p><code>torch.cat()</code>可以看做 <code>torch.split()</code> 和 <code>torch.chunk()</code>的反操作。 <code>cat()</code> 函数可以通过下面例子更好的理解。</p>
+<p>参数:</p>
+<ul>
+<li>inputs (<em>sequence of Tensors</em>) – 可以是任意相同Tensor 类型的python 序列</li>
+<li>dimension (<em>int</em>, <em>optional</em>) – 沿着此维连接张量序列。</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; x = torch.randn(2, 3)
+&gt;&gt;&gt; x
+
+ 0.5983 -0.0341  2.4918
+ 1.5981 -0.5265 -0.8735
+[torch.FloatTensor of size 2x3]
+
+&gt;&gt;&gt; torch.cat((x, x, x), 0)
+
+ 0.5983 -0.0341  2.4918
+ 1.5981 -0.5265 -0.8735
+ 0.5983 -0.0341  2.4918
+ 1.5981 -0.5265 -0.8735
+ 0.5983 -0.0341  2.4918
+ 1.5981 -0.5265 -0.8735
+[torch.FloatTensor of size 6x3]
+
+&gt;&gt;&gt; torch.cat((x, x, x), 1)
+
+ 0.5983 -0.0341  2.4918  0.5983 -0.0341  2.4918  0.5983 -0.0341  2.4918
+ 1.5981 -0.5265 -0.8735  1.5981 -0.5265 -0.8735  1.5981 -0.5265 -0.8735
+[torch.FloatTensor of size 2x9]
+</code></pre><h3 id="torch-chunk"><a href="#torch-chunk" class="headerlink" title="torch.chunk"></a>torch.chunk</h3><pre><code>torch.chunk(tensor, chunks, dim=0)
+</code></pre><p>在给定维度(轴)上将输入张量进行分块儿。</p>
+<p>参数:</p>
+<ul>
+<li>tensor (Tensor) – 待分块的输入张量</li>
+<li>chunks (int) – 分块的个数</li>
+<li>dim (int) – 沿着此维度进行分块</li>
+</ul>
+<h3 id="torch-gather"><a href="#torch-gather" class="headerlink" title="torch.gather"></a>torch.gather</h3><pre><code>torch.gather(input, dim, index, out=None) → Tensor
+</code></pre><p>沿给定轴<code>dim</code>，将输入索引张量<code>index</code>指定位置的值进行聚合。</p>
+<p>对一个3维张量，输出可以定义为：</p>
+<pre><code>out[i][j][k] = tensor[index[i][j][k]][j][k]  # dim=0
+out[i][j][k] = tensor[i][index[i][j][k]][k]  # dim=1
+out[i][j][k] = tensor[i][j][index[i][j][k]]  # dim=3
+</code></pre><p>例子：</p>
+<pre><code>&gt;&gt;&gt; t = torch.Tensor([[1,2],[3,4]])
+&gt;&gt;&gt; torch.gather(t, 1, torch.LongTensor([[0,0],[1,0]]))
+ 1  1
+ 4  3
+[torch.FloatTensor of size 2x2]
+</code></pre><p>参数:</p>
+<ul>
+<li>input (Tensor) – 源张量</li>
+<li>dim (int) – 索引的轴</li>
+<li>index (LongTensor) – 聚合元素的下标</li>
+<li>out (Tensor, optional) – 目标张量</li>
+</ul>
+<h3 id="torch-index-select"><a href="#torch-index-select" class="headerlink" title="torch.index_select"></a>torch.index_select</h3><pre><code>torch.index_select(input, dim, index, out=None) → Tensor
+</code></pre><p>沿着指定维度对输入进行切片，取<code>index</code>中指定的相应项(<code>index</code>为一个LongTensor)，然后返回到一个新的张量， 返回的张量与原始张量_Tensor_有相同的维度(在指定轴上)。</p>
+<p>注意： 返回的张量不与原始张量共享内存空间。</p>
+<p>参数:</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>dim (int) – 索引的轴</li>
+<li>index (LongTensor) – 包含索引下标的一维张量</li>
+<li>out (Tensor, optional) – 目标张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; x = torch.randn(3, 4)
+&gt;&gt;&gt; x
+
+ 1.2045  2.4084  0.4001  1.1372
+ 0.5596  1.5677  0.6219 -0.7954
+ 1.3635 -1.2313 -0.5414 -1.8478
+[torch.FloatTensor of size 3x4]
+
+&gt;&gt;&gt; indices = torch.LongTensor([0, 2])
+&gt;&gt;&gt; torch.index_select(x, 0, indices)
+
+ 1.2045  2.4084  0.4001  1.1372
+ 1.3635 -1.2313 -0.5414 -1.8478
+[torch.FloatTensor of size 2x4]
+
+&gt;&gt;&gt; torch.index_select(x, 1, indices)
+
+ 1.2045  0.4001
+ 0.5596  0.6219
+ 1.3635 -0.5414
+[torch.FloatTensor of size 3x2]
+</code></pre><h3 id="torch-masked-select"><a href="#torch-masked-select" class="headerlink" title="torch.masked_select"></a>torch.masked_select</h3><pre><code>torch.masked_select(input, mask, out=None) → Tensor
+</code></pre><p>根据掩码张量<code>mask</code>中的二元值，取输入张量中的指定项( <code>mask</code>为一个 <em>ByteTensor</em>)，将取值返回到一个新的1D张量，</p>
+<p>张量 <code>mask</code>须跟<code>input</code>张量有相同数量的元素数目，但形状或维度不需要相同。 注意： 返回的张量不与原始张量共享内存空间。</p>
+<p>参数:</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>mask (ByteTensor) – 掩码张量，包含了二元索引值</li>
+<li>out (Tensor, optional) – 目标张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; x = torch.randn(3, 4)
+&gt;&gt;&gt; x
+
+ 1.2045  2.4084  0.4001  1.1372
+ 0.5596  1.5677  0.6219 -0.7954
+ 1.3635 -1.2313 -0.5414 -1.8478
+[torch.FloatTensor of size 3x4]
+
+&gt;&gt;&gt; indices = torch.LongTensor([0, 2])
+&gt;&gt;&gt; torch.index_select(x, 0, indices)
+
+ 1.2045  2.4084  0.4001  1.1372
+ 1.3635 -1.2313 -0.5414 -1.8478
+[torch.FloatTensor of size 2x4]
+
+&gt;&gt;&gt; torch.index_select(x, 1, indices)
+
+ 1.2045  0.4001
+ 0.5596  0.6219
+ 1.3635 -0.5414
+[torch.FloatTensor of size 3x2]
+</code></pre><h3 id="torch-nonzero"><a href="#torch-nonzero" class="headerlink" title="torch.nonzero"></a>torch.nonzero</h3><pre><code>torch.nonzero(input, out=None) → LongTensor
+</code></pre><p>返回一个包含输入<code>input</code>中非零元素索引的张量。输出张量中的每行包含输入中非零元素的索引。</p>
+<p>如果输入<code>input</code>有<code>n</code>维，则输出的索引张量<code>output</code>的形状为 z x n, 这里 z 是输入张量<code>input</code>中所有非零元素的个数。</p>
+<p>参数:</p>
+<ul>
+<li>input (Tensor) – 源张量</li>
+<li>out (LongTensor, optional) – 包含索引值的结果张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; torch.nonzero(torch.Tensor([1, 1, 1, 0, 1]))
+
+ 0
+ 1
+ 2
+ 4
+[torch.LongTensor of size 4x1]
+
+&gt;&gt;&gt; torch.nonzero(torch.Tensor([[0.6, 0.0, 0.0, 0.0],
+...                             [0.0, 0.4, 0.0, 0.0],
+...                             [0.0, 0.0, 1.2, 0.0],
+...                             [0.0, 0.0, 0.0,-0.4]]))
+
+ 0  0
+ 1  1
+ 2  2
+ 3  3
+[torch.LongTensor of size 4x2]
+</code></pre><h3 id="torch-split"><a href="#torch-split" class="headerlink" title="torch.split"></a>torch.split</h3><pre><code>torch.split(tensor, split_size, dim=0)
+</code></pre><p>将输入张量分割成相等形状的chunks（如果可分）。 如果沿指定维的张量形状大小不能被<code>split_size</code> 整分， 则最后一个分块会小于其它分块。</p>
+<p>参数:</p>
+<ul>
+<li>tensor (Tensor) – 待分割张量</li>
+<li>split_size (int) – 单个分块的形状大小</li>
+<li>dim (int) – 沿着此维进行分割</li>
+</ul>
+<h3 id="torch-squeeze"><a href="#torch-squeeze" class="headerlink" title="torch.squeeze"></a>torch.squeeze</h3><pre><code>torch.squeeze(input, dim=None, out=None)
+</code></pre><p>注意： 返回张量与输入张量共享内存，所以改变其中一个的内容会改变另一个。</p>
+<p>参数:</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>dim (int, optional) – 如果给定，则<code>input</code>只会在给定维度挤压</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; x = torch.zeros(2,1,2,1,2)
+&gt;&gt;&gt; x.size()
+(2L, 1L, 2L, 1L, 2L)
+&gt;&gt;&gt; y = torch.squeeze(x)
+&gt;&gt;&gt; y.size()
+(2L, 2L, 2L)
+&gt;&gt;&gt; y = torch.squeeze(x, 0)
+&gt;&gt;&gt; y.size()
+(2L, 1L, 2L, 1L, 2L)
+&gt;&gt;&gt; y = torch.squeeze(x, 1)
+&gt;&gt;&gt; y.size()
+(2L, 2L, 1L, 2L)
+</code></pre><h3 id="torch-stack-source"><a href="#torch-stack-source" class="headerlink" title="torch.stack[source]"></a>torch.stack<a href="http://pytorch.org/docs/_modules/torch/functional.html#stack" target="_blank" rel="noopener">[source]</a></h3><pre><code>torch.stack(sequence, dim=0)
+</code></pre><p>沿着一个新维度对输入张量序列进行连接。 序列中所有的张量都应该为相同形状。</p>
+<p>参数:</p>
+<ul>
+<li>sqequence (Sequence) – 待连接的张量序列</li>
+<li>dim (int) – 插入的维度。必须介于 0 与 待连接的张量序列数之间。</li>
+</ul>
+<h3 id="torch-t"><a href="#torch-t" class="headerlink" title="torch.t"></a>torch.t</h3><pre><code>torch.t(input, out=None) → Tensor
+</code></pre><p>输入一个矩阵（2维张量），并转置0, 1维。 可以被视为函数<code>transpose(input, 0, 1)</code>的简写函数。</p>
+<p>参数:</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>out (Tensor, optional) – 结果张量</li>
+</ul>
+<pre><code>&gt;&gt;&gt; x = torch.randn(2, 3)
+&gt;&gt;&gt; x
+
+ 0.4834  0.6907  1.3417
+-0.1300  0.5295  0.2321
+[torch.FloatTensor of size 2x3]
+
+&gt;&gt;&gt; torch.t(x)
+
+ 0.4834 -0.1300
+ 0.6907  0.5295
+ 1.3417  0.2321
+[torch.FloatTensor of size 3x2]
+</code></pre><h3 id="torch-transpose"><a href="#torch-transpose" class="headerlink" title="torch.transpose"></a>torch.transpose</h3><pre><code>torch.transpose(input, dim0, dim1, out=None) → Tensor
+</code></pre><p>返回输入矩阵<code>input</code>的转置。交换维度<code>dim0</code>和<code>dim1</code>。 输出张量与输入张量共享内存，所以改变其中一个会导致另外一个也被修改。</p>
+<p>参数:</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>dim0 (int) – 转置的第一维</li>
+<li>dim1 (int) – 转置的第二维</li>
+</ul>
+<pre><code>&gt;&gt;&gt; x = torch.randn(2, 3)
+&gt;&gt;&gt; x
+
+ 0.5983 -0.0341  2.4918
+ 1.5981 -0.5265 -0.8735
+[torch.FloatTensor of size 2x3]
+
+&gt;&gt;&gt; torch.transpose(x, 0, 1)
+
+ 0.5983  1.5981
+-0.0341 -0.5265
+ 2.4918 -0.8735
+[torch.FloatTensor of size 3x2]
+</code></pre><h3 id="torch-unbind"><a href="#torch-unbind" class="headerlink" title="torch.unbind"></a>torch.unbind</h3><pre><code>torch.unbind(tensor, dim=0)[source]
+</code></pre><p>移除指定维后，返回一个元组，包含了沿着指定维切片后的各个切片</p>
+<p>参数:</p>
+<ul>
+<li>tensor (Tensor) – 输入张量</li>
+<li>dim (int) – 删除的维度</li>
+</ul>
+<h3 id="torch-unsqueeze"><a href="#torch-unsqueeze" class="headerlink" title="torch.unsqueeze"></a>torch.unsqueeze</h3><pre><code>torch.unsqueeze(input, dim, out=None)
+</code></pre><p>返回一个新的张量，对输入的制定位置插入维度 1</p>
+<p>注意： 返回张量与输入张量共享内存，所以改变其中一个的内容会改变另一个。</p>
+<p>参数:</p>
+<ul>
+<li>tensor (Tensor) – 输入张量</li>
+<li>dim (int) – 插入维度的索引</li>
+<li>out (Tensor, optional) – 结果张量</li>
+</ul>
+<pre><code>&gt;&gt;&gt; x = torch.Tensor([1, 2, 3, 4])
+&gt;&gt;&gt; torch.unsqueeze(x, 0)
+ 1  2  3  4
+[torch.FloatTensor of size 1x4]
+&gt;&gt;&gt; torch.unsqueeze(x, 1)
+ 1
+ 2
+ 3
+ 4
+[torch.FloatTensor of size 4x1]
+</code></pre><hr>
+<h2 id="随机抽样-Random-sampling"><a href="#随机抽样-Random-sampling" class="headerlink" title="随机抽样 Random sampling"></a>随机抽样 Random sampling</h2><h3 id="torch-manual-seed"><a href="#torch-manual-seed" class="headerlink" title="torch.manual_seed"></a>torch.manual_seed</h3><pre><code>torch.manual_seed(seed)
+</code></pre><p>设定生成随机数的种子，并返回一个 <em>torch._C.Generator</em> 对象.</p>
+<p>参数: seed (int or long) – 种子.</p>
+<h3 id="torch-initial-seed"><a href="#torch-initial-seed" class="headerlink" title="torch.initial_seed"></a>torch.initial_seed</h3><pre><code>torch.initial_seed()
+</code></pre><p>返回生成随机数的原始种子值（python long）。</p>
+<h3 id="torch-get-rng-state"><a href="#torch-get-rng-state" class="headerlink" title="torch.get_rng_state"></a>torch.get_rng_state</h3><pre><code>torch.get_rng_state()[source]
+</code></pre><p>返回随机生成器状态(<em>ByteTensor</em>)</p>
+<h3 id="torch-set-rng-state"><a href="#torch-set-rng-state" class="headerlink" title="torch.set_rng_state"></a>torch.set_rng_state</h3><pre><code>torch.set_rng_state(new_state)[source]
+</code></pre><p>设定随机生成器状态 参数: new_state (torch.ByteTensor) – 期望的状态</p>
+<h3 id="torch-default-generator"><a href="#torch-default-generator" class="headerlink" title="torch.default_generator"></a>torch.default_generator</h3><pre><code>torch.default_generator = &lt;torch._C.Generator object&gt;
+</code></pre><h3 id="torch-bernoulli"><a href="#torch-bernoulli" class="headerlink" title="torch.bernoulli"></a>torch.bernoulli</h3><pre><code>torch.bernoulli(input, out=None) → Tensor
+</code></pre><p>从伯努利分布中抽取二元随机数(0 或者 1)。</p>
+<p>输出张量的第<em><code>i</code></em>个元素值， 将会以输入张量的第<em><code>i</code></em>个概率值等于<code>1</code>。</p>
+<p>返回值将会是与输入相同大小的张量，每个值为0或者1 参数:</p>
+<ul>
+<li>input (Tensor) – 输入为伯努利分布的概率值</li>
+<li>out (Tensor, optional) – 输出张量(可选)</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.Tensor(3, 3).uniform_(0, 1) # generate a uniform random matrix with range [0, 1]
+&gt;&gt;&gt; a
+
+ 0.7544  0.8140  0.9842
+ 0.5282  0.0595  0.6445
+ 0.1925  0.9553  0.9732
+[torch.FloatTensor of size 3x3]
+
+&gt;&gt;&gt; torch.bernoulli(a)
+
+ 1  1  1
+ 0  0  1
+ 0  1  1
+[torch.FloatTensor of size 3x3]
+
+&gt;&gt;&gt; a = torch.ones(3, 3) # probability of drawing "1" is 1
+&gt;&gt;&gt; torch.bernoulli(a)
+
+ 1  1  1
+ 1  1  1
+ 1  1  1
+[torch.FloatTensor of size 3x3]
+
+&gt;&gt;&gt; a = torch.zeros(3, 3) # probability of drawing "1" is 0
+&gt;&gt;&gt; torch.bernoulli(a)
+
+ 0  0  0
+ 0  0  0
+ 0  0  0
+[torch.FloatTensor of size 3x3]
+</code></pre><hr>
+<h3 id="torch-multinomial"><a href="#torch-multinomial" class="headerlink" title="torch.multinomial"></a>torch.multinomial</h3><pre><code>torch.multinomial(input, num_samples,replacement=False, out=None) → LongTensor
+</code></pre><p>返回一个张量，每行包含从<code>input</code>相应行中定义的多项分布中抽取的<code>num_samples</code>个样本。</p>
+<p><strong>[注意]</strong>:输入<code>input</code>每行的值不需要总和为1 (这里我们用来做权重)，但是必须非负且总和不能为0。</p>
+<p>当抽取样本时，依次从左到右排列(第一个样本对应第一列)。</p>
+<p>如果参数<code>replacement</code> 为 <em>True</em>, 则样本抽取可以重复。否则，一个样本在每行不能被重复抽取。</p>
+<p>参数<code>num_samples</code>必须小于<code>input</code>长度(即，<code>input</code>的列数，如果是<code>input</code>是一个矩阵)。</p>
+<p>参数:</p>
+<ul>
+<li>input (Tensor) – 包含概率值的张量</li>
+<li>num_samples (int) – 抽取的样本数</li>
+<li>replacement (bool, optional) – 布尔值，决定是否能重复抽取</li>
+<li>out (Tensor, optional) – 结果张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; weights = torch.Tensor([0, 10, 3, 0]) # create a Tensor of weights
+&gt;&gt;&gt; torch.multinomial(weights, 4)
+
+ 1
+ 2
+ 0
+ 0
+[torch.LongTensor of size 4]
+
+&gt;&gt;&gt; torch.multinomial(weights, 4, replacement=True)
+
+ 1
+ 2
+ 1
+ 2
+[torch.LongTensor of size 4]
+</code></pre><h3 id="torch-normal"><a href="#torch-normal" class="headerlink" title="torch.normal()"></a>torch.normal()</h3><pre><code>torch.normal(means, std, out=None)
+</code></pre><p>返回一个张量，包含从给定参数<code>means</code>,<code>std</code>的离散正态分布中抽取随机数。 均值<code>means</code>是一个张量，包含每个输出元素相关的正态分布的均值。 <code>std</code>是一个张量，包含每个输出元素相关的正态分布的标准差。 均值和标准差的形状不须匹配，但每个张量的元素个数须相同。</p>
+<p>参数:</p>
+<ul>
+<li>means (Tensor) – 均值</li>
+<li>std (Tensor) – 标准差</li>
+<li>out (Tensor) – 可选的输出张量</li>
+</ul>
+<pre><code>torch.normal(means=torch.arange(1, 11), std=torch.arange(1, 0, -0.1))
+
+ 1.5104
+ 1.6955
+ 2.4895
+ 4.9185
+ 4.9895
+ 6.9155
+ 7.3683
+ 8.1836
+ 8.7164
+ 9.8916
+[torch.FloatTensor of size 10]
+</code></pre><pre><code>torch.normal(mean=0.0, std, out=None)
+</code></pre><p>与上面函数类似，所有抽取的样本共享均值。</p>
+<p>参数:</p>
+<ul>
+<li>means (Tensor,optional) – 所有分布均值</li>
+<li>std (Tensor) – 每个元素的标准差</li>
+<li>out (Tensor) – 可选的输出张量</li>
+</ul>
+<p>例子:</p>
+<pre><code>&gt;&gt;&gt; torch.normal(mean=0.5, std=torch.arange(1, 6))
+
+  0.5723
+  0.0871
+ -0.3783
+ -2.5689
+ 10.7893
+[torch.FloatTensor of size 5]
+</code></pre><pre><code>torch.normal(means, std=1.0, out=None)
+</code></pre><p>与上面函数类似，所有抽取的样本共享标准差。</p>
+<p>参数:</p>
+<ul>
+<li>means (Tensor) – 每个元素的均值</li>
+<li>std (float, optional) – 所有分布的标准差</li>
+<li>out (Tensor) – 可选的输出张量</li>
+</ul>
+<p>例子:</p>
+<pre><code>&gt;&gt;&gt; torch.normal(means=torch.arange(1, 6))
+
+ 1.1681
+ 2.8884
+ 3.7718
+ 2.5616
+ 4.2500
+[torch.FloatTensor of size 5]
+</code></pre><hr>
+<h2 id="序列化-Serialization"><a href="#序列化-Serialization" class="headerlink" title="序列化 Serialization"></a>序列化 Serialization</h2><h3 id="torch-saves-source"><a href="#torch-saves-source" class="headerlink" title="torch.saves[source]"></a>torch.saves<a href="http://pytorch.org/docs/_modules/torch/serialization.html#save" target="_blank" rel="noopener">[source]</a></h3><pre><code>torch.save(obj, f, pickle_module=&lt;module 'pickle' from '/home/jenkins/miniconda/lib/python3.5/pickle.py'&gt;, pickle_protocol=2)
+</code></pre><p>保存一个对象到一个硬盘文件上 参考: <a href="http://pytorch.org/docs/notes/serialization.html#recommend-saving-models" target="_blank" rel="noopener">Recommended approach for saving a model</a> 参数：</p>
+<ul>
+<li>obj – 保存对象</li>
+<li>f － 类文件对象 (返回文件描述符)或一个保存文件名的字符串</li>
+<li>pickle_module – 用于pickling元数据和对象的模块</li>
+<li>pickle_protocol – 指定pickle protocal 可以覆盖默认参数</li>
+</ul>
+<h3 id="torch-load-source"><a href="#torch-load-source" class="headerlink" title="torch.load[source]"></a>torch.load<a href="http://pytorch.org/docs/_modules/torch/serialization.html#load" target="_blank" rel="noopener">[source]</a></h3><pre><code>torch.load(f, map_location=None, pickle_module=&lt;module 'pickle' from '/home/jenkins/miniconda/lib/python3.5/pickle.py'&gt;)
+</code></pre><p>从磁盘文件中读取一个通过<code>torch.save()</code>保存的对象。 <code>torch.load()</code> 可通过参数<code>map_location</code> 动态地进行内存重映射，使其能从不动设备中读取文件。一般调用时，需两个参数: storage 和 location tag. 返回不同地址中的storage，或着返回None (此时地址可以通过默认方法进行解析). 如果这个参数是字典的话，意味着其是从文件的地址标记到当前系统的地址标记的映射。 默认情况下， location tags中 “cpu”对应host tensors，‘cuda:device_id’ (e.g. ‘cuda:2’) 对应cuda tensors。 用户可以通过register_package进行扩展，使用自己定义的标记和反序列化方法。</p>
+<p>参数:</p>
+<ul>
+<li>f – 类文件对象 (返回文件描述符)或一个保存文件名的字符串</li>
+<li>map_location – 一个函数或字典规定如何remap存储位置</li>
+<li>pickle_module – 用于unpickling元数据和对象的模块 (必须匹配序列化文件时的pickle_module )</li>
+</ul>
+<p>例子:</p>
+<pre><code>&gt;&gt;&gt; torch.load('tensors.pt')
+# Load all tensors onto the CPU
+&gt;&gt;&gt; torch.load('tensors.pt', map_location=lambda storage, loc: storage)
+# Map tensors from GPU 1 to GPU 0
+&gt;&gt;&gt; torch.load('tensors.pt', map_location={'cuda:1':'cuda:0'})
+</code></pre><h2 id="并行化-Parallelism"><a href="#并行化-Parallelism" class="headerlink" title="并行化 Parallelism"></a>并行化 Parallelism</h2><h3 id="torch-get-num-threads"><a href="#torch-get-num-threads" class="headerlink" title="torch.get_num_threads"></a>torch.get_num_threads</h3><pre><code>torch.get_num_threads() → int
+</code></pre><p>获得用于并行化CPU操作的OpenMP线程数</p>
+<hr>
+<h3 id="torch-set-num-threads"><a href="#torch-set-num-threads" class="headerlink" title="torch.set_num_threads"></a>torch.set_num_threads</h3><pre><code>torch.set_num_threads(int)
+</code></pre><p>设定用于并行化CPU操作的OpenMP线程数</p>
+<h1 id="数学操作Math-operations"><a href="#数学操作Math-operations" class="headerlink" title="数学操作Math operations"></a>数学操作Math operations</h1><h2 id="Pointwise-Ops"><a href="#Pointwise-Ops" class="headerlink" title="Pointwise Ops"></a>Pointwise Ops</h2><h3 id="torch-abs"><a href="#torch-abs" class="headerlink" title="torch.abs"></a>torch.abs</h3><pre><code>torch.abs(input, out=None) → Tensor
+</code></pre><p>计算输入张量的每个元素绝对值</p>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; torch.abs(torch.FloatTensor([-1, -2, 3]))
+FloatTensor([1, 2, 3])
+</code></pre><h3 id="torch-acos-input-out-None-→-Tensor"><a href="#torch-acos-input-out-None-→-Tensor" class="headerlink" title="torch.acos(input, out=None) → Tensor"></a>torch.acos(input, out=None) → Tensor</h3><pre><code>torch.acos(input, out=None) → Tensor
+</code></pre><p>返回一个新张量，包含输入张量每个元素的反余弦。 参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>out (<a href="http://pytorch.org/docs/tensors.html#torch.Tensor" target="_blank" rel="noopener">Tensor</a>, optional) – 结果张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(4)
+&gt;&gt;&gt; a
+
+-0.6366
+ 0.2718
+ 0.4469
+ 1.3122
+[torch.FloatTensor of size 4]
+
+&gt;&gt;&gt; torch.acos(a)
+ 2.2608
+ 1.2956
+ 1.1075
+    nan
+[torch.FloatTensor of size 4]
+</code></pre><h3 id="torch-add"><a href="#torch-add" class="headerlink" title="torch.add()"></a>torch.add()</h3><pre><code>torch.add(input, value, out=None)
+</code></pre><p>如果输入<code>input</code>是FloatTensor or DoubleTensor类型，则<code>value</code> 必须为实数，否则须为整数。【译注：似乎并非如此，无关输入类型，<code>value</code>取整数、实数皆可。】</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>value (Number) – 添加到输入每个元素的数</li>
+<li>out (Tensor, optional) – 结果张量</li>
+</ul>
+<pre><code>&gt;&gt;&gt; a = torch.randn(4)
+&gt;&gt;&gt; a
+
+ 0.4050
+-1.2227
+ 1.8688
+-0.4185
+[torch.FloatTensor of size 4]
+
+&gt;&gt;&gt; torch.add(a, 20)
+
+ 20.4050
+ 18.7773
+ 21.8688
+ 19.5815
+[torch.FloatTensor of size 4]
+</code></pre><pre><code>torch.add(input, value=1, other, out=None)
+</code></pre><p>两个张量 <code>input</code> and <code>other</code>的尺寸不需要匹配，但元素总数必须一样。</p>
+<p><strong>注意</strong> :当两个张量形状不匹配时，输入张量的形状会作为输出张量的尺寸。</p>
+<p>如果<code>other</code>是FloatTensor or DoubleTensor类型，则<code>value</code> 必须为实数，否则须为整数。【译注：似乎并非如此，无关输入类型，<code>value</code>取整数、实数皆可。】</p>
+<p>参数:</p>
+<ul>
+<li>input (Tensor) – 第一个输入张量</li>
+<li>value (Number) – 用于第二个张量的尺寸因子</li>
+<li>other (Tensor) – 第二个输入张量</li>
+<li>out (Tensor, optional) – 结果张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; import torch
+&gt;&gt;&gt; a = torch.randn(4)
+&gt;&gt;&gt; a
+
+-0.9310
+ 2.0330
+ 0.0852
+-0.2941
+[torch.FloatTensor of size 4]
+
+&gt;&gt;&gt; b = torch.randn(2, 2)
+&gt;&gt;&gt; b
+
+ 1.0663  0.2544
+-0.1513  0.0749
+[torch.FloatTensor of size 2x2]
+
+&gt;&gt;&gt; torch.add(a, 10, b)
+ 9.7322
+ 4.5770
+-1.4279
+ 0.4552
+[torch.FloatTensor of size 4]
+</code></pre><h3 id="torch-addcdiv"><a href="#torch-addcdiv" class="headerlink" title="torch.addcdiv"></a>torch.addcdiv</h3><pre><code>torch.addcdiv(tensor, value=1, tensor1, tensor2, out=None) → Tensor
+</code></pre><p>用<code>tensor2</code>对<code>tensor1</code>逐元素相除，然后乘以标量值<code>value</code> 并加到<code>tensor</code>。</p>
+<p>张量的形状不需要匹配，但元素数量必须一致。</p>
+<p>如果输入是FloatTensor or DoubleTensor类型，则<code>value</code> 必须为实数，否则须为整数。</p>
+<p>参数：</p>
+<ul>
+<li>tensor (Tensor) – 张量，对 tensor1 ./ tensor 进行相加</li>
+<li>value (Number, optional) – 标量，对 tensor1 ./ tensor2 进行相乘</li>
+<li>tensor1 (Tensor) – 张量，作为被除数(分子)</li>
+<li>tensor2 (Tensor) –张量，作为除数(分母)</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; t = torch.randn(2, 3)
+&gt;&gt;&gt; t1 = torch.randn(1, 6)
+&gt;&gt;&gt; t2 = torch.randn(6, 1)
+&gt;&gt;&gt; torch.addcdiv(t, 0.1, t1, t2)
+
+ 0.0122 -0.0188 -0.2354
+ 0.7396 -1.5721  1.2878
+[torch.FloatTensor of size 2x3]
+</code></pre><h3 id="torch-addcmul"><a href="#torch-addcmul" class="headerlink" title="torch.addcmul"></a>torch.addcmul</h3><pre><code>torch.addcmul(tensor, value=1, tensor1, tensor2, out=None) → Tensor
+</code></pre><p>用<code>tensor2</code>对<code>tensor1</code>逐元素相乘，并对结果乘以标量值<code>value</code>然后加到<code>tensor</code>。 张量的形状不需要匹配，但元素数量必须一致。 如果输入是FloatTensor or DoubleTensor类型，则<code>value</code> 必须为实数，否则须为整数。</p>
+<p>参数：</p>
+<ul>
+<li>tensor (Tensor) – 张量，对tensor1 ./ tensor 进行相加</li>
+<li>value (Number, optional) – 标量，对 tensor1 . tensor2 进行相乘</li>
+<li>tensor1 (Tensor) – 张量，作为乘子1</li>
+<li>tensor2 (Tensor) –张量，作为乘子2</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; t = torch.randn(2, 3)
+&gt;&gt;&gt; t1 = torch.randn(1, 6)
+&gt;&gt;&gt; t2 = torch.randn(6, 1)
+&gt;&gt;&gt; torch.addcmul(t, 0.1, t1, t2)
+
+ 0.0122 -0.0188 -0.2354
+ 0.7396 -1.5721  1.2878
+[torch.FloatTensor of size 2x3]
+</code></pre><h3 id="torch-asin"><a href="#torch-asin" class="headerlink" title="torch.asin"></a>torch.asin</h3><pre><code>torch.asin(input, out=None) → Tensor
+</code></pre><p>返回一个新张量，包含输入<code>input</code>张量每个元素的反正弦函数</p>
+<p>参数：</p>
+<ul>
+<li>tensor (Tensor) – 输入张量</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(4)
+&gt;&gt;&gt; a
+-0.6366
+ 0.2718
+ 0.4469
+ 1.3122
+[torch.FloatTensor of size 4]
+
+&gt;&gt;&gt; torch.asin(a)
+-0.6900
+ 0.2752
+ 0.4633
+    nan
+[torch.FloatTensor of size 4]
+</code></pre><h3 id="torch-atan"><a href="#torch-atan" class="headerlink" title="torch.atan"></a>torch.atan</h3><pre><code>torch.atan(input, out=None) → Tensor
+</code></pre><p>返回一个新张量，包含输入<code>input</code>张量每个元素的反正切函数</p>
+<p>参数：</p>
+<ul>
+<li>tensor (Tensor) – 输入张量</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(4)
+&gt;&gt;&gt; a
+-0.6366
+ 0.2718
+ 0.4469
+ 1.3122
+[torch.FloatTensor of size 4]
+
+&gt;&gt;&gt; torch.atan(a)
+-0.5669
+ 0.2653
+ 0.4203
+ 0.9196
+[torch.FloatTensor of size 4]
+</code></pre><h3 id="torch-atan2"><a href="#torch-atan2" class="headerlink" title="torch.atan2"></a>torch.atan2</h3><pre><code>torch.atan2(input1, input2, out=None) → Tensor
+</code></pre><p>返回一个新张量，包含两个输入张量<code>input1</code>和<code>input2</code>的反正切函数</p>
+<p>参数：</p>
+<ul>
+<li>input1 (Tensor) – 第一个输入张量</li>
+<li>input2 (Tensor) – 第二个输入张量</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(4)
+&gt;&gt;&gt; a
+-0.6366
+ 0.2718
+ 0.4469
+ 1.3122
+[torch.FloatTensor of size 4]
+
+&gt;&gt;&gt; torch.atan2(a, torch.randn(4))
+-2.4167
+ 2.9755
+ 0.9363
+ 1.6613
+[torch.FloatTensor of size 4]
+</code></pre><h3 id="torch-ceil"><a href="#torch-ceil" class="headerlink" title="torch.ceil"></a>torch.ceil</h3><pre><code>torch.ceil(input, out=None) → Tensor
+</code></pre><p>天井函数，对输入<code>input</code>张量每个元素向上取整, 即取不小于每个元素的最小整数，并返回结果到输出。</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(4)
+&gt;&gt;&gt; a
+
+ 1.3869
+ 0.3912
+-0.8634
+-0.5468
+[torch.FloatTensor of size 4]
+
+&gt;&gt;&gt; torch.ceil(a)
+
+ 2
+ 1
+-0
+-0
+[torch.FloatTensor of size 4]
+</code></pre><h3 id="torch-clamp"><a href="#torch-clamp" class="headerlink" title="torch.clamp"></a>torch.clamp</h3><pre><code>torch.clamp(input, min, max, out=None) → Tensor
+</code></pre><p>操作定义如下：</p>
+<pre><code>      | min, if x_i &lt; min
+y_i = | x_i, if min &lt;= x_i &lt;= max
+      | max, if x_i &gt; max
+</code></pre><p>如果输入是FloatTensor or DoubleTensor类型，则参数<code>min</code> <code>max</code> 必须为实数，否则须为整数。【译注：似乎并非如此，无关输入类型，<code>min</code>， <code>max</code>取整数、实数皆可。】</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>min (Number) – 限制范围下限</li>
+<li>max (Number) – 限制范围上限</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(4)
+&gt;&gt;&gt; a
+
+ 1.3869
+ 0.3912
+-0.8634
+-0.5468
+[torch.FloatTensor of size 4]
+
+&gt;&gt;&gt; torch.clamp(a, min=-0.5, max=0.5)
+
+ 0.5000
+ 0.3912
+-0.5000
+-0.5000
+[torch.FloatTensor of size 4]
+</code></pre><pre><code>torch.clamp(input, *, min, out=None) → Tensor
+</code></pre><p>将输入<code>input</code>张量每个元素的限制到不小于<code>min</code> ，并返回结果到一个新张量。</p>
+<p>如果输入是FloatTensor or DoubleTensor类型，则参数 <code>min</code> 必须为实数，否则须为整数。【译注：似乎并非如此，无关输入类型，<code>min</code>取整数、实数皆可。】</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>value (Number) – 限制范围下限</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(4)
+&gt;&gt;&gt; a
+
+ 1.3869
+ 0.3912
+-0.8634
+-0.5468
+[torch.FloatTensor of size 4]
+
+&gt;&gt;&gt; torch.clamp(a, min=0.5)
+
+ 1.3869
+ 0.5000
+ 0.5000
+ 0.5000
+[torch.FloatTensor of size 4]
+</code></pre><pre><code>torch.clamp(input, *, max, out=None) → Tensor
+</code></pre><p>将输入<code>input</code>张量每个元素的限制到不大于<code>max</code> ，并返回结果到一个新张量。</p>
+<p>如果输入是FloatTensor or DoubleTensor类型，则参数 <code>max</code> 必须为实数，否则须为整数。【译注：似乎并非如此，无关输入类型，<code>max</code>取整数、实数皆可。】</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>value (Number) – 限制范围上限</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(4)
+&gt;&gt;&gt; a
+
+ 1.3869
+ 0.3912
+-0.8634
+-0.5468
+[torch.FloatTensor of size 4]
+
+&gt;&gt;&gt; torch.clamp(a, max=0.5)
+
+ 0.5000
+ 0.3912
+-0.8634
+-0.5468
+[torch.FloatTensor of size 4]
+</code></pre><h3 id="torch-cos"><a href="#torch-cos" class="headerlink" title="torch.cos"></a>torch.cos</h3><pre><code>torch.cos(input, out=None) → Tensor
+</code></pre><p>返回一个新张量，包含输入<code>input</code>张量每个元素的余弦。</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(4)
+&gt;&gt;&gt; a
+-0.6366
+ 0.2718
+ 0.4469
+ 1.3122
+[torch.FloatTensor of size 4]
+
+&gt;&gt;&gt; torch.cos(a)
+ 0.8041
+ 0.9633
+ 0.9018
+ 0.2557
+[torch.FloatTensor of size 4]
+</code></pre><h3 id="torch-cosh"><a href="#torch-cosh" class="headerlink" title="torch.cosh"></a>torch.cosh</h3><pre><code>torch.cosh(input, out=None) → Tensor
+</code></pre><p>返回一个新张量，包含输入<code>input</code>张量每个元素的双曲余弦。</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(4)
+&gt;&gt;&gt; a
+-0.6366
+ 0.2718
+ 0.4469
+ 1.3122
+[torch.FloatTensor of size 4]
+
+&gt;&gt;&gt; torch.cosh(a)
+ 1.2095
+ 1.0372
+ 1.1015
+ 1.9917
+[torch.FloatTensor of size 4]
+</code></pre><h3 id="torch-div"><a href="#torch-div" class="headerlink" title="torch.div()"></a>torch.div()</h3><pre><code>torch.div(input, value, out=None)
+</code></pre><p>如果输入是FloatTensor or DoubleTensor类型，则参数 <code>value</code> 必须为实数，否则须为整数。【译注：似乎并非如此，无关输入类型，<code>value</code>取整数、实数皆可。】</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>value (Number) – 除数</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(5)
+&gt;&gt;&gt; a
+
+-0.6147
+-1.1237
+-0.1604
+-0.6853
+ 0.1063
+[torch.FloatTensor of size 5]
+
+&gt;&gt;&gt; torch.div(a, 0.5)
+
+-1.2294
+-2.2474
+-0.3208
+-1.3706
+ 0.2126
+[torch.FloatTensor of size 5]
+</code></pre><pre><code>torch.div(input, other, out=None)
+</code></pre><p>两张量形状不须匹配，但元素数须一致。</p>
+<p>注意：当形状不匹配时，<code>input</code>的形状作为输出张量的形状。</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 张量(分子)</li>
+<li>other (Tensor) – 张量(分母)</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(4,4)
+&gt;&gt;&gt; a
+
+-0.1810  0.4017  0.2863 -0.1013
+ 0.6183  2.0696  0.9012 -1.5933
+ 0.5679  0.4743 -0.0117 -0.1266
+-0.1213  0.9629  0.2682  1.5968
+[torch.FloatTensor of size 4x4]
+
+&gt;&gt;&gt; b = torch.randn(8, 2)
+&gt;&gt;&gt; b
+
+ 0.8774  0.7650
+ 0.8866  1.4805
+-0.6490  1.1172
+ 1.4259 -0.8146
+ 1.4633 -0.1228
+ 0.4643 -0.6029
+ 0.3492  1.5270
+ 1.6103 -0.6291
+[torch.FloatTensor of size 8x2]
+
+&gt;&gt;&gt; torch.div(a, b)
+
+-0.2062  0.5251  0.3229 -0.0684
+-0.9528  1.8525  0.6320  1.9559
+ 0.3881 -3.8625 -0.0253  0.2099
+-0.3473  0.6306  0.1666 -2.5381
+[torch.FloatTensor of size 4x4]
+</code></pre><h3 id="torch-exp"><a href="#torch-exp" class="headerlink" title="torch.exp"></a>torch.exp</h3><pre><code>torch.exp(tensor, out=None) → Tensor
+</code></pre><p>返回一个新张量，包含输入<code>input</code>张量每个元素的指数。</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<pre><code>&gt;&gt;&gt; torch.exp(torch.Tensor([0, math.log(2)]))
+torch.FloatTensor([1, 2])
+</code></pre><h3 id="torch-floor"><a href="#torch-floor" class="headerlink" title="torch.floor"></a>torch.floor</h3><pre><code>torch.floor(input, out=None) → Tensor
+</code></pre><p>床函数: 返回一个新张量，包含输入<code>input</code>张量每个元素的floor，即不小于元素的最大整数。</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(4)
+&gt;&gt;&gt; a
+
+ 1.3869
+ 0.3912
+-0.8634
+-0.5468
+[torch.FloatTensor of size 4]
+
+&gt;&gt;&gt; torch.floor(a)
+
+ 1
+ 0
+-1
+-1
+[torch.FloatTensor of size 4]
+</code></pre><h3 id="torch-fmod"><a href="#torch-fmod" class="headerlink" title="torch.fmod"></a>torch.fmod</h3><pre><code>torch.fmod(input, divisor, out=None) → Tensor
+</code></pre><p>计算除法余数。 除数与被除数可能同时含有整数和浮点数。此时，余数的正负与被除数相同。</p>
+<p>参数： - input (Tensor) – 被除数 - divisor (Tensor or float) – 除数，一个数或与被除数相同类型的张量 - out (Tensor, optional) – 输出张量</p>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; torch.fmod(torch.Tensor([-3, -2, -1, 1, 2, 3]), 2)
+torch.FloatTensor([-1, -0, -1, 1, 0, 1])
+&gt;&gt;&gt; torch.fmod(torch.Tensor([1, 2, 3, 4, 5]), 1.5)
+torch.FloatTensor([1.0, 0.5, 0.0, 1.0, 0.5])
+</code></pre><p>参考: <a href="http://pytorch.org/docs/torch.html#torch.remainder" target="_blank" rel="noopener"><code>torch.remainder()</code></a>, 计算逐元素余数， 相当于python 中的 % 操作符。</p>
+<h3 id="torch-frac"><a href="#torch-frac" class="headerlink" title="torch.frac"></a>torch.frac</h3><pre><code>torch.frac(tensor, out=None) → Tensor
+</code></pre><p>返回每个元素的分数部分。</p>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; torch.frac(torch.Tensor([1, 2.5, -3.2])
+torch.FloatTensor([0, 0.5, -0.2])
+</code></pre><h3 id="torch-lerp"><a href="#torch-lerp" class="headerlink" title="torch.lerp"></a>torch.lerp</h3><pre><code>torch.lerp(start, end, weight, out=None)
+</code></pre><p>参数：</p>
+<ul>
+<li>start (Tensor) – 起始点张量</li>
+<li>end (Tensor) – 终止点张量</li>
+<li>weight (float) – 插值公式的weight</li>
+<li>out (Tensor, optional) – 结果张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; start = torch.arange(1, 5)
+&gt;&gt;&gt; end = torch.Tensor(4).fill_(10)
+&gt;&gt;&gt; start
+
+ 1
+ 2
+ 3
+ 4
+[torch.FloatTensor of size 4]
+
+&gt;&gt;&gt; end
+
+ 10
+ 10
+ 10
+ 10
+[torch.FloatTensor of size 4]
+
+&gt;&gt;&gt; torch.lerp(start, end, 0.5)
+
+ 5.5000
+ 6.0000
+ 6.5000
+ 7.0000
+[torch.FloatTensor of size 4]
+</code></pre><h3 id="torch-log"><a href="#torch-log" class="headerlink" title="torch.log"></a>torch.log</h3><pre><code>torch.log(input, out=None) → Tensor
+</code></pre><p>计算<code>input</code> 的自然对数</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(5)
+&gt;&gt;&gt; a
+
+-0.4183
+ 0.3722
+-0.3091
+ 0.4149
+ 0.5857
+[torch.FloatTensor of size 5]
+
+&gt;&gt;&gt; torch.log(a)
+
+    nan
+-0.9883
+    nan
+-0.8797
+-0.5349
+[torch.FloatTensor of size 5]
+</code></pre><h3 id="torch-log1p"><a href="#torch-log1p" class="headerlink" title="torch.log1p"></a>torch.log1p</h3><pre><code>torch.log1p(input, out=None) → Tensor
+</code></pre><p>注意：对值比较小的输入，此函数比<code>torch.log()</code>更准确。</p>
+<p>如果输入是FloatTensor or DoubleTensor类型，则<code>value</code> 必须为实数，否则须为整数。</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(5)
+&gt;&gt;&gt; a
+
+-0.4183
+ 0.3722
+-0.3091
+ 0.4149
+ 0.5857
+[torch.FloatTensor of size 5]
+
+&gt;&gt;&gt; torch.log1p(a)
+
+-0.5418
+ 0.3164
+-0.3697
+ 0.3471
+ 0.4611
+[torch.FloatTensor of size 5]
+</code></pre><h3 id="torch-mul"><a href="#torch-mul" class="headerlink" title="torch.mul"></a>torch.mul</h3><pre><code>torch.mul(input, value, out=None)
+</code></pre><p>如果输入是FloatTensor or DoubleTensor类型，则<code>value</code> 必须为实数，否则须为整数。【译注：似乎并非如此，无关输入类型，<code>value</code>取整数、实数皆可。】</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>value (Number) – 乘到每个元素的数</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(3)
+&gt;&gt;&gt; a
+
+-0.9374
+-0.5254
+-0.6069
+[torch.FloatTensor of size 3]
+
+&gt;&gt;&gt; torch.mul(a, 100)
+
+-93.7411
+-52.5374
+-60.6908
+[torch.FloatTensor of size 3]
+</code></pre><pre><code>torch.mul(input, other, out=None)
+</code></pre><p>两计算张量形状不须匹配，但总元素数须一致。 <strong>注意</strong>：当形状不匹配时，<code>input</code>的形状作为输入张量的形状。</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 第一个相乘张量</li>
+<li>other (Tensor) – 第二个相乘张量</li>
+<li>out (Tensor, optional) – 结果张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(4,4)
+&gt;&gt;&gt; a
+
+-0.7280  0.0598 -1.4327 -0.5825
+-0.1427 -0.0690  0.0821 -0.3270
+-0.9241  0.5110  0.4070 -1.1188
+-0.8308  0.7426 -0.6240 -1.1582
+[torch.FloatTensor of size 4x4]
+
+&gt;&gt;&gt; b = torch.randn(2, 8)
+&gt;&gt;&gt; b
+
+ 0.0430 -1.0775  0.6015  1.1647 -0.6549  0.0308 -0.1670  1.0742
+-1.2593  0.0292 -0.0849  0.4530  1.2404 -0.4659 -0.1840  0.5974
+[torch.FloatTensor of size 2x8]
+
+&gt;&gt;&gt; torch.mul(a, b)
+
+-0.0313 -0.0645 -0.8618 -0.6784
+ 0.0934 -0.0021 -0.0137 -0.3513
+ 1.1638  0.0149 -0.0346 -0.5068
+-1.0304 -0.3460  0.1148 -0.6919
+[torch.FloatTensor of size 4x4]
+</code></pre><h3 id="torch-neg"><a href="#torch-neg" class="headerlink" title="torch.neg"></a>torch.neg</h3><pre><code>torch.neg(input, out=None) → Tensor
+</code></pre><p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(5)
+&gt;&gt;&gt; a
+
+-0.4430
+ 1.1690
+-0.8836
+-0.4565
+ 0.2968
+[torch.FloatTensor of size 5]
+
+&gt;&gt;&gt; torch.neg(a)
+
+ 0.4430
+-1.1690
+ 0.8836
+ 0.4565
+-0.2968
+[torch.FloatTensor of size 5]
+</code></pre><h3 id="torch-pow"><a href="#torch-pow" class="headerlink" title="torch.pow"></a>torch.pow</h3><pre><code>torch.pow(input, exponent, out=None)
+</code></pre><p>对输入<code>input</code>的按元素求<code>exponent</code>次幂值，并返回结果张量。 幂值<code>exponent</code> 可以为单一 <code>float</code> 数或者与<code>input</code>相同元素数的张量。</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>exponent (float or Tensor) – 幂值</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(4)
+&gt;&gt;&gt; a
+
+-0.5274
+-0.8232
+-2.1128
+ 1.7558
+[torch.FloatTensor of size 4]
+
+&gt;&gt;&gt; torch.pow(a, 2)
+
+ 0.2781
+ 0.6776
+ 4.4640
+ 3.0829
+[torch.FloatTensor of size 4]
+
+&gt;&gt;&gt; exp = torch.arange(1, 5)
+&gt;&gt;&gt; a = torch.arange(1, 5)
+&gt;&gt;&gt; a
+
+ 1
+ 2
+ 3
+ 4
+[torch.FloatTensor of size 4]
+
+&gt;&gt;&gt; exp
+
+ 1
+ 2
+ 3
+ 4
+[torch.FloatTensor of size 4]
+
+&gt;&gt;&gt; torch.pow(a, exp)
+
+   1
+   4
+  27
+ 256
+[torch.FloatTensor of size 4]
+</code></pre><pre><code>torch.pow(base, input, out=None)
+</code></pre><p><code>base</code> 为标量浮点值,<code>input</code>为张量， 返回的输出张量 <code>out</code> 与输入张量相同形状。</p>
+<p>参数：</p>
+<ul>
+<li>base (float) – 标量值，指数的底</li>
+<li>input ( Tensor) – 幂值</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; exp = torch.arange(1, 5)
+&gt;&gt;&gt; base = 2
+&gt;&gt;&gt; torch.pow(base, exp)
+
+  2
+  4
+  8
+ 16
+[torch.FloatTensor of size 4]
+</code></pre><h3 id="torch-reciprocal"><a href="#torch-reciprocal" class="headerlink" title="torch.reciprocal"></a>torch.reciprocal</h3><pre><code>torch.reciprocal(input, out=None) → Tensor
+</code></pre><p>返回一个新张量，包含输入<code>input</code>张量每个元素的倒数，即 1.0/x。</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(4)
+&gt;&gt;&gt; a
+
+ 1.3869
+ 0.3912
+-0.8634
+-0.5468
+[torch.FloatTensor of size 4]
+
+&gt;&gt;&gt; torch.reciprocal(a)
+
+ 0.7210
+ 2.5565
+-1.1583
+-1.8289
+[torch.FloatTensor of size 4]
+</code></pre><h3 id="torch-remainder"><a href="#torch-remainder" class="headerlink" title="torch.remainder"></a>torch.remainder</h3><pre><code>torch.remainder(input, divisor, out=None) → Tensor
+</code></pre><p>返回一个新张量，包含输入<code>input</code>张量每个元素的除法余数。 除数与被除数可能同时包含整数或浮点数。余数与除数有相同的符号。</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 被除数</li>
+<li>divisor (Tensor or float) – 除数，一个数或者与除数相同大小的张量</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; torch.remainder(torch.Tensor([-3, -2, -1, 1, 2, 3]), 2)
+torch.FloatTensor([1, 0, 1, 1, 0, 1])
+&gt;&gt;&gt; torch.remainder(torch.Tensor([1, 2, 3, 4, 5]), 1.5)
+torch.FloatTensor([1.0, 0.5, 0.0, 1.0, 0.5])
+</code></pre><p><strong>参考</strong>: 函数<code>torch.fmod()</code> 同样可以计算除法余数，相当于 C 的 库函数<code>fmod()</code></p>
+<h3 id="torch-round"><a href="#torch-round" class="headerlink" title="torch.round"></a>torch.round</h3><pre><code>torch.round(input, out=None) → Tensor
+</code></pre><p>返回一个新张量，将输入<code>input</code>张量每个元素舍入到最近的整数。</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(4)
+&gt;&gt;&gt; a
+
+ 1.2290
+ 1.3409
+-0.5662
+-0.0899
+[torch.FloatTensor of size 4]
+
+&gt;&gt;&gt; torch.round(a)
+
+ 1
+ 1
+-1
+-0
+[torch.FloatTensor of size 4]
+</code></pre><h3 id="torch-rsqrt"><a href="#torch-rsqrt" class="headerlink" title="torch.rsqrt"></a>torch.rsqrt</h3><pre><code>torch.rsqrt(input, out=None) → Tensor
+</code></pre><p>返回一个新张量，包含输入<code>input</code>张量每个元素的平方根倒数。</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(4)
+&gt;&gt;&gt; a
+
+ 1.2290
+ 1.3409
+-0.5662
+-0.0899
+[torch.FloatTensor of size 4]
+
+&gt;&gt;&gt; torch.rsqrt(a)
+
+ 0.9020
+ 0.8636
+    nan
+    nan
+[torch.FloatTensor of size 4]
+</code></pre><h3 id="torch-sigmoid"><a href="#torch-sigmoid" class="headerlink" title="torch.sigmoid"></a>torch.sigmoid</h3><pre><code>torch.sigmoid(input, out=None) → Tensor
+</code></pre><p>返回一个新张量，包含输入<code>input</code>张量每个元素的sigmoid值。</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(4)
+&gt;&gt;&gt; a
+
+-0.4972
+ 1.3512
+ 0.1056
+-0.2650
+[torch.FloatTensor of size 4]
+
+&gt;&gt;&gt; torch.sigmoid(a)
+
+ 0.3782
+ 0.7943
+ 0.5264
+ 0.4341
+[torch.FloatTensor of size 4]
+</code></pre><h3 id="torch-sign"><a href="#torch-sign" class="headerlink" title="torch.sign"></a>torch.sign</h3><pre><code>torch.sign(input, out=None) → Tensor
+</code></pre><p>符号函数：返回一个新张量，包含输入<code>input</code>张量每个元素的正负。</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(4)
+&gt;&gt;&gt; a
+-0.6366
+ 0.2718
+ 0.4469
+ 1.3122
+[torch.FloatTensor of size 4]
+
+&gt;&gt;&gt; torch.sign(a)
+
+-1
+ 1
+ 1
+ 1
+[torch.FloatTensor of size 4]
+</code></pre><h3 id="torch-sin"><a href="#torch-sin" class="headerlink" title="torch.sin"></a>torch.sin</h3><pre><code>torch.sin(input, out=None) → Tensor
+</code></pre><p>返回一个新张量，包含输入<code>input</code>张量每个元素的正弦。</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(4)
+&gt;&gt;&gt; a
+-0.6366
+ 0.2718
+ 0.4469
+ 1.3122
+[torch.FloatTensor of size 4]
+
+&gt;&gt;&gt; torch.sin(a)
+-0.5944
+ 0.2684
+ 0.4322
+ 0.9667
+[torch.FloatTensor of size 4]
+</code></pre><h3 id="torch-sinh"><a href="#torch-sinh" class="headerlink" title="torch.sinh"></a>torch.sinh</h3><pre><code>torch.sinh(input, out=None) → Tensor
+</code></pre><p>返回一个新张量，包含输入<code>input</code>张量每个元素的双曲正弦。</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(4)
+&gt;&gt;&gt; a
+-0.6366
+ 0.2718
+ 0.4469
+ 1.3122
+[torch.FloatTensor of size 4]
+
+&gt;&gt;&gt; torch.sinh(a)
+-0.6804
+ 0.2751
+ 0.4619
+ 1.7225
+[torch.FloatTensor of size 4]
+</code></pre><h3 id="torch-sqrt"><a href="#torch-sqrt" class="headerlink" title="torch.sqrt"></a>torch.sqrt</h3><pre><code>torch.sqrt(input, out=None) → Tensor
+</code></pre><p>返回一个新张量，包含输入<code>input</code>张量每个元素的平方根。</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(4)
+&gt;&gt;&gt; a
+
+ 1.2290
+ 1.3409
+-0.5662
+-0.0899
+[torch.FloatTensor of size 4]
+
+&gt;&gt;&gt; torch.sqrt(a)
+
+ 1.1086
+ 1.1580
+    nan
+    nan
+[torch.FloatTensor of size 4]
+</code></pre><h3 id="torch-tan"><a href="#torch-tan" class="headerlink" title="torch.tan"></a>torch.tan</h3><pre><code>torch.tan(input, out=None) → Tensor
+</code></pre><p>返回一个新张量，包含输入<code>input</code>张量每个元素的正切。</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(4)
+&gt;&gt;&gt; a
+-0.6366
+ 0.2718
+ 0.4469
+ 1.3122
+[torch.FloatTensor of size 4]
+
+&gt;&gt;&gt; torch.tan(a)
+-0.7392
+ 0.2786
+ 0.4792
+ 3.7801
+[torch.FloatTensor of size 4]
+</code></pre><h3 id="torch-tanh"><a href="#torch-tanh" class="headerlink" title="torch.tanh"></a>torch.tanh</h3><pre><code>torch.tanh(input, out=None) → Tensor
+</code></pre><p>返回一个新张量，包含输入<code>input</code>张量每个元素的双曲正切。</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(4)
+&gt;&gt;&gt; a
+-0.6366
+ 0.2718
+ 0.4469
+ 1.3122
+[torch.FloatTensor of size 4]
+
+&gt;&gt;&gt; torch.tanh(a)
+-0.5625
+ 0.2653
+ 0.4193
+ 0.8648
+[torch.FloatTensor of size 4]
+</code></pre><h3 id="torch-trunc"><a href="#torch-trunc" class="headerlink" title="torch.trunc"></a>torch.trunc</h3><pre><code>torch.trunc(input, out=None) → Tensor
+</code></pre><p>返回一个新张量，包含输入<code>input</code>张量每个元素的截断值(标量x的截断值是最接近其的整数，其比x更接近零。简而言之，有符号数的小数部分被舍弃)。</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(4)
+&gt;&gt;&gt; a
+
+-0.4972
+ 1.3512
+ 0.1056
+-0.2650
+[torch.FloatTensor of size 4]
+
+&gt;&gt;&gt; torch.trunc(a)
+
+-0
+ 1
+ 0
+-0
+[torch.FloatTensor of size 4]
+</code></pre><h2 id="Reduction-Ops"><a href="#Reduction-Ops" class="headerlink" title="Reduction Ops"></a>Reduction Ops</h2><h3 id="torch-cumprod"><a href="#torch-cumprod" class="headerlink" title="torch.cumprod"></a>torch.cumprod</h3><pre><code>torch.cumprod(input, dim, out=None) → Tensor
+</code></pre><p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>dim (int) – 累积积操作的维度</li>
+<li>out (Tensor, optional) – 结果张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(10)
+&gt;&gt;&gt; a
+
+ 1.1148
+ 1.8423
+ 1.4143
+-0.4403
+ 1.2859
+-1.2514
+-0.4748
+ 1.1735
+-1.6332
+-0.4272
+[torch.FloatTensor of size 10]
+
+&gt;&gt;&gt; torch.cumprod(a, dim=0)
+
+ 1.1148
+ 2.0537
+ 2.9045
+-1.2788
+-1.6444
+ 2.0578
+-0.9770
+-1.1466
+ 1.8726
+-0.8000
+[torch.FloatTensor of size 10]
+
+&gt;&gt;&gt; a[5] = 0.0
+&gt;&gt;&gt; torch.cumprod(a, dim=0)
+
+ 1.1148
+ 2.0537
+ 2.9045
+-1.2788
+-1.6444
+-0.0000
+ 0.0000
+ 0.0000
+-0.0000
+ 0.0000
+[torch.FloatTensor of size 10]
+</code></pre><h3 id="torch-cumsum"><a href="#torch-cumsum" class="headerlink" title="torch.cumsum"></a>torch.cumsum</h3><pre><code>torch.cumsum(input, dim, out=None) → Tensor
+</code></pre><p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>dim (int) – 累积和操作的维度</li>
+<li>out (Tensor, optional) – 结果张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(10)
+&gt;&gt;&gt; a
+
+-0.6039
+-0.2214
+-0.3705
+-0.0169
+ 1.3415
+-0.1230
+ 0.9719
+ 0.6081
+-0.1286
+ 1.0947
+[torch.FloatTensor of size 10]
+
+&gt;&gt;&gt; torch.cumsum(a, dim=0)
+
+-0.6039
+-0.8253
+-1.1958
+-1.2127
+ 0.1288
+ 0.0058
+ 0.9777
+ 1.5858
+ 1.4572
+ 2.5519
+[torch.FloatTensor of size 10]
+</code></pre><hr>
+<h3 id="torch-dist"><a href="#torch-dist" class="headerlink" title="torch.dist"></a>torch.dist</h3><pre><code>torch.dist(input, other, p=2, out=None) → Tensor
+</code></pre><p>返回 (<code>input</code> - <code>other</code>) 的 <code>p</code>范数 。</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>other (Tensor) – 右侧输入张量</li>
+<li>p (float, optional) – 所计算的范数</li>
+<li>out (Tensor, optional) – 结果张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; x = torch.randn(4)
+&gt;&gt;&gt; x
+
+ 0.2505
+-0.4571
+-0.3733
+ 0.7807
+[torch.FloatTensor of size 4]
+
+&gt;&gt;&gt; y = torch.randn(4)
+&gt;&gt;&gt; y
+
+ 0.7782
+-0.5185
+ 1.4106
+-2.4063
+[torch.FloatTensor of size 4]
+
+&gt;&gt;&gt; torch.dist(x, y, 3.5)
+3.302832063224223
+&gt;&gt;&gt; torch.dist(x, y, 3)
+3.3677282206393286
+&gt;&gt;&gt; torch.dist(x, y, 0)
+inf
+&gt;&gt;&gt; torch.dist(x, y, 1)
+5.560028076171875
+</code></pre><h3 id="torch-mean"><a href="#torch-mean" class="headerlink" title="torch.mean"></a>torch.mean</h3><pre><code>torch.mean(input) → float
+</code></pre><p>返回输入张量所有元素的均值。</p>
+<p>参数： input (Tensor) – 输入张量</p>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(1, 3)
+&gt;&gt;&gt; a
+
+-0.2946 -0.9143  2.1809
+[torch.FloatTensor of size 1x3]
+
+&gt;&gt;&gt; torch.mean(a)
+0.32398951053619385
+</code></pre><pre><code>torch.mean(input, dim, out=None) → Tensor
+</code></pre><p>返回输入张量给定维度<code>dim</code>上每行的均值。</p>
+<p>输出形状与输入相同，除了给定维度上为1.</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>dim (int) – the dimension to reduce</li>
+<li>out (Tensor, optional) – 结果张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(4, 4)
+&gt;&gt;&gt; a
+
+-1.2738 -0.3058  0.1230 -1.9615
+ 0.8771 -0.5430 -0.9233  0.9879
+ 1.4107  0.0317 -0.6823  0.2255
+-1.3854  0.4953 -0.2160  0.2435
+[torch.FloatTensor of size 4x4]
+
+&gt;&gt;&gt; torch.mean(a, 1)
+
+-0.8545
+ 0.0997
+ 0.2464
+-0.2157
+[torch.FloatTensor of size 4x1]
+</code></pre><h3 id="torch-median"><a href="#torch-median" class="headerlink" title="torch.median"></a>torch.median</h3><pre><code>torch.median(input, dim=-1, values=None, indices=None) -&gt; (Tensor, LongTensor)
+</code></pre><p>返回输入张量给定维度每行的中位数，同时返回一个包含中位数的索引的<code>LongTensor</code>。</p>
+<p><code>dim</code>值默认为输入张量的最后一维。 输出形状与输入相同，除了给定维度上为1.</p>
+<p><em>注意</em>: 这个函数还没有在<code>torch.cuda.Tensor</code>中定义</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>dim (int) – 缩减的维度</li>
+<li>values (Tensor, optional) – 结果张量</li>
+<li>indices (Tensor, optional) – 返回的索引结果张量</li>
+</ul>
+<pre><code>&gt;&gt;&gt; a
+
+ -0.6891 -0.6662
+ 0.2697  0.7412
+ 0.5254 -0.7402
+ 0.5528 -0.2399
+[torch.FloatTensor of size 4x2]
+
+&gt;&gt;&gt; a = torch.randn(4, 5)
+&gt;&gt;&gt; a
+
+ 0.4056 -0.3372  1.0973 -2.4884  0.4334
+ 2.1336  0.3841  0.1404 -0.1821 -0.7646
+-0.2403  1.3975 -2.0068  0.1298  0.0212
+-1.5371 -0.7257 -0.4871 -0.2359 -1.1724
+[torch.FloatTensor of size 4x5]
+
+&gt;&gt;&gt; torch.median(a, 1)
+(
+ 0.4056
+ 0.1404
+ 0.0212
+-0.7257
+[torch.FloatTensor of size 4x1]
+,
+ 0
+ 2
+ 4
+ 1
+[torch.LongTensor of size 4x1]
+)
+</code></pre><h3 id="torch-mode"><a href="#torch-mode" class="headerlink" title="torch.mode"></a>torch.mode</h3><pre><code>torch.mode(input, dim=-1, values=None, indices=None) -&gt; (Tensor, LongTensor)
+</code></pre><p>返回给定维<code>dim</code>上，每行的众数值。 同时返回一个<code>LongTensor</code>，包含众数职的索引。<code>dim</code>值默认为输入张量的最后一维。</p>
+<p>输出形状与输入相同，除了给定维度上为1.</p>
+<p><em>注意</em>: 这个函数还没有在<code>torch.cuda.Tensor</code>中定义</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>dim (int) – 缩减的维度</li>
+<li>values (Tensor, optional) – 结果张量</li>
+<li>indices (Tensor, optional) – 返回的索引张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a
+
+ -0.6891 -0.6662
+ 0.2697  0.7412
+ 0.5254 -0.7402
+ 0.5528 -0.2399
+[torch.FloatTensor of size 4x2]
+
+&gt;&gt;&gt; a = torch.randn(4, 5)
+&gt;&gt;&gt; a
+
+ 0.4056 -0.3372  1.0973 -2.4884  0.4334
+ 2.1336  0.3841  0.1404 -0.1821 -0.7646
+-0.2403  1.3975 -2.0068  0.1298  0.0212
+-1.5371 -0.7257 -0.4871 -0.2359 -1.1724
+[torch.FloatTensor of size 4x5]
+
+&gt;&gt;&gt; torch.mode(a, 1)
+(
+-2.4884
+-0.7646
+-2.0068
+-1.5371
+[torch.FloatTensor of size 4x1]
+,
+ 3
+ 4
+ 2
+ 0
+[torch.LongTensor of size 4x1]
+)
+</code></pre><h3 id="torch-norm"><a href="#torch-norm" class="headerlink" title="torch.norm"></a>torch.norm</h3><pre><code>torch.norm(input, p=2) → float
+</code></pre><p>返回输入张量<code>input</code> 的p 范数。</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>p (float,optional) – 范数计算中的幂指数值</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(1, 3)
+&gt;&gt;&gt; a
+
+-0.4376 -0.5328  0.9547
+[torch.FloatTensor of size 1x3]
+
+&gt;&gt;&gt; torch.norm(a, 3)
+1.0338925067372466
+</code></pre><pre><code>torch.norm(input, p, dim, out=None) → Tensor
+</code></pre><p>返回输入张量给定维<code>dim</code> 上每行的p 范数。 输出形状与输入相同，除了给定维度上为1.</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>p (float) – 范数计算中的幂指数值</li>
+<li>dim (int) – 缩减的维度</li>
+<li>out (Tensor, optional) – 结果张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(4, 2)
+&gt;&gt;&gt; a
+
+-0.6891 -0.6662
+ 0.2697  0.7412
+ 0.5254 -0.7402
+ 0.5528 -0.2399
+[torch.FloatTensor of size 4x2]
+
+&gt;&gt;&gt; torch.norm(a, 2, 1)
+
+ 0.9585
+ 0.7888
+ 0.9077
+ 0.6026
+[torch.FloatTensor of size 4x1]
+
+&gt;&gt;&gt; torch.norm(a, 0, 1)
+
+ 2
+ 2
+ 2
+ 2
+[torch.FloatTensor of size 4x1]
+</code></pre><h3 id="torch-prod"><a href="#torch-prod" class="headerlink" title="torch.prod"></a>torch.prod</h3><pre><code>torch.prod(input) → float
+</code></pre><p>返回输入张量<code>input</code> 所有元素的积。</p>
+<p>参数：input (Tensor) – 输入张量</p>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(1, 3)
+&gt;&gt;&gt; a
+
+ 0.6170  0.3546  0.0253
+[torch.FloatTensor of size 1x3]
+
+&gt;&gt;&gt; torch.prod(a)
+0.005537458061418483
+</code></pre><pre><code>torch.prod(input, dim, out=None) → Tensor
+</code></pre><p>返回输入张量给定维度上每行的积。 输出形状与输入相同，除了给定维度上为1.</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>dim (int) – 缩减的维度</li>
+<li>out (Tensor, optional) – 结果张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(4, 2)
+&gt;&gt;&gt; a
+
+ 0.1598 -0.6884
+-0.1831 -0.4412
+-0.9925 -0.6244
+-0.2416 -0.8080
+[torch.FloatTensor of size 4x2]
+
+&gt;&gt;&gt; torch.prod(a, 1)
+
+-0.1100
+ 0.0808
+ 0.6197
+ 0.1952
+[torch.FloatTensor of size 4x1]
+</code></pre><h3 id="torch-std"><a href="#torch-std" class="headerlink" title="torch.std"></a>torch.std</h3><pre><code>torch.std(input) → float
+</code></pre><p>返回输入张量<code>input</code> 所有元素的标准差。</p>
+<p>参数：- input (Tensor) – 输入张量</p>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(1, 3)
+&gt;&gt;&gt; a
+
+-1.3063  1.4182 -0.3061
+[torch.FloatTensor of size 1x3]
+
+&gt;&gt;&gt; torch.std(a)
+1.3782334731508061
+</code></pre><pre><code>torch.std(input, dim, out=None) → Tensor
+</code></pre><p>返回输入张量给定维度上每行的标准差。 输出形状与输入相同，除了给定维度上为1.</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>dim (int) – 缩减的维度</li>
+<li>out (Tensor, optional) – 结果张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(4, 4)
+&gt;&gt;&gt; a
+
+ 0.1889 -2.4856  0.0043  1.8169
+-0.7701 -0.4682 -2.2410  0.4098
+ 0.1919 -1.1856 -1.0361  0.9085
+ 0.0173  1.0662  0.2143 -0.5576
+[torch.FloatTensor of size 4x4]
+
+&gt;&gt;&gt; torch.std(a, dim=1)
+
+ 1.7756
+ 1.1025
+ 1.0045
+ 0.6725
+[torch.FloatTensor of size 4x1]
+</code></pre><h3 id="torch-sum"><a href="#torch-sum" class="headerlink" title="torch.sum"></a>torch.sum</h3><pre><code>torch.sum(input) → float
+</code></pre><p>返回输入张量<code>input</code> 所有元素的和。</p>
+<p>输出形状与输入相同，除了给定维度上为1.</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(1, 3)
+&gt;&gt;&gt; a
+
+ 0.6170  0.3546  0.0253
+[torch.FloatTensor of size 1x3]
+
+&gt;&gt;&gt; torch.sum(a)
+0.9969287421554327
+</code></pre><pre><code>torch.sum(input, dim, out=None) → Tensor
+</code></pre><p>返回输入张量给定维度上每行的和。 输出形状与输入相同，除了给定维度上为1.</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>dim (int) – 缩减的维度</li>
+<li>out (Tensor, optional) – 结果张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(4, 4)
+&gt;&gt;&gt; a
+
+-0.4640  0.0609  0.1122  0.4784
+-1.3063  1.6443  0.4714 -0.7396
+-1.3561 -0.1959  1.0609 -1.9855
+ 2.6833  0.5746 -0.5709 -0.4430
+[torch.FloatTensor of size 4x4]
+
+&gt;&gt;&gt; torch.sum(a, 1)
+
+ 0.1874
+ 0.0698
+-2.4767
+ 2.2440
+[torch.FloatTensor of size 4x1]
+</code></pre><h3 id="torch-var"><a href="#torch-var" class="headerlink" title="torch.var"></a>torch.var</h3><pre><code>torch.var(input) → float
+</code></pre><p>返回输入张量所有元素的方差</p>
+<p>输出形状与输入相同，除了给定维度上为1.</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(1, 3)
+&gt;&gt;&gt; a
+
+-1.3063  1.4182 -0.3061
+[torch.FloatTensor of size 1x3]
+
+&gt;&gt;&gt; torch.var(a)
+1.899527506513334
+</code></pre><pre><code>torch.var(input, dim, out=None) → Tensor
+</code></pre><p>返回输入张量给定维度上每行的方差。 输出形状与输入相同，除了给定维度上为1.</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>dim (int) – the dimension to reduce</li>
+<li>out (Tensor, optional) – 结果张量 例子：</li>
+</ul>
+<pre><code>&gt;&gt;&gt; a = torch.randn(4, 4)
+&gt;&gt;&gt; a
+
+-1.2738 -0.3058  0.1230 -1.9615
+ 0.8771 -0.5430 -0.9233  0.9879
+ 1.4107  0.0317 -0.6823  0.2255
+-1.3854  0.4953 -0.2160  0.2435
+[torch.FloatTensor of size 4x4]
+
+&gt;&gt;&gt; torch.var(a, 1)
+
+ 0.8859
+ 0.9509
+ 0.7548
+ 0.6949
+[torch.FloatTensor of size 4x1]
+</code></pre><h2 id="比较操作-Comparison-Ops"><a href="#比较操作-Comparison-Ops" class="headerlink" title="比较操作 Comparison Ops"></a>比较操作 Comparison Ops</h2><h3 id="torch-eq"><a href="#torch-eq" class="headerlink" title="torch.eq"></a>torch.eq</h3><pre><code>torch.eq(input, other, out=None) → Tensor
+</code></pre><p>比较元素相等性。第二个参数可为一个数或与第一个参数同类型形状的张量。</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 待比较张量</li>
+<li>other (Tensor or float) – 比较张量或数</li>
+<li>out (Tensor, optional) – 输出张量，须为 ByteTensor类型 or 与<code>input</code>同类型</li>
+</ul>
+<p>返回值： 一个 <code>torch.ByteTensor</code> 张量，包含了每个位置的比较结果(相等为1，不等为0 )</p>
+<p>返回类型： Tensor</p>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; torch.eq(torch.Tensor([[1, 2], [3, 4]]), torch.Tensor([[1, 1], [4, 4]]))
+1  0
+0  1
+[torch.ByteTensor of size 2x2]
+</code></pre><h3 id="torch-equal"><a href="#torch-equal" class="headerlink" title="torch.equal"></a>torch.equal</h3><pre><code>torch.equal(tensor1, tensor2) → bool
+</code></pre><p>如果两个张量有相同的形状和元素值，则返回<code>True</code> ，否则 <code>False</code>。</p>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; torch.equal(torch.Tensor([1, 2]), torch.Tensor([1, 2]))
+True
+</code></pre><h3 id="torch-ge"><a href="#torch-ge" class="headerlink" title="torch.ge"></a>torch.ge</h3><pre><code>torch.ge(input, other, out=None) → Tensor
+</code></pre><p>如果两个张量有相同的形状和元素值，则返回<code>True</code> ，否则 <code>False</code>。 第二个参数可以为一个数或与第一个参数相同形状和类型的张量</p>
+<p>参数:</p>
+<ul>
+<li>input (Tensor) – 待对比的张量</li>
+<li>other (Tensor or float) – 对比的张量或<code>float</code>值</li>
+<li>out (Tensor, optional) – 输出张量。必须为<code>ByteTensor</code>或者与第一个参数<code>tensor</code>相同类型。</li>
+</ul>
+<p>返回值： 一个 <code>torch.ByteTensor</code> 张量，包含了每个位置的比较结果(是否 input &gt;= other )。 返回类型： Tensor</p>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; torch.ge(torch.Tensor([[1, 2], [3, 4]]), torch.Tensor([[1, 1], [4, 4]]))
+ 1  1
+ 0  1
+[torch.ByteTensor of size 2x2]
+</code></pre><h3 id="torch-gt"><a href="#torch-gt" class="headerlink" title="torch.gt"></a>torch.gt</h3><pre><code>torch.gt(input, other, out=None) → Tensor
+</code></pre><p>参数:</p>
+<ul>
+<li>input (Tensor) – 要对比的张量</li>
+<li>other (Tensor or float) – 要对比的张量或<code>float</code>值</li>
+<li>out (Tensor, optional) – 输出张量。必须为<code>ByteTensor</code>或者与第一个参数<code>tensor</code>相同类型。</li>
+</ul>
+<p>返回值： 一个 <code>torch.ByteTensor</code> 张量，包含了每个位置的比较结果(是否 input &gt;= other )。 返回类型： Tensor</p>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; torch.gt(torch.Tensor([[1, 2], [3, 4]]), torch.Tensor([[1, 1], [4, 4]]))
+ 0  1
+ 0  0
+[torch.ByteTensor of size 2x2]
+</code></pre><h3 id="torch-kthvalue"><a href="#torch-kthvalue" class="headerlink" title="torch.kthvalue"></a>torch.kthvalue</h3><pre><code>torch.kthvalue(input, k, dim=None, out=None) -&gt; (Tensor, LongTensor)
+</code></pre><p>取输入张量<code>input</code>指定维上第k 个最小值。如果不指定<code>dim</code>，则默认为<code>input</code>的最后一维。</p>
+<p>返回一个元组 <em>(values,indices)</em>，其中<code>indices</code>是原始输入张量<code>input</code>中沿<code>dim</code>维的第 <code>k</code> 个最小值下标。</p>
+<p>参数:</p>
+<ul>
+<li>input (Tensor) – 要对比的张量</li>
+<li>k (int) – 第 <code>k</code> 个最小值</li>
+<li>dim (int, optional) – 沿着此维进行排序</li>
+<li>out (tuple, optional) – 输出元组 (Tensor, LongTensor) 可选地给定作为 输出 buffers</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; x = torch.arange(1, 6)
+&gt;&gt;&gt; x
+
+ 1
+ 2
+ 3
+ 4
+ 5
+[torch.FloatTensor of size 5]
+
+&gt;&gt;&gt; torch.kthvalue(x, 4)
+(
+ 4
+[torch.FloatTensor of size 1]
+,
+ 3
+[torch.LongTensor of size 1]
+)
+</code></pre><h3 id="torch-le"><a href="#torch-le" class="headerlink" title="torch.le"></a>torch.le</h3><pre><code>torch.le(input, other, out=None) → Tensor
+</code></pre><p>参数:</p>
+<ul>
+<li>input (Tensor) – 要对比的张量</li>
+<li>other (Tensor or float ) – 对比的张量或<code>float</code>值</li>
+<li>out (Tensor, optional) – 输出张量。必须为<code>ByteTensor</code>或者与第一个参数<code>tensor</code>相同类型。</li>
+</ul>
+<p>返回值： 一个 <code>torch.ByteTensor</code> 张量，包含了每个位置的比较结果(是否 input &gt;= other )。 返回类型： Tensor</p>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; torch.le(torch.Tensor([[1, 2], [3, 4]]), torch.Tensor([[1, 1], [4, 4]]))
+ 1  0
+ 1  1
+[torch.ByteTensor of size 2x2]
+</code></pre><h3 id="torch-lt"><a href="#torch-lt" class="headerlink" title="torch.lt"></a>torch.lt</h3><pre><code>torch.lt(input, other, out=None) → Tensor
+</code></pre><p>第二个参数可以为一个数或与第一个参数相同形状和类型的张量</p>
+<p>参数:</p>
+<ul>
+<li>input (Tensor) – 要对比的张量</li>
+<li>other (Tensor or float ) – 对比的张量或<code>float</code>值</li>
+<li>out (Tensor, optional) – 输出张量。必须为<code>ByteTensor</code>或者与第一个参数<code>tensor</code>相同类型。</li>
+</ul>
+<p>input： 一个 <code>torch.ByteTensor</code> 张量，包含了每个位置的比较结果(是否 tensor &gt;= other )。 返回类型： Tensor</p>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; torch.lt(torch.Tensor([[1, 2], [3, 4]]), torch.Tensor([[1, 1], [4, 4]]))
+ 0  0
+ 1  0
+[torch.ByteTensor of size 2x2]
+</code></pre><h3 id="torch-max"><a href="#torch-max" class="headerlink" title="torch.max"></a>torch.max</h3><pre><code>torch.max()
+</code></pre><p>返回输入张量所有元素的最大值。</p>
+<p>参数:</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(1, 3)
+&gt;&gt;&gt; a
+
+ 0.4729 -0.2266 -0.2085
+[torch.FloatTensor of size 1x3]
+
+&gt;&gt;&gt; torch.max(a)
+0.4729
+</code></pre><pre><code>torch.max(input, dim, max=None, max_indices=None) -&gt; (Tensor, LongTensor)
+</code></pre><p>返回输入张量给定维度上每行的最大值，并同时返回每个最大值的位置索引。</p>
+<p>输出形状中，将<code>dim</code>维设定为1，其它与输入形状保持一致。</p>
+<p>参数:</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>dim (int) – 指定的维度</li>
+<li>max (Tensor, optional) – 结果张量，包含给定维度上的最大值</li>
+<li>max_indices (LongTensor, optional) – 结果张量，包含给定维度上每个最大值的位置索引</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt; a = torch.randn(4, 4)
+&gt;&gt; a
+
+0.0692  0.3142  1.2513 -0.5428
+0.9288  0.8552 -0.2073  0.6409
+1.0695 -0.0101 -2.4507 -1.2230
+0.7426 -0.7666  0.4862 -0.6628
+torch.FloatTensor of size 4x4]
+
+&gt;&gt;&gt; torch.max(a, 1)
+(
+ 1.2513
+ 0.9288
+ 1.0695
+ 0.7426
+[torch.FloatTensor of size 4x1]
+,
+ 2
+ 0
+ 0
+ 0
+[torch.LongTensor of size 4x1]
+)
+</code></pre><pre><code>torch.max(input, other, out=None) → Tensor
+</code></pre><p>输出形状中，将<code>dim</code>维设定为1，其它与输入形状保持一致。</p>
+<p>参数:</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>other (Tensor) – 输出张量</li>
+<li>out (Tensor, optional) – 结果张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(4)
+&gt;&gt;&gt; a
+
+ 1.3869
+ 0.3912
+-0.8634
+-0.5468
+[torch.FloatTensor of size 4]
+
+&gt;&gt;&gt; b = torch.randn(4)
+&gt;&gt;&gt; b
+
+ 1.0067
+-0.8010
+ 0.6258
+ 0.3627
+[torch.FloatTensor of size 4]
+
+&gt;&gt;&gt; torch.max(a, b)
+
+ 1.3869
+ 0.3912
+ 0.6258
+ 0.3627
+[torch.FloatTensor of size 4]
+</code></pre><h3 id="torch-min"><a href="#torch-min" class="headerlink" title="torch.min"></a>torch.min</h3><pre><code>torch.min(input) → float
+</code></pre><p>返回输入张量所有元素的最小值。</p>
+<p>参数: input (Tensor) – 输入张量</p>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(1, 3)
+&gt;&gt;&gt; a
+
+ 0.4729 -0.2266 -0.2085
+[torch.FloatTensor of size 1x3]
+
+&gt;&gt;&gt; torch.min(a)
+-0.22663167119026184
+</code></pre><pre><code>torch.min(input, dim, min=None, min_indices=None) -&gt; (Tensor, LongTensor)
+</code></pre><p>返回输入张量给定维度上每行的最小值，并同时返回每个最小值的位置索引。</p>
+<p>输出形状中，将<code>dim</code>维设定为1，其它与输入形状保持一致。</p>
+<p>参数:</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>dim (int) – 指定的维度</li>
+<li>min (Tensor, optional) – 结果张量，包含给定维度上的最小值</li>
+<li>min_indices (LongTensor, optional) – 结果张量，包含给定维度上每个最小值的位置索引</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt; a = torch.randn(4, 4)
+&gt;&gt; a
+
+0.0692  0.3142  1.2513 -0.5428
+0.9288  0.8552 -0.2073  0.6409
+1.0695 -0.0101 -2.4507 -1.2230
+0.7426 -0.7666  0.4862 -0.6628
+torch.FloatTensor of size 4x4]
+
+&gt;&gt; torch.min(a, 1)
+
+0.5428
+0.2073
+2.4507
+0.7666
+torch.FloatTensor of size 4x1]
+
+3
+2
+2
+1
+torch.LongTensor of size 4x1]
+</code></pre><pre><code>torch.min(input, other, out=None) → Tensor
+</code></pre><p>两张量形状不需匹配，但元素数须相同。</p>
+<p>注意：当形状不匹配时，<code>input</code>的形状作为返回张量的形状。</p>
+<p>参数:</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>other (Tensor) – 第二个输入张量</li>
+<li>out (Tensor, optional) – 结果张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(4)
+&gt;&gt;&gt; a
+
+ 1.3869
+ 0.3912
+-0.8634
+-0.5468
+[torch.FloatTensor of size 4]
+
+&gt;&gt;&gt; b = torch.randn(4)
+&gt;&gt;&gt; b
+
+ 1.0067
+-0.8010
+ 0.6258
+ 0.3627
+[torch.FloatTensor of size 4]
+
+&gt;&gt;&gt; torch.min(a, b)
+
+ 1.0067
+-0.8010
+-0.8634
+-0.5468
+[torch.FloatTensor of size 4]
+</code></pre><h3 id="torch-ne"><a href="#torch-ne" class="headerlink" title="torch.ne"></a>torch.ne</h3><pre><code>torch.ne(input, other, out=None) → Tensor
+</code></pre><p>参数:</p>
+<ul>
+<li>input (Tensor) – 待对比的张量</li>
+<li>other (Tensor or float) – 对比的张量或<code>float</code>值</li>
+<li>out (Tensor, optional) – 输出张量。必须为<code>ByteTensor</code>或者与<code>input</code>相同类型。</li>
+</ul>
+<p>返回值： 一个 <code>torch.ByteTensor</code> 张量，包含了每个位置的比较结果 (如果 tensor != other 为<code>True</code> ，返回<code>1</code>)。</p>
+<p>返回类型： Tensor</p>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; torch.ne(torch.Tensor([[1, 2], [3, 4]]), torch.Tensor([[1, 1], [4, 4]]))
+ 0  1
+ 1  0
+[torch.ByteTensor of size 2x2]
+</code></pre><h3 id="torch-sort"><a href="#torch-sort" class="headerlink" title="torch.sort"></a>torch.sort</h3><pre><code>torch.sort(input, dim=None, descending=False, out=None) -&gt; (Tensor, LongTensor)
+</code></pre><p>对输入张量<code>input</code>沿着指定维按升序排序。如果不给定<code>dim</code>，则默认为输入的最后一维。如果指定参数<code>descending</code>为<code>True</code>，则按降序排序</p>
+<p>返回元组 (sorted_tensor, sorted_indices) ， <code>sorted_indices</code> 为原始输入中的下标。</p>
+<p>参数:</p>
+<ul>
+<li>input (Tensor) – 要对比的张量</li>
+<li>dim (int, optional) – 沿着此维排序</li>
+<li>descending (bool, optional) – 布尔值，控制升降排序</li>
+<li>out (tuple, optional) – 输出张量。必须为<code>ByteTensor</code>或者与第一个参数<code>tensor</code>相同类型。</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; x = torch.randn(3, 4)
+&gt;&gt;&gt; sorted, indices = torch.sort(x)
+&gt;&gt;&gt; sorted
+
+-1.6747  0.0610  0.1190  1.4137
+-1.4782  0.7159  1.0341  1.3678
+-0.3324 -0.0782  0.3518  0.4763
+[torch.FloatTensor of size 3x4]
+
+&gt;&gt;&gt; indices
+
+ 0  1  3  2
+ 2  1  0  3
+ 3  1  0  2
+[torch.LongTensor of size 3x4]
+
+&gt;&gt;&gt; sorted, indices = torch.sort(x, 0)
+&gt;&gt;&gt; sorted
+
+-1.6747 -0.0782 -1.4782 -0.3324
+ 0.3518  0.0610  0.4763  0.1190
+ 1.0341  0.7159  1.4137  1.3678
+[torch.FloatTensor of size 3x4]
+
+&gt;&gt;&gt; indices
+
+ 0  2  1  2
+ 2  0  2  0
+ 1  1  0  1
+[torch.LongTensor of size 3x4]
+</code></pre><h3 id="torch-topk"><a href="#torch-topk" class="headerlink" title="torch.topk"></a>torch.topk</h3><pre><code>torch.topk(input, k, dim=None, largest=True, sorted=True, out=None) -&gt; (Tensor, LongTensor)
+</code></pre><p>沿给定<code>dim</code>维度返回输入张量<code>input</code>中 <code>k</code> 个最大值。 如果不指定<code>dim</code>，则默认为<code>input</code>的最后一维。 如果为<code>largest</code>为 <code>False</code> ，则返回最小的 <code>k</code> 个值。</p>
+<p>返回一个元组 <em>(values,indices)</em>，其中<code>indices</code>是原始输入张量<code>input</code>中测元素下标。 如果设定布尔值<code>sorted</code> 为_True_，将会确保返回的 <code>k</code> 个值被排序。</p>
+<p>参数:</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>k (int) – “top-k”中的<code>k</code></li>
+<li>dim (int, optional) – 排序的维</li>
+<li>largest (bool, optional) – 布尔值，控制返回最大或最小值</li>
+<li>sorted (bool, optional) – 布尔值，控制返回值是否排序</li>
+<li>out (tuple, optional) – 可选输出张量 (Tensor, LongTensor) output buffers</li>
+</ul>
+<pre><code>&gt;&gt;&gt; x = torch.arange(1, 6)
+&gt;&gt;&gt; x
+
+ 1
+ 2
+ 3
+ 4
+ 5
+[torch.FloatTensor of size 5]
+
+&gt;&gt;&gt; torch.topk(x, 3)
+(
+ 5
+ 4
+ 3
+[torch.FloatTensor of size 3]
+,
+ 4
+ 3
+ 2
+[torch.LongTensor of size 3]
+)
+&gt;&gt;&gt; torch.topk(x, 3, 0, largest=False)
+(
+ 1
+ 2
+ 3
+[torch.FloatTensor of size 3]
+,
+ 0
+ 1
+ 2
+[torch.LongTensor of size 3]
+)
+</code></pre><h2 id="其它操作-Other-Operations"><a href="#其它操作-Other-Operations" class="headerlink" title="其它操作 Other Operations"></a>其它操作 Other Operations</h2><h3 id="torch-cross"><a href="#torch-cross" class="headerlink" title="torch.cross"></a>torch.cross</h3><pre><code>torch.cross(input, other, dim=-1, out=None) → Tensor
+</code></pre><p>返回沿着维度<code>dim</code>上，两个张量<code>input</code>和<code>other</code>的向量积（叉积）。 <code>input</code>和<code>other</code> 必须有相同的形状，且指定的<code>dim</code>维上size必须为<code>3</code>。</p>
+<p>如果不指定<code>dim</code>，则默认为第一个尺度为<code>3</code>的维。</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>other (Tensor) – 第二个输入张量</li>
+<li>dim (int, optional) – 沿着此维进行叉积操作</li>
+<li>out (Tensor,optional) – 结果张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(4, 3)
+&gt;&gt;&gt; a
+
+-0.6652 -1.0116 -0.6857
+ 0.2286  0.4446 -0.5272
+ 0.0476  0.2321  1.9991
+ 0.6199  1.1924 -0.9397
+[torch.FloatTensor of size 4x3]
+
+&gt;&gt;&gt; b = torch.randn(4, 3)
+&gt;&gt;&gt; b
+
+-0.1042 -1.1156  0.1947
+ 0.9947  0.1149  0.4701
+-1.0108  0.8319 -0.0750
+ 0.9045 -1.3754  1.0976
+[torch.FloatTensor of size 4x3]
+
+&gt;&gt;&gt; torch.cross(a, b, dim=1)
+
+-0.9619  0.2009  0.6367
+ 0.2696 -0.6318 -0.4160
+-1.6805 -2.0171  0.2741
+ 0.0163 -1.5304 -1.9311
+[torch.FloatTensor of size 4x3]
+
+&gt;&gt;&gt; torch.cross(a, b)
+
+-0.9619  0.2009  0.6367
+ 0.2696 -0.6318 -0.4160
+-1.6805 -2.0171  0.2741
+ 0.0163 -1.5304 -1.9311
+[torch.FloatTensor of size 4x3]
+</code></pre><h3 id="torch-diag"><a href="#torch-diag" class="headerlink" title="torch.diag"></a>torch.diag</h3><pre><code>torch.diag(input, diagonal=0, out=None) → Tensor
+</code></pre><ul>
+<li>如果输入是一个向量(1D 张量)，则返回一个以<code>input</code>为对角线元素的2D方阵</li>
+<li>如果输入是一个矩阵(2D 张量)，则返回一个包含<code>input</code>对角线元素的1D张量</li>
+</ul>
+<p>参数<code>diagonal</code>指定对角线:</p>
+<ul>
+<li><code>diagonal</code> = 0, 主对角线</li>
+<li><code>diagonal</code> &gt; 0, 主对角线之上</li>
+<li><code>diagonal</code> &lt; 0, 主对角线之下</li>
+</ul>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>diagonal (int, optional) – 指定对角线</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<p>例子：</p>
+<ul>
+<li>取得以<code>input</code>为对角线的方阵：</li>
+</ul>
+<pre><code>&gt;&gt;&gt; a = torch.randn(3)
+&gt;&gt;&gt; a
+
+ 1.0480
+-2.3405
+-1.1138
+[torch.FloatTensor of size 3]
+
+&gt;&gt;&gt; torch.diag(a)
+
+ 1.0480  0.0000  0.0000
+ 0.0000 -2.3405  0.0000
+ 0.0000  0.0000 -1.1138
+[torch.FloatTensor of size 3x3]
+
+&gt;&gt;&gt; torch.diag(a, 1)
+
+ 0.0000  1.0480  0.0000  0.0000
+ 0.0000  0.0000 -2.3405  0.0000
+ 0.0000  0.0000  0.0000 -1.1138
+ 0.0000  0.0000  0.0000  0.0000
+[torch.FloatTensor of size 4x4]
+</code></pre><ul>
+<li>取得给定矩阵第<code>k</code>个对角线:</li>
+</ul>
+<pre><code>&gt;&gt;&gt; a = torch.randn(3, 3)
+&gt;&gt;&gt; a
+
+-1.5328 -1.3210 -1.5204
+ 0.8596  0.0471 -0.2239
+-0.6617  0.0146 -1.0817
+[torch.FloatTensor of size 3x3]
+
+&gt;&gt;&gt; torch.diag(a, 0)
+
+-1.5328
+ 0.0471
+-1.0817
+[torch.FloatTensor of size 3]
+
+&gt;&gt;&gt; torch.diag(a, 1)
+
+-1.3210
+-0.2239
+[torch.FloatTensor of size 2]
+</code></pre><h3 id="torch-histc"><a href="#torch-histc" class="headerlink" title="torch.histc"></a>torch.histc</h3><pre><code>torch.histc(input, bins=100, min=0, max=0, out=None) → Tensor
+</code></pre><p>计算输入张量的直方图。以<code>min</code>和<code>max</code>为range边界，将其均分成<code>bins</code>个直条，然后将排序好的数据划分到各个直条(bins)中。如果<code>min</code>和<code>max</code>都为0, 则利用数据中的最大最小值作为边界。</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>bins (int) – 直方图 bins(直条)的个数(默认100个)</li>
+<li>min (int) – range的下边界(包含)</li>
+<li>max (int) – range的上边界(包含)</li>
+<li>out (Tensor, optional) – 结果张量</li>
+</ul>
+<p>返回： 直方图 返回类型：张量</p>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; torch.histc(torch.FloatTensor([1, 2, 1]), bins=4, min=0, max=3)
+FloatTensor([0, 2, 1, 0])
+</code></pre><h3 id="torch-renorm"><a href="#torch-renorm" class="headerlink" title="torch.renorm"></a>torch.renorm</h3><pre><code>torch.renorm(input, p, dim, maxnorm, out=None) → Tensor
+</code></pre><p>返回一个张量，包含规范化后的各个子张量，使得沿着<code>dim</code>维划分的各子张量的p范数小于<code>maxnorm</code>。</p>
+<p><strong>注意</strong> 如果p范数的值小于<code>maxnorm</code>，则当前子张量不需要修改。</p>
+<p><strong>注意</strong>: 更详细解释参考<a href="http://torch7.readthedocs.io/en/rtd/maths/" target="_blank" rel="noopener">torch7</a> 以及<a href="https://arxiv.org/pdf/1207.0580.pdf" target="_blank" rel="noopener">Hinton et al. 2012, p. 2</a></p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>p (float) – 范数的p</li>
+<li>dim (int) – 沿着此维切片，得到张量子集</li>
+<li>maxnorm (float) – 每个子张量的范数的最大值</li>
+<li>out (Tensor, optional) – 结果张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; x = torch.ones(3, 3)
+&gt;&gt;&gt; x[1].fill_(2)
+&gt;&gt;&gt; x[2].fill_(3)
+&gt;&gt;&gt; x
+
+ 1  1  1
+ 2  2  2
+ 3  3  3
+[torch.FloatTensor of size 3x3]
+
+&gt;&gt;&gt; torch.renorm(x, 1, 0, 5)
+
+ 1.0000  1.0000  1.0000
+ 1.6667  1.6667  1.6667
+ 1.6667  1.6667  1.6667
+[torch.FloatTensor of size 3x3]
+</code></pre><h3 id="torch-trace"><a href="#torch-trace" class="headerlink" title="torch.trace"></a>torch.trace</h3><pre><code>torch.trace(input) → float
+</code></pre><p>返回输入2维矩阵对角线元素的和(迹)</p>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; x = torch.arange(1, 10).view(3, 3)
+&gt;&gt;&gt; x
+
+ 1  2  3
+ 4  5  6
+ 7  8  9
+[torch.FloatTensor of size 3x3]
+
+&gt;&gt;&gt; torch.trace(x)
+15.0
+</code></pre><h3 id="torch-tril"><a href="#torch-tril" class="headerlink" title="torch.tril"></a>torch.tril</h3><pre><code>torch.tril(input, k=0, out=None) → Tensor
+</code></pre><p>返回一个张量<code>out</code>，包含输入矩阵(2D张量)的下三角部分，<code>out</code>其余部分被设为<code>0</code>。这里所说的下三角部分为矩阵指定对角线<code>diagonal</code>之上的元素。</p>
+<p>参数<code>k</code>控制对角线: - <code>k</code> = 0, 主对角线 - <code>k</code> &gt; 0, 主对角线之上 - <code>k</code> &lt; 0, 主对角线之下</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>k (int, optional) – 指定对角线</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(3,3)
+&gt;&gt;&gt; a
+
+ 1.3225  1.7304  1.4573
+-0.3052 -0.3111 -0.1809
+ 1.2469  0.0064 -1.6250
+[torch.FloatTensor of size 3x3]
+
+&gt;&gt;&gt; torch.tril(a)
+
+ 1.3225  0.0000  0.0000
+-0.3052 -0.3111  0.0000
+ 1.2469  0.0064 -1.6250
+[torch.FloatTensor of size 3x3]
+
+&gt;&gt;&gt; torch.tril(a, k=1)
+
+ 1.3225  1.7304  0.0000
+-0.3052 -0.3111 -0.1809
+ 1.2469  0.0064 -1.6250
+[torch.FloatTensor of size 3x3]
+
+&gt;&gt;&gt; torch.tril(a, k=-1)
+
+ 0.0000  0.0000  0.0000
+-0.3052  0.0000  0.0000
+ 1.2469  0.0064  0.0000
+[torch.FloatTensor of size 3x3]
+</code></pre><h3 id="torch-triu"><a href="#torch-triu" class="headerlink" title="torch.triu"></a>torch.triu</h3><pre><code>torch.triu(input, k=0, out=None) → Tensor
+</code></pre><p>返回一个张量，包含输入矩阵(2D张量)的上三角部分，其余部分被设为<code>0</code>。这里所说的上三角部分为矩阵指定对角线<code>diagonal</code>之上的元素。</p>
+<p>参数<code>k</code>控制对角线: - <code>k</code> = 0, 主对角线 - <code>k</code> &gt; 0, 主对角线之上 - <code>k</code> &lt; 0, 主对角线之下</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入张量</li>
+<li>k (int, optional) – 指定对角线</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.randn(3,3)
+&gt;&gt;&gt; a
+
+ 1.3225  1.7304  1.4573
+-0.3052 -0.3111 -0.1809
+ 1.2469  0.0064 -1.6250
+[torch.FloatTensor of size 3x3]
+
+&gt;&gt;&gt; torch.triu(a)
+
+ 1.3225  1.7304  1.4573
+ 0.0000 -0.3111 -0.1809
+ 0.0000  0.0000 -1.6250
+[torch.FloatTensor of size 3x3]
+
+&gt;&gt;&gt; torch.triu(a, k=1)
+
+ 0.0000  1.7304  1.4573
+ 0.0000  0.0000 -0.1809
+ 0.0000  0.0000  0.0000
+[torch.FloatTensor of size 3x3]
+
+&gt;&gt;&gt; torch.triu(a, k=-1)
+
+ 1.3225  1.7304  1.4573
+-0.3052 -0.3111 -0.1809
+ 0.0000  0.0064 -1.6250
+[torch.FloatTensor of size 3x3]
+</code></pre><h2 id="BLAS-and-LAPACK-Operations"><a href="#BLAS-and-LAPACK-Operations" class="headerlink" title="BLAS and LAPACK Operations"></a>BLAS and LAPACK Operations</h2><h3 id="torch-addbmm"><a href="#torch-addbmm" class="headerlink" title="torch.addbmm"></a>torch.addbmm</h3><pre><code>torch.addbmm(beta=1, mat, alpha=1, batch1, batch2, out=None) → Tensor
+</code></pre><p>对类型为 <em>FloatTensor</em> 或 <em>DoubleTensor</em> 的输入，<code>alpha</code>and <code>beta</code>必须为实数，否则两个参数须为整数。</p>
+<p>参数：</p>
+<ul>
+<li>beta (Number, optional) – 用于<code>mat</code>的乘子</li>
+<li>mat (Tensor) – 相加矩阵</li>
+<li>batch1 (Tensor) – 第一批相乘矩阵</li>
+<li>batch2 (Tensor) – 第二批相乘矩阵</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<p>例子:</p>
+<pre><code>&gt;&gt;&gt; M = torch.randn(3, 5)
+&gt;&gt;&gt; batch1 = torch.randn(10, 3, 4)
+&gt;&gt;&gt; batch2 = torch.randn(10, 4, 5)
+&gt;&gt;&gt; torch.addbmm(M, batch1, batch2)
+
+ -3.1162  11.0071   7.3102   0.1824  -7.6892
+  1.8265   6.0739   0.4589  -0.5641  -5.4283
+ -9.3387  -0.1794  -1.2318  -6.8841  -4.7239
+[torch.FloatTensor of size 3x5]
+</code></pre><h3 id="torch-addmm"><a href="#torch-addmm" class="headerlink" title="torch.addmm"></a>torch.addmm</h3><pre><code>torch.addmm(beta=1, mat, alpha=1, mat1, mat2, out=None) → Tensor
+</code></pre><p>对类型为 <em>FloatTensor</em> 或 <em>DoubleTensor</em> 的输入，<code>beta</code>and <code>alpha</code>必须为实数，否则两个参数须为整数。</p>
+<p>参数 ：</p>
+<ul>
+<li><p>beta (Number, optional) – 用于<code>mat</code>的乘子</p>
+</li>
+<li><p>mat (Tensor) – 相加矩阵</p>
+</li>
+<li><p>mat1 (Tensor) – 第一个相乘矩阵</p>
+</li>
+<li><p>mat2 (Tensor) – 第二个相乘矩阵</p>
+</li>
+<li><p>out (Tensor, optional) – 输出张量</p>
+</li>
+</ul>
+<pre><code>&gt;&gt;&gt; M = torch.randn(2, 3)
+&gt;&gt;&gt; mat1 = torch.randn(2, 3)
+&gt;&gt;&gt; mat2 = torch.randn(3, 3)
+&gt;&gt;&gt; torch.addmm(M, mat1, mat2)
+
+-0.4095 -1.9703  1.3561
+ 5.7674 -4.9760  2.7378
+[torch.FloatTensor of size 2x3]
+</code></pre><h3 id="torch-addmv"><a href="#torch-addmv" class="headerlink" title="torch.addmv"></a>torch.addmv</h3><pre><code>torch.addmv(beta=1, tensor, alpha=1, mat, vec, out=None) → Tensor
+</code></pre><p>对类型为_FloatTensor_或_DoubleTensor_的输入，<code>alpha</code>and <code>beta</code>必须为实数，否则两个参数须为整数。</p>
+<p>参数 ：</p>
+<ul>
+<li>beta (Number, optional) – 用于<code>mat</code>的乘子</li>
+<li>mat (Tensor) – 相加矩阵</li>
+<li>mat (Tensor) – 相乘矩阵</li>
+<li>vec (Tensor) – 相乘向量</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<pre><code>&gt;&gt;&gt; M = torch.randn(2)
+&gt;&gt;&gt; mat = torch.randn(2, 3)
+&gt;&gt;&gt; vec = torch.randn(3)
+&gt;&gt;&gt; torch.addmv(M, mat, vec)
+
+-2.0939
+-2.2950
+[torch.FloatTensor of size 2]
+</code></pre><h3 id="torch-addr"><a href="#torch-addr" class="headerlink" title="torch.addr"></a>torch.addr</h3><pre><code>torch.addr(beta=1, mat, alpha=1, vec1, vec2, out=None) → Tensor
+</code></pre><p>对类型为_FloatTensor_或_DoubleTensor_的输入，<code>alpha</code>and <code>beta</code>必须为实数，否则两个参数须为整数。</p>
+<p>参数 ：</p>
+<ul>
+<li>beta (Number, optional) – 用于<code>mat</code>的乘子</li>
+<li>mat (Tensor) – 相加矩阵</li>
+<li>vec1 (Tensor) – 第一个相乘向量</li>
+<li>vec2 (Tensor) – 第二个相乘向量</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<pre><code>&gt;&gt;&gt; vec1 = torch.arange(1, 4)
+&gt;&gt;&gt; vec2 = torch.arange(1, 3)
+&gt;&gt;&gt; M = torch.zeros(3, 2)
+&gt;&gt;&gt; torch.addr(M, vec1, vec2)
+ 1  2
+ 2  4
+ 3  6
+[torch.FloatTensor of size 3x2]
+</code></pre><h3 id="torch-baddbmm"><a href="#torch-baddbmm" class="headerlink" title="torch.baddbmm"></a>torch.baddbmm</h3><pre><code>torch.baddbmm(beta=1, mat, alpha=1, batch1, batch2, out=None) → Tensor
+</code></pre><p>对类型为_FloatTensor_或_DoubleTensor_的输入，<code>alpha</code>and <code>beta</code>必须为实数，否则两个参数须为整数。</p>
+<p>参数：</p>
+<ul>
+<li>beta (Number, optional) – 用于<code>mat</code>的乘子</li>
+<li>mat (Tensor) – 相加矩阵</li>
+<li>batch1 (Tensor) – 第一批相乘矩阵</li>
+<li>batch2 (Tensor) – 第二批相乘矩阵</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<pre><code>&gt;&gt;&gt; M = torch.randn(10, 3, 5)
+&gt;&gt;&gt; batch1 = torch.randn(10, 3, 4)
+&gt;&gt;&gt; batch2 = torch.randn(10, 4, 5)
+&gt;&gt;&gt; torch.baddbmm(M, batch1, batch2).size()
+torch.Size([10, 3, 5])
+</code></pre><h3 id="torch-bmm"><a href="#torch-bmm" class="headerlink" title="torch.bmm"></a>torch.bmm</h3><pre><code>torch.bmm(batch1, batch2, out=None) → Tensor
+</code></pre><p>对类型为 <em>FloatTensor</em> 或 <em>DoubleTensor</em> 的输入，<code>alpha</code>and <code>beta</code>必须为实数，否则两个参数须为整数。</p>
+<p>参数：</p>
+<ul>
+<li>batch1 (Tensor) – 第一批相乘矩阵</li>
+<li>batch2 (Tensor) – 第二批相乘矩阵</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<pre><code>&gt;&gt;&gt; batch1 = torch.randn(10, 3, 4)
+&gt;&gt;&gt; batch2 = torch.randn(10, 4, 5)
+&gt;&gt;&gt; res = torch.bmm(batch1, batch2)
+&gt;&gt;&gt; res.size()
+torch.Size([10, 3, 5])
+</code></pre><h3 id="torch-btrifact"><a href="#torch-btrifact" class="headerlink" title="torch.btrifact"></a>torch.btrifact</h3><pre><code>torch.btrifact(A, info=None) → Tensor, IntTensor
+</code></pre><p>返回一个元组，包含LU 分解和<code>pivots</code> 。 可选参数<code>info</code>决定是否对每个minibatch样本进行分解。<code>info</code> are from dgetrf and a non-zero value indicates an error occurred. 如果用CUDA的话，这个值来自于CUBLAS，否则来自LAPACK。</p>
+<p>参数： A (Tensor) – 待分解张量</p>
+<pre><code>&gt;&gt;&gt; A = torch.randn(2, 3, 3)
+&gt;&gt;&gt; A_LU = A.btrifact()
+</code></pre><h3 id="torch-btrisolve"><a href="#torch-btrisolve" class="headerlink" title="torch.btrisolve"></a>torch.btrisolve</h3><pre><code>torch.btrisolve(b, LU_data, LU_pivots) → Tensor
+</code></pre><p>参数：</p>
+<ul>
+<li>b (Tensor) – RHS 张量.</li>
+<li>LU_data (Tensor) – Pivoted LU factorization of A from btrifact.</li>
+<li>LU_pivots (IntTensor) – LU 分解的Pivots.</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; A = torch.randn(2, 3, 3)
+&gt;&gt;&gt; b = torch.randn(2, 3)
+&gt;&gt;&gt; A_LU = torch.btrifact(A)
+&gt;&gt;&gt; x = b.btrisolve(*A_LU)
+&gt;&gt;&gt; torch.norm(A.bmm(x.unsqueeze(2)) - b)
+6.664001874625056e-08
+</code></pre><h3 id="torch-dot"><a href="#torch-dot" class="headerlink" title="torch.dot"></a>torch.dot</h3><pre><code>torch.dot(tensor1, tensor2) → float
+</code></pre><p>计算两个张量的点乘(内乘),两个张量都为1-D 向量.</p>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; torch.dot(torch.Tensor([2, 3]), torch.Tensor([2, 1]))
+7.0
+</code></pre><h3 id="torch-eig"><a href="#torch-eig" class="headerlink" title="torch.eig"></a>torch.eig</h3><pre><code>torch.eig(a, eigenvectors=False, out=None) -&gt; (Tensor, Tensor)
+</code></pre><p>计算实方阵<code>a</code> 的特征值和特征向量</p>
+<p>参数：</p>
+<ul>
+<li>a (Tensor) – 方阵，待计算其特征值和特征向量</li>
+<li>eigenvectors (bool) – 布尔值，如果<code>True</code>，则同时计算特征值和特征向量，否则只计算特征值。</li>
+<li>out (tuple, optional) – 输出元组</li>
+</ul>
+<p>返回值： 元组，包括：</p>
+<ul>
+<li>e (Tensor): a 的右特征向量</li>
+<li>v (Tensor): 如果<code>eigenvectors</code>为<code>True</code>，则为包含特征向量的张量; 否则为空张量</li>
+</ul>
+<p>返回值类型： (Tensor, Tensor)</p>
+<h3 id="torch-gels"><a href="#torch-gels" class="headerlink" title="torch.gels"></a>torch.gels</h3><pre><code>torch.gels(B, A, out=None) → Tensor
+</code></pre><p>注意： 返回矩阵总是被转置，无论输入矩阵的原始布局如何，总会被转置；即，总是有 stride (1, m) 而不是 (m, 1).</p>
+<p>参数：</p>
+<ul>
+<li>B (Tensor) – 矩阵B</li>
+<li>out (tuple, optional) – 输出元组</li>
+</ul>
+<p>返回值： 元组，包括：</p>
+<ul>
+<li>X (Tensor): 最小二乘解</li>
+<li>qr (Tensor): QR 分解的细节</li>
+</ul>
+<p>返回值类型： (Tensor, Tensor)</p>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; A = torch.Tensor([[1, 1, 1],
+...                   [2, 3, 4],
+...                   [3, 5, 2],
+...                   [4, 2, 5],
+...                   [5, 4, 3]])
+&gt;&gt;&gt; B = torch.Tensor([[-10, -3],
+                      [ 12, 14],
+                      [ 14, 12],
+                      [ 16, 16],
+                      [ 18, 16]])
+&gt;&gt;&gt; X, _ = torch.gels(B, A)
+&gt;&gt;&gt; X
+2.0000  1.0000
+1.0000  1.0000
+1.0000  2.0000
+[torch.FloatTensor of size 3x2]
+</code></pre><h3 id="torch-geqrf"><a href="#torch-geqrf" class="headerlink" title="torch.geqrf"></a>torch.geqrf</h3><pre><code>torch.geqrf(input, out=None) -&gt; (Tensor, Tensor)
+</code></pre><p>这是一个直接调用LAPACK的底层函数。 一般使用<code>torch.qr()</code></p>
+<p>计算输入的QR 分解，但是并不会分别创建Q,R两个矩阵，而是直接调用LAPACK 函数 Rather, this directly calls the underlying LAPACK function ?geqrf which produces a sequence of ‘elementary reflectors’.</p>
+<p>参考 <a href="https://software.intel.com/en-us/node/521004" target="_blank" rel="noopener">LAPACK文档</a>获取更详细信息。</p>
+<p>参数:</p>
+<ul>
+<li>input (Tensor) – 输入矩阵</li>
+<li>out (tuple, optional) – 元组，包含输出张量 (Tensor, Tensor)</li>
+</ul>
+<h3 id="torch-ger"><a href="#torch-ger" class="headerlink" title="torch.ger"></a>torch.ger</h3><pre><code>torch.ger(vec1, vec2, out=None) → Tensor
+</code></pre><p>计算两向量<code>vec1</code>,<code>vec2</code>的张量积。如果<code>vec1</code>的长度为<code>n</code>,<code>vec2</code>长度为<code>m</code>，则输出<code>out</code>应为形如n x m的矩阵。</p>
+<p>参数:</p>
+<ul>
+<li>vec1 (Tensor) – 1D 输入向量</li>
+<li>vec2 (Tensor) – 1D 输入向量</li>
+<li>out (tuple, optional) – 输出张量</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; v1 = torch.arange(1, 5)
+&gt;&gt;&gt; v2 = torch.arange(1, 4)
+&gt;&gt;&gt; torch.ger(v1, v2)
+
+  1   2   3
+  2   4   6
+  3   6   9
+  4   8  12
+[torch.FloatTensor of size 4x3]
+</code></pre><h3 id="torch-gesv"><a href="#torch-gesv" class="headerlink" title="torch.gesv"></a>torch.gesv</h3><pre><code>torch.gesv(B, A, out=None) -&gt; (Tensor, Tensor)
+</code></pre><p>例子:</p>
+<pre><code>&gt;&gt;&gt; A = torch.Tensor([[6.80, -2.11,  5.66,  5.97,  8.23],
+...                   [-6.05, -3.30,  5.36, -4.44,  1.08],
+...                   [-0.45,  2.58, -2.70,  0.27,  9.04],
+...                   [8.32,  2.71,  4.35,  -7.17,  2.14],
+...                   [-9.67, -5.14, -7.26,  6.08, -6.87]]).t()
+&gt;&gt;&gt; B = torch.Tensor([[4.02,  6.19, -8.22, -7.57, -3.03],
+...                   [-1.56,  4.00, -8.67,  1.75,  2.86],
+...                   [9.81, -4.09, -4.57, -8.61,  8.99]]).t()
+&gt;&gt;&gt; X, LU = torch.gesv(B, A)
+&gt;&gt;&gt; torch.dist(B, torch.mm(A, X))
+9.250057093890353e-06
+</code></pre><h3 id="torch-inverse"><a href="#torch-inverse" class="headerlink" title="torch.inverse"></a>torch.inverse</h3><pre><code>torch.inverse(input, out=None) → Tensor
+</code></pre><p>对方阵输入<code>input</code> 取逆。</p>
+<p><em>注意</em> ： Irrespective of the original strides, the returned matrix will be transposed, i.e. with strides (1, m) instead of (m, 1)</p>
+<p>参数 ：</p>
+<ul>
+<li>input (Tensor) – 输入2维张量</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<p>例子:</p>
+<pre><code>&gt;&gt;&gt; x = torch.rand(10, 10)
+&gt;&gt;&gt; x
+
+ 0.7800  0.2267  0.7855  0.9479  0.5914  0.7119  0.4437  0.9131  0.1289  0.1982
+ 0.0045  0.0425  0.2229  0.4626  0.6210  0.0207  0.6338  0.7067  0.6381  0.8196
+ 0.8350  0.7810  0.8526  0.9364  0.7504  0.2737  0.0694  0.5899  0.8516  0.3883
+ 0.6280  0.6016  0.5357  0.2936  0.7827  0.2772  0.0744  0.2627  0.6326  0.9153
+ 0.7897  0.0226  0.3102  0.0198  0.9415  0.9896  0.3528  0.9397  0.2074  0.6980
+ 0.5235  0.6119  0.6522  0.3399  0.3205  0.5555  0.8454  0.3792  0.4927  0.6086
+ 0.1048  0.0328  0.5734  0.6318  0.9802  0.4458  0.0979  0.3320  0.3701  0.0909
+ 0.2616  0.3485  0.4370  0.5620  0.5291  0.8295  0.7693  0.1807  0.0650  0.8497
+ 0.1655  0.2192  0.6913  0.0093  0.0178  0.3064  0.6715  0.5101  0.2561  0.3396
+ 0.4370  0.4695  0.8333  0.1180  0.4266  0.4161  0.0699  0.4263  0.8865  0.2578
+[torch.FloatTensor of size 10x10]
+
+&gt;&gt;&gt; x = torch.rand(10, 10)
+&gt;&gt;&gt; y = torch.inverse(x)
+&gt;&gt;&gt; z = torch.mm(x, y)
+&gt;&gt;&gt; z
+
+ 1.0000  0.0000  0.0000 -0.0000  0.0000  0.0000  0.0000  0.0000 -0.0000 -0.0000
+ 0.0000  1.0000 -0.0000  0.0000  0.0000  0.0000 -0.0000 -0.0000 -0.0000 -0.0000
+ 0.0000  0.0000  1.0000 -0.0000 -0.0000  0.0000  0.0000  0.0000 -0.0000 -0.0000
+ 0.0000  0.0000  0.0000  1.0000  0.0000  0.0000  0.0000 -0.0000 -0.0000  0.0000
+ 0.0000  0.0000 -0.0000 -0.0000  1.0000  0.0000  0.0000 -0.0000 -0.0000 -0.0000
+ 0.0000  0.0000  0.0000 -0.0000  0.0000  1.0000 -0.0000 -0.0000 -0.0000 -0.0000
+ 0.0000  0.0000  0.0000 -0.0000  0.0000  0.0000  1.0000  0.0000 -0.0000  0.0000
+ 0.0000  0.0000 -0.0000 -0.0000  0.0000  0.0000 -0.0000  1.0000 -0.0000  0.0000
+-0.0000  0.0000 -0.0000 -0.0000  0.0000  0.0000 -0.0000 -0.0000  1.0000 -0.0000
+-0.0000  0.0000 -0.0000 -0.0000 -0.0000  0.0000 -0.0000 -0.0000  0.0000  1.0000
+[torch.FloatTensor of size 10x10]
+
+&gt;&gt;&gt; torch.max(torch.abs(z - torch.eye(10))) # Max nonzero
+5.096662789583206e-07
+</code></pre><h3 id="torch-mm"><a href="#torch-mm" class="headerlink" title="torch.mm"></a>torch.mm</h3><pre><code>torch.mm(mat1, mat2, out=None) → Tensor
+</code></pre><p>参数 ：</p>
+<ul>
+<li>mat1 (Tensor) – 第一个相乘矩阵</li>
+<li>mat2 (Tensor) – 第二个相乘矩阵</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<p>例子:</p>
+<pre><code>&gt;&gt;&gt; mat1 = torch.randn(2, 3)
+&gt;&gt;&gt; mat2 = torch.randn(3, 3)
+&gt;&gt;&gt; torch.mm(mat1, mat2)
+ 0.0519 -0.3304  1.2232
+ 4.3910 -5.1498  2.7571
+[torch.FloatTensor of size 2x3]
+</code></pre><h3 id="torch-mv"><a href="#torch-mv" class="headerlink" title="torch.mv"></a>torch.mv</h3><pre><code>torch.mv(mat, vec, out=None) → Tensor
+</code></pre><p>参数 ：</p>
+<ul>
+<li>mat (Tensor) – 相乘矩阵</li>
+<li>vec (Tensor) – 相乘向量</li>
+<li>out (Tensor, optional) – 输出张量</li>
+</ul>
+<p>例子:</p>
+<pre><code>&gt;&gt;&gt; mat = torch.randn(2, 3)
+&gt;&gt;&gt; vec = torch.randn(3)
+&gt;&gt;&gt; torch.mv(mat, vec)
+-2.0939
+-2.2950
+[torch.FloatTensor of size 2]
+</code></pre><h3 id="torch-orgqr"><a href="#torch-orgqr" class="headerlink" title="torch.orgqr"></a>torch.orgqr</h3><pre><code>torch.orgqr()
+</code></pre><h3 id="torch-ormqr"><a href="#torch-ormqr" class="headerlink" title="torch.ormqr"></a>torch.ormqr</h3><pre><code>torch.ormqr()
+</code></pre><h3 id="torch-potrf"><a href="#torch-potrf" class="headerlink" title="torch.potrf"></a>torch.potrf</h3><pre><code>torch.potrf()
+</code></pre><h3 id="torch-potri"><a href="#torch-potri" class="headerlink" title="torch.potri"></a>torch.potri</h3><pre><code>torch.potri()
+</code></pre><h3 id="torch-potrs"><a href="#torch-potrs" class="headerlink" title="torch.potrs"></a>torch.potrs</h3><pre><code>torch.potrs()
+</code></pre><h3 id="torch-pstrf"><a href="#torch-pstrf" class="headerlink" title="torch.pstrf"></a>torch.pstrf</h3><pre><code>torch.pstrf()
+</code></pre><h3 id="torch-qr"><a href="#torch-qr" class="headerlink" title="torch.qr"></a>torch.qr</h3><pre><code>torch.qr(input, out=None) -&gt; (Tensor, Tensor)
+</code></pre><p>本函数返回一个thin(reduced)QR分解。</p>
+<p><strong>注意</strong> 如果输入很大，可能可能会丢失精度。</p>
+<p><strong>注意</strong> 本函数依赖于你的LAPACK实现，虽然总能返回一个合法的分解，但不同平台可能得到不同的结果。</p>
+<p>Irrespective of the original strides, the returned matrix q will be transposed, i.e. with strides (1, m) instead of (m, 1).</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入的2维张量</li>
+<li>out (tuple, optional) – 输出元组<code>tuple</code>，包含Q和R</li>
+</ul>
+<p>例子:</p>
+<pre><code>&gt;&gt;&gt; a = torch.Tensor([[12, -51, 4], [6, 167, -68], [-4, 24, -41]])
+&gt;&gt;&gt; q, r = torch.qr(a)
+&gt;&gt;&gt; q
+
+-0.8571  0.3943  0.3314
+-0.4286 -0.9029 -0.0343
+ 0.2857 -0.1714  0.9429
+[torch.FloatTensor of size 3x3]
+
+&gt;&gt;&gt; r
+
+ -14.0000  -21.0000   14.0000
+   0.0000 -175.0000   70.0000
+   0.0000    0.0000  -35.0000
+[torch.FloatTensor of size 3x3]
+
+&gt;&gt;&gt; torch.mm(q, r).round()
+
+  12  -51    4
+   6  167  -68
+  -4   24  -41
+[torch.FloatTensor of size 3x3]
+
+&gt;&gt;&gt; torch.mm(q.t(), q).round()
+
+ 1 -0  0
+-0  1  0
+ 0  0  1
+[torch.FloatTensor of size 3x3]
+</code></pre><h3 id="torch-svd"><a href="#torch-svd" class="headerlink" title="torch.svd"></a>torch.svd</h3><pre><code>torch.svd(input, some=True, out=None) -&gt; (Tensor, Tensor, Tensor)
+</code></pre><p><code>some</code> 代表了需要计算的奇异值数目。如果 <code>some=True</code>, it computes some and some=False computes all.</p>
+<p>Irrespective of the original strides, the returned matrix U will be transposed, i.e. with strides (1, n) instead of (n, 1).</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入的2维张量</li>
+<li>some (bool, optional) – 布尔值，控制需计算的奇异值数目</li>
+<li>out (tuple, optional) – 结果<code>tuple</code></li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.Tensor([[8.79,  6.11, -9.15,  9.57, -3.49,  9.84],
+...                   [9.93,  6.91, -7.93,  1.64,  4.02,  0.15],
+...                   [9.83,  5.04,  4.86,  8.83,  9.80, -8.99],
+...                   [5.45, -0.27,  4.85,  0.74, 10.00, -6.02],
+...                   [3.16,  7.98,  3.01,  5.80,  4.27, -5.31]]).t()
+&gt;&gt;&gt; a
+
+  8.7900   9.9300   9.8300   5.4500   3.1600
+  6.1100   6.9100   5.0400  -0.2700   7.9800
+ -9.1500  -7.9300   4.8600   4.8500   3.0100
+  9.5700   1.6400   8.8300   0.7400   5.8000
+ -3.4900   4.0200   9.8000  10.0000   4.2700
+  9.8400   0.1500  -8.9900  -6.0200  -5.3100
+[torch.FloatTensor of size 6x5]
+
+&gt;&gt;&gt; u, s, v = torch.svd(a)
+&gt;&gt;&gt; u
+
+-0.5911  0.2632  0.3554  0.3143  0.2299
+-0.3976  0.2438 -0.2224 -0.7535 -0.3636
+-0.0335 -0.6003 -0.4508  0.2334 -0.3055
+-0.4297  0.2362 -0.6859  0.3319  0.1649
+-0.4697 -0.3509  0.3874  0.1587 -0.5183
+ 0.2934  0.5763 -0.0209  0.3791 -0.6526
+[torch.FloatTensor of size 6x5]
+
+&gt;&gt;&gt; s
+
+ 27.4687
+ 22.6432
+  8.5584
+  5.9857
+  2.0149
+[torch.FloatTensor of size 5]
+
+&gt;&gt;&gt; v
+
+-0.2514  0.8148 -0.2606  0.3967 -0.2180
+-0.3968  0.3587  0.7008 -0.4507  0.1402
+-0.6922 -0.2489 -0.2208  0.2513  0.5891
+-0.3662 -0.3686  0.3859  0.4342 -0.6265
+-0.4076 -0.0980 -0.4932 -0.6227 -0.4396
+[torch.FloatTensor of size 5x5]
+
+&gt;&gt;&gt; torch.dist(a, torch.mm(torch.mm(u, torch.diag(s)), v.t()))
+8.934150226306685e-06
+</code></pre><h3 id="torch-symeig"><a href="#torch-symeig" class="headerlink" title="torch.symeig"></a>torch.symeig</h3><pre><code>torch.symeig(input, eigenvectors=False, upper=True, out=None) -&gt; (Tensor, Tensor)
+</code></pre><p><strong>注意</strong>: 不管原来Irrespective of the original strides, the returned matrix V will be transposed, i.e. with strides (1, m) instead of (m, 1)</p>
+<p>参数：</p>
+<ul>
+<li>input (Tensor) – 输入对称矩阵</li>
+<li>eigenvectors (boolean, optional) – 布尔值（可选），控制是否计算特征向量</li>
+<li>upper (boolean, optional) – 布尔值（可选），控制是否考虑上三角或下三角区域</li>
+<li>out (tuple, optional) – 输出元组(Tensor, Tensor)</li>
+</ul>
+<p>例子：</p>
+<pre><code>&gt;&gt;&gt; a = torch.Tensor([[ 1.96,  0.00,  0.00,  0.00,  0.00],
+...                   [-6.49,  3.80,  0.00,  0.00,  0.00],
+...                   [-0.47, -6.39,  4.17,  0.00,  0.00],
+...                   [-7.20,  1.50, -1.51,  5.70,  0.00],
+...                   [-0.65, -6.34,  2.67,  1.80, -7.10]]).t()
+
+&gt;&gt;&gt; e, v = torch.symeig(a, eigenvectors=True)
+&gt;&gt;&gt; e
+
+-11.0656
+ -6.2287
+  0.8640
+  8.8655
+ 16.0948
+[torch.FloatTensor of size 5]
+
+&gt;&gt;&gt; v
+
+-0.2981 -0.6075  0.4026 -0.3745  0.4896
+-0.5078 -0.2880 -0.4066 -0.3572 -0.6053
+-0.0816 -0.3843 -0.6600  0.5008  0.3991
+-0.0036 -0.4467  0.4553  0.6204 -0.4564
+-0.8041  0.4480  0.1725  0.3108  0.1622
+[torch.FloatTensor of size 5x5]
+</code></pre><h3 id="torch-trtrs"><a href="#torch-trtrs" class="headerlink" title="torch.trtrs"></a>torch.trtrs</h3><pre><code> torch.trtrs()</code></pre><script>
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return; }
+            const img = document.createElement('img');
+            img.style = 'display:none !important;';
+            img.src = el.dataset.src;
+            img.addEventListener('error', () => {
+              img.remove();
+              el.style.color = 'inherit';
+              el.style.backgroundImage = 'none';
+              el.style.background = 'none';
+            });
+            img.addEventListener('load', () => {
+              img.remove();
+            });
+            document.body.appendChild(img);
+          });
+      </script>
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://jackhcc.github.io" rel="external nofollow noreferrer">杰克成</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://jackhcc.github.io/posts/blog-python11.html">https://jackhcc.github.io/posts/blog-python11.html</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="https://jackhcc.github.io" target="_blank">杰克成</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">
+                                    <span class="chip bg-color">机器学习</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/images/loading.gif" data-original="/medias/reward/aliqr.png" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/images/loading.gif" data-original="/medias/reward/wxqr.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+            
+        </div>
+    </div>
+
+    
+        <link rel="stylesheet" href="/libs/gitalk/gitalk.css">
+<link rel="stylesheet" href="/css/my-gitalk.css">
+
+<div class="card gitalk-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="gitalk-container" class="card-content"></div>
+</div>
+
+<script src="/libs/gitalk/gitalk.min.js"></script>
+<script>
+    let gitalk = new Gitalk({
+        clientID: '3821a0bbb773038a51fc',
+        clientSecret: '4b30b507d67ec5497ec0e77f43f80cb3e0d7dd3a',
+        repo: 'JackHCC.github.io',
+        owner: 'JackHCC',
+        admin: "JackHCC",
+        id: '2020-02-28T21-56-50',
+        distractionFreeMode: false  // Facebook-like distraction free mode
+    });
+
+    gitalk.render('gitalk-container');
+</script>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/posts/blog-python12.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/images/loading.gif" data-original="/medias/featureimages/0.jpg" class="responsive-img" alt="Python实战：小道具小功能实现">
+                        
+                        <span class="card-title">Python实战：小道具小功能实现</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            Python实战：图片编辑器，计算器，浏览器，播放器等小道具小功能实现
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2020-02-28
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Python/" class="post-category">
+                                    Python
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Python/">
+                        <span class="chip bg-color">Python</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/posts/blog-python10.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/images/loading.gif" data-original="/medias/featureimages/10.jpg" class="responsive-img" alt="Python-关键词动态爬取图片保存于本地">
+                        
+                        <span class="card-title">Python-关键词动态爬取图片保存于本地</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            输入关键词从百度爬取关键词内容的图片~
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-02-28
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Python/" class="post-category">
+                                    Python
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E7%88%AC%E8%99%AB/">
+                        <span class="chip bg-color">爬虫</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+<!-- 代码块折行 -->
+
+<style type="text/css">
+code[class*="language-"], pre[class*="language-"] { white-space: pre !important; }
+</style>
+
+
+    
+
+</main>
+
+
+
+    <footer class="page-footer bg-color">
+    <div class="container row center-align" style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            <span id="year">2020</span>
+            <a href="https://jackhcc.github.io" target="_blank">杰克成</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                class="white-color">83.2k</span>&nbsp;字
+            
+            
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;人
+            </span>
+            
+            <br>
+            
+            <span id="sitetime">载入运行时间...</span>
+            <script>
+                function siteTime() {
+                    var seconds = 1000;
+                    var minutes = seconds * 60;
+                    var hours = minutes * 60;
+                    var days = hours * 24;
+                    var years = days * 365;
+                    var today = new Date();
+                    var startYear = "2020";
+                    var startMonth = "2";
+                    var startDate = "27";
+                    var startHour = "6";
+                    var startMinute = "30";
+                    var startSecond = "0";
+                    var todayYear = today.getFullYear();
+                    var todayMonth = today.getMonth() + 1;
+                    var todayDate = today.getDate();
+                    var todayHour = today.getHours();
+                    var todayMinute = today.getMinutes();
+                    var todaySecond = today.getSeconds();
+                    var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                    var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                    var diff = t2 - t1;
+                    var diffYears = Math.floor(diff / years);
+                    var diffDays = Math.floor((diff / days) - diffYears * 365);
+                    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+                    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) /
+                        minutes);
+                    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours -
+                        diffMinutes * minutes) / seconds);
+                    if (startYear == todayYear) {
+                        document.getElementById("year").innerHTML = todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffDays + " 天 " + diffHours +
+                            " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    } else {
+                        document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffYears + " 年 " + diffDays +
+                            " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    }
+                }
+                setInterval(siteTime, 1000);
+            </script>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/JackHCC" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:jackcc0701@163.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+    <a href="https://www.facebook.com/profile.php?id=100046343443643" class="tooltipped" target="_blank" data-tooltip="关注我的Facebook: https://www.facebook.com/profile.php?id=100046343443643" data-position="top" data-delay="50">
+        <i class="fab fa-facebook-f"></i>
+    </a>
+
+
+
+    <a href="https://twitter.com/JackChe66021834" class="tooltipped" target="_blank" data-tooltip="关注我的Twitter: https://twitter.com/JackChe66021834" data-position="top" data-delay="50">
+        <i class="fab fa-twitter"></i>
+    </a>
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=2508074836" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 2508074836" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+    <a href="https://weibo.com/u/6885584679" class="tooltipped" target="_blank" data-tooltip="关注我的微博: https://weibo.com/u/6885584679" data-position="top" data-delay="50">
+        <i class="fab fa-weibo"></i>
+    </a>
+
+
+
+    <a href="https://www.zhihu.com/people/8f8482f01f0d6a04e844efe32e0f0710" class="tooltipped" target="_blank" data-tooltip="关注我的知乎: https://www.zhihu.com/people/8f8482f01f0d6a04e844efe32e0f0710" data-position="top" data-delay="50">
+        <i class="fab fa-zhihu1">知</i>
+    </a>
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+    <script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script type="text/javascript" src="/js/fireworks.js"></script>
+
+    <script type="text/javascript">
+        //只在桌面版网页启用特效
+        var windowWidth = $(window).width();
+        if (windowWidth > 768) {
+            document.write('<script type="text/javascript" src="/js/sakura.js"><\/script>'); }
+    </script>
+
+    <!-- weather -->
+	<script type="text/javascript">
+	WIDGET = {FID: 'TToslpmkVO'}
+	</script>
+	<script type="text/javascript" src="https://apip.weatherdt.com/float/static/js/r.js?v=1111"></script>
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <!-- Baidu Analytics -->
+
+<script>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+    <!-- Baidu Push -->
+
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+        <script src="//code.tidio.co/kqhlkxviiccyoa0czpfpu4ijuey9hfre.js"></script>
+        <script> 
+            $(document).ready(function () {
+                setInterval(change_Tidio, 50);  
+                function change_Tidio() { 
+                    var tidio=$("#tidio-chat iframe");
+                    if(tidio.css("display")=="block"&& $(window).width()>977 ){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" &&$(window).width()>977)>0? "-40px" : ($("div.toc-title").length&&$(window).width()>977)>0?"85px":"20px";   
+                        document.getElementById("tidio-chat-iframe").style.right="-15px";   
+                        document.getElementById("tidio-chat-iframe").style.height=parseInt(tidio.css("height"))>=520?"520px":tidio.css("height");
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    } 
+                    else if(tidio.css("display")=="block"&&$(window).width()>601 &&$(window).width()<992 ){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" && 601< $(window).width()<992)>0? "-40px":"20px" ;   
+                        document.getElementById("tidio-chat-iframe").style.right="-15px"; 
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    }
+                    else if(tidio.css("display")=="block"&&$(window).width()<601 && parseInt(tidio.css("height"))<230){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" && $(window).width()<601)>0? "-10px":"45px" ;   
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    }
+                    if( tidio.css("display")=="block"&&$(window).width()<601 && parseInt(tidio.css("height"))>=230){
+                        document.getElementById("tidio-chat-iframe").style.zIndex="998";
+                    }
+                } 
+            }); 
+        </script>
+    
+
+    
+
+    
+    <script type="text/javascript" color="0,0,255"
+        pointColor="0,0,255" opacity='0.7'
+        zIndex="-1" count="99"
+        src="/libs/background/canvas-nest.js"></script>
+    
+
+    
+
+    
+    <script type="text/javascript" src="/libs/background/ribbon-dynamic.js" async="async"></script>
+    
+    
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+        <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
+        <script>
+        $('a').each(function() {
+          const $this = $(this);
+          const href = $this.attr('href');
+          if (href && href.match('^((http|https|thunder|qqdl|ed2k|Flashget|qbrowser|ftp|rtsp|mms)://)')) {
+            const strs = href.split('/');
+            if (strs.length >= 3) {
+                const host = strs[2];
+                if (host !== 'your_domain' || window.location.host) {
+                    $this.attr('href', '/go.html?u='+Base64.encode(href)+'').attr('rel', 'external nofollow noopener noreferrer');
+                    if (true) {
+                        $this.attr('target', '_blank');
+                    }
+                }
+            }
+          }
+        });
+        </script><script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script></body>
+
+</html>
+
