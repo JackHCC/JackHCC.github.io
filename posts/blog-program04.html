@@ -1,0 +1,1497 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="Nginx学习笔录, JackHCC">
+    <meta name="description" content="Nginx学习笔记大全">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Nginx学习笔录 | JackHCC</title>
+    <link rel="icon" type="image/png" href="/medias/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+    
+    <script src="/libs/jquery/jquery.min.js"></script>
+    
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper head-container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/images/loading.gif" data-original="/medias/me.jpg" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">JackHCC</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>留言板</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>友情链接</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/images/loading.gif" data-original="/medias/me.jpg" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">JackHCC</div>
+        <div class="logo-desc">
+            
+            Make the world betterrrr!!!
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			留言板
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			友情链接
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/JackHCC/JackHCC.github.io" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/JackHCC/JackHCC.github.io" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/11.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">Nginx学习笔录</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="container content">
+
+    
+    <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/Nginx/">
+                                <span class="chip bg-color">Nginx</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/%E7%BC%96%E7%A8%8B/" class="post-category">
+                                编程
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2020-02-28
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2020-02-28
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    3.5k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    14 分
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <p><a href="http://nginx.org/en/docs/" target="_blank" rel="noopener">官方文档</a></p>
+<h3 id="Http协议简介"><a href="#Http协议简介" class="headerlink" title="Http协议简介"></a>Http协议简介</h3><ul>
+<li><p>http协议：80/tcp,HyperText Transfer Procotol</p>
+</li>
+<li><p>html:Hypertext Mark Language</p>
+</li>
+<li><p>文本：HTTP/1.0 MIME</p>
+</li>
+<li><p>MIME:Multipurpose Internet Mail Extension</p>
+<ul>
+<li>major/minor<ul>
+<li>text/plain</li>
+<li>image/jpeg</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>URL:schem://server[:port]/path/to/source</p>
+</li>
+<li><p>http事务：request &lt;——–&gt; response</p>
+<ul>
+<li><p>request:<br><method><url><version></version></url></method></p>
+<header>
+
+
+</header></li>
+<li><p>response:<br><version><status><reason phrase=""></reason></status></version></p>
+<header>
+
+
+
+<ul>
+<li>协议格式：文本，二进制</li>
+</ul>
+</header></li>
+</ul>
+</li>
+<li><p>method：<br>GET，HEAD,POST,PUT,DELETE,TRACE,OPTIONS</p>
+</li>
+<li><p>status:<br>1xx: 信息类<br>2xx: 成功类 200（ok）<br>3xx: 重定向类 301,302,304<br>4xx: 客户端错误类 403,404<br>5xx: 服务器端错误 502</p>
+</li>
+<li><p>HEADER：<br>通用首部<br>请求首部：<br>  IF-Modified-Since   IF-None-Match<br>响应首部<br>实体首部<br>扩展首部</p>
+</li>
+</ul>
+<h3 id="Web页面访问及其页面资源"><a href="#Web页面访问及其页面资源" class="headerlink" title="Web页面访问及其页面资源"></a>Web页面访问及其页面资源</h3><ul>
+<li><p>Web页面：多个资源<br>  入口，资源引用</p>
+</li>
+<li><p>认证：<br>基于IP认证<br>基于用户认证</p>
+</li>
+<li><p>资源映射：<br>Alias<br>DocumentRoot</p>
+</li>
+<li><p>httpd：MPM</p>
+<ul>
+<li><p>prefork，worker，event</p>
+<p>prefork：主进程，生成多个子进程，每个子进程处理一个请求<br>worker：主进程，生成多个子进程，每个子进程生成多个线程，每个线程响应一个请求<br>event：主进程，生成多个子进程，每个子进程响应多个请求</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="I-O类型"><a href="#I-O类型" class="headerlink" title="I/O类型"></a>I/O类型</h3><ul>
+<li><p>同步与异步：synchronous，asynchronous<br>关注的是消息通知机制</p>
+<ul>
+<li>同步：调用发生之后不会立即返回，但一旦返回，就返回最终结果</li>
+<li>异步：调用出发之后，被调用方立即返回消息，但返回并非最终结果；被调用通过状态，通知机制来通知调用者，或通过回调函数来处理结果过</li>
+</ul>
+</li>
+<li><p>阻塞与非阻塞：block，nonblock<br>关注的是调用者等待返回调用结果时的状态</p>
+<ul>
+<li>阻塞：调用返回之前，调用者被挂起，只能得到返回结果过才能继续</li>
+<li>非阻塞：调用在结果返回之前，不会被挂起，即调用不会阻塞调用者</li>
+</ul>
+</li>
+</ul>
+<p>###I/O模型</p>
+<ul>
+<li><p>blocking I/O：阻塞式</p>
+</li>
+<li><p>nonblocking I/O：非阻塞式</p>
+</li>
+<li><p>IO multiplexing：复用型<br>  select（），poll（）</p>
+</li>
+<li><p>signal driven IO：事件驱动</p>
+<ul>
+<li>通知：<br>水平触发：多次通知<br>边缘触发：只通知一次</li>
+</ul>
+</li>
+<li><p>asynchronous IO：异步</p>
+</li>
+</ul>
+<p>例如：一次读操作</p>
+<ol>
+<li>等待数据准备好，磁盘到内核内存</li>
+<li>从内核复制到进程内存</li>
+</ol>
+<p>注：前三个为同步，后两个为异步</p>
+<h3 id="Nginx"><a href="#Nginx" class="headerlink" title="Nginx"></a>Nginx</h3><ul>
+<li><p><a href="http://nginx.org/" target="_blank" rel="noopener">http://nginx.org/</a> , C10k</p>
+</li>
+<li><p>Igor Sysoev,Rambler Media;</p>
+<ul>
+<li>engine X:nginx</li>
+<li>tenglne,OpenResty</li>
+</ul>
+</li>
+<li><p>Nginx特性：</p>
+<ol>
+<li>模块化设计，较好的扩展性</li>
+<li>高可靠性：master/worker</li>
+<li>支持热部署：不停机更新配置值文件，更新日志，更新服务器程序版本</li>
+<li>低内存消耗：10000个keep-alive连接模式的非活动链接仅占2.5M</li>
+<li>event-driven，alo，mmap</li>
+</ol>
+</li>
+<li><p>基本功能</p>
+<ul>
+<li><p>静态资源的web服务器</p>
+</li>
+<li><p>http协议的反向代理</p>
+<ul>
+<li>http代理：指的是使用代理服务器使网络用户访问外部网站。代理服务器是介于浏览器和Web服务器之间的一台服务器，是建立在超文本传输协议上的网络浏览方式，作用是可以防伪部分对协议进行了限制的局域网。</li>
+<li>关于HTTP代理服务器的主要功能包括五个方面：<ol>
+<li>突破自身IP访问限制，访问国外站点；</li>
+<li>访问一些单位或团体内部资源，如某大学的内部网，使用<a href="https://www.baidu.com/s?wd=%E6%95%99%E8%82%B2%E7%BD%91&amp;tn=SE_PcZhidaonwhc_ngpagmjz&amp;rsv_dl=gh_pc_zhidao" target="_blank" rel="noopener">教育网</a>内地址段免费代理服务器可以用于对教育 网开放的各类下载上传以及各类资料查询共享等服务；</li>
+</ol>
+</li>
+</ul>
+<ol start="3">
+<li>突破<a href="https://www.baidu.com/s?wd=%E4%B8%AD%E5%9B%BD%E7%94%B5%E4%BF%A1&amp;tn=SE_PcZhidaonwhc_ngpagmjz&amp;rsv_dl=gh_pc_zhidao" target="_blank" rel="noopener">中国电信</a>的<a href="https://www.baidu.com/s?wd=IP%E5%B0%81%E9%94%81&amp;tn=SE_PcZhidaonwhc_ngpagmjz&amp;rsv_dl=gh_pc_zhidao" target="_blank" rel="noopener">IP封锁</a>：<a href="https://www.baidu.com/s?wd=%E4%B8%AD%E5%9B%BD%E7%94%B5%E4%BF%A1&amp;tn=SE_PcZhidaonwhc_ngpagmjz&amp;rsv_dl=gh_pc_zhidao" target="_blank" rel="noopener">中国电信</a>有很多网站限制了用户访问，使用HTTP代理可以突破访问限制；</li>
+<li>提高访问速度：通常代理服务器都设置一个较大的硬盘缓冲区，当有外界的信息通过时将信息保存到缓冲区中，当其他用户再访问相同的信息时， 可直接由缓冲区中取出信息传递给用户，提高访问速度；</li>
+<li>隐藏真实IP：HTTP代理可以隐藏IP地址，避免受到网络攻击。<ul>
+<li>http反向代理：所谓反向代理（Reverse Proxy）方式是指以代理服务器来接受Internet上的连接请求，然后将请求转发给内部网络上的服务器，并将从服务器上得到的结果返回给Internet上请求连接的客户端，此时代理服务器对外就表现为一个服务器。<br>我们常说的代理是指正向代理，正向代理的过程，它隐藏了真实的请求客户端，服务端不知道真实的客户端是谁，客户端请求的服务都被代理服务器代替来请求，科学上网工具 Shadowsocks 扮演的就是典型的正向代理角色。在天朝用浏览器访问 <a href="http://www.google.com" target="_blank" rel="noopener">www.google.com</a> 时会被无情的墙掉，要想翻阅这堵墙，你可以在国外用 Shadowsocks 来搭建一台代理服务器，让代理帮我们去请求 <a href="http://www.google.com，代理再把请求响应结果再返回给我。" target="_blank" rel="noopener">www.google.com，代理再把请求响应结果再返回给我。</a><br>反向代理隐藏了真实的服务端。</li>
+</ul>
+</li>
+</ol>
+</li>
+<li><p>pop3，SMPT，IMap4等邮件协议的反向代理</p>
+</li>
+<li><p>能缓存打开的文件（元数据），支持FastCGI（php-fpm），uWSGI（python web Framwork）等协议</p>
+</li>
+<li><p>模块化，过滤器zip，ssi，ssl</p>
+</li>
+</ul>
+</li>
+<li><p>Web服务相关功能<br>虚拟主机，keepalive，访问日志，url rewrite，路径别名，基于IP及用户的访问控制，支持速率限制及并发数限制；……</p>
+</li>
+<li><p>Nginx基础架构</p>
+<ul>
+<li><p>master/worker<br>一个master进程，可以生成多个worker进程；<br>事件驱动：epoll（Linux），kqueue（FreeBSD），/dev/poll（Solars）</p>
+<ul>
+<li>消息通知：select，poll，rt signals</li>
+</ul>
+<p>支持sendfile，sendfile64<br>支持AIO，mmap</p>
+<p>master：加载配置文件，管理worker进程，平滑升级……<br>worker：http服务，http代理，fastcgl代理……</p>
+</li>
+</ul>
+</li>
+<li><p>模块类型</p>
+<ul>
+<li>核心模块：core module</li>
+<li>Standard HTTP modules</li>
+<li>Optional HTTP modules</li>
+<li>Mail modules</li>
+<li>3rd party modules</li>
+</ul>
+</li>
+<li><p>做什么？<br>静态资源web服务器<br>http服务器反向代理</p>
+</li>
+</ul>
+<h3 id="Nginx安装与配置"><a href="#Nginx安装与配置" class="headerlink" title="Nginx安装与配置"></a>Nginx安装与配置</h3><p><a href="https://www.jianshu.com/p/be46088269ba" target="_blank" rel="noopener">Nginx:Window下安装与配置</a><br> <a href="https://www.jianshu.com/p/8d3e1689b884" target="_blank" rel="noopener">Nginx:Ubuntu下安装与配置</a></p>
+<p><strong>配置文件</strong></p>
+<ul>
+<li>主配置文件：nginx.conf</li>
+<li>mime.types</li>
+<li>fastcgi配置文件：fastcgi_params     uwsgl_params</li>
+<li>proxy.conf</li>
+<li>sites.conf</li>
+</ul>
+<p><strong>配置指令</strong>(必须以分号结尾)</p>
+<pre><code>Directive value1[value2……];</code></pre><p>支持使用变量：</p>
+<ul>
+<li>内置变量：又模块引入</li>
+<li>自定义变量：<pre><code>set variable value</code></pre></li>
+<li>引用变量:$variable</li>
+</ul>
+<p><strong>nginx.conf配置文件组织结构</strong></p>
+<pre><code>main block
+event{
+...
+}
+http{
+...
+  upstream{
+  ...
+  }
+  //至少一个server
+  server{
+    ...
+    server_name
+    root
+    alias
+    location /url/{
+    ...
+    }
+  }
+  server{
+    ...
+  }
+} </code></pre><p><strong>main block配置</strong><br>  类别：</p>
+<ul>
+<li>正常运行必备的配置</li>
+</ul>
+<pre><code>1. user USERNAME [GROUPNAME];  指定用于运行work进程的用户和组.
+user nginx nginx
+2. pid /PATH/TO/PID_FILE;  指定nginx进程的pid文路径
+pid /var/run/nginx.pid
+3. worker_rlimit_nofile #;  一个work进程所能打开的最大文件描述符数量
+4. worker_rlimit_slgpending #; 每个用户能够发给worker进程的信号数量</code></pre><ul>
+<li>优化性能相关的配置</li>
+</ul>
+<pre><code>1. work_processes # ;  worker进程的个数，通常为该物理CPU核心数量-1，可以设置为‘auto’
+2. worker_cpu_affinity CPUMASK CPUMASK ……
+    CUPMASK:0001    0010    0100    1000
+worker_cpu_affinity 00000001 00000010 00000100
+3. worker_priority nice;
+[-20,19]</code></pre><ul>
+<li>用于调试，定位问题的配置</li>
+</ul>
+<pre><code>1. daemon off|on;   是否以守护进程方式启动nginx
+2. master_process on|off;   是否以master/worker模型运行nginx
+3. error_log  /PATH/TO/ERROR_LOG level;   错误日志文件及其级别；用于调试需要，可以设为debug，但debug仅在编译时使用‘--with-debug’选项时才生效</code></pre><p><strong>event配置</strong></p>
+<pre><code>1. worker_connections # ; 每个worker进程能够响应最大的并发请求数量
+worker_proceses * worker_connections
+2. use [epoll|rgsig|select|poll];定义使用的事件模型，建议让nginx自动选择
+3. accept_mutex [on|off];  各worker接受用户请求的负载均衡锁；启用时，表示用于让多个worker轮流的，序列的响应新请求
+4. lock_file /PATH/TO/LOCK_FILE;</code></pre><p><strong>http配置</strong></p>
+<ul>
+<li>套接字或主机相关指令</li>
+</ul>
+<ol>
+<li><p>server{}：//定义虚拟主机</p>
+<pre><code>server{
+listen PORT；
+server_name NAME;  
+root /PATH/TO/DOCUMENTROOT;
+}</code></pre><p>注：（1）基于port：listen监听不同的端口；<br>（2）基于hostname：server_name指令指向不同主机</p>
+</li>
+<li><p>listen</p>
+<pre><code>listen address[:port][default_server][ssl][http2|spdy]
+listen port[default_server][ssl][http2|spdy]
+//default_server:设置默认虚拟主机，用于基于IP地址，或使用任意不能对应任何一个server的name时所返回的站点；
+//ssl:用于限制只能通过ssl连接提供服务
+//spdy:SPDY protocol(speedy),在编译时spdy模块情况下，用于支持SPDY协议
+//http2:http version 2;</code></pre></li>
+<li><p>server_name NAME [……];<br>可跟一个或多个主机名，名称还可以使用通配符和正则表达式（~）；<br>```</p>
+</li>
+<li><p>首先做精准匹配：<a href="http://www.magedu.com" target="_blank" rel="noopener">www.magedu.com</a></p>
+</li>
+<li><p>左侧通配符：*.magedu.com</p>
+</li>
+<li><p>右侧通配符：<a href="http://www.magedu" target="_blank" rel="noopener">www.magedu</a>.*</p>
+</li>
+<li><p>正则表达式：~^.*\magedu.com$</p>
+</li>
+<li><p>default server</p>
+<pre><code></code></pre></li>
+<li><p>tcp_nodelay on|off<br>在keepalive模式下的连接是否使用TCP_NODELAY选项；</p>
+</li>
+<li><p>tcp_nopush on|off<br>是否启用TCP_NOPUSH(FREEBSE)或TCP_CORK(LINUX)选项；仅在sendfile为on时有用</p>
+</li>
+<li><p>sendfile on|off<br>是否启用sendfile功能</p>
+</li>
+</ol>
+<ul>
+<li>路径相关指令</li>
+</ul>
+<ol start="7">
+<li>root<br>设置web资源的路径映射，用于指明请求的URL所对应的文档目录的路径:<pre><code>server{
+...
+root /data/www/vhost1;
+}
+// 访问http://www.a.com/image/logo.jpg  --&gt;/data/www/vhost1/image/logo.ipg
+server{
+...
+server_name www.a.com
+location /image/ {
+ root /data/imgs/;
+ ...
+}
+// 访问http://www.a.com/image/logo.jpg  --&gt;/data/imgs/image/logo.ipg</code></pre></li>
+<li>location [= | ~ | <del>* | ^</del>] url{……}<br>location @name {……}</li>
+</ol>
+<p>功能：允许根据用户请求的url来匹配定义的各location，匹配到时，此请求将被相应的location块中的配置所处理，简言之，即用于需要的专用配置的URL提供特定配置。</p>
+<ul>
+<li>=：url的精确匹配</li>
+<li>~：做正则表达式匹配，区分字符大小写</li>
+<li>~*：做正则表达式匹配，不区分字符大小写</li>
+<li>^~：url左半部分匹配，不区分字符大小写</li>
+</ul>
+<p><strong>匹配优先级</strong>：=，^<del>,</del>或~*，不带符号的url；</p>
+<ol start="9">
+<li><p>alias<br>只能用于location匹配段，定义路径别名</p>
+<pre><code>location /image/{
+root /data/imgs/;
+}
+location /image/{
+alias /data/imgs/;
+}</code></pre><p>注：<br>root：给定的路径对应location的“/”这个url<br>/image/test.jpg–&gt;/data/imgs/image/test.jpg<br>alias：给定的路径对应于location的“/url”这个url<br>/image/test.jpg–&gt;/data/imgs/test.jpg</p>
+</li>
+<li><p>index</p>
+<pre><code>index file ……;</code></pre><p>默认主页面</p>
+</li>
+<li><p>error_page code … [=[response]] url<br>根据http的状态码重定向错误页面；</p>
+<pre><code>error_page 404 /404.html
+error_page 404=200 /404.html   //以指定状态码响应</code></pre></li>
+<li><p>try_files file…… url；<br>try_files file……=code；<br>尝试查找第一个至第N-1个文件，第一个返回给请求者的资源，若N-1文件都不存在，则跳转至最后一个url（必须不能匹配至当前location，而应该匹配至其他location，否则会导致死循环）；</p>
+</li>
+</ol>
+<p><strong>用户请求相关配置</strong><br>13. keepalive_timeout timeout [header_timeout]<br>设定keepalive连接的超时时长；0表示禁止长连接</p>
+<ol start="14">
+<li><p>keepalive_requests number;<br>在keepalive链接上所允许请求的最大资源数量；默认100</p>
+</li>
+<li><p>keepalive_disable none|browser …;<br>指明禁止为何种浏览器使用keepalive功能；</p>
+</li>
+<li><p>send_timeout #;<br>发送响应报文超时时长，默认60s</p>
+</li>
+<li><p>client_body_buffer_size size;<br>接受客户端请求报文body的缓冲区大小，默认16k；超出此值时，将被移存于磁盘上</p>
+</li>
+<li><p>client_body_temp_path path [level1 [level2 [level3]]];<br>设定用于存储客户端请求body的临时储存路径及子目录结构和数量；</p>
+<pre><code>client_body_temp_path /var/tmp/client_body 2 2</code></pre></li>
+</ol>
+<p><strong>对客户端请求进行限制</strong></p>
+<ol start="19">
+<li><p>limit_except METHOD{…}<br>对指定范围外的其他方法进行访问控制；</p>
+<pre><code>limit_except GET{
+allow 172.16.0.0/16;
+deny all;
+}</code></pre></li>
+<li><p>limit_rate speed;<br>限制客户端每秒钟所能够传输的字节数，默认为0表示无限制。</p>
+</li>
+</ol>
+<p><strong>文件操作优化相关配置</strong></p>
+<ol start="21">
+<li><p>aio on|off</p>
+</li>
+<li><p>directio size|off;</p>
+</li>
+<li><p>open_file_cache off;<br>open_file_cache  max=N [inactive=time]</p>
+<p>nginx可以缓存以下三种信息：</p>
+<ol>
+<li>文件描述符，文件大小和最近一次的修改时间</li>
+<li>打开的目录的结构</li>
+<li>没有找到的或者没有权限操作的文件的相关信息</li>
+</ol>
+</li>
+</ol>
+<p>max=N 表示可缓存的最大条目上限，则会使用LUR算法中删除最近最少使用的缓存项；</p>
+<p>inactive=time:在此处指定的时长内没有被访问的缓存项视为非活动缓存项，因此直接删除；</p>
+<ol start="24">
+<li><p>open_file_cache_errors on|off;<br>是否缓存找不到路径的文件，或没有权限访问的文件相关信息；</p>
+</li>
+<li><p>open_file_cache_valid time;<br>没隔多久检查一次缓存中缓存项的有效性，默认60s；</p>
+</li>
+<li><p>open_file_cache_min_uses number;<br>缓存项在非活动期限内最少应该被访问的次数；</p>
+</li>
+</ol>
+<p><strong>ngx_http_access_module模块(基于IP的访问控制)</strong><br>27. allow address|CIDR|unix|all;</p>
+<ol start="28">
+<li><p>deny address|CIDR|unix|all;</p>
+<p>  应用上下文：http,server,location,limit_except</p>
+</li>
+</ol>
+<p><strong>ngx_http_auth_basic_module模块(basic认证)</strong></p>
+<ol start="29">
+<li><p>auth_basic string|off;<br>使用http basic认证协议对用户进行认证</p>
+</li>
+<li><p>auth_basic_user_file file;<br>实现用户认证的账号文件；</p>
+</li>
+</ol>
+<ul>
+<li><p>文件格式：<br>name1:password1<br>name2:password2;commit</p>
+</li>
+<li><p>密码格式：</p>
+</li>
+</ul>
+<p>1.encrypted with the crypt（） function；<br>2.md5加密；</p>
+<pre><code>location /admin/ {
+auth_basic "admin"
+auth_basic_user_file /etc/nginx/.ngxhtpasswd;
+}</code></pre><p><strong>ngx_http_log_module模块(访问日志)</strong><br>31. log_format name string …;<br>定义日志格式及其名称，日志格式一般通过调用内置函数变量来定义</p>
+<ol start="32">
+<li>access_log path [format[buffer=size[flush=time]]];<br>access_log off;</li>
+</ol>
+<p>访问日志路径，格式名称以及缓存大小的刷写时间间隔；建议定义缓冲以提升性能。</p>
+<ol start="33">
+<li>open_log_file_cache max=N[inactive=time][min_user=N][valid=time];<br>open_log_file_cache off;</li>
+</ol>
+<p><strong>ngx_http_stub_status_module模块</strong><br>34. stub_status;<br>通过指定的url的stub_status</p>
+<p>Active connections: 291<br>server accepts handled requests<br> 16630948 16630948 31070465<br>Reading: 6 Writing: 179 Waiting: 106 </p>
+<ul>
+<li>Active connections:当前活动客户端连接数，包括<code>Waiting</code>连接数。</li>
+<li>accepts:已接受的客户端连接总数。</li>
+<li>handled:已处理连接的总数。通常，参数值与<code>accepts</code> 除非已达到某些资源限制（例如， <a href="http://nginx.org/en/docs/ngx_core_module.html#worker_connections" target="_blank" rel="noopener">worker_connections</a>限制）相同。</li>
+<li>requests:客户端请求的总数。</li>
+<li>Reading:nginx正在读取请求标头的当前连接数。</li>
+<li>Writing:nginx将响应写回客户端的当前连接数。</li>
+<li>Waiting:当前等待请求的空闲客户端连接数。</li>
+</ul>
+<p><strong>ngx_http_referer_module模块</strong><br>35. valid_referers none | blocked | server_names | string …;</p>
+<ul>
+<li>none 请求标头中不存在“Referer”字段;</li>
+<li>blocked：“Referer”字段出现在请求标头中，但其值已被防火墙或代理服务器删除; 这些值是不以“ http://”或“ https://” 开头的字符串;</li>
+<li>server_names：“Referer”请求头字段包含一个服务器名称;</li>
+<li>arbitrary string:直接字符串，可以使用通配符</li>
+<li>regular expression：以~起始的正则表达式</li>
+</ul>
+<p><strong>内置变量：$invalid_referer(所有不能符合valid_referer指令定义的引用请求均为不合法引用)</strong></p>
+<p>实例：</p>
+<pre><code>valid_referers none blocked server_names
+               *.example.com example.* www.example.org/galleries/
+               ~\.google\.;</code></pre><script>
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return; }
+            const img = document.createElement('img');
+            img.style = 'display:none !important;';
+            img.src = el.dataset.src;
+            img.addEventListener('error', () => {
+              img.remove();
+              el.style.color = 'inherit';
+              el.style.backgroundImage = 'none';
+              el.style.background = 'none';
+            });
+            img.addEventListener('load', () => {
+              img.remove();
+            });
+            document.body.appendChild(img);
+          });
+      </script>
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://jackhcc.github.io" rel="external nofollow noreferrer">JackHCC</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://jackhcc.github.io/posts/blog-program04.html">https://jackhcc.github.io/posts/blog-program04.html</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="https://jackhcc.github.io" target="_blank">JackHCC</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/Nginx/">
+                                    <span class="chip bg-color">Nginx</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/images/loading.gif" data-original="/medias/reward/aliqr.png" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/images/loading.gif" data-original="/medias/reward/wxqr.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+            
+        </div>
+    </div>
+
+    
+        <link rel="stylesheet" href="/libs/gitalk/gitalk.css">
+<link rel="stylesheet" href="/css/my-gitalk.css">
+
+<div class="card gitalk-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="gitalk-container" class="card-content"></div>
+</div>
+
+<script src="/libs/gitalk/gitalk.min.js"></script>
+<script>
+    let gitalk = new Gitalk({
+        clientID: '3821a0bbb773038a51fc',
+        clientSecret: '4b30b507d67ec5497ec0e77f43f80cb3e0d7dd3a',
+        repo: 'JackHCC.github.io',
+        owner: 'JackHCC',
+        admin: "JackHCC",
+        id: '2020-02-28T22-59-54',
+        distractionFreeMode: false  // Facebook-like distraction free mode
+    });
+
+    gitalk.render('gitalk-container');
+</script>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
+            <div class="card">
+                <a href="/posts/blog-program04.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/images/loading.gif" data-original="/medias/featureimages/11.jpg" class="responsive-img" alt="Nginx学习笔录">
+                        
+                        <span class="card-title">Nginx学习笔录</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            Nginx学习笔记大全
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-02-28
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E7%BC%96%E7%A8%8B/" class="post-category">
+                                    编程
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Nginx/">
+                        <span class="chip bg-color">Nginx</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/posts/blog-program03.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/images/loading.gif" data-original="/medias/featureimages/3.jpg" class="responsive-img" alt="Redis数据结构与基本命令">
+                        
+                        <span class="card-title">Redis数据结构与基本命令</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            Redis数据结构与基本命令大全
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-02-28
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E7%BC%96%E7%A8%8B/" class="post-category">
+                                    编程
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Redis/">
+                        <span class="chip bg-color">Redis</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+<!-- 代码块折行 -->
+
+<style type="text/css">
+code[class*="language-"], pre[class*="language-"] { white-space: pre !important; }
+</style>
+
+
+    
+
+</main>
+
+
+
+    <footer class="page-footer bg-color">
+    <div class="container row center-align" style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            <span id="year">2020</span>
+            <a href="https://jackhcc.github.io" target="_blank">杰克成</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                class="white-color">158.3k</span>&nbsp;字
+            
+            
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;人
+            </span>
+            
+            <br>
+            
+            <span id="sitetime">载入运行时间...</span>
+            <script>
+                function siteTime() {
+                    var seconds = 1000;
+                    var minutes = seconds * 60;
+                    var hours = minutes * 60;
+                    var days = hours * 24;
+                    var years = days * 365;
+                    var today = new Date();
+                    var startYear = "2020";
+                    var startMonth = "2";
+                    var startDate = "27";
+                    var startHour = "6";
+                    var startMinute = "30";
+                    var startSecond = "0";
+                    var todayYear = today.getFullYear();
+                    var todayMonth = today.getMonth() + 1;
+                    var todayDate = today.getDate();
+                    var todayHour = today.getHours();
+                    var todayMinute = today.getMinutes();
+                    var todaySecond = today.getSeconds();
+                    var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                    var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                    var diff = t2 - t1;
+                    var diffYears = Math.floor(diff / years);
+                    var diffDays = Math.floor((diff / days) - diffYears * 365);
+                    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+                    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) /
+                        minutes);
+                    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours -
+                        diffMinutes * minutes) / seconds);
+                    if (startYear == todayYear) {
+                        document.getElementById("year").innerHTML = todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffDays + " 天 " + diffHours +
+                            " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    } else {
+                        document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffYears + " 年 " + diffDays +
+                            " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    }
+                }
+                setInterval(siteTime, 1000);
+            </script>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/JackHCC" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:jackcc0701@163.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+    <a href="https://www.facebook.com/profile.php?id=100046343443643" class="tooltipped" target="_blank" data-tooltip="关注我的Facebook: https://www.facebook.com/profile.php?id=100046343443643" data-position="top" data-delay="50">
+        <i class="fab fa-facebook-f"></i>
+    </a>
+
+
+
+    <a href="https://twitter.com/JackChe66021834" class="tooltipped" target="_blank" data-tooltip="关注我的Twitter: https://twitter.com/JackChe66021834" data-position="top" data-delay="50">
+        <i class="fab fa-twitter"></i>
+    </a>
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=2508074836" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 2508074836" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+    <a href="https://weibo.com/u/6885584679" class="tooltipped" target="_blank" data-tooltip="关注我的微博: https://weibo.com/u/6885584679" data-position="top" data-delay="50">
+        <i class="fab fa-weibo"></i>
+    </a>
+
+
+
+    <a href="https://www.zhihu.com/people/8f8482f01f0d6a04e844efe32e0f0710" class="tooltipped" target="_blank" data-tooltip="关注我的知乎: https://www.zhihu.com/people/8f8482f01f0d6a04e844efe32e0f0710" data-position="top" data-delay="50">
+        <i class="fab fa-zhihu1">知</i>
+    </a>
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+    <script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script type="text/javascript" src="/js/fireworks.js"></script>
+
+    <script type="text/javascript">
+        //只在桌面版网页启用特效
+        var windowWidth = $(window).width();
+        if (windowWidth > 768) {
+            document.write('<script type="text/javascript" src="/js/sakura.js"><\/script>'); }
+    </script>
+
+    <!-- weather -->
+	<script type="text/javascript">
+	WIDGET = {FID: 'TToslpmkVO'}
+	</script>
+	<script type="text/javascript" src="https://apip.weatherdt.com/float/static/js/r.js?v=1111"></script>
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <!-- Baidu Analytics -->
+
+<script>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+    <!-- Baidu Push -->
+
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+        <script src="//code.tidio.co/kqhlkxviiccyoa0czpfpu4ijuey9hfre.js"></script>
+        <script> 
+            $(document).ready(function () {
+                setInterval(change_Tidio, 50);  
+                function change_Tidio() { 
+                    var tidio=$("#tidio-chat iframe");
+                    if(tidio.css("display")=="block"&& $(window).width()>977 ){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" &&$(window).width()>977)>0? "-40px" : ($("div.toc-title").length&&$(window).width()>977)>0?"85px":"20px";   
+                        document.getElementById("tidio-chat-iframe").style.right="-15px";   
+                        document.getElementById("tidio-chat-iframe").style.height=parseInt(tidio.css("height"))>=520?"520px":tidio.css("height");
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    } 
+                    else if(tidio.css("display")=="block"&&$(window).width()>601 &&$(window).width()<992 ){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" && 601< $(window).width()<992)>0? "-40px":"20px" ;   
+                        document.getElementById("tidio-chat-iframe").style.right="-15px"; 
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    }
+                    else if(tidio.css("display")=="block"&&$(window).width()<601 && parseInt(tidio.css("height"))<230){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" && $(window).width()<601)>0? "-10px":"45px" ;   
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    }
+                    if( tidio.css("display")=="block"&&$(window).width()<601 && parseInt(tidio.css("height"))>=230){
+                        document.getElementById("tidio-chat-iframe").style.zIndex="998";
+                    }
+                } 
+            }); 
+        </script>
+    
+
+    
+
+    
+    <script type="text/javascript" color="0,0,255"
+        pointColor="0,0,255" opacity='0.7'
+        zIndex="-1" count="99"
+        src="/libs/background/canvas-nest.js"></script>
+    
+
+    
+
+    
+    <script type="text/javascript" src="/libs/background/ribbon-dynamic.js" async="async"></script>
+    
+    
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+        <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
+        <script>
+        $('a').each(function() {
+          const $this = $(this);
+          const href = $this.attr('href');
+          if (href && href.match('^((http|https|thunder|qqdl|ed2k|Flashget|qbrowser|ftp|rtsp|mms)://)')) {
+            const strs = href.split('/');
+            if (strs.length >= 3) {
+                const host = strs[2];
+                if (host !== 'your_domain' || window.location.host) {
+                    $this.attr('href', '/go.html?u='+Base64.encode(href)+'').attr('rel', 'external nofollow noopener noreferrer');
+                    if (true) {
+                        $this.attr('target', '_blank');
+                    }
+                }
+            }
+          }
+        });
+        </script><script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script></body>
+
+</html>
+
