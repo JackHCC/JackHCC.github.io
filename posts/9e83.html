@@ -1,0 +1,1171 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="Ghidra Pcode详解, JackHCC">
+    <meta name="description" content="Ghidra IR中间语言介绍~">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Ghidra Pcode详解 | JackHCC</title>
+    <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/my.css">
+    
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/jquery/jquery.min.js"></script>
+    
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper head-container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/me.jpg" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">JackHCC</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>留言板</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>友情链接</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/me.jpg" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">JackHCC</div>
+        <div class="logo-desc">
+            
+            Make the world betterrrr!!!
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			留言板
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			友情链接
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/JackHCC/JackHCC.github.io" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/JackHCC/JackHCC.github.io" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/5.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">Ghidra Pcode详解</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="container content">
+
+    
+    <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/Ghidra-IR/">
+                                <span class="chip bg-color">Ghidra | IR</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/Decompile/" class="post-category">
+                                Decompile
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2021-07-25
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2021-07-25
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    1.8k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    6 分
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <p>Pcode</p>
+<p>P-code 是一种为逆向工程应用设计的<em>寄存器传输语言</em>。该语言足够通用，可以对许多不同处理器的行为进行建模。通过这种方式建模，将不同处理器的分析放到一个通用的框架中，促进可重定向分析算法和应用程序的开发。</p>
+<p>从根本上说，p-code 的工作原理是将单个处理器指令转换为一系列<strong>p-code 操作</strong>，这些<strong>操作</strong>将处理器状态的一部分作为输入和输出变量 ( <strong>varnodes</strong> )。一组独特的 p-code 操作（由<strong>opcode</strong>区分）包含一组相当紧密的由通用处理器执行的算术和逻辑操作。将指令直接转换为这些操作称为<strong>原始 Pcode</strong>。原始 Pcode可用于直接模拟指令执行，通常遵循相同的控制流，尽管它可能会添加一些自己的内部控制流。</p>
+<p>Pcode 专门设计用于促进<em>数据流</em>图的构建，以便对反汇编指令进行后续分析。Varnodes 和 p-code 操作符可以被明确地认为是这些图中的节点。生成原始 p-code 是图构建的必要第一步，但需要额外的步骤，这引入了一些新的操作码。其中两个 <strong>MULTIEQUAL</strong>和<strong>INDIRECT</strong>特定于图构建过程，但可以在随后的图分析和转换过程中引入其他操作码，并帮助保持恢复的数据类型关系。所有新的操作码都在原始原始 Pcode翻译中都不会发生。最后，一些 Pcode运算符 <strong>CALL</strong>、 <strong>CALLIND</strong>和<strong>RETURN</strong>可能在分析期间更改了它们的输入和输出变量节点，以便它们不再匹配其<em>原始 Pcode</em>形式。</p>
+<p><strong>p-code的核心概念是：</strong></p>
+<p><strong>Address Space</strong></p>
+<p>Pcode 的<strong>地址空间</strong>是 RAM 的概括。它被简单地定义为可以由 Pcode操作读取和写入的索引字节序列。对于特定字节，标记它的唯一索引是该字节的<strong>地址</strong>。地址空间有一个名称来标识它，一个大小表示空间中不同索引的数量，以及与之关联的<strong>字节顺序</strong>，表示整数和其他多字节值如何编码到空间中。一个典型的处理器将有一个<strong>ram</strong>空间，用于模拟可通过其主数据总线访问的内存，以及一个<strong>寄存器</strong>用于对处理器的通用寄存器进行建模的空间。处理器操作的任何数据都必须在某个地址空间中。处理器的规范可以根据需要自由定义任意数量的地址空间。总是有一个特殊的地址空间，称为<strong>常量</strong>地址空间，用于对 Pcode操作所需的任何常量值进行编码。生成 p-code 的系统通常也使用专用的<strong>临时</strong>空间，可以将其视为临时寄存器的无底源。这些用于在对指令行为建模时保存中间值。</p>
+<p>Pcode规范允许地址空间的可寻址单元大于一个字节。每个地址空间都有一个<strong>wordsize</strong>属性，可以设置该属性来指示一个单元中的字节数。大于 1 的字大小对 Pcode的表示几乎没有影响。地址空间中的所有偏移量在内部仍表示为字节偏移量。唯一的例外是<strong>LOAD</strong>和 <strong>STORE</strong> p-code 操作。这些操作读取一个指针偏移量，当取消引用指针时，该偏移量必须正确缩放以获得正确的字节偏移量。wordsize 属性对任何其他 Pcode操作没有影响。</p>
+<p><strong>Varnode</strong></p>
+<p>一个<strong>varnode</strong>要么是寄存器或存储器位置的概括。它由形式三元组表示：地址空间、空间偏移量和大小。直观地，varnode 是某个地址空间中的连续字节序列，可以将其视为单个值。p-code 操作对数据的所有操作都发生在 varnode 上。</p>
+<p>Varnodes 本身只是一个连续的字节块，由地址和大小标识，并且它们没有类型。然而，Pcode操作可以强制对 varnode进行三种<em>类型</em>解释之一：整数、布尔值和浮点数。</p>
+<ul>
+<li><p>操作整数的操作总是将 varnode 解释为使用与包含 varnode 的地址空间相关联的字节序的二进制补码编码。</p>
+</li>
+<li><p>用作布尔值的 varnode 被假定为单个字节，该字节只能取值 0，表示<em>false</em>，而 1，表示<em>true</em>。</p>
+</li>
+<li><p>浮点运算使用正在建模的处理器预期的编码，这取决于 varnode 的大小。对于大多数处理器，这些编码由 IEEE 754 标准描述，但原则上其他编码也是可能的。</p>
+</li>
+</ul>
+<p>如果将 varnode 指定为<strong>常量</strong>地址空间的偏移量，则在使用该 varnode 的任何 pcode操作中，该偏移量将被解释为常量或立即数。在这种情况下，varnode 的大小可以被视为可用于常量编码的大小或精度。与其他 varnodes 一样，常量只有使用它们的 p 代码操作强制使用的类型。</p>
+<p><strong>P-code Operation</strong></p>
+<p>一个<strong>p-code操作</strong>是机器指令的模拟。所有 p-code操作在内部具有相同的基本格式。它们都将一个或多个 varnode 作为输入，并可选择生成单个输出 varnode。操作的动作由它的<strong>操作码</strong>决定。对于几乎所有的 p-code 操作，只有输出 varnode 可以修改其值；操作没有间接影响。唯一可能的例外是<em>伪</em>操作，当对指令的行为不完全了解时，有时需要伪操作。</p>
+<p>所有 p-code操作都与它们被翻译的原始处理器指令的地址相关联。对于单个指令，从零开始的 计数器用于枚举其转换中涉及的多个 p-code操作。地址和计数器成对称为 p-code操作的唯一<strong>序列号</strong>。p-code操作的控制流通常遵循序列号顺序。当一条指令的所有 p-code执行完成时，如果该指令有<em>失败</em>从语义上讲，p-code 控制流按照对应于 fall-through 地址处的指令的顺序，选择第一个 p-code 操作。类似地，如果 p-code操作导致控制流分支，则按顺序在目标地址执行第一个 p-code操作。</p>
+<p>可能的操作码列表类似于许多基于 RISC 的指令集。每个操作码的作用在下面的章节中详细描述，在名为“语法参考”的章节中给出了一个参考表。通常，特定 p-code 操作的大小或精度由 varnode 输入或输出的大小决定，而不是由操作码决定。</p>
+<h2 id="P-Code-Operation-Reference"><a href="#P-Code-Operation-Reference" class="headerlink" title="P-Code Operation Reference"></a>P-Code Operation Reference</h2><p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=YTU0MjQzZGI0ZGE3YjJmZGQ0YmFmMzM0ZDRmZDQ3MDhfZERzb3ZjRUdwbGFWT1ZLUlBIWVlrUG93amlqendjcE5fVG9rZW46Ym94Y241ZG15WGdOWkRxbUtlQXlqQldvUkRjXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><a href="https://ghidra.re/courses/languages/html/pcodedescription.html" target="_blank" rel="noopener">P-Code Operation Reference</a></p>
+<h3 id="Data-Moving"><a href="#Data-Moving" class="headerlink" title="Data Moving"></a>Data Moving</h3><p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=NjI1NjlhZDA1NDVmNTgyNmZlZGU4YjlhMmIxNjU1NzlfYWNEWG1ENFFId2pBeXJXN3ZuVGRXejhWT1htajdLYjRfVG9rZW46Ym94Y25TSjZNWER1NUxMMnVSdHZWZDJLMUF6XzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=NGFlNmI4Yzk3N2Q3NzNjZmNhMzNmNGE1YzU0MzFmYTVfZ1RGMm5lOHRxN1FSTm1PNkdzUTZ1cEZCVmltM043aVZfVG9rZW46Ym94Y24xZ1EzWGlIWTJoYkNtY0ljS3ZkVHZoXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=MzUxNDI2YzM3YmRhMTM3NTY4ZmVkZGQyZTlkODgwNGZfZ0JOajZBOXFsMU1majdPYmpMTGRqOXBDMGRKQW5ZcTdfVG9rZW46Ym94Y25xVjdoM1BidzVRU3g2NkhzdkZWSWJkXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<h3 id="Branching"><a href="#Branching" class="headerlink" title="Branching"></a>Branching</h3><p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=NDVlY2JmZDQyY2MxZWZkOGQ4MjJhNjM4Y2IyOWI4ZGNfSkJ5NHJyM1dZSmVZOHVqZUZ4cFJ3bW1ONUJ1ME5pdVVfVG9rZW46Ym94Y25VYkFXU0JjNUlNTUNkWUwzSzdXc2RnXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=MTliMmQwOGUzOGRmMmJjNzQzNWFlZGJjZTEzNjdkZmRfYW5LcnF0MjlOS0xhZ3o3bjRXNzY1VXpiRXZvVlNPaEdfVG9rZW46Ym94Y25kUVNLTjZGbDdTRFNDQmROMEZjTUJiXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=N2I5ZjdlZGVjOTcwZDUyNmFjNjU1MDE4OTlkYWM0Y2RfakZ3RUo3NE1oNTZPS1JJZkJLTUJCenY3bVJvSWRMcmFfVG9rZW46Ym94Y24zY0RCaXprN1FXTm9nNXUxaE5aRVRoXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=NjczYjhiNzQ3ZTM1NzhmNzI2MzI1MTRiNDFkMTA2ZjdfcjliU096cTBMUEN5UEpZWjhrbVdrZWhwc1NwQXQ4aENfVG9rZW46Ym94Y25GM0tVa2kzR2l3ejVHaTEwZ250SjFnXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=NGUwZmE1MTU0OTVmY2FjMGI3OWMyOGU3YWRjN2JlY2RfM3pXMUpUV1I0ZWNFeHp6SmtFclJmMjNYR0lYcTBCbUxfVG9rZW46Ym94Y25ra1VGNjVvMDh5cWNNUEFpWXNqQjFIXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=MGJlN2ViMzBlYzEyNDY1OWExZWU2NGI3NzY1OTc5N2Rfd3lDQW9DSHQyWXNJSzIzOUNzdkg1YzBsZXpSRXRsRm9fVG9rZW46Ym94Y25wV3hEYzNmVGlPRVQ3dHpQclNZQ2RlXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<h3 id="Extension-Truncation"><a href="#Extension-Truncation" class="headerlink" title="Extension/Truncation"></a>Extension/Truncation</h3><p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=OGY2MjZlZDlkMWE5OTIyZThjZDZkYjNjOTZlZTVkOGZfSjhXY25sdk42SGdKSkVVYUxacHRFN2haSTVJMFBFMVJfVG9rZW46Ym94Y25xYndIazByUmRMYkVUYXRWZXhxOUxmXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=Y2RjOWVjYTYyOWIxYmFiODgzMWEwNTNjNTIxMDU5MDlfTHBqaWw5dVJKUXh1MEczdVdNUWw5ZEtIb0VGem1VVExfVG9rZW46Ym94Y25XclFIWmVOTmFBd2NybUFCSEI2RU5iXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=ODU1NTA2NTAzYjViNWFmNjQ1Y2UxZGRkYTBiNTUzMzVfSTZta3AzdTlVUnptdktxRHFRbVFTMkJlZWhNV2NNb3ZfVG9rZW46Ym94Y25JTm5vaFE1TU9EQ3BMTWYxVkMxdzV3XzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=YzA5NzA1Y2ZjNTkwMmQ5MzA0ZjBjYmI5OTQyNTU4YWFfb3dZNjJ6aGl0Vms5MjdCTXFuZndWQ3NaY2FvRk9hcENfVG9rZW46Ym94Y25oZUdVZHUxekw2Mk45aU91dUpHWlZjXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<h3 id="Integer-Comparison"><a href="#Integer-Comparison" class="headerlink" title="Integer Comparison"></a>Integer Comparison</h3><p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=NmU0NWEwYWJhOTNhMDY0ZmRhZDJjMDExMjcwOGMyOGFfazRtTE9WMldIeFQzeDlqbGtQeGZ3dGJkNlI3TjQwazJfVG9rZW46Ym94Y25WQ0J3QjNJcWlhRnJ1OHF2Z0s5ZnhkXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=MDA3MzA3ZWFlNjc0ZTQ5NzQxMzAxMDc4OTAyNzI1MmFfTUpRb0MweGRudWQ0U0VON3pEeUwzVmdvTTlqWk1aT0hfVG9rZW46Ym94Y25IeTJRdDBMV09TNW5QOHAzQXRERWFmXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=NWUzZmNkNzVlNGVjNDY0YzNiNDJhM2U5YWQ5YmY3M2FfOUxMcE9LNWxTRk1GWFZhTTlPdHl3ZDdhdEFMVWxGclFfVG9rZW46Ym94Y25wNXA0b1hVYmdNZzhpaFJVcHBSRjJlXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=YmI0NDU3ZTMyYmJiMTRhY2VhMzA1OGIyYTM0YTdkMTlfOWtITDRkdzVPd0JJMlVMc1FZV2thWE5aT2hHdW9DWGxfVG9rZW46Ym94Y25xTnI5ZjlUT043b1pHZmtWNnB6c0ZoXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=YzkwN2Q1MmRlMzFhNWRjYTc3MTMxMDQwNDFlMzNkZWJfYW1rSWhoUEIweEczWGRMNURHZFgyTXNkVW1MUFN3c1ZfVG9rZW46Ym94Y25JcmROOFJKRUZPM2ZOelRiZ0RqRmxmXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=OTFhYzgyYjI1MTVjM2E2NzgwYTQ4N2VjODFlZTA3ZDBfN3RraWtMT2x0M2dCREtlYm95TXJiOFNia2pkNVVJbjZfVG9rZW46Ym94Y25ZUHA3eTZDWEdONVNDTzFKczRqU0ZjXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<h3 id="Integer-Arithmetic"><a href="#Integer-Arithmetic" class="headerlink" title="Integer Arithmetic"></a>Integer Arithmetic</h3><p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=YzFhMTg0YjU1OWYxYTBmNTJiNTZlY2EzYWJjZDU2NzFfaFNhdUlibGlPQ0hDS29DZWhZMW4xRENTQUR4eHE4dVJfVG9rZW46Ym94Y25hTVBueEw3R1B4azB6VG1VZXFTU1lkXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=ZGY5YjcxYzkwZDk1MzY1NGFiMTkxMDAxZmZlNTkyMDhfaXlUc1k0R2d4ZndjTVdnT0RpbnExVHNFdHZYOFNSckpfVG9rZW46Ym94Y25Rd2l0MFE0dWxrR0FycktQUmlhWnpkXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=OTA4OTJlZjE0OGVmNzQ0N2Y2YjJlMjM5MmJkZDUzZGNfM21ZaXp4bUVHWTlmZ3FlSWtvNnVlTEkyVVhPRGpFd2hfVG9rZW46Ym94Y25IZEl1bEpXNnI3TUFKYXk5SnR4ZzdjXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=NmVjYjI0ZmZjOWY2NDAzYmE5ODFiNjM2YmRiYzNhMGVfZzBOQzA1WEFoWHk0bFllRXdxa05ja1d0UkVBdnVTSzFfVG9rZW46Ym94Y25KY1hOeHloRVBuSFJrZkNZellpR0tnXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=MWNjZWNmMWY4Zjk5MTRmMDU2NTEyNjdjMDllN2RiYzlfUld0NUZGbHUyQ1lCcEFLOWNubHZhMkFVV1plbXVKUjdfVG9rZW46Ym94Y256ZzZ1WTc4Q013NnpRZ000SmxJSmVLXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=NGUzNTZlMTk3YTY4YTcxMDZmNTFkZTBjNmIwOTk3OTdfWWk2ZUFRZElZYWVtRlNCVTFybVg2U0FERDloMWRWU3RfVG9rZW46Ym94Y25zblUzMG90c21najBmNm9VQ3h2WWloXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=MDc3Yjg5N2VlOGZlMzk0MzU2MWFhZDEzY2E3YTQ4M2NfUGx6TkFDY1VPRmY5Y3lpbXVDT291NW9nNlJWR0NUaXpfVG9rZW46Ym94Y24wcVFRcW9LdXV6WjFVTnpuUDA2QkdnXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=ZjQ4MTA0YTNjMmI1NDkyNTg4MzgxODVjNjc3ZjJmZDZfck1kYXlieGFuSTlKYmRrTUdPM2Z3TE53cWF3OWp1THNfVG9rZW46Ym94Y25ZVGNxQUY4d0tsNjd5VHcyUFVVc3hmXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<h3 id="Overflow-Test"><a href="#Overflow-Test" class="headerlink" title="Overflow Test"></a>Overflow Test</h3><p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=MGQ0YWVmMTRmYzVjODczZjI3MTdkN2FhZWYzMjE2YTlfSnY1YlFWeENjTndMYng3WFA1TmhsYXJldGZFZzVLcDRfVG9rZW46Ym94Y241akdRMUM1N01CTDliQk1adERSeFFjXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=ZjM1MTE4OGMxMTZiODVhYmM2MjRjYTEwZjNjZmY4NjNfR01UbHhZMWw0OFNYejFINWtMdUNWNzNYUlNhbjNwM0dfVG9rZW46Ym94Y254Q21yd09Bc0VRRGxqbGpjejlSaExiXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=MWEwNjIwYzk1ZjA1ODQ1OTlkYWM0NTg3MDhlN2VmZWFfc2lXSWxJOTBxYkJIbFh0OGxhSm1PUlZZZWl1YzFGYVlfVG9rZW46Ym94Y25ONnBmR1h0MlBuT3F2U0w0cU5Fa25mXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=YjZmNTE1ZmMzYmNhMjEwMDEzYWIwMTA5YmFmNDZiNTBfR01ybU1ZOTUzOHBvclBKN2IyeEtOZXJKSzQwZUZzOFJfVG9rZW46Ym94Y25FWk1ERTE1SUVFWEQxUERrQ1RsdWNnXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<h3 id="Logical"><a href="#Logical" class="headerlink" title="Logical"></a>Logical</h3><p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=ZjM0YmU2ODk3MjEzYjNmYzgyMThjYmQ5MzViZGE3MzFfeDRVYWIyelVjVVhEaEN1T0xGS0h1RzQ4Q0NUa0tNRzdfVG9rZW46Ym94Y240cmF3U29RakZ4YzZtU0VDeUVwSUhlXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=NmJiM2VhZGY5MjNlNTA5NGY2NzExMWEzZWI5YWRhOTJfM2kxYXE1OTRlSGljRmhpdWMyc25TelV6VVpVcWcwbFdfVG9rZW46Ym94Y253YVN1U3JxTFkzV3NadnVtWUVaT05NXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=MTIyOWRjYjExMGJlZmE2NDljYzYwMDRhYTVkNjRiNTFfdzRtUkpMcU1pNTlYdXlZTGRvdURZSGcwdWVQU1ZDb09fVG9rZW46Ym94Y25EaTBHQm5DYkhKcURxVU5uZm5VM2ZmXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=ZGNlMDZlZjgzZWJkNjg2N2NhNDU1NzIxN2ExZDQ1NjZfeDFZR2JQbkN3NmtjRHQ5Y1dEVUZPS3FVejg3TUFRTzFfVG9rZW46Ym94Y25NU2VZVG55bEdybTc3N2RoVjM3bFBkXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<h3 id="Integer-Shift"><a href="#Integer-Shift" class="headerlink" title="Integer Shift"></a>Integer Shift</h3><p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=NGRmOWM5NmVmYzNmOGMwZGVkZDQ2ZDk4OGEyYTQwNDFfZThuMEkzWERmeVFsTDRBem1weXlZQlZVVDNGVXZKVzRfVG9rZW46Ym94Y253OW44c3gzcWRJZnpyQkdPaWVReXdaXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=NWZjYmEyYWIxNjM1NzdlMmQ2N2Q0YmEzY2QzYTA3N2ZfcUFoWWRxV0pVeVNnTlJQUW85TnFVNGVnenBvcVo1MHRfVG9rZW46Ym94Y24yU2hwelZ6UnUwVVN5U3FDTkdDODFkXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=NTlmNTQ1NTIwYzBiMzE4Mjc1NzZiNzNjZDU5ZWNkZjZfN2NqMHhacDNqbGNacTJST2Q1Q2EwQ2lrSDBnYXk3U2tfVG9rZW46Ym94Y25QYmQ0NWFRODVNOUI2ZmpKOXUwbGpmXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<h3 id="Boolean"><a href="#Boolean" class="headerlink" title="Boolean"></a>Boolean</h3><p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=ODkwNzA3Zjc3MGEzODFjY2RhNzRmMGFmM2IyNTkyZjdfa3IxeWpzQzFEZG5jTjZwUURsdkhySDVsMG5VQUVpWnRfVG9rZW46Ym94Y25MZ3Rvd2tOWWQwbzZHcWE0bnB5M0lkXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=OGU1Zjk2NDQyZjI3MjFjMzQ0OWVlYTdlNmMzMzU2MjlfWVhOVWxHOHdiVzFFY0IwVXBFd1hheURxeW5LelNLRk9fVG9rZW46Ym94Y25lOWlKQ0MzdmxsQ1FTQ0FiUWZWRlBlXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=OWM2ZDhkZmJlYjhlMzg0ZmFjOGNjM2ZlNThmODUyMWZfSWxBbkhNQ1FWWHV4Q1pnSmJqaXBCOXdhMmRId25uSEFfVG9rZW46Ym94Y25tOGczT3hsTFZXbFg2RElzb2JQS3FmXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=NDc1NjgwODU2MDRjZjJlMjM2YzhiMjBiM2E0ZjkzYTdfOUhJb3pjVWtvVFMzZkVSbWhCdHA4c012SmwyVkdGaERfVG9rZW46Ym94Y25rZHJFbXBoc3JSMlVMbk00cnZhckFoXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<h3 id="Floating-Point-Comparison"><a href="#Floating-Point-Comparison" class="headerlink" title="Floating Point Comparison"></a>Floating Point Comparison</h3><p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=OWRmZmY3ZGI0ZDVlMTI5YWI1NTk0Nzc0ZTlkY2QyNjFfVEhtWXpJS1g2cWpDdmZDTnJaSzhPV3ZpaWJySnBFbTNfVG9rZW46Ym94Y25ENjdmemQ4TWdZWTM0WU5WaWw5NFFMXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=N2VhODhhOWFhYmM3YTcxNmJkMThkMTY0MTU5YzdmYjRfZE94eWFmRG1pcGxnbnhCU2xzS2xsUW10VjdiQnBoS3ZfVG9rZW46Ym94Y25aZzRURkh3azJWa3RVN3NQbG02eHBnXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=MWMzNjRhYjlhMDdiM2FiNDAxZTZjNWM0N2NmMzIxNWNfZzY3SnZybXB4d1F6ZWlJVXNMcWo4dTRLd3lxVXBhbWtfVG9rZW46Ym94Y251VUhEeE5taGJCUGdBdkdrcUlnN0hmXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=ZjhhN2ZmODkwNmNiZDQ4NGI3ZTliNjAyOGYwZDkwYzJfak1lWDdVc0U5WlR4R0pIRlpEcXI1U01YYnVmdnV5UmtfVG9rZW46Ym94Y25YdmdqUFRiQTNxZDdLRVBMV2dGZkVnXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<h3 id="Floating-Point-Arithmetic"><a href="#Floating-Point-Arithmetic" class="headerlink" title="Floating Point Arithmetic"></a>Floating Point Arithmetic</h3><p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=ZjNjZmY5MGQ5YTZlNmQ1MzE2Njk1MzUwMDFkMzc0NmNfOUJodmxyM01vYW15TjRSTUhxd2lNbmFiRkI1cFZsNW9fVG9rZW46Ym94Y242WVBsR3VXZ3RMdENrRnhWRmVjR2piXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=ZGQyZTdhNDI3ODFkMDZhZWFhZDNjOGEwOTUzMWM0ZjdfQ3dsOUFqTkd0dUtVTHJzNVZ6SWNqRDJCUmh5alNyMFpfVG9rZW46Ym94Y25NdGFPQW1LT0JQTW15OHlFUEluY09jXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=YWVhM2MwYTliZmI2ODZkNTFiYjhiYThkZDQ4MDM3ZDhfeG5kZHM5RWZBdmNtZG40UDA1MXNNbDhMMWY2dFVEOFhfVG9rZW46Ym94Y25CdnBqbDVCbFZsT1NNOTFJMGxwZk9kXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=ZmFmM2YwZGJlODljZjViNzA2NWMwZGFhN2UyMTFjM2RfWkhYbzhYamNpajA5eFk0d2FwY1FReEVPUENSU1hPYWtfVG9rZW46Ym94Y245VGFqNGpZcnNYNTAxV3BDYkRKdnlkXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=NjVkYTI0MmMxMDI5MTQwNjIxNDIxYjAwNDNiODk2NmFfWlBmV3dEZERxOFUyV0ZSRklNOHVIVlYzZTBZOHhwUW9fVG9rZW46Ym94Y250ZEdLdGFjWUJNdDU1UWQydTFiRWtmXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=OWZkNGNmYTZiNGQ4NmUxMTgxNTVmNTk2NjJlYjg1YWFfN0drd0ZsRDFXZzQ1WVp3NnB3WkVhanNoaXhvWTVJSUdfVG9rZW46Ym94Y25CMVFxYlJQU2FJSE1zN0RlYmtyVHRiXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=NzZhYmU1MDUzNWQyOTMxNDI5OTNlYWM0ZmJjMGE1ZmNfaGRkY1BZN2sxRVpKcjNnOFFXejlmSXdaSWowb2pLTXVfVG9rZW46Ym94Y254SkZ0SmNlU1RpdUJPVHYzOTdpaXZiXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<h3 id="Floating-Point-Conversion"><a href="#Floating-Point-Conversion" class="headerlink" title="Floating Point Conversion"></a>Floating Point Conversion</h3><p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=MzgxMDJlM2QwMGVhODFlODM2NjIzZWEwYjJhNjVlNDhfRXhVdXFwdm5CZFRQQVpBYTd3OU4wdjAyQ0g2NzBzbWJfVG9rZW46Ym94Y25YOVZyVzUwTTBqcnVGYm83aEl1VFYzXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=YmIzZGM2ZDMwY2M4NjlmYzI3MWI4YmFhMTAyM2U3M2FfSzFXV1Jua0UxTXZDVkwwWDkySUFBOW1jcnBKbE9JM2xfVG9rZW46Ym94Y252dktzTHVkN0llbTk5SmtVa1BUS3JiXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=MWVlYzRkNWFmZmM2NTBlMzcwZmE0Y2M5MDAxYjFjN2NfQURUS1djMU9YeXlCanFhbW81QUNYeWxNT3M5QndCMEFfVG9rZW46Ym94Y25JNmFOTnlMQ2dlSEpmNmtlOWZTY2ZjXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=YTU2MTk4M2ZjNzZjY2NmN2FmNTU0Y2U2MmYzN2E2ODZfTFhSOTJjeE1keHlwakN5NFU1ZWZFcHJkWHM1aHRyNXFfVG9rZW46Ym94Y25rOWJ1WXZrWU41NjJzTEk3T2ZEczZkXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=MTI2OTFkNGIzODYwZmExZjBjNjkyMGRhMzJlNmNjNTFfUTZudHdxWFJ2N3p1dWdscVdNNm9NSkczWnJGVW5GbGdfVG9rZW46Ym94Y25xTlNobmZBdXhPd2pnOUNLcHVoVlBmXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=N2E5NzdlNWYxZDgwZTExMTU5NmNhZDAxNDg4MzM0ZmJfbkRHcnVWcllQTHY1MUR4QjYybFNSaU1hM200N1FwMkdfVG9rZW46Ym94Y25LMHBySHZPa3dwQTZPWWJnSkVtNEs5XzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<h2 id="Pseudo-P-CODE-Operations"><a href="#Pseudo-P-CODE-Operations" class="headerlink" title="Pseudo P-CODE Operations"></a>Pseudo P-CODE Operations</h2><p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=YTNiYTg1OWUyMGJmN2ViNGE5NWM0MmZiMGM3ODg5NGNfUXprcnpzTExkM2V6d21DbDkzUTVRSFQ5dTVTaHAyYURfVG9rZW46Ym94Y25GMW1HYndWTVBrNUY5bDV6Q0JBUHpmXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=MTYzYjFiN2RjNjViYzk0Nzk1MjlmNWQ1ODY2NzNhZTlfdWRjNjF0bmZ5NHh4M3NxZFFhakRWNUEzNTRLb3IwSHlfVG9rZW46Ym94Y25sT1RDeDY0ZEZGMXpTZ0hROEplbW1mXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=NzczMDg0YzA5NmYxMzYxMTEzYzQ3ZmQyMDIwNGMzOTlfOXdNWHUxeXlMbWhRUFloVUo1ck55T2pNRnpubER3akpfVG9rZW46Ym94Y25BRmlHeWYycXhVbDFKTm9KYmdvMEtXXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<h2 id="Additional-P-CODE-Operations"><a href="#Additional-P-CODE-Operations" class="headerlink" title="Additional P-CODE Operations"></a>Additional P-CODE Operations</h2><p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=NjhhMmMyMTliNjlmOGVhOGIwNzA5ZTZiODhmNjQwOGFfRlNGZXE4MnYyQ0l6WU1IMzFtcHhwbGJvZjhqN2tWeFhfVG9rZW46Ym94Y25aQkZQMjBqbUdLeko5RnVVeXZnakplXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=ODllODg0N2FlNjBlY2JmNWUwNThkOTE5YjI0YTVlOWRfZURmdEZ1cERjbzlTUWZCMmI4ZFZqY2Fvd0swenllcDVfVG9rZW46Ym94Y25QZ3VreUVmbE0wRGlKbk9sUnhTc0JmXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=ZDFlNzY2ZTZkNmVjYmMxNDEwYjgxNWI2NWJhYzc2YTlfQlRud2cyWVFZSHpmQ0RDeUdsSFBCdVc1QjJYanJSR1FfVG9rZW46Ym94Y25WbXhiTVdHd2RpSERySEM5eUVKTmNxXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=YjBmNzE2MjE3ZWQ1ZjY0YjM4YzM5YWM2OTA5Y2U0MzZfazUxUmpuRnY4d1ZYd1RocVcyTmpPQTFPRmVMd2hqM0NfVG9rZW46Ym94Y242aHlBMG1NSjQ1V0d5RkhiQXlxRE1jXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://starcross.feishu.cn/space/api/box/stream/download/asynccode/?code=YjE2MzMzMTk1MWYyMDQ4MmExODAwNTk5YTUwYjk2ZGFfRmpPaWFRRTRNeGxGVXVmNXR5dXhHUnI0TUp4eERsRGlfVG9rZW46Ym94Y254cTVETkYwOG5QVzVPMUh2MnRjb0tjXzE2MjcxNDgxNzY6MTYyNzE1MTc3Nl9WNA" alt="img"></p>
+<h2 id="Syntax-Reference"><a href="#Syntax-Reference" class="headerlink" title="Syntax Reference"></a>Syntax Reference</h2><p><strong><a href="https://ghidra.re/courses/languages/html/reference.html" target="_blank" rel="noopener">Syntax Reference</a></strong></p>
+<p>无法复制加载中的内容</p>
+<script>
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return; }
+            const img = document.createElement('img');
+            img.style = 'display:none !important;';
+            img.src = el.dataset.src;
+            img.addEventListener('error', () => {
+              img.remove();
+              el.style.color = 'inherit';
+              el.style.backgroundImage = 'none';
+              el.style.background = 'none';
+            });
+            img.addEventListener('load', () => {
+              img.remove();
+            });
+            document.body.appendChild(img);
+          });
+      </script>
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://jackhcc.github.io" rel="external nofollow noreferrer">杰克成</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://jackhcc.github.io/posts/9e83.html">https://jackhcc.github.io/posts/9e83.html</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="https://jackhcc.github.io" target="_blank">杰克成</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/Ghidra-IR/">
+                                    <span class="chip bg-color">Ghidra | IR</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/reward/aliqr.png" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/reward/wxqr.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+            
+        </div>
+    </div>
+
+    
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/gitalk/gitalk.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/my-gitalk.css">
+
+<div class="card gitalk-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="gitalk-container" class="card-content"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/gitalk/gitalk.min.js"></script>
+<script>
+    let gitalk = new Gitalk({
+        clientID: '3821a0bbb773038a51fc',
+        clientSecret: '4b30b507d67ec5497ec0e77f43f80cb3e0d7dd3a',
+        repo: 'JackHCC.github.io',
+        owner: 'JackHCC',
+        admin: "JackHCC",
+        id: '2021-07-25T01-36-16',
+        distractionFreeMode: false  // Facebook-like distraction free mode
+    });
+
+    gitalk.render('gitalk-container');
+</script>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/posts/c35a.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/2.jpg" class="responsive-img" alt="从零开始的内核ebpf开发之旅">
+                        
+                        <span class="card-title">从零开始的内核ebpf开发之旅</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            从零开始的学习内核ebpf
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-07-25
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Linux-Kernel/" class="post-category">
+                                    Linux Kernel
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/EBPF-Linux-Kernel/">
+                        <span class="chip bg-color">EBPF | Linux Kernel</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/posts/3d8e.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/22.jpg" class="responsive-img" alt="反编译理论基础">
+                        
+                        <span class="card-title">反编译理论基础</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            反编译基础知识与算法
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-07-25
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Decompile/" class="post-category">
+                                    Decompile
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Decompiling-Basic/">
+                        <span class="chip bg-color">Decompiling | Basic</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeShrink.js"></script>
+
+
+<!-- 代码块折行 -->
+
+<style type="text/css">
+code[class*="language-"], pre[class*="language-"] { white-space: pre !important; }
+</style>
+
+
+    
+
+</main>
+
+
+
+    <footer class="page-footer bg-color">
+    <div class="container row center-align" style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            <span id="year">2020</span>
+            <a href="https://jackhcc.github.io" target="_blank">杰克成</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                class="white-color">646.8k</span>&nbsp;字
+            
+            
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;人
+            </span>
+            
+            <br>
+            
+            <span id="sitetime">载入运行时间...</span>
+            <script>
+                function siteTime() {
+                    var seconds = 1000;
+                    var minutes = seconds * 60;
+                    var hours = minutes * 60;
+                    var days = hours * 24;
+                    var years = days * 365;
+                    var today = new Date();
+                    var startYear = "2020";
+                    var startMonth = "2";
+                    var startDate = "27";
+                    var startHour = "6";
+                    var startMinute = "30";
+                    var startSecond = "0";
+                    var todayYear = today.getFullYear();
+                    var todayMonth = today.getMonth() + 1;
+                    var todayDate = today.getDate();
+                    var todayHour = today.getHours();
+                    var todayMinute = today.getMinutes();
+                    var todaySecond = today.getSeconds();
+                    var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                    var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                    var diff = t2 - t1;
+                    var diffYears = Math.floor(diff / years);
+                    var diffDays = Math.floor((diff / days) - diffYears * 365);
+                    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+                    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) /
+                        minutes);
+                    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours -
+                        diffMinutes * minutes) / seconds);
+                    if (startYear == todayYear) {
+                        document.getElementById("year").innerHTML = todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffDays + " 天 " + diffHours +
+                            " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    } else {
+                        document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffYears + " 年 " + diffDays +
+                            " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    }
+                }
+                setInterval(siteTime, 1000);
+            </script>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/JackHCC" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:jackcc0701@163.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+    <a href="https://www.facebook.com/profile.php?id=100046343443643" class="tooltipped" target="_blank" data-tooltip="关注我的Facebook: https://www.facebook.com/profile.php?id=100046343443643" data-position="top" data-delay="50">
+        <i class="fab fa-facebook-f"></i>
+    </a>
+
+
+
+    <a href="https://twitter.com/JackChe66021834" class="tooltipped" target="_blank" data-tooltip="关注我的Twitter: https://twitter.com/JackChe66021834" data-position="top" data-delay="50">
+        <i class="fab fa-twitter"></i>
+    </a>
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=2508074836" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 2508074836" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+    <a href="https://weibo.com/u/6885584679" class="tooltipped" target="_blank" data-tooltip="关注我的微博: https://weibo.com/u/6885584679" data-position="top" data-delay="50">
+        <i class="fab fa-weibo"></i>
+    </a>
+
+
+
+    <a href="https://www.zhihu.com/people/8f8482f01f0d6a04e844efe32e0f0710" class="tooltipped" target="_blank" data-tooltip="关注我的知乎: https://www.zhihu.com/people/8f8482f01f0d6a04e844efe32e0f0710" data-position="top" data-delay="50">
+        <i class="fab fa-zhihu1">知</i>
+    </a>
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/materialize/materialize.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/aos/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/js/matery.js"></script>
+
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+    <script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script type="text/javascript" src="/js/fireworks.js"></script>
+
+    <script type="text/javascript">
+        //只在桌面版网页启用特效
+        var windowWidth = $(window).width();
+        if (windowWidth > 768) {
+            document.write('<script type="text/javascript" src="/js/sakura.js"><\/script>'); }
+    </script>
+
+    <!-- weather -->
+	<script type="text/javascript">
+	WIDGET = {FID: 'TToslpmkVO'}
+	</script>
+	<script type="text/javascript" src="https://apip.weatherdt.com/float/static/js/r.js?v=1111"></script>
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <!-- Baidu Analytics -->
+
+<script>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+    <!-- Baidu Push -->
+
+    
+    
+    <script async src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+        <script src="//code.tidio.co/kqhlkxviiccyoa0czpfpu4ijuey9hfre.js"></script>
+        <script> 
+            $(document).ready(function () {
+                setInterval(change_Tidio, 50);  
+                function change_Tidio() { 
+                    var tidio=$("#tidio-chat iframe");
+                    if(tidio.css("display")=="block"&& $(window).width()>977 ){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" &&$(window).width()>977)>0? "-40px" : ($("div.toc-title").length&&$(window).width()>977)>0?"85px":"20px";   
+                        document.getElementById("tidio-chat-iframe").style.right="-15px";   
+                        document.getElementById("tidio-chat-iframe").style.height=parseInt(tidio.css("height"))>=520?"520px":tidio.css("height");
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    } 
+                    else if(tidio.css("display")=="block"&&$(window).width()>601 &&$(window).width()<992 ){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" && 601< $(window).width()<992)>0? "-40px":"20px" ;   
+                        document.getElementById("tidio-chat-iframe").style.right="-15px"; 
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    }
+                    else if(tidio.css("display")=="block"&&$(window).width()<601 && parseInt(tidio.css("height"))<230){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" && $(window).width()<601)>0? "-10px":"45px" ;   
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    }
+                    if( tidio.css("display")=="block"&&$(window).width()<601 && parseInt(tidio.css("height"))>=230){
+                        document.getElementById("tidio-chat-iframe").style.zIndex="998";
+                    }
+                } 
+            }); 
+        </script>
+    
+
+    
+
+    
+    <script type="text/javascript" color="0,0,255"
+        pointColor="0,0,255" opacity='0.7'
+        zIndex="-1" count="99"
+        src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/background/canvas-nest.js"></script>
+    
+
+    
+
+    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/background/ribbon-dynamic.js" async="async"></script>
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+        <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
+        <script>
+        $('a').each(function() {
+          const $this = $(this);
+          const href = $this.attr('href');
+          if (href && href.match('^((http|https|thunder|qqdl|ed2k|Flashget|qbrowser|ftp|rtsp|mms)://)')) {
+            const strs = href.split('/');
+            if (strs.length >= 3) {
+                const host = strs[2];
+                if (host !== 'your_domain' || window.location.host) {
+                    $this.attr('href', '/go.html?u='+Base64.encode(href)+'').attr('rel', 'external nofollow noopener noreferrer');
+                    if (true) {
+                        $this.attr('target', '_blank');
+                    }
+                }
+            }
+          }
+        });
+        </script><script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script></body>
+
+</html>
+
