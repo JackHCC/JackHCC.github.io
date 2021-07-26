@@ -1,0 +1,1514 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="Ghidra Pcode详解, JackHCC">
+    <meta name="description" content="Ghidra IR中间语言介绍~">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Ghidra Pcode详解 | JackHCC</title>
+    <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/my.css">
+    
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/jquery/jquery.min.js"></script>
+    
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper head-container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/me.jpg" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">JackHCC</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>留言板</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>友情链接</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/me.jpg" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">JackHCC</div>
+        <div class="logo-desc">
+            
+            Make the world betterrrr!!!
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			留言板
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			友情链接
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/JackHCC/JackHCC.github.io" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/JackHCC/JackHCC.github.io" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/5.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">Ghidra Pcode详解</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="container content">
+
+    
+    <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/Ghidra/">
+                                <span class="chip bg-color">Ghidra</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/Decompile/" class="post-category">
+                                Decompile
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2021-07-25
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2021-07-27
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    2.7k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    12 分
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <p>Pcode</p>
+<p>P-code 是一种为逆向工程应用设计的<em>寄存器传输语言</em>。该语言足够通用，可以对许多不同处理器的行为进行建模。通过这种方式建模，将不同处理器的分析放到一个通用的框架中，促进可重定向分析算法和应用程序的开发。</p>
+<p>从根本上说，p-code 的工作原理是将单个处理器指令转换为一系列<strong>p-code 操作</strong>，这些<strong>操作</strong>将处理器状态的一部分作为输入和输出变量 ( <strong>varnodes</strong> )。一组独特的 p-code 操作（由<strong>opcode</strong>区分）包含一组相当紧密的由通用处理器执行的算术和逻辑操作。将指令直接转换为这些操作称为<strong>原始 Pcode</strong>。原始 Pcode可用于直接模拟指令执行，通常遵循相同的控制流，尽管它可能会添加一些自己的内部控制流。</p>
+<p>Pcode 专门设计用于促进<em>数据流</em>图的构建，以便对反汇编指令进行后续分析。Varnodes 和 p-code 操作符可以被明确地认为是这些图中的节点。生成原始 p-code 是图构建的必要第一步，但需要额外的步骤，这引入了一些新的操作码。其中两个 <strong>MULTIEQUAL</strong>和<strong>INDIRECT</strong>特定于图构建过程，但可以在随后的图分析和转换过程中引入其他操作码，并帮助保持恢复的数据类型关系。所有新的操作码都在原始原始 Pcode翻译中都不会发生。最后，一些 Pcode运算符 <strong>CALL</strong>、 <strong>CALLIND</strong>和<strong>RETURN</strong>可能在分析期间更改了它们的输入和输出变量节点，以便它们不再匹配其<em>原始 Pcode</em>形式。</p>
+<p><strong>p-code的核心概念是：</strong></p>
+<p><strong>Address Space</strong></p>
+<p>Pcode 的<strong>地址空间</strong>是 RAM 的概括。它被简单地定义为可以由 Pcode操作读取和写入的索引字节序列。对于特定字节，标记它的唯一索引是该字节的<strong>地址</strong>。地址空间有一个名称来标识它，一个大小表示空间中不同索引的数量，以及与之关联的<strong>字节顺序</strong>，表示整数和其他多字节值如何编码到空间中。一个典型的处理器将有一个<strong>ram</strong>空间，用于模拟可通过其主数据总线访问的内存，以及一个<strong>寄存器</strong>用于对处理器的通用寄存器进行建模的空间。处理器操作的任何数据都必须在某个地址空间中。处理器的规范可以根据需要自由定义任意数量的地址空间。总是有一个特殊的地址空间，称为<strong>常量</strong>地址空间，用于对 Pcode操作所需的任何常量值进行编码。生成 p-code 的系统通常也使用专用的<strong>临时</strong>空间，可以将其视为临时寄存器的无底源。这些用于在对指令行为建模时保存中间值。</p>
+<p>Pcode规范允许地址空间的可寻址单元大于一个字节。每个地址空间都有一个<strong>wordsize</strong>属性，可以设置该属性来指示一个单元中的字节数。大于 1 的字大小对 Pcode的表示几乎没有影响。地址空间中的所有偏移量在内部仍表示为字节偏移量。唯一的例外是<strong>LOAD</strong>和 <strong>STORE</strong> p-code 操作。这些操作读取一个指针偏移量，当取消引用指针时，该偏移量必须正确缩放以获得正确的字节偏移量。wordsize 属性对任何其他 Pcode操作没有影响。</p>
+<p><strong>Varnode</strong></p>
+<p>一个<strong>varnode</strong>要么是寄存器或存储器位置的概括。它由形式三元组表示：地址空间、空间偏移量和大小。直观地，varnode 是某个地址空间中的连续字节序列，可以将其视为单个值。p-code 操作对数据的所有操作都发生在 varnode 上。</p>
+<p>Varnodes 本身只是一个连续的字节块，由地址和大小标识，并且它们没有类型。然而，Pcode操作可以强制对 varnode进行三种<em>类型</em>解释之一：整数、布尔值和浮点数。</p>
+<ul>
+<li><p>操作整数的操作总是将 varnode 解释为使用与包含 varnode 的地址空间相关联的字节序的二进制补码编码。</p>
+</li>
+<li><p>用作布尔值的 varnode 被假定为单个字节，该字节只能取值 0，表示<em>false</em>，而 1，表示<em>true</em>。</p>
+</li>
+<li><p>浮点运算使用正在建模的处理器预期的编码，这取决于 varnode 的大小。对于大多数处理器，这些编码由 IEEE 754 标准描述，但原则上其他编码也是可能的。</p>
+</li>
+</ul>
+<p>如果将 varnode 指定为<strong>常量</strong>地址空间的偏移量，则在使用该 varnode 的任何 pcode操作中，该偏移量将被解释为常量或立即数。在这种情况下，varnode 的大小可以被视为可用于常量编码的大小或精度。与其他 varnodes 一样，常量只有使用它们的 p 代码操作强制使用的类型。</p>
+<p><strong>P-code Operation</strong></p>
+<p>一个<strong>p-code操作</strong>是机器指令的模拟。所有 p-code操作在内部具有相同的基本格式。它们都将一个或多个 varnode 作为输入，并可选择生成单个输出 varnode。操作的动作由它的<strong>操作码</strong>决定。对于几乎所有的 p-code 操作，只有输出 varnode 可以修改其值；操作没有间接影响。唯一可能的例外是<em>伪</em>操作，当对指令的行为不完全了解时，有时需要伪操作。</p>
+<p>所有 p-code操作都与它们被翻译的原始处理器指令的地址相关联。对于单个指令，从零开始的 计数器用于枚举其转换中涉及的多个 p-code操作。地址和计数器成对称为 p-code操作的唯一<strong>序列号</strong>。p-code操作的控制流通常遵循序列号顺序。当一条指令的所有 p-code执行完成时，如果该指令有<em>失败</em>从语义上讲，p-code 控制流按照对应于 fall-through 地址处的指令的顺序，选择第一个 p-code 操作。类似地，如果 p-code操作导致控制流分支，则按顺序在目标地址执行第一个 p-code操作。</p>
+<p>可能的操作码列表类似于许多基于 RISC 的指令集。每个操作码的作用在下面的章节中详细描述，在名为“语法参考”的章节中给出了一个参考表。通常，特定 p-code 操作的大小或精度由 varnode 输入或输出的大小决定，而不是由操作码决定。</p>
+<h2 id="P-Code-Operation-Reference"><a href="#P-Code-Operation-Reference" class="headerlink" title="P-Code Operation Reference"></a>P-Code Operation Reference</h2><p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309626804432" alt=""></p>
+<p><a href="https://ghidra.re/courses/languages/html/pcodedescription.html" target="_blank" rel="noopener">P-Code Operation Reference</a></p>
+<h3 id="Data-Moving"><a href="#Data-Moving" class="headerlink" title="Data Moving"></a>Data Moving</h3><p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309629579434" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309643995438" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309645987440" alt=""></p>
+<h3 id="Branching"><a href="#Branching" class="headerlink" title="Branching"></a>Branching</h3><p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309632533436" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309649395442" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309651309444" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309653572446" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309656228448" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309658340450" alt=""></p>
+<h3 id="Extension-Truncation"><a href="#Extension-Truncation" class="headerlink" title="Extension/Truncation"></a>Extension/Truncation</h3><p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309660140452" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309661870454" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309663563456" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309665476458" alt=""></p>
+<h3 id="Integer-Comparison"><a href="#Integer-Comparison" class="headerlink" title="Integer Comparison"></a>Integer Comparison</h3><p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309667212460" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309668772462" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309670781464" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309672909466" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309675628468" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309677389470" alt=""></p>
+<h3 id="Integer-Arithmetic"><a href="#Integer-Arithmetic" class="headerlink" title="Integer Arithmetic"></a>Integer Arithmetic</h3><p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309679373472" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309680892474" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309683021476" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309684781478" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309686325480" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309688462482" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309690646484" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309692703486" alt=""></p>
+<h3 id="Overflow-Test"><a href="#Overflow-Test" class="headerlink" title="Overflow Test"></a>Overflow Test</h3><p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309695720488" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309697672490" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309700245492" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309703373494" alt=""></p>
+<h3 id="Logical"><a href="#Logical" class="headerlink" title="Logical"></a>Logical</h3><p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309705253496" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309706853498" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309708188500" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309709988502" alt=""></p>
+<h3 id="Integer-Shift"><a href="#Integer-Shift" class="headerlink" title="Integer Shift"></a>Integer Shift</h3><p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309711957504" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309714157506" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309715604508" alt=""></p>
+<h3 id="Boolean"><a href="#Boolean" class="headerlink" title="Boolean"></a>Boolean</h3><p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309718568510" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309720104512" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309729958514" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309731904516" alt=""></p>
+<h3 id="Floating-Point-Comparison"><a href="#Floating-Point-Comparison" class="headerlink" title="Floating Point Comparison"></a>Floating Point Comparison</h3><p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309734237518" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309735989520" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309737895522" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309739336524" alt=""></p>
+<h3 id="Floating-Point-Arithmetic"><a href="#Floating-Point-Arithmetic" class="headerlink" title="Floating Point Arithmetic"></a>Floating Point Arithmetic</h3><p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309741038526" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309743279528" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309745070530" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309746759532" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309749375534" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309751486536" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309753295538" alt=""></p>
+<h3 id="Floating-Point-Conversion"><a href="#Floating-Point-Conversion" class="headerlink" title="Floating Point Conversion"></a>Floating Point Conversion</h3><p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309754846540" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309756359542" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309761039544" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309763311546" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309764803548" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309766187550" alt=""></p>
+<h2 id="Pseudo-P-CODE-Operations"><a href="#Pseudo-P-CODE-Operations" class="headerlink" title="Pseudo P-CODE Operations"></a>Pseudo P-CODE Operations</h2><p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309768020552" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309770033554" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309771623556" alt=""></p>
+<h2 id="Additional-P-CODE-Operations"><a href="#Additional-P-CODE-Operations" class="headerlink" title="Additional P-CODE Operations"></a>Additional P-CODE Operations</h2><p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309773416558" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309774777560" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309776345562" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309777608564" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/decompiling/-1627309778992566" alt=""></p>
+<h2 id="Syntax-Reference"><a href="#Syntax-Reference" class="headerlink" title="Syntax Reference"></a>Syntax Reference</h2><p><strong><a href="https://ghidra.re/courses/languages/html/reference.html" target="_blank" rel="noopener">Syntax Reference</a></strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Syntax</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>COPY</td>
+<td>v0 = v1;</td>
+<td>Copy v1 into v0.</td>
+</tr>
+<tr>
+<td>LOAD</td>
+<td>* v1 *[spc]v1 *:2 v1 *[spc]:2 v1</td>
+<td>Dereference v1 as pointer into default space. Optionally specify a space to load from and size of data in bytes.</td>
+</tr>
+<tr>
+<td>STORE</td>
+<td>*v0 = v1; *[spc]v0 = v1; *:4 v0 = v1; *[spc]:4 v0 = v1;</td>
+<td>Store in v1 in default space using v0 as pointer. Optionally specify space to store in and size of data in bytes.</td>
+</tr>
+<tr>
+<td>BRANCH</td>
+<td>goto v0;</td>
+<td>Branch execution to address of v0.</td>
+</tr>
+<tr>
+<td>CBRANCH</td>
+<td>if (v0) goto v1;</td>
+<td>Branch execution to address of v1 if v0 equals 1 (true).</td>
+</tr>
+<tr>
+<td>BRANCHIND</td>
+<td>goto [v0];</td>
+<td>Branch execution to value in v0 viewed as an offset into the current space.</td>
+</tr>
+<tr>
+<td>CALL</td>
+<td>call v0;</td>
+<td>Branch execution to address of v0. Hint that the branch is a subroutine call.</td>
+</tr>
+<tr>
+<td>CALLIND</td>
+<td>call [v0];</td>
+<td>Branch execution to value in v0 viewed as an offset into the current space. Hint that the branch is a subroutine call.</td>
+</tr>
+<tr>
+<td>RETURN</td>
+<td>return [v0];</td>
+<td>Branch execution to value in v0 viewed as an offset into the current space. Hint that the branch is a subroutine return.</td>
+</tr>
+<tr>
+<td>INT_EQUAL</td>
+<td>v0 == v1</td>
+<td>True if v0 equals v1.</td>
+</tr>
+<tr>
+<td>INT_NOTEQUAL</td>
+<td>v0 != v1</td>
+<td>True if v0 does not equal v1.</td>
+</tr>
+<tr>
+<td>INT_SLESS</td>
+<td>v0 s&lt; v1v1 s&gt; v0</td>
+<td>True if v0 is less than v1 as a signed integer.</td>
+</tr>
+<tr>
+<td>INT_SLESSEQUAL</td>
+<td>v0 s&lt;= v1v1 s&gt;= v0</td>
+<td>True if v0 is less than or equal to v1 as a signed integer.</td>
+</tr>
+<tr>
+<td>INT_LESS</td>
+<td>v0 &lt; v1v1 &gt; v0</td>
+<td>True if v0 is less than v1 as an unsigned integer.</td>
+</tr>
+<tr>
+<td>INT_LESSEQUAL</td>
+<td>v0 &lt;= v1v1 &gt;= v0</td>
+<td>True if v0 is less than or equal to v1 as an unsigned integer.</td>
+</tr>
+<tr>
+<td>INT_ZEXT</td>
+<td>zext(v0)</td>
+<td>Zero extension of v0.</td>
+</tr>
+<tr>
+<td>INT_SEXT</td>
+<td>sext(v0)</td>
+<td>Sign extension of v0.</td>
+</tr>
+<tr>
+<td>INT_ADD</td>
+<td>v0 + v1</td>
+<td>Addition of v0 and v1 as integers.</td>
+</tr>
+<tr>
+<td>INT_SUB</td>
+<td>v0 - v1</td>
+<td>Subtraction of v1 from v0 as integers.</td>
+</tr>
+<tr>
+<td>INT_CARRY</td>
+<td>carry(v0,v1)</td>
+<td>True if adding v0 and v1 would produce an unsigned carry.</td>
+</tr>
+<tr>
+<td>INT_SCARRY</td>
+<td>scarry(v0,v1)</td>
+<td>True if adding v0 and v1 would produce an signed carry.</td>
+</tr>
+<tr>
+<td>INT_SBORROW</td>
+<td>sborrow(v0,v1)</td>
+<td>True if subtracting v1 from v0 would produce a signed borrow.</td>
+</tr>
+<tr>
+<td>INT_2COMP</td>
+<td>-v0</td>
+<td>Twos complement of v0.</td>
+</tr>
+<tr>
+<td>INT_NEGATE</td>
+<td>~v0</td>
+<td>Bitwise negation of v0.</td>
+</tr>
+<tr>
+<td>INT_XOR</td>
+<td>v0 ^ v1</td>
+<td>Bitwise Exclusive Or of v0 with v1.</td>
+</tr>
+<tr>
+<td>INT_AND</td>
+<td>v0 &amp; v1</td>
+<td>Bitwise Logical And of v0 with v1.</td>
+</tr>
+<tr>
+<td>INT_OR</td>
+<td>v0 | v1</td>
+<td>Bitwise Logical Or of v0 with v1.</td>
+</tr>
+<tr>
+<td>INT_LEFT</td>
+<td>v0 &lt;&lt; v1</td>
+<td>Left shift of v0 by v1 bits.</td>
+</tr>
+<tr>
+<td>INT_RIGHT</td>
+<td>v0 &gt;&gt; v1</td>
+<td>Unsigned (logical) right shift of v0 by v1 bits.</td>
+</tr>
+<tr>
+<td>INT_SRIGHT</td>
+<td>v0 s&gt;&gt; v1</td>
+<td>Signed (arithmetic) right shift of v0 by v1 bits.</td>
+</tr>
+<tr>
+<td>INT_MULT</td>
+<td>v0 * v1</td>
+<td>Integer multiplication of v0 and v1.</td>
+</tr>
+<tr>
+<td>INT_DIV</td>
+<td>v0 / v1</td>
+<td>Unsigned division of v0 by v1.</td>
+</tr>
+<tr>
+<td>INT_SDIV</td>
+<td>v0 s/ v1</td>
+<td>Signed division of v0 by v1.</td>
+</tr>
+<tr>
+<td>INT_REM</td>
+<td>v0 % v1</td>
+<td>Unsigned remainder of v0 modulo v1.</td>
+</tr>
+<tr>
+<td>INT_SREM</td>
+<td>v0 s% v1</td>
+<td>Signed remainder of v0 modulo v1.</td>
+</tr>
+<tr>
+<td>BOOL_NEGATE</td>
+<td>!v0</td>
+<td>Negation of boolean value v0.</td>
+</tr>
+<tr>
+<td>BOOL_XOR</td>
+<td>v0 ^^ v1</td>
+<td>Exclusive-Or of booleans v0 and v1.</td>
+</tr>
+<tr>
+<td>BOOL_AND</td>
+<td>v0 &amp;&amp; v1</td>
+<td>Logical-And of booleans v0 and v1.</td>
+</tr>
+<tr>
+<td>BOOL_OR</td>
+<td>v0 || v1</td>
+<td>Logical-Or of booleans v0 and v1.</td>
+</tr>
+<tr>
+<td>FLOAT_EQUAL</td>
+<td>v0 f== v1</td>
+<td>True if v0 equals v1 viewed as floating-point numbers.</td>
+</tr>
+<tr>
+<td>FLOAT_NOTEQUAL</td>
+<td>v0 f!= v1</td>
+<td>True if v0 does not equal v1 viewed as floating-point numbers.</td>
+</tr>
+<tr>
+<td>FLOAT_LESS</td>
+<td>v0 f&lt; v1v1 f&gt; v0</td>
+<td>True if v0 is less than v1 viewed as floating-point numbers.</td>
+</tr>
+<tr>
+<td>FLOAT_LESSEQUAL</td>
+<td>v0 f&lt;= v1v1 f&gt;= v0</td>
+<td>True if v0 is less than or equal to v1 viewed as floating-point numbers.</td>
+</tr>
+<tr>
+<td>FLOAT_NAN</td>
+<td>nan(v0)</td>
+<td>True if v0 is not a valid floating-point number (NaN).</td>
+</tr>
+<tr>
+<td>FLOAT_ADD</td>
+<td>v0 f+ v1</td>
+<td>Addition of v0 and v1 as floating-point numbers.</td>
+</tr>
+<tr>
+<td>FLOAT_DIV</td>
+<td>v0 f/ v1</td>
+<td>Division of v0 by v1 as floating-point numbers.</td>
+</tr>
+<tr>
+<td>FLOAT_MULT</td>
+<td>v0 f* v1</td>
+<td>Multiplication of v0 and v1 as floating-point numbers.</td>
+</tr>
+<tr>
+<td>FLOAT_SUB</td>
+<td>v0 f- v1</td>
+<td>Subtraction of v1 from v0 as floating-point numbers.</td>
+</tr>
+<tr>
+<td>FLOAT_NEG</td>
+<td>f- v0</td>
+<td>Additive inverse of v0 as a floating-point number.</td>
+</tr>
+<tr>
+<td>FLOAT_ABS</td>
+<td>abs(v0)</td>
+<td>Absolute value of v0 as a floating-point number.</td>
+</tr>
+<tr>
+<td>FLOAT_SQRT</td>
+<td>sqrt(v0)</td>
+<td>Square root of v0 as a floating-point number.</td>
+</tr>
+<tr>
+<td>INT2FLOAT</td>
+<td>int2float(v0)</td>
+<td>Floating-point representation of v0 viewed as an integer.</td>
+</tr>
+<tr>
+<td>FLOAT2FLOAT</td>
+<td>float2float(v0)</td>
+<td>Copy of floating-point number v0 with more or less precision.</td>
+</tr>
+<tr>
+<td>TRUNC</td>
+<td>trunc(v0)</td>
+<td>Signed integer obtained by truncating v0 viewed as a floating-point number.</td>
+</tr>
+<tr>
+<td>FLOAT_CEIL</td>
+<td>ceil(v0)</td>
+<td>Nearest integral floating-point value greater than v0, viewed as a floating-point number.</td>
+</tr>
+<tr>
+<td>FLOAT_FLOOR</td>
+<td>floor(v0)</td>
+<td>Nearest integral floating-point value less than v0, viewed as a floating-point number.</td>
+</tr>
+<tr>
+<td>FLOAT_ROUND</td>
+<td>round(v0)</td>
+<td>Nearest integral floating-point to v0, viewed as a floating-point number.</td>
+</tr>
+<tr>
+<td>SUBPIECE</td>
+<td>v0:2</td>
+<td>The least signficant n bytes of v0.</td>
+</tr>
+<tr>
+<td>SUBPIECE</td>
+<td>v0(2)</td>
+<td>All but the least significant n bytes of v0.</td>
+</tr>
+<tr>
+<td>PIECE</td>
+<td><na></na></td>
+<td>Concatenate two varnodes into a single varnode.</td>
+</tr>
+<tr>
+<td>CPOOLREF</td>
+<td>cpool(v0,…)</td>
+<td>Obtain constant pool value.</td>
+</tr>
+<tr>
+<td>NEW</td>
+<td>newobject(v0) newobject(v0,v1)</td>
+<td>Allocate an object or an array of objects.</td>
+</tr>
+<tr>
+<td>MULTIEQUAL</td>
+<td><na></na></td>
+<td>Compiler phi-node: values merging from multiple control-flow paths.</td>
+</tr>
+<tr>
+<td>INDIRECT</td>
+<td><na></na></td>
+<td>Indirect effect from input varnode to output varnode.</td>
+</tr>
+<tr>
+<td>CAST</td>
+<td><na></na></td>
+<td>Copy from input to output. A hint that the underlying datatype has changed.</td>
+</tr>
+<tr>
+<td>PTRADD</td>
+<td><na></na></td>
+<td>Construct a pointer to an element from a pointer to the start of an array and an index.</td>
+</tr>
+<tr>
+<td>PTRSUB</td>
+<td><na></na></td>
+<td>Construct a pointer to a field from a pointer to a structure and an offset.</td>
+</tr>
+</tbody></table>
+<script>
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return; }
+            const img = document.createElement('img');
+            img.style = 'display:none !important;';
+            img.src = el.dataset.src;
+            img.addEventListener('error', () => {
+              img.remove();
+              el.style.color = 'inherit';
+              el.style.backgroundImage = 'none';
+              el.style.background = 'none';
+            });
+            img.addEventListener('load', () => {
+              img.remove();
+            });
+            document.body.appendChild(img);
+          });
+      </script>
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://jackhcc.github.io" rel="external nofollow noreferrer">杰克成</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://jackhcc.github.io/posts/ghidra-pcode.html">https://jackhcc.github.io/posts/ghidra-pcode.html</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="https://jackhcc.github.io" target="_blank">杰克成</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/Ghidra/">
+                                    <span class="chip bg-color">Ghidra</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/reward/aliqr.png" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/reward/wxqr.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+            
+        </div>
+    </div>
+
+    
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/gitalk/gitalk.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/my-gitalk.css">
+
+<div class="card gitalk-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="gitalk-container" class="card-content"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/gitalk/gitalk.min.js"></script>
+<script>
+    let gitalk = new Gitalk({
+        clientID: '3821a0bbb773038a51fc',
+        clientSecret: '4b30b507d67ec5497ec0e77f43f80cb3e0d7dd3a',
+        repo: 'JackHCC.github.io',
+        owner: 'JackHCC',
+        admin: "JackHCC",
+        id: '2021-07-25T01-36-16',
+        distractionFreeMode: false  // Facebook-like distraction free mode
+    });
+
+    gitalk.render('gitalk-container');
+</script>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/posts/ebpf-plan.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/2.jpg" class="responsive-img" alt="从零开始的内核ebpf开发之旅">
+                        
+                        <span class="card-title">从零开始的内核ebpf开发之旅</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            从零开始的学习内核ebpf
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-07-25
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Linux-Kernel/" class="post-category">
+                                    Linux Kernel
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/EBPF/">
+                        <span class="chip bg-color">EBPF</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/posts/decompiling.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/22.jpg" class="responsive-img" alt="反编译理论基础">
+                        
+                        <span class="card-title">反编译理论基础</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            反编译基础知识与算法
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-07-25
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Decompile/" class="post-category">
+                                    Decompile
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Decompiling/">
+                        <span class="chip bg-color">Decompiling</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeShrink.js"></script>
+
+
+<!-- 代码块折行 -->
+
+<style type="text/css">
+code[class*="language-"], pre[class*="language-"] { white-space: pre !important; }
+</style>
+
+
+    
+
+</main>
+
+
+
+    <footer class="page-footer bg-color">
+    <div class="container row center-align" style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            <span id="year">2020</span>
+            <a href="https://jackhcc.github.io" target="_blank">杰克成</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                class="white-color">703.1k</span>&nbsp;字
+            
+            
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;人
+            </span>
+            
+            <br>
+            
+            <span id="sitetime">载入运行时间...</span>
+            <script>
+                function siteTime() {
+                    var seconds = 1000;
+                    var minutes = seconds * 60;
+                    var hours = minutes * 60;
+                    var days = hours * 24;
+                    var years = days * 365;
+                    var today = new Date();
+                    var startYear = "2020";
+                    var startMonth = "2";
+                    var startDate = "27";
+                    var startHour = "6";
+                    var startMinute = "30";
+                    var startSecond = "0";
+                    var todayYear = today.getFullYear();
+                    var todayMonth = today.getMonth() + 1;
+                    var todayDate = today.getDate();
+                    var todayHour = today.getHours();
+                    var todayMinute = today.getMinutes();
+                    var todaySecond = today.getSeconds();
+                    var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                    var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                    var diff = t2 - t1;
+                    var diffYears = Math.floor(diff / years);
+                    var diffDays = Math.floor((diff / days) - diffYears * 365);
+                    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+                    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) /
+                        minutes);
+                    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours -
+                        diffMinutes * minutes) / seconds);
+                    if (startYear == todayYear) {
+                        document.getElementById("year").innerHTML = todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffDays + " 天 " + diffHours +
+                            " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    } else {
+                        document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffYears + " 年 " + diffDays +
+                            " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    }
+                }
+                setInterval(siteTime, 1000);
+            </script>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/JackHCC" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:jackcc0701@163.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+    <a href="https://www.facebook.com/profile.php?id=100046343443643" class="tooltipped" target="_blank" data-tooltip="关注我的Facebook: https://www.facebook.com/profile.php?id=100046343443643" data-position="top" data-delay="50">
+        <i class="fab fa-facebook-f"></i>
+    </a>
+
+
+
+    <a href="https://twitter.com/JackChe66021834" class="tooltipped" target="_blank" data-tooltip="关注我的Twitter: https://twitter.com/JackChe66021834" data-position="top" data-delay="50">
+        <i class="fab fa-twitter"></i>
+    </a>
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=2508074836" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 2508074836" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+    <a href="https://weibo.com/u/6885584679" class="tooltipped" target="_blank" data-tooltip="关注我的微博: https://weibo.com/u/6885584679" data-position="top" data-delay="50">
+        <i class="fab fa-weibo"></i>
+    </a>
+
+
+
+    <a href="https://www.zhihu.com/people/8f8482f01f0d6a04e844efe32e0f0710" class="tooltipped" target="_blank" data-tooltip="关注我的知乎: https://www.zhihu.com/people/8f8482f01f0d6a04e844efe32e0f0710" data-position="top" data-delay="50">
+        <i class="fab fa-zhihu1">知</i>
+    </a>
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/materialize/materialize.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/aos/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/js/matery.js"></script>
+
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+    <script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script type="text/javascript" src="/js/fireworks.js"></script>
+
+    <script type="text/javascript">
+        //只在桌面版网页启用特效
+        var windowWidth = $(window).width();
+        if (windowWidth > 768) {
+            document.write('<script type="text/javascript" src="/js/sakura.js"><\/script>'); }
+    </script>
+
+    <!-- weather -->
+	<script type="text/javascript">
+	WIDGET = {FID: 'TToslpmkVO'}
+	</script>
+	<script type="text/javascript" src="https://apip.weatherdt.com/float/static/js/r.js?v=1111"></script>
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <!-- Baidu Analytics -->
+
+<script>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+    <!-- Baidu Push -->
+
+    
+    
+    <script async src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+        <script src="//code.tidio.co/kqhlkxviiccyoa0czpfpu4ijuey9hfre.js"></script>
+        <script> 
+            $(document).ready(function () {
+                setInterval(change_Tidio, 50);  
+                function change_Tidio() { 
+                    var tidio=$("#tidio-chat iframe");
+                    if(tidio.css("display")=="block"&& $(window).width()>977 ){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" &&$(window).width()>977)>0? "-40px" : ($("div.toc-title").length&&$(window).width()>977)>0?"85px":"20px";   
+                        document.getElementById("tidio-chat-iframe").style.right="-15px";   
+                        document.getElementById("tidio-chat-iframe").style.height=parseInt(tidio.css("height"))>=520?"520px":tidio.css("height");
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    } 
+                    else if(tidio.css("display")=="block"&&$(window).width()>601 &&$(window).width()<992 ){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" && 601< $(window).width()<992)>0? "-40px":"20px" ;   
+                        document.getElementById("tidio-chat-iframe").style.right="-15px"; 
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    }
+                    else if(tidio.css("display")=="block"&&$(window).width()<601 && parseInt(tidio.css("height"))<230){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" && $(window).width()<601)>0? "-10px":"45px" ;   
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    }
+                    if( tidio.css("display")=="block"&&$(window).width()<601 && parseInt(tidio.css("height"))>=230){
+                        document.getElementById("tidio-chat-iframe").style.zIndex="998";
+                    }
+                } 
+            }); 
+        </script>
+    
+
+    
+
+    
+    <script type="text/javascript" color="0,0,255"
+        pointColor="0,0,255" opacity='0.7'
+        zIndex="-1" count="99"
+        src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/background/canvas-nest.js"></script>
+    
+
+    
+
+    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/background/ribbon-dynamic.js" async="async"></script>
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+        <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
+        <script>
+        $('a').each(function() {
+          const $this = $(this);
+          const href = $this.attr('href');
+          if (href && href.match('^((http|https|thunder|qqdl|ed2k|Flashget|qbrowser|ftp|rtsp|mms)://)')) {
+            const strs = href.split('/');
+            if (strs.length >= 3) {
+                const host = strs[2];
+                if (host !== 'your_domain' || window.location.host) {
+                    $this.attr('href', '/go.html?u='+Base64.encode(href)+'').attr('rel', 'external nofollow noopener noreferrer');
+                    if (true) {
+                        $this.attr('target', '_blank');
+                    }
+                }
+            }
+          }
+        });
+        </script><script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script></body>
+
+</html>
+

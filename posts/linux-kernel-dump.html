@@ -1,0 +1,1207 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="Linux调试之崩溃, JackHCC">
+    <meta name="description" content="Linux内核dump调试">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Linux调试之崩溃 | JackHCC</title>
+    <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/my.css">
+    
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/jquery/jquery.min.js"></script>
+    
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper head-container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/me.jpg" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">JackHCC</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>留言板</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>友情链接</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/me.jpg" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">JackHCC</div>
+        <div class="logo-desc">
+            
+            Make the world betterrrr!!!
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			留言板
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			友情链接
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/JackHCC/JackHCC.github.io" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/JackHCC/JackHCC.github.io" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/9.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">Linux调试之崩溃</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="container content">
+
+    
+    <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/Linux-Kernel/">
+                                <span class="chip bg-color">Linux Kernel</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/Linux-Kernel/" class="post-category">
+                                Linux Kernel
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2021-07-25
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2021-07-27
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    3.4k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    12 分
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h2 id="Linux内核panic后查看dmesg"><a href="#Linux内核panic后查看dmesg" class="headerlink" title="Linux内核panic后查看dmesg"></a>Linux内核panic后查看dmesg</h2><p>由于panic后内核不能再将dmesg写入到存储介质中去，所以重启之后dmesg就丢失了。但是kdump可以在内核panic后启用一个小内核来将dmesg和一些内存信息写进存储介质。使用kdump配合crash查看崩溃信息的。</p>
+<h3 id="Kdump简介"><a href="#Kdump简介" class="headerlink" title="Kdump简介"></a>Kdump简介</h3><p>kdump是一种基于kexec的内核崩溃转储技术。kdump需要两个内核，分别是生产内核和捕获内核，生产内核是捕获内核服务的对象，且保留了内存的一部分给捕获内核启动使用。当系统崩溃时，kdump使用kexec启动捕获内核，以相应的ramdisk一起组建一个微环境，用于对生产内核下的内存进行收集和转存。</p>
+<h3 id="安装kdump"><a href="#安装kdump" class="headerlink" title="安装kdump"></a>安装kdump</h3><h4 id="ubuntu上kdump安装配置："><a href="#ubuntu上kdump安装配置：" class="headerlink" title="ubuntu上kdump安装配置："></a>ubuntu上kdump安装配置：</h4><p>参考；<a href="https://www.cnblogs.com/zhangmingda/p/12566534.html" target="_blank" rel="noopener">https://www.cnblogs.com/zhangmingda/p/12566534.html</a></p>
+<h4 id="centos下安装配置："><a href="#centos下安装配置：" class="headerlink" title="centos下安装配置："></a>centos下安装配置：</h4><h5 id="安装kexec-tools"><a href="#安装kexec-tools" class="headerlink" title="安装kexec-tools"></a>安装kexec-tools</h5><p>  使用kdump服务，必须要用到kexec-tools工具包。</p>
+<pre><code>sudo yum update
+sudo yum install kexec-tools</code></pre><p>  安装完成之后可以通过kexec -version查看kexec的版本。</p>
+<h5 id="配置kdump-kernel"><a href="#配置kdump-kernel" class="headerlink" title="配置kdump kernel"></a>配置kdump kernel</h5><p>  需要为kdump kernel配置内存区域，kdump要求系统正常使用时，不能使用kdump kernel所占用的内存。</p>
+<p> <strong>1.修改grub文件</strong></p>
+<pre><code>vim /etc/default/grub</code></pre><p>  需要将GRUB_CMDLINE_LINUX=”crashkernel=auto…”中的auto修改为128M。一般设为128M或256M。</p>
+<p> <strong>2.更新grub配置</strong></p>
+<p> 只要更改了grub文件，都需要更改grub配置。</p>
+<pre><code>sudo grub2-mkconfig -o /boot/grub2/grub.cfg</code></pre><p>  <strong>3.重启系统</strong></p>
+<pre><code>reboot</code></pre><h5 id="修改kdump默认配置"><a href="#修改kdump默认配置" class="headerlink" title="修改kdump默认配置"></a>修改kdump默认配置</h5><pre><code>vim /etc/kdump.conf</code></pre><p>  其中，需要注意的三行内容是</p>
+<pre><code>path /var/crash            #指定coredump文件放在/var/crash文件夹中
+core_collector makedumpfile -c -l --message-level 1 -d 31   #加上-c表示压缩，原文件中没有
+default reboot         #生成coredump后，重启系统</code></pre><p>开启kdump服务</p>
+<pre><code>systemctl start kdump.service     //启动kdump
+systemctl enable kdump.service    //设置开机启动</code></pre><h5 id="测试kdump是否开启"><a href="#测试kdump是否开启" class="headerlink" title="测试kdump是否开启"></a>测试kdump是否开启</h5><p>  <strong>1.检查kdump开启成功</strong></p>
+<pre><code>service kdump status</code></pre><p>  如下所示，表示开启成功    </p>
+<p><img src="/images/loading.gif" data-original="../images/basic/-16272333107071018" alt=""></p>
+<p>关闭kdump服务</p>
+<pre><code>service kdump stop</code></pre><p>禁止开机启动</p>
+<pre><code>chkconfig kdump off</code></pre><p> <strong>2.手动触发crash</strong></p>
+<pre><code>#echo 1 &gt; /proc/sys/kernel/sysrq
+#echo c &gt; /proc/sysrq-trigger</code></pre><p>  如果配置成功，系统将自动重启，重新进入系统，可以看到/var/crash文件夹下生成了相应文件，是一个以生成coredump日期为文件名的文件,如图所示：</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/-16272333208761020" alt=""></p>
+<h3 id="减少dump文件的大小"><a href="#减少dump文件的大小" class="headerlink" title="减少dump文件的大小"></a>减少dump文件的大小</h3><pre><code>man makedumpfile</code></pre><p><img src="/images/loading.gif" data-original="../images/basic/-16272333285581022" alt=""></p>
+<p>可以看到默认的消息等级（打星星的7）会打印common message，生成的dump文件很大。所以我们把它改成1，只打印process indicator：编辑/etc/default/kdump-tools，在里面加上</p>
+<pre><code>MAKEDUMP_ARGS="-c --message-level 1 -d 31"</code></pre><p><img src="/images/loading.gif" data-original="../images/basic/-16272333372051024" alt=""></p>
+<p>现在dump文件只有17MB了。</p>
+<h3 id="禁止生成vmcore"><a href="#禁止生成vmcore" class="headerlink" title="禁止生成vmcore"></a>禁止生成vmcore</h3><p>vmcore文件很大，生成要花费大量时间。我们这里只需要dmesg，所以可以禁止生成vmcore。</p>
+<p>编辑/etc/default/kdump-tools</p>
+<pre><code>MAKEDUMP_ARGS="-c -d 31 --message-level 0 --dump-dmesg"</code></pre><p>其中–dump-dmesg表示直接把dmesg抽出来，而不生成vmcore。</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/-16272333465791026" alt=""></p>
+<p>现在生成的文件都很小了，重启也非常快。</p>
+<h2 id="Linux运行C程序crash掉的分析"><a href="#Linux运行C程序crash掉的分析" class="headerlink" title="Linux运行C程序crash掉的分析"></a>Linux运行C程序crash掉的分析</h2><h3 id="一、程序运行崩溃的原因"><a href="#一、程序运行崩溃的原因" class="headerlink" title="一、程序运行崩溃的原因"></a><strong>一、程序运行崩溃的原因</strong></h3><p>Linux下c/c++开发程序崩溃(Segment fault)通常都是指针错误引起的.</p>
+<p>比如：</p>
+<p>(1)访问了不存在的内存地址</p>
+<p>(2)访问了只读的内存地址</p>
+<p>(3)访问了系统保护的内存地址int <em>p=0;</em>p=100;</p>
+<p>(4)栈溢出，无限递归</p>
+<p>(5)内存溢出</p>
+<h3 id="二、内核转储文件作用"><a href="#二、内核转储文件作用" class="headerlink" title="二、内核转储文件作用"></a><strong>二、内核转储文件作用</strong></h3><p>发生Segment fault时，内核转储文件(core dump)作用</p>
+<p>(1) 内核转储的最大好处是能够保存问题发生时的状态。</p>
+<p>(2) 只要有可执行文件和内核转储，就可以知道进程当时的状态。</p>
+<p>(3) 只要获取内核转储，那么即使没有复现环境，也能调试。</p>
+<h3 id="三、配置操作系统的内核转储功能"><a href="#三、配置操作系统的内核转储功能" class="headerlink" title="三、配置操作系统的内核转储功能"></a><strong>三、配置操作系统的内核转储功能</strong></h3><p>可以参考《高并发服务器开发与配置》中，用户能打开的最大文件数的设置方法。</p>
+<p>启动系统的内核转储功能，需要做如下配置:</p>
+<p>(1)查看当前转储文件大小</p>
+<p>&gt;&gt; ulimit -c</p>
+<p>0  为0，表示当前转储文件大小为0，没有启动内核转储</p>
+<p>&gt;&gt;ulimit -c unlimited      #设置coredump 大小为无限大</p>
+<p>这些需要有root权限, 在ubuntu下每次重新打开中断都需要重新输入上面的第一条命令, 来设置core大小为无限.</p>
+<h3 id="四、gdb使用内核转储文件再现崩溃时的状态"><a href="#四、gdb使用内核转储文件再现崩溃时的状态" class="headerlink" title="四、gdb使用内核转储文件再现崩溃时的状态"></a><strong>四、gdb使用内核转储文件再现崩溃时的状态</strong></h3><p>&gt;&gt;./test  -&gt;运行test崩溃，在当前目录下将产生一个core文件</p>
+<p>&gt;&gt;gdb -c ./corefile ./test  使用gdb再现崩溃状态</p>
+<p>在进入gdb后, 用bt命令查看backtrace以检查发生程序运行到哪里, 来定位core dump的文件-&gt;行.</p>
+<h3 id="五、System-Dump和Core-Dump的区别"><a href="#五、System-Dump和Core-Dump的区别" class="headerlink" title="五、System Dump和Core Dump的区别"></a><strong>五、System Dump和Core Dump的区别</strong></h3><p>\1) 系统Dump（System Dump）</p>
+<p>所有开放式操作系统，都存在系统DUMP问题。</p>
+<p>产生原因：</p>
+<p>由于系统关键/核心进程，产生严重的无法恢复的错误，为了避免系统相关资源受到更大损害，操作系统都会强行停止运行，并将当前内存中的各种结构,核心进程出错位置及其代码状态，保存下来，以便以后分析。最常见的原因是指令走飞，或者缓冲区溢出，或者内存访问越界。走飞就是说代码流有问题，导致执行到某一步指令混乱，跳转到一些不属于它的指令位置去执行一些莫名其妙的东西（没人知道那些地方本来是代码还是数据，而且是不是正确的代码开始位置），或者调用到不属于此进程的内存空间。写过C程序及汇编程序的人士，对这些现象应当是很清楚的。</p>
+<p>系统DUMP生成过程的特点：</p>
+<p>在生成DUMP过程中，为了避免过多的操作结构，导致问题所在位置正好也在生成DUMP过程所涉及的资源中，造成DUMP不能正常生成，操作系统都用尽量简单的代码来完成，所以避开了一切复杂的管理结构，如文件系统）LVM等等，所以这就是为什么几乎所有开放系统，都要求DUMP设备空间是物理连续的——不用定位一个个数据块，从DUMP设备开头一直写直到完成，这个过程可以只用BIOS级别的操作就可以。这也是为什么在企业级UNIX普遍使用LVM的现状下，DUMP设备只可能是裸设备而不可能是文件系统文件，而且[b]只[/b]用作DUMP的设备，做 LVM镜像是无用的——系统此时根本没有LVM操作，它不会管什么镜像不镜像，就用第一份连续写下去。</p>
+<p>所以UNIX系统也不例外，它会将DUMP写到一个裸设或磁带设备。在重启的时候，如果设置的DUMP转存目录（文件系统中的目录）有足够空间，它将会转存成一个文件系统文件，缺省情况下，对于AIX</p>
+<p>来说是/var/adm/ras/下的vmcore*这样的文件，对于HPUX来说是 /var/adm/crash下的目录及文件。当然，也可以选择将其转存到磁带设备。会造成系统DUMP的原因主要是：系统补丁级别不一致或缺少）系统内核扩展有BUG（例如Oracle就会安装系统内核扩展））驱动程序有 BUG（因为设备驱动程序一般是工作在内核级别的），等等。所以一旦经常发生类似的系统DUMP，可以考虑将系统补丁包打到最新并一致化）升级微码）升级设备驱动程序（包括FC多路冗余软件））升级安装了内核扩展的软件的补丁包等等。</p>
+<p>\2) 进程Core Dump</p>
+<p>进程Core Dump产生的技术原因，基本等同于系统DUMP，就是说从程序原理上来说是基本一致的。但进程是运行在低一级的优先级上（此优先级不同于系统中对进程定义的优先级，而是指CPU代码指令的优先级），被操作系统所控制，所以操作系统可以在一个进程出问题时，不影响其他进程的情况下，中止此进程的运行，并将相关环境保存下来，这就是core dump文件，可供分析。</p>
+<p>如果进程是用高级语言编写并编译的，且用户有源程序，那么可以通过在编译时带上诊断用符号表（所有高级语言编译程序都有这种功能），通过系统提供的分析工具，加上core文件，能够分析到哪一个源程序语句造成的问题，进而比较容易地修正问题，当然，要做到这样，除非一开始就带上了符号表进行编译，否则只能重新编译程序，并重新运行程序，重现错误，才能显示出源程序出错位置。</p>
+<p>如果用户没有源程序，那么只能分析到汇编指令的级别，难于查找问题所在并作出修正，所以这种情况下就不必多费心了，找到出问题的地方也没有办法。</p>
+<p>进程Core Dump的时候，操作系统会将进程异常终止掉并释放其占用的资源，不可能对系统本身的运行造成危害。这是与系统DUMP根本区别的一点，系统DUMP产生时，一定伴随着系统崩溃和停机，进程</p>
+<p>Core Dump时，只会造成相应的进程被终止，系统本身不可能崩溃。当然如果此进程与其他进程有关联，其他进程也会受到影响，至于后果是什么，就看相关进程对这种异常情况（与自己相关的进程突然</p>
+<p>终止）的处理机制是什么了，没有一概的定论。</p>
+<h3 id="六、内核转储文件-core-dump-永久生效的办法"><a href="#六、内核转储文件-core-dump-永久生效的办法" class="headerlink" title="六、内核转储文件(core dump)永久生效的办法"></a><strong>六、内核转储文件(core dump)永久生效的办法</strong></h3><p>在终端中输入以下命令，查看内核转储是否有效。</p>
+<pre><code>#ulimit -c
+0</code></pre><p>-c 表示内核转储文件的大小限制，现在显示为0，表示不能用。</p>
+<p>永久生效的办法是：</p>
+<pre><code>#vi /etc/profile 然后，在profile中添加：
+ulimit -c 1073741824     --1G大小</code></pre><p>(但是，若将产生的转储文件大小大于该数字时，将不会产生转储文件)或者</p>
+<pre><code>ulimit -c unlimited</code></pre><p>这样重启机器后生效了。 或者， 使用source命令使之马上生效。</p>
+<pre><code>#source /etc/profile</code></pre><h3 id="七、指定内核转储的文件名和目录"><a href="#七、指定内核转储的文件名和目录" class="headerlink" title="七、指定内核转储的文件名和目录"></a><strong>七、指定内核转储的文件名和目录</strong></h3><p>缺省情况下，内核在coredump时所产生的core文件放在与该程序相同的目录中，并且文件名固定为core。很显然，如果有多个程序产生core文件，或者同一个程序多次崩溃，就会重复覆盖同一个core文</p>
+<p>件。可以通过修改kernel的参数，指定内核转储所生成的core文件的路径和文件名。</p>
+<p>可以通过在/etc/sysctl.conf文件中，对sysctl变量kernel.core_pattern的设置。</p>
+<pre><code>&gt;&gt;vi /etc/sysctl.conf</code></pre><p>然后，在sysctl.conf文件中添加下面两句话：</p>
+<pre><code>kernel.core_pattern = /var/core/core_%e_%p
+kernel.core_uses_pid = 0</code></pre><p>需要说明的是， /proc/sys/kernel/core_uses_pid。如果这个文件的内容被配置成1，即使core_pattern中没有设置%p，最后生成的core dump文件名仍会加上进程ID。</p>
+<p>这里%e, %p分别表示：</p>
+<p>%c 转储文件的大小上限</p>
+<p>%e 所dump的文件名</p>
+<p>%g 所dump的进程的实际组ID</p>
+<p>%h 主机名</p>
+<p>%p 所dump的进程PID</p>
+<p>%s 导致本次coredump的信号</p>
+<p>%t 转储时刻(由1970年1月1日起计的秒数)</p>
+<p>%u 所dump进程的实际用户ID</p>
+<p>可以使用以下命令，使修改结果马上生效。</p>
+<pre><code>&gt;&gt;sysctl –p /etc/sysctl.conf</code></pre><p>请在/var目录下先建立core文件夹，然后执行a.out程序，就会在/var/core/下产生以指定格式命名的内核转储文件。查看转储文件的情况：</p>
+<pre><code>#ls /var/core
+core_a.out_2834</code></pre><p><strong>八、例子</strong></p>
+<p>Linux下c/c++开发之程序崩溃(Segment fault)时内核转储文件(coredump)生成举例说明</p>
+<p>例子的源代码：</p>
+<pre><code>#include &lt;stdio.h&gt;
+int main(void)
+{
+int *a = NULL;
+*a = 0x1;
+return 0;
+}</code></pre><p>把以上源代码，写成一个a.c文件后，编译a.c文件产生一个a.out的可执行文件：</p>
+<pre><code>#gcc -g a.c -o a.out</code></pre><p>修改a.out文件的权限后，执行它：</p>
+<pre><code>#./a.out</code></pre><p>就会显示：</p>
+<pre><code>Segmentation fault(core dump)</code></pre><p>这表示在当前目录下, 已经生成了a.out对应的内核转储文件。</p>
+<p>注意：后面带有(core dump), 才说明转储文件成功生成了。</p>
+<pre><code>#file core*
+core:ELF 64-bit LSB core file x86-64, version 1(SYSV), SVR4-style, from './a.out'
+coreDump: UTF-8 Unicode C program text</code></pre><p>要用GDB调试内核转储文件，应该使用以下方式启动GDB:</p>
+<pre><code>#gdb -c ./core ./a.out
+GNU gdb (GDB) 7.1-Ubuntu
+...
+Core was generated by './a.out'.
+Program terminated with signal 11, Segmentation fault.
+#0 0x00000000004004dc in main() at a.c:6
+6 *a =0x1;</code></pre><p>a.c的第6行收到了11号信号。用GDB的list命令可以查看附近的源代码。</p>
+<pre><code>(gdb) l 5
+1           #include &lt;stdio.h&gt;
+2     
+3           int main(void)
+4           {
+5                  int *a = NULL;
+6                  *a = 0x1;
+7                  return 0;
+8           }</code></pre><p>这里默认都是当前目录，也可以给core 和a.out 指定路径。</p>
+<script>
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return; }
+            const img = document.createElement('img');
+            img.style = 'display:none !important;';
+            img.src = el.dataset.src;
+            img.addEventListener('error', () => {
+              img.remove();
+              el.style.color = 'inherit';
+              el.style.backgroundImage = 'none';
+              el.style.background = 'none';
+            });
+            img.addEventListener('load', () => {
+              img.remove();
+            });
+            document.body.appendChild(img);
+          });
+      </script>
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://jackhcc.github.io" rel="external nofollow noreferrer">杰克成</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://jackhcc.github.io/posts/linux-kernel-dump.html">https://jackhcc.github.io/posts/linux-kernel-dump.html</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="https://jackhcc.github.io" target="_blank">杰克成</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/Linux-Kernel/">
+                                    <span class="chip bg-color">Linux Kernel</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/reward/aliqr.png" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/reward/wxqr.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+            
+        </div>
+    </div>
+
+    
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/gitalk/gitalk.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/my-gitalk.css">
+
+<div class="card gitalk-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="gitalk-container" class="card-content"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/gitalk/gitalk.min.js"></script>
+<script>
+    let gitalk = new Gitalk({
+        clientID: '3821a0bbb773038a51fc',
+        clientSecret: '4b30b507d67ec5497ec0e77f43f80cb3e0d7dd3a',
+        repo: 'JackHCC.github.io',
+        owner: 'JackHCC',
+        admin: "JackHCC",
+        id: '2021-07-25T01-49-01',
+        distractionFreeMode: false  // Facebook-like distraction free mode
+    });
+
+    gitalk.render('gitalk-container');
+</script>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
+            <div class="card">
+                <a href="/posts/linux-kernel-dump.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/9.jpg" class="responsive-img" alt="Linux调试之崩溃">
+                        
+                        <span class="card-title">Linux调试之崩溃</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            Linux内核dump调试
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-07-25
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Linux-Kernel/" class="post-category">
+                                    Linux Kernel
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Linux-Kernel/">
+                        <span class="chip bg-color">Linux Kernel</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/posts/gdb-easy.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/8.jpg" class="responsive-img" alt="GDB简介">
+                        
+                        <span class="card-title">GDB简介</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            GDB基本指令使用
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-07-25
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Linux-Kernel/" class="post-category">
+                                    Linux Kernel
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/GDB/">
+                        <span class="chip bg-color">GDB</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeShrink.js"></script>
+
+
+<!-- 代码块折行 -->
+
+<style type="text/css">
+code[class*="language-"], pre[class*="language-"] { white-space: pre !important; }
+</style>
+
+
+    
+
+</main>
+
+
+
+    <footer class="page-footer bg-color">
+    <div class="container row center-align" style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            <span id="year">2020</span>
+            <a href="https://jackhcc.github.io" target="_blank">杰克成</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                class="white-color">703.1k</span>&nbsp;字
+            
+            
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;人
+            </span>
+            
+            <br>
+            
+            <span id="sitetime">载入运行时间...</span>
+            <script>
+                function siteTime() {
+                    var seconds = 1000;
+                    var minutes = seconds * 60;
+                    var hours = minutes * 60;
+                    var days = hours * 24;
+                    var years = days * 365;
+                    var today = new Date();
+                    var startYear = "2020";
+                    var startMonth = "2";
+                    var startDate = "27";
+                    var startHour = "6";
+                    var startMinute = "30";
+                    var startSecond = "0";
+                    var todayYear = today.getFullYear();
+                    var todayMonth = today.getMonth() + 1;
+                    var todayDate = today.getDate();
+                    var todayHour = today.getHours();
+                    var todayMinute = today.getMinutes();
+                    var todaySecond = today.getSeconds();
+                    var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                    var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                    var diff = t2 - t1;
+                    var diffYears = Math.floor(diff / years);
+                    var diffDays = Math.floor((diff / days) - diffYears * 365);
+                    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+                    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) /
+                        minutes);
+                    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours -
+                        diffMinutes * minutes) / seconds);
+                    if (startYear == todayYear) {
+                        document.getElementById("year").innerHTML = todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffDays + " 天 " + diffHours +
+                            " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    } else {
+                        document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffYears + " 年 " + diffDays +
+                            " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    }
+                }
+                setInterval(siteTime, 1000);
+            </script>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/JackHCC" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:jackcc0701@163.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+    <a href="https://www.facebook.com/profile.php?id=100046343443643" class="tooltipped" target="_blank" data-tooltip="关注我的Facebook: https://www.facebook.com/profile.php?id=100046343443643" data-position="top" data-delay="50">
+        <i class="fab fa-facebook-f"></i>
+    </a>
+
+
+
+    <a href="https://twitter.com/JackChe66021834" class="tooltipped" target="_blank" data-tooltip="关注我的Twitter: https://twitter.com/JackChe66021834" data-position="top" data-delay="50">
+        <i class="fab fa-twitter"></i>
+    </a>
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=2508074836" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 2508074836" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+    <a href="https://weibo.com/u/6885584679" class="tooltipped" target="_blank" data-tooltip="关注我的微博: https://weibo.com/u/6885584679" data-position="top" data-delay="50">
+        <i class="fab fa-weibo"></i>
+    </a>
+
+
+
+    <a href="https://www.zhihu.com/people/8f8482f01f0d6a04e844efe32e0f0710" class="tooltipped" target="_blank" data-tooltip="关注我的知乎: https://www.zhihu.com/people/8f8482f01f0d6a04e844efe32e0f0710" data-position="top" data-delay="50">
+        <i class="fab fa-zhihu1">知</i>
+    </a>
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/materialize/materialize.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/aos/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/js/matery.js"></script>
+
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+    <script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script type="text/javascript" src="/js/fireworks.js"></script>
+
+    <script type="text/javascript">
+        //只在桌面版网页启用特效
+        var windowWidth = $(window).width();
+        if (windowWidth > 768) {
+            document.write('<script type="text/javascript" src="/js/sakura.js"><\/script>'); }
+    </script>
+
+    <!-- weather -->
+	<script type="text/javascript">
+	WIDGET = {FID: 'TToslpmkVO'}
+	</script>
+	<script type="text/javascript" src="https://apip.weatherdt.com/float/static/js/r.js?v=1111"></script>
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <!-- Baidu Analytics -->
+
+<script>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+    <!-- Baidu Push -->
+
+    
+    
+    <script async src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+        <script src="//code.tidio.co/kqhlkxviiccyoa0czpfpu4ijuey9hfre.js"></script>
+        <script> 
+            $(document).ready(function () {
+                setInterval(change_Tidio, 50);  
+                function change_Tidio() { 
+                    var tidio=$("#tidio-chat iframe");
+                    if(tidio.css("display")=="block"&& $(window).width()>977 ){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" &&$(window).width()>977)>0? "-40px" : ($("div.toc-title").length&&$(window).width()>977)>0?"85px":"20px";   
+                        document.getElementById("tidio-chat-iframe").style.right="-15px";   
+                        document.getElementById("tidio-chat-iframe").style.height=parseInt(tidio.css("height"))>=520?"520px":tidio.css("height");
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    } 
+                    else if(tidio.css("display")=="block"&&$(window).width()>601 &&$(window).width()<992 ){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" && 601< $(window).width()<992)>0? "-40px":"20px" ;   
+                        document.getElementById("tidio-chat-iframe").style.right="-15px"; 
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    }
+                    else if(tidio.css("display")=="block"&&$(window).width()<601 && parseInt(tidio.css("height"))<230){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" && $(window).width()<601)>0? "-10px":"45px" ;   
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    }
+                    if( tidio.css("display")=="block"&&$(window).width()<601 && parseInt(tidio.css("height"))>=230){
+                        document.getElementById("tidio-chat-iframe").style.zIndex="998";
+                    }
+                } 
+            }); 
+        </script>
+    
+
+    
+
+    
+    <script type="text/javascript" color="0,0,255"
+        pointColor="0,0,255" opacity='0.7'
+        zIndex="-1" count="99"
+        src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/background/canvas-nest.js"></script>
+    
+
+    
+
+    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/background/ribbon-dynamic.js" async="async"></script>
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+        <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
+        <script>
+        $('a').each(function() {
+          const $this = $(this);
+          const href = $this.attr('href');
+          if (href && href.match('^((http|https|thunder|qqdl|ed2k|Flashget|qbrowser|ftp|rtsp|mms)://)')) {
+            const strs = href.split('/');
+            if (strs.length >= 3) {
+                const host = strs[2];
+                if (host !== 'your_domain' || window.location.host) {
+                    $this.attr('href', '/go.html?u='+Base64.encode(href)+'').attr('rel', 'external nofollow noopener noreferrer');
+                    if (true) {
+                        $this.attr('target', '_blank');
+                    }
+                }
+            }
+          }
+        });
+        </script><script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script></body>
+
+</html>
+
