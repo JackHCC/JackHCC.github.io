@@ -4,8 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="math-roc, JackHCC">
-    <meta name="description" content="title: ROC曲线详解auther: JackHCCdate: 2021-08-03 14:57:04img:top:cover:coverImg:password:toc:mathjax:summary: ROC曲线相关术语及实现c">
+    <meta name="keywords" content="ROC曲线详解, JackHCC">
+    <meta name="description" content="ROC曲线相关术语及实现">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -13,7 +13,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>math-roc | JackHCC</title>
+    <title>ROC曲线详解 | JackHCC</title>
     <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/awesome/css/all.css">
@@ -26,9 +26,9 @@
     
     <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/jquery/jquery.min.js"></script>
     
-<meta name="generator" content="Hexo 4.2.0"><link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
-<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
-</head>
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
 
 
 <body>
@@ -305,12 +305,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/1.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/16.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">math-roc</h1>
+                    <h1 class="description center-align post-title">ROC曲线详解</h1>
                 </div>
             </div>
         </div>
@@ -330,12 +330,25 @@
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                          <div class="article-tag">
-                            <span class="chip bg-color">无标签</span>
-                          </div>
+                    <div class="article-tag">
+                        
+                            <a href="/tags/Math/">
+                                <span class="chip bg-color">Math</span>
+                            </a>
+                        
+                    </div>
                     
                 </div>
                 <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/Basic/" class="post-category">
+                                Basic
+                            </a>
+                        
+                    </div>
                     
                 </div>
             </div>
@@ -351,7 +364,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-08-05
+                    2021-08-06
                 </div>
                 
 
@@ -381,8 +394,7 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>title: ROC曲线详解<br>auther: JackHCC<br>date: 2021-08-03 14:57:04<br>img:<br>top:<br>cover:<br>coverImg:<br>password:<br>toc:<br>mathjax:<br>summary: ROC曲线相关术语及实现<br>categories: Basic<br>tags: Math</p>
-<h2 id="基本术语"><a href="#基本术语" class="headerlink" title="基本术语"></a>基本术语</h2><p><strong>混淆矩阵：</strong><br>如下图：<br><img src="/images/loading.gif" data-original="https://img-blog.csdnimg.cn/20201124181821380.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2R1eWlibzEyMw==,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+                <h2 id="基本术语"><a href="#基本术语" class="headerlink" title="基本术语"></a>基本术语</h2><p><strong>混淆矩阵：</strong><br>如下图：<br><img src="/images/loading.gif" data-original="https://img-blog.csdnimg.cn/20201124181821380.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2R1eWlibzEyMw==,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
 <ul>
 <li>真正率 TPR：预测为正例且实际为正例的样本占所有正例样本（真实结果为正样本）的比例。</li>
 <li>假正率 FPR：预测为正例但实际为负例的样本占所有负例样本（真实结果为负样本）的比例。</li>
@@ -548,7 +560,7 @@ plt<span class="token punctuation">.</span>show<span class="token punctuation">(
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://jackhcc.github.io/posts/a418.html">https://jackhcc.github.io/posts/a418.html</a>
+                    <a href="https://jackhcc.github.io/posts/Basic-Math-Roc.html">https://jackhcc.github.io/posts/Basic-Math-Roc.html</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -585,7 +597,11 @@ plt<span class="token punctuation">.</span>show<span class="token punctuation">(
                 <div class="post-meta__tag-list" style="display: inline-block;">
                     
                         <div class="article-tag">
-                            <span class="chip bg-color">无标签</span>
+                            
+                                <a href="/tags/Math/">
+                                    <span class="chip bg-color">Math</span>
+                                </a>
+                            
                         </div>
                     
                 </div>
@@ -920,7 +936,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">768.2k</span>&nbsp;字
+                class="white-color">774.2k</span>&nbsp;字
             
             
             
