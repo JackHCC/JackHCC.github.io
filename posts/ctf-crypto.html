@@ -364,21 +364,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-08-17
+                    2021-08-18
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    14.7k
+                    20.8k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    61 分
+                    93 分
                 </div>
                 
 
@@ -2056,91 +2056,92 @@ for fi in range(1024):
 </ul>
 <p>这说明输出与第一个和第三个的关联性非常大。 因此，我们可以暴力去枚举第一个和第三个 LFSR 的输出判断其与 类 Geffe 的输出相等的个数，如果大约在 75% 的话，就可以认为是正确的。第二个就直接暴力枚举了。</p>
 <p>脚本如下</p>
-<pre><code>#for x1 in range(2):
-#    for x2 in range(2):
-#        for x3 in range(2):
-#            print x1,x2,x3,(x1*x2)^((x2^1)*x3)
-#n = [17,19,21]
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#for x1 in range(2):</span>
+<span class="token comment" spellcheck="true">#    for x2 in range(2):</span>
+<span class="token comment" spellcheck="true">#        for x3 in range(2):</span>
+<span class="token comment" spellcheck="true">#            print x1,x2,x3,(x1*x2)^((x2^1)*x3)</span>
+<span class="token comment" spellcheck="true">#n = [17,19,21]</span>
 
-#cycle = 1
-#for i in n:
-#    cycle = cycle*(pow(2,i)-1)
-#print cycle
-
-
-def lfsr(R, mask):
-    output = (R &lt;&lt; 1) &amp; 0xffffff
-    i = (R &amp; mask) &amp; 0xffffff
-    lastbit = 0
-    while i != 0:
-        lastbit ^= (i &amp; 1)
-        i = i &gt;&gt; 1
-    output ^= lastbit
-    return (output, lastbit)
+<span class="token comment" spellcheck="true">#cycle = 1</span>
+<span class="token comment" spellcheck="true">#for i in n:</span>
+<span class="token comment" spellcheck="true">#    cycle = cycle*(pow(2,i)-1)</span>
+<span class="token comment" spellcheck="true">#print cycle</span>
 
 
-def single_round(R1, R1_mask, R2, R2_mask, R3, R3_mask):
-    (R1_NEW, x1) = lfsr(R1, R1_mask)
-    (R2_NEW, x2) = lfsr(R2, R2_mask)
-    (R3_NEW, x3) = lfsr(R3, R3_mask)
-    return (R1_NEW, R2_NEW, R3_NEW, (x1 * x2) ^ ((x2 ^ 1) * x3))
+<span class="token keyword">def</span> <span class="token function">lfsr</span><span class="token punctuation">(</span>R<span class="token punctuation">,</span> mask<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    output <span class="token operator">=</span> <span class="token punctuation">(</span>R <span class="token operator">&lt;&lt;</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">&amp;</span> <span class="token number">0xffffff</span>
+    i <span class="token operator">=</span> <span class="token punctuation">(</span>R <span class="token operator">&amp;</span> mask<span class="token punctuation">)</span> <span class="token operator">&amp;</span> <span class="token number">0xffffff</span>
+    lastbit <span class="token operator">=</span> <span class="token number">0</span>
+    <span class="token keyword">while</span> i <span class="token operator">!=</span> <span class="token number">0</span><span class="token punctuation">:</span>
+        lastbit <span class="token operator">^</span><span class="token operator">=</span> <span class="token punctuation">(</span>i <span class="token operator">&amp;</span> <span class="token number">1</span><span class="token punctuation">)</span>
+        i <span class="token operator">=</span> i <span class="token operator">>></span> <span class="token number">1</span>
+    output <span class="token operator">^</span><span class="token operator">=</span> lastbit
+    <span class="token keyword">return</span> <span class="token punctuation">(</span>output<span class="token punctuation">,</span> lastbit<span class="token punctuation">)</span>
 
 
-R1_mask = 0x10020
-R2_mask = 0x4100c
-R3_mask = 0x100002
-n3 = 21
-n2 = 19
-n1 = 17
+<span class="token keyword">def</span> <span class="token function">single_round</span><span class="token punctuation">(</span>R1<span class="token punctuation">,</span> R1_mask<span class="token punctuation">,</span> R2<span class="token punctuation">,</span> R2_mask<span class="token punctuation">,</span> R3<span class="token punctuation">,</span> R3_mask<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token punctuation">(</span>R1_NEW<span class="token punctuation">,</span> x1<span class="token punctuation">)</span> <span class="token operator">=</span> lfsr<span class="token punctuation">(</span>R1<span class="token punctuation">,</span> R1_mask<span class="token punctuation">)</span>
+    <span class="token punctuation">(</span>R2_NEW<span class="token punctuation">,</span> x2<span class="token punctuation">)</span> <span class="token operator">=</span> lfsr<span class="token punctuation">(</span>R2<span class="token punctuation">,</span> R2_mask<span class="token punctuation">)</span>
+    <span class="token punctuation">(</span>R3_NEW<span class="token punctuation">,</span> x3<span class="token punctuation">)</span> <span class="token operator">=</span> lfsr<span class="token punctuation">(</span>R3<span class="token punctuation">,</span> R3_mask<span class="token punctuation">)</span>
+    <span class="token keyword">return</span> <span class="token punctuation">(</span>R1_NEW<span class="token punctuation">,</span> R2_NEW<span class="token punctuation">,</span> R3_NEW<span class="token punctuation">,</span> <span class="token punctuation">(</span>x1 <span class="token operator">*</span> x2<span class="token punctuation">)</span> <span class="token operator">^</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>x2 <span class="token operator">^</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">*</span> x3<span class="token punctuation">)</span><span class="token punctuation">)</span>
 
 
-def guess(beg, end, num, mask):
-    ansn = range(beg, end)
-    data = open('./output/0').read(num)
-    data = ''.join(bin(256 + ord(c))[3:] for c in data)
-    now = 0
-    res = 0
-    for i in ansn:
-        r = i
-        cnt = 0
-        for j in range(num * 8):
-            r, lastbit = lfsr(r, mask)
-            lastbit = str(lastbit)
-            cnt += (lastbit == data[j])
-        if cnt &gt; now:
-            now = cnt
-            res = i
-            print now, res
-    return res
+R1_mask <span class="token operator">=</span> <span class="token number">0x10020</span>
+R2_mask <span class="token operator">=</span> <span class="token number">0x4100c</span>
+R3_mask <span class="token operator">=</span> <span class="token number">0x100002</span>
+n3 <span class="token operator">=</span> <span class="token number">21</span>
+n2 <span class="token operator">=</span> <span class="token number">19</span>
+n1 <span class="token operator">=</span> <span class="token number">17</span>
 
 
-def bruteforce2(x, z):
-    data = open('./output/0').read(50)
-    data = ''.join(bin(256 + ord(c))[3:] for c in data)
-    for y in range(pow(2, n2 - 1), pow(2, n2)):
-        R1, R2, R3 = x, y, z
-        flag = True
-        for i in range(len(data)):
-            (R1, R2, R3,
-             out) = single_round(R1, R1_mask, R2, R2_mask, R3, R3_mask)
-            if str(out) != data[i]:
-                flag = False
-                break
-        if y % 10000 == 0:
-            print 'now: ', x, y, z
-        if flag:
-            print 'ans: ', hex(x)[2:], hex(y)[2:], hex(z)[2:]
-            break
+<span class="token keyword">def</span> <span class="token function">guess</span><span class="token punctuation">(</span>beg<span class="token punctuation">,</span> end<span class="token punctuation">,</span> num<span class="token punctuation">,</span> mask<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    ansn <span class="token operator">=</span> range<span class="token punctuation">(</span>beg<span class="token punctuation">,</span> end<span class="token punctuation">)</span>
+    data <span class="token operator">=</span> open<span class="token punctuation">(</span><span class="token string">'./output/0'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>read<span class="token punctuation">(</span>num<span class="token punctuation">)</span>
+    data <span class="token operator">=</span> <span class="token string">''</span><span class="token punctuation">.</span>join<span class="token punctuation">(</span>bin<span class="token punctuation">(</span><span class="token number">256</span> <span class="token operator">+</span> ord<span class="token punctuation">(</span>c<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">:</span><span class="token punctuation">]</span> <span class="token keyword">for</span> c <span class="token keyword">in</span> data<span class="token punctuation">)</span>
+    now <span class="token operator">=</span> <span class="token number">0</span>
+    res <span class="token operator">=</span> <span class="token number">0</span>
+    <span class="token keyword">for</span> i <span class="token keyword">in</span> ansn<span class="token punctuation">:</span>
+        r <span class="token operator">=</span> i
+        cnt <span class="token operator">=</span> <span class="token number">0</span>
+        <span class="token keyword">for</span> j <span class="token keyword">in</span> range<span class="token punctuation">(</span>num <span class="token operator">*</span> <span class="token number">8</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+            r<span class="token punctuation">,</span> lastbit <span class="token operator">=</span> lfsr<span class="token punctuation">(</span>r<span class="token punctuation">,</span> mask<span class="token punctuation">)</span>
+            lastbit <span class="token operator">=</span> str<span class="token punctuation">(</span>lastbit<span class="token punctuation">)</span>
+            cnt <span class="token operator">+=</span> <span class="token punctuation">(</span>lastbit <span class="token operator">==</span> data<span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">)</span>
+        <span class="token keyword">if</span> cnt <span class="token operator">></span> now<span class="token punctuation">:</span>
+            now <span class="token operator">=</span> cnt
+            res <span class="token operator">=</span> i
+            <span class="token keyword">print</span> now<span class="token punctuation">,</span> res
+    <span class="token keyword">return</span> res
 
 
-R1 = guess(pow(2, n1 - 1), pow(2, n1), 40, R1_mask)
-print R1
-R3 = guess(pow(2, n3 - 1), pow(2, n3), 40, R3_mask)
-print R3
-R1 = 113099
-R3 = 1487603
+<span class="token keyword">def</span> <span class="token function">bruteforce2</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> z<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    data <span class="token operator">=</span> open<span class="token punctuation">(</span><span class="token string">'./output/0'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>read<span class="token punctuation">(</span><span class="token number">50</span><span class="token punctuation">)</span>
+    data <span class="token operator">=</span> <span class="token string">''</span><span class="token punctuation">.</span>join<span class="token punctuation">(</span>bin<span class="token punctuation">(</span><span class="token number">256</span> <span class="token operator">+</span> ord<span class="token punctuation">(</span>c<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">:</span><span class="token punctuation">]</span> <span class="token keyword">for</span> c <span class="token keyword">in</span> data<span class="token punctuation">)</span>
+    <span class="token keyword">for</span> y <span class="token keyword">in</span> range<span class="token punctuation">(</span>pow<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> n2 <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> pow<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> n2<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        R1<span class="token punctuation">,</span> R2<span class="token punctuation">,</span> R3 <span class="token operator">=</span> x<span class="token punctuation">,</span> y<span class="token punctuation">,</span> z
+        flag <span class="token operator">=</span> <span class="token boolean">True</span>
+        <span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span>len<span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+            <span class="token punctuation">(</span>R1<span class="token punctuation">,</span> R2<span class="token punctuation">,</span> R3<span class="token punctuation">,</span>
+             out<span class="token punctuation">)</span> <span class="token operator">=</span> single_round<span class="token punctuation">(</span>R1<span class="token punctuation">,</span> R1_mask<span class="token punctuation">,</span> R2<span class="token punctuation">,</span> R2_mask<span class="token punctuation">,</span> R3<span class="token punctuation">,</span> R3_mask<span class="token punctuation">)</span>
+            <span class="token keyword">if</span> str<span class="token punctuation">(</span>out<span class="token punctuation">)</span> <span class="token operator">!=</span> data<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">:</span>
+                flag <span class="token operator">=</span> <span class="token boolean">False</span>
+                <span class="token keyword">break</span>
+        <span class="token keyword">if</span> y <span class="token operator">%</span> <span class="token number">10000</span> <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">:</span>
+            <span class="token keyword">print</span> <span class="token string">'now: '</span><span class="token punctuation">,</span> x<span class="token punctuation">,</span> y<span class="token punctuation">,</span> z
+        <span class="token keyword">if</span> flag<span class="token punctuation">:</span>
+            <span class="token keyword">print</span> <span class="token string">'ans: '</span><span class="token punctuation">,</span> hex<span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">:</span><span class="token punctuation">]</span><span class="token punctuation">,</span> hex<span class="token punctuation">(</span>y<span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">:</span><span class="token punctuation">]</span><span class="token punctuation">,</span> hex<span class="token punctuation">(</span>z<span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">:</span><span class="token punctuation">]</span>
+            <span class="token keyword">break</span>
 
-bruteforce2(R1, R3)</code></pre><p>运行结果如下</p>
+
+R1 <span class="token operator">=</span> guess<span class="token punctuation">(</span>pow<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> n1 <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> pow<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> n1<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">40</span><span class="token punctuation">,</span> R1_mask<span class="token punctuation">)</span>
+<span class="token keyword">print</span> R1
+R3 <span class="token operator">=</span> guess<span class="token punctuation">(</span>pow<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> n3 <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> pow<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> n3<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">40</span><span class="token punctuation">,</span> R3_mask<span class="token punctuation">)</span>
+<span class="token keyword">print</span> R3
+R1 <span class="token operator">=</span> <span class="token number">113099</span>
+R3 <span class="token operator">=</span> <span class="token number">1487603</span>
+
+bruteforce2<span class="token punctuation">(</span>R1<span class="token punctuation">,</span> R3<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>运行结果如下</p>
 <pre><code>➜  2018-CISCN-start-streamgame3 git:(master) ✗ python exp.py
 161 65536
 172 65538
@@ -2254,6 +2255,480 @@ for each message byte b
 <li>其他方案</li>
 </ul>
 <h4 id="密钥扩展"><a href="#密钥扩展" class="headerlink" title="密钥扩展"></a>密钥扩展</h4><p>目前，密钥扩展的方法有很多，没有见到什么完美的密钥扩展方法，基本原则是使得密钥的每一个比特尽可能影响多轮的轮密钥。</p>
+<h1 id="ARX-Add-Rotate-Xor"><a href="#ARX-Add-Rotate-Xor" class="headerlink" title="ARX: Add-Rotate-Xor"></a>ARX: Add-Rotate-Xor</h1><h2 id="概述-3"><a href="#概述-3" class="headerlink" title="概述"></a>概述</h2><p>ARX 运算是如下 3 种基本运算的统称 - Add 有限域上的模加 - Rotate 循环移位 - Xor 异或</p>
+<p>有许多常见的块加密算法在轮函数中只用到了这 3 种基本运算，典型例子如 Salsa20、Speck 等。另外 IDEA 也采用了类似的基本运算来构建加解密操作，不过以乘法代替了移位。</p>
+<h2 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h2><h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
+<li>操作简单，运算速度快</li>
+<li>执行时间为常数，可以避免基于时间的测信道攻击</li>
+<li>组合后的函数表达能力足够强（参见下方例题）</li>
+</ul>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ul>
+<li>在三种基本运算当中，Rotate、Xor 对于单个 bit 来说均是完全线性的运算，可能会带来一定的脆弱性 (参见 <a href="https://en.wikipedia.org/wiki/Rotational_cryptanalysis" target="_blank" rel="noopener">Rotational cryptanalysis</a>)</li>
+</ul>
+<h2 id="题目-1"><a href="#题目-1" class="headerlink" title="题目"></a>题目</h2><h3 id="2018-ctf-primitive"><a href="#2018-ctf-primitive" class="headerlink" title="2018 *ctf primitive"></a>2018 *ctf primitive</h3><h4 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h4><p>本题要求我们组合一定数目以内的 Add-Rotate-Xor 运算，使得获得的加密算法能够将固定明文加密成指定的随机密文，即通过基础运算来构建任意置换函数。成功构建 3 次之后即可获得 flag。</p>
+<h4 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h4><p>对于模 256 下的运算，一种典型的基于 ARX 的换位操作可以表示为如下组合</p>
+<pre><code>RotateLeft_1(Add_255(RotateLeft_7(Add_2(x))))</code></pre><p>上述函数对应了一个将 254 和 255 进行交换，同时保持其它数字不变的置换运算。</p>
+<p>直觉上来说，由于在第一步的模加 2 运算中，仅有输入为 254、255 时会发生进位，该组合函数得以区别对待这一情况。</p>
+<p>利用上述原子操作，我们可以构造出任意两个数字 <code>a,b</code> 的置换，结合 Xor 操作，我们可以减少所需的基本操作数目，使其满足题目给出的限制。一种可能的操作步骤如下：</p>
+<ol>
+<li>对于 <code>a,b</code>，通过模加操作使得 <code>a</code> 为 0</li>
+<li>通过右移使得 b 的最低位为 1</li>
+<li>若 <code>b</code> 不为 1，进行 <code>Xor 1, Add 255</code> 操作，保持 <code>a</code> 仍然为 0，同时 <code>b</code> 的数值减小</li>
+<li>重复操作 2-3 直至 <code>b</code> 为 1</li>
+<li>进行 <code>Add 254</code> 及换位操作，交换 <code>a,b</code></li>
+<li>对于换位以外的所有操作，加入对应的逆运算，确保 <code>a,b</code> 以外的数值不变</li>
+</ol>
+<p>完整的解题脚本如下：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> pwn <span class="token keyword">import</span> <span class="token operator">*</span>
+<span class="token keyword">import</span> string
+<span class="token keyword">from</span> hashlib <span class="token keyword">import</span> sha256
+
+<span class="token comment" spellcheck="true">#context.log_level='debug'</span>
+<span class="token keyword">def</span> <span class="token function">dopow</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    chal <span class="token operator">=</span> c<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    post <span class="token operator">=</span> chal<span class="token punctuation">[</span><span class="token number">12</span><span class="token punctuation">:</span><span class="token number">28</span><span class="token punctuation">]</span>
+    tar <span class="token operator">=</span> chal<span class="token punctuation">[</span><span class="token number">33</span><span class="token punctuation">:</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span>
+    c<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">':'</span><span class="token punctuation">)</span>
+    found <span class="token operator">=</span> iters<span class="token punctuation">.</span>bruteforce<span class="token punctuation">(</span><span class="token keyword">lambda</span> x<span class="token punctuation">:</span>sha256<span class="token punctuation">(</span>x<span class="token operator">+</span>post<span class="token punctuation">)</span><span class="token punctuation">.</span>hexdigest<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">==</span>tar<span class="token punctuation">,</span> string<span class="token punctuation">.</span>ascii_letters<span class="token operator">+</span>string<span class="token punctuation">.</span>digits<span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">)</span>
+    c<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>found<span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true">#c = remote('127.0.0.1',10001)</span>
+c <span class="token operator">=</span> remote<span class="token punctuation">(</span><span class="token string">'47.75.4.252'</span><span class="token punctuation">,</span><span class="token number">10001</span><span class="token punctuation">)</span>
+dopow<span class="token punctuation">(</span><span class="token punctuation">)</span>
+pt<span class="token operator">=</span><span class="token string">'GoodCipher'</span>
+
+<span class="token keyword">def</span> <span class="token function">doswap</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span>b<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">if</span> a<span class="token operator">==</span>b<span class="token punctuation">:</span>
+        <span class="token keyword">return</span>
+    <span class="token keyword">if</span> a<span class="token operator">></span>b<span class="token punctuation">:</span>
+        tmp<span class="token operator">=</span>b
+        b<span class="token operator">=</span>a
+        a<span class="token operator">=</span>tmp
+    ans<span class="token operator">=</span><span class="token punctuation">[</span><span class="token punctuation">]</span>
+    ans<span class="token punctuation">.</span>append<span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">256</span><span class="token operator">-</span>a<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    b<span class="token operator">-=</span>a
+    a<span class="token operator">=</span><span class="token number">0</span>
+    <span class="token keyword">while</span> b<span class="token operator">!=</span><span class="token number">1</span><span class="token punctuation">:</span>
+        tmp<span class="token operator">=</span><span class="token number">0</span>
+        lo<span class="token operator">=</span><span class="token number">1</span>
+        <span class="token keyword">while</span> b<span class="token operator">&amp;</span>lo<span class="token operator">==</span><span class="token number">0</span><span class="token punctuation">:</span>
+            lo<span class="token operator">&lt;&lt;</span><span class="token operator">=</span><span class="token number">1</span>
+            tmp<span class="token operator">+=</span><span class="token number">1</span>
+        <span class="token keyword">if</span> b<span class="token operator">==</span>lo<span class="token punctuation">:</span>
+            ans<span class="token punctuation">.</span>append<span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">8</span><span class="token operator">-</span>tmp<span class="token punctuation">)</span><span class="token punctuation">)</span>
+            <span class="token keyword">break</span>
+        <span class="token keyword">if</span> tmp<span class="token operator">!=</span><span class="token number">0</span><span class="token punctuation">:</span>
+            ans<span class="token punctuation">.</span>append<span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">8</span><span class="token operator">-</span>tmp<span class="token punctuation">)</span><span class="token punctuation">)</span>
+        b<span class="token operator">>></span><span class="token operator">=</span>tmp
+        ans<span class="token punctuation">.</span>append<span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+        b<span class="token operator">^</span><span class="token operator">=</span><span class="token number">1</span>
+        ans<span class="token punctuation">.</span>append<span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">255</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+        b<span class="token operator">-=</span><span class="token number">1</span>
+    ans<span class="token punctuation">.</span>append<span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">254</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+    <span class="token keyword">for</span> a<span class="token punctuation">,</span>b <span class="token keyword">in</span> ans<span class="token punctuation">:</span>
+        c<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span><span class="token string">'%d %d'</span><span class="token operator">%</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span>b<span class="token punctuation">)</span><span class="token punctuation">)</span>
+        c<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">for</span> a<span class="token punctuation">,</span>b <span class="token keyword">in</span> <span class="token punctuation">[</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">7</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">255</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">:</span>
+        c<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span><span class="token string">'%d %d'</span><span class="token operator">%</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span>b<span class="token punctuation">)</span><span class="token punctuation">)</span>
+        c<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">for</span> a<span class="token punctuation">,</span>b <span class="token keyword">in</span> ans<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">:</span>
+        <span class="token keyword">if</span> a<span class="token operator">==</span><span class="token number">0</span><span class="token punctuation">:</span>
+            c<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span><span class="token string">'%d %d'</span><span class="token operator">%</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span><span class="token number">256</span><span class="token operator">-</span>b<span class="token punctuation">)</span><span class="token punctuation">)</span>
+        <span class="token keyword">elif</span> a<span class="token operator">==</span><span class="token number">1</span><span class="token punctuation">:</span>
+            c<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span><span class="token string">'%d %d'</span><span class="token operator">%</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span><span class="token number">8</span><span class="token operator">-</span>b<span class="token punctuation">)</span><span class="token punctuation">)</span>
+        <span class="token keyword">elif</span> a<span class="token operator">==</span><span class="token number">2</span><span class="token punctuation">:</span>
+            c<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span><span class="token string">'%d %d'</span><span class="token operator">%</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span>b<span class="token punctuation">)</span><span class="token punctuation">)</span>
+        c<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">print</span> i
+    m<span class="token operator">=</span>range<span class="token punctuation">(</span><span class="token number">256</span><span class="token punctuation">)</span>
+    c<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">'ciphertext is '</span><span class="token punctuation">)</span>
+    ct<span class="token operator">=</span>c<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>strip<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    ct<span class="token operator">=</span>ct<span class="token punctuation">.</span>decode<span class="token punctuation">(</span><span class="token string">'hex'</span><span class="token punctuation">)</span>
+    <span class="token keyword">assert</span> len<span class="token punctuation">(</span>ct<span class="token punctuation">)</span><span class="token operator">==</span><span class="token number">10</span>
+    <span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        a<span class="token operator">=</span>ord<span class="token punctuation">(</span>ct<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span>
+        b<span class="token operator">=</span>ord<span class="token punctuation">(</span>pt<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span>
+        <span class="token comment" spellcheck="true">#print m[a],b</span>
+        doswap<span class="token punctuation">(</span>m<span class="token punctuation">[</span>a<span class="token punctuation">]</span><span class="token punctuation">,</span>b<span class="token punctuation">)</span>
+        <span class="token keyword">for</span> j <span class="token keyword">in</span> range<span class="token punctuation">(</span><span class="token number">256</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+            <span class="token keyword">if</span> m<span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token operator">==</span>b<span class="token punctuation">:</span>
+                m<span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token operator">=</span>m<span class="token punctuation">[</span>a<span class="token punctuation">]</span>
+                m<span class="token punctuation">[</span>a<span class="token punctuation">]</span><span class="token operator">=</span>b
+                <span class="token keyword">break</span>
+    c<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span><span class="token string">'-1'</span><span class="token punctuation">)</span>
+
+c<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">'Your flag here.\n'</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span> c<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="DES"><a href="#DES" class="headerlink" title="DES"></a>DES</h1><h2 id="基本介绍-1"><a href="#基本介绍-1" class="headerlink" title="基本介绍"></a>基本介绍</h2><p>Data Encryption Standard(DES)，数据加密标准，是典型的块加密，其基本信息如下</p>
+<ul>
+<li>输入 64 位。</li>
+<li>输出 64 位。</li>
+<li>密钥 64 位，使用 64 位密钥中的 56 位，剩余的 8 位要么丢弃，要么作为奇偶校验位。</li>
+<li>Feistel 迭代结构<ul>
+<li>明文经过 16 轮迭代得到密文。</li>
+<li>密文经过类似的 16 轮迭代得到明文。</li>
+</ul>
+</li>
+</ul>
+<h2 id="基本流程-1"><a href="#基本流程-1" class="headerlink" title="基本流程"></a>基本流程</h2><p>给出一张简单的 DES 流程图 。</p>
+<p><img src="/images/loading.gif" data-original="../images/CTF/des-162926557535513.gif" alt=""></p>
+<h3 id="加密"><a href="#加密" class="headerlink" title="加密"></a>加密</h3><p>我们可以考虑一下每一轮的加密过程</p>
+<p>$$<br>L_{i+1}=R_i<br>$$</p>
+<p>$$<br>R_{i+1}=L_i\oplus F(R_i,K_i)<br>$$</p>
+<p>那么在最后的 Permutation 之前，对应的密文为<br>$$<br>(R_{n+1},L_{n+1})<br>$$<br>。</p>
+<h3 id="解密"><a href="#解密" class="headerlink" title="解密"></a>解密</h3><p>那么解密如何解密呢？首先我们可以把密文先进行逆置换，那么就可以得到最后一轮的输出。我们这时考虑每一轮</p>
+<p>$$<br>R_i=L_{i+1}<br>$$</p>
+<p>$$<br>L_i=R_{i+1}\oplus F(L_{i+1},K_i)<br>$$</p>
+<p>因此，<br>$$<br>(L_0,R_0)<br>$$<br>就是加密时第一次置换后的明文。我们只需要再执行逆置换就可以获得明文了。</p>
+<p>可以看出，DES 加解密使用同一套逻辑，只是密钥使用的顺序不一致。</p>
+<h2 id="核心部件"><a href="#核心部件" class="headerlink" title="核心部件"></a>核心部件</h2><p>DES 中的核心部件主要包括（这里只给出加密过程的）</p>
+<ul>
+<li>初始置换</li>
+<li>F 函数<ul>
+<li>E 扩展函数</li>
+<li>S 盒，设计标准未给出。</li>
+<li>P 置换</li>
+</ul>
+</li>
+<li>最后置换</li>
+</ul>
+<p>其中 F 函数如下</p>
+<p><img src="/images/loading.gif" data-original="../images/CTF/f-function-162926569404515.png" alt=""></p>
+<p>如果对 DES 更加感兴趣，可以进行更加仔细地研究。欢迎提供 PR。</p>
+<h2 id="衍生"><a href="#衍生" class="headerlink" title="衍生"></a>衍生</h2><p>在 DES 的基础上，衍生了以下两种加密方式</p>
+<ul>
+<li>双重 DES</li>
+<li>三种 DES</li>
+</ul>
+<h3 id="双重-DES"><a href="#双重-DES" class="headerlink" title="双重 DES"></a>双重 DES</h3><p>双重 DES 使用两个密钥，长度为 112 比特。加密方式如下</p>
+<p>$$<br>C=E_{k2}(E_{k1}(P))<br>$$<br>但是双重 DES 不能抵抗中间相遇攻击，我们可以构造如下两个集合</p>
+<p>$$<br>I={E_{k1}(P)}<br>$$</p>
+<p>$$<br>J=D_{k2}(C)<br>$$</p>
+<p>即分别枚举 K1 和 K2 分别对 P 进行加密和对 C 进行解密。</p>
+<p>在我们对 P 进行加密完毕后，可以对加密结果进行排序，这样的复杂度为<br>$$<br>2^nlog(2^n)=O(n2^n)<br>$$<br>当我们对 C 进行解密时，可以每解密一个，就去对应的表中查询。</p>
+<p>总的复杂度为还是<br>$$<br>O(n2^n)<br>$$<br>。</p>
+<h3 id="三重-DES"><a href="#三重-DES" class="headerlink" title="三重 DES"></a>三重 DES</h3><p>三重 DES 的加解密方式如下</p>
+<p>$$<br>C=E_{k3}(D_{k2}(E_{k1}(P)))<br>$$</p>
+<p>$$<br>P=D_{k1}(E_{k2}(D_{k3}(C)))<br>$$</p>
+<p>在选择密钥时，可以有两种方法</p>
+<ul>
+<li>3 个不同的密钥，k1，k2，k3 互相独立，一共 168 比特。</li>
+<li>2 个不同的密钥，k1 与 k2 独立，k3=k1，112 比特。</li>
+</ul>
+<h2 id="攻击方法"><a href="#攻击方法" class="headerlink" title="攻击方法"></a>攻击方法</h2><ul>
+<li>差分攻击</li>
+<li>线性攻击</li>
+</ul>
+<h2 id="2018-N1CTF-N1ES"><a href="#2018-N1CTF-N1ES" class="headerlink" title="2018 N1CTF N1ES"></a>2018 N1CTF N1ES</h2><p>基本代码如下</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># -*- coding: utf-8 -*-</span>
+<span class="token keyword">def</span> <span class="token function">round_add</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    f <span class="token operator">=</span> <span class="token keyword">lambda</span> x<span class="token punctuation">,</span> y<span class="token punctuation">:</span> x <span class="token operator">+</span> y <span class="token operator">-</span> <span class="token number">2</span> <span class="token operator">*</span> <span class="token punctuation">(</span>x <span class="token operator">&amp;</span> y<span class="token punctuation">)</span>
+    res <span class="token operator">=</span> <span class="token string">''</span>
+    <span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span>len<span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        res <span class="token operator">+=</span> chr<span class="token punctuation">(</span>f<span class="token punctuation">(</span>ord<span class="token punctuation">(</span>a<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">,</span> ord<span class="token punctuation">(</span>b<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> res
+
+<span class="token keyword">def</span> <span class="token function">permutate</span><span class="token punctuation">(</span>table<span class="token punctuation">,</span> block<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">return</span> list<span class="token punctuation">(</span>map<span class="token punctuation">(</span><span class="token keyword">lambda</span> x<span class="token punctuation">:</span> block<span class="token punctuation">[</span>x<span class="token punctuation">]</span><span class="token punctuation">,</span> table<span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token keyword">def</span> <span class="token function">string_to_bits</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    data <span class="token operator">=</span> <span class="token punctuation">[</span>ord<span class="token punctuation">(</span>c<span class="token punctuation">)</span> <span class="token keyword">for</span> c <span class="token keyword">in</span> data<span class="token punctuation">]</span>
+    l <span class="token operator">=</span> len<span class="token punctuation">(</span>data<span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">8</span>
+    result <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">*</span> l
+    pos <span class="token operator">=</span> <span class="token number">0</span>
+    <span class="token keyword">for</span> ch <span class="token keyword">in</span> data<span class="token punctuation">:</span>
+        <span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">8</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+            result<span class="token punctuation">[</span><span class="token punctuation">(</span>pos<span class="token operator">&lt;&lt;</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token operator">+</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">(</span>ch<span class="token operator">>></span>i<span class="token punctuation">)</span> <span class="token operator">&amp;</span> <span class="token number">1</span>
+        pos <span class="token operator">+=</span> <span class="token number">1</span>
+    <span class="token keyword">return</span> result
+
+s_box <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">54</span><span class="token punctuation">,</span> <span class="token number">132</span><span class="token punctuation">,</span> <span class="token number">138</span><span class="token punctuation">,</span> <span class="token number">83</span><span class="token punctuation">,</span> <span class="token number">16</span><span class="token punctuation">,</span> <span class="token number">73</span><span class="token punctuation">,</span> <span class="token number">187</span><span class="token punctuation">,</span> <span class="token number">84</span><span class="token punctuation">,</span> <span class="token number">146</span><span class="token punctuation">,</span> <span class="token number">30</span><span class="token punctuation">,</span> <span class="token number">95</span><span class="token punctuation">,</span> <span class="token number">21</span><span class="token punctuation">,</span> <span class="token number">148</span><span class="token punctuation">,</span> <span class="token number">63</span><span class="token punctuation">,</span> <span class="token number">65</span><span class="token punctuation">,</span> <span class="token number">189</span><span class="token punctuation">,</span> <span class="token number">188</span><span class="token punctuation">,</span> <span class="token number">151</span><span class="token punctuation">,</span> <span class="token number">72</span><span class="token punctuation">,</span> <span class="token number">161</span><span class="token punctuation">,</span> <span class="token number">116</span><span class="token punctuation">,</span> <span class="token number">63</span><span class="token punctuation">,</span> <span class="token number">161</span><span class="token punctuation">,</span> <span class="token number">91</span><span class="token punctuation">,</span> <span class="token number">37</span><span class="token punctuation">,</span> <span class="token number">24</span><span class="token punctuation">,</span> <span class="token number">126</span><span class="token punctuation">,</span> <span class="token number">107</span><span class="token punctuation">,</span> <span class="token number">87</span><span class="token punctuation">,</span> <span class="token number">30</span><span class="token punctuation">,</span> <span class="token number">117</span><span class="token punctuation">,</span> <span class="token number">185</span><span class="token punctuation">,</span> <span class="token number">98</span><span class="token punctuation">,</span> <span class="token number">90</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">42</span><span class="token punctuation">,</span> <span class="token number">140</span><span class="token punctuation">,</span> <span class="token number">70</span><span class="token punctuation">,</span> <span class="token number">86</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">42</span><span class="token punctuation">,</span> <span class="token number">150</span><span class="token punctuation">,</span> <span class="token number">54</span><span class="token punctuation">,</span> <span class="token number">22</span><span class="token punctuation">,</span> <span class="token number">144</span><span class="token punctuation">,</span> <span class="token number">153</span><span class="token punctuation">,</span> <span class="token number">36</span><span class="token punctuation">,</span> <span class="token number">90</span><span class="token punctuation">,</span> <span class="token number">149</span><span class="token punctuation">,</span> <span class="token number">54</span><span class="token punctuation">,</span> <span class="token number">156</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">,</span> <span class="token number">59</span><span class="token punctuation">,</span> <span class="token number">40</span><span class="token punctuation">,</span> <span class="token number">110</span><span class="token punctuation">,</span> <span class="token number">56</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">84</span><span class="token punctuation">,</span> <span class="token number">103</span><span class="token punctuation">,</span> <span class="token number">22</span><span class="token punctuation">,</span> <span class="token number">65</span><span class="token punctuation">,</span> <span class="token number">17</span><span class="token punctuation">,</span> <span class="token number">190</span><span class="token punctuation">,</span> <span class="token number">41</span><span class="token punctuation">,</span> <span class="token number">99</span><span class="token punctuation">,</span> <span class="token number">151</span><span class="token punctuation">,</span> <span class="token number">119</span><span class="token punctuation">,</span> <span class="token number">124</span><span class="token punctuation">,</span> <span class="token number">68</span><span class="token punctuation">,</span> <span class="token number">17</span><span class="token punctuation">,</span> <span class="token number">166</span><span class="token punctuation">,</span> <span class="token number">125</span><span class="token punctuation">,</span> <span class="token number">95</span><span class="token punctuation">,</span> <span class="token number">65</span><span class="token punctuation">,</span> <span class="token number">105</span><span class="token punctuation">,</span> <span class="token number">133</span><span class="token punctuation">,</span> <span class="token number">49</span><span class="token punctuation">,</span> <span class="token number">19</span><span class="token punctuation">,</span> <span class="token number">138</span><span class="token punctuation">,</span> <span class="token number">29</span><span class="token punctuation">,</span> <span class="token number">110</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">81</span><span class="token punctuation">,</span> <span class="token number">134</span><span class="token punctuation">,</span> <span class="token number">70</span><span class="token punctuation">,</span> <span class="token number">87</span><span class="token punctuation">,</span> <span class="token number">180</span><span class="token punctuation">,</span> <span class="token number">78</span><span class="token punctuation">,</span> <span class="token number">175</span><span class="token punctuation">,</span> <span class="token number">108</span><span class="token punctuation">,</span> <span class="token number">26</span><span class="token punctuation">,</span> <span class="token number">121</span><span class="token punctuation">,</span> <span class="token number">74</span><span class="token punctuation">,</span> <span class="token number">29</span><span class="token punctuation">,</span> <span class="token number">68</span><span class="token punctuation">,</span> <span class="token number">162</span><span class="token punctuation">,</span> <span class="token number">142</span><span class="token punctuation">,</span> <span class="token number">177</span><span class="token punctuation">,</span> <span class="token number">143</span><span class="token punctuation">,</span> <span class="token number">86</span><span class="token punctuation">,</span> <span class="token number">129</span><span class="token punctuation">,</span> <span class="token number">101</span><span class="token punctuation">,</span> <span class="token number">117</span><span class="token punctuation">,</span> <span class="token number">41</span><span class="token punctuation">,</span> <span class="token number">57</span><span class="token punctuation">,</span> <span class="token number">34</span><span class="token punctuation">,</span> <span class="token number">177</span><span class="token punctuation">,</span> <span class="token number">103</span><span class="token punctuation">,</span> <span class="token number">61</span><span class="token punctuation">,</span> <span class="token number">135</span><span class="token punctuation">,</span> <span class="token number">191</span><span class="token punctuation">,</span> <span class="token number">74</span><span class="token punctuation">,</span> <span class="token number">69</span><span class="token punctuation">,</span> <span class="token number">147</span><span class="token punctuation">,</span> <span class="token number">90</span><span class="token punctuation">,</span> <span class="token number">49</span><span class="token punctuation">,</span> <span class="token number">135</span><span class="token punctuation">,</span> <span class="token number">124</span><span class="token punctuation">,</span> <span class="token number">106</span><span class="token punctuation">,</span> <span class="token number">19</span><span class="token punctuation">,</span> <span class="token number">8</span>
+<span class="token number">9</span><span class="token punctuation">,</span> <span class="token number">38</span><span class="token punctuation">,</span> <span class="token number">21</span><span class="token punctuation">,</span> <span class="token number">41</span><span class="token punctuation">,</span> <span class="token number">17</span><span class="token punctuation">,</span> <span class="token number">155</span><span class="token punctuation">,</span> <span class="token number">83</span><span class="token punctuation">,</span> <span class="token number">38</span><span class="token punctuation">,</span> <span class="token number">159</span><span class="token punctuation">,</span> <span class="token number">179</span><span class="token punctuation">,</span> <span class="token number">19</span><span class="token punctuation">,</span> <span class="token number">157</span><span class="token punctuation">,</span> <span class="token number">68</span><span class="token punctuation">,</span> <span class="token number">105</span><span class="token punctuation">,</span> <span class="token number">151</span><span class="token punctuation">,</span> <span class="token number">166</span><span class="token punctuation">,</span> <span class="token number">171</span><span class="token punctuation">,</span> <span class="token number">122</span><span class="token punctuation">,</span> <span class="token number">179</span><span class="token punctuation">,</span> <span class="token number">114</span><span class="token punctuation">,</span> <span class="token number">52</span><span class="token punctuation">,</span> <span class="token number">183</span><span class="token punctuation">,</span> <span class="token number">89</span><span class="token punctuation">,</span> <span class="token number">107</span><span class="token punctuation">,</span> <span class="token number">113</span><span class="token punctuation">,</span> <span class="token number">65</span><span class="token punctuation">,</span> <span class="token number">161</span><span class="token punctuation">,</span> <span class="token number">141</span><span class="token punctuation">,</span> <span class="token number">18</span><span class="token punctuation">,</span> <span class="token number">121</span><span class="token punctuation">,</span> <span class="token number">95</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">95</span><span class="token punctuation">,</span> <span class="token number">101</span><span class="token punctuation">,</span> <span class="token number">81</span><span class="token punctuation">,</span> <span class="token number">156</span><span class="token punctuation">,</span>
+ <span class="token number">17</span><span class="token punctuation">,</span> <span class="token number">190</span><span class="token punctuation">,</span> <span class="token number">38</span><span class="token punctuation">,</span> <span class="token number">84</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">,</span> <span class="token number">171</span><span class="token punctuation">,</span> <span class="token number">180</span><span class="token punctuation">,</span> <span class="token number">59</span><span class="token punctuation">,</span> <span class="token number">45</span><span class="token punctuation">,</span> <span class="token number">15</span><span class="token punctuation">,</span> <span class="token number">34</span><span class="token punctuation">,</span> <span class="token number">89</span><span class="token punctuation">,</span> <span class="token number">75</span><span class="token punctuation">,</span> <span class="token number">164</span><span class="token punctuation">,</span> <span class="token number">190</span><span class="token punctuation">,</span> <span class="token number">140</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">41</span><span class="token punctuation">,</span> <span class="token number">188</span><span class="token punctuation">,</span> <span class="token number">77</span><span class="token punctuation">,</span> <span class="token number">165</span><span class="token punctuation">,</span> <span class="token number">105</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">107</span><span class="token punctuation">,</span> <span class="token number">31</span><span class="token punctuation">,</span> <span class="token number">183</span><span class="token punctuation">,</span> <span class="token number">107</span><span class="token punctuation">,</span> <span class="token number">141</span><span class="token punctuation">,</span> <span class="token number">66</span><span class="token punctuation">,</span> <span class="token number">63</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">,</span> <span class="token number">125</span><span class="token punctuation">,</span> <span class="token number">50</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">153</span><span class="token punctuation">,</span> <span class="token number">156</span><span class="token punctuation">,</span> <span class="token number">162</span><span class="token punctuation">,</span> <span class="token number">186</span><span class="token punctuation">,</span> <span class="token number">76</span><span class="token punctuation">,</span> <span class="token number">158</span><span class="token punctuation">,</span> <span class="token number">153</span><span class="token punctuation">,</span> <span class="token number">117</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">,</span> <span class="token number">77</span><span class="token punctuation">,</span> <span class="token number">156</span><span class="token punctuation">,</span> <span class="token number">11</span><span class="token punctuation">,</span> <span class="token number">145</span><span class="token punctuation">,</span> <span class="token number">12</span><span class="token punctuation">,</span> <span class="token number">169</span><span class="token punctuation">,</span> <span class="token number">52</span><span class="token punctuation">,</span> <span class="token number">57</span><span class="token punctuation">,</span> <span class="token number">161</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">158</span><span class="token punctuation">,</span> <span class="token number">110</span><span class="token punctuation">,</span> <span class="token number">191</span><span class="token punctuation">,</span> <span class="token number">43</span><span class="token punctuation">,</span> <span class="token number">82</span><span class="token punctuation">,</span> <span class="token number">186</span><span class="token punctuation">,</span> <span class="token number">49</span><span class="token punctuation">,</span> <span class="token number">102</span><span class="token punctuation">,</span> <span class="token number">166</span><span class="token punctuation">,</span> <span class="token number">31</span><span class="token punctuation">,</span> <span class="token number">41</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">189</span><span class="token punctuation">,</span> <span class="token number">27</span><span class="token punctuation">]</span>
+
+<span class="token keyword">def</span> <span class="token function">generate</span><span class="token punctuation">(</span>o<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    k <span class="token operator">=</span> permutate<span class="token punctuation">(</span>s_box<span class="token punctuation">,</span>o<span class="token punctuation">)</span>
+    b <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+    <span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> len<span class="token punctuation">(</span>k<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        b<span class="token punctuation">.</span>append<span class="token punctuation">(</span>k<span class="token punctuation">[</span>i<span class="token punctuation">:</span>i<span class="token operator">+</span><span class="token number">7</span><span class="token punctuation">]</span> <span class="token operator">+</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+    c <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+    <span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span><span class="token number">32</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        pos <span class="token operator">=</span> <span class="token number">0</span>
+        x <span class="token operator">=</span> <span class="token number">0</span>
+        <span class="token keyword">for</span> j <span class="token keyword">in</span> b<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">:</span>
+            x <span class="token operator">+=</span> <span class="token punctuation">(</span>j<span class="token operator">&lt;&lt;</span>pos<span class="token punctuation">)</span>
+            pos <span class="token operator">+=</span> <span class="token number">1</span>
+        c<span class="token punctuation">.</span>append<span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token number">0x10001</span><span class="token operator">**</span>x<span class="token punctuation">)</span> <span class="token operator">%</span> <span class="token punctuation">(</span><span class="token number">0x7f</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> c
+
+
+
+<span class="token keyword">class</span> <span class="token class-name">N1ES</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> key<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>len<span class="token punctuation">(</span>key<span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token number">24</span> <span class="token operator">or</span> isinstance<span class="token punctuation">(</span>key<span class="token punctuation">,</span> bytes<span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token boolean">False</span> <span class="token punctuation">)</span><span class="token punctuation">:</span>
+            <span class="token keyword">raise</span> Exception<span class="token punctuation">(</span><span class="token string">"key must be 24 bytes long"</span><span class="token punctuation">)</span>
+        self<span class="token punctuation">.</span>key <span class="token operator">=</span> key
+        self<span class="token punctuation">.</span>gen_subkey<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    <span class="token keyword">def</span> <span class="token function">gen_subkey</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        o <span class="token operator">=</span> string_to_bits<span class="token punctuation">(</span>self<span class="token punctuation">.</span>key<span class="token punctuation">)</span>
+        k <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+        <span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span><span class="token number">8</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+            o <span class="token operator">=</span> generate<span class="token punctuation">(</span>o<span class="token punctuation">)</span>
+            k<span class="token punctuation">.</span>extend<span class="token punctuation">(</span>o<span class="token punctuation">)</span>
+            o <span class="token operator">=</span> string_to_bits<span class="token punctuation">(</span><span class="token punctuation">[</span>chr<span class="token punctuation">(</span>c<span class="token punctuation">)</span> <span class="token keyword">for</span> c <span class="token keyword">in</span> o<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">:</span><span class="token number">24</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+        self<span class="token punctuation">.</span>Kn <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+        <span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span><span class="token number">32</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+            self<span class="token punctuation">.</span>Kn<span class="token punctuation">.</span>append<span class="token punctuation">(</span>map<span class="token punctuation">(</span>chr<span class="token punctuation">,</span> k<span class="token punctuation">[</span>i <span class="token operator">*</span> <span class="token number">8</span><span class="token punctuation">:</span> i <span class="token operator">*</span> <span class="token number">8</span> <span class="token operator">+</span> <span class="token number">8</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+        <span class="token keyword">return</span>
+
+    <span class="token keyword">def</span> <span class="token function">encrypt</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> plaintext<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>len<span class="token punctuation">(</span>plaintext<span class="token punctuation">)</span> <span class="token operator">%</span> <span class="token number">16</span> <span class="token operator">!=</span> <span class="token number">0</span> <span class="token operator">or</span> isinstance<span class="token punctuation">(</span>plaintext<span class="token punctuation">,</span> bytes<span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token boolean">False</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+            <span class="token keyword">raise</span> Exception<span class="token punctuation">(</span><span class="token string">"plaintext must be a multiple of 16 in length"</span><span class="token punctuation">)</span>
+        res <span class="token operator">=</span> <span class="token string">''</span>
+        <span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span>len<span class="token punctuation">(</span>plaintext<span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">16</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+            block <span class="token operator">=</span> plaintext<span class="token punctuation">[</span>i <span class="token operator">*</span> <span class="token number">16</span><span class="token punctuation">:</span><span class="token punctuation">(</span>i <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">16</span><span class="token punctuation">]</span>
+            L <span class="token operator">=</span> block<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token number">8</span><span class="token punctuation">]</span>
+            R <span class="token operator">=</span> block<span class="token punctuation">[</span><span class="token number">8</span><span class="token punctuation">:</span><span class="token punctuation">]</span>
+            <span class="token keyword">for</span> round_cnt <span class="token keyword">in</span> range<span class="token punctuation">(</span><span class="token number">32</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+                L<span class="token punctuation">,</span> R <span class="token operator">=</span> R<span class="token punctuation">,</span> <span class="token punctuation">(</span>round_add<span class="token punctuation">(</span>L<span class="token punctuation">,</span> self<span class="token punctuation">.</span>Kn<span class="token punctuation">[</span>round_cnt<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+            L<span class="token punctuation">,</span> R <span class="token operator">=</span> R<span class="token punctuation">,</span> L
+            res <span class="token operator">+=</span> L <span class="token operator">+</span> R
+        <span class="token keyword">return</span> res<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>显然，我们可以将其视为一个 Feistel 加密的方式，解密函数如下</p>
+<pre class="line-numbers language-python"><code class="language-python">    <span class="token keyword">def</span> <span class="token function">decrypt</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span>ciphertext<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        res <span class="token operator">=</span> <span class="token string">''</span>
+        <span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span>len<span class="token punctuation">(</span>ciphertext<span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">16</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+            block <span class="token operator">=</span> ciphertext<span class="token punctuation">[</span>i <span class="token operator">*</span> <span class="token number">16</span><span class="token punctuation">:</span><span class="token punctuation">(</span>i <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">16</span><span class="token punctuation">]</span>
+            L <span class="token operator">=</span> block<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token number">8</span><span class="token punctuation">]</span>
+            R <span class="token operator">=</span> block<span class="token punctuation">[</span><span class="token number">8</span><span class="token punctuation">:</span><span class="token punctuation">]</span>
+            <span class="token keyword">for</span> round_cnt <span class="token keyword">in</span> range<span class="token punctuation">(</span><span class="token number">32</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+                L<span class="token punctuation">,</span> R <span class="token operator">=</span>R<span class="token punctuation">,</span> <span class="token punctuation">(</span>round_add<span class="token punctuation">(</span>L<span class="token punctuation">,</span> self<span class="token punctuation">.</span>Kn<span class="token punctuation">[</span><span class="token number">31</span><span class="token operator">-</span>round_cnt<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+            L<span class="token punctuation">,</span>R<span class="token operator">=</span>R<span class="token punctuation">,</span>L
+            res <span class="token operator">+=</span> L <span class="token operator">+</span> R
+        <span class="token keyword">return</span> res<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>最后结果为</p>
+<pre class="line-numbers language-shell"><code class="language-shell">➜  baby_N1ES cat challenge.py
+from N1ES import N1ES
+import base64
+key = "wxy191iss00000000000cute"
+n1es = N1ES(key)
+flag = "N1CTF{*****************************************}"
+cipher = n1es.encrypt(flag)
+#print base64.b64encode(cipher)  # HRlgC2ReHW1/WRk2DikfNBo1dl1XZBJrRR9qECMNOjNHDktBJSxcI1hZIz07YjVx
+cipher = 'HRlgC2ReHW1/WRk2DikfNBo1dl1XZBJrRR9qECMNOjNHDktBJSxcI1hZIz07YjVx'
+cipher = base64.b64decode(cipher)
+print n1es.decrypt(cipher)
+➜  baby_N1ES python challenge.py
+N1CTF{F3istel_n3tw0rk_c4n_b3_ea5i1y_s0lv3d_/--/}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="2019-CISCN-part-des"><a href="#2019-CISCN-part-des" class="headerlink" title="2019 CISCN  part_des"></a>2019 CISCN  part_des</h2><p>题目只给了一个文件：</p>
+<pre><code>Round n part_encode-&gt; 0x92d915250119e12b
+Key map -&gt; 0xe0be661032d5f0b676f82095e4d67623628fe6d376363183aed373a60167af537b46abc2af53d97485591f5bd94b944a3f49d94897ea1f699d1cdc291f2d9d4a5c705f2cad89e938dbacaca15e10d8aeaed90236f0be2e954a8cf0bea6112e84</code></pre><p>考虑到题目名以及数据特征，<code>Round n part_encode</code> 为执行n轮des的中间结果，<code>Key map</code> 应为des的子密钥，要还原出明文只需进行n轮des加密的逆过程即可，解密时注意以下三点。</p>
+<ul>
+<li>子密钥的选取，对于只进行了n轮的加密结果，解密时应依次使用密钥 n, n-1…, 1。</li>
+<li>des 最后一轮后的操作，未完成的 des 没有交换左右两部分和逆初始置换，因此解密时我们应先对密文进行这两步操作。</li>
+<li>n 的选择，在本题中，我们并不知道 n，但这无关紧要，我们可以尝试所有可能的取值（0-15）flag应为ascii字符串。</li>
+</ul>
+<p>代码：</p>
+<pre><code>kkk = 16
+def bit_rot_left(lst, pos):
+    return lst[pos:] + lst[:pos]
+
+class DES:
+    IP = [
+            58,50,42,34,26,18,10,2,60,52,44,36,28,20,12,4,
+            62,54,46,38,30,22,14,6,64,56,48,40,32,24,16,8,
+            57,49,41,33,25,17,9,1,59,51,43,35,27,19,11,3,
+            61,53,45,37,29,21,13,5,63,55,47,39,31,23,15,7
+        ]
+    IP_re = [
+            40,8,48,16,56,24,64,32,39,7,47,15,55,23,63,31,
+            38,6,46,14,54,22,62,30,37,5,45,13,53,21,61,29,
+            36,4,44,12,52,20,60,28,35,3,43,11,51,19,59,27,
+            34,2,42,10,50,18,58,26,33,1,41,9,49,17,57,25
+        ]
+    Pbox = [
+            16,7,20,21,29,12,28,17,1,15,23,26,5,18,31,10,
+            2,8,24,14,32,27,3,9,19,13,30,6,22,11,4,25
+        ]
+    E = [
+            32,1,2,3,4,5,4,5,6,7,8,9,
+            8,9,10,11,12,13,12,13,14,15,16,17,
+            16,17,18,19,20,21,20,21,22,23,24,25,
+            24,25,26,27,28,29,28,29,30,31,32,1
+        ]
+    PC1 = [
+                57,49,41,33,25,17,9,1,58,50,42,34,26,18,
+                10,2,59,51,43,35,27,19,11,3,60,52,44,36,
+                63,55,47,39,31,23,15,7,62,54,46,38,30,22,
+                14,6,61,53,45,37,29,21,13,5,28,20,12,4
+        ]
+    PC2 = [
+            14,17,11,24,1,5,3,28,15,6,21,10,
+            23,19,12,4,26,8,16,7,27,20,13,2,
+            41,52,31,37,47,55,30,40,51,45,33,48,
+            44,49,39,56,34,53,46,42,50,36,29,32
+        ]
+    Sbox = [
+            [
+                [14,4,13,1,2,15,11,8,3,10,6,12,5,9,0,7],
+                [0,15,7,4,14,2,13,1,10,6,12,11,9,5,3,8],
+                [4,1,14,8,13,6,2,11,15,12,9,7,3,10,5,0],
+                [15,12,8,2,4,9,1,7,5,11,3,14,10,0,6,13],
+            ],
+            [
+                [15,1,8,14,6,11,3,4,9,7,2,13,12,0,5,10],
+                [3,13,4,7,15,2,8,14,12,0,1,10,6,9,11,5],
+                [0,14,7,11,10,4,13,1,5,8,12,6,9,3,2,15],
+                [13,8,10,1,3,15,4,2,11,6,7,12,0,5,14,9],
+            ],
+            [
+                [10,0,9,14,6,3,15,5,1,13,12,7,11,4,2,8],
+                [13,7,0,9,3,4,6,10,2,8,5,14,12,11,15,1],
+                [13,6,4,9,8,15,3,0,11,1,2,12,5,10,14,7],
+                [1,10,13,0,6,9,8,7,4,15,14,3,11,5,2,12],
+            ],
+            [
+                [7,13,14,3,0,6,9,10,1,2,8,5,11,12,4,15],
+                [13,8,11,5,6,15,0,3,4,7,2,12,1,10,14,9],
+                [10,6,9,0,12,11,7,13,15,1,3,14,5,2,8,4],
+                [3,15,0,6,10,1,13,8,9,4,5,11,12,7,2,14],
+            ],
+            [
+                [2,12,4,1,7,10,11,6,8,5,3,15,13,0,14,9],
+                [14,11,2,12,4,7,13,1,5,0,15,10,3,9,8,6],
+                [4,2,1,11,10,13,7,8,15,9,12,5,6,3,0,14],
+                [11,8,12,7,1,14,2,13,6,15,0,9,10,4,5,3],
+            ],
+            [
+                [12,1,10,15,9,2,6,8,0,13,3,4,14,7,5,11],
+                [10,15,4,2,7,12,9,5,6,1,13,14,0,11,3,8],
+                [9,14,15,5,2,8,12,3,7,0,4,10,1,13,11,6],
+                [4,3,2,12,9,5,15,10,11,14,1,7,6,0,8,13],
+            ],
+            [
+                [4,11,2,14,15,0,8,13,3,12,9,7,5,10,6,1],
+                [13,0,11,7,4,9,1,10,14,3,5,12,2,15,8,6],
+                [1,4,11,13,12,3,7,14,10,15,6,8,0,5,9,2],
+                [6,11,13,8,1,4,10,7,9,5,0,15,14,2,3,12],
+            ],
+            [
+                [13,2,8,4,6,15,11,1,10,9,3,14,5,0,12,7],
+                [1,15,13,8,10,3,7,4,12,5,6,11,0,14,9,2],
+                [7,11,4,1,9,12,14,2,0,6,10,13,15,3,5,8],
+                [2,1,14,7,4,10,8,13,15,12,9,0,3,5,6,11],
+            ]
+        ]
+    rout = [1,1,2,2,2,2,2,2,1,2,2,2,2,2,2,1]
+    def __init__(self):
+        self.subkey = [[[1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1], [1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1], [1, 1, 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 1], [1, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1], [1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 1], [1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0], [1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 0, 1], [0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0], [0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0], [0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1], [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0], [0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0], [1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0], [1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0], [1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0], [1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0]], [[1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0], [1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0], [1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0], [1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0], [0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0], [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0], [0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1], [0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0], [0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0], [1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 0, 1], [1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0], [1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 1], [1, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1], [1, 1, 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 1], [1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1], [1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1]]]
+
+    def permute(self, lst, tb):
+        return [lst[i-1] for i in tb]
+
+    def f(self,riti,subkeyi):
+        tmp = [i^j for i,j in zip(subkeyi,self.permute(riti,DES.E))]
+        return  self.permute(sum([[int(l) for l in str(bin(DES.Sbox[i][int(str(tmp[6*i])+str(tmp[6*i+5]),2)][int("".join(str(j) for j in tmp[6*i+1:6*i+5]),2)])[2:].zfill(4))] for i in range(8)],[]),DES.Pbox)
+
+    def des_main(self,m,mark):
+        sbkey = self.subkey[0]
+        #if mark == 'e' else self.subkey[1]
+        # tmp =  self.permute([int(i) for i in list((m).ljust(64,"0"))],self.IP)
+        tmp =  [int(i) for i in list((m).ljust(64,"0"))]
+        global kkk
+        print(kkk)
+        for i in range(kkk):
+            tmp = tmp[32:] + [j^k for j,k in zip(tmp[:32],self.f(tmp[32:],sbkey[i if mark != 'd' else kkk-1-i]))]
+        return "".join([str(i) for i in self.permute(tmp[32:]+tmp[:32],self.IP_re)])
+
+    def des_encipher(self,m):
+        m = "".join([bin(ord(i))[2:].zfill(8) for i in m])
+        des_en = self.des_main(m,'e')
+        return "".join([chr(int(des_en[i*8:i*8+8],2)) for i in range(8)])
+
+    def des_decipher(self,c):
+        c = "".join([bin(ord(i))[2:].zfill(8) for i in c])
+        des_de = self.des_main(c,'d')
+        return "".join([chr(int(des_de[i*8:i*8+8],2)) for i in range(8)])
+
+def test():
+    import base64
+    global kkk
+    while kkk &gt;=0:
+        desobj = DES()
+        # cipher = desobj.des_encipher("12345678")
+        cipher = '\x01\x19\xe1+\x92\xd9\x15%'
+        message1 = desobj.des_decipher(cipher)
+        print(message1)
+        kkk -= 1
+if __name__=='__main__':
+    test()
+
+```</code></pre><p>解密结果（部分）：</p>
+<pre><code>14
+t-ÏEÏx§
+13
+y0ur9Ood
+12
+µp^Ûé=¹
+11
+)Á`rûÕû</code></pre><p>可以看出n为13，flag为<code>flag{y0ur9Ood}</code></p>
+<h1 id="IDEA"><a href="#IDEA" class="headerlink" title="IDEA"></a>IDEA</h1><h2 id="概述-4"><a href="#概述-4" class="headerlink" title="概述"></a>概述</h2><p><strong>国际数据加密算法</strong>（International Data Encryption Algorithm，IDEA），最早称为<strong>改良建议加密标准</strong>（Improved Proposed Encryption Standard，IPES），是密码学上一种对称密钥分组密码，由 James Massey 与来学嘉设计，在 1991 年首次提出。这个算法的提出，是为了取代旧有的数据加密标准 DES。</p>
+<h2 id="基本流程-2"><a href="#基本流程-2" class="headerlink" title="基本流程"></a>基本流程</h2><h3 id="密钥生成"><a href="#密钥生成" class="headerlink" title="密钥生成"></a>密钥生成</h3><p>IDEA 在加密的每轮中使用 6 个密钥，然后最后输出轮使用 4 个密钥。所以一共有 52 个。</p>
+<ol>
+<li>前 8 个密钥来自与该算法最初的密钥，K1 取自密钥的高 16 比特，K8 取自密钥的低 16 比特。</li>
+<li>将密钥循环左移 25 位获取下一轮密钥，然后再次分为 8 组。</li>
+</ol>
+<h3 id="加密流程"><a href="#加密流程" class="headerlink" title="加密流程"></a>加密流程</h3><p>IDEA 加密的数据块的大小为 64 比特，其使用的密钥长度为 128 比特。该算法会对输入的数据块进行 8 次相同的变换，只是每次使用的密钥不同，最后会进行一次输出变换。每一轮的操作</p>
+<p><img src="/images/loading.gif" data-original="../images/CTF/IDEA_Round.png" alt=""></p>
+<p>可以输入和输出都是 16 比特位一组。每一轮的主要执行的运算有</p>
+<ul>
+<li>按位异或，⊕</li>
+<li>模加，模数为 2^16 ，⊞</li>
+<li>模乘，模数为 2^16+1，⊙。但是需要注意的是 0x0000 的输入会被修改为 2^16 ，2^16 的输出结果会被修改为 0x0000。</li>
+</ul>
+<p>这里我们称由 K5，K6 构成的中间那个方格的加密方式为 MA。这也是 IDEA 算法中重要的一部分，此外，我们称 MA_L 为该部分加密后的左侧结果，其最后会和最左边的 16 比特操作；MA_R 为该部分加密后的右半部分的结果，其最后会和第三个 16 比特操作。</p>
+<p>在最后输出轮的操作如下</p>
+<p><img src="/images/loading.gif" data-original="../images/CTF/IDEA_Output_Trans.png" alt=""></p>
+<h3 id="解密流程"><a href="#解密流程" class="headerlink" title="解密流程"></a>解密流程</h3><p>解密流程与加密流程相似，主要在于其密钥的选取</p>
+<ul>
+<li>第 i(1-9) 轮的解密的密钥的前 4 个子密钥由加密过程中第 10-i 轮的前 4 个子密钥得出</li>
+<li>其中第 1 个和第 4 个解密子密钥为相应的子密钥关于 2^16+1的乘法逆元。</li>
+<li>第 2 个和第 3 个子密钥的取法为<ul>
+<li>当轮数为 2，…，8 时，取相应的第 3 个和第 2 个的子密钥的2^16的加密逆元。</li>
+<li>当轮数为 1 或 9 时，取相应的第 2 个和第 3 个子密钥对应的2^16 的加密逆元。</li>
+</ul>
+</li>
+<li>第 5 和第 6 个密钥不变。</li>
+</ul>
+<h3 id="总体流程"><a href="#总体流程" class="headerlink" title="总体流程"></a>总体流程</h3><p><img src="/images/loading.gif" data-original="../images/CTF/IDEA_All.png" alt=""></p>
+<p>我们来证明一下算法的正确性，这里我们关注于解密算法的第一轮，首先我们先看一下Yi是如何得到的</p>
+<p>Y1=W81⊙Z49</p>
+<p>Y2=W83⊞Z50Y</p>
+<p>Y3=W82⊞Z51</p>
+<p>Y4=W83⊙Z52</p>
+<p>解密时，第一轮直接进行的变换为</p>
+<p>J11=Y1⊙U1=Y1⊙Z−149=W81</p>
+<p>J12=Y2⊞U2=Y2⊞Z−150=W83</p>
+<p>J13=Y3⊞U3=Y3⊞Z−151=W82</p>
+<p>J14=Y4⊙U4=Y4⊙Z−152=W84</p>
+<p>可以看出得到的结果只有中间的两个 16 位加密结果恰好相反。我们进一步看一下W8i是如何得到的。</p>
+<p>W81=I81⊕MAR(I81⊕I83,I82⊕I84)</p>
+<p>W82=I83⊕MAR(I81⊕I83,I82⊕I84)</p>
+<p>W83=I82⊕MAL(I81⊕I83,I82⊕I84)</p>
+<p>W84=I84⊕MAL(I81⊕I83,I82⊕I84)</p>
+<p>那么对于 V11 来说</p>
+<p>V11=J11⊕MAR(J11⊕J13,J12⊕J14)</p>
+<p>通过简单带入已有的值，显然</p>
+<p>V11=W81⊕MAR(I81⊕I83,I82⊕I84)=I81</p>
+<p>对于其他的元素也类似，那么其实我们会发现第一轮解密后的结果恰好是I81,I83,I82,I84。</p>
+<p>类似地，这个关系可以一直满足直到</p>
+<p>V81=I11,V82=I13,V83=I12,V84=I14</p>
+<p>那么最后再经过一次简单的输出变换，恰好得到最初加密的数值。</p>
+<p><img src="/images/loading.gif" data-original="../images/CTF/IDEA_Round.png" alt=""></p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -2673,7 +3148,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">890k</span>&nbsp;字
+                class="white-color">909.4k</span>&nbsp;字
             
             
             
