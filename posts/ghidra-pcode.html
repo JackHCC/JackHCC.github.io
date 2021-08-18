@@ -364,21 +364,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-07-27
+                    2021-08-17
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    2.7k
+                    3k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    12 分
+                    13 分
                 </div>
                 
 
@@ -394,14 +394,28 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>Pcode</p>
-<p>P-code 是一种为逆向工程应用设计的<em>寄存器传输语言</em>。该语言足够通用，可以对许多不同处理器的行为进行建模。通过这种方式建模，将不同处理器的分析放到一个通用的框架中，促进可重定向分析算法和应用程序的开发。</p>
+                <h2 id="Pcode"><a href="#Pcode" class="headerlink" title="Pcode"></a>Pcode</h2><p>P-code 是一种为逆向工程应用设计的<em>寄存器传输语言</em>。该语言足够通用，可以对许多不同处理器的行为进行建模。通过这种方式建模，将不同处理器的分析放到一个通用的框架中，促进可重定向分析算法和应用程序的开发。</p>
 <p>从根本上说，p-code 的工作原理是将单个处理器指令转换为一系列<strong>p-code 操作</strong>，这些<strong>操作</strong>将处理器状态的一部分作为输入和输出变量 ( <strong>varnodes</strong> )。一组独特的 p-code 操作（由<strong>opcode</strong>区分）包含一组相当紧密的由通用处理器执行的算术和逻辑操作。将指令直接转换为这些操作称为<strong>原始 Pcode</strong>。原始 Pcode可用于直接模拟指令执行，通常遵循相同的控制流，尽管它可能会添加一些自己的内部控制流。</p>
 <p>Pcode 专门设计用于促进<em>数据流</em>图的构建，以便对反汇编指令进行后续分析。Varnodes 和 p-code 操作符可以被明确地认为是这些图中的节点。生成原始 p-code 是图构建的必要第一步，但需要额外的步骤，这引入了一些新的操作码。其中两个 <strong>MULTIEQUAL</strong>和<strong>INDIRECT</strong>特定于图构建过程，但可以在随后的图分析和转换过程中引入其他操作码，并帮助保持恢复的数据类型关系。所有新的操作码都在原始原始 Pcode翻译中都不会发生。最后，一些 Pcode运算符 <strong>CALL</strong>、 <strong>CALLIND</strong>和<strong>RETURN</strong>可能在分析期间更改了它们的输入和输出变量节点，以便它们不再匹配其<em>原始 Pcode</em>形式。</p>
 <p><strong>p-code的核心概念是：</strong></p>
 <p><strong>Address Space</strong></p>
 <p>Pcode 的<strong>地址空间</strong>是 RAM 的概括。它被简单地定义为可以由 Pcode操作读取和写入的索引字节序列。对于特定字节，标记它的唯一索引是该字节的<strong>地址</strong>。地址空间有一个名称来标识它，一个大小表示空间中不同索引的数量，以及与之关联的<strong>字节顺序</strong>，表示整数和其他多字节值如何编码到空间中。一个典型的处理器将有一个<strong>ram</strong>空间，用于模拟可通过其主数据总线访问的内存，以及一个<strong>寄存器</strong>用于对处理器的通用寄存器进行建模的空间。处理器操作的任何数据都必须在某个地址空间中。处理器的规范可以根据需要自由定义任意数量的地址空间。总是有一个特殊的地址空间，称为<strong>常量</strong>地址空间，用于对 Pcode操作所需的任何常量值进行编码。生成 p-code 的系统通常也使用专用的<strong>临时</strong>空间，可以将其视为临时寄存器的无底源。这些用于在对指令行为建模时保存中间值。</p>
 <p>Pcode规范允许地址空间的可寻址单元大于一个字节。每个地址空间都有一个<strong>wordsize</strong>属性，可以设置该属性来指示一个单元中的字节数。大于 1 的字大小对 Pcode的表示几乎没有影响。地址空间中的所有偏移量在内部仍表示为字节偏移量。唯一的例外是<strong>LOAD</strong>和 <strong>STORE</strong> p-code 操作。这些操作读取一个指针偏移量，当取消引用指针时，该偏移量必须正确缩放以获得正确的字节偏移量。wordsize 属性对任何其他 Pcode操作没有影响。</p>
+<p>pcode 可以读写的寻址空间。每个 address space 有三种属性</p>
+<ul>
+<li>name</li>
+<li>size</li>
+<li>endianness</li>
+</ul>
+<p>对于特定处理器的 pcode 模型，地址空间中含有该处理器特征的所有信息（例如 RAM, register, stack…)</p>
+<p>不同处理器通用的地址空间通常包括以下几种</p>
+<ul>
+<li>ram：对可以通过数据总线访问的空间进行的抽象</li>
+<li>register：对处理器的通用寄存器进行的抽象</li>
+<li>unique：对临时寄存器（存储了中间值）进行的抽象</li>
+<li>stack：对可以通过 stack pointer 访问的空间进行的抽象</li>
+<li>constant：pcode 中用于编码常量的特殊空间</li>
+</ul>
 <p><strong>Varnode</strong></p>
 <p>一个<strong>varnode</strong>要么是寄存器或存储器位置的概括。它由形式三元组表示：地址空间、空间偏移量和大小。直观地，varnode 是某个地址空间中的连续字节序列，可以将其视为单个值。p-code 操作对数据的所有操作都发生在 varnode 上。</p>
 <p>Varnodes 本身只是一个连续的字节块，由地址和大小标识，并且它们没有类型。然而，Pcode操作可以强制对 varnode进行三种<em>类型</em>解释之一：整数、布尔值和浮点数。</p>
@@ -414,6 +428,16 @@
 </li>
 </ul>
 <p>如果将 varnode 指定为<strong>常量</strong>地址空间的偏移量，则在使用该 varnode 的任何 pcode操作中，该偏移量将被解释为常量或立即数。在这种情况下，varnode 的大小可以被视为可用于常量编码的大小或精度。与其他 varnodes 一样，常量只有使用它们的 p 代码操作强制使用的类型。</p>
+<p>被定义为地址空间中字节序列。是 pcode 中使用的变量，包含(<em>address space、offset、size)</em>三个属性，地址空间和偏移量合在一起表示 varnode 的地址</p>
+<p>Varnodes 本身不一定具有与之关联的数据类型。 反编译器最终会分配一个正式的数据类型，但在 p-code 的最低级别，varnodes 从作用于它们的 p-code 操作继承构建块数据类型</p>
+<ul>
+<li><p><strong>Integer</strong></p>
+</li>
+<li><p><strong>Boolean</strong></p>
+</li>
+<li><p><strong>Floating Point</strong></p>
+</li>
+</ul>
 <p><strong>P-code Operation</strong></p>
 <p>一个<strong>p-code操作</strong>是机器指令的模拟。所有 p-code操作在内部具有相同的基本格式。它们都将一个或多个 varnode 作为输入，并可选择生成单个输出 varnode。操作的动作由它的<strong>操作码</strong>决定。对于几乎所有的 p-code 操作，只有输出 varnode 可以修改其值；操作没有间接影响。唯一可能的例外是<em>伪</em>操作，当对指令的行为不完全了解时，有时需要伪操作。</p>
 <p>所有 p-code操作都与它们被翻译的原始处理器指令的地址相关联。对于单个指令，从零开始的 计数器用于枚举其转换中涉及的多个 p-code操作。地址和计数器成对称为 p-code操作的唯一<strong>序列号</strong>。p-code操作的控制流通常遵循序列号顺序。当一条指令的所有 p-code执行完成时，如果该指令有<em>失败</em>从语义上讲，p-code 控制流按照对应于 fall-through 地址处的指令的顺序，选择第一个 p-code 操作。类似地，如果 p-code操作导致控制流分支，则按顺序在目标地址执行第一个 p-code操作。</p>
@@ -832,6 +856,9 @@
 <td>Construct a pointer to a field from a pointer to a structure and an offset.</td>
 </tr>
 </tbody></table>
+<ul>
+<li></li>
+</ul>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -1251,7 +1278,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">838.1k</span>&nbsp;字
+                class="white-color">890k</span>&nbsp;字
             
             
             

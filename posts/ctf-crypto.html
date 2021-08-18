@@ -1,0 +1,2936 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="CTF-Crypto要点, JackHCC">
+    <meta name="description" content="CTF密码学学习要点">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>CTF-Crypto要点 | JackHCC</title>
+    <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/my.css">
+    
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/jquery/jquery.min.js"></script>
+    
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper head-container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/me.jpg" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">JackHCC</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>留言板</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>友情链接</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/me.jpg" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">JackHCC</div>
+        <div class="logo-desc">
+            
+            Make the world betterrrr!!!
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			留言板
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			友情链接
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/JackHCC/JackHCC.github.io" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/JackHCC/JackHCC.github.io" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/9.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">CTF-Crypto要点</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="container content">
+
+    
+    <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/CTF-Cryptography/">
+                                <span class="chip bg-color">CTF-Cryptography</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/CTF/" class="post-category">
+                                CTF
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2021-08-15
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2021-08-17
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    14.7k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    61 分
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h1 id="密码学简介"><a href="#密码学简介" class="headerlink" title="密码学简介"></a>密码学简介</h1><p>密码学（Cryptography）一般可分为古典密码学和现代密码学。</p>
+<p>其中，古典密码学，作为一种实用性艺术存在，其编码和破译通常依赖于设计者和敌手的创造力与技巧，并没有对密码学原件进行清晰的定义。古典密码学主要包含以下几个方面：</p>
+<ul>
+<li>单表替换加密（Monoalphabetic Cipher）</li>
+<li>多表替换加密（Polyalphabetic Cipher）</li>
+<li>奇奇怪怪的加密方式</li>
+</ul>
+<p>而现代密码学则起源于 20 世纪中后期出现的大量相关理论，1949 年香农（C. E. Shannon）发表了题为《保密系统的通信理论》的经典论文标志着现代密码学的开始。现代密码学主要包含以下几个方面：</p>
+<ul>
+<li>对称加密（Symmetric Cryptography），以 DES，AES，RC4 为代表。</li>
+<li>非对称加密（Asymmetric Cryptography），以 RSA，ElGamal，椭圆曲线加密为代表。</li>
+<li>哈希函数（Hash Function），以 MD5，SHA-1，SHA-512 等为代表。</li>
+<li>数字签名（Digital Signature），以 RSA 签名，ElGamal 签名，DSA 签名为代表。</li>
+</ul>
+<p>其中，对称加密体制主要分为两种方式：</p>
+<ul>
+<li>分组密码（Block Cipher），又称为块密码。</li>
+<li>序列密码（Stream Cipher），又称为流密码。</li>
+</ul>
+<p>一般来说，密码设计者的根本目标是保障信息及信息系统的</p>
+<ul>
+<li>机密性（Confidentiality）</li>
+<li>完整性（Integrity）</li>
+<li>可用性（Availability）</li>
+<li>认证性（Authentication）</li>
+<li>不可否认性（Non-repudiation）</li>
+</ul>
+<p>其中，前三者被称为信息安全的 CIA 三要素 。</p>
+<p>而对于密码破解者来说，一般是要想办法识别出密码算法，然后进行暴力破解，或者利用密码体制的漏洞进行破解。当然，也有可能通过构造虚假的哈希值或者数字签名来绕过相应的检测。</p>
+<p>一般来说，我们都会假设攻击者已知待破解的密码体制，而攻击类型通常分为以下四种：</p>
+<table>
+<thead>
+<tr>
+<th align="left">攻击类型</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">唯密文攻击</td>
+<td align="left">只拥有密文</td>
+</tr>
+<tr>
+<td align="left">已知明文攻击</td>
+<td align="left">拥有密文与对应的明文</td>
+</tr>
+<tr>
+<td align="left">选择明文攻击</td>
+<td align="left">拥有加密权限，能够对明文加密后获得相应密文</td>
+</tr>
+<tr>
+<td align="left">选择密文攻击</td>
+<td align="left">拥有解密权限，能够对密文解密后获得相应明文</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Note</p>
+<p>注：之前在这里曾写过这些攻击常见的场景，随着不断地学习，渐渐意识到这些攻击类型侧重描述攻击者的能力，有可能适用于各种各样的场景。故进行修正。</p>
+</blockquote>
+<p>这里推荐一些资料</p>
+<ul>
+<li><a href="http://open.163.com/special/Khan/moderncryptography.html" target="_blank" rel="noopener">可汗学院公开课</a></li>
+<li><a href="https://github.com/yuankeyang/python/blob/master/《深入浅出密码学——常用加密技术原理与应用》.pdf" target="_blank" rel="noopener">深入浅出密码学——常用加密技术原理与应用</a></li>
+<li><a href="https://cryptopals.com/，一堆密码学的练习题目。" target="_blank" rel="noopener">https://cryptopals.com/，一堆密码学的练习题目。</a></li>
+</ul>
+<h1 id="古典密码简介"><a href="#古典密码简介" class="headerlink" title="古典密码简介"></a>古典密码简介</h1><p>在古典密码学中，我们主要介绍单表替代密码，多表替代密码，以及一些其它比较有意思的密码。</p>
+<p>值得一提的是，在古典密码学中，设计者主要考虑消息的保密性，使得只有相关密钥的人才可以解密密文获得消息的内容，对于消息的完整性和不可否认性则并没有进行太多的考虑。</p>
+<ul>
+<li>拓展阅读<ul>
+<li><a href="http://www.tuicool.com/articles/2E3INnm" target="_blank" rel="noopener">CTF 中那些脑洞大开的编码和加密</a></li>
+<li><a href="http://www.oscca.gov.cn/sca/zxfw/2017-04/24/content_1011709.shtml" target="_blank" rel="noopener">古典密码学发展史</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/古典密碼" target="_blank" rel="noopener">古典密码——维基百科</a></li>
+</ul>
+</li>
+</ul>
+<h1 id="单表代换加密"><a href="#单表代换加密" class="headerlink" title="单表代换加密"></a>单表代换加密</h1><h2 id="通用特点"><a href="#通用特点" class="headerlink" title="通用特点"></a>通用特点</h2><p>在单表替换加密中，所有的加密方式几乎都有一个共性，那就是明密文一一对应。所以说，一般有以下两种方式来进行破解</p>
+<ul>
+<li>在密钥空间较小的情况下，采用暴力破解方式</li>
+<li>在密文长度足够长的时候，使用词频分析，<a href="http://quipqiup.com/" target="_blank" rel="noopener">http://quipqiup.com/</a></li>
+</ul>
+<p>当密钥空间足够大，而密文长度足够短的情况下，破解较为困难。</p>
+<h2 id="凯撒密码"><a href="#凯撒密码" class="headerlink" title="凯撒密码"></a>凯撒密码</h2><h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>凯撒密码（Caesar）加密时会将明文中的 <strong>每个字母</strong> 都按照其在字母表中的顺序向后（或向前）移动固定数目（<strong>循环移动</strong>）作为密文。例如，当偏移量是左移 3 的时候（解密时的密钥就是 3）：</p>
+<pre><code>明文字母表：ABCDEFGHIJKLMNOPQRSTUVWXYZ
+密文字母表：DEFGHIJKLMNOPQRSTUVWXYZABC</code></pre><p>使用时，加密者查找明文字母表中需要加密的消息中的每一个字母所在位置，并且写下密文字母表中对应的字母。需要解密的人则根据事先已知的密钥反过来操作，得到原来的明文。例如：</p>
+<pre><code>明文：THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG
+密文：WKH TXLFN EURZQ IRA MXPSV RYHU WKH ODCB GRJ</code></pre><p>根据偏移量的不同，还存在<strong>若干特定的恺撒密码名称</strong>：</p>
+<ul>
+<li>偏移量为 10：Avocat （A→K）</li>
+<li>偏移量为 13：<a href="https://zh.wikipedia.org/wiki/ROT13" target="_blank" rel="noopener">ROT13</a></li>
+<li>偏移量为 -5：Cassis （K 6）</li>
+<li>偏移量为 -6：Cassette （K 7）</li>
+</ul>
+<p>此外，还有还有一种基于密钥的凯撒密码 Keyed Caesar。其基本原理是 <strong>利用一个密钥，将密钥的每一位转换为数字（一般转化为字母表对应顺序的数字），分别以这一数字为密钥加密明文的每一位字母。</strong></p>
+<p>这里以 <strong>XMan 一期夏令营分享赛宫保鸡丁队 Crypto 100</strong> 为例进行介绍。</p>
+<pre><code>密文：s0a6u3u1s0bv1a
+密钥：guangtou
+偏移：6,20,0,13,6,19,14,20
+明文：y0u6u3h1y0uj1u</code></pre><h3 id="破解"><a href="#破解" class="headerlink" title="破解"></a>破解</h3><ol>
+<li>遍历 26 个偏移量，适用于普遍情况</li>
+<li>利用词频分析，适用于密文较长的情况。</li>
+</ol>
+<p>其中，第一种方式肯定可以得到明文，而第二种方式则不一定可以得到正确的明文。</p>
+<p>而对于基于密钥的凯撒密码来说，一般来说必须知道对应的密钥。</p>
+<h3 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h3><p>一般我们有如下的工具，其中 JPK 比较通用。</p>
+<ul>
+<li>JPK，可解带密钥与不带密钥</li>
+<li><a href="http://planetcalc.com/1434/" target="_blank" rel="noopener">http://planetcalc.com/1434/</a></li>
+<li><a href="http://www.qqxiuzi.cn/bianma/ROT5-13-18-47.php" target="_blank" rel="noopener">http://www.qqxiuzi.cn/bianma/ROT5-13-18-47.php</a></li>
+</ul>
+<h2 id="移位密码"><a href="#移位密码" class="headerlink" title="移位密码"></a>移位密码</h2><p>与凯撒密码类似，区别在于移位密码不仅会处理字母，还会处理数字和特殊字符，常用 ASCII 码表进行移位。其破解方法也是遍历所有的可能性来得到可能的结果。</p>
+<h2 id="Atbash-Cipher"><a href="#Atbash-Cipher" class="headerlink" title="Atbash Cipher"></a>Atbash Cipher</h2><h3 id="原理-1"><a href="#原理-1" class="headerlink" title="原理"></a>原理</h3><p>埃特巴什码（Atbash Cipher）其实可以视为下面要介绍的简单替换密码的特例，它使用字母表中的最后一个字母代表第一个字母，倒数第二个字母代表第二个字母。在罗马字母表中，它是这样出现的：</p>
+<pre><code>明文：A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+密文：Z Y X W V U T S R Q P O N M L K J I H G F E D C B A</code></pre><p>下面给出一个例子：</p>
+<pre><code>明文：the quick brown fox jumps over the lazy dog
+密文：gsv jfrxp yildm ulc qfnkh levi gsv ozab wlt</code></pre><h3 id="破解-1"><a href="#破解-1" class="headerlink" title="破解"></a>破解</h3><p>可以看出其密钥空间足够短，同时当密文足够长时，仍然可以采用词频分析的方法解决。</p>
+<h3 id="工具-1"><a href="#工具-1" class="headerlink" title="工具"></a>工具</h3><ul>
+<li><a href="http://www.practicalcryptography.com/ciphers/classical-era/atbash-cipher/" target="_blank" rel="noopener">http://www.practicalcryptography.com/ciphers/classical-era/atbash-cipher/</a></li>
+</ul>
+<h2 id="简单替换密码"><a href="#简单替换密码" class="headerlink" title="简单替换密码"></a>简单替换密码</h2><h3 id="原理-2"><a href="#原理-2" class="headerlink" title="原理"></a>原理</h3><p>简单替换密码（Simple Substitution Cipher）加密时，将每个明文字母替换为与之唯一对应且不同的字母。它与恺撒密码之间的区别是其密码字母表的字母不是简单的移位，而是完全是混乱的，这也使得其破解难度要高于凯撒密码。 比如：</p>
+<pre><code>明文字母 : abcdefghijklmnopqrstuvwxyz
+密钥字母 : phqgiumeaylnofdxjkrcvstzwb</code></pre><p>a 对应 p，b 对应 h，以此类推。</p>
+<pre><code>明文：the quick brown fox jumps over the lazy dog
+密文：cei jvaql hkdtf udz yvoxr dsik cei npbw gdm</code></pre><p>而解密时，我们一般是知道了每一个字母的对应规则，才可以正常解密。</p>
+<h3 id="破解-2"><a href="#破解-2" class="headerlink" title="破解"></a>破解</h3><p>由于这种加密方式导致其所有的密钥个数是26!26! ，所以几乎上不可能使用暴力的解决方式。所以我们 一般采用词频分析。</p>
+<h3 id="工具-2"><a href="#工具-2" class="headerlink" title="工具"></a>工具</h3><ul>
+<li><a href="http://quipqiup.com/" target="_blank" rel="noopener">http://quipqiup.com/</a></li>
+</ul>
+<h2 id="仿射密码"><a href="#仿射密码" class="headerlink" title="仿射密码"></a>仿射密码</h2><h3 id="原理-3"><a href="#原理-3" class="headerlink" title="原理"></a>原理</h3><ul>
+<li>仿射密码的加密函数是 E(x)=(ax+b)(mod m)，其中<ul>
+<li>x 表示明文按照某种编码得到的数字</li>
+<li>a 和 m 互质</li>
+<li>m 是编码系统中字母的数目</li>
+</ul>
+</li>
+</ul>
+<p>解密函数是 D(x)=a^−1(x−b)(mod m)，其中 a^−1 是 a 在 Zm群的乘法逆元。</p>
+<p>下面我们以 E(x)=(5x+8) mod 26函数为例子进行介绍，加密字符串为 <code>AFFINE CIPHER</code>，这里我们直接采用字母表 26 个字母作为编码系统</p>
+<table>
+<thead>
+<tr>
+<th align="left">明文</th>
+<th align="left">A</th>
+<th align="left">F</th>
+<th align="left">F</th>
+<th align="left">I</th>
+<th align="left">N</th>
+<th align="left">E</th>
+<th align="left">C</th>
+<th align="left">I</th>
+<th align="left">P</th>
+<th align="left">H</th>
+<th align="left">E</th>
+<th align="left">R</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">x</td>
+<td align="left">0</td>
+<td align="left">5</td>
+<td align="left">5</td>
+<td align="left">8</td>
+<td align="left">13</td>
+<td align="left">4</td>
+<td align="left">2</td>
+<td align="left">8</td>
+<td align="left">15</td>
+<td align="left">7</td>
+<td align="left">4</td>
+<td align="left">17</td>
+</tr>
+<tr>
+<td align="left">y=5x+8</td>
+<td align="left">8</td>
+<td align="left">33</td>
+<td align="left">33</td>
+<td align="left">48</td>
+<td align="left">73</td>
+<td align="left">28</td>
+<td align="left">18</td>
+<td align="left">48</td>
+<td align="left">83</td>
+<td align="left">43</td>
+<td align="left">28</td>
+<td align="left">93</td>
+</tr>
+<tr>
+<td align="left">y mod 26</td>
+<td align="left">8</td>
+<td align="left">7</td>
+<td align="left">7</td>
+<td align="left">22</td>
+<td align="left">21</td>
+<td align="left">2</td>
+<td align="left">18</td>
+<td align="left">22</td>
+<td align="left">5</td>
+<td align="left">17</td>
+<td align="left">2</td>
+<td align="left">15</td>
+</tr>
+<tr>
+<td align="left">密文</td>
+<td align="left">I</td>
+<td align="left">H</td>
+<td align="left">H</td>
+<td align="left">W</td>
+<td align="left">V</td>
+<td align="left">C</td>
+<td align="left">S</td>
+<td align="left">W</td>
+<td align="left">F</td>
+<td align="left">R</td>
+<td align="left">C</td>
+<td align="left">P</td>
+</tr>
+</tbody></table>
+<p>其对应的加密结果是 <code>IHHWVCSWFRCP</code>。</p>
+<p>对于解密过程，正常解密者具有 a 与 b，可以计算得到 a−1 为 21，所以其解密函数是D(x)=21(x−8)(mod 26) ，解密如下</p>
+<table>
+<thead>
+<tr>
+<th align="left">密文</th>
+<th>I</th>
+<th>H</th>
+<th align="left">H</th>
+<th align="left">W</th>
+<th align="left">V</th>
+<th align="left">C</th>
+<th align="left">S</th>
+<th align="left">W</th>
+<th align="left">F</th>
+<th align="left">R</th>
+<th align="left">C</th>
+<th align="left">P</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">y</td>
+<td>8</td>
+<td>7</td>
+<td align="left">7</td>
+<td align="left">22</td>
+<td align="left">21</td>
+<td align="left">2</td>
+<td align="left">18</td>
+<td align="left">22</td>
+<td align="left">5</td>
+<td align="left">17</td>
+<td align="left">2</td>
+<td align="left">15</td>
+</tr>
+<tr>
+<td align="left">x=21(y−8)</td>
+<td>0</td>
+<td>-21</td>
+<td align="left">-21</td>
+<td align="left">294</td>
+<td align="left">273</td>
+<td align="left">-126</td>
+<td align="left">210</td>
+<td align="left">294</td>
+<td align="left">-63</td>
+<td align="left">189</td>
+<td align="left">-126</td>
+<td align="left">147</td>
+</tr>
+<tr>
+<td align="left">xmod26</td>
+<td>0</td>
+<td>5</td>
+<td align="left">5</td>
+<td align="left">8</td>
+<td align="left">13</td>
+<td align="left">4</td>
+<td align="left">2</td>
+<td align="left">8</td>
+<td align="left">15</td>
+<td align="left">7</td>
+<td align="left">4</td>
+<td align="left">17</td>
+</tr>
+<tr>
+<td align="left">明文</td>
+<td>A</td>
+<td>F</td>
+<td align="left">F</td>
+<td align="left">I</td>
+<td align="left">N</td>
+<td align="left">E</td>
+<td align="left">C</td>
+<td align="left">I</td>
+<td align="left">P</td>
+<td align="left">H</td>
+<td align="left">E</td>
+<td align="left">R</td>
+</tr>
+</tbody></table>
+<p>可以看出其特点在于只有 26 个英文字母。</p>
+<h3 id="破解-3"><a href="#破解-3" class="headerlink" title="破解"></a>破解</h3><p>首先，我们可以看到的是，仿射密码对于任意两个不同的字母，其最后得到的密文必然不一样，所以其也具有最通用的特点。当密文长度足够长时，我们可以使用频率分析的方法来解决。</p>
+<p>其次，我们可以考虑如何攻击该密码。可以看出当a=1时，仿射加密是凯撒加密。而一般来说，我们利用仿射密码时，其字符集都用的是字母表，一般只有 26 个字母，而不大于 26 的与 26 互素的个数一共有</p>
+<p>ϕ(26)=ϕ(2)×ϕ(13)=12</p>
+<p>算上 b 的偏移可能，一共有可能的密钥空间大小也就是</p>
+<p>12×26=312</p>
+<p>一般来说，对于该种密码，我们至少得是在已知部分明文的情况下才可以攻击。下面进行简单的分析。</p>
+<p>这种密码由两种参数来控制，如果我们知道其中任意一个参数，那我们便可以很容易地快速枚举另外一个参数得到答案。</p>
+<p>但是，假设我们已经知道采用的字母集，这里假设为 26 个字母，我们还有另外一种解密方式，我们只需要知道两个加密后的字母 y1,y2 即可进行解密。那么我们还可以知道</p>
+<p>y1=(ax1+b)(mod 26) </p>
+<p>y2=(ax2+b)(mod 26)</p>
+<p>两式相减，可得</p>
+<p>y1−y2=a(x1−x2)(mod 26)</p>
+<p>这里 y1,y2已知，如果我们知道密文对应的两个不一样的字符 x1与 x2 ，那么我们就可以很容易得到 a ，进而就可以得到 b 了。</p>
+<h3 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h3><p>这里我们以 TWCTF 2016 的 super_express 为例进行介绍。简单看一下给的源码</p>
+<pre><code>import sys
+key = '****CENSORED***************'
+flag = 'TWCTF{*******CENSORED********}'
+
+if len(key) % 2 == 1:
+    print("Key Length Error")
+    sys.exit(1)
+
+n = len(key) / 2
+encrypted = ''
+for c in flag:
+    c = ord(c)
+    for a, b in zip(key[0:n], key[n:2*n]):
+        c = (ord(a) * c + ord(b)) % 251
+    encrypted += '%02x' % c
+
+print encrypted</code></pre><p>可以发现，虽然对于 flag 中的每个字母都加密了 n 次，如果我们仔细分析的话，我们可以发现</p>
+<p>c1=a1c+b1</p>
+<p>c2=a2c1+b2</p>
+<p>=a1a2c+a2b1+b2</p>
+<p>=kc+d</p>
+<p>根据第二行的推导，我们可以得到其实 cn也是这样的形式，可以看成 cn=xc+y ，并且，我们可以知道的是，key 是始终不变化的，所以说，其实这个就是仿射密码。</p>
+<p>此外，题目中还给出了密文以及部分部分密文对应的明文，那么我们就很容易利用已知明文攻击的方法来攻击了，利用代码如下</p>
+<pre><code>import gmpy
+
+key = '****CENSORED****************'
+flag = 'TWCTF{*******CENSORED********}'
+
+f = open('encrypted', 'r')
+data = f.read().strip('\n')
+encrypted = [int(data[i:i + 2], 16) for i in range(0, len(data), 2)]
+plaindelta = ord(flag[1]) - ord(flag[0])
+cipherdalte = encrypted[1] - encrypted[0]
+a = gmpy.invert(plaindelta, 251) * cipherdalte % 251
+b = (encrypted[0] - a * ord(flag[0])) % 251
+a_inv = gmpy.invert(a, 251)
+result = ""
+for c in encrypted:
+    result += chr((c - b) * a_inv % 251)
+print result</code></pre><p>结果如下</p>
+<pre><code>➜  TWCTF2016-super_express git:(master) ✗ python exploit.py
+TWCTF{Faster_Than_Shinkansen!}</code></pre><h1 id="多表代换加密"><a href="#多表代换加密" class="headerlink" title="多表代换加密"></a>多表代换加密</h1><p>对于多表替换加密来说，加密后的字母几乎不再保持原来的频率，所以我们一般只能通过寻找算法实现对应的弱点进行破解。</p>
+<h2 id="Playfair"><a href="#Playfair" class="headerlink" title="Playfair"></a>Playfair</h2><h3 id="原理-4"><a href="#原理-4" class="headerlink" title="原理"></a>原理</h3><p>Playfair 密码（Playfair cipher or Playfair square）是一种替换密码，1854 年由英国人查尔斯 · 惠斯通（Charles Wheatstone）发明，基本算法如下：</p>
+<ol>
+<li>选取一串英文字母，除去重复出现的字母，将剩下的字母逐个逐个加入 5 × 5 的矩阵内，剩下的空间由未加入的英文字母依 a-z 的顺序加入。注意，将 q 去除，或将 i 和 j 视作同一字。</li>
+<li>将要加密的明文分成两个一组。若组内的字母相同，将 X（或 Q）加到该组的第一个字母后，重新分组。若剩下一个字，也加入 X 。</li>
+<li>在每组中，找出两个字母在矩阵中的地方。<ul>
+<li>若两个字母不同行也不同列，在矩阵中找出另外两个字母（第一个字母对应行优先），使这四个字母成为一个长方形的四个角。</li>
+<li>若两个字母同行，取这两个字母右方的字母（若字母在最右方则取最左方的字母）。</li>
+<li>若两个字母同列，取这两个字母下方的字母（若字母在最下方则取最上方的字母）。</li>
+</ul>
+</li>
+</ol>
+<p>新找到的两个字母就是原本的两个字母加密的结果。</p>
+<p>以 playfair example 为密匙，得</p>
+<pre><code>P L A Y F
+I R E X M
+B C D G H
+K N O Q S
+T U V W Z</code></pre><p>要加密的讯息为 Hide the gold in the tree stump</p>
+<pre><code>HI DE TH EG OL DI NT HE TR EX ES TU MP</code></pre><p>就会得到</p>
+<pre><code>BM OD ZB XD NA BE KU DM UI XM MO UV IF</code></pre><h3 id="工具-3"><a href="#工具-3" class="headerlink" title="工具"></a>工具</h3><ul>
+<li>CAP4</li>
+</ul>
+<h2 id="Polybius"><a href="#Polybius" class="headerlink" title="Polybius"></a>Polybius</h2><h3 id="原理-5"><a href="#原理-5" class="headerlink" title="原理"></a>原理</h3><p>Polybius 密码又称为棋盘密码，其一般是将给定的明文加密为两两组合的数字，其常用密码表</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th align="left">1</th>
+<th align="left">2</th>
+<th align="left">3</th>
+<th align="left">4</th>
+<th>5</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td align="left">A</td>
+<td align="left">B</td>
+<td align="left">C</td>
+<td align="left">D</td>
+<td>E</td>
+</tr>
+<tr>
+<td>2</td>
+<td align="left">F</td>
+<td align="left">G</td>
+<td align="left">H</td>
+<td align="left">I/J</td>
+<td>K</td>
+</tr>
+<tr>
+<td>3</td>
+<td align="left">L</td>
+<td align="left">M</td>
+<td align="left">N</td>
+<td align="left">O</td>
+<td>P</td>
+</tr>
+<tr>
+<td>4</td>
+<td align="left">Q</td>
+<td align="left">R</td>
+<td align="left">S</td>
+<td align="left">T</td>
+<td>U</td>
+</tr>
+<tr>
+<td>5</td>
+<td align="left">V</td>
+<td align="left">W</td>
+<td align="left">X</td>
+<td align="left">Y</td>
+<td>Z</td>
+</tr>
+</tbody></table>
+<p>举个例子，明文 HELLO，加密后就是 23 15 31 31 34。</p>
+<p>另一种密码表</p>
+<table>
+<thead>
+<tr>
+<th align="left"></th>
+<th align="left">A</th>
+<th align="left">D</th>
+<th align="left">F</th>
+<th align="left">G</th>
+<th align="left">X</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">A</td>
+<td align="left">b</td>
+<td align="left">t</td>
+<td align="left">a</td>
+<td align="left">l</td>
+<td align="left">p</td>
+</tr>
+<tr>
+<td align="left">D</td>
+<td align="left">d</td>
+<td align="left">h</td>
+<td align="left">o</td>
+<td align="left">z</td>
+<td align="left">k</td>
+</tr>
+<tr>
+<td align="left">F</td>
+<td align="left">q</td>
+<td align="left">f</td>
+<td align="left">v</td>
+<td align="left">s</td>
+<td align="left">n</td>
+</tr>
+<tr>
+<td align="left">G</td>
+<td align="left">g</td>
+<td align="left">j</td>
+<td align="left">c</td>
+<td align="left">u</td>
+<td align="left">x</td>
+</tr>
+<tr>
+<td align="left">X</td>
+<td align="left">m</td>
+<td align="left">r</td>
+<td align="left">e</td>
+<td align="left">w</td>
+<td align="left">y</td>
+</tr>
+</tbody></table>
+<p>注意，这里字母的顺序被打乱了。</p>
+<p>A D F G X 的由来：</p>
+<blockquote>
+<p>1918 年，第一次世界大战将要结束时，法军截获了一份德军电报，电文中的所有单词都由 A、D、F、G、X 五个字母拼成，因此被称为 ADFGX 密码。ADFGX 密码是 1918 年 3 月由德军上校 Fritz Nebel 发明的，是结合了 Polybius 密码和置换密码的双重加密方案。</p>
+</blockquote>
+<p>举个例子，HELLO，使用这个表格加密，就是 DD XF AG AG DF。</p>
+<h3 id="工具-4"><a href="#工具-4" class="headerlink" title="工具"></a>工具</h3><ul>
+<li>CrypTool</li>
+</ul>
+<h3 id="例子-1"><a href="#例子-1" class="headerlink" title="例子"></a>例子</h3><p>这里以安恒杯 9 月 Crypto 赛题 Go 为例，题目为：</p>
+<blockquote>
+<p>密文：ilnllliiikkninlekile</p>
+<p>压缩包给了一行十六进制：546865206c656e677468206f66207468697320706c61696e746578743a203130</p>
+<p>请对密文解密</p>
+</blockquote>
+<p>首先对十六进制进行 hex 解码，得到字符串：”The length of this plaintext: 10”</p>
+<p>密文长度为 20 ，而明文长度为 10 ，密文只有 “l”,”i”,”n”,”k”,”e” 这五个字符，联想到棋盘密码。</p>
+<p>首先试一下五个字符按字母表顺序排列：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th align="left">e</th>
+<th align="left">i</th>
+<th align="left">k</th>
+<th align="left">l</th>
+<th>n</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>e</td>
+<td align="left">A</td>
+<td align="left">B</td>
+<td align="left">C</td>
+<td align="left">D</td>
+<td>E</td>
+</tr>
+<tr>
+<td>i</td>
+<td align="left">F</td>
+<td align="left">G</td>
+<td align="left">H</td>
+<td align="left">I/J</td>
+<td>K</td>
+</tr>
+<tr>
+<td>k</td>
+<td align="left">L</td>
+<td align="left">M</td>
+<td align="left">N</td>
+<td align="left">O</td>
+<td>P</td>
+</tr>
+<tr>
+<td>l</td>
+<td align="left">Q</td>
+<td align="left">R</td>
+<td align="left">S</td>
+<td align="left">T</td>
+<td>U</td>
+</tr>
+<tr>
+<td>n</td>
+<td align="left">V</td>
+<td align="left">W</td>
+<td align="left">X</td>
+<td align="left">Y</td>
+<td>Z</td>
+</tr>
+</tbody></table>
+<p>根据密文解密得：iytghpkqmq。</p>
+<p>这应该不是我们想要的 flag 答案。</p>
+<p>看来这五个字符排列不是这么排列的，一共有 5! 种情况，写脚本爆破：</p>
+<pre><code>import itertools
+
+key = []
+cipher = "ilnllliiikkninlekile"
+
+for i in itertools.permutations('ilnke', 5):
+    key.append(''.join(i))
+
+for now_key in key:
+    solve_c = ""
+    res = ""
+    for now_c in cipher:
+        solve_c += str(now_key.index(now_c))
+    for i in range(0,len(solve_c),2):
+        now_ascii = int(solve_c[i])*5+int(solve_c[i+1])+97
+        if now_ascii&gt;ord('i'):
+            now_ascii+=1
+        res += chr(now_ascii)
+    if "flag" in res:
+        print now_key,res</code></pre><p>脚本其实就是实现棋盘密码这个算法，只是这五个字符的顺序不定。</p>
+<p>跑出下面两个结果：</p>
+<blockquote>
+<p>linke flagishere</p>
+<p>linek flagkxhdwd</p>
+</blockquote>
+<p>显然第一个是我们想要的答案。</p>
+<p>附上正确的密码表：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th align="left">l</th>
+<th align="left">i</th>
+<th align="left">n</th>
+<th align="left">k</th>
+<th>e</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>l</td>
+<td align="left">A</td>
+<td align="left">B</td>
+<td align="left">C</td>
+<td align="left">D</td>
+<td>E</td>
+</tr>
+<tr>
+<td>i</td>
+<td align="left">F</td>
+<td align="left">G</td>
+<td align="left">H</td>
+<td align="left">I/J</td>
+<td>K</td>
+</tr>
+<tr>
+<td>n</td>
+<td align="left">L</td>
+<td align="left">M</td>
+<td align="left">N</td>
+<td align="left">O</td>
+<td>P</td>
+</tr>
+<tr>
+<td>k</td>
+<td align="left">Q</td>
+<td align="left">R</td>
+<td align="left">S</td>
+<td align="left">T</td>
+<td>U</td>
+</tr>
+<tr>
+<td>e</td>
+<td align="left">V</td>
+<td align="left">W</td>
+<td align="left">X</td>
+<td align="left">Y</td>
+<td>Z</td>
+</tr>
+</tbody></table>
+<h2 id="Vigenere-维吉尼亚密码"><a href="#Vigenere-维吉尼亚密码" class="headerlink" title="Vigenere 维吉尼亚密码"></a>Vigenere 维吉尼亚密码</h2><h3 id="原理-6"><a href="#原理-6" class="headerlink" title="原理"></a>原理</h3><p>维吉尼亚密码（Vigenere）是使用一系列凯撒密码组成密码字母表的加密算法，属于多表密码的一种简单形式。</p>
+<p><img src="/images/loading.gif" data-original="https://ctf-wiki.org/crypto/classical/figure/vigenere1.jpg" alt="维吉尼亚表格"></p>
+<p>下面给出一个例子</p>
+<pre><code>明文：come greatwall
+密钥：crypto</code></pre><p>首先，对密钥进行填充使其长度与明文长度一样。</p>
+<table>
+<thead>
+<tr>
+<th align="left">明文</th>
+<th align="left">c</th>
+<th align="left">o</th>
+<th align="left">m</th>
+<th align="left">e</th>
+<th align="left">g</th>
+<th align="left">r</th>
+<th align="left">e</th>
+<th align="left">a</th>
+<th align="left">t</th>
+<th align="left">w</th>
+<th align="left">a</th>
+<th align="left">l</th>
+<th align="left">l</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">密钥</td>
+<td align="left">c</td>
+<td align="left">r</td>
+<td align="left">y</td>
+<td align="left">p</td>
+<td align="left">t</td>
+<td align="left">o</td>
+<td align="left">c</td>
+<td align="left">r</td>
+<td align="left">y</td>
+<td align="left">p</td>
+<td align="left">t</td>
+<td align="left">o</td>
+<td align="left">c</td>
+</tr>
+</tbody></table>
+<p>其次，查表得密文</p>
+<p><img src="/images/loading.gif" data-original="https://ctf-wiki.org/crypto/classical/figure/vigenere2.jpg" alt="维吉尼亚加密"></p>
+<pre><code>明文：come greatwall
+密钥：crypto
+密文：efkt zferrltzn</code></pre><h3 id="破解-4"><a href="#破解-4" class="headerlink" title="破解"></a>破解</h3><p>对包括维吉尼亚密码在内的所有多表密码的破译都是以字母频率为基础的，但直接的频率分析却并不适用，这是因为在维吉尼亚密码中，一个字母可以被加密成不同的密文，因而简单的频率分析在这里并没有用。</p>
+<p><strong>破译维吉尼亚密码的关键在于它的密钥是循环重复的。</strong> 如果我们知道了密钥的长度，那密文就可以被看作是交织在一起的凯撒密码，而其中每一个都可以单独破解。关于密码的长度，我们可以 使用卡西斯基试验和弗里德曼试验来获取。</p>
+<p>卡西斯基试验是基于类似 the 这样的常用单词有可能被同样的密钥字母进行加密，从而在密文中重复出现。例如，明文中不同的 CRYPTO 可能被密钥 ABCDEF 加密成不同的密文：</p>
+<pre><code>密钥：ABCDEF AB CDEFA BCD EFABCDEFABCD
+明文：CRYPTO IS SHORT FOR CRYPTOGRAPHY
+密文：CSASXT IT UKSWT GQU GWYQVRKWAQJB</code></pre><p>此时明文中重复的元素在密文中并不重复。然而，如果密钥相同的话，结果可能便为（使用密钥 ABCD）：</p>
+<pre><code>密钥：ABCDAB CD ABCDA BCD ABCDABCDABCD
+明文：CRYPTO IS SHORT FOR CRYPTOGRAPHY
+密文：CSASTP KV SIQUT GQU CSASTPIUAQJB</code></pre><p>此时卡西斯基试验就能产生效果。对于更长的段落此方法更为有效，因为通常密文中重复的片段会更多。如通过下面的密文就能破译出密钥的长度：</p>
+<pre><code>密文：DYDUXRMHTVDVNQDQNWDYDUXRMHARTJGWNQD</code></pre><p>其中，两个 DYDUXRMH 的出现相隔了 18 个字母。因此，可以假定密钥的长度是 18 的约数，即长度为 18、9、6、3 或 2。而两个 NQD 则相距 20 个字母，意味着密钥长度应为 20、10、5、4 或 2。取两者的交集，则可以基本确定密钥长度为 2。接下来就是进行进一步的操作了。</p>
+<p>关于更加详细的破解原理，这里暂时不做过多的介绍。可以参考 http://<a href="http://www.practicalcryptography.com/cryptanalysis/stochastic-searching/cryptanalysis-vigenere-cipher/" target="_blank" rel="noopener">www.practicalcryptography.com/cryptanalysis/stochastic-searching/cryptanalysis-vigenere-cipher/</a>。</p>
+<h3 id="工具-5"><a href="#工具-5" class="headerlink" title="工具"></a>工具</h3><ul>
+<li>已知密钥<ul>
+<li>Python 的 pycipher 库</li>
+<li><a href="http://planetcalc.com/2468/" target="_blank" rel="noopener">在线解密 Vigenère cipher</a></li>
+<li>CAP4</li>
+</ul>
+</li>
+<li>未知密钥<ul>
+<li><a href="http://www.mygeocachingprofile.com/codebreaker.vigenerecipher.aspx" target="_blank" rel="noopener">Vigenère Cipher Codebreaker</a></li>
+<li><a href="https://www.guballa.de/vigenere-solver" target="_blank" rel="noopener">Vigenere Solver</a> ，不够完善。</li>
+</ul>
+</li>
+</ul>
+<h2 id="Nihilist"><a href="#Nihilist" class="headerlink" title="Nihilist"></a>Nihilist</h2><h3 id="原理-7"><a href="#原理-7" class="headerlink" title="原理"></a>原理</h3><p>Nihilist 密码又称关键字密码：明文 + 关键字 = 密文。以关键字 helloworld 为例。</p>
+<p>首先利用密钥构造棋盘矩阵（类似 Polybius 密码） - 新建一个 5 × 5 矩阵 - 将字符不重复地依次填入矩阵 - 剩下部分按字母顺序填入 - 字母 i 和 j 等价</p>
+<table>
+<thead>
+<tr>
+<th align="left"></th>
+<th align="left">1</th>
+<th align="left">2</th>
+<th align="left">3</th>
+<th align="left">4</th>
+<th align="left">5</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">1</td>
+<td align="left">h</td>
+<td align="left">e</td>
+<td align="left">l</td>
+<td align="left">o</td>
+<td align="left">w</td>
+</tr>
+<tr>
+<td align="left">2</td>
+<td align="left">r</td>
+<td align="left">d</td>
+<td align="left">a</td>
+<td align="left">b</td>
+<td align="left">c</td>
+</tr>
+<tr>
+<td align="left">3</td>
+<td align="left">f</td>
+<td align="left">g</td>
+<td align="left">i / j</td>
+<td align="left">k</td>
+<td align="left">m</td>
+</tr>
+<tr>
+<td align="left">4</td>
+<td align="left">n</td>
+<td align="left">p</td>
+<td align="left">q</td>
+<td align="left">s</td>
+<td align="left">t</td>
+</tr>
+<tr>
+<td align="left">5</td>
+<td align="left">u</td>
+<td align="left">v</td>
+<td align="left">x</td>
+<td align="left">y</td>
+<td align="left">z</td>
+</tr>
+</tbody></table>
+<p>对于加密过程参照矩阵 M 进行加密：</p>
+<pre><code>a -&gt; M[2,3] -&gt; 23
+t -&gt; M[4,5] -&gt; 45</code></pre><p>对于解密过程</p>
+<p>参照矩阵 M 进行解密：</p>
+<pre><code>23 -&gt; M[2,3] -&gt; a
+45 -&gt; M[4,5] -&gt; t</code></pre><p>可以看出，密文的特征有如下几点</p>
+<ul>
+<li>纯数字</li>
+<li>只包含 1 到 5</li>
+<li>密文长度偶数。</li>
+</ul>
+<h2 id="Hill"><a href="#Hill" class="headerlink" title="Hill"></a>Hill</h2><h3 id="原理-8"><a href="#原理-8" class="headerlink" title="原理"></a>原理</h3><p>希尔密码（Hill）使用每个字母在字母表中的顺序作为其对应的数字，即 A=0，B=1，C=2 等，然后将明文转化为 n 维向量，跟一个 n × n 的矩阵相乘，再将得出的结果模 26。注意用作加密的矩阵（即密匙）在 Zn26必须是可逆的，否则就不可能解码。只有矩阵的行列式和 26 互质，才是可逆的。下面举一个例子</p>
+<pre><code>明文：ACT</code></pre><p><img src="/images/loading.gif" data-original="../images/CTF/image-20210815235006081.png" alt=""></p>
+<p>密文即为</p>
+<pre><code>密文：POH</code></pre><h3 id="工具-6"><a href="#工具-6" class="headerlink" title="工具"></a>工具</h3><ul>
+<li><a href="http://www.practicalcryptography.com/ciphers/hill-cipher/" target="_blank" rel="noopener">http://www.practicalcryptography.com/ciphers/hill-cipher/</a></li>
+<li>CAP4</li>
+<li>Cryptool</li>
+</ul>
+<h3 id="例子-2"><a href="#例子-2" class="headerlink" title="例子"></a>例子</h3><p>这里我们以 ISCC 2015 base decrypt 150 为例进行介绍，题目为</p>
+<blockquote>
+<p>密文： 22,09,00,12,03,01,10,03,04,08,01,17 （wjamdbkdeibr）</p>
+<p>使用的矩阵是 1 2 3 4 5 6 7 8 10</p>
+<p>请对密文解密.</p>
+</blockquote>
+<p>首先，矩阵是 3 × 3 的。说明每次加密 3 个字符。我们直接使用 Cryptool，需要注意的是，这个矩阵是按照列来排布的。即如下</p>
+<pre><code>1 4 7
+2 5 8
+3 6 10</code></pre><p>最后的结果为 <code>overthehillx</code>。</p>
+<h2 id="AutokeyCipher"><a href="#AutokeyCipher" class="headerlink" title="AutokeyCipher"></a>AutokeyCipher</h2><h3 id="原理-9"><a href="#原理-9" class="headerlink" title="原理"></a>原理</h3><p>自动密钥密码（Autokey Cipher）也是多表替换密码，与维吉尼亚密码密码类似，但使用不同的方法生成密钥。通常来说它要比维吉尼亚密码更安全。自动密钥密码主要有两种，关键词自动密钥密码和原文自动密钥密码。下面我们以关键词自动密钥为例：</p>
+<pre><code>明文：THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG
+关键词：CULTURE</code></pre><p>自动生成密钥：</p>
+<pre><code>CULTURE THE QUICK BROWN FOX JUMPS OVER THE</code></pre><p>接下来的加密过程和维吉尼亚密码类似，从相应的表格可得：</p>
+<p>密文</p>
+<pre><code>VBP JOZGD IVEQV HYY AIICX CSNL FWW ZVDP WVK</code></pre><h3 id="工具-7"><a href="#工具-7" class="headerlink" title="工具"></a>工具</h3><ul>
+<li>已知关键词<ul>
+<li>Python 的 pycipher 库</li>
+</ul>
+</li>
+<li>未知关键词<ul>
+<li><a href="http://www.practicalcryptography.com/cryptanalysis/stochastic-searching/cryptanalysis-autokey-cipher/" target="_blank" rel="noopener">http://www.practicalcryptography.com/cryptanalysis/stochastic-searching/cryptanalysis-autokey-cipher/</a></li>
+<li><strong>tools 文件夹下 break_autokey.py，待完成。</strong></li>
+</ul>
+</li>
+</ul>
+<h1 id="其它类型加密"><a href="#其它类型加密" class="headerlink" title="其它类型加密"></a>其它类型加密</h1><h2 id="培根密码"><a href="#培根密码" class="headerlink" title="培根密码"></a>培根密码</h2><h3 id="原理-10"><a href="#原理-10" class="headerlink" title="原理"></a>原理</h3><p>培根密码使用两种不同的字体，代表 A 和 B，结合加密表进行加解密。</p>
+<table>
+<thead>
+<tr>
+<th align="left">a</th>
+<th align="left">AAAAA</th>
+<th align="left">g</th>
+<th align="left">AABBA</th>
+<th align="left">n</th>
+<th align="left">ABBAA</th>
+<th align="left">t</th>
+<th align="left">BAABA</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">b</td>
+<td align="left">AAAAB</td>
+<td align="left">h</td>
+<td align="left">AABBB</td>
+<td align="left">o</td>
+<td align="left">ABBAB</td>
+<td align="left">u-v</td>
+<td align="left">BAABB</td>
+</tr>
+<tr>
+<td align="left">c</td>
+<td align="left">AAABA</td>
+<td align="left">i-j</td>
+<td align="left">ABAAA</td>
+<td align="left">p</td>
+<td align="left">ABBBA</td>
+<td align="left">w</td>
+<td align="left">BABAA</td>
+</tr>
+<tr>
+<td align="left">d</td>
+<td align="left">AAABB</td>
+<td align="left">k</td>
+<td align="left">ABAAB</td>
+<td align="left">q</td>
+<td align="left">ABBBB</td>
+<td align="left">x</td>
+<td align="left">BABAB</td>
+</tr>
+<tr>
+<td align="left">e</td>
+<td align="left">AABAA</td>
+<td align="left">l</td>
+<td align="left">ABABA</td>
+<td align="left">r</td>
+<td align="left">BAAAA</td>
+<td align="left">y</td>
+<td align="left">BABBA</td>
+</tr>
+<tr>
+<td align="left">f</td>
+<td align="left">AABAB</td>
+<td align="left">m</td>
+<td align="left">ABABB</td>
+<td align="left">s</td>
+<td align="left">BAAAB</td>
+<td align="left">z</td>
+<td align="left">BABBB</td>
+</tr>
+</tbody></table>
+<p>上面的是常用的加密表。还有另外的一种加密表，可认为是将 26 个字母从 0 到 25 排序，以二进制表示，A 代表 0，B 代表 1。</p>
+<p>下面这一段内容就是明文 steganography 加密后的内容，正常字体是 A，粗体是 B：</p>
+<p><strong>T</strong>o en<strong>co</strong>de <strong>a</strong> mes<strong>s</strong>age e<strong>ac</strong>h letter <strong>of</strong> the <strong>pl</strong>a<strong>i</strong>nt<strong>ex</strong>t <strong>i</strong>s replaced b<strong>y a g</strong>rou<strong>p of f</strong>i<strong>ve</strong> of <strong>th</strong>e lett<strong>ers</strong> <strong>‘A’</strong> o<strong>r ‘B’</strong>.</p>
+<p>可以看到，培根密码主要有以下特点</p>
+<ul>
+<li>只有两种字符</li>
+<li>每一段的长度为 5</li>
+<li>加密内容会有特殊的字体之分，亦或者大小写之分。</li>
+</ul>
+<h3 id="工具-8"><a href="#工具-8" class="headerlink" title="工具"></a>工具</h3><ul>
+<li><a href="http://rumkin.com/tools/cipher/baconian.php" target="_blank" rel="noopener">http://rumkin.com/tools/cipher/baconian.php</a></li>
+</ul>
+<h2 id="栅栏密码"><a href="#栅栏密码" class="headerlink" title="栅栏密码"></a>栅栏密码</h2><h3 id="原理-11"><a href="#原理-11" class="headerlink" title="原理"></a>原理</h3><p>栅栏密码把要加密的明文分成 N 个一组，然后把每组的第 1 个字连起来，形成一段无规律的话。这里给出一个例子</p>
+<pre><code>明文：THERE IS A CIPHER</code></pre><p>去掉空格后变为</p>
+<pre><code>THEREISACIPHER</code></pre><p>分成两栏，两个一组得到</p>
+<pre><code>TH ER EI SA CI PH ER</code></pre><p>先取出第一个字母，再取出第二个字母</p>
+<pre><code>TEESCPE
+HRIAIHR</code></pre><p>连在一起就是</p>
+<pre><code>TEESCPEHRIAIHR</code></pre><p>上述明文也可以分为 2 栏。</p>
+<pre><code>THEREIS ACIPHER</code></pre><p>组合得到密文</p>
+<pre><code>TAHCEIRPEHIESR</code></pre><h3 id="工具-9"><a href="#工具-9" class="headerlink" title="工具"></a>工具</h3><ul>
+<li><a href="https://www.qqxiuzi.cn/bianma/zhalanmima.php" target="_blank" rel="noopener">https://www.qqxiuzi.cn/bianma/zhalanmima.php</a></li>
+</ul>
+<h2 id="曲路密码"><a href="#曲路密码" class="headerlink" title="曲路密码"></a>曲路密码</h2><h3 id="原理-12"><a href="#原理-12" class="headerlink" title="原理"></a>原理</h3><p>曲路密码（Curve Cipher）是一种换位密码，需要事先双方约定密钥（也就是曲路路径）。下面给出一个例子</p>
+<pre><code>明文：The quick brown fox jumps over the lazy dog</code></pre><p>填入 5 行 7 列表（事先约定填充的行列数）</p>
+<p><img src="/images/loading.gif" data-original="https://ctf-wiki.org/crypto/classical/figure/qulu-table.png" alt="qulu-table"></p>
+<p>加密的回路线（事先约定填充的行列数）</p>
+<p><img src="/images/loading.gif" data-original="https://ctf-wiki.org/crypto/classical/figure/qulu-road.png" alt="qulu-road"></p>
+<pre><code>密文：gesfc inpho dtmwu qoury zejre hbxva lookT</code></pre><h2 id="列移位加密"><a href="#列移位加密" class="headerlink" title="列移位加密"></a>列移位加密</h2><h3 id="原理-13"><a href="#原理-13" class="headerlink" title="原理"></a>原理</h3><p>列移位密码（Columnar Transposition Cipher）是一种比较简单，易于实现的换位密码，通过一个简单的规则将明文打乱混合成密文。下面给出一个例子。</p>
+<p>我们以明文 <code>The quick brown fox jumps over the lazy dog</code>，密钥 <code>how are u</code> 为例：</p>
+<p>将明文填入 5 行 7 列表（事先约定填充的行列数，如果明文不能填充完表格可以约定使用某个字母进行填充）</p>
+<p><img src="/images/loading.gif" data-original="https://ctf-wiki.org/crypto/classical/figure/columnar-transposition-plaintext.png" alt="明文"></p>
+<p>密钥： <code>how are u</code>，按 <code>how are u</code> 在字母表中的出现的先后顺序进行编号，我们就有 a 为 1，e 为 2，h 为 3，o 为 4，r 为 5，u 为 6，w 为 7，所以先写出 a 列，其次 e 列，以此类推写出的结果便是密文：</p>
+<p><img src="/images/loading.gif" data-original="https://ctf-wiki.org/crypto/classical/figure/columnar-transposition-key.png" alt="密钥"></p>
+<p>密文： <code>qoury inpho Tkool hbxva uwmtd cfseg erjez</code></p>
+<h3 id="工具-10"><a href="#工具-10" class="headerlink" title="工具"></a>工具</h3><ul>
+<li><a href="http://www.practicalcryptography.com/ciphers/classical-era/columnar-transposition/" target="_blank" rel="noopener">http://www.practicalcryptography.com/ciphers/classical-era/columnar-transposition/</a> 行列数相等</li>
+</ul>
+<h2 id="01248-密码"><a href="#01248-密码" class="headerlink" title="01248 密码"></a>01248 密码</h2><h3 id="原理-14"><a href="#原理-14" class="headerlink" title="原理"></a>原理</h3><p>该密码又称为云影密码，使用 0，1，2，4，8 四个数字，其中 0 用来表示间隔，其他数字以加法可以表示出 如：28=10，124=7，18=9，再用 1-&gt;26 表示 A-&gt;Z。</p>
+<p>可以看出该密码有以下特点</p>
+<ul>
+<li>只有 0，1，2，4，8</li>
+</ul>
+<h3 id="例子-3"><a href="#例子-3" class="headerlink" title="例子"></a>例子</h3><p>这里我们以 CFF 2016 影之密码为例进行介绍，题目</p>
+<blockquote>
+<p>8842101220480224404014224202480122</p>
+</blockquote>
+<p>我们按照 0 来进行分割，如下</p>
+<table>
+<thead>
+<tr>
+<th align="left">内容</th>
+<th align="left">数字</th>
+<th align="left">字符</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">88421</td>
+<td align="left">8+8+4+2+1=23</td>
+<td align="left">W</td>
+</tr>
+<tr>
+<td align="left">122</td>
+<td align="left">1+2+2=5</td>
+<td align="left">E</td>
+</tr>
+<tr>
+<td align="left">48</td>
+<td align="left">4+8=12</td>
+<td align="left">L</td>
+</tr>
+<tr>
+<td align="left">2244</td>
+<td align="left">2+2+4+4=12</td>
+<td align="left">L</td>
+</tr>
+<tr>
+<td align="left">4</td>
+<td align="left">4</td>
+<td align="left">D</td>
+</tr>
+<tr>
+<td align="left">142242</td>
+<td align="left">1+4+2+2+4+2=15</td>
+<td align="left">O</td>
+</tr>
+<tr>
+<td align="left">248</td>
+<td align="left">2+4+8=14</td>
+<td align="left">N</td>
+</tr>
+<tr>
+<td align="left">122</td>
+<td align="left">1+2+2=5</td>
+<td align="left">E</td>
+</tr>
+</tbody></table>
+<p>所以最后的 flag 为 WELLDONE。</p>
+<h2 id="JSFuck"><a href="#JSFuck" class="headerlink" title="JSFuck"></a>JSFuck</h2><h3 id="原理-15"><a href="#原理-15" class="headerlink" title="原理"></a>原理</h3><p>JSFuck 可以只用 6 个字符 <code>[]()!+</code> 来编写 JavaScript 程序。比如我们想用 JSFuck 来实现 <code>alert(1)</code> 代码如下</p>
+<pre><code>[][(![]+[])[+[[+[]]]]+([][[]]+[])[+[[!+[]+!+[]+!+[]+!+[]+!+[]]]]+(![]+[])[+[[!+[]+!+[]]]]+(!![]+[])[+[[+[]]]]+(!![]+[])[+[[!+[]+!+[]+!+[]]]]+(!![]+[])[+[[+!+[]]]]][([][(![]+[])[+[[+[]]]]+([][[]]+[])[+[[!+[]+!+[]+!+[]+!+[]+!+[]]]]+(![]+[])[+[[!+[]+!+[]]]]+(!![]+[])[+[[+[]]]]+(!![]+[])[+[[!+[]+!+[]+!+[]]]]+(!![]+[])[+[[+!+[]]]]]+[])[+[[!+[]+!+[]+!+[]]]]+([][(![]+[])[+[[+[]]]]+([][[]]+[])[+[[!+[]+!+[]+!+[]+!+[]+!+[]]]]+(![]+[])[+[[!+[]+!+[]]]]+(!![]+[])[+[[+[]]]]+(!![]+[])[+[[!+[]+!+[]+!+[]]]]+(!![]+[])[+[[+!+[]]]]]+[])[+[[!+[]+!+[]+!+[]+!+[]+!+[]+!+[]]]]+([][[]]+[])[+[[+!+[]]]]+(![]+[])[+[[!+[]+!+[]+!+[]]]]+(!![]+[])[+[[+[]]]]+(!![]+[])[+[[+!+[]]]]+([][[]]+[])[+[[+[]]]]+([][(![]+[])[+[[+[]]]]+([][[]]+[])[+[[!+[]+!+[]+!+[]+!+[]+!+[]]]]+(![]+[])[+[[!+[]+!+[]]]]+(!![]+[])[+[[+[]]]]+(!![]+[])[+[[!+[]+!+[]+!+[]]]]+(!![]+[])[+[[+!+[]]]]]+[])[+[[!+[]+!+[]+!+[]]]]+(!![]+[])[+[[+[]]]]+([][(![]+[])[+[[+[]]]]+([][[]]+[])[+[[!+[]+!+[]+!+[]+!+[]+!+[]]]]+(![]+[])[+[[!+[]+!+[]]]]+(!![]+[])[+[[+[]]]]+(!![]+[])[+[[!+[]+!+[]+!+[]]]]+(!![]+[])[+[[+!+[]]]]]+[])[+[[!+[]+!+[]+!+[]+!+[]+!+[]+!+[]]]]+(!![]+[])[+[[+!+[]]]]]((![]+[])[+[[+!+[]]]]+(![]+[])[+[[!+[]+!+[]]]]+(!![]+[])[+[[!+[]+!+[]+!+[]]]]+(!![]+[])[+[[+!+[]]]]+(!![]+[])[+[[+[]]]]+([][(![]+[])[+[[+[]]]]+([][[]]+[])[+[[!+[]+!+[]+!+[]+!+[]+!+[]]]]+(![]+[])[+[[!+[]+!+[]]]]+(!![]+[])[+[[+[]]]]+(!![]+[])[+[[!+[]+!+[]+!+[]]]]+(!![]+[])[+[[+!+[]]]]]+[])[+[[+!+[]]]+[[!+[]+!+[]+!+[]+!+[]+!+[]]]]+[+!+[]]+([][(![]+[])[+[[+[]]]]+([][[]]+[])[+[[!+[]+!+[]+!+[]+!+[]+!+[]]]]+(![]+[])[+[[!+[]+!+[]]]]+(!![]+[])[+[[+[]]]]+(!![]+[])[+[[!+[]+!+[]+!+[]]]]+(!![]+[])[+[[+!+[]]]]]+[])[+[[+!+[]]]+[[!+[]+!+[]+!+[]+!+[]+!+[]+!+[]]]])()</code></pre><p>其他一些基本的表达：</p>
+<pre><code>false       =&gt;  ![]
+true        =&gt;  !![]
+undefined   =&gt;  [][[]]
+NaN         =&gt;  +[![]]
+0           =&gt;  +[]
+1           =&gt;  +!+[]
+2           =&gt;  !+[]+!+[]
+10          =&gt;  [+!+[]]+[+[]]
+Array       =&gt;  []
+Number      =&gt;  +[]
+String      =&gt;  []+[]
+Boolean     =&gt;  ![]
+Function    =&gt;  []["filter"]
+eval        =&gt;  []["filter"]["constructor"]( CODE )()
+window      =&gt;  []["filter"]["constructor"]("return this")()</code></pre><h3 id="工具-11"><a href="#工具-11" class="headerlink" title="工具"></a>工具</h3><ul>
+<li><a href="http://www.jsfuck.com/" target="_blank" rel="noopener">JSFuck 在线加密网站</a></li>
+</ul>
+<h2 id="BrainFuck"><a href="#BrainFuck" class="headerlink" title="BrainFuck"></a>BrainFuck</h2><h3 id="原理-16"><a href="#原理-16" class="headerlink" title="原理"></a>原理</h3><p>Brainfuck，是一种极小化的计算机语言，它是由 Urban Müller 在 1993 年创建的。我们举一个例子，如果我们想要一个在屏幕上打印 Hello World！，那么对应的程序如下。对于其中的原理，感兴趣的可以自行网上搜索。</p>
+<pre><code>++++++++++[&gt;+++++++&gt;++++++++++&gt;+++&gt;+&lt;&lt;&lt;&lt;-]
+&gt;++.&gt;+.+++++++..+++.&gt;++.&lt;&lt;+++++++++++++++.
+&gt;.+++.------.--------.&gt;+.&gt;.</code></pre><p>与其对应的还有 ook。</p>
+<h3 id="工具-12"><a href="#工具-12" class="headerlink" title="工具"></a>工具</h3><ul>
+<li><a href="https://www.splitbrain.org/services/ook" target="_blank" rel="noopener">https://www.splitbrain.org/services/ook</a></li>
+</ul>
+<h2 id="猪圈密码"><a href="#猪圈密码" class="headerlink" title="猪圈密码"></a>猪圈密码</h2><h3 id="原理-17"><a href="#原理-17" class="headerlink" title="原理"></a>原理</h3><p>猪圈密码是一种以格子为基础的简单替代式密码，格子如下</p>
+<p><img src="/images/loading.gif" data-original="https://ctf-wiki.org/crypto/classical/figure/pigpen.png" alt="猪圈密码对照表"></p>
+<p>我们举一个例子，如明文为 <code>X marks the spot</code> ，那么密文如下</p>
+<p><img src="/images/loading.gif" data-original="https://ctf-wiki.org/crypto/classical/figure/pigpen_example.png" alt="猪圈密码示例"></p>
+<h3 id="工具-13"><a href="#工具-13" class="headerlink" title="工具"></a>工具</h3><ul>
+<li><a href="http://www.simonsingh.net/The_Black_Chamber/pigpen.html" target="_blank" rel="noopener">http://www.simonsingh.net/The_Black_Chamber/pigpen.html</a></li>
+</ul>
+<h2 id="舞动的小人密码"><a href="#舞动的小人密码" class="headerlink" title="舞动的小人密码"></a>舞动的小人密码</h2><h3 id="原理-18"><a href="#原理-18" class="headerlink" title="原理"></a>原理</h3><p>这种密码出自于福尔摩斯探案集。每一个跳舞的小人实际上对应的是英文二十六个字母中的一个，而小人手中的旗子则表明该字母是单词的最后一个字母，如果仅仅是一个单词而不是句子，或者是句子中最后的一个单词，则单词中最后一个字母不必举旗。</p>
+<p><img src="/images/loading.gif" data-original="https://ctf-wiki.org/crypto/classical/figure/dancingman.jpg" alt="舞动的小人密码"></p>
+<h2 id="键盘密码"><a href="#键盘密码" class="headerlink" title="键盘密码"></a>键盘密码</h2><p>所谓键盘密码，就是采用手机键盘或者电脑键盘进行加密。</p>
+<h3 id="手机键盘密码"><a href="#手机键盘密码" class="headerlink" title="手机键盘密码"></a>手机键盘密码</h3><p>手机键盘加密方式，是每个数字键上有 3-4 个字母，用两位数字来表示字母，例如：ru 用手机键盘表示就是：7382，那么这里就可以知道了，手机键盘加密方式不可能用 1 开头，第二位数字不可能超过 4，解密的时候参考此</p>
+<p><img src="/images/loading.gif" data-original="https://ctf-wiki.org/crypto/classical/figure/mobile.jpg" alt="picture"></p>
+<p>关于手机键盘加密还有另一种方式，就是「音的」式（这一点可能根据手机的不同会有所不同），具体参照手机键盘来打，例如：「数字」表示出来就是：748 94。在手机键盘上面按下这几个数，就会出：「数字」的拼音。</p>
+<h3 id="电脑键盘棋盘"><a href="#电脑键盘棋盘" class="headerlink" title="电脑键盘棋盘"></a>电脑键盘棋盘</h3><p>电脑键盘棋盘加密，利用了电脑的棋盘方阵。</p>
+<p><img src="/images/loading.gif" data-original="https://ctf-wiki.org/crypto/classical/figure/computer-chess.jpg" alt="电脑棋盘加密"></p>
+<h3 id="电脑键盘坐标"><a href="#电脑键盘坐标" class="headerlink" title="电脑键盘坐标"></a>电脑键盘坐标</h3><p>电脑键盘坐标加密，利用键盘上面的字母行和数字行来加密，例：bye 用电脑键盘 XY 表示就是：351613</p>
+<p><img src="/images/loading.gif" data-original="https://ctf-wiki.org/crypto/classical/figure/computer-x-y.jpg" alt="电脑键盘坐标加密"></p>
+<h3 id="电脑键盘-QWE"><a href="#电脑键盘-QWE" class="headerlink" title="电脑键盘 QWE"></a>电脑键盘 QWE</h3><p>电脑键盘 QWE 加密法，就是用字母表替换键盘上面的排列顺序。</p>
+<p><img src="/images/loading.gif" data-original="https://ctf-wiki.org/crypto/classical/figure/computer-qwe.jpg" alt="computer-qwe"></p>
+<h3 id="键盘布局加密"><a href="#键盘布局加密" class="headerlink" title="键盘布局加密"></a>键盘布局加密</h3><p>简单地说就是根据给定的字符在键盘上的样子来进行加密。</p>
+<h3 id="0CTF-2014-classic"><a href="#0CTF-2014-classic" class="headerlink" title="0CTF 2014 classic"></a>0CTF 2014 classic</h3><blockquote>
+<p>小丁丁发现自己置身于一个诡异的房间，面前只有一扇刻着奇怪字符的门。 他发现门边上还有一道密码锁，似乎要输入密码才能开门。。4esxcft5 rdcvgt 6tfc78uhg 098ukmnb</p>
+</blockquote>
+<p>发现这么乱，还同时包括数字和字母猜想可能是键盘密码，试着在键盘上按照字母顺序描绘一下，可得到 0ops 字样，猜测就是 flag 了。</p>
+<h3 id="2017-年-xman-选拔赛——一二三，木头人"><a href="#2017-年-xman-选拔赛——一二三，木头人" class="headerlink" title="2017 年 xman 选拔赛——一二三，木头人"></a>2017 年 xman 选拔赛——一二三，木头人</h3><blockquote>
+<p>我数 123 木头人，再不行动就要被扣分。</p>
+<p>23731263111628163518122316391715262121</p>
+<p>密码格式 xman{flag}</p>
+</blockquote>
+<p>题目中有很明显的提示 123，那么就自然需要联想到键盘密码中电脑键盘坐标密码，可以发现前几个数字第二个数字都是 1-3 范围内的，也验证了我们的猜测。于是</p>
+<blockquote>
+<p>23-x</p>
+<p>73-m</p>
+<p>12-a</p>
+<p>63-n</p>
+<p>11-q</p>
+</blockquote>
+<p>不对呀，密码格式是 <code>xman{</code>，第四个字符是 <code>{</code>，于是看了看 <code>{</code> 的位置，其并没有对应的横坐标，但是如果我们手动把它视为 11 的话，那么 111 就是 <code>{</code>。然后依次往后推，发现确实可行，，最后再把 121 视为 <code>}</code> 即可得到 flag。</p>
+<pre><code>xman{hintisenough}</code></pre><p>从这里我们可以看出，我们还是要注意迁移性，不能单纯地照搬一些已有的知识。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><h2 id="古典密码分析思路"><a href="#古典密码分析思路" class="headerlink" title="古典密码分析思路"></a>古典密码分析思路</h2><p>CTF 中有关古典密码的题目，通常是根据密文求出明文，因此采用<strong>唯密文攻击</strong>居多，基本分析思路总结如下：</p>
+<ol>
+<li>确定密码类型：根据题目提示、加密方式、密文字符集、密文展现形式等信息。</li>
+<li>确定攻击方法：包括直接分析、蛮力攻击、统计分析等方法。对于无法确定类型的特殊密码，应根据其密码特性选用合适的攻击方法。</li>
+<li>确定分析工具：以在线密码分析工具与 Python 脚本工具包为主，以离线密码分析工具与手工分析为辅。</li>
+</ol>
+<p>以上唯密文攻击方法的适用场景与举例如下：</p>
+<table>
+<thead>
+<tr>
+<th align="left">攻击方法</th>
+<th align="left">适用场景</th>
+<th align="left">举例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">直接分析法</td>
+<td align="left">由密码类型可确定映射关系的代换密码</td>
+<td align="left">凯撒密码、猪圈密码、键盘密码等</td>
+</tr>
+<tr>
+<td align="left">蛮力攻击法</td>
+<td align="left">密钥空间较小的代换密码或置换密码</td>
+<td align="left">移位密码、栅栏密码等</td>
+</tr>
+<tr>
+<td align="left">统计分析法</td>
+<td align="left">密钥空间较大的代换密码</td>
+<td align="left">简单替换密码、仿射密码、维吉尼亚密码等</td>
+</tr>
+</tbody></table>
+<h2 id="实验吧-围在栅栏里的爱"><a href="#实验吧-围在栅栏里的爱" class="headerlink" title="实验吧 围在栅栏里的爱"></a>实验吧 围在栅栏里的爱</h2><p>题目描述</p>
+<blockquote>
+<p>最近一直在好奇一个问题，QWE 到底等不等于 ABC？</p>
+<p>-.- .. –.- .-.. .– - ..-. -.-. –.- –. -. … — —</p>
+<p>flag 格式：CTF{xxx}</p>
+</blockquote>
+<p>首先，根据密码样式判断是摩斯电码，解密后得到 <code>KIQLWTFCQGNSOO</code>，看着也不像 flag，题目中还有还有栅栏与 <code>QWE到底等不等于ABC</code>，两个都试了试之后，发现是先 QWE 然后栅栏可得到结果。</p>
+<p>首先键盘 QWE 解密，试着解密得到 <code>IILYOAVNEBSAHR</code>。继而栅栏解密得到 <code>ILOVESHIYANBAR</code>。</p>
+<h2 id="2017-SECCON-Vigenere3d"><a href="#2017-SECCON-Vigenere3d" class="headerlink" title="2017 SECCON Vigenere3d"></a>2017 SECCON Vigenere3d</h2><p>程序如下</p>
+<pre><code># Vigenere3d.py
+import sys
+def _l(idx, s):
+    return s[idx:] + s[:idx]
+def main(p, k1, k2):
+    s = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz_{}"
+    t = [[_l((i+j) % len(s), s) for j in range(len(s))] for i in range(len(s))]
+    i1 = 0
+    i2 = 0
+    c = ""
+    for a in p:
+        c += t[s.find(a)][s.find(k1[i1])][s.find(k2[i2])]
+        i1 = (i1 + 1) % len(k1)
+        i2 = (i2 + 1) % len(k2)
+    return c
+print main(sys.argv[1], sys.argv[2], sys.argv[2][::-1])
+
+$ python Vigenere3d.py SECCON{**************************} **************
+POR4dnyTLHBfwbxAAZhe}}ocZR3Cxcftw9</code></pre><p><strong>解法一</strong>：</p>
+<p>首先，我们先来分析一下 t 的构成 $$ t[i][j]=s[i+j:]+s[:i+j] \ t[i][k]=s[i+k:]+s[:i+k] $$</p>
+<p>t[i][j][k]t[i][j][k] 为 t[i][j]t[i][j] 中的第 k 个字符，t[i][k][j]t[i][k][j] 为 t[i][k]t[i][k] 中的第 j 个字符。无论是 i+j+ki+j+k 是否超过 <code>len(s)</code> 两者都始终保持一致，即 t[i][j][k]=t[i][k][j]t[i][j][k]=t[i][k][j] 。</p>
+<p>故而，其实对于相同的明文来说，可能有多个密钥使其生成相同的密文。</p>
+<p>然而上面分析就是单纯地分析而已，，下面开始正题。</p>
+<p>不难看出，密文的每一位只与明文的相应位相关，而且，密钥的每一位的空间最大也就是 s 的大小，所以我们可以使用爆破来获取密钥。这里根据上述命令行提示，可以知道密钥长度为 14，恰好明文前面 7 个字节已知。恢复密钥的 exp 如下</p>
+<pre><code>def get_key(plain, cipher):
+    s = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz_{}"
+    t = [[_l((i + j) % len(s), s) for j in range(len(s))]
+         for i in range(len(s))]
+    i1 = 0
+    i2 = 0
+    key = ['*'] * 14
+    for i in range(len(plain)):
+        for i1 in range(len(s)):
+            for i2 in range(len(s)):
+                if t[s.find(plain[i])][s.find(s[i1])][s.find(s[i2])] == cipher[
+                        i]:
+                    key[i] = s[i1]
+                    key[13 - i] = s[i2]
+    return ''.join(key)</code></pre><p>恢复明文的脚本如下</p>
+<pre><code>def decrypt(cipher, k1, k2):
+    s = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz_{}"
+    t = [[_l((i + j) % len(s), s) for j in range(len(s))]
+         for i in range(len(s))]
+    i1 = 0
+    i2 = 0
+    plain = ""
+    for a in cipher:
+        for i in range(len(s)):
+            if t[i][s.find(k1[i1])][s.find(k2[i2])] == a:
+                plain += s[i]
+                break
+        i1 = (i1 + 1) % len(k1)
+        i2 = (i2 + 1) % len(k2)
+    return plain</code></pre><p>得到明文如下</p>
+<pre><code>➜  2017_seccon_vigenere3d git:(master) python exp.py
+SECCON{Welc0me_to_SECCON_CTF_2017}</code></pre><p><strong>解法二</strong></p>
+<p>关于此题的分析：</p>
+<ol>
+<li>考虑到在程序正常运行下，数组访问不会越界，我们在讨论时做以下约定：arr[index]⇔arr[index%len(arr)]arr[index]⇔arr[index%len(arr)]</li>
+<li>关于 python 程序中定义的 <code>_l</code> 函数，发现以下等价关系：_l(offset,arr)[index]⇔arr[index+offset]_l(offset,arr)[index]⇔arr[index+offset]</li>
+<li>关于 python 的 main 函数中三维矩阵 t 的定义，发现以下等价关系：t[a][b][c]⇔_l(a+b,s)[c]t[a][b][c]⇔_l(a+b,s)[c]</li>
+<li>综合第 2 第 3 点的观察，有如下等价关系：t[a][b][c]⇔s[a+b+c]t[a][b][c]⇔s[a+b+c]</li>
+<li>我们将 s 视为一种编码格式，即：编码过程 s.find(x)，解码过程 s[x]。并直接使用其编码结果的数字替代其所代指的字符串，那么加密过程可以用以下公式表示：</li>
+<li>e=f+k1+k2e=f+k1+k2</li>
+<li>其中，e 是密文，f 是明文，k1 与 k2 是通过复制方法得到、与 f 长度一样的密钥，<strong>加法是向量加</strong>。</li>
+</ol>
+<p>所以我们只需要通过计算 <code>k1+k2</code> ，模拟密钥，即可解密。关于此题的解密 python 脚本：</p>
+<pre><code># exp2.py
+enc_str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz_{}'
+dec_dic = {k:v for v,k in enumerate(enc_str)}
+encrypt = 'POR4dnyTLHBfwbxAAZhe}}ocZR3Cxcftw9'
+flag_bg = 'SECCON{**************************}'
+
+sim_key = [dec_dic[encrypt[i]]-dec_dic[flag_bg[i]] for i in range(7)] # 破解模拟密钥
+sim_key = sim_key + sim_key[::-1]
+
+flag_ed = [dec_dic[v]-sim_key[k%14] for k,v in enumerate(encrypt)] # 模拟密钥解密
+flag_ed = ''.join([enc_str[i%len(enc_str)] for i in flag_ed]) # 解码
+print(flag_ed)</code></pre><p>得到明文如下：</p>
+<pre><code>$ python exp2.py
+SECCON{Welc0me_to_SECCON_CTF_2017}</code></pre><h2 id="消失的三重密码"><a href="#消失的三重密码" class="headerlink" title="消失的三重密码"></a>消失的三重密码</h2><p>密文</p>
+<pre><code>of zit kggd zitkt qkt ygxk ortfzoeqs wqlatzwqssl qfr zvg ortfzoeqs yggzwqssl. fgv oy ngx vqfz zg hxz zitd of gft soft.piv dgfn lgsxzogfl qkt zitkt? zohl:hstqlt eiqfut zit ygkd gy zit fxdwtk ngx utz.zit hkgukqddtkl!</code></pre><p>使用 quipquip 直接解密。</p>
+<h1 id="流密码"><a href="#流密码" class="headerlink" title="流密码"></a>流密码</h1><p>流密码一般逐字节或者逐比特处理信息。一般来说</p>
+<ul>
+<li>流密码的密钥长度会与明文的长度相同。</li>
+<li>流密码的密钥派生自一个较短的密钥，派生算法通常为一个伪随机数生成算法。</li>
+</ul>
+<p>需要注意的是，流加密目前来说都是对称加密。</p>
+<p>伪随机数生成算法生成的序列的随机性越强，明文中的统计特征被覆盖的更好。</p>
+<p>流密码加解密非常简单，在已知明文的情况下，可以非常容易地获取密钥流。</p>
+<p>流密码的关键在于设计好的伪随机数生成器。一般来说，伪随机数生成器的基本构造模块为反馈移位寄存器。当然，也有一些特殊设计的流密码，比如 RC4。</p>
+<h1 id="伪随机数生成器"><a href="#伪随机数生成器" class="headerlink" title="伪随机数生成器"></a>伪随机数生成器</h1><h2 id="伪随机数生成器介绍"><a href="#伪随机数生成器介绍" class="headerlink" title="伪随机数生成器介绍"></a>伪随机数生成器介绍</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>伪随机数生成器（pseudorandom number generator，PRNG），又称为确定性随机位生成器（deterministic random bit generator，DRBG），是用来生成<strong>接近于绝对随机数序列的数字序列</strong>的算法。一般来说，PRNG 会依赖于一个初始值，也称为种子，来生成对应的伪随机数序列。只要种子确定了，PRNG 所生成的随机数就是完全确定的，因此其生成的随机数序列并不是真正随机的。</p>
+<p>就目前而言，PRNG 在众多应用都发挥着重要的作用，比如模拟（蒙特卡洛方法），电子竞技，密码应用。</p>
+<h3 id="随机性的严格性"><a href="#随机性的严格性" class="headerlink" title="随机性的严格性"></a>随机性的严格性</h3><ul>
+<li>随机性：随机数应该不存在统计学偏差，是完全杂乱的数列。</li>
+<li>不可预测性：不能从过去的序列推测出下一个出现的数。</li>
+<li>不可重现性：除非数列保存下来，否则不能重现相同的数列。</li>
+</ul>
+<p>这三个性质的严格性依次递增。</p>
+<p>一般来说，随机数可以分为三类</p>
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th>随机性</th>
+<th>不可预测性</th>
+<th>不可重现性</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>弱伪随机数</td>
+<td>✅</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>强伪随机数</td>
+<td>✅</td>
+<td>✅</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>真随机数</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+</tbody></table>
+<p>一般来说，密码学中使用的随机数是第二种。</p>
+<h3 id="周期"><a href="#周期" class="headerlink" title="周期"></a>周期</h3><p>正如我们之前所说，一旦 PRNG 所依赖的种子确定了，那么 PRNG 生成的随机数序列基本也就确定了。这里定义 PRNG 的周期如下：对于一个 PRNG 的<strong>所有可能起始状态</strong>，不重复序列的最长长度。显然，对于一个 PRNG 来说，其周期不会大于其所有可能的状态。但是，需要注意的是，并不是当我们遇到重复的输出时，就可以认为是 PRNG 的周期，因为 PRNG 的状态一般都是大于输出的位数的。</p>
+<h3 id="评价标准"><a href="#评价标准" class="headerlink" title="评价标准"></a>评价标准</h3><p>参见维基百科，<a href="https://en.wikipedia.org/wiki/Pseudorandom_number_generator。" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Pseudorandom_number_generator。</a></p>
+<h3 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h3><p>目前通用的伪随机数生成器主要有</p>
+<ul>
+<li>线性同余生成器，LCG</li>
+<li>线性回归发生器</li>
+<li><a href="https://en.wikipedia.org/wiki/Mersenne_Twister" target="_blank" rel="noopener">Mersenne Twister</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Xorshift" target="_blank" rel="noopener">xorshift</a> generators</li>
+<li><a href="https://en.wikipedia.org/wiki/Well_Equidistributed_Long-period_Linear" target="_blank" rel="noopener">WELL</a> family of generators</li>
+<li>Linear feedback shift register，LFSR，线性反馈移位寄存器</li>
+</ul>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>通常来说，伪随机数生成器可能会有以下问题</p>
+<ul>
+<li>在某些种子的情况下，其生成的随机数序列的周期会比较小。</li>
+<li>生成大数时，分配的不均匀。</li>
+<li>连续值之间关联密切，知道后续值，可以知道之前的值。</li>
+<li>输出序列的值的大小很不均匀。</li>
+</ul>
+<h2 id="密码安全伪随机数生成器"><a href="#密码安全伪随机数生成器" class="headerlink" title="密码安全伪随机数生成器"></a>密码安全伪随机数生成器</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>密码学安全伪随机数生成器（cryptographically secure pseudo-random number generator，CSPRNG），也称为密码学伪随机数生成器（cryptographic pseudo-random number generator，CPRNG），是一种特殊的伪随机数生成器。它需要满足满足一些必要的特性，以便于适合于密码学应用。</p>
+<p>密码学的很多方面都需要随机数</p>
+<ul>
+<li>密钥生成</li>
+<li>生成初始化向量，IV，用于分组密码的 CBC，CFB，OFB 模式</li>
+<li>nounce，用于防止重放攻击以及分组密码的 CTR 模式等、</li>
+<li><a href="https://en.wikipedia.org/wiki/One-time_pad" target="_blank" rel="noopener">one-time pads</a></li>
+<li>某些签名方案中的盐，如 <a href="https://en.wikipedia.org/wiki/ECDSA" target="_blank" rel="noopener">ECDSA</a>， <a href="https://en.wikipedia.org/w/index.php?title=RSASSA-PSS&amp;action=edit&amp;redlink=1" target="_blank" rel="noopener">RSASSA-PSS</a></li>
+</ul>
+<h3 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h3><p>毫无疑问，密码学安全伪随机数生成器的要求肯定比一般的伪随机数生成器要高。一般而言，CSPRNG 的要求可以分为两类</p>
+<ul>
+<li>通过统计随机性测试。CSPRNG 必须通过 <a href="https://en.wikipedia.org/wiki/Next-bit_test" target="_blank" rel="noopener">next-bit test</a>，也就是说，知道了一个序列的前 k 个比特，攻击者不可能在多项式时间内以大于 50% 的概率预测出来下一个比特位。这里特别提及一点，姚期智曾在 1982 年证明，如果一个生成器可以通过 <a href="https://en.wikipedia.org/wiki/Next-bit_test" target="_blank" rel="noopener">next-bit test</a>，那么它也可以通过所有其他的多项式时间统计测试。</li>
+<li>必须能够抵抗足够强的攻击，比如当生成器的部分初始状态或者运行时的状态被攻击者获知时，攻击者仍然不能够获取泄漏状态之前的生成的随机数。</li>
+</ul>
+<h3 id="分类-1"><a href="#分类-1" class="headerlink" title="分类"></a>分类</h3><p>就目前而看， CSPRNG 的设计可以分为以下三类</p>
+<ul>
+<li>基于密码学算法，如密文或者哈希值。</li>
+<li>基于数学难题</li>
+<li>某些特殊目的的设计</li>
+</ul>
+<h2 id="2017-Tokyo-Westerns-CTF-3rd-Backpacker’s-Problem"><a href="#2017-Tokyo-Westerns-CTF-3rd-Backpacker’s-Problem" class="headerlink" title="2017 Tokyo Westerns CTF 3rd Backpacker’s Problem"></a>2017 Tokyo Westerns CTF 3rd Backpacker’s Problem</h2><p>题目中给了一个 cpp 文件，大概意思如下</p>
+<pre><code>Given the integers a_1, a_2, ..., a_N, your task is to find a subsequence b of a
+where b_1 + b_2 + ... + b_K = 0.
+
+Input Format: N a_1 a_2 ... a_N
+Answer Format: K b_1 b_2 ... b_K
+
+Example Input:
+4 -8 -2 3 5
+Example Answer:
+3 -8 3 5</code></pre><p>即是一个背包问题。其中，在本题中，我们需要解决 20 个这样的背包问题，背包大小依次是 1 * 10~20 * 10。而子集求和的背包问题是一个 NPC 问题，问题的时间复杂度随着随着背包大小而指数增长。这里背包的大小最大是 200，显然不可能使用暴力破解的方式。</p>
+<h1 id="线性同余生成器"><a href="#线性同余生成器" class="headerlink" title="线性同余生成器"></a>线性同余生成器</h1><h2 id="2016-Google-CTF-woodman"><a href="#2016-Google-CTF-woodman" class="headerlink" title="2016 Google CTF woodman"></a>2016 Google CTF woodman</h2><p>程序的大概意思就是一个猜数游戏，如果连续猜中若干次，就算会拿到 flag，背后的生成相应数的核心代码如下</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">class</span> <span class="token class-name">SecurePrng</span><span class="token punctuation">(</span>object<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token comment" spellcheck="true"># generate seed with 64 bits of entropy</span>
+        self<span class="token punctuation">.</span>p <span class="token operator">=</span> 4646704883L
+        self<span class="token punctuation">.</span>x <span class="token operator">=</span> random<span class="token punctuation">.</span>randint<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> self<span class="token punctuation">.</span>p<span class="token punctuation">)</span>
+        self<span class="token punctuation">.</span>y <span class="token operator">=</span> random<span class="token punctuation">.</span>randint<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> self<span class="token punctuation">.</span>p<span class="token punctuation">)</span>
+
+    <span class="token keyword">def</span> <span class="token function">next</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        self<span class="token punctuation">.</span>x <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">2</span> <span class="token operator">*</span> self<span class="token punctuation">.</span>x <span class="token operator">+</span> <span class="token number">3</span><span class="token punctuation">)</span> <span class="token operator">%</span> self<span class="token punctuation">.</span>p
+        self<span class="token punctuation">.</span>y <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">3</span> <span class="token operator">*</span> self<span class="token punctuation">.</span>y <span class="token operator">+</span> <span class="token number">9</span><span class="token punctuation">)</span> <span class="token operator">%</span> self<span class="token punctuation">.</span>p
+        <span class="token keyword">return</span> <span class="token punctuation">(</span>self<span class="token punctuation">.</span>x <span class="token operator">^</span> self<span class="token punctuation">.</span>y<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这里我们显然，我们猜出前两轮还是比较容易的，毕竟概率也有 0.25。这里当我们猜出前两轮后，使用 Z3 来求解出初始的 x 和 y，那么我们就可以顺利的猜出剩下的值了。</p>
+<p>具体的脚本如下，然而 Z3 在解决这样的问题时似乎是有问题的。。。</p>
+<p>这里我们考虑另外一种方法，<strong>依次从低比特位枚举到高比特位获取 x 的值</strong>，之所以能够这样做，是依赖于这样的观察</p>
+<ul>
+<li>a + b = c，c 的第 i 比特位的值只受 a 和 b 该比特位以及更低比特位的影响。<strong>因为第 i 比特位进行运算时，只有可能收到低比特位的进位数值。</strong></li>
+<li>a - b = c，c 的第 i 比特位的值只受 a 和 b 该比特位以及更低比特位的影响。<strong>因为第 i 比特位进行运算时，只有可能向低比特位的借位。</strong></li>
+<li>a * b = c，c 的第 i 比特位的值只受 a 和 b 该比特位以及更低比特位的影响。因为这可以视作多次加法。</li>
+<li>a % b = c，c 的第 i 比特位的值只受 a 和 b 该比特位以及更低比特位的影响。因为这可视为多次进行减法。</li>
+<li>a ^ b = c，c 的第 i 比特位的值只受 a 和 b 该比特位的影响。这一点是显而易见的。</li>
+</ul>
+<p><strong>注：个人感觉这个技巧非常有用。</strong></p>
+<p>此外，我们不难得知 p 的比特位为 33 比特位。具体利用思路如下</p>
+<ol>
+<li>首先获取两次猜到的值，这个概率有 0.25。</li>
+<li>依次从低比特位到高比特位依次枚举<strong>第一次迭代后的 x 的相应比特位</strong>。</li>
+<li>根据自己枚举的值分别计算出第二次的值，只有当对应比特位正确，可以将其加入候选正确值。需要注意的是，这里由于取模，所以我们需要枚举到底减了多少次。</li>
+<li>此外，在最终判断时，仍然需要确保对应的值满足一定要求，因为之前对减了多少次进行了枚举。</li>
+</ol>
+<p>具体利用代码如下</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> os
+<span class="token keyword">import</span> random
+<span class="token keyword">from</span> itertools <span class="token keyword">import</span> product
+
+
+<span class="token keyword">class</span> <span class="token class-name">SecurePrng</span><span class="token punctuation">(</span>object<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> x<span class="token operator">=</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> y<span class="token operator">=</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token comment" spellcheck="true"># generate seed with 64 bits of entropy</span>
+        self<span class="token punctuation">.</span>p <span class="token operator">=</span> 4646704883L  <span class="token comment" spellcheck="true"># 33bit</span>
+        <span class="token keyword">if</span> x <span class="token operator">==</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">:</span>
+            self<span class="token punctuation">.</span>x <span class="token operator">=</span> random<span class="token punctuation">.</span>randint<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> self<span class="token punctuation">.</span>p<span class="token punctuation">)</span>
+        <span class="token keyword">else</span><span class="token punctuation">:</span>
+            self<span class="token punctuation">.</span>x <span class="token operator">=</span> x
+        <span class="token keyword">if</span> y <span class="token operator">==</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">:</span>
+            self<span class="token punctuation">.</span>y <span class="token operator">=</span> random<span class="token punctuation">.</span>randint<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> self<span class="token punctuation">.</span>p<span class="token punctuation">)</span>
+        <span class="token keyword">else</span><span class="token punctuation">:</span>
+            self<span class="token punctuation">.</span>y <span class="token operator">=</span> y
+
+    <span class="token keyword">def</span> <span class="token function">next</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        self<span class="token punctuation">.</span>x <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">2</span> <span class="token operator">*</span> self<span class="token punctuation">.</span>x <span class="token operator">+</span> <span class="token number">3</span><span class="token punctuation">)</span> <span class="token operator">%</span> self<span class="token punctuation">.</span>p
+        self<span class="token punctuation">.</span>y <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">3</span> <span class="token operator">*</span> self<span class="token punctuation">.</span>y <span class="token operator">+</span> <span class="token number">9</span><span class="token punctuation">)</span> <span class="token operator">%</span> self<span class="token punctuation">.</span>p
+        <span class="token keyword">return</span> <span class="token punctuation">(</span>self<span class="token punctuation">.</span>x <span class="token operator">^</span> self<span class="token punctuation">.</span>y<span class="token punctuation">)</span>
+
+
+<span class="token keyword">def</span> <span class="token function">getbiti</span><span class="token punctuation">(</span>num<span class="token punctuation">,</span> idx<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">return</span> bin<span class="token punctuation">(</span>num<span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token operator">-</span>idx <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">:</span><span class="token punctuation">]</span>
+
+
+<span class="token keyword">def</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    sp <span class="token operator">=</span> SecurePrng<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    targetx <span class="token operator">=</span> sp<span class="token punctuation">.</span>x
+    targety <span class="token operator">=</span> sp<span class="token punctuation">.</span>y
+    <span class="token keyword">print</span> <span class="token string">"we would like to get x "</span><span class="token punctuation">,</span> targetx
+    <span class="token keyword">print</span> <span class="token string">"we would like to get y "</span><span class="token punctuation">,</span> targety
+
+    <span class="token comment" spellcheck="true"># suppose we have already guess two number</span>
+    guess1 <span class="token operator">=</span> sp<span class="token punctuation">.</span>next<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    guess2 <span class="token operator">=</span> sp<span class="token punctuation">.</span>next<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    p <span class="token operator">=</span> <span class="token number">4646704883</span>
+
+    <span class="token comment" spellcheck="true"># newx = tmpx*2+3-kx*p</span>
+    <span class="token keyword">for</span> kx<span class="token punctuation">,</span> ky <span class="token keyword">in</span> product<span class="token punctuation">(</span>range<span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">,</span> range<span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        candidate <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">]</span>
+        <span class="token comment" spellcheck="true"># only 33 bit</span>
+        <span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span><span class="token number">33</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+            <span class="token comment" spellcheck="true">#print 'idx ', i</span>
+            new_candidate <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+            <span class="token keyword">for</span> old<span class="token punctuation">,</span> bit <span class="token keyword">in</span> product<span class="token punctuation">(</span>candidate<span class="token punctuation">,</span> range<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+                <span class="token comment" spellcheck="true">#print old, bit</span>
+                oldx <span class="token operator">=</span> old<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>
+                <span class="token comment" spellcheck="true">#oldy = old[1]</span>
+                tmpx <span class="token operator">=</span> oldx <span class="token operator">|</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>bit <span class="token operator">&amp;</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">&lt;&lt;</span> i<span class="token punctuation">)</span>
+                <span class="token comment" spellcheck="true">#tmpy = oldy | ((bit / 2) &lt;&lt; i)</span>
+                tmpy <span class="token operator">=</span> tmpx <span class="token operator">^</span> guess1
+                newx <span class="token operator">=</span> tmpx <span class="token operator">*</span> <span class="token number">2</span> <span class="token operator">+</span> <span class="token number">3</span> <span class="token operator">-</span> kx <span class="token operator">*</span> p <span class="token operator">+</span> <span class="token punctuation">(</span><span class="token number">1</span> <span class="token operator">&lt;&lt;</span> <span class="token number">40</span><span class="token punctuation">)</span>
+                newy <span class="token operator">=</span> tmpy <span class="token operator">*</span> <span class="token number">3</span> <span class="token operator">+</span> <span class="token number">9</span> <span class="token operator">-</span> ky <span class="token operator">*</span> p <span class="token operator">+</span> <span class="token punctuation">(</span><span class="token number">1</span> <span class="token operator">&lt;&lt;</span> <span class="token number">40</span><span class="token punctuation">)</span>
+                tmp1 <span class="token operator">=</span> newx <span class="token operator">^</span> newy
+                <span class="token comment" spellcheck="true">#print "tmpx:    ", bin(tmpx)</span>
+                <span class="token comment" spellcheck="true">#print "targetx: ", bin(targetx)</span>
+                <span class="token comment" spellcheck="true">#print "calculate:     ", bin(tmp1 + (1 &lt;&lt; 40))</span>
+                <span class="token comment" spellcheck="true">#print "target guess2: ", bin(guess1 + (1 &lt;&lt; 40))</span>
+                <span class="token keyword">if</span> getbiti<span class="token punctuation">(</span>guess2 <span class="token operator">+</span> <span class="token punctuation">(</span><span class="token number">1</span> <span class="token operator">&lt;&lt;</span> <span class="token number">40</span><span class="token punctuation">)</span><span class="token punctuation">,</span> i<span class="token punctuation">)</span> <span class="token operator">==</span> getbiti<span class="token punctuation">(</span>
+                        tmp1 <span class="token operator">+</span> <span class="token punctuation">(</span><span class="token number">1</span> <span class="token operator">&lt;&lt;</span> <span class="token number">40</span><span class="token punctuation">)</span><span class="token punctuation">,</span> i<span class="token punctuation">)</span><span class="token punctuation">:</span>
+                    <span class="token keyword">if</span> <span class="token punctuation">[</span>tmpx<span class="token punctuation">]</span> <span class="token operator">not</span> <span class="token keyword">in</span> new_candidate<span class="token punctuation">:</span>
+                        <span class="token comment" spellcheck="true">#print "got one"</span>
+                        <span class="token comment" spellcheck="true">#print bin(tmpx)</span>
+                        <span class="token comment" spellcheck="true">#print bin(targetx)</span>
+                        <span class="token comment" spellcheck="true">#print bin(tmpy)</span>
+                        new_candidate<span class="token punctuation">.</span>append<span class="token punctuation">(</span><span class="token punctuation">[</span>tmpx<span class="token punctuation">]</span><span class="token punctuation">)</span>
+            candidate <span class="token operator">=</span> new_candidate
+            <span class="token comment" spellcheck="true">#print len(candidate)</span>
+            <span class="token comment" spellcheck="true">#print candidate</span>
+        <span class="token keyword">print</span> <span class="token string">"candidate x for kx: "</span><span class="token punctuation">,</span> kx<span class="token punctuation">,</span> <span class="token string">" ky "</span><span class="token punctuation">,</span> ky
+        <span class="token keyword">for</span> item <span class="token keyword">in</span> candidate<span class="token punctuation">:</span>
+            tmpx <span class="token operator">=</span> candidate<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>
+            tmpy <span class="token operator">=</span> tmpx <span class="token operator">^</span> guess1
+            <span class="token keyword">if</span> tmpx <span class="token operator">>=</span> p <span class="token operator">or</span> tmpx <span class="token operator">>=</span> p<span class="token punctuation">:</span>
+                <span class="token keyword">continue</span>
+            mysp <span class="token operator">=</span> SecurePrng<span class="token punctuation">(</span>tmpx<span class="token punctuation">,</span> tmpy<span class="token punctuation">)</span>
+            tmp1 <span class="token operator">=</span> mysp<span class="token punctuation">.</span>next<span class="token punctuation">(</span><span class="token punctuation">)</span>
+            <span class="token keyword">if</span> tmp1 <span class="token operator">!=</span> guess2<span class="token punctuation">:</span>
+                <span class="token keyword">continue</span>
+            <span class="token keyword">print</span> tmpx<span class="token punctuation">,</span> tmpy
+            <span class="token keyword">print</span><span class="token punctuation">(</span>targetx <span class="token operator">*</span> <span class="token number">2</span> <span class="token operator">+</span> <span class="token number">3</span><span class="token punctuation">)</span> <span class="token operator">%</span> p<span class="token punctuation">,</span> <span class="token punctuation">(</span>targety <span class="token operator">*</span> <span class="token number">3</span> <span class="token operator">+</span> <span class="token number">9</span><span class="token punctuation">)</span> <span class="token operator">%</span> p
+
+
+<span class="token keyword">if</span> __name__ <span class="token operator">==</span> <span class="token string">"__main__"</span><span class="token punctuation">:</span>
+    main<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="反馈移位寄存器"><a href="#反馈移位寄存器" class="headerlink" title="反馈移位寄存器"></a>反馈移位寄存器</h1><p>一般的，一个 n 级反馈移位寄存器如下图所示</p>
+<p><img src="/images/loading.gif" data-original="../images/CTF/n-fsr.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/CTF/image-20210817225404246.png" alt=""></p>
+<h2 id="线性反馈移位寄存器-LFSR"><a href="#线性反馈移位寄存器-LFSR" class="headerlink" title="线性反馈移位寄存器 - LFSR"></a>线性反馈移位寄存器 - LFSR</h2><h3 id="介绍-1"><a href="#介绍-1" class="headerlink" title="介绍"></a>介绍</h3><p>线性反馈移位寄存器的反馈函数一般如下</p>
+<p>$$<br>a_{i+n}=\sum\limits_{j=1}^{n}c_ja_{i+n-j}<br>$$<br>其中，$<br>$$<br>c_j<br>$$<br>$ 均在某个有限域 $F_q$ 中。</p>
+<p>既然线性空间是一个线性变换，我们可以得知这个线性变换为</p>
+<p>$$<br> \begin{align<em>}<br>&amp;\left[<br>  a_{i+1},a_{i+2},a_{i+3}, …,a_{i+n}<br>\right]\\=&amp;\left[<br>  a_{i},a_{i+1},a_{i+2}, …,a_{i+n-1}<br>\right]\left[ \begin{matrix} 0   &amp; 0      &amp; \cdots &amp; 0 &amp; c_n     \ 1   &amp; 0      &amp; \cdots &amp; 0 &amp; c_{n-1}  \ 0   &amp; 1      &amp; \cdots &amp; 0 &amp; c_{n-2}\\vdots &amp; \vdots &amp; \ddots &amp; \vdots \ 0   &amp; 0      &amp; \cdots &amp; 1 &amp; c_1     \ \end{matrix} \right]\\=&amp;\left[<br>  a_{0},a_{1},a_{2}, …,a_{n-1}<br>\right]\left[ \begin{matrix} 0   &amp; 0      &amp; \cdots &amp; 0 &amp; c_n     \ 1   &amp; 0      &amp; \cdots &amp; 0 &amp; c_{n-1}  \ 0   &amp; 1      &amp; \cdots &amp; 0 &amp; c_{n-2}\\vdots &amp; \vdots &amp; \ddots &amp; \vdots \ 0   &amp; 0      &amp; \cdots &amp; 1 &amp; c_1     \ \end{matrix} \right]^{i+1}<br>\end{align</em>}<br>$$<br>进而，我们可以求得其特征多项式为</p>
+<p>$$<br>f(x)=x^n-\sum\limits_{i=1}^{n}c_ix^{n-i}<br>$$<br>同时，我们定义其互反多项式为</p>
+<p>$$<br>\overline f(x)=x^nf(\frac{1}{x})=1-\sum\limits_{i=1}^{n}c_ix^{i}<br>$$<br>我们也称互反多项式为线性反馈移位寄存器的联结多项式。</p>
+<p>这里有一些定理需要我们记一下，感兴趣的可以自行推导。</p>
+<h3 id="特征多项式与生成函数"><a href="#特征多项式与生成函数" class="headerlink" title="特征多项式与生成函数"></a>特征多项式与生成函数</h3><p>已知某个 n 级线性反馈移位寄存器的特征多项式，那么该序列对应的生成函数为</p>
+<p>$$<br>A(x)=\frac{p(x)}{\overline f(x)}<br>$$</p>
+<p>其中，$p(x)=\sum\limits_{i=1}^{n}(c_{n-i}x^{n-i}\sum\limits_{j=1}^{i}a_jx^{j-1})$。可以看出 p(x) 完全由初始状态和反馈函数的系数决定。</p>
+<h3 id="序列周期与生成函数"><a href="#序列周期与生成函数" class="headerlink" title="序列周期与生成函数"></a>序列周期与生成函数</h3><p>序列的的周期为其生成函数的既约真分式的分母的周期。</p>
+<p>对于 n 级线性反馈移位寄存器，最长周期为 $2^{n}-1$（排除全零）。达到最长周期的序列一般称为 m 序列。</p>
+<h3 id="特殊性质"><a href="#特殊性质" class="headerlink" title="特殊性质"></a>特殊性质</h3><ul>
+<li>将两个序列累加得到新的序列的周期为这两个序列的周期的和。</li>
+<li>序列是 n 级 m 序列，当且仅当序列的极小多项式是 n 次本原多项式。</li>
+</ul>
+<h3 id="B-M-算法"><a href="#B-M-算法" class="headerlink" title="B-M 算法"></a>B-M 算法</h3><p>一般来说，我们可以从两种角度来考虑 LFSR</p>
+<ul>
+<li>密钥生成角度，一般我们希望使用级数尽可能低的 LFSR 来生成周期大，随机性好的序列。</li>
+<li>密码分析角度，给定一个长度为 n 的序列 a，如何构造一个级数尽可能小的 LFSR 来生成它。其实这就是 B-M 算法的来源。</li>
+</ul>
+<p>一般来说，我们定义一个序列的线性复杂度如下</p>
+<ul>
+<li>若 s 为一个全零序列，则线性复杂度为0。</li>
+<li>若没有 LFSR 能生成 s，则线性复杂度为无穷。</li>
+<li>否则，s 的线性复杂度为生成 L(s) 的最小级的 LFSR。</li>
+</ul>
+<p>BM 算法的要求我们需要知道长度为 2n 的序列。其复杂度</p>
+<ul>
+<li>时间复杂度：O(n^2) 次比特操作</li>
+<li>空间复杂度：O(n) 比特。</li>
+</ul>
+<p>关于 BM 算法的细节，后续添加，目前处于学习过程中。</p>
+<p>但是其实如果我们知道了长度为 2n 的序列，我们也可以一种比较笨的方法来获取原先的序列。不妨假设已知的序列为$a_1,…,a_{2n}$，我们可以令</p>
+<p>$S_1=(a_1,…,a_n)$</p>
+<p>$S_2=(a_2,…,a_{n+1})$</p>
+<p>….</p>
+<p>$S_{n+1}=(a_{n+1},…,a_{2n})$</p>
+<p>那么我们可以构造矩阵 $X=(S_1,…,S_n)$，那么</p>
+<p>$S_{n+1}=(c_n,…,c_1)X$</p>
+<p>所以</p>
+<p>$(c_n,…,c_1)=S_{n+1}X^{-1}$</p>
+<p>进而我们也就知道了 LFSR 的反馈表达式，进而我们就可以推出初始化种子。</p>
+<h3 id="2018-强网杯-streamgame1"><a href="#2018-强网杯-streamgame1" class="headerlink" title="2018 强网杯 streamgame1"></a>2018 强网杯 streamgame1</h3><p>简单看一下题目</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> flag <span class="token keyword">import</span> flag
+<span class="token keyword">assert</span> flag<span class="token punctuation">.</span>startswith<span class="token punctuation">(</span><span class="token string">"flag{"</span><span class="token punctuation">)</span>
+<span class="token keyword">assert</span> flag<span class="token punctuation">.</span>endswith<span class="token punctuation">(</span><span class="token string">"}"</span><span class="token punctuation">)</span>
+<span class="token keyword">assert</span> len<span class="token punctuation">(</span>flag<span class="token punctuation">)</span><span class="token operator">==</span><span class="token number">25</span>
+
+<span class="token keyword">def</span> <span class="token function">lfsr</span><span class="token punctuation">(</span>R<span class="token punctuation">,</span>mask<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    output <span class="token operator">=</span> <span class="token punctuation">(</span>R <span class="token operator">&lt;&lt;</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">&amp;</span> <span class="token number">0xffffff</span>
+    i<span class="token operator">=</span><span class="token punctuation">(</span>R<span class="token operator">&amp;</span>mask<span class="token punctuation">)</span><span class="token operator">&amp;</span><span class="token number">0xffffff</span>
+    lastbit<span class="token operator">=</span><span class="token number">0</span>
+    <span class="token keyword">while</span> i<span class="token operator">!=</span><span class="token number">0</span><span class="token punctuation">:</span>
+        lastbit<span class="token operator">^</span><span class="token operator">=</span><span class="token punctuation">(</span>i<span class="token operator">&amp;</span><span class="token number">1</span><span class="token punctuation">)</span>
+        i<span class="token operator">=</span>i<span class="token operator">>></span><span class="token number">1</span>
+    output<span class="token operator">^</span><span class="token operator">=</span>lastbit
+    <span class="token keyword">return</span> <span class="token punctuation">(</span>output<span class="token punctuation">,</span>lastbit<span class="token punctuation">)</span>
+
+
+
+R<span class="token operator">=</span>int<span class="token punctuation">(</span>flag<span class="token punctuation">[</span><span class="token number">5</span><span class="token punctuation">:</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">)</span>
+mask    <span class="token operator">=</span>   <span class="token number">0b1010011000100011100</span>
+
+f<span class="token operator">=</span>open<span class="token punctuation">(</span><span class="token string">"key"</span><span class="token punctuation">,</span><span class="token string">"ab"</span><span class="token punctuation">)</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span><span class="token number">12</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    tmp<span class="token operator">=</span><span class="token number">0</span>
+    <span class="token keyword">for</span> j <span class="token keyword">in</span> range<span class="token punctuation">(</span><span class="token number">8</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token punctuation">(</span>R<span class="token punctuation">,</span>out<span class="token punctuation">)</span><span class="token operator">=</span>lfsr<span class="token punctuation">(</span>R<span class="token punctuation">,</span>mask<span class="token punctuation">)</span>
+        tmp<span class="token operator">=</span><span class="token punctuation">(</span>tmp <span class="token operator">&lt;&lt;</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token operator">^</span>out
+    f<span class="token punctuation">.</span>write<span class="token punctuation">(</span>chr<span class="token punctuation">(</span>tmp<span class="token punctuation">)</span><span class="token punctuation">)</span>
+f<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>可以发现，flag 的长度为25-5-1=19，所以可以暴力枚举。结果</p>
+<pre class="line-numbers language-shell"><code class="language-shell">➜  2018-强网杯-streamgame1 git:(master) ✗ python exp.py
+12
+0b1110101100001101011<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>因此 flag 为 flag{1110101100001101011}。</p>
+<h3 id="2018-CISCN-初赛-oldstreamgame"><a href="#2018-CISCN-初赛-oldstreamgame" class="headerlink" title="2018 CISCN 初赛 oldstreamgame"></a>2018 CISCN 初赛 oldstreamgame</h3><p>简单看一下题目</p>
+<pre class="line-numbers language-shell"><code class="language-shell">flag = "flag{xxxxxxxxxxxxxxxx}"
+assert flag.startswith("flag{")
+assert flag.endswith("}")
+assert len(flag)==14
+
+def lfsr(R,mask):
+    output = (R << 1) & 0xffffffff
+    i=(R&mask)&0xffffffff
+    lastbit=0
+    while i!=0:
+        lastbit^=(i&1)
+        i=i>>1
+    output^=lastbit
+    return (output,lastbit)
+
+R=int(flag[5:-1],16)
+mask = 0b10100100000010000000100010010100
+
+f=open("key","w")
+for i in range(100):
+    tmp=0
+    for j in range(8):
+        (R,out)=lfsr(R,mask)
+        tmp=(tmp << 1)^out
+    f.write(chr(tmp))
+f.close()<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>程序很简单，仍然是一个 LFSR，但是初态是 32 比特位，当然，我们也可以选择爆破，但是这里不选择爆破。</p>
+<p>这里给出两种做法。</p>
+<p>第一种做法，程序输出的第 32 个比特是由程序输出的前 31 个比特和初始种子的第 1 个比特来决定的，因此我们可以知道初始种子的第一个比特，进而可以知道初始种子的第 2 个比特，依次类推。代码如下</p>
+<pre class="line-numbers language-python"><code class="language-python">mask <span class="token operator">=</span> <span class="token number">0b10100100000010000000100010010100</span>
+b <span class="token operator">=</span> <span class="token string">''</span>
+N <span class="token operator">=</span> <span class="token number">32</span>
+<span class="token keyword">with</span> open<span class="token punctuation">(</span><span class="token string">'key'</span><span class="token punctuation">,</span> <span class="token string">'rb'</span><span class="token punctuation">)</span> <span class="token keyword">as</span> f<span class="token punctuation">:</span>
+    b <span class="token operator">=</span> f<span class="token punctuation">.</span>read<span class="token punctuation">(</span><span class="token punctuation">)</span>
+key <span class="token operator">=</span> <span class="token string">''</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span>N <span class="token operator">/</span> <span class="token number">8</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    t <span class="token operator">=</span> ord<span class="token punctuation">(</span>b<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span>
+    <span class="token keyword">for</span> j <span class="token keyword">in</span> xrange<span class="token punctuation">(</span><span class="token number">7</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        key <span class="token operator">+=</span> str<span class="token punctuation">(</span>t <span class="token operator">>></span> j <span class="token operator">&amp;</span> <span class="token number">1</span><span class="token punctuation">)</span>
+idx <span class="token operator">=</span> <span class="token number">0</span>
+ans <span class="token operator">=</span> <span class="token string">""</span>
+key <span class="token operator">=</span> key<span class="token punctuation">[</span><span class="token number">31</span><span class="token punctuation">]</span> <span class="token operator">+</span> key<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token number">32</span><span class="token punctuation">]</span>
+<span class="token keyword">while</span> idx <span class="token operator">&lt;</span> <span class="token number">32</span><span class="token punctuation">:</span>
+    tmp <span class="token operator">=</span> <span class="token number">0</span>
+    <span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span><span class="token number">32</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">if</span> mask <span class="token operator">>></span> i <span class="token operator">&amp;</span> <span class="token number">1</span><span class="token punctuation">:</span>
+            tmp <span class="token operator">^</span><span class="token operator">=</span> int<span class="token punctuation">(</span>key<span class="token punctuation">[</span><span class="token number">31</span> <span class="token operator">-</span> i<span class="token punctuation">]</span><span class="token punctuation">)</span>
+    ans <span class="token operator">=</span> str<span class="token punctuation">(</span>tmp<span class="token punctuation">)</span> <span class="token operator">+</span> ans
+    idx <span class="token operator">+=</span> <span class="token number">1</span>
+    key <span class="token operator">=</span> key<span class="token punctuation">[</span><span class="token number">31</span><span class="token punctuation">]</span> <span class="token operator">+</span> str<span class="token punctuation">(</span>tmp<span class="token punctuation">)</span> <span class="token operator">+</span> key<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">:</span><span class="token number">31</span><span class="token punctuation">]</span>
+num <span class="token operator">=</span> int<span class="token punctuation">(</span>ans<span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span> hex<span class="token punctuation">(</span>num<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>运行</p>
+<pre class="line-numbers language-shell"><code class="language-shell">➜  2018-CISCN-start-oldstreamgame git:(master) ✗ python exp1.py
+0x926201d7<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>第二种做法，我们可以考虑一下矩阵转换的过程，如果进行了 32 次线性变换，那么就可以得到输出流前 32 个比特。而其实，我们只需要前 32 个比特就可以恢复初始状态了。</p>
+<pre class="line-numbers language-python"><code class="language-python">mask <span class="token operator">=</span> <span class="token number">0b10100100000010000000100010010100</span>
+
+N <span class="token operator">=</span> <span class="token number">32</span>
+F <span class="token operator">=</span> GF<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span>
+
+b <span class="token operator">=</span> <span class="token string">''</span>
+<span class="token keyword">with</span> open<span class="token punctuation">(</span><span class="token string">'key'</span><span class="token punctuation">,</span> <span class="token string">'rb'</span><span class="token punctuation">)</span> <span class="token keyword">as</span> f<span class="token punctuation">:</span>
+    b <span class="token operator">=</span> f<span class="token punctuation">.</span>read<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+R <span class="token operator">=</span> <span class="token punctuation">[</span>vector<span class="token punctuation">(</span>F<span class="token punctuation">,</span> N<span class="token punctuation">)</span> <span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span>N<span class="token punctuation">)</span><span class="token punctuation">]</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span>N<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    R<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>N <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> mask <span class="token operator">>></span> <span class="token punctuation">(</span><span class="token number">31</span> <span class="token operator">-</span> i<span class="token punctuation">)</span> <span class="token operator">&amp;</span> <span class="token number">1</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span>N <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    R<span class="token punctuation">[</span>i <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">1</span>
+M <span class="token operator">=</span> Matrix<span class="token punctuation">(</span>F<span class="token punctuation">,</span> R<span class="token punctuation">)</span>
+M <span class="token operator">=</span> M <span class="token operator">^</span> N
+
+vec <span class="token operator">=</span> vector<span class="token punctuation">(</span>F<span class="token punctuation">,</span> N<span class="token punctuation">)</span>
+row <span class="token operator">=</span> <span class="token number">0</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span>N <span class="token operator">/</span> <span class="token number">8</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    t <span class="token operator">=</span> ord<span class="token punctuation">(</span>b<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span>
+    <span class="token keyword">for</span> j <span class="token keyword">in</span> xrange<span class="token punctuation">(</span><span class="token number">7</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        vec<span class="token punctuation">[</span>row<span class="token punctuation">]</span> <span class="token operator">=</span> t <span class="token operator">>></span> j <span class="token operator">&amp;</span> <span class="token number">1</span>
+        row <span class="token operator">+=</span> <span class="token number">1</span>
+<span class="token keyword">print</span> rank<span class="token punctuation">(</span>M<span class="token punctuation">)</span>
+num <span class="token operator">=</span> int<span class="token punctuation">(</span><span class="token string">''</span><span class="token punctuation">.</span>join<span class="token punctuation">(</span>map<span class="token punctuation">(</span>str<span class="token punctuation">,</span> list<span class="token punctuation">(</span>M<span class="token punctuation">.</span>solve_left<span class="token punctuation">(</span>vec<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span> hex<span class="token punctuation">(</span>num<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>运行脚本</p>
+<pre class="line-numbers language-shell"><code class="language-shell">➜  2018-CISCN-start-oldstreamgame git:(master) ✗ sage exp.sage
+32
+0x926201d7<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>从而 flag 为 flag{926201d7}。</p>
+<p>还有一种做法是 TokyoWesterns 的，可以参考对应的文件夹的文件。</p>
+<h2 id="非线性反馈移位寄存器"><a href="#非线性反馈移位寄存器" class="headerlink" title="非线性反馈移位寄存器"></a>非线性反馈移位寄存器</h2><h3 id="介绍-2"><a href="#介绍-2" class="headerlink" title="介绍"></a>介绍</h3><p>为了使得密钥流输出的序列尽可能复杂，会使用非线性反馈移位寄存器，常见的有三种</p>
+<ul>
+<li>非线性组合生成器，对多个 LFSR 的输出使用一个非线性组合函数</li>
+<li>非线性滤波生成器，对一个 LFSR 的内容使用一个非线性组合函数</li>
+<li>钟控生成器，使用一个（或多个）LFSR 的输出来控制另一个（或多个）LFSR 的时钟</li>
+</ul>
+<h3 id="非线性组合生成器"><a href="#非线性组合生成器" class="headerlink" title="非线性组合生成器"></a>非线性组合生成器</h3><h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><p>组合生成器一般如下图所示。</p>
+<p><img src="/images/loading.gif" data-original="../images/CTF/combine-generator.png" alt="image-20180713223743681"></p>
+<h4 id="Geffe"><a href="#Geffe" class="headerlink" title="Geffe"></a>Geffe</h4><p>这里我们以 Geffe 为例进行介绍。Geffe 包含 3 个线性反馈移位寄存器，非线性组合函数为<br>$$<br>F(x1,x2,x3)=(x1\andx2)⊕(┐x1\andx3)=(x1\andx2)⊕(x1\andx3)⊕x3F(x1,x2,x3)=(x1\andx2)⊕(⌝x1\andx3)=(x1\andx2)⊕(x1\andx3)⊕x3<br>$$</p>
+<h5 id="2018-强网杯-streamgame3"><a href="#2018-强网杯-streamgame3" class="headerlink" title="2018 强网杯 streamgame3"></a>2018 强网杯 streamgame3</h5><p>简单看一下题目</p>
+<pre><code>from flag import flag
+assert flag.startswith("flag{")
+assert flag.endswith("}")
+assert len(flag)==24
+
+def lfsr(R,mask):
+    output = (R &lt;&lt; 1) &amp; 0xffffff
+    i=(R&amp;mask)&amp;0xffffff
+    lastbit=0
+    while i!=0:
+        lastbit^=(i&amp;1)
+        i=i&gt;&gt;1
+    output^=lastbit
+    return (output,lastbit)
+
+
+def single_round(R1,R1_mask,R2,R2_mask,R3,R3_mask):
+    (R1_NEW,x1)=lfsr(R1,R1_mask)
+    (R2_NEW,x2)=lfsr(R2,R2_mask)
+    (R3_NEW,x3)=lfsr(R3,R3_mask)
+    return (R1_NEW,R2_NEW,R3_NEW,(x1*x2)^((x2^1)*x3))
+
+R1=int(flag[5:11],16)
+R2=int(flag[11:17],16)
+R3=int(flag[17:23],16)
+assert len(bin(R1)[2:])==17
+assert len(bin(R2)[2:])==19
+assert len(bin(R3)[2:])==21
+R1_mask=0x10020
+R2_mask=0x4100c
+R3_mask=0x100002
+
+
+for fi in range(1024):
+    print fi
+    tmp1mb=""
+    for i in range(1024):
+        tmp1kb=""
+        for j in range(1024):
+            tmp=0
+            for k in range(8):
+                (R1,R2,R3,out)=single_round(R1,R1_mask,R2,R2_mask,R3,R3_mask)
+                tmp = (tmp &lt;&lt; 1) ^ out
+            tmp1kb+=chr(tmp)
+        tmp1mb+=tmp1kb
+    f = open("./output/" + str(fi), "ab")
+    f.write(tmp1mb)
+    f.close()</code></pre><p>可以看出，该程序与 Geffe 生成器非常类似，这里我们使用相关攻击方法进行攻击，我们可以统计一下在三个 LFSR 输出不同的情况下，最后类 Geffe 生成器的输出，如下</p>
+<table>
+<thead>
+<tr>
+<th align="left">x1x1</th>
+<th align="left">x2x2</th>
+<th align="left">x3x3</th>
+<th align="left">F(x1,x2,x3)F(x1,x2,x3)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">0</td>
+</tr>
+<tr>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">1</td>
+<td align="left">1</td>
+</tr>
+<tr>
+<td align="left">0</td>
+<td align="left">1</td>
+<td align="left">0</td>
+<td align="left">0</td>
+</tr>
+<tr>
+<td align="left">0</td>
+<td align="left">1</td>
+<td align="left">1</td>
+<td align="left">0</td>
+</tr>
+<tr>
+<td align="left">1</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">0</td>
+</tr>
+<tr>
+<td align="left">1</td>
+<td align="left">0</td>
+<td align="left">1</td>
+<td align="left">1</td>
+</tr>
+<tr>
+<td align="left">1</td>
+<td align="left">1</td>
+<td align="left">0</td>
+<td align="left">1</td>
+</tr>
+<tr>
+<td align="left">1</td>
+<td align="left">1</td>
+<td align="left">1</td>
+<td align="left">1</td>
+</tr>
+</tbody></table>
+<p>可以发现</p>
+<ul>
+<li>Geffe 的输出与 x1x1 相同的概率为 0.75</li>
+<li>Geffe 的输出与 x2x2 相同的概率为 0.5</li>
+<li>Geffe 的输出与 x3x3 相同的概率为 0.75</li>
+</ul>
+<p>这说明输出与第一个和第三个的关联性非常大。 因此，我们可以暴力去枚举第一个和第三个 LFSR 的输出判断其与 类 Geffe 的输出相等的个数，如果大约在 75% 的话，就可以认为是正确的。第二个就直接暴力枚举了。</p>
+<p>脚本如下</p>
+<pre><code>#for x1 in range(2):
+#    for x2 in range(2):
+#        for x3 in range(2):
+#            print x1,x2,x3,(x1*x2)^((x2^1)*x3)
+#n = [17,19,21]
+
+#cycle = 1
+#for i in n:
+#    cycle = cycle*(pow(2,i)-1)
+#print cycle
+
+
+def lfsr(R, mask):
+    output = (R &lt;&lt; 1) &amp; 0xffffff
+    i = (R &amp; mask) &amp; 0xffffff
+    lastbit = 0
+    while i != 0:
+        lastbit ^= (i &amp; 1)
+        i = i &gt;&gt; 1
+    output ^= lastbit
+    return (output, lastbit)
+
+
+def single_round(R1, R1_mask, R2, R2_mask, R3, R3_mask):
+    (R1_NEW, x1) = lfsr(R1, R1_mask)
+    (R2_NEW, x2) = lfsr(R2, R2_mask)
+    (R3_NEW, x3) = lfsr(R3, R3_mask)
+    return (R1_NEW, R2_NEW, R3_NEW, (x1 * x2) ^ ((x2 ^ 1) * x3))
+
+
+R1_mask = 0x10020
+R2_mask = 0x4100c
+R3_mask = 0x100002
+n3 = 21
+n2 = 19
+n1 = 17
+
+
+def guess(beg, end, num, mask):
+    ansn = range(beg, end)
+    data = open('./output/0').read(num)
+    data = ''.join(bin(256 + ord(c))[3:] for c in data)
+    now = 0
+    res = 0
+    for i in ansn:
+        r = i
+        cnt = 0
+        for j in range(num * 8):
+            r, lastbit = lfsr(r, mask)
+            lastbit = str(lastbit)
+            cnt += (lastbit == data[j])
+        if cnt &gt; now:
+            now = cnt
+            res = i
+            print now, res
+    return res
+
+
+def bruteforce2(x, z):
+    data = open('./output/0').read(50)
+    data = ''.join(bin(256 + ord(c))[3:] for c in data)
+    for y in range(pow(2, n2 - 1), pow(2, n2)):
+        R1, R2, R3 = x, y, z
+        flag = True
+        for i in range(len(data)):
+            (R1, R2, R3,
+             out) = single_round(R1, R1_mask, R2, R2_mask, R3, R3_mask)
+            if str(out) != data[i]:
+                flag = False
+                break
+        if y % 10000 == 0:
+            print 'now: ', x, y, z
+        if flag:
+            print 'ans: ', hex(x)[2:], hex(y)[2:], hex(z)[2:]
+            break
+
+
+R1 = guess(pow(2, n1 - 1), pow(2, n1), 40, R1_mask)
+print R1
+R3 = guess(pow(2, n3 - 1), pow(2, n3), 40, R3_mask)
+print R3
+R1 = 113099
+R3 = 1487603
+
+bruteforce2(R1, R3)</code></pre><p>运行结果如下</p>
+<pre><code>➜  2018-CISCN-start-streamgame3 git:(master) ✗ python exp.py
+161 65536
+172 65538
+189 65545
+203 65661
+210 109191
+242 113099
+113099
+157 1048576
+165 1048578
+183 1048580
+184 1049136
+186 1049436
+187 1049964
+189 1050869
+190 1051389
+192 1051836
+194 1053573
+195 1055799
+203 1060961
+205 1195773
+212 1226461
+213 1317459
+219 1481465
+239 1487603
+1487603
+now:  113099 270000 1487603
+now:  113099 280000 1487603
+now:  113099 290000 1487603
+now:  113099 300000 1487603
+now:  113099 310000 1487603
+now:  113099 320000 1487603
+now:  113099 330000 1487603
+now:  113099 340000 1487603
+now:  113099 350000 1487603
+now:  113099 360000 1487603
+ans:  1b9cb 5979c 16b2f3</code></pre><p>从而 flag 为 flag{01b9cb05979c16b2f3}。</p>
+<h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><ul>
+<li>2017 WHCTF Bornpig</li>
+<li>2018 Google CTF 2018 Betterzip</li>
+</ul>
+<h1 id="RC4"><a href="#RC4" class="headerlink" title="RC4"></a>RC4</h1><h2 id="基本介绍"><a href="#基本介绍" class="headerlink" title="基本介绍"></a>基本介绍</h2><p>RSA 由 Ron Rivest 设计，最初隶属于 RSA 安全公司，是一个专利密码产品。它是面向字节的流密码，密钥长度可变，非常简单，但也很有效果。RC4 算法广泛应用于 SSL/TLS 协议和 WEP/WPA 协议。</p>
+<h2 id="基本流程"><a href="#基本流程" class="headerlink" title="基本流程"></a>基本流程</h2><p>RC4 主要包含三个流程</p>
+<ul>
+<li>初始化 S 和 T 数组。</li>
+<li>初始化置换 S。</li>
+<li>生成密钥流。</li>
+</ul>
+<h3 id="初始化-S-和-T-数组"><a href="#初始化-S-和-T-数组" class="headerlink" title="初始化 S 和 T 数组"></a>初始化 S 和 T 数组</h3><p>初始化 S 和 T 的代码如下</p>
+<pre><code>for i = 0 to 255 do
+    S[i] = i
+    T[i] = K[i mod keylen])</code></pre><p><img src="/images/loading.gif" data-original="../images/CTF/rc4_s_t.png" alt=""></p>
+<h3 id="初始化置换-S"><a href="#初始化置换-S" class="headerlink" title="初始化置换 S"></a>初始化置换 S</h3><pre><code>j = 0
+for i = 0 to 255 do 
+    j = (j + S[i] + T[i]) (mod 256) 
+    swap (S[i], S[j])</code></pre><p><img src="/images/loading.gif" data-original="../images/CTF/rc4_s.png" alt=""></p>
+<h3 id="生成流密钥"><a href="#生成流密钥" class="headerlink" title="生成流密钥"></a>生成流密钥</h3><pre><code>i = j = 0 
+for each message byte b
+    i = (i + 1) (mod 256)
+    j = (j + S[i]) (mod 256)
+    swap(S[i], S[j])
+    t = (S[i] + S[j]) (mod 256) 
+    print S[t]</code></pre><p><img src="/images/loading.gif" data-original="../images/CTF/rc4_key.png" alt=""></p>
+<p>我们一般称前两部分为 KSA ，最后一部分是 PRGA。</p>
+<h1 id="块加密"><a href="#块加密" class="headerlink" title="块加密"></a>块加密</h1><h2 id="概述-1"><a href="#概述-1" class="headerlink" title="概述"></a>概述</h2><p>所谓块加密就是每次加密一块明文，常见的加密算法有</p>
+<ul>
+<li>IDEA 加密</li>
+<li>DES 加密</li>
+<li>AES 加密</li>
+</ul>
+<p>块加密也是对称加密。</p>
+<p>其实，我们也可以把块加密理解一种特殊的替代密码，但是其每次替代的是一大块。而正是由于一大块，明文空间巨大，而且对于不同的密钥，我们无法做一个表进行对应相应的密文，因此必须得有 <strong>复杂</strong> 的加解密算法来加解密明密文。</p>
+<p>而与此同时，明文往往可能很长也可能很短，因此在块加密时往往需要两个辅助</p>
+<ul>
+<li>padding，即 padding 到指定分组长度</li>
+<li>分组加密模式，即明文分组加密的方式。</li>
+</ul>
+<h2 id="基本策略"><a href="#基本策略" class="headerlink" title="基本策略"></a>基本策略</h2><p>在分组密码设计时，充分使用了 Shannon 提出的两大策略：混淆与扩散两大策略。</p>
+<h3 id="混淆"><a href="#混淆" class="headerlink" title="混淆"></a>混淆</h3><p>混淆，Confusion，将密文与密钥之间的统计关系变得尽可能复杂，使得攻击者即使获取了密文的一些统计特性，也无法推测密钥。一般使用复杂的非线性变换可以得到很好的混淆效果，常见的方法如下</p>
+<ul>
+<li>S 盒</li>
+<li>乘法</li>
+</ul>
+<h3 id="扩散"><a href="#扩散" class="headerlink" title="扩散"></a>扩散</h3><p>扩散，Diffusion，使得明文中的每一位影响密文中的许多位。常见的方法有</p>
+<ul>
+<li>线性变换</li>
+<li>置换</li>
+<li>移位，循环移位</li>
+</ul>
+<h2 id="常见加解密结构"><a href="#常见加解密结构" class="headerlink" title="常见加解密结构"></a>常见加解密结构</h2><p>目前块加密中主要使用的是结构是</p>
+<ul>
+<li>迭代结构，这是因为迭代结构便于设计与实现，同时方便安全性评估。</li>
+</ul>
+<h3 id="迭代结构"><a href="#迭代结构" class="headerlink" title="迭代结构"></a>迭代结构</h3><h4 id="概述-2"><a href="#概述-2" class="headerlink" title="概述"></a>概述</h4><p>迭代结构基本如下，一般包括三个部分</p>
+<ul>
+<li>密钥置换</li>
+<li>轮加密函数</li>
+<li>轮解密函数</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/CTF/iterated_cipher.png" alt=""></p>
+<h4 id="轮函数"><a href="#轮函数" class="headerlink" title="轮函数"></a>轮函数</h4><p>目前来说，轮函数主要有主要有以下设计方法</p>
+<ul>
+<li>Feistel Network，由 Horst Feistel 发明，DES 设计者之一。<ul>
+<li>DES</li>
+</ul>
+</li>
+<li>Substitution-Permutation Network(SPN)<ul>
+<li>AES</li>
+</ul>
+</li>
+<li>其他方案</li>
+</ul>
+<h4 id="密钥扩展"><a href="#密钥扩展" class="headerlink" title="密钥扩展"></a>密钥扩展</h4><p>目前，密钥扩展的方法有很多，没有见到什么完美的密钥扩展方法，基本原则是使得密钥的每一个比特尽可能影响多轮的轮密钥。</p>
+<script>
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return; }
+            const img = document.createElement('img');
+            img.style = 'display:none !important;';
+            img.src = el.dataset.src;
+            img.addEventListener('error', () => {
+              img.remove();
+              el.style.color = 'inherit';
+              el.style.backgroundImage = 'none';
+              el.style.background = 'none';
+            });
+            img.addEventListener('load', () => {
+              img.remove();
+            });
+            document.body.appendChild(img);
+          });
+      </script>
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://jackhcc.github.io" rel="external nofollow noreferrer">杰克成</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://jackhcc.github.io/posts/ctf-crypto.html">https://jackhcc.github.io/posts/ctf-crypto.html</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="https://jackhcc.github.io" target="_blank">杰克成</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/CTF-Cryptography/">
+                                    <span class="chip bg-color">CTF-Cryptography</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/reward/aliqr.png" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/reward/wxqr.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+            
+        </div>
+    </div>
+
+    
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/gitalk/gitalk.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/my-gitalk.css">
+
+<div class="card gitalk-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="gitalk-container" class="card-content"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/gitalk/gitalk.min.js"></script>
+<script>
+    let gitalk = new Gitalk({
+        clientID: '3821a0bbb773038a51fc',
+        clientSecret: '4b30b507d67ec5497ec0e77f43f80cb3e0d7dd3a',
+        repo: 'JackHCC.github.io',
+        owner: 'JackHCC',
+        admin: "JackHCC",
+        id: '2021-08-15T23-23-13',
+        distractionFreeMode: false  // Facebook-like distraction free mode
+    });
+
+    gitalk.render('gitalk-container');
+</script>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/posts/paper-bcsd.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/12.jpg" class="responsive-img" alt="Binary Code Similarity Detection">
+                        
+                        <span class="card-title">Binary Code Similarity Detection</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            二进制代码相似性论文解读复现
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-08-16
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Paper/" class="post-category">
+                                    Paper
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/BCSD/">
+                        <span class="chip bg-color">BCSD</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/posts/ctf-web.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/20.jpg" class="responsive-img" alt="CTF-Web要点">
+                        
+                        <span class="card-title">CTF-Web要点</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            CTF-Web学习要点
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-08-12
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/CTF/" class="post-category">
+                                    CTF
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/CTF-Web/">
+                        <span class="chip bg-color">CTF-Web</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeShrink.js"></script>
+
+
+<!-- 代码块折行 -->
+
+<style type="text/css">
+code[class*="language-"], pre[class*="language-"] { white-space: pre !important; }
+</style>
+
+
+    
+
+</main>
+
+
+
+    <footer class="page-footer bg-color">
+    <div class="container row center-align" style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            <span id="year">2020</span>
+            <a href="https://jackhcc.github.io" target="_blank">杰克成</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                class="white-color">890k</span>&nbsp;字
+            
+            
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;人
+            </span>
+            
+            <br>
+            
+            <span id="sitetime">载入运行时间...</span>
+            <script>
+                function siteTime() {
+                    var seconds = 1000;
+                    var minutes = seconds * 60;
+                    var hours = minutes * 60;
+                    var days = hours * 24;
+                    var years = days * 365;
+                    var today = new Date();
+                    var startYear = "2020";
+                    var startMonth = "2";
+                    var startDate = "27";
+                    var startHour = "6";
+                    var startMinute = "30";
+                    var startSecond = "0";
+                    var todayYear = today.getFullYear();
+                    var todayMonth = today.getMonth() + 1;
+                    var todayDate = today.getDate();
+                    var todayHour = today.getHours();
+                    var todayMinute = today.getMinutes();
+                    var todaySecond = today.getSeconds();
+                    var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                    var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                    var diff = t2 - t1;
+                    var diffYears = Math.floor(diff / years);
+                    var diffDays = Math.floor((diff / days) - diffYears * 365);
+                    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+                    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) /
+                        minutes);
+                    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours -
+                        diffMinutes * minutes) / seconds);
+                    if (startYear == todayYear) {
+                        document.getElementById("year").innerHTML = todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffDays + " 天 " + diffHours +
+                            " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    } else {
+                        document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffYears + " 年 " + diffDays +
+                            " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    }
+                }
+                setInterval(siteTime, 1000);
+            </script>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/JackHCC" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:jackcc0701@163.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+    <a href="https://www.facebook.com/profile.php?id=100046343443643" class="tooltipped" target="_blank" data-tooltip="关注我的Facebook: https://www.facebook.com/profile.php?id=100046343443643" data-position="top" data-delay="50">
+        <i class="fab fa-facebook-f"></i>
+    </a>
+
+
+
+    <a href="https://twitter.com/JackChe66021834" class="tooltipped" target="_blank" data-tooltip="关注我的Twitter: https://twitter.com/JackChe66021834" data-position="top" data-delay="50">
+        <i class="fab fa-twitter"></i>
+    </a>
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=2508074836" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 2508074836" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+    <a href="https://weibo.com/u/6885584679" class="tooltipped" target="_blank" data-tooltip="关注我的微博: https://weibo.com/u/6885584679" data-position="top" data-delay="50">
+        <i class="fab fa-weibo"></i>
+    </a>
+
+
+
+    <a href="https://www.zhihu.com/people/8f8482f01f0d6a04e844efe32e0f0710" class="tooltipped" target="_blank" data-tooltip="关注我的知乎: https://www.zhihu.com/people/8f8482f01f0d6a04e844efe32e0f0710" data-position="top" data-delay="50">
+        <i class="fab fa-zhihu1">知</i>
+    </a>
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/materialize/materialize.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/aos/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/js/matery.js"></script>
+
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+    <script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script type="text/javascript" src="/js/fireworks.js"></script>
+
+    <script type="text/javascript">
+        //只在桌面版网页启用特效
+        var windowWidth = $(window).width();
+        if (windowWidth > 768) {
+            document.write('<script type="text/javascript" src="/js/sakura.js"><\/script>'); }
+    </script>
+
+    <!-- weather -->
+	<script type="text/javascript">
+	WIDGET = {FID: 'TToslpmkVO'}
+	</script>
+	<script type="text/javascript" src="https://apip.weatherdt.com/float/static/js/r.js?v=1111"></script>
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <!-- Baidu Analytics -->
+
+<script>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+    <!-- Baidu Push -->
+
+    
+    
+    <script async src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+        <script src="//code.tidio.co/kqhlkxviiccyoa0czpfpu4ijuey9hfre.js"></script>
+        <script> 
+            $(document).ready(function () {
+                setInterval(change_Tidio, 50);  
+                function change_Tidio() { 
+                    var tidio=$("#tidio-chat iframe");
+                    if(tidio.css("display")=="block"&& $(window).width()>977 ){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" &&$(window).width()>977)>0? "-40px" : ($("div.toc-title").length&&$(window).width()>977)>0?"85px":"20px";   
+                        document.getElementById("tidio-chat-iframe").style.right="-15px";   
+                        document.getElementById("tidio-chat-iframe").style.height=parseInt(tidio.css("height"))>=520?"520px":tidio.css("height");
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    } 
+                    else if(tidio.css("display")=="block"&&$(window).width()>601 &&$(window).width()<992 ){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" && 601< $(window).width()<992)>0? "-40px":"20px" ;   
+                        document.getElementById("tidio-chat-iframe").style.right="-15px"; 
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    }
+                    else if(tidio.css("display")=="block"&&$(window).width()<601 && parseInt(tidio.css("height"))<230){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" && $(window).width()<601)>0? "-10px":"45px" ;   
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    }
+                    if( tidio.css("display")=="block"&&$(window).width()<601 && parseInt(tidio.css("height"))>=230){
+                        document.getElementById("tidio-chat-iframe").style.zIndex="998";
+                    }
+                } 
+            }); 
+        </script>
+    
+
+    
+
+    
+    <script type="text/javascript" color="0,0,255"
+        pointColor="0,0,255" opacity='0.7'
+        zIndex="-1" count="99"
+        src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/background/canvas-nest.js"></script>
+    
+
+    
+
+    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/background/ribbon-dynamic.js" async="async"></script>
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+        <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
+        <script>
+        $('a').each(function() {
+          const $this = $(this);
+          const href = $this.attr('href');
+          if (href && href.match('^((http|https|thunder|qqdl|ed2k|Flashget|qbrowser|ftp|rtsp|mms)://)')) {
+            const strs = href.split('/');
+            if (strs.length >= 3) {
+                const host = strs[2];
+                if (host !== 'your_domain' || window.location.host) {
+                    $this.attr('href', '/go.html?u='+Base64.encode(href)+'').attr('rel', 'external nofollow noopener noreferrer');
+                    if (true) {
+                        $this.attr('target', '_blank');
+                    }
+                }
+            }
+          }
+        });
+        </script><script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script></body>
+
+</html>
+
