@@ -371,14 +371,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    20.8k
+                    26.1k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    93 分
+                    119 分
                 </div>
                 
 
@@ -2729,6 +2729,686 @@ y0ur9Ood
 <p>V81=I11,V82=I13,V83=I12,V84=I14</p>
 <p>那么最后再经过一次简单的输出变换，恰好得到最初加密的数值。</p>
 <p><img src="/images/loading.gif" data-original="../images/CTF/IDEA_Round.png" alt=""></p>
+<h1 id="AES"><a href="#AES" class="headerlink" title="AES"></a>AES</h1><h2 id="基本介绍-2"><a href="#基本介绍-2" class="headerlink" title="基本介绍"></a>基本介绍</h2><p>Advanced Encryption Standard（AES），高级加密标准，是典型的块加密，被设计来取代 DES，由 Joan Daemen 和 Vincent Rijmen 所设计。其基本信息如下</p>
+<ul>
+<li>输入：128 比特。</li>
+<li>输出：128 比特。</li>
+<li>SPN 网络结构。</li>
+</ul>
+<p>其迭代轮数与密钥长度有关系，如下</p>
+<table>
+<thead>
+<tr>
+<th>密钥长度（比特）</th>
+<th>迭代轮数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>128</td>
+<td>10</td>
+</tr>
+<tr>
+<td>192</td>
+<td>12</td>
+</tr>
+<tr>
+<td>256</td>
+<td>14</td>
+</tr>
+</tbody></table>
+<h2 id="基本流程-3"><a href="#基本流程-3" class="headerlink" title="基本流程"></a>基本流程</h2><h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>在 AES 加解密过程中，每一块都是 128 比特，所以我们这里明确一些基本概念。</p>
+<p><img src="/images/loading.gif" data-original="../images/CTF/aes_data_unit.png" alt=""></p>
+<p>在 AES 中，块与 State 之间的转换过程如下</p>
+<p><img src="/images/loading.gif" data-original="../images/CTF/aes_block2state.png" alt=""></p>
+<p>所以，可以看出，每一个 block 中的字节是按照列排列进入到状态数组的。</p>
+<p>而对于明文来说，一般我们会选择使用其十六进制进行编码。</p>
+<p><img src="/images/loading.gif" data-original="../images/CTF/aes_plain2state.png" alt=""></p>
+<h3 id="加解密过程"><a href="#加解密过程" class="headerlink" title="加解密过程"></a>加解密过程</h3><p>基本的流程，每一轮主要包括</p>
+<ul>
+<li>轮密钥加，AddRoundKey</li>
+<li>字节替换，SubBytes</li>
+<li>行移位，ShiftRows</li>
+<li>列混淆，MixColumns</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/CTF/aes_details.jpg" alt=""></p>
+<p>上面的列混淆的矩阵乘法等号左边的列向量应该在右边。</p>
+<p>这里再给一张其加解密的全图，其解密算法的正确性很显然。</p>
+<p><img src="/images/loading.gif" data-original="../images/CTF/aes_enc_dec.png" alt=""></p>
+<p>我们这里重点关注一下以下。</p>
+<h4 id="字节替换"><a href="#字节替换" class="headerlink" title="字节替换"></a>字节替换</h4><p>在字节替换的背后，其实是有对应的数学规则来定义对应的替换表的，如下</p>
+<p><img src="/images/loading.gif" data-original="../images/CTF/aes_subbytes.png" alt=""></p>
+<p>这里的运算均定义在 GF(28) 内。</p>
+<h4 id="列混淆"><a href="#列混淆" class="headerlink" title="列混淆"></a>列混淆</h4><p>这里的运算也是定义在 GF(28)上，使用的模多项式为 x8+x4+x3+1。</p>
+<h4 id="密钥扩展-1"><a href="#密钥扩展-1" class="headerlink" title="密钥扩展"></a>密钥扩展</h4><p><img src="/images/loading.gif" data-original="../images/CTF/aes_key_expansion.png" alt=""></p>
+<h2 id="等价解密算法"><a href="#等价解密算法" class="headerlink" title="等价解密算法"></a>等价解密算法</h2><p>简单分析一下，我们可以发现</p>
+<ul>
+<li>交换逆向行移位和逆向字节代替并不影响结果。</li>
+<li>交换轮密钥加和逆向列混淆并不影响结果，关键在于</li>
+<li>首先可以把异或看成域上的多项式加法</li>
+<li>然后多项式中乘法对加法具有分配率。</li>
+</ul>
+<h2 id="攻击方法-1"><a href="#攻击方法-1" class="headerlink" title="攻击方法"></a>攻击方法</h2><ul>
+<li>积分攻击</li>
+</ul>
+<h2 id="2018-国赛-Crackmec"><a href="#2018-国赛-Crackmec" class="headerlink" title="2018 国赛 Crackmec"></a>2018 国赛 Crackmec</h2><p>通过简单分析这个算法，我们可以发现这个算法是一个简化版的 AES，其基本操作为</p>
+<ul>
+<li>9 轮迭代<ul>
+<li>行移位</li>
+<li>变种字节替换</li>
+</ul>
+</li>
+</ul>
+<p>如下</p>
+<pre><code>  memcpy(cipher, plain, 0x10uLL);
+  for ( i = 0LL; i &lt;= 8; ++i )
+  {
+    shift_row(cipher);
+    for ( j = 0LL; j &lt;= 3; ++j )
+      *(_DWORD *)&amp;cipher[4 * j] =
+        box[((4 * j + 3 + 16 * i) &lt;&lt; 8) + (unsigned __int8)cipher[4 * j + 3]] ^
+        box[((4 * j + 2 + 16 * i) &lt;&lt; 8) + (unsigned __int8)cipher[4 * j + 2]] ^
+        box[((4 * j + 1 + 16 * i) &lt;&lt; 8) + (unsigned __int8)cipher[4 * j + 1]] ^
+        box[((4 * j + 16 * i) &lt;&lt; 8) + (unsigned __int8)cipher[4 * j]];
+  }
+  result = shift_row(cipher);
+  for ( k = 0LL; k &lt;= 0xF; ++k )
+  {
+    result = subbytes[256 * k + (unsigned __int8)cipher[k]];
+    cipher[k] = result;
+  }
+  return result;</code></pre><p>根据程序流程，我们已知程序加密的结果，而 subbytes 和 shift_row 又是可逆的，所以我们可以获取最后一轮加密后的结果。此时，我们还知道 box 对应的常数，我们只是不知道上一轮中 <code>cipher[4*j]</code> 对应的值，一共 32 位，如果我们直接爆破的话，显然不可取，因为每一轮都需要这么爆破，时间不可接受。那么有没有其它办法呢？其实有的，我们可以考虑中间相遇攻击，即首先枚举所有的 <code>cipher[4*j]</code> 与<code>cipher[4*j+1]</code> 的字节组合，一共 256*256 种。在枚举剩下两个字节时，我们可以先计算出其与密文的异或值，然后去之前的组合中找，如果找到的话，我们就认为是正确的。这样复杂度瞬间降到 O(216)。</p>
+<p>代码如下</p>
+<pre><code>encflag = [
+    0x16, 0xEA, 0xCA, 0xCC, 0xDA, 0xC8, 0xDE, 0x1B, 0x16, 0x03, 0xF8, 0x84,
+    0x69, 0x23, 0xB2, 0x25
+]
+subbytebox = eval(open('./subbytes').read())
+box = eval(open('./box').read())
+print subbytebox[-1], box[-1]
+
+
+def inv_shift_row(now):
+    tmp = now[13]
+    now[13] = now[9]
+    now[9] = now[5]
+    now[5] = now[1]
+    now[1] = tmp
+
+    tmp = now[10]
+    now[10] = now[2]
+    now[2] = tmp
+    tmp = now[14]
+    now[14] = now[6]
+    now[6] = tmp
+
+    tmp = now[15]
+    now[15] = now[3]
+    now[3] = now[7]
+    now[7] = now[11]
+    now[11] = tmp
+
+    return now
+
+
+def byte2num(a):
+    num = 0
+    for i in range(3, -1, -1):
+        num = num * 256
+        num += a[i]
+    return num
+
+
+def getbytes(i, j, target):
+    """
+    box[((4 * j + 3 + 16 * i) &lt;&lt; 8) + a2[4 * j + 3]]
+    box[((4 * j + 2 + 16 * i) &lt;&lt; 8 )+ a2[4 * j + 2]]
+    box[((4 * j + 1 + 16 * i) &lt;&lt; 8) + a2[4 * j + 1]]
+    box[((4 * j + 16 * i) &lt;&lt; 8) + a2[4 * j]];
+    """
+    box01 = dict()
+    for c0 in range(256):
+        for c1 in range(256):
+            num0 = ((4 * j + 16 * i) &lt;&lt; 8) + c0
+            num1 = ((4 * j + 1 + 16 * i) &lt;&lt; 8) + c1
+            num = box[num0] ^ box[num1]
+            box01[num] = (c0, c1)
+    for c2 in range(256):
+        for c3 in range(256):
+            num2 = ((4 * j + 2 + 16 * i) &lt;&lt; 8) + c2
+            num3 = ((4 * j + 3 + 16 * i) &lt;&lt; 8) + c3
+            num = box[num2] ^ box[num3]
+            calc = num ^ target
+            if calc in box01:
+                c0, c1 = box01[calc]
+                return c0, c1, c2, c3
+    print 'not found'
+    print i, j, target, calc
+    exit(0)
+
+
+def solve():
+    a2 = [0] * 16
+    """
+      for ( k = 0LL; k &lt;= 0xF; ++k )
+      {
+        result = subbytesbox[256 * k + a2[k]];
+        a2[k] = result;
+      }
+    """
+    for i in range(15, -1, -1):
+        tag = 0
+        for j in range(256):
+            if subbytebox[256 * i + j] == encflag[i]:
+                # j = a2[k]
+                tag += 1
+                a2[i] = j
+                if tag == 2:
+                    print 'two number', i
+                    exit(0)
+    """
+      result = shift_row(a2);
+    """
+    a2 = inv_shift_row(a2)
+    """
+      for ( i = 0LL; i &lt;= 8; ++i )
+      {
+        shift_row(a2);
+        for ( j = 0LL; j &lt;= 3; ++j )
+          *(_DWORD *)&amp;a2[4 * j] = box[((4 * j + 3 + 16 * i) &lt;&lt; 8) + a2[4 * j + 3]] ^ box[((4 * j + 2 + 16 * i) &lt;&lt; 8)
+                                                                                       + a2[4 * j + 2]] ^ box[((4 * j + 1 + 16 * i) &lt;&lt; 8) + a2[4 * j + 1]] ^ box[((4 * j + 16 * i) &lt;&lt; 8) + a2[4 * j]];
+      }
+    """
+    for i in range(8, -1, -1):
+        tmp = [0] * 16
+        print 'round ', i
+        for j in range(0, 4):
+            num = byte2num(a2[4 * j:4 * j + 4])
+            #print num, a2[4 * j:4 * j + 4]
+            tmp[4 * j
+               ], tmp[4 * j + 1], tmp[4 * j + 2], tmp[4 * j + 3] = getbytes(
+                   i, j, num
+               )
+        a2 = inv_shift_row(tmp)
+    print a2
+    print ''.join(chr(c) for c in a2)
+
+
+if __name__ == "__main__":
+    solve()</code></pre><p>运行结果</p>
+<pre><code>➜  cracemec git:(master) ✗ python exp.py
+211 3549048324
+round  8
+round  7
+round  6
+round  5
+round  4
+round  3
+round  2
+round  1
+round  0
+[67, 73, 83, 67, 78, 98, 35, 97, 100, 102, 115, 64, 70, 122, 57, 51]
+CISCNb#adfs@Fz93</code></pre><h1 id="Simon-and-Speck-Block-Ciphers"><a href="#Simon-and-Speck-Block-Ciphers" class="headerlink" title="Simon and Speck Block Ciphers"></a>Simon and Speck Block Ciphers</h1><p>这是一组姐妹轻量级加密。</p>
+<h2 id="Simon-Block-Cipher"><a href="#Simon-Block-Cipher" class="headerlink" title="Simon Block Cipher"></a>Simon Block Cipher</h2><h3 id="基本介绍-3"><a href="#基本介绍-3" class="headerlink" title="基本介绍"></a>基本介绍</h3><p>Simon 块加密算法由 NSA 2013 年 6 月公布，主要在<strong>硬件实现</strong>上进行了优化。</p>
+<p>Simon Block Cipher 是平衡的 <a href="https://en.wikipedia.org/wiki/Feistel_cipher" target="_blank" rel="noopener">Feistel cipher</a> 加密，一共有两块，若每块加密的大小为 n bits，那么明文的大小就是 2n bits。此外，一般来说，该加密中所使用的密钥长度是块长度的整数倍，比如 2n，4n 等。常见的 Simon 加密算法有</p>
+<p><img src="/images/loading.gif" data-original="../images/CTF/simon_cipher_mode.png" alt=""></p>
+<p>一般来说，Simon 算法称之为 Simon 2<em>n</em>/nm，n 为块大小，m 是块大小与密钥之间的倍数。比如说 Simon 48/96 就是指明文是 48 比特，密钥是 96 比特的加密算法。</p>
+<p>此外，对于 Simon 块加密算法来说，每轮的加密过程一样，如下</p>
+<p><img src="/images/loading.gif" data-original="../images/CTF/Simon_block_cipher.png" alt=""></p>
+<p>当然，对于每一轮以及不同的 m 来说，密钥也会有所不同</p>
+<p><img src="/images/loading.gif" data-original="../images/CTF/simon_key_schedule.svg" alt=""></p>
+<p>其中， zj 是由 Linear Feedback Shift Register (LFSR) 生成的，虽然对于不同的 zj的逻辑不同，但是初始向量是固定的。</p>
+<table>
+<thead>
+<tr>
+<th>Constant</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>z0z0=11111010001001010110000111001101111101000100101011000011100110</td>
+</tr>
+<tr>
+<td>z1z1=10001110111110010011000010110101000111011111001001100001011010</td>
+</tr>
+<tr>
+<td>z2z2=10101111011100000011010010011000101000010001111110010110110011</td>
+</tr>
+<tr>
+<td>z3z3=11011011101011000110010111100000010010001010011100110100001111</td>
+</tr>
+<tr>
+<td>z4z4=11010001111001101011011000100000010111000011001010010011101111</td>
+</tr>
+</tbody></table>
+<h3 id="2017-SECCON-Simon-and-Speck-Block-Ciphers"><a href="#2017-SECCON-Simon-and-Speck-Block-Ciphers" class="headerlink" title="2017 SECCON Simon and Speck Block Ciphers"></a>2017 SECCON Simon and Speck Block Ciphers</h3><p>题目描述如下</p>
+<pre><code>Simon and Speck Block Ciphers
+
+https://eprint.iacr.org/2013/404.pdf Simon_96_64, ECB, key="SECCON{xxxx}", plain=0x6d564d37426e6e71, cipher=0xbb5d12ba422834b5</code></pre><p>从名字中可以看出密钥是 96 比特（12 byte），明文是 64 比特（8 字节），而密钥已经给出了 8 个字节，只剩下四个字节未知。那我们可以使用暴力破解的方法。这里从 <a href="https://github.com/bozhu/NSA-ciphers/blob/master/simon.py" target="_blank" rel="noopener">https://github.com/bozhu/NSA-ciphers/blob/master/simon.py</a> 获取了一份 simon 加密算法。</p>
+<p>具体如下</p>
+<pre><code>from pwn import *
+from simon import SIMON
+
+plain = 0x6d564d37426e6e71
+cipher = 0xbb5d12ba422834b5
+
+
+def compare(key):
+    key = "SECCON{" + key + "}"
+    key = key.encode('hex')
+    key = int(key, 16)
+    my_simon = SIMON(64, 96, key)
+    test = my_simon.encrypt(plain)
+    if test == cipher:
+        return True
+    else:
+        return False
+
+
+def solve():
+    visible = string.uppercase + string.lowercase + string.digits + string.punctuation + " "
+    key = pwnlib.util.iters.mbruteforce(compare, visible, 4, method="fixed")
+    print key
+
+
+if __name__ == "__main__":
+    solve()</code></pre><p>结果如下</p>
+<pre><code>➜  2017_seccon_simon_and_speck_block_ciphers git:(master) python exp.py
+[+] MBruteforcing: Found key: "6Pz0"</code></pre><h1 id="分组模式"><a href="#分组模式" class="headerlink" title="分组模式"></a>分组模式</h1><p>分组加密会将明文消息划分为固定大小的块，每块明文分别在密钥控制下加密为密文。当然并不是每个消息都是相应块大小的整数倍，所以我们可能需要进行填充。</p>
+<h2 id="填充方式"><a href="#填充方式" class="headerlink" title="填充方式"></a>填充方式</h2><p>正如我们之前所说，在分组加密中，明文的长度往往并不满足要求，需要进行 padding，而如何 padding 目前也已经有了不少的规定。</p>
+<p>常见的 <a href="https://www.di-mgt.com.au/cryptopad.html" target="_blank" rel="noopener">填充规则</a> 如下。<strong>需要注意的是，即使消息的长度是块大小的整数倍，仍然需要填充。</strong></p>
+<p>一般来说，如果在解密之后发现 Padding 不正确，则往往会抛出异常。我们也因此可以知道 Paddig 是否正确。</p>
+<h3 id="Pad-with-bytes-all-of-the-same-value-as-the-number-of-padding-bytes-PKCS5-padding"><a href="#Pad-with-bytes-all-of-the-same-value-as-the-number-of-padding-bytes-PKCS5-padding" class="headerlink" title="Pad with bytes all of the same value as the number of padding bytes (PKCS5 padding)"></a>Pad with bytes all of the same value as the number of padding bytes (PKCS5 padding)</h3><p>举例子如下</p>
+<pre><code>DES INPUT BLOCK  = f  o  r  _  _  _  _  _
+(IN HEX)           66 6F 72 05 05 05 05 05
+KEY              = 01 23 45 67 89 AB CD EF
+DES OUTPUT BLOCK = FD 29 85 C9 E8 DF 41 40</code></pre><h3 id="Pad-with-0x80-followed-by-zero-bytes-OneAndZeroes-Padding"><a href="#Pad-with-0x80-followed-by-zero-bytes-OneAndZeroes-Padding" class="headerlink" title="Pad with 0x80 followed by zero bytes (OneAndZeroes Padding)"></a>Pad with 0x80 followed by zero bytes (OneAndZeroes Padding)</h3><p>举例子如下</p>
+<pre><code>DES INPUT BLOCK  = f  o  r  _  _  _  _  _
+(IN HEX)           66 6F 72 80 00 00 00 00
+KEY              = 01 23 45 67 89 AB CD EF
+DES OUTPUT BLOCK = BE 62 5D 9F F3 C6 C8 40</code></pre><p>这里其实就是和 md5 和 sha1 的 padding 差不多。</p>
+<h3 id="Pad-with-zeroes-except-make-the-last-byte-equal-to-the-number-of-padding-bytes"><a href="#Pad-with-zeroes-except-make-the-last-byte-equal-to-the-number-of-padding-bytes" class="headerlink" title="Pad with zeroes except make the last byte equal to the number of padding bytes"></a>Pad with zeroes except make the last byte equal to the number of padding bytes</h3><p>举例子如下</p>
+<pre><code>DES INPUT BLOCK  = f  o  r  _  _  _  _  _
+(IN HEX)           66 6f 72 00 00 00 00 05
+KEY              = 01 23 45 67 89 AB CD EF
+DES OUTPUT BLOCK = 91 19 2C 64 B5 5C 5D B8</code></pre><h3 id="Pad-with-zero-null-characters"><a href="#Pad-with-zero-null-characters" class="headerlink" title="Pad with zero (null) characters"></a>Pad with zero (null) characters</h3><p>举例子如下</p>
+<pre><code>DES INPUT BLOCK  = f  o  r  _  _  _  _  _
+(IN HEX)           66 6f 72 00 00 00 00 00
+KEY              = 01 23 45 67 89 AB CD EF
+DES OUTPUT BLOCK = 9E 14 FB 96 C5 FE EB 75</code></pre><h3 id="Pad-with-spaces"><a href="#Pad-with-spaces" class="headerlink" title="Pad with spaces"></a>Pad with spaces</h3><p>举例子如下</p>
+<pre><code>DES INPUT BLOCK  = f  o  r  _  _  _  _  _
+(IN HEX)           66 6f 72 20 20 20 20 20
+KEY              = 01 23 45 67 89 AB CD EF
+DES OUTPUT BLOCK = E3 FF EC E5 21 1F 35 25</code></pre><h3 id="2018-上海市大学生网络安全大赛-aessss"><a href="#2018-上海市大学生网络安全大赛-aessss" class="headerlink" title="2018 上海市大学生网络安全大赛 aessss"></a>2018 上海市大学生网络安全大赛 aessss</h3><p>有时候可以针对一些使用不当的 Padding 进行攻击。这里以 2018 上海市大学生网络安全大赛的一道题目为例：</p>
+<p>题目脚本如下：</p>
+<pre><code>import random
+import sys
+import string
+from hashlib import sha256
+import SocketServer
+from Crypto.Cipher import AES
+from secret import FLAG, IV, KEY
+
+
+class Task(SocketServer.BaseRequestHandler):
+    def proof_of_work(self):
+        proof = ''.join(
+            [random.choice(string.ascii_letters+string.digits) for _ in xrange(20)])
+        # print proof
+        digest = sha256(proof).hexdigest()
+        self.request.send("sha256(XXXX+%s) == %s\n" % (proof[4:], digest))
+        self.request.send('Give me XXXX:')
+        x = self.request.recv(10)
+        x = x.strip()
+        if len(x) != 4 or sha256(x+proof[4:]).hexdigest() != digest:
+            return False
+        return True
+
+    def pad(self, s):
+        s += (256 - len(s)) * chr(256 - len(s))
+        ret = ['\x00' for _ in range(256)]
+        for index, pos in enumerate(self.s_box):
+            ret[pos] = s[index]
+        return ''.join(ret)
+
+    def unpad(self, s):
+        ret = ['\x00' for _ in range(256)]
+        for index, pos in enumerate(self.invs_box):
+            ret[pos] = s[index]
+        return ''.join(ret[0:-ord(ret[-1])])
+
+    s_box = [
+        0x63, 0x7C, 0x77, 0x7B, 0xF2, 0x6B, 0x6F, 0xC5, 0x30, 0x01, 0x67, 0x2B, 0xFE, 0xD7, 0xAB, 0x76,
+        0xCA, 0x82, 0xC9, 0x7D, 0xFA, 0x59, 0x47, 0xF0, 0xAD, 0xD4, 0xA2, 0xAF, 0x9C, 0xA4, 0x72, 0xC0,
+        0xB7, 0xFD, 0x93, 0x26, 0x36, 0x3F, 0xF7, 0xCC, 0x34, 0xA5, 0xE5, 0xF1, 0x71, 0xD8, 0x31, 0x15,
+        0x04, 0xC7, 0x23, 0xC3, 0x18, 0x96, 0x05, 0x9A, 0x07, 0x12, 0x80, 0xE2, 0xEB, 0x27, 0xB2, 0x75,
+        0x09, 0x83, 0x2C, 0x1A, 0x1B, 0x6E, 0x5A, 0xA0, 0x52, 0x3B, 0xD6, 0xB3, 0x29, 0xE3, 0x2F, 0x84,
+        0x53, 0xD1, 0x00, 0xED, 0x20, 0xFC, 0xB1, 0x5B, 0x6A, 0xCB, 0xBE, 0x39, 0x4A, 0x4C, 0x58, 0xCF,
+        0xD0, 0xEF, 0xAA, 0xFB, 0x43, 0x4D, 0x33, 0x85, 0x45, 0xF9, 0x02, 0x7F, 0x50, 0x3C, 0x9F, 0xA8,
+        0x51, 0xA3, 0x40, 0x8F, 0x92, 0x9D, 0x38, 0xF5, 0xBC, 0xB6, 0xDA, 0x21, 0x10, 0xFF, 0xF3, 0xD2,
+        0xCD, 0x0C, 0x13, 0xEC, 0x5F, 0x97, 0x44, 0x17, 0xC4, 0xA7, 0x7E, 0x3D, 0x64, 0x5D, 0x19, 0x73,
+        0x60, 0x81, 0x4F, 0xDC, 0x22, 0x2A, 0x90, 0x88, 0x46, 0xEE, 0xB8, 0x14, 0xDE, 0x5E, 0x0B, 0xDB,
+        0xE0, 0x32, 0x3A, 0x0A, 0x49, 0x06, 0x24, 0x5C, 0xC2, 0xD3, 0xAC, 0x62, 0x91, 0x95, 0xE4, 0x79,
+        0xE7, 0xC8, 0x37, 0x6D, 0x8D, 0xD5, 0x4E, 0xA9, 0x6C, 0x56, 0xF4, 0xEA, 0x65, 0x7A, 0xAE, 0x08,
+        0xBA, 0x78, 0x25, 0x2E, 0x1C, 0xA6, 0xB4, 0xC6, 0xE8, 0xDD, 0x74, 0x1F, 0x4B, 0xBD, 0x8B, 0x8A,
+        0x70, 0x3E, 0xB5, 0x66, 0x48, 0x03, 0xF6, 0x0E, 0x61, 0x35, 0x57, 0xB9, 0x86, 0xC1, 0x1D, 0x9E,
+        0xE1, 0xF8, 0x98, 0x11, 0x69, 0xD9, 0x8E, 0x94, 0x9B, 0x1E, 0x87, 0xE9, 0xCE, 0x55, 0x28, 0xDF,
+        0x8C, 0xA1, 0x89, 0x0D, 0xBF, 0xE6, 0x42, 0x68, 0x41, 0x99, 0x2D, 0x0F, 0xB0, 0x54, 0xBB, 0x16
+    ]
+
+    invs_box = [
+        0x52, 0x09, 0x6A, 0xD5, 0x30, 0x36, 0xA5, 0x38, 0xBF, 0x40, 0xA3, 0x9E, 0x81, 0xF3, 0xD7, 0xFB,
+        0x7C, 0xE3, 0x39, 0x82, 0x9B, 0x2F, 0xFF, 0x87, 0x34, 0x8E, 0x43, 0x44, 0xC4, 0xDE, 0xE9, 0xCB,
+        0x54, 0x7B, 0x94, 0x32, 0xA6, 0xC2, 0x23, 0x3D, 0xEE, 0x4C, 0x95, 0x0B, 0x42, 0xFA, 0xC3, 0x4E,
+        0x08, 0x2E, 0xA1, 0x66, 0x28, 0xD9, 0x24, 0xB2, 0x76, 0x5B, 0xA2, 0x49, 0x6D, 0x8B, 0xD1, 0x25,
+        0x72, 0xF8, 0xF6, 0x64, 0x86, 0x68, 0x98, 0x16, 0xD4, 0xA4, 0x5C, 0xCC, 0x5D, 0x65, 0xB6, 0x92,
+        0x6C, 0x70, 0x48, 0x50, 0xFD, 0xED, 0xB9, 0xDA, 0x5E, 0x15, 0x46, 0x57, 0xA7, 0x8D, 0x9D, 0x84,
+        0x90, 0xD8, 0xAB, 0x00, 0x8C, 0xBC, 0xD3, 0x0A, 0xF7, 0xE4, 0x58, 0x05, 0xB8, 0xB3, 0x45, 0x06,
+        0xD0, 0x2C, 0x1E, 0x8F, 0xCA, 0x3F, 0x0F, 0x02, 0xC1, 0xAF, 0xBD, 0x03, 0x01, 0x13, 0x8A, 0x6B,
+        0x3A, 0x91, 0x11, 0x41, 0x4F, 0x67, 0xDC, 0xEA, 0x97, 0xF2, 0xCF, 0xCE, 0xF0, 0xB4, 0xE6, 0x73,
+        0x96, 0xAC, 0x74, 0x22, 0xE7, 0xAD, 0x35, 0x85, 0xE2, 0xF9, 0x37, 0xE8, 0x1C, 0x75, 0xDF, 0x6E,
+        0x47, 0xF1, 0x1A, 0x71, 0x1D, 0x29, 0xC5, 0x89, 0x6F, 0xB7, 0x62, 0x0E, 0xAA, 0x18, 0xBE, 0x1B,
+        0xFC, 0x56, 0x3E, 0x4B, 0xC6, 0xD2, 0x79, 0x20, 0x9A, 0xDB, 0xC0, 0xFE, 0x78, 0xCD, 0x5A, 0xF4,
+        0x1F, 0xDD, 0xA8, 0x33, 0x88, 0x07, 0xC7, 0x31, 0xB1, 0x12, 0x10, 0x59, 0x27, 0x80, 0xEC, 0x5F,
+        0x60, 0x51, 0x7F, 0xA9, 0x19, 0xB5, 0x4A, 0x0D, 0x2D, 0xE5, 0x7A, 0x9F, 0x93, 0xC9, 0x9C, 0xEF,
+        0xA0, 0xE0, 0x3B, 0x4D, 0xAE, 0x2A, 0xF5, 0xB0, 0xC8, 0xEB, 0xBB, 0x3C, 0x83, 0x53, 0x99, 0x61,
+        0x17, 0x2B, 0x04, 0x7E, 0xBA, 0x77, 0xD6, 0x26, 0xE1, 0x69, 0x14, 0x63, 0x55, 0x21, 0x0C, 0x7D
+    ]
+
+    def encrypt(self, msg):
+        cipher = AES.new(KEY, AES.MODE_CBC, IV)
+        return cipher.encrypt(msg).encode('hex')
+
+    def handle(self):
+        if not self.proof_of_work():
+            return
+        self.request.settimeout(15)
+        req = self.request
+        flag_len = len(FLAG)
+        assert(flag_len == 33)
+        self.flag = self.pad(FLAG)
+        assert(len(self.flag) == 256)
+
+        while True:
+            req.sendall(
+                'Welcome to AES(WXH) encrypt system.\n1. get encrypted flag.\n2. pad flag.\n3.Do some encrypt.\nYour choice:')
+            cmd = req.recv(2).strip()
+            try:
+                cmd = int(cmd)
+            except ValueError:
+                cmd = 0
+            if cmd == 1:
+                enc = self.encrypt(self.flag)
+                req.sendall('Here is the encrypted flag: 0x%s\n' % enc)
+            elif cmd == 2:
+                req.sendall('Pad me something:')
+                self.flag = self.unpad(self.flag)[
+                    :flag_len] + req.recv(1024).strip()
+                assert(len(self.flag) &lt;= 256)
+                self.flag = self.pad(self.flag)
+                req.sendall('Done.\n')
+            elif cmd == 3:
+                req.sendall('What do you want to encrypt:')
+                msg = self.pad(req.recv(1024).strip())
+                assert(len(msg) &lt;= 256)
+                enc = self.encrypt(msg)
+                req.sendall('Here is the encrypted message: 0x%s\n' % enc)
+            else:
+                req.sendall('Do not lose heart～ ！% Once WXH AK IOI 2019 can Solved! WXH is the first in the tianxia!')
+                req.close()
+                return
+
+
+class ThreadedServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
+    pass
+
+
+if __name__ == "__main__":
+    HOST, PORT = '0.0.0.0', 23333
+    print 'Run in port:23333'
+    server = ThreadedServer((HOST, PORT), Task)
+    server.allow_reuse_address = True
+    server.serve_forever()</code></pre><h4 id="分析-1"><a href="#分析-1" class="headerlink" title="分析"></a>分析</h4><p>这个题目问题出在 padding 的时候，由于不足 256 位要进行 padding，padding 的字节也就是缺的字节数，但是如果明文够 256 字节，那么按照代码逻辑就不进行 padding：</p>
+<pre><code>def pad(self, s):
+        s += (256 - len(s)) * chr(256 - len(s))
+        ret = ['\x00' for _ in range(256)]
+        for index, pos in enumerate(self.s_box):
+            ret[pos] = s[index]
+        return ''.join(ret)</code></pre><p>最大的问题出在 unpad 上，unpad 没有进行检查，仅仅通过最后一个字节来判断填充的字节数。</p>
+<pre><code> def unpad(self, s):
+        ret = ['\x00' for _ in range(256)]
+        for index, pos in enumerate(self.invs_box):
+            ret[pos] = s[index]
+        return ''.join(ret[0:-ord(ret[-1])])</code></pre><p>我们可以通过篡改最后一个字节来控制去掉的 padding 字节数。</p>
+<h4 id="利用"><a href="#利用" class="headerlink" title="利用"></a>利用</h4><ol>
+<li>选择 choice2，追加 <code>256-33 =223</code>字节，使当前 flag 不需要填充，追加的最后一个字节设置成 <code>chr(256-32)</code>。</li>
+<li>服务器对 flag 追加我们的信息，并进行 s 盒替换，结果赋给类中的 flag 变量。</li>
+<li>我们再次选择 choice2，这里由于我们需要追加，服务器会将类中的 flag 变量取出进行逆 S 盒替换和 unpad，这样按照这个 unpad 算法会把后面 224 字节的全部当成 padding 去掉，明文剩下了真正 flag 的前 32 位。</li>
+<li>我们此时输入一个字符 i, 那么此时加密的对象就是 <code>flag[:32]+i</code>。</li>
+<li>选择 choice1 对当前 flag 加密，控制 i 进行爆破，如果得到的密文和最初的 flag 加密的密文一样，就得到了 flag 的最后一个字节。</li>
+<li>逐字节爆破，直至获取全部的 flag。</li>
+</ol>
+<p>exp 如下：</p>
+<pre><code># -*- coding: utf-8 -*-
+from hashlib import sha256
+import socket
+import string
+import itertools
+HOST='106.75.13.64'
+PORT=54321
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sock.connect((HOST, PORT))
+def brute_force(pad, shavalue):
+    for str in itertools.product(string.ascii_letters + string.digits, repeat=4):
+        str=''.join(str)
+        if sha256(str + pad).hexdigest() == shavalue:
+            print str
+            return str
+def choice1():
+    sock.send("1\n")
+    result=sock.recv(1024).strip()[30:]
+    sock.recv(1024).strip()
+    return result
+def choice2(pad):
+    sock.send("2\n")
+    sock.recv(1024).strip()
+    sock.send(pad+"\n")
+    sock.recv(1024).strip()
+    sock.recv(1024).strip()
+def choice3(str):
+    sock.send("3\n")
+    sock.recv(1024).strip()
+    sock.send(str+"\n")
+    result=sock.recv(1024).strip()[33:]
+    sock.recv(1024).strip()
+    return result
+content = sock.recv(1024).strip()
+pad=content[12:12+16]
+hash=content[33:33+64]
+sock.recv(1024).strip()
+sock.send(str(brute_force(pad,hash))+"\n")
+print sock.recv(1024).strip()
+flag_enc=choice1()
+flag=""
+for i in range(33):
+    a = ''.join(['a' for _ in range(223)])
+    a = a[:-1] + chr(224+i)
+    for c in string.printable:
+        print c+flag
+        choice2(a)
+        choice2(c+flag)
+        if choice1() == flag_enc:
+            flag=c+flag
+            print "success:",flag
+            break</code></pre><blockquote>
+<p>flag{H4ve_fun_w1th_p4d_and_unp4d}</p>
+</blockquote>
+<h2 id="ECB"><a href="#ECB" class="headerlink" title="ECB"></a>ECB</h2><p>ECB 模式全称为电子密码本模式（Electronic codebook）。</p>
+<h3 id="加密-1"><a href="#加密-1" class="headerlink" title="加密"></a>加密</h3><p><img src="/images/loading.gif" data-original="../images/CTF/ecb_encryption.png" alt=""></p>
+<h3 id="解密-1"><a href="#解密-1" class="headerlink" title="解密"></a>解密</h3><p><img src="/images/loading.gif" data-original="../images/CTF/ecb_decryption.png" alt=""></p>
+<h3 id="优缺点-1"><a href="#优缺点-1" class="headerlink" title="优缺点"></a>优缺点</h3><h4 id="优点-1"><a href="#优点-1" class="headerlink" title="优点"></a>优点</h4><ol>
+<li>实现简单。</li>
+<li>不同明文分组的加密可以并行计算，速度很快。</li>
+</ol>
+<h4 id="缺点-1"><a href="#缺点-1" class="headerlink" title="缺点"></a>缺点</h4><ol>
+<li>同样的明文块会被加密成相同的密文块，不会隐藏明文分组的统计规律。正如下图所示</li>
+</ol>
+<p><img src="/images/loading.gif" data-original="../images/CTF/ecb_bad_linux.png" alt="image-20180716215135907"></p>
+<p>为了解决统一明文产生相同密文的问题，提出了其它的加密模式。</p>
+<h3 id="典型应用"><a href="#典型应用" class="headerlink" title="典型应用"></a>典型应用</h3><ol>
+<li>用于随机数的加密保护。</li>
+<li>用于单分组明文的加密。</li>
+</ol>
+<h3 id="2016-ABCTF-aes-mess-75"><a href="#2016-ABCTF-aes-mess-75" class="headerlink" title="2016 ABCTF aes-mess-75"></a>2016 ABCTF aes-mess-75</h3><p>题目描述如下</p>
+<pre><code>We encrypted a flag with AES-ECB encryption using a secret key, and got the hash: e220eb994c8fc16388dbd60a969d4953f042fc0bce25dbef573cf522636a1ba3fafa1a7c21ff824a5824c5dc4a376e75 However, we lost our plaintext flag and also lost our key and we can't seem to decrypt the hash back :(. Luckily we encrypted a bunch of other flags with the same key. Can you recover the lost flag using this?
+
+[HINT] There has to be some way to work backwards, right?</code></pre><p>可以看出，这个加密是一个 ECB 加密，然后 AES 是 16 个字节一组，每个字节可以使用两个 16 进制字符表示，因此，我们每 32 个字符一组进行分组，然后去对应的 txt 文件中搜索即可。</p>
+<p>对应 flag</p>
+<pre><code>e220eb994c8fc16388dbd60a969d4953 abctf{looks_like
+f042fc0bce25dbef573cf522636a1ba3 _you_can_break_a
+fafa1a7c21ff824a5824c5dc4a376e75 es}</code></pre><p>最后一个显然在加密时进行了 padding。</p>
+<h2 id="CBC"><a href="#CBC" class="headerlink" title="CBC"></a>CBC</h2><p>CBC 全称为密码分组链接（Cipher-block chaining） 模式，这里</p>
+<ul>
+<li>IV 不要求保密</li>
+<li>IV 必须是不可预测的，而且要保证完整性。</li>
+</ul>
+<h3 id="加密-2"><a href="#加密-2" class="headerlink" title="加密"></a>加密</h3><p><img src="/images/loading.gif" data-original="../images/CTF/cbc_encryption.png" alt=""></p>
+<h3 id="解密-2"><a href="#解密-2" class="headerlink" title="解密"></a>解密</h3><p><img src="/images/loading.gif" data-original="../images/CTF/cbc_decryption.png" alt=""></p>
+<h3 id="优缺点-2"><a href="#优缺点-2" class="headerlink" title="优缺点"></a>优缺点</h3><h4 id="优点-2"><a href="#优点-2" class="headerlink" title="优点"></a>优点</h4><ol>
+<li>密文块不仅和当前密文块相关，而且和前一个密文块或 IV 相关，隐藏了明文的统计特性。</li>
+<li>具有有限的两步错误传播特性，即密文块中的一位变化只会影响当前密文块和下一密文块。</li>
+<li>具有自同步特性，即第 k 块起密文正确，则第 k+1 块就能正常解密。</li>
+</ol>
+<h4 id="缺点-2"><a href="#缺点-2" class="headerlink" title="缺点"></a>缺点</h4><ol>
+<li>加密不能并行，解密可以并行。</li>
+</ol>
+<h3 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h3><p>CBC 应用十分广泛</p>
+<ul>
+<li>常见的数据加密和 TLS 加密。</li>
+<li>完整性认证和身份认证。</li>
+</ul>
+<h3 id="攻击"><a href="#攻击" class="headerlink" title="攻击"></a>攻击</h3><h4 id="字节反转攻击"><a href="#字节反转攻击" class="headerlink" title="字节反转攻击"></a>字节反转攻击</h4><h5 id="原理-19"><a href="#原理-19" class="headerlink" title="原理"></a>原理</h5><p>字节反转的原理十分简单，我们观察<strong>解密过程</strong>可以发现如下特性:</p>
+<ul>
+<li>IV 向量影响第一个明文分组</li>
+<li>第 n 个密文分组可以影响第 n + 1 个明文分组</li>
+</ul>
+<p>假设第nn 个密文分组为CnCn，解密后的第nn 个明文分组为为PnPn。</p>
+<p>然后Pn+1=Cn xor f(Cn+1)Pn+1=Cn xor f(Cn+1)。</p>
+<p>其中ff 函数为图中的Block Cipher DecryptionBlock Cipher Decryption。</p>
+<p>对于某个信息已知的原文和密文，然后我们可以修改第nn 个密文块CnCn 为Cn xor Pn+1 xor ACn xor Pn+1 xor A。然后再对这条密文进行解密，那么解密后的第nn 个明文快将会变成AA。</p>
+<h5 id="例题"><a href="#例题" class="headerlink" title="例题"></a>例题</h5><pre><code>from flag import FLAG
+from Crypto.Cipher import AES
+from Crypto import Random
+import base64
+
+BLOCK_SIZE=16
+IV = Random.new().read(BLOCK_SIZE)
+passphrase = Random.new().read(BLOCK_SIZE)
+
+pad = lambda s: s + (BLOCK_SIZE - len(s) % BLOCK_SIZE) * chr(BLOCK_SIZE - len(s) % BLOCK_SIZE)
+unpad = lambda s: s[:-ord(s[len(s) - 1:])]
+
+prefix = "flag="+FLAG+"&amp;userdata="
+suffix = "&amp;user=guest"
+def menu():
+    print "1. encrypt"
+    print "2. decrypt"
+    return raw_input("&gt; ")
+
+def encrypt():
+    data = raw_input("your data: ")
+    plain = prefix+data+suffix
+    aes = AES.new(passphrase, AES.MODE_CBC, IV)
+    print base64.b64encode(aes.encrypt(pad(plain)))
+
+
+def decrypt():
+    data = raw_input("input data: ")
+    aes = AES.new(passphrase, AES.MODE_CBC, IV)
+    plain = unpad(aes.decrypt(base64.b64decode(data)))
+    print 'DEBUG ====&gt; ' + plain
+    if plain[-5:]=="admin":
+        print plain
+    else:
+        print "you are not admin"
+
+def main():
+    for _ in range(10):
+        cmd = menu()
+        if cmd=="1":
+            encrypt()
+        elif cmd=="2":
+            decrypt()
+        else:
+            exit()
+
+if __name__=="__main__":
+    main()</code></pre><p>可见题目希望我们提供一个加密的字符串，如果这个字符串解密后最后的内容为 admin。程序将会输出明文。所以题目流程为先随便提供一个明文，然后将密文进行修改，使得解密后的字符串最后的内容为 admin, 我们可以枚举 flag 的长度来确定我们需要在什么位置进行修改。</p>
+<p>以下是 exp.py</p>
+<pre><code>from pwn import *
+import base64
+
+pad = 16
+data = 'a' * pad
+for x in range(10, 100):
+    r = remote('xxx.xxx.xxx.xxx', 10004)
+    #r = process('./chall.sh')
+
+    r.sendlineafter('&gt; ', '1')
+    r.sendlineafter('your data: ', data)
+    cipher = list(base64.b64decode(r.recv()))
+    #print 'cipher ===&gt;', ''.join(cipher)
+
+    BLOCK_SIZE = 16
+    prefix = "flag=" + 'a' * x + "&amp;userdata="
+    suffix = "&amp;user=guest"
+    plain = prefix + data + suffix
+
+    idx = (22 + x + pad) % BLOCK_SIZE + ((22 + x + pad) / BLOCK_SIZE - 1) * BLOCK_SIZE
+    cipher[idx + 0] = chr(ord(cipher[idx + 0]) ^ ord('g') ^ ord('a'))
+    cipher[idx + 1] = chr(ord(cipher[idx + 1]) ^ ord('u') ^ ord('d'))
+    cipher[idx + 2] = chr(ord(cipher[idx + 2]) ^ ord('e') ^ ord('m'))
+    cipher[idx + 3] = chr(ord(cipher[idx + 3]) ^ ord('s') ^ ord('i'))
+    cipher[idx + 4] = chr(ord(cipher[idx + 4]) ^ ord('t') ^ ord('n'))
+
+    r.sendlineafter('&gt; ', '2')
+    r.sendlineafter('input data: ', base64.b64encode(''.join(cipher)))
+
+    msg = r.recvline()
+    if 'you are not admin' not in msg:
+        print msg
+        break
+    r.close()  </code></pre><h2 id="PCBC"><a href="#PCBC" class="headerlink" title="PCBC"></a>PCBC</h2><p>PCBC 的全称为明文密码块链接（Plaintext cipher-block chaining）。也称为填充密码块链接（Propagating cipher-block chaining）。</p>
+<h3 id="加密-3"><a href="#加密-3" class="headerlink" title="加密"></a>加密</h3><p><img src="/images/loading.gif" data-original="../images/CTF/pcbc_encryption.png" alt=""></p>
+<h3 id="解密-3"><a href="#解密-3" class="headerlink" title="解密"></a>解密</h3><p><img src="/images/loading.gif" data-original="../images/CTF/pcbc_decryption.png" alt=""></p>
+<h3 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h3><ul>
+<li>解密过程难以并行化</li>
+<li>互换邻接的密文块不会对后面的密文块造成影响</li>
+</ul>
+<h2 id="CFB"><a href="#CFB" class="headerlink" title="CFB"></a>CFB</h2><p>CFB 全称为密文反馈模式（Cipher feedback）。</p>
+<h3 id="加密-4"><a href="#加密-4" class="headerlink" title="加密"></a>加密</h3><p><img src="/images/loading.gif" data-original="../images/CTF/cfb_encryption.png" alt=""></p>
+<h3 id="解密-4"><a href="#解密-4" class="headerlink" title="解密"></a>解密</h3><p><img src="/images/loading.gif" data-original="../images/CTF/cfb_decryption.png" alt=""></p>
+<h3 id="优缺点-3"><a href="#优缺点-3" class="headerlink" title="优缺点"></a>优缺点</h3><h4 id="优点-3"><a href="#优点-3" class="headerlink" title="优点"></a>优点</h4><ul>
+<li>适应于不同数据格式的要求</li>
+<li>有限错误传播</li>
+<li>自同步</li>
+</ul>
+<h4 id="缺点-3"><a href="#缺点-3" class="headerlink" title="缺点"></a>缺点</h4><ul>
+<li>加密不能并行化，解密不能并行</li>
+</ul>
+<h3 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h3><p>该模式适应于数据库加密，无线通信加密等对数据格式有特殊要求的加密环境。</p>
+<h2 id="OFB"><a href="#OFB" class="headerlink" title="OFB"></a>OFB</h2><p>OFB 全称为输出反馈模式（Output feedback），其反馈内容是分组加密后的内容而不是密文。</p>
+<h3 id="加密-5"><a href="#加密-5" class="headerlink" title="加密"></a>加密</h3><p><img src="/images/loading.gif" data-original="../images/CTF/ofb_encryption.png" alt=""></p>
+<h3 id="解密-5"><a href="#解密-5" class="headerlink" title="解密"></a>解密</h3><p><img src="/images/loading.gif" data-original="../images/CTF/ofb_decryption.png" alt=""></p>
+<h3 id="优缺点-4"><a href="#优缺点-4" class="headerlink" title="优缺点"></a>优缺点</h3><h4 id="优点-4"><a href="#优点-4" class="headerlink" title="优点"></a>优点</h4><ol>
+<li>不具有错误传播特性。</li>
+</ol>
+<h4 id="缺点-4"><a href="#缺点-4" class="headerlink" title="缺点"></a>缺点</h4><ol>
+<li>IV 无需保密，但是对每个消息必须选择不同的 IV。</li>
+<li>不具有自同步能力。</li>
+</ol>
+<h3 id="适用场景"><a href="#适用场景" class="headerlink" title="适用场景"></a>适用场景</h3><p>适用于一些明文冗余度比较大的场景，如图像加密和语音加密。</p>
+<h2 id="CTR"><a href="#CTR" class="headerlink" title="CTR"></a>CTR</h2><p>CTR 全称为计数器模式（Counter mode），该模式由 Diffe 和 Hellman 设计。</p>
+<h3 id="加密-6"><a href="#加密-6" class="headerlink" title="加密"></a>加密</h3><p><img src="/images/loading.gif" data-original="../images/CTF/ctr_encryption.png" alt=""></p>
+<h3 id="解密-6"><a href="#解密-6" class="headerlink" title="解密"></a>解密</h3><p><img src="/images/loading.gif" data-original="../images/CTF/ctr_encryption.png" alt=""></p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -3148,7 +3828,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">909.4k</span>&nbsp;字
+                class="white-color">914.7k</span>&nbsp;字
             
             
             
@@ -3386,7 +4066,7 @@ $(function () {
     
     <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/instantpage/instantpage.js" type="module"></script>
     
-
+<script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script>
         <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
         <script>
         $('a').each(function() {
@@ -3405,7 +4085,7 @@ $(function () {
             }
           }
         });
-        </script><script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script></body>
+        </script></body>
 
 </html>
 

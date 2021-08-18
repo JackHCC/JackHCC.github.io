@@ -364,7 +364,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-08-14
+                    2021-08-18
                 </div>
                 
 
@@ -1055,7 +1055,7 @@ if(isset($_GET['code'])){
 <pre><code>&lt;?php
     echo "A"^"?";
 ?&gt;</code></pre><p>运行结果如下：</p>
-<p><img src="/images/loading.gif" data-original="https://ctf-wiki.org/web/php/figure/preg_match/answer1.png" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://ctf-wiki.org/web/php/figure/preg_match/answer1.png" alt=""></p>
 <p>我们可以看到，输出的结果是字符 <code>~</code>。之所以会得到这样的结果，是因为代码中对字符 <code>A</code> 和字符 <code>?</code> 进行了异或操作。在 <code>PHP</code> 中，两个变量进行异或时，先会将字符串转换成 <code>ASCII</code> 值，再将 <code>ASCII</code> 值转换成二进制再进行异或，异或完，又将结果从二进制转换成了 <code>ASCII</code> 值，再将 <code>ASCII</code> 值转换成字符串。异或操作有时也被用来交换两个变量的值。</p>
 <p>比如像上面这个例子</p>
 <pre><code>A` 的 `ASCII` 值是 `65` ，对应的二进制值是 `01000001
@@ -1069,7 +1069,7 @@ if(isset($_GET['code'])){
     $__= "?" ^ "}";
     $__();
 ?&gt;</code></pre><p>代码执行结果如下：</p>
-<p><img src="/images/loading.gif" data-original="https://ctf-wiki.org/web/php/figure/preg_match/answer2.png" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://ctf-wiki.org/web/php/figure/preg_match/answer2.png" alt=""></p>
 <p>我们一起来分析一下上面这段代码：</p>
 <p>1、<code>$_++;</code> 这行代码的意思是对变量名为 <code>"_"</code> 的变量进行自增操作，在 <code>PHP</code> 中未定义的变量默认值 <code>null</code> ，<code>null==false==0</code> ，我们可以在不使用任何数字的情况下，通过对未定义变量的自增操作来得到一个数字。</p>
 <p>2、<code>$__="?" ^ "}";</code> 对字符 <code>?</code> 和 <code>}</code> 进行异或运算，得到结果 <code>B</code> 赋给变量名为 <code>__</code> (两个下划线) 的变量</p>
@@ -1089,7 +1089,7 @@ if(isset($_GET['code'])){
 <p>我们甚至可以将上面的代码合并为一行，从而使程序的可读性更差，代码如下：</p>
 <pre><code>$__=("#"^"|").("."^"~").("/"^"`").("|"^"/").("{"^"/");</code></pre><p>我们回到 <code>xman</code> 训练赛的那题来看，我们的想法是通过构造异或来去绕过那串字符，那么我们该如何构造这个字串使得长度小于 <code>40</code> 呢？</p>
 <p>我们最终是要读取到那个 <code>getFlag</code> 函数，我们需要构造一个 <code>_GET</code> 来去读取这个函数，我们最终构造了如下字符串：</p>
-<p><img src="/images/loading.gif" data-original="https://ctf-wiki.org/web/php/figure/preg_match/payloads.png" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://ctf-wiki.org/web/php/figure/preg_match/payloads.png" alt=""></p>
 <p>可能很多小伙伴看到这里仍然无法理解这段字符串是如何构造的吧，我们就对这段字符串进行段分析。</p>
 <h4 id="构造-GET-读取"><a href="#构造-GET-读取" class="headerlink" title="构造 _GET 读取"></a>构造 <code>_GET</code> 读取</h4><p>首先我们得知道 <code>_GET</code> 由什么异或而来的，经过我的尝试与分析，我得出了下面的结论：</p>
 <pre><code>&lt;?php
@@ -1104,15 +1104,15 @@ if(isset($_GET['code'])){
 <pre><code>&lt;?php
     echo "{"^"&lt;";
 ?&gt;</code></pre><p>输出结果为：</p>
-<p><img src="/images/loading.gif" data-original="https://ctf-wiki.org/web/php/figure/preg_match/answer3.png" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://ctf-wiki.org/web/php/figure/preg_match/answer3.png" alt=""></p>
 <pre><code>&lt;?php
     echo "{"^"&gt;";
 ?&gt;</code></pre><p>输出结果为：</p>
-<p><img src="/images/loading.gif" data-original="https://ctf-wiki.org/web/php/figure/preg_match/answer4.png" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://ctf-wiki.org/web/php/figure/preg_match/answer4.png" alt=""></p>
 <pre><code>&lt;?php
     echo "{"^"/";
 ?&gt;</code></pre><p>输出结果为：</p>
-<p><img src="/images/loading.gif" data-original="https://ctf-wiki.org/web/php/figure/preg_match/answer5.png" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://ctf-wiki.org/web/php/figure/preg_match/answer5.png" alt=""></p>
 <p>所以我们可以知道， <code>_GET</code> 就是这么被构造出来的啦！</p>
 <h4 id="获取-GET-参数"><a href="#获取-GET-参数" class="headerlink" title="获取 _GET 参数"></a>获取 <code>_GET</code> 参数</h4><p>我们又该如何获取 <code>_GET</code> 参数呢？咱们可以构造出如下字串：</p>
 <pre><code>&lt;?php
@@ -1122,9 +1122,9 @@ if(isset($_GET['code'])){
 <pre><code>&lt;?php
     echo $_=getFlag;//getFlag
 ?&gt;</code></pre><p>所以把参数全部连接起来，就可以了。</p>
-<p><img src="/images/loading.gif" data-original="https://ctf-wiki.org/web/php/figure/preg_match/payloads.png" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://ctf-wiki.org/web/php/figure/preg_match/payloads.png" alt=""></p>
 <p>结果如下：</p>
-<p><img src="/images/loading.gif" data-original="https://ctf-wiki.org/web/php/figure/preg_match/flag.png" alt="img"></p>
+<p><img src="/images/loading.gif" data-original="https://ctf-wiki.org/web/php/figure/preg_match/flag.png" alt=""></p>
 <p>于是我们就成功地读取到了 flag！</p>
 <h3 id="动态函数执行"><a href="#动态函数执行" class="headerlink" title="动态函数执行"></a>动态函数执行</h3><p>用户自定义的函数可以导致代码执行。</p>
 <pre><code>&lt;?php
@@ -1746,7 +1746,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">909.4k</span>&nbsp;字
+                class="white-color">914.7k</span>&nbsp;字
             
             
             
@@ -1984,7 +1984,7 @@ $(function () {
     
     <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/instantpage/instantpage.js" type="module"></script>
     
-
+<script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script>
         <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
         <script>
         $('a').each(function() {
@@ -2003,7 +2003,7 @@ $(function () {
             }
           }
         });
-        </script><script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script></body>
+        </script></body>
 
 </html>
 
