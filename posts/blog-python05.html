@@ -364,21 +364,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-07-27
+                    2021-08-25
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    2k
+                    6.1k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    8 分
+                    28 分
                 </div>
                 
 
@@ -394,96 +394,792 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="一、生成数据表"><a href="#一、生成数据表" class="headerlink" title="一、生成数据表"></a>一、生成数据表</h1><h2 id="1、首先导入pandas库，一般都会用到numpy库，所以我们先导入备用："><a href="#1、首先导入pandas库，一般都会用到numpy库，所以我们先导入备用：" class="headerlink" title="1、首先导入pandas库，一般都会用到numpy库，所以我们先导入备用："></a>1、首先导入pandas库，一般都会用到numpy库，所以我们先导入备用：</h2><p>import numpy as np<br>import pandas as pd</p>
-<h2 id="2、导入CSV或者xlsx文件："><a href="#2、导入CSV或者xlsx文件：" class="headerlink" title="2、导入CSV或者xlsx文件："></a>2、导入CSV或者xlsx文件：</h2><p>df = pd.DataFrame(pd.read_csv(‘name.csv’,header=1))<br>df = pd.DataFrame(pd.read_excel(‘name.xlsx’))</p>
-<h2 id="3、用pandas创建数据表："><a href="#3、用pandas创建数据表：" class="headerlink" title="3、用pandas创建数据表："></a>3、用pandas创建数据表：</h2><pre><code>df = pd.DataFrame({"id":[1001,1002,1003,1004,1005,1006], 
- "date":pd.date_range('20130102', periods=6),
-  "city":['Beijing ', 'SH', ' guangzhou ', 'Shenzhen', 'shanghai', 'BEIJING '],
- "age":[23,44,54,32,34,32],
- "category":['100-A','100-B','110-A','110-C','210-A','130-F'],
-  "price":[1200,np.nan,2133,5433,np.nan,4432]},
-  columns =['id','date','city','category','age','price'])
-</code></pre><h1 id="二、数据表信息查看"><a href="#二、数据表信息查看" class="headerlink" title="二、数据表信息查看"></a>二、数据表信息查看</h1><h2 id="1、维度查看："><a href="#1、维度查看：" class="headerlink" title="1、维度查看："></a>1、维度查看：</h2><p>df.shape</p>
-<h2 id="2、数据表基本信息（维度、列名称、数据格式、所占空间等）："><a href="#2、数据表基本信息（维度、列名称、数据格式、所占空间等）：" class="headerlink" title="2、数据表基本信息（维度、列名称、数据格式、所占空间等）："></a>2、数据表基本信息（维度、列名称、数据格式、所占空间等）：</h2><p>df.info()</p>
-<h2 id="3、每一列数据的格式："><a href="#3、每一列数据的格式：" class="headerlink" title="3、每一列数据的格式："></a>3、每一列数据的格式：</h2><p>df.dtypes</p>
-<h2 id="4、某一列格式："><a href="#4、某一列格式：" class="headerlink" title="4、某一列格式："></a>4、某一列格式：</h2><p>df[‘B’].dtype</p>
-<h2 id="5、空值："><a href="#5、空值：" class="headerlink" title="5、空值："></a>5、空值：</h2><p>df.isnull()</p>
-<h2 id="6、查看某一列空值："><a href="#6、查看某一列空值：" class="headerlink" title="6、查看某一列空值："></a>6、查看某一列空值：</h2><p>df.isnull()</p>
-<h2 id="7、查看某一列的唯一值："><a href="#7、查看某一列的唯一值：" class="headerlink" title="7、查看某一列的唯一值："></a>7、查看某一列的唯一值：</h2><p>df[‘B’].unique()</p>
-<h2 id="8、查看数据表的值："><a href="#8、查看数据表的值：" class="headerlink" title="8、查看数据表的值："></a>8、查看数据表的值：</h2><p>df.values</p>
-<h2 id="9、查看列名称："><a href="#9、查看列名称：" class="headerlink" title="9、查看列名称："></a>9、查看列名称：</h2><p>df.columns</p>
-<h2 id="10、查看前10行数据、后10行数据："><a href="#10、查看前10行数据、后10行数据：" class="headerlink" title="10、查看前10行数据、后10行数据："></a>10、查看前10行数据、后10行数据：</h2><p>df.head() #默认前10行数据<br>df.tail() #默认后10 行数据</p>
-<h1 id="三、数据表清洗"><a href="#三、数据表清洗" class="headerlink" title="三、数据表清洗"></a>三、数据表清洗</h1><h2 id="1、用数字0填充空值："><a href="#1、用数字0填充空值：" class="headerlink" title="1、用数字0填充空值："></a>1、用数字0填充空值：</h2><p>df.fillna(value=0)</p>
-<h2 id="2、使用列prince的均值对NA进行填充："><a href="#2、使用列prince的均值对NA进行填充：" class="headerlink" title="2、使用列prince的均值对NA进行填充："></a>2、使用列prince的均值对NA进行填充：</h2><p>df[‘prince’].fillna(df[‘prince’].mean())</p>
-<h2 id="3、清楚city字段的字符空格："><a href="#3、清楚city字段的字符空格：" class="headerlink" title="3、清楚city字段的字符空格："></a>3、清楚city字段的字符空格：</h2><p>df[‘city’]=df[‘city’].map(str.strip)</p>
-<h2 id="4、大小写转换："><a href="#4、大小写转换：" class="headerlink" title="4、大小写转换："></a>4、大小写转换：</h2><p>df[‘city’]=df[‘city’].str.lower()</p>
-<h2 id="5、更改数据格式："><a href="#5、更改数据格式：" class="headerlink" title="5、更改数据格式："></a>5、更改数据格式：</h2><p>df[‘price’].astype(‘int’)</p>
-<h2 id="6、更改列名称："><a href="#6、更改列名称：" class="headerlink" title="6、更改列名称："></a>6、更改列名称：</h2><p>df.rename(columns={‘category’: ‘category-size’})</p>
-<h2 id="7、删除后出现的重复值："><a href="#7、删除后出现的重复值：" class="headerlink" title="7、删除后出现的重复值："></a>7、删除后出现的重复值：</h2><p>df[‘city’].drop_duplicates()</p>
-<h2 id="8、删除先出现的重复值："><a href="#8、删除先出现的重复值：" class="headerlink" title="8、删除先出现的重复值："></a>8、删除先出现的重复值：</h2><p>df[‘city’].drop_duplicates(keep=’last’)</p>
-<h2 id="9、数据替换："><a href="#9、数据替换：" class="headerlink" title="9、数据替换："></a>9、数据替换：</h2><p>df[‘city’].replace(‘sh’, ‘shanghai’)</p>
-<h1 id="四、数据预处理"><a href="#四、数据预处理" class="headerlink" title="四、数据预处理"></a>四、数据预处理</h1><pre><code>df1=pd.DataFrame({"id":[1001,1002,1003,1004,1005,1006,1007,1008], 
-"gender":['male','female','male','female','male','female','male','female'],
-"pay":['Y','N','Y','Y','N','Y','N','Y',],
-"m-point":[10,12,20,40,40,40,30,20]})
-</code></pre><h2 id="1、数据表合并"><a href="#1、数据表合并" class="headerlink" title="1、数据表合并"></a>1、数据表合并</h2><h3 id="1-1-merge"><a href="#1-1-merge" class="headerlink" title="1.1 merge"></a>1.1 merge</h3><pre><code>df_inner=pd.merge(df,df1,how='inner')  # 匹配合并，交集
-df_left=pd.merge(df,df1,how='left')        #
-df_right=pd.merge(df,df1,how='right')
-df_outer=pd.merge(df,df1,how='outer')  #并集
-</code></pre><h3 id="1-2-append"><a href="#1-2-append" class="headerlink" title="1.2 append"></a>1.2 append</h3><pre><code>result = df1.append(df2)
-</code></pre><p><img src="/images/loading.gif" data-original="../images/basic/1240-1627231668602870" alt=""></p>
-<h3 id="1-3-join"><a href="#1-3-join" class="headerlink" title="1.3 join"></a>1.3 join</h3><pre><code>result = left.join(right, on='key')
-</code></pre><p><img src="/images/loading.gif" data-original="../images/basic/1240-1627231671478872" alt=""></p>
-<h3 id="1-4-concat"><a href="#1-4-concat" class="headerlink" title="1.4 concat"></a>1.4 concat</h3><pre><code>pd.concat(objs, axis=0, join='outer', join_axes=None, ignore_index=False,
-          keys=None, levels=None, names=None, verify_integrity=False,
-          copy=True)
-</code></pre><p>objs︰ 一个序列或系列、 综合或面板对象的映射。如果字典中传递，将作为键参数，使用排序的键，除非它传递，在这种情况下的值将会选择 （见下文）。任何没有任何反对将默默地被丢弃，除非他们都没有在这种情况下将引发 ValueError。<br>axis: {0，1，…}，默认值为 0。要连接沿轴。<br>join: {‘内部’、 ‘外’}，默认 ‘外’。如何处理其他 axis(es) 上的索引。联盟内、 外的交叉口。<br>ignore_index︰ 布尔值、 默认 False。如果为 True，则不要串联轴上使用的索引值。由此产生的轴将标记 0，…，n-1。这是有用的如果你串联串联轴没有有意义的索引信息的对象。请注意在联接中仍然受到尊重的其他轴上的索引值。<br>join_axes︰ 索引对象的列表。具体的指标，用于其他 n-1 轴而不是执行内部/外部设置逻辑。<br>keys︰ 序列，默认为无。构建分层索引使用通过的键作为最外面的级别。如果多个级别获得通过，应包含元组。<br>levels︰ 列表的序列，默认为无。具体水平 （唯一值） 用于构建多重。否则，他们将推断钥匙。<br>names︰ 列表中，默认为无。由此产生的分层索引中的级的名称。<br>verify_integrity︰ 布尔值、 默认 False。检查是否新的串联的轴包含重复项。这可以是相对于实际数据串联非常昂贵。<br>副本︰ 布尔值、 默认 True。如果为 False，请不要，不必要地复制数据。</p>
-<p>例子：1.frames = [df1, df2, df3]<br>2.result = pd.concat(frames)<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627231679346874" alt=""></p>
-<h2 id="2、设置索引列"><a href="#2、设置索引列" class="headerlink" title="2、设置索引列"></a>2、设置索引列</h2><p>df_inner.set_index(‘id’)</p>
-<h2 id="3、按照特定列的值排序："><a href="#3、按照特定列的值排序：" class="headerlink" title="3、按照特定列的值排序："></a>3、按照特定列的值排序：</h2><p>df_inner.sort_values(by=[‘age’])</p>
-<h2 id="4、按照索引列排序："><a href="#4、按照索引列排序：" class="headerlink" title="4、按照索引列排序："></a>4、按照索引列排序：</h2><p>df_inner.sort_index()</p>
-<h2 id="5、如果prince列的值-gt-3000，group列显示high，否则显示low："><a href="#5、如果prince列的值-gt-3000，group列显示high，否则显示low：" class="headerlink" title="5、如果prince列的值>3000，group列显示high，否则显示low："></a>5、如果prince列的值&gt;3000，group列显示high，否则显示low：</h2><p>df_inner[‘group’] = np.where(df_inner[‘price’] &gt; 3000,’high’,’low’)</p>
-<h2 id="6、对复合多个条件的数据进行分组标记"><a href="#6、对复合多个条件的数据进行分组标记" class="headerlink" title="6、对复合多个条件的数据进行分组标记"></a>6、对复合多个条件的数据进行分组标记</h2><p>df_inner.loc[(df_inner[‘city’] == ‘beijing’) &amp; (df_inner[‘price’] &gt;= 4000), ‘sign’]=1</p>
-<h2 id="7、对category字段的值依次进行分列，并创建数据表，索引值为df-inner的索引列，列名称为category和size"><a href="#7、对category字段的值依次进行分列，并创建数据表，索引值为df-inner的索引列，列名称为category和size" class="headerlink" title="7、对category字段的值依次进行分列，并创建数据表，索引值为df_inner的索引列，列名称为category和size"></a>7、对category字段的值依次进行分列，并创建数据表，索引值为df_inner的索引列，列名称为category和size</h2><p>pd.DataFrame((x.split(‘-‘) for x in df_inner[‘category’]),index=df_inner.index,columns=[‘category’,’size’]))</p>
-<h2 id="8、将完成分裂后的数据表和原df-inner数据表进行匹配"><a href="#8、将完成分裂后的数据表和原df-inner数据表进行匹配" class="headerlink" title="8、将完成分裂后的数据表和原df_inner数据表进行匹配"></a>8、将完成分裂后的数据表和原df_inner数据表进行匹配</h2><p>df_inner=pd.merge(df_inner,split,right_index=True, left_index=True)</p>
-<h1 id="五、数据提取"><a href="#五、数据提取" class="headerlink" title="五、数据提取"></a>五、数据提取</h1><p>主要用到的三个函数：loc,iloc和ix，loc函数按标签值进行提取，iloc按位置进行提取，ix可以同时按标签和位置进行提取。</p>
-<h2 id="1、按索引提取单行的数值"><a href="#1、按索引提取单行的数值" class="headerlink" title="1、按索引提取单行的数值"></a>1、按索引提取单行的数值</h2><p>df_inner.loc[3]</p>
-<h2 id="2、按索引提取区域行数值"><a href="#2、按索引提取区域行数值" class="headerlink" title="2、按索引提取区域行数值"></a>2、按索引提取区域行数值</h2><p>df_inner.iloc[0:5]</p>
-<h2 id="3、重设索引"><a href="#3、重设索引" class="headerlink" title="3、重设索引"></a>3、重设索引</h2><p>df_inner.reset_index()</p>
-<h2 id="4、设置日期为索引"><a href="#4、设置日期为索引" class="headerlink" title="4、设置日期为索引"></a>4、设置日期为索引</h2><p>df_inner=df_inner.set_index(‘date’)</p>
-<h2 id="5、提取4日之前的所有数据"><a href="#5、提取4日之前的所有数据" class="headerlink" title="5、提取4日之前的所有数据"></a>5、提取4日之前的所有数据</h2><p>df_inner[:’2013-01-04’]</p>
-<h2 id="6、使用iloc按位置区域提取数据"><a href="#6、使用iloc按位置区域提取数据" class="headerlink" title="6、使用iloc按位置区域提取数据"></a>6、使用iloc按位置区域提取数据</h2><p>df_inner.iloc[:3,:2] #冒号前后的数字不再是索引的标签名称，而是数据所在的位置，从0开始，前三行，前两列。</p>
-<h2 id="7、适应iloc按位置单独提起数据"><a href="#7、适应iloc按位置单独提起数据" class="headerlink" title="7、适应iloc按位置单独提起数据"></a>7、适应iloc按位置单独提起数据</h2><p>df_inner.iloc[[0,2,5],[4,5]] #提取第0、2、5行，4、5列</p>
-<h2 id="8、使用ix按索引标签和位置混合提取数据"><a href="#8、使用ix按索引标签和位置混合提取数据" class="headerlink" title="8、使用ix按索引标签和位置混合提取数据"></a>8、使用ix按索引标签和位置混合提取数据</h2><p>df_inner.ix[:’2013-01-03’,:4] #2013-01-03号之前，前四列数据</p>
-<h2 id="9、判断city列的值是否为北京"><a href="#9、判断city列的值是否为北京" class="headerlink" title="9、判断city列的值是否为北京"></a>9、判断city列的值是否为北京</h2><p>df_inner[‘city’].isin([‘beijing’])</p>
-<h2 id="10、判断city列里是否包含beijing和shanghai，然后将符合条件的数据提取出来"><a href="#10、判断city列里是否包含beijing和shanghai，然后将符合条件的数据提取出来" class="headerlink" title="10、判断city列里是否包含beijing和shanghai，然后将符合条件的数据提取出来"></a>10、判断city列里是否包含beijing和shanghai，然后将符合条件的数据提取出来</h2><p>df_inner.loc[df_inner[‘city’].isin([‘beijing’,’shanghai’])]</p>
-<h2 id="11、提取前三个字符，并生成数据表"><a href="#11、提取前三个字符，并生成数据表" class="headerlink" title="11、提取前三个字符，并生成数据表"></a>11、提取前三个字符，并生成数据表</h2><p>pd.DataFrame(category.str[:3])</p>
-<h1 id="六、数据筛选"><a href="#六、数据筛选" class="headerlink" title="六、数据筛选"></a>六、数据筛选</h1><p>使用与、或、非三个条件配合大于、小于、等于对数据进行筛选，并进行计数和求和。</p>
-<h2 id="1、使用“与”进行筛选"><a href="#1、使用“与”进行筛选" class="headerlink" title="1、使用“与”进行筛选"></a>1、使用“与”进行筛选</h2><p>df_inner.loc[(df_inner[‘age’] &gt; 25) &amp; (df_inner[‘city’] == ‘beijing’), [‘id’,’city’,’age’,’category’,’gender’]]</p>
-<h2 id="2、使用“或”进行筛选"><a href="#2、使用“或”进行筛选" class="headerlink" title="2、使用“或”进行筛选"></a>2、使用“或”进行筛选</h2><p>df_inner.loc[(df_inner[‘age’] &gt; 25) | (df_inner[‘city’] == ‘beijing’), [‘id’,’city’,’age’,’category’,’gender’]].sort([‘age’])</p>
-<h2 id="3、使用“非”条件进行筛选"><a href="#3、使用“非”条件进行筛选" class="headerlink" title="3、使用“非”条件进行筛选"></a>3、使用“非”条件进行筛选</h2><p>df_inner.loc[(df_inner[‘city’] != ‘beijing’), [‘id’,’city’,’age’,’category’,’gender’]].sort([‘id’])</p>
-<h2 id="4、对筛选后的数据按city列进行计数"><a href="#4、对筛选后的数据按city列进行计数" class="headerlink" title="4、对筛选后的数据按city列进行计数"></a>4、对筛选后的数据按city列进行计数</h2><p>df_inner.loc[(df_inner[‘city’] != ‘beijing’), [‘id’,’city’,’age’,’category’,’gender’]].sort([‘id’]).city.count()</p>
-<h2 id="5、使用query函数进行筛选"><a href="#5、使用query函数进行筛选" class="headerlink" title="5、使用query函数进行筛选"></a>5、使用query函数进行筛选</h2><p>df_inner.query(‘city == [“beijing”, “shanghai”]’)</p>
-<h2 id="6、对筛选后的结果按prince进行求和"><a href="#6、对筛选后的结果按prince进行求和" class="headerlink" title="6、对筛选后的结果按prince进行求和"></a>6、对筛选后的结果按prince进行求和</h2><p>df_inner.query(‘city == [“beijing”, “shanghai”]’).price.sum()</p>
-<h1 id="七、数据汇总"><a href="#七、数据汇总" class="headerlink" title="七、数据汇总"></a>七、数据汇总</h1><p>主要函数是groupby和pivote_table</p>
-<h2 id="1、对所有的列进行计数汇总"><a href="#1、对所有的列进行计数汇总" class="headerlink" title="1、对所有的列进行计数汇总"></a>1、对所有的列进行计数汇总</h2><p>df_inner.groupby(‘city’).count()</p>
-<h2 id="2、按城市对id字段进行计数"><a href="#2、按城市对id字段进行计数" class="headerlink" title="2、按城市对id字段进行计数"></a>2、按城市对id字段进行计数</h2><p>df_inner.groupby(‘city’)[‘id’].count()</p>
-<h2 id="3、对两个字段进行汇总计数"><a href="#3、对两个字段进行汇总计数" class="headerlink" title="3、对两个字段进行汇总计数"></a>3、对两个字段进行汇总计数</h2><p>df_inner.groupby([‘city’,’size’])[‘id’].count()</p>
-<h2 id="4、对city字段进行汇总，并分别计算prince的合计和均值"><a href="#4、对city字段进行汇总，并分别计算prince的合计和均值" class="headerlink" title="4、对city字段进行汇总，并分别计算prince的合计和均值"></a>4、对city字段进行汇总，并分别计算prince的合计和均值</h2><p>df_inner.groupby(‘city’)[‘price’].agg([len,np.sum, np.mean])</p>
-<h1 id="八、数据统计"><a href="#八、数据统计" class="headerlink" title="八、数据统计"></a>八、数据统计</h1><p>数据采样，计算标准差，协方差和相关系数</p>
-<h2 id="1、简单的数据采样"><a href="#1、简单的数据采样" class="headerlink" title="1、简单的数据采样"></a>1、简单的数据采样</h2><p>df_inner.sample(n=3)</p>
-<h2 id="2、手动设置采样权重"><a href="#2、手动设置采样权重" class="headerlink" title="2、手动设置采样权重"></a>2、手动设置采样权重</h2><p>weights = [0, 0, 0, 0, 0.5, 0.5]<br>df_inner.sample(n=2, weights=weights)</p>
-<h2 id="3、采样后不放回"><a href="#3、采样后不放回" class="headerlink" title="3、采样后不放回"></a>3、采样后不放回</h2><p>df_inner.sample(n=6, replace=False)</p>
-<h2 id="4、采样后放回"><a href="#4、采样后放回" class="headerlink" title="4、采样后放回"></a>4、采样后放回</h2><p>df_inner.sample(n=6, replace=True)</p>
-<h2 id="5、-数据表描述性统计"><a href="#5、-数据表描述性统计" class="headerlink" title="5、 数据表描述性统计"></a>5、 数据表描述性统计</h2><p>df_inner.describe().round(2).T #round函数设置显示小数位，T表示转置</p>
-<h2 id="6、计算列的标准差"><a href="#6、计算列的标准差" class="headerlink" title="6、计算列的标准差"></a>6、计算列的标准差</h2><p>df_inner[‘price’].std()</p>
-<h2 id="7、计算两个字段间的协方差"><a href="#7、计算两个字段间的协方差" class="headerlink" title="7、计算两个字段间的协方差"></a>7、计算两个字段间的协方差</h2><p>df_inner[‘price’].cov(df_inner[‘m-point’])</p>
-<h2 id="8、数据表中所有字段间的协方差"><a href="#8、数据表中所有字段间的协方差" class="headerlink" title="8、数据表中所有字段间的协方差"></a>8、数据表中所有字段间的协方差</h2><p>df_inner.cov()</p>
-<h2 id="9、两个字段的相关性分析"><a href="#9、两个字段的相关性分析" class="headerlink" title="9、两个字段的相关性分析"></a>9、两个字段的相关性分析</h2><p>df_inner[‘price’].corr(df_inner[‘m-point’]) #相关系数在-1到1之间，接近1为正相关，接近-1为负相关，0为不相关</p>
-<h2 id="10、数据表的相关性分析"><a href="#10、数据表的相关性分析" class="headerlink" title="10、数据表的相关性分析"></a>10、数据表的相关性分析</h2><p>df_inner.corr()</p>
-<h1 id="九、数据输出"><a href="#九、数据输出" class="headerlink" title="九、数据输出"></a>九、数据输出</h1><p>分析后的数据可以输出为xlsx格式和csv格式</p>
-<h2 id="1、写入Excel"><a href="#1、写入Excel" class="headerlink" title="1、写入Excel"></a>1、写入Excel</h2><p>df_inner.to_excel(‘excel_to_python.xlsx’, sheet_name=’bluewhale_cc’)</p>
-<h2 id="2、写入到CSV"><a href="#2、写入到CSV" class="headerlink" title="2、写入到CSV"></a>2、写入到CSV</h2><p>df_inner.to_csv(‘excel_to_python.csv’)</p>
+                <h1 id="Pandas-教程"><a href="#Pandas-教程" class="headerlink" title="Pandas 教程"></a>Pandas 教程</h1><p><img src="/images/loading.gif" data-original="../images/ML/pandas.png" alt=""></p>
+<p><strong>Pandas 是 Python 语言的一个扩展程序库，用于数据分析。</strong></p>
+<p>Pandas 是一个开放源码、BSD 许可的库，提供高性能、易于使用的数据结构和数据分析工具。</p>
+<p>Pandas 名字衍生自术语 “panel data”（面板数据）和 “Python data analysis”（Python 数据分析）。</p>
+<p>Pandas 一个强大的分析结构化数据的工具集，基础是 Numpy（提供高性能的矩阵运算）。</p>
+<p>Pandas 可以从各种文件格式比如 CSV、JSON、SQL、Microsoft Excel 导入数据。</p>
+<p>Pandas 可以对各种数据进行运算操作，比如归并、再成形、选择，还有数据清洗和数据加工特征。</p>
+<p>Pandas 广泛应用在学术、金融、统计学等各个数据分析领域。</p>
+<hr>
+<h2 id="Pandas-应用"><a href="#Pandas-应用" class="headerlink" title="Pandas 应用"></a>Pandas 应用</h2><p>Pandas 的主要数据结构是 Series （一维数据）与 DataFrame（二维数据），这两种数据结构足以处理金融、统计、社会科学、工程等领域里的大多数典型用例。</p>
+<hr>
+<h2 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h2><p><strong>Series</strong> 是一种类似于一维数组的对象，它由一组数据（各种Numpy数据类型）以及一组与之相关的数据标签（即索引）组成。</p>
+<p><strong>DataFrame</strong> 是一个表格型的数据结构，它含有一组有序的列，每列可以是不同的值类型（数值、字符串、布尔型值）。DataFrame 既有行索引也有列索引，它可以被看做由 Series 组成的字典（共同用一个索引）。</p>
+<h1 id="Pandas-安装"><a href="#Pandas-安装" class="headerlink" title="Pandas 安装"></a>Pandas 安装</h1><p>安装 pandas 需要基础环境是 Python，开始前我们假定你已经安装了 Python 和 Pip。</p>
+<p>使用 pip 安装 pandas:</p>
+<pre class="line-numbers language-python"><code class="language-python">pip install pandas<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>安装成功后，我们就可以导入 pandas 包使用：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> pandas<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="实例-查看-pandas-版本"><a href="#实例-查看-pandas-版本" class="headerlink" title="实例 - 查看 pandas 版本"></a>实例 - 查看 pandas 版本</h2><pre><code>&gt;&gt;&gt; **import** pandas
+&gt;&gt;&gt; pandas.__version__  # 查看版本
+'1.1.5'</code></pre><p>导入 pandas 一般使用别名 <strong>pd</strong> 来代替：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="实例-查看-pandas-版本-1"><a href="#实例-查看-pandas-版本-1" class="headerlink" title="实例 - 查看 pandas 版本"></a>实例 - 查看 pandas 版本</h2><pre><code>&gt;&gt;&gt; **import** pandas **as** pd
+&gt;&gt;&gt; pd.__version__  # 查看版本
+'1.1.5'</code></pre><p>一个简单等 pandas 实例：</p>
+<h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
+
+mydataset <span class="token operator">=</span> <span class="token punctuation">{</span>
+ <span class="token string">'sites'</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">"Google"</span><span class="token punctuation">,</span> <span class="token string">"Runoob"</span><span class="token punctuation">,</span> <span class="token string">"Wiki"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+ <span class="token string">'number'</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+
+myvar <span class="token operator">=</span> pd<span class="token punctuation">.</span>DataFrame<span class="token punctuation">(</span>mydataset<span class="token punctuation">)</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span>myvar<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>执行以上代码，输出结果为：</p>
+<p><img src="/images/loading.gif" data-original="../images/language/0332CA88-50C3-4BF6-BACC-D9963BE0F724.jpg" alt=""></p>
+<h1 id="Pandas-数据结构-Series"><a href="#Pandas-数据结构-Series" class="headerlink" title="Pandas 数据结构 - Series"></a>Pandas 数据结构 - Series</h1><p>Pandas Series 类似表格中的一个列（column），类似于一维数组，可以保存任何数据类型。</p>
+<p>Series 由索引（index）和列组成，函数如下：</p>
+<pre class="line-numbers language-python"><code class="language-python">pandas<span class="token punctuation">.</span>Series<span class="token punctuation">(</span> data<span class="token punctuation">,</span> index<span class="token punctuation">,</span> dtype<span class="token punctuation">,</span> name<span class="token punctuation">,</span> copy<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>参数说明：</p>
+<ul>
+<li><strong>data</strong>：一组数据(ndarray 类型)。</li>
+<li><strong>index</strong>：数据索引标签，如果不指定，默认从 0 开始。</li>
+<li><strong>dtype</strong>：数据类型，默认会自己判断。</li>
+<li><strong>name</strong>：设置名称。</li>
+<li><strong>copy</strong>：拷贝数据，默认为 False。</li>
+</ul>
+<p>创建一个简单的 Series 实例：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
+
+a <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">]</span>
+
+myvar <span class="token operator">=</span> pd<span class="token punctuation">.</span>Series<span class="token punctuation">(</span>a<span class="token punctuation">)</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span>myvar<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>输出结果如下：</p>
+<p><img src="/images/loading.gif" data-original="../images/language/FD659034-1715-4020-A6BF-400FAC9CE849.jpg" alt=""></p>
+<p>从上图可知，如果没有指定索引，索引值就从 0 开始，我们可以根据索引值读取数据：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
+
+a <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">]</span>
+
+myvar <span class="token operator">=</span> pd<span class="token punctuation">.</span>Series<span class="token punctuation">(</span>a<span class="token punctuation">)</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span>myvar<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>输出结果如下：</p>
+<pre><code>2</code></pre><p>我们可以指定索引值，如下实例：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
+
+a <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"Google"</span><span class="token punctuation">,</span> <span class="token string">"Runoob"</span><span class="token punctuation">,</span> <span class="token string">"Wiki"</span><span class="token punctuation">]</span>
+
+myvar <span class="token operator">=</span> pd<span class="token punctuation">.</span>Series<span class="token punctuation">(</span>a<span class="token punctuation">,</span> index <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"x"</span><span class="token punctuation">,</span> <span class="token string">"y"</span><span class="token punctuation">,</span> <span class="token string">"z"</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span>myvar<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>输出结果如下：</p>
+<p><img src="/images/loading.gif" data-original="../images/language/32B49FA4-ED68-446A-9EBF-C52FCB6D0CD6.jpg" alt=""></p>
+<p>根据索引值读取数据:</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
+
+a <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"Google"</span><span class="token punctuation">,</span> <span class="token string">"Runoob"</span><span class="token punctuation">,</span> <span class="token string">"Wiki"</span><span class="token punctuation">]</span>
+
+myvar <span class="token operator">=</span> pd<span class="token punctuation">.</span>Series<span class="token punctuation">(</span>a<span class="token punctuation">,</span> index <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"x"</span><span class="token punctuation">,</span> <span class="token string">"y"</span><span class="token punctuation">,</span> <span class="token string">"z"</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span>myvar<span class="token punctuation">[</span><span class="token string">"y"</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>输出结果如下：</p>
+<pre><code>Runoob</code></pre><p>我们也可以使用 key/value 对象，类似字典来创建 Series：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
+
+sites <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token number">1</span><span class="token punctuation">:</span> <span class="token string">"Google"</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">:</span> <span class="token string">"Runoob"</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">:</span> <span class="token string">"Wiki"</span><span class="token punctuation">}</span>
+
+myvar <span class="token operator">=</span> pd<span class="token punctuation">.</span>Series<span class="token punctuation">(</span>sites<span class="token punctuation">)</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span>myvar<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>输出结果如下：</p>
+<p><img src="/images/loading.gif" data-original="../images/language/C01F8A55-5D06-4FAD-BE34-A569A8B05E2C.jpg" alt=""></p>
+<p>从上图可知，字典的 key 变成了索引值。</p>
+<p>如果我们只需要字典中的一部分数据，只需要指定需要数据的索引即可，如下实例：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
+
+sites <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token number">1</span><span class="token punctuation">:</span> <span class="token string">"Google"</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">:</span> <span class="token string">"Runoob"</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">:</span> <span class="token string">"Wiki"</span><span class="token punctuation">}</span>
+
+myvar <span class="token operator">=</span> pd<span class="token punctuation">.</span>Series<span class="token punctuation">(</span>sites<span class="token punctuation">,</span> index <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span>myvar<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>输出结果如下：</p>
+<p><img src="/images/loading.gif" data-original="../images/language/6CC2CFBA-3CC5-459D-8FE0-D89C1EE1AEB9.jpg" alt=""></p>
+<p>设置 Series 名称参数：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
+
+sites <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token number">1</span><span class="token punctuation">:</span> <span class="token string">"Google"</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">:</span> <span class="token string">"Runoob"</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">:</span> <span class="token string">"Wiki"</span><span class="token punctuation">}</span>
+
+myvar <span class="token operator">=</span> pd<span class="token punctuation">.</span>Series<span class="token punctuation">(</span>sites<span class="token punctuation">,</span> index <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">,</span> name<span class="token operator">=</span><span class="token string">"RUNOOB-Series-TEST"</span> <span class="token punctuation">)</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span>myvar<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/language/1FB6D419-06D7-4229-9148-1F4E79DE6ACF.jpg" alt=""></p>
+<h1 id="Pandas-数据结构-DataFrame"><a href="#Pandas-数据结构-DataFrame" class="headerlink" title="Pandas 数据结构 - DataFrame"></a>Pandas 数据结构 - DataFrame</h1><p>DataFrame 是一个表格型的数据结构，它含有一组有序的列，每列可以是不同的值类型（数值、字符串、布尔型值）。DataFrame 既有行索引也有列索引，它可以被看做由 Series 组成的字典（共同用一个索引）。</p>
+<p><img src="/images/loading.gif" data-original="../images/language/pandas-DataStructure.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/language/df-dp.png" alt=""></p>
+<p>DataFrame 构造方法如下：</p>
+<pre class="line-numbers language-python"><code class="language-python">pandas<span class="token punctuation">.</span>DataFrame<span class="token punctuation">(</span> data<span class="token punctuation">,</span> index<span class="token punctuation">,</span> columns<span class="token punctuation">,</span> dtype<span class="token punctuation">,</span> copy<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>参数说明：</p>
+<ul>
+<li><strong>data</strong>：一组数据(ndarray、series, map, lists, dict 等类型)。</li>
+<li><strong>index</strong>：索引值，或者可以称为行标签。</li>
+<li><strong>columns</strong>：列标签，默认为 RangeIndex (0, 1, 2, …, n) 。</li>
+<li><strong>dtype</strong>：数据类型。</li>
+<li><strong>copy</strong>：拷贝数据，默认为 False。</li>
+</ul>
+<p>Pandas DataFrame 是一个二维的数组结构，类似二维数组。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
+
+data <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token string">'Google'</span><span class="token punctuation">,</span><span class="token number">10</span><span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token punctuation">[</span><span class="token string">'Runoob'</span><span class="token punctuation">,</span><span class="token number">12</span><span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token punctuation">[</span><span class="token string">'Wiki'</span><span class="token punctuation">,</span><span class="token number">13</span><span class="token punctuation">]</span><span class="token punctuation">]</span>
+
+df <span class="token operator">=</span> pd<span class="token punctuation">.</span>DataFrame<span class="token punctuation">(</span>data<span class="token punctuation">,</span>columns<span class="token operator">=</span><span class="token punctuation">[</span><span class="token string">'Site'</span><span class="token punctuation">,</span><span class="token string">'Age'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>dtype<span class="token operator">=</span>float<span class="token punctuation">)</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span>df<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>输出结果如下：</p>
+<p><img src="/images/loading.gif" data-original="../images/language/BE773E8F-DEC2-4434-8630-91E660A1DFC0.jpg" alt=""></p>
+<p>以下实例使用 ndarrays 创建，ndarray 的长度必须相同， 如果传递了 index，则索引的长度应等于数组的长度。如果没有传递索引，则默认情况下，索引将是range(n)，其中n是数组长度。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
+
+data <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token string">'Site'</span><span class="token punctuation">:</span><span class="token punctuation">[</span><span class="token string">'Google'</span><span class="token punctuation">,</span> <span class="token string">'Runoob'</span><span class="token punctuation">,</span> <span class="token string">'Wiki'</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token string">'Age'</span><span class="token punctuation">:</span><span class="token punctuation">[</span><span class="token number">10</span><span class="token punctuation">,</span> <span class="token number">12</span><span class="token punctuation">,</span> <span class="token number">13</span><span class="token punctuation">]</span><span class="token punctuation">}</span>
+
+df <span class="token operator">=</span> pd<span class="token punctuation">.</span>DataFrame<span class="token punctuation">(</span>data<span class="token punctuation">)</span>
+
+<span class="token keyword">print</span> <span class="token punctuation">(</span>df<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>输出结果如下：</p>
+<p><img src="/images/loading.gif" data-original="../images/language/BE773E8F-DEC2-4434-8630-91E660A1DFC0-1629874139063416.jpg" alt=""></p>
+<p>从以上输出结果可以知道， DataFrame 数据类型一个表格，包含 rows（行） 和 columns（列）：</p>
+<p><img src="/images/loading.gif" data-original="../images/language/rows-cloumns.png" alt=""></p>
+<p>还可以使用字典（key/value），其中字典的 key 为列名:</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
+
+data <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">{</span><span class="token string">'a'</span><span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">'b'</span><span class="token punctuation">:</span> <span class="token number">2</span><span class="token punctuation">}</span><span class="token punctuation">,</span><span class="token punctuation">{</span><span class="token string">'a'</span><span class="token punctuation">:</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token string">'b'</span><span class="token punctuation">:</span> <span class="token number">10</span><span class="token punctuation">,</span> <span class="token string">'c'</span><span class="token punctuation">:</span> <span class="token number">20</span><span class="token punctuation">}</span><span class="token punctuation">]</span>
+
+df <span class="token operator">=</span> pd<span class="token punctuation">.</span>DataFrame<span class="token punctuation">(</span>data<span class="token punctuation">)</span>
+
+<span class="token keyword">print</span> <span class="token punctuation">(</span>df<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>输出结果为：</p>
+<pre class="line-numbers language-python"><code class="language-python">   a   b     c
+<span class="token number">0</span>  <span class="token number">1</span>   <span class="token number">2</span>   NaN
+<span class="token number">1</span>  <span class="token number">5</span>  <span class="token number">10</span>  <span class="token number">20.0</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>没有对应的部分数据为 <strong>NaN</strong>。</p>
+<p>Pandas 可以使用 <strong>loc</strong> 属性返回指定行的数据，如果没有设置索引，第一行索引为 <strong>0</strong>，第二行索引为 <strong>1</strong>，以此类推：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
+
+data <span class="token operator">=</span> <span class="token punctuation">{</span>
+  <span class="token string">"calories"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token number">420</span><span class="token punctuation">,</span> <span class="token number">380</span><span class="token punctuation">,</span> <span class="token number">390</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token string">"duration"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token number">50</span><span class="token punctuation">,</span> <span class="token number">40</span><span class="token punctuation">,</span> <span class="token number">45</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true"># 数据载入到 DataFrame 对象</span>
+df <span class="token operator">=</span> pd<span class="token punctuation">.</span>DataFrame<span class="token punctuation">(</span>data<span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># 返回第一行</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>df<span class="token punctuation">.</span>loc<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true"># 返回第二行</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>df<span class="token punctuation">.</span>loc<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>输出结果如下：</p>
+<pre class="line-numbers language-python"><code class="language-python">calories    <span class="token number">420</span>
+duration     <span class="token number">50</span>
+Name<span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">,</span> dtype<span class="token punctuation">:</span> int64
+calories    <span class="token number">380</span>
+duration     <span class="token number">40</span>
+Name<span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">,</span> dtype<span class="token punctuation">:</span> int64<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>注意：</strong>返回结果其实就是一个 Pandas Series 数据。</p>
+<p>也可以返回多行数据，使用 <strong>[[ … ]]</strong> 格式，<strong>…</strong> 为各行的索引，以逗号隔开：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
+
+data <span class="token operator">=</span> <span class="token punctuation">{</span>
+  <span class="token string">"calories"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token number">420</span><span class="token punctuation">,</span> <span class="token number">380</span><span class="token punctuation">,</span> <span class="token number">390</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token string">"duration"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token number">50</span><span class="token punctuation">,</span> <span class="token number">40</span><span class="token punctuation">,</span> <span class="token number">45</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true"># 数据载入到 DataFrame 对象</span>
+df <span class="token operator">=</span> pd<span class="token punctuation">.</span>DataFrame<span class="token punctuation">(</span>data<span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># 返回第一行和第二行</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>df<span class="token punctuation">.</span>loc<span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>输出结果为：</p>
+<pre class="line-numbers language-python"><code class="language-python">   calories  duration
+<span class="token number">0</span>       <span class="token number">420</span>        <span class="token number">50</span>
+<span class="token number">1</span>       <span class="token number">380</span>        <span class="token number">40</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p><strong>注意：</strong>返回结果其实就是一个 Pandas DataFrame 数据。</p>
+<p>我们可以指定索引值，如下实例：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
+
+data <span class="token operator">=</span> <span class="token punctuation">{</span>
+  <span class="token string">"calories"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token number">420</span><span class="token punctuation">,</span> <span class="token number">380</span><span class="token punctuation">,</span> <span class="token number">390</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token string">"duration"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token number">50</span><span class="token punctuation">,</span> <span class="token number">40</span><span class="token punctuation">,</span> <span class="token number">45</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+
+df <span class="token operator">=</span> pd<span class="token punctuation">.</span>DataFrame<span class="token punctuation">(</span>data<span class="token punctuation">,</span> index <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"day1"</span><span class="token punctuation">,</span> <span class="token string">"day2"</span><span class="token punctuation">,</span> <span class="token string">"day3"</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span>df<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>输出结果为：</p>
+<pre class="line-numbers language-python"><code class="language-python">      calories  duration
+day1       <span class="token number">420</span>        <span class="token number">50</span>
+day2       <span class="token number">380</span>        <span class="token number">40</span>
+day3       <span class="token number">390</span>        <span class="token number">45</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>Pandas 可以使用 <strong>loc</strong> 属性返回指定索引对应到某一行：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
+
+data <span class="token operator">=</span> <span class="token punctuation">{</span>
+  <span class="token string">"calories"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token number">420</span><span class="token punctuation">,</span> <span class="token number">380</span><span class="token punctuation">,</span> <span class="token number">390</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token string">"duration"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token number">50</span><span class="token punctuation">,</span> <span class="token number">40</span><span class="token punctuation">,</span> <span class="token number">45</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+
+df <span class="token operator">=</span> pd<span class="token punctuation">.</span>DataFrame<span class="token punctuation">(</span>data<span class="token punctuation">,</span> index <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"day1"</span><span class="token punctuation">,</span> <span class="token string">"day2"</span><span class="token punctuation">,</span> <span class="token string">"day3"</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># 指定索引</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>df<span class="token punctuation">.</span>loc<span class="token punctuation">[</span><span class="token string">"day2"</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>输出结果为：</p>
+<pre class="line-numbers language-python"><code class="language-python">calories    <span class="token number">380</span>
+duration     <span class="token number">40</span>
+Name<span class="token punctuation">:</span> day2<span class="token punctuation">,</span> dtype<span class="token punctuation">:</span> int64<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<h1 id="Pandas-CSV-文件"><a href="#Pandas-CSV-文件" class="headerlink" title="Pandas CSV 文件"></a>Pandas CSV 文件</h1><p>CSV（Comma-Separated Values，逗号分隔值，有时也称为字符分隔值，因为分隔字符也可以不是逗号），其文件以纯文本形式存储表格数据（数字和文本）。</p>
+<p>CSV 是一种通用的、相对简单的文件格式，被用户、商业和科学广泛应用。</p>
+<p>Pandas 可以很方便的处理 CSV 文件，本文以 <a href="https://static.runoob.com/download/nba.csv" target="_blank" rel="noopener">nba.csv</a> 为例，你可以<a href="https://static.runoob.com/download/nba.csv" target="_blank" rel="noopener">下载 nba.csv</a> 或<a href="https://static.runoob.com/download/nba.csv.txt" target="_blank" rel="noopener">打开 nba.csv</a> 查看。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
+
+df <span class="token operator">=</span> pd<span class="token punctuation">.</span>read_csv<span class="token punctuation">(</span><span class="token string">'nba.csv'</span><span class="token punctuation">)</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span>df<span class="token punctuation">.</span>to_string<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>to_string()</strong> 用于返回 DataFrame 类型的数据，如果不使用该函数，则输出结果为数据的前面 5 行和末尾 5 行，中间部分以 <strong>…</strong> 代替。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
+
+df <span class="token operator">=</span> pd<span class="token punctuation">.</span>read_csv<span class="token punctuation">(</span><span class="token string">'nba.csv'</span><span class="token punctuation">)</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span>df<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>输出结果为：</p>
+<pre><code>              Name            Team  Number Position   Age Height  Weight            College     Salary
+0    Avery Bradley  Boston Celtics     0.0       PG  25.0    6-2   180.0              Texas  7730337.0
+1      Jae Crowder  Boston Celtics    99.0       SF  25.0    6-6   235.0          Marquette  6796117.0
+2     John Holland  Boston Celtics    30.0       SG  27.0    6-5   205.0  Boston University        NaN
+3      R.J. Hunter  Boston Celtics    28.0       SG  22.0    6-5   185.0      Georgia State  1148640.0
+4    Jonas Jerebko  Boston Celtics     8.0       PF  29.0   6-10   231.0                NaN  5000000.0
+..             ...             ...     ...      ...   ...    ...     ...                ...        ...
+453   Shelvin Mack       Utah Jazz     8.0       PG  26.0    6-3   203.0             Butler  2433333.0
+454      Raul Neto       Utah Jazz    25.0       PG  24.0    6-1   179.0                NaN   900000.0
+455   Tibor Pleiss       Utah Jazz    21.0        C  26.0    7-3   256.0                NaN  2900000.0
+456    Jeff Withey       Utah Jazz    24.0        C  26.0    7-0   231.0             Kansas   947276.0
+457            NaN             NaN     NaN      NaN   NaN    NaN     NaN                NaN        NaN</code></pre><p>我们也可以使用 <strong>to_csv()</strong> 方法将 DataFrame 存储为 csv 文件：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
+
+<span class="token comment" spellcheck="true"># 三个字段 name, site, age</span>
+nme <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"Google"</span><span class="token punctuation">,</span> <span class="token string">"Runoob"</span><span class="token punctuation">,</span> <span class="token string">"Taobao"</span><span class="token punctuation">,</span> <span class="token string">"Wiki"</span><span class="token punctuation">]</span>
+st <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"www.google.com"</span><span class="token punctuation">,</span> <span class="token string">"www.runoob.com"</span><span class="token punctuation">,</span> <span class="token string">"www.taobao.com"</span><span class="token punctuation">,</span> <span class="token string">"www.wikipedia.org"</span><span class="token punctuation">]</span>
+ag <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">90</span><span class="token punctuation">,</span> <span class="token number">40</span><span class="token punctuation">,</span> <span class="token number">80</span><span class="token punctuation">,</span> <span class="token number">98</span><span class="token punctuation">]</span>
+
+<span class="token comment" spellcheck="true"># 字典</span>
+dict <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token string">'name'</span><span class="token punctuation">:</span> nme<span class="token punctuation">,</span> <span class="token string">'site'</span><span class="token punctuation">:</span> st<span class="token punctuation">,</span> <span class="token string">'age'</span><span class="token punctuation">:</span> ag<span class="token punctuation">}</span>
+
+df <span class="token operator">=</span> pd<span class="token punctuation">.</span>DataFrame<span class="token punctuation">(</span>dict<span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># 保存 dataframe</span>
+df<span class="token punctuation">.</span>to_csv<span class="token punctuation">(</span><span class="token string">'site.csv'</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>执行成功后，我们打开 site.csv 文件，显示结果如下：</p>
+<p><img src="/images/loading.gif" data-original="../images/language/9758194A-0D8E-4C53-95A0-157C690614E6.jpg" alt=""></p>
+<h2 id="数据处理"><a href="#数据处理" class="headerlink" title="数据处理"></a>数据处理</h2><h3 id="head"><a href="#head" class="headerlink" title="head()"></a>head()</h3><p><strong>head( n)</strong> 方法用于读取前面的 n 行，如果不填参数 n ，默认返回 5 行。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
+
+df <span class="token operator">=</span> pd<span class="token punctuation">.</span>read_csv<span class="token punctuation">(</span><span class="token string">'nba.csv'</span><span class="token punctuation">)</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span>df<span class="token punctuation">.</span>head<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>输出结果为：</p>
+<pre><code>            Name            Team  Number Position   Age Height  Weight            College     Salary
+0  Avery Bradley  Boston Celtics     0.0       PG  25.0    6-2   180.0              Texas  7730337.0
+1    Jae Crowder  Boston Celtics    99.0       SF  25.0    6-6   235.0          Marquette  6796117.0
+2   John Holland  Boston Celtics    30.0       SG  27.0    6-5   205.0  Boston University        NaN
+3    R.J. Hunter  Boston Celtics    28.0       SG  22.0    6-5   185.0      Georgia State  1148640.0
+4  Jonas Jerebko  Boston Celtics     8.0       PF  29.0   6-10   231.0                NaN  5000000.0</code></pre><pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
+
+df <span class="token operator">=</span> pd<span class="token punctuation">.</span>read_csv<span class="token punctuation">(</span><span class="token string">'nba.csv'</span><span class="token punctuation">)</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span>df<span class="token punctuation">.</span>head<span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>输出结果为：</p>
+<pre><code>            Name            Team  Number Position   Age Height  Weight            College      Salary
+0  Avery Bradley  Boston Celtics     0.0       PG  25.0    6-2   180.0              Texas   7730337.0
+1    Jae Crowder  Boston Celtics    99.0       SF  25.0    6-6   235.0          Marquette   6796117.0
+2   John Holland  Boston Celtics    30.0       SG  27.0    6-5   205.0  Boston University         NaN
+3    R.J. Hunter  Boston Celtics    28.0       SG  22.0    6-5   185.0      Georgia State   1148640.0
+4  Jonas Jerebko  Boston Celtics     8.0       PF  29.0   6-10   231.0                NaN   5000000.0
+5   Amir Johnson  Boston Celtics    90.0       PF  29.0    6-9   240.0                NaN  12000000.0
+6  Jordan Mickey  Boston Celtics    55.0       PF  21.0    6-8   235.0                LSU   1170960.0
+7   Kelly Olynyk  Boston Celtics    41.0        C  25.0    7-0   238.0            Gonzaga   2165160.0
+8   Terry Rozier  Boston Celtics    12.0       PG  22.0    6-2   190.0         Louisville   1824360.0
+9   Marcus Smart  Boston Celtics    36.0       PG  22.0    6-4   220.0     Oklahoma State   3431040.0</code></pre><h3 id="tail"><a href="#tail" class="headerlink" title="tail()"></a>tail()</h3><p><strong>tail( n )</strong> 方法用于读取尾部的 n 行，如果不填参数 n ，默认返回 5 行，空行各个字段的值返回 <strong>NaN</strong>。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
+
+df <span class="token operator">=</span> pd<span class="token punctuation">.</span>read_csv<span class="token punctuation">(</span><span class="token string">'nba.csv'</span><span class="token punctuation">)</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span>df<span class="token punctuation">.</span>tail<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>输出结果为：</p>
+<pre><code>             Name       Team  Number Position   Age Height  Weight College     Salary
+453  Shelvin Mack  Utah Jazz     8.0       PG  26.0    6-3   203.0  Butler  2433333.0
+454     Raul Neto  Utah Jazz    25.0       PG  24.0    6-1   179.0     NaN   900000.0
+455  Tibor Pleiss  Utah Jazz    21.0        C  26.0    7-3   256.0     NaN  2900000.0
+456   Jeff Withey  Utah Jazz    24.0        C  26.0    7-0   231.0  Kansas   947276.0
+457           NaN        NaN     NaN      NaN   NaN    NaN     NaN     NaN        NaN</code></pre><pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
+
+df <span class="token operator">=</span> pd<span class="token punctuation">.</span>read_csv<span class="token punctuation">(</span><span class="token string">'nba.csv'</span><span class="token punctuation">)</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span>df<span class="token punctuation">.</span>tail<span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>输出结果为：</p>
+<pre><code>               Name       Team  Number Position   Age Height  Weight   College      Salary
+448  Gordon Hayward  Utah Jazz    20.0       SF  26.0    6-8   226.0    Butler  15409570.0
+449     Rodney Hood  Utah Jazz     5.0       SG  23.0    6-8   206.0      Duke   1348440.0
+450      Joe Ingles  Utah Jazz     2.0       SF  28.0    6-8   226.0       NaN   2050000.0
+451   Chris Johnson  Utah Jazz    23.0       SF  26.0    6-6   206.0    Dayton    981348.0
+452      Trey Lyles  Utah Jazz    41.0       PF  20.0   6-10   234.0  Kentucky   2239800.0
+453    Shelvin Mack  Utah Jazz     8.0       PG  26.0    6-3   203.0    Butler   2433333.0
+454       Raul Neto  Utah Jazz    25.0       PG  24.0    6-1   179.0       NaN    900000.0
+455    Tibor Pleiss  Utah Jazz    21.0        C  26.0    7-3   256.0       NaN   2900000.0
+456     Jeff Withey  Utah Jazz    24.0        C  26.0    7-0   231.0    Kansas    947276.0
+457             NaN        NaN     NaN      NaN   NaN    NaN     NaN       NaN         NaN</code></pre><h3 id="info"><a href="#info" class="headerlink" title="info()"></a>info()</h3><p>info() 方法返回表格的一些基本信息：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
+
+df <span class="token operator">=</span> pd<span class="token punctuation">.</span>read_csv<span class="token punctuation">(</span><span class="token string">'nba.csv'</span><span class="token punctuation">)</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span>df<span class="token punctuation">.</span>info<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>输出结果为：</p>
+<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 458 entries, 0 to 457          # 行数，458 行，第一行编号为 0
+Data columns (total 9 columns):            # 列数，9列
+ #   Column    Non-Null Count  Dtype       # 各列的数据类型
+---  ------    --------------  -----  
+ 0   Name      457 non-null    object 
+ 1   Team      457 non-null    object 
+ 2   Number    457 non-null    float64
+ 3   Position  457 non-null    object 
+ 4   Age       457 non-null    float64
+ 5   Height    457 non-null    object 
+ 6   Weight    457 non-null    float64
+ 7   College   373 non-null    object         # non-null，意思为非空的数据    
+ 8   Salary    446 non-null    float64
+dtypes: float64(4), object(5)                 # 类型</code></pre><p>non-null 为非空数据，我们可以看到上面的信息中，总共 458 行，College 字段的空值最多。</p>
+<h1 id="Pandas-JSON"><a href="#Pandas-JSON" class="headerlink" title="Pandas JSON"></a>Pandas JSON</h1><p>JSON（<strong>J</strong>ava<strong>S</strong>cript <strong>O</strong>bject <strong>N</strong>otation，JavaScript 对象表示法），是存储和交换文本信息的语法，类似 XML。</p>
+<p>JSON 比 XML 更小、更快，更易解析.</p>
+<p>Pandas 可以很方便的处理 JSON 数据，本文以 <a href="https://static.runoob.com/download/sites.json" target="_blank" rel="noopener">sites.json</a> 为例，内容如下：</p>
+<pre><code>[
+   {
+   "id": "A001",
+   "name": "菜鸟教程",
+   "url": "www.runoob.com",
+   "likes": 61
+   },
+   {
+   "id": "A002",
+   "name": "Google",
+   "url": "www.google.com",
+   "likes": 124
+   },
+   {
+   "id": "A003",
+   "name": "淘宝",
+   "url": "www.taobao.com",
+   "likes": 45
+   }
+]</code></pre><pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
+
+df <span class="token operator">=</span> pd<span class="token punctuation">.</span>read_json<span class="token punctuation">(</span><span class="token string">'sites.json'</span><span class="token punctuation">)</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span>df<span class="token punctuation">.</span>to_string<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>to_string()</strong> 用于返回 DataFrame 类型的数据，我们也可以直接处理 JSON 字符串。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
+
+data <span class="token operator">=</span><span class="token punctuation">[</span>
+    <span class="token punctuation">{</span>
+      <span class="token string">"id"</span><span class="token punctuation">:</span> <span class="token string">"A001"</span><span class="token punctuation">,</span>
+      <span class="token string">"name"</span><span class="token punctuation">:</span> <span class="token string">"菜鸟教程"</span><span class="token punctuation">,</span>
+      <span class="token string">"url"</span><span class="token punctuation">:</span> <span class="token string">"www.runoob.com"</span><span class="token punctuation">,</span>
+      <span class="token string">"likes"</span><span class="token punctuation">:</span> <span class="token number">61</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+      <span class="token string">"id"</span><span class="token punctuation">:</span> <span class="token string">"A002"</span><span class="token punctuation">,</span>
+      <span class="token string">"name"</span><span class="token punctuation">:</span> <span class="token string">"Google"</span><span class="token punctuation">,</span>
+      <span class="token string">"url"</span><span class="token punctuation">:</span> <span class="token string">"www.google.com"</span><span class="token punctuation">,</span>
+      <span class="token string">"likes"</span><span class="token punctuation">:</span> <span class="token number">124</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+      <span class="token string">"id"</span><span class="token punctuation">:</span> <span class="token string">"A003"</span><span class="token punctuation">,</span>
+      <span class="token string">"name"</span><span class="token punctuation">:</span> <span class="token string">"淘宝"</span><span class="token punctuation">,</span>
+      <span class="token string">"url"</span><span class="token punctuation">:</span> <span class="token string">"www.taobao.com"</span><span class="token punctuation">,</span>
+      <span class="token string">"likes"</span><span class="token punctuation">:</span> <span class="token number">45</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">]</span>
+df <span class="token operator">=</span> pd<span class="token punctuation">.</span>DataFrame<span class="token punctuation">(</span>data<span class="token punctuation">)</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span>df<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>以上实例输出结果为：</p>
+<pre><code>     id    name             url  likes
+0  A001    菜鸟教程  www.runoob.com     61
+1  A002  Google  www.google.com    124
+2  A003      淘宝  www.taobao.com     45</code></pre><p>JSON 对象与 Python 字典具有相同的格式，所以我们可以直接将 Python 字典转化为 DataFrame 数据：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
+
+
+<span class="token comment" spellcheck="true"># 字典格式的 JSON                                                                                              </span>
+s <span class="token operator">=</span> <span class="token punctuation">{</span>
+    <span class="token string">"col1"</span><span class="token punctuation">:</span><span class="token punctuation">{</span><span class="token string">"row1"</span><span class="token punctuation">:</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token string">"row2"</span><span class="token punctuation">:</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token string">"row3"</span><span class="token punctuation">:</span><span class="token number">3</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token string">"col2"</span><span class="token punctuation">:</span><span class="token punctuation">{</span><span class="token string">"row1"</span><span class="token punctuation">:</span><span class="token string">"x"</span><span class="token punctuation">,</span><span class="token string">"row2"</span><span class="token punctuation">:</span><span class="token string">"y"</span><span class="token punctuation">,</span><span class="token string">"row3"</span><span class="token punctuation">:</span><span class="token string">"z"</span><span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true"># 读取 JSON 转为 DataFrame                                                                                          </span>
+df <span class="token operator">=</span> pd<span class="token punctuation">.</span>DataFrame<span class="token punctuation">(</span>s<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>df<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>以上实例输出结果为：</p>
+<pre><code>      col1 col2
+row1     1    x
+row2     2    y
+row3     3    z</code></pre><p>从 URL 中读取 JSON 数据：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
+
+URL <span class="token operator">=</span> <span class="token string">'https://static.runoob.com/download/sites.json'</span>
+df <span class="token operator">=</span> pd<span class="token punctuation">.</span>read_json<span class="token punctuation">(</span>URL<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>df<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>以上实例输出结果为：</p>
+<pre><code>     id    name             url  likes
+0  A001    菜鸟教程  www.runoob.com     61
+1  A002  Google  www.google.com    124
+2  A003      淘宝  www.taobao.com     45</code></pre><h3 id="内嵌的-JSON-数据"><a href="#内嵌的-JSON-数据" class="headerlink" title="内嵌的 JSON 数据"></a>内嵌的 JSON 数据</h3><p>假设有一组内嵌的 JSON 数据文件 <strong>nested_list.json</strong> ：</p>
+<pre><code>{
+    "school_name": "ABC primary school",
+    "class": "Year 1",
+    "students": [
+    {
+        "id": "A001",
+        "name": "Tom",
+        "math": 60,
+        "physics": 66,
+        "chemistry": 61
+    },
+    {
+        "id": "A002",
+        "name": "James",
+        "math": 89,
+        "physics": 76,
+        "chemistry": 51
+    },
+    {
+        "id": "A003",
+        "name": "Jenny",
+        "math": 79,
+        "physics": 90,
+        "chemistry": 78
+    }]
+}</code></pre><p>使用以下代码格式化完整内容：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
+
+df <span class="token operator">=</span> pd<span class="token punctuation">.</span>read_json<span class="token punctuation">(</span><span class="token string">'nested_list.json'</span><span class="token punctuation">)</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span>df<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>以上实例输出结果为：</p>
+<pre><code>          school_name   class                                           students
+0  ABC primary school  Year 1  {'id': 'A001', 'name': 'Tom', 'math': 60, 'phy...
+1  ABC primary school  Year 1  {'id': 'A002', 'name': 'James', 'math': 89, 'p...
+2  ABC primary school  Year 1  {'id': 'A003', 'name': 'Jenny', 'math': 79, 'p...</code></pre><p>这时我们就需要使用到 <strong>json_normalize()</strong> 方法将内嵌的数据完整的解析出来：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
+<span class="token keyword">import</span> json
+
+<span class="token comment" spellcheck="true"># 使用 Python JSON 模块载入数据</span>
+<span class="token keyword">with</span> open<span class="token punctuation">(</span><span class="token string">'nested_list.json'</span><span class="token punctuation">,</span><span class="token string">'r'</span><span class="token punctuation">)</span> <span class="token keyword">as</span> f<span class="token punctuation">:</span>
+    data <span class="token operator">=</span> json<span class="token punctuation">.</span>loads<span class="token punctuation">(</span>f<span class="token punctuation">.</span>read<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># 展平数据</span>
+df_nested_list <span class="token operator">=</span> pd<span class="token punctuation">.</span>json_normalize<span class="token punctuation">(</span>data<span class="token punctuation">,</span> record_path <span class="token operator">=</span><span class="token punctuation">[</span><span class="token string">'students'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>df_nested_list<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>以上实例输出结果为：</p>
+<pre><code>     id   name  math  physics  chemistry
+0  A001    Tom    60       66         61
+1  A002  James    89       76         51
+2  A003  Jenny    79       90         78</code></pre><p><strong>data = json.loads(f.read())</strong> 使用 Python JSON 模块载入数据。</p>
+<p><strong>json_normalize()</strong> 使用了参数 <strong>record_path</strong> 并设置为 <strong>[‘students’]</strong> 用于展开内嵌的 JSON 数据 <strong>students</strong>。</p>
+<p>显示结果还没有包含 school_name 和 class 元素，如果需要展示出来可以使用 meta 参数来显示这些元数据：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
+<span class="token keyword">import</span> json
+
+<span class="token comment" spellcheck="true"># 使用 Python JSON 模块载入数据</span>
+<span class="token keyword">with</span> open<span class="token punctuation">(</span><span class="token string">'nested_list.json'</span><span class="token punctuation">,</span><span class="token string">'r'</span><span class="token punctuation">)</span> <span class="token keyword">as</span> f<span class="token punctuation">:</span>
+    data <span class="token operator">=</span> json<span class="token punctuation">.</span>loads<span class="token punctuation">(</span>f<span class="token punctuation">.</span>read<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># 展平数据</span>
+df_nested_list <span class="token operator">=</span> pd<span class="token punctuation">.</span>json_normalize<span class="token punctuation">(</span>
+    data<span class="token punctuation">,</span>
+    record_path <span class="token operator">=</span><span class="token punctuation">[</span><span class="token string">'students'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    meta<span class="token operator">=</span><span class="token punctuation">[</span><span class="token string">'school_name'</span><span class="token punctuation">,</span> <span class="token string">'class'</span><span class="token punctuation">]</span>
+<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>df_nested_list<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>以上实例输出结果为：</p>
+<pre><code>     id   name  math  physics  chemistry         school_name   class
+0  A001    Tom    60       66         61  ABC primary school  Year 1
+1  A002  James    89       76         51  ABC primary school  Year 1
+2  A003  Jenny    79       90         78  ABC primary school  Year 1</code></pre><p>接下来，让我们尝试读取更复杂的 JSON 数据，该数据嵌套了列表和字典，数据文件 <strong>nested_mix.json</strong> 如下：</p>
+<pre><code>{
+    "school_name": "local primary school",
+    "class": "Year 1",
+    "info": {
+      "president": "John Kasich",
+      "address": "ABC road, London, UK",
+      "contacts": {
+        "email": "admin@e.com",
+        "tel": "123456789"
+      }
+    },
+    "students": [
+    {
+        "id": "A001",
+        "name": "Tom",
+        "math": 60,
+        "physics": 66,
+        "chemistry": 61
+    },
+    {
+        "id": "A002",
+        "name": "James",
+        "math": 89,
+        "physics": 76,
+        "chemistry": 51
+    },
+    {
+        "id": "A003",
+        "name": "Jenny",
+        "math": 79,
+        "physics": 90,
+        "chemistry": 78
+    }]
+}</code></pre><p>nested_mix.json 文件转换为 DataFrame：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
+<span class="token keyword">import</span> json
+
+<span class="token comment" spellcheck="true"># 使用 Python JSON 模块载入数据</span>
+<span class="token keyword">with</span> open<span class="token punctuation">(</span><span class="token string">'nested_mix.json'</span><span class="token punctuation">,</span><span class="token string">'r'</span><span class="token punctuation">)</span> <span class="token keyword">as</span> f<span class="token punctuation">:</span>
+    data <span class="token operator">=</span> json<span class="token punctuation">.</span>loads<span class="token punctuation">(</span>f<span class="token punctuation">.</span>read<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+df <span class="token operator">=</span> pd<span class="token punctuation">.</span>json_normalize<span class="token punctuation">(</span>
+    data<span class="token punctuation">,</span>
+    record_path <span class="token operator">=</span><span class="token punctuation">[</span><span class="token string">'students'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    meta<span class="token operator">=</span><span class="token punctuation">[</span>
+        <span class="token string">'class'</span><span class="token punctuation">,</span>
+        <span class="token punctuation">[</span><span class="token string">'info'</span><span class="token punctuation">,</span> <span class="token string">'president'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+        <span class="token punctuation">[</span><span class="token string">'info'</span><span class="token punctuation">,</span> <span class="token string">'contacts'</span><span class="token punctuation">,</span> <span class="token string">'tel'</span><span class="token punctuation">]</span>
+    <span class="token punctuation">]</span>
+<span class="token punctuation">)</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span>df<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>以上实例输出结果为：</p>
+<pre><code>     id   name  math  physics  chemistry   class info.president info.contacts.tel
+0  A001    Tom    60       66         61  Year 1    John Kasich         123456789
+1  A002  James    89       76         51  Year 1    John Kasich         123456789
+2  A003  Jenny    79       90         78  Year 1    John Kasich         123456789</code></pre><h3 id="读取内嵌数据中的一组数据"><a href="#读取内嵌数据中的一组数据" class="headerlink" title="读取内嵌数据中的一组数据"></a>读取内嵌数据中的一组数据</h3><p>以下是实例文件 <strong>nested_deep.json</strong>，我们只读取内嵌中的 <strong>math</strong> 字段：</p>
+<pre><code>{
+    "school_name": "local primary school",
+    "class": "Year 1",
+    "students": [
+    {
+        "id": "A001",
+        "name": "Tom",
+        "grade": {
+            "math": 60,
+            "physics": 66,
+            "chemistry": 61
+        }
+
+    },
+    {
+        "id": "A002",
+        "name": "James",
+        "grade": {
+            "math": 89,
+            "physics": 76,
+            "chemistry": 51
+        }
+
+    },
+    {
+        "id": "A003",
+        "name": "Jenny",
+        "grade": {
+            "math": 79,
+            "physics": 90,
+            "chemistry": 78
+        }
+    }]
+}</code></pre><p>这里我们需要使用到 <strong>glom</strong> 模块来处理数据套嵌，<strong>glom</strong> 模块允许我们使用 <strong>.</strong> 来访问内嵌对象的属性。</p>
+<p>第一次使用我们需要安装 glom：</p>
+<pre><code>pip3 install glom</code></pre><pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
+<span class="token keyword">from</span> glom <span class="token keyword">import</span> glom
+
+df <span class="token operator">=</span> pd<span class="token punctuation">.</span>read_json<span class="token punctuation">(</span><span class="token string">'nested_deep.json'</span><span class="token punctuation">)</span>
+
+data <span class="token operator">=</span> df<span class="token punctuation">[</span><span class="token string">'students'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>apply<span class="token punctuation">(</span><span class="token keyword">lambda</span> row<span class="token punctuation">:</span> glom<span class="token punctuation">(</span>row<span class="token punctuation">,</span> <span class="token string">'grade.math'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>以上实例输出结果为：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token number">0</span>    <span class="token number">60</span>
+<span class="token number">1</span>    <span class="token number">89</span>
+<span class="token number">2</span>    <span class="token number">79</span>
+Name<span class="token punctuation">:</span> students<span class="token punctuation">,</span> dtype<span class="token punctuation">:</span> int64<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="常用操作"><a href="#常用操作" class="headerlink" title="常用操作"></a>常用操作</h1><h2 id="一、生成数据表"><a href="#一、生成数据表" class="headerlink" title="一、生成数据表"></a>一、生成数据表</h2><p><strong>1、首先导入pandas库，一般都会用到numpy库，所以我们先导入备用：</strong></p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> numpy <span class="token keyword">as</span> np 
+<span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p><strong>2、导入CSV或者xlsx文件：</strong></p>
+<pre class="line-numbers language-python"><code class="language-python">df <span class="token operator">=</span> pd<span class="token punctuation">.</span>DataFrame<span class="token punctuation">(</span>pd<span class="token punctuation">.</span>read_csv<span class="token punctuation">(</span>‘name<span class="token punctuation">.</span>csv’<span class="token punctuation">,</span>header<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span> 
+df <span class="token operator">=</span> pd<span class="token punctuation">.</span>DataFrame<span class="token punctuation">(</span>pd<span class="token punctuation">.</span>read_excel<span class="token punctuation">(</span>‘name<span class="token punctuation">.</span>xlsx’<span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p><strong>3、用pandas创建数据表：</strong></p>
+<pre class="line-numbers language-python"><code class="language-python">df <span class="token operator">=</span> pd<span class="token punctuation">.</span>DataFrame<span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token string">"id"</span><span class="token punctuation">:</span><span class="token punctuation">[</span><span class="token number">1001</span><span class="token punctuation">,</span><span class="token number">1002</span><span class="token punctuation">,</span><span class="token number">1003</span><span class="token punctuation">,</span><span class="token number">1004</span><span class="token punctuation">,</span><span class="token number">1005</span><span class="token punctuation">,</span><span class="token number">1006</span><span class="token punctuation">]</span><span class="token punctuation">,</span> 
+ <span class="token string">"date"</span><span class="token punctuation">:</span>pd<span class="token punctuation">.</span>date_range<span class="token punctuation">(</span><span class="token string">'20130102'</span><span class="token punctuation">,</span> periods<span class="token operator">=</span><span class="token number">6</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token string">"city"</span><span class="token punctuation">:</span><span class="token punctuation">[</span><span class="token string">'Beijing '</span><span class="token punctuation">,</span> <span class="token string">'SH'</span><span class="token punctuation">,</span> <span class="token string">' guangzhou '</span><span class="token punctuation">,</span> <span class="token string">'Shenzhen'</span><span class="token punctuation">,</span> <span class="token string">'shanghai'</span><span class="token punctuation">,</span> <span class="token string">'BEIJING '</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+ <span class="token string">"age"</span><span class="token punctuation">:</span><span class="token punctuation">[</span><span class="token number">23</span><span class="token punctuation">,</span><span class="token number">44</span><span class="token punctuation">,</span><span class="token number">54</span><span class="token punctuation">,</span><span class="token number">32</span><span class="token punctuation">,</span><span class="token number">34</span><span class="token punctuation">,</span><span class="token number">32</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+ <span class="token string">"category"</span><span class="token punctuation">:</span><span class="token punctuation">[</span><span class="token string">'100-A'</span><span class="token punctuation">,</span><span class="token string">'100-B'</span><span class="token punctuation">,</span><span class="token string">'110-A'</span><span class="token punctuation">,</span><span class="token string">'110-C'</span><span class="token punctuation">,</span><span class="token string">'210-A'</span><span class="token punctuation">,</span><span class="token string">'130-F'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token string">"price"</span><span class="token punctuation">:</span><span class="token punctuation">[</span><span class="token number">1200</span><span class="token punctuation">,</span>np<span class="token punctuation">.</span>nan<span class="token punctuation">,</span><span class="token number">2133</span><span class="token punctuation">,</span><span class="token number">5433</span><span class="token punctuation">,</span>np<span class="token punctuation">.</span>nan<span class="token punctuation">,</span><span class="token number">4432</span><span class="token punctuation">]</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+  columns <span class="token operator">=</span><span class="token punctuation">[</span><span class="token string">'id'</span><span class="token punctuation">,</span><span class="token string">'date'</span><span class="token punctuation">,</span><span class="token string">'city'</span><span class="token punctuation">,</span><span class="token string">'category'</span><span class="token punctuation">,</span><span class="token string">'age'</span><span class="token punctuation">,</span><span class="token string">'price'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="二、数据表信息查看"><a href="#二、数据表信息查看" class="headerlink" title="二、数据表信息查看"></a>二、数据表信息查看</h2><p><strong>1、维度查看：</strong></p>
+<p>df.shape</p>
+<p><strong>2、数据表基本信息（维度、列名称、数据格式、所占空间等）：</strong></p>
+<p>df.info()</p>
+<p><strong>3、每一列数据的格式：</strong></p>
+<p>df.dtypes</p>
+<p><strong>4、某一列格式：</strong></p>
+<p>df[‘B’].dtype</p>
+<p><strong>5、空值：</strong></p>
+<p>df.isnull()</p>
+<p><strong>6、查看某一列空值：</strong></p>
+<p>df.isnull()</p>
+<p><strong>7、查看某一列的唯一值：</strong></p>
+<p>df[‘B’].unique()</p>
+<p><strong>8、查看数据表的值：</strong></p>
+<p>df.values</p>
+<p><strong>9、查看列名称：</strong></p>
+<p>df.columns</p>
+<p><strong>10、查看前10行数据、后10行数据：</strong></p>
+<pre class="line-numbers language-python"><code class="language-python">df<span class="token punctuation">.</span>head<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">#默认前10行数据 </span>
+df<span class="token punctuation">.</span>tail<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">#默认后10 行数据</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h2 id="三、数据表清洗"><a href="#三、数据表清洗" class="headerlink" title="三、数据表清洗"></a>三、数据表清洗</h2><p><strong>1、用数字0填充空值：</strong></p>
+<p>df.fillna(value=0)</p>
+<p><strong>2、使用列prince的均值对NA进行填充：</strong></p>
+<p>df[‘prince’].fillna(df[‘prince’].mean())</p>
+<p><strong>3、清楚city字段的字符空格：</strong></p>
+<p>df[‘city’]=df[‘city’].map(str.strip)</p>
+<p><strong>4、大小写转换：</strong></p>
+<p>df[‘city’]=df[‘city’].str.lower()</p>
+<p><strong>5、更改数据格式：</strong></p>
+<p>df[‘price’].astype(‘int’)</p>
+<p><strong>6、更改列名称：</strong></p>
+<p>df.rename(columns={‘category’: ‘category-size’})</p>
+<p><strong>7、删除后出现的重复值：</strong></p>
+<p>df[‘city’].drop_duplicates()</p>
+<p><strong>8、删除先出现的重复值：</strong></p>
+<p>df[‘city’].drop_duplicates(keep=’last’)</p>
+<p><strong>9、数据替换：</strong></p>
+<p>df[‘city’].replace(‘sh’, ‘shanghai’)</p>
+<h2 id="四、数据预处理"><a href="#四、数据预处理" class="headerlink" title="四、数据预处理"></a>四、数据预处理</h2><pre class="line-numbers language-python"><code class="language-python">df1<span class="token operator">=</span>pd<span class="token punctuation">.</span>DataFrame<span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token string">"id"</span><span class="token punctuation">:</span><span class="token punctuation">[</span><span class="token number">1001</span><span class="token punctuation">,</span><span class="token number">1002</span><span class="token punctuation">,</span><span class="token number">1003</span><span class="token punctuation">,</span><span class="token number">1004</span><span class="token punctuation">,</span><span class="token number">1005</span><span class="token punctuation">,</span><span class="token number">1006</span><span class="token punctuation">,</span><span class="token number">1007</span><span class="token punctuation">,</span><span class="token number">1008</span><span class="token punctuation">]</span><span class="token punctuation">,</span> 
+<span class="token string">"gender"</span><span class="token punctuation">:</span><span class="token punctuation">[</span><span class="token string">'male'</span><span class="token punctuation">,</span><span class="token string">'female'</span><span class="token punctuation">,</span><span class="token string">'male'</span><span class="token punctuation">,</span><span class="token string">'female'</span><span class="token punctuation">,</span><span class="token string">'male'</span><span class="token punctuation">,</span><span class="token string">'female'</span><span class="token punctuation">,</span><span class="token string">'male'</span><span class="token punctuation">,</span><span class="token string">'female'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+<span class="token string">"pay"</span><span class="token punctuation">:</span><span class="token punctuation">[</span><span class="token string">'Y'</span><span class="token punctuation">,</span><span class="token string">'N'</span><span class="token punctuation">,</span><span class="token string">'Y'</span><span class="token punctuation">,</span><span class="token string">'Y'</span><span class="token punctuation">,</span><span class="token string">'N'</span><span class="token punctuation">,</span><span class="token string">'Y'</span><span class="token punctuation">,</span><span class="token string">'N'</span><span class="token punctuation">,</span><span class="token string">'Y'</span><span class="token punctuation">,</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+<span class="token string">"m-point"</span><span class="token punctuation">:</span><span class="token punctuation">[</span><span class="token number">10</span><span class="token punctuation">,</span><span class="token number">12</span><span class="token punctuation">,</span><span class="token number">20</span><span class="token punctuation">,</span><span class="token number">40</span><span class="token punctuation">,</span><span class="token number">40</span><span class="token punctuation">,</span><span class="token number">40</span><span class="token punctuation">,</span><span class="token number">30</span><span class="token punctuation">,</span><span class="token number">20</span><span class="token punctuation">]</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="1、数据表合并"><a href="#1、数据表合并" class="headerlink" title="1、数据表合并"></a>1、数据表合并</h4><p>1.1 merge</p>
+<pre class="line-numbers language-python"><code class="language-python">df_inner<span class="token operator">=</span>pd<span class="token punctuation">.</span>merge<span class="token punctuation">(</span>df<span class="token punctuation">,</span>df1<span class="token punctuation">,</span>how<span class="token operator">=</span><span class="token string">'inner'</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># 匹配合并，交集</span>
+df_left<span class="token operator">=</span>pd<span class="token punctuation">.</span>merge<span class="token punctuation">(</span>df<span class="token punctuation">,</span>df1<span class="token punctuation">,</span>how<span class="token operator">=</span><span class="token string">'left'</span><span class="token punctuation">)</span>        <span class="token comment" spellcheck="true">#</span>
+df_right<span class="token operator">=</span>pd<span class="token punctuation">.</span>merge<span class="token punctuation">(</span>df<span class="token punctuation">,</span>df1<span class="token punctuation">,</span>how<span class="token operator">=</span><span class="token string">'right'</span><span class="token punctuation">)</span>
+df_outer<span class="token operator">=</span>pd<span class="token punctuation">.</span>merge<span class="token punctuation">(</span>df<span class="token punctuation">,</span>df1<span class="token punctuation">,</span>how<span class="token operator">=</span><span class="token string">'outer'</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true">#并集</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>1.2 append</p>
+<pre class="line-numbers language-python"><code class="language-python">result <span class="token operator">=</span> df1<span class="token punctuation">.</span>append<span class="token punctuation">(</span>df2<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/basic/1240-1627231668602870" alt=""></p>
+<p>1.3 join</p>
+<pre class="line-numbers language-python"><code class="language-python">result <span class="token operator">=</span> left<span class="token punctuation">.</span>join<span class="token punctuation">(</span>right<span class="token punctuation">,</span> on<span class="token operator">=</span><span class="token string">'key'</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/basic/1240-1627231671478872" alt=""></p>
+<p>1.4 concat</p>
+<pre class="line-numbers language-python"><code class="language-python">pd<span class="token punctuation">.</span>concat<span class="token punctuation">(</span>objs<span class="token punctuation">,</span> axis<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">,</span> join<span class="token operator">=</span><span class="token string">'outer'</span><span class="token punctuation">,</span> join_axes<span class="token operator">=</span>None<span class="token punctuation">,</span> ignore_index<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">,</span>
+          keys<span class="token operator">=</span>None<span class="token punctuation">,</span> levels<span class="token operator">=</span>None<span class="token punctuation">,</span> names<span class="token operator">=</span>None<span class="token punctuation">,</span> verify_integrity<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">,</span>
+          copy<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li>objs︰ 一个序列或系列、 综合或面板对象的映射。如果字典中传递，将作为键参数，使用排序的键，除非它传递，在这种情况下的值将会选择 （见下文）。任何没有任何反对将默默地被丢弃，除非他们都没有在这种情况下将引发 ValueError。 </li>
+<li>axis: {0，1，…}，默认值为 0。要连接沿轴。 </li>
+<li>join: {‘内部’、 ‘外’}，默认 ‘外’。如何处理其他 axis(es) 上的索引。联盟内、 外的交叉口。 </li>
+<li>ignore_index︰ 布尔值、 默认 False。如果为 True，则不要串联轴上使用的索引值。由此产生的轴将标记 0，…，n-1。这是有用的如果你串联串联轴没有有意义的索引信息的对象。请注意在联接中仍然受到尊重的其他轴上的索引值。 </li>
+<li>join_axes︰ 索引对象的列表。具体的指标，用于其他 n-1 轴而不是执行内部/外部设置逻辑。 </li>
+<li>keys︰ 序列，默认为无。构建分层索引使用通过的键作为最外面的级别。如果多个级别获得通过，应包含元组。 </li>
+<li>levels︰ 列表的序列，默认为无。具体水平 （唯一值） 用于构建多重。否则，他们将推断钥匙。 </li>
+<li>names︰ 列表中，默认为无。由此产生的分层索引中的级的名称。 </li>
+<li>verify_integrity︰ 布尔值、 默认 False。检查是否新的串联的轴包含重复项。这可以是相对于实际数据串联非常昂贵。<br>副本︰ 布尔值、 默认 True。如果为 False，请不要，不必要地复制数据。</li>
+</ul>
+<p>例子：</p>
+<pre class="line-numbers language-python"><code class="language-python">frames <span class="token operator">=</span> <span class="token punctuation">[</span>df1<span class="token punctuation">,</span> df2<span class="token punctuation">,</span> df3<span class="token punctuation">]</span> 
+result <span class="token operator">=</span> pd<span class="token punctuation">.</span>concat<span class="token punctuation">(</span>frames<span class="token punctuation">)</span> <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/basic/1240-1627231679346874" alt=""></p>
+<h4 id="2、设置索引列"><a href="#2、设置索引列" class="headerlink" title="2、设置索引列"></a>2、设置索引列</h4><p>df_inner.set_index(‘id’)</p>
+<h4 id="3、按照特定列的值排序："><a href="#3、按照特定列的值排序：" class="headerlink" title="3、按照特定列的值排序："></a>3、按照特定列的值排序：</h4><p>df_inner.sort_values(by=[‘age’])</p>
+<h4 id="4、按照索引列排序："><a href="#4、按照索引列排序：" class="headerlink" title="4、按照索引列排序："></a>4、按照索引列排序：</h4><p>df_inner.sort_index()</p>
+<h4 id="5、如果prince列的值-gt-3000，group列显示high，否则显示low："><a href="#5、如果prince列的值-gt-3000，group列显示high，否则显示low：" class="headerlink" title="5、如果prince列的值>3000，group列显示high，否则显示low："></a>5、如果prince列的值&gt;3000，group列显示high，否则显示low：</h4><p>df_inner[‘group’] = np.where(df_inner[‘price’] &gt; 3000,’high’,’low’)</p>
+<h4 id="6、对复合多个条件的数据进行分组标记"><a href="#6、对复合多个条件的数据进行分组标记" class="headerlink" title="6、对复合多个条件的数据进行分组标记"></a>6、对复合多个条件的数据进行分组标记</h4><p>df_inner.loc[(df_inner[‘city’] == ‘beijing’) &amp; (df_inner[‘price’] &gt;= 4000), ‘sign’]=1</p>
+<h4 id="7、对category字段的值依次进行分列，并创建数据表，索引值为df-inner的索引列，列名称为category和size"><a href="#7、对category字段的值依次进行分列，并创建数据表，索引值为df-inner的索引列，列名称为category和size" class="headerlink" title="7、对category字段的值依次进行分列，并创建数据表，索引值为df_inner的索引列，列名称为category和size"></a>7、对category字段的值依次进行分列，并创建数据表，索引值为df_inner的索引列，列名称为category和size</h4><p>pd.DataFrame((x.split(‘-‘) for x in df_inner[‘category’]),index=df_inner.index,columns=[‘category’,’size’]))</p>
+<h4 id="8、将完成分裂后的数据表和原df-inner数据表进行匹配"><a href="#8、将完成分裂后的数据表和原df-inner数据表进行匹配" class="headerlink" title="8、将完成分裂后的数据表和原df_inner数据表进行匹配"></a>8、将完成分裂后的数据表和原df_inner数据表进行匹配</h4><p>df_inner=pd.merge(df_inner,split,right_index=True, left_index=True)</p>
+<h2 id="五、数据提取"><a href="#五、数据提取" class="headerlink" title="五、数据提取"></a>五、数据提取</h2><p>主要用到的三个函数：loc,iloc和ix，loc函数按标签值进行提取，iloc按位置进行提取，ix可以同时按标签和位置进行提取。</p>
+<p><strong>1、按索引提取单行的数值</strong></p>
+<p>df_inner.loc[3]</p>
+<p><strong>2、按索引提取区域行数值</strong></p>
+<p>df_inner.iloc[0:5]</p>
+<p><strong>3、重设索引</strong></p>
+<p>df_inner.reset_index()</p>
+<p><strong>4、设置日期为索引</strong></p>
+<p>df_inner=df_inner.set_index(‘date’)</p>
+<p><strong>5、提取4日之前的所有数据</strong></p>
+<p>df_inner[:’2013-01-04’]</p>
+<p><strong>6、使用iloc按位置区域提取数据</strong></p>
+<p>df_inner.iloc[:3,:2] #冒号前后的数字不再是索引的标签名称，而是数据所在的位置，从0开始，前三行，前两列。</p>
+<p><strong>7、适应iloc按位置单独提起数据</strong></p>
+<p>df_inner.iloc[[0,2,5],[4,5]] #提取第0、2、5行，4、5列</p>
+<p><strong>8、使用ix按索引标签和位置混合提取数据</strong></p>
+<p>df_inner.ix[:’2013-01-03’,:4] #2013-01-03号之前，前四列数据</p>
+<p><strong>9、判断city列的值是否为北京</strong></p>
+<p>df_inner[‘city’].isin([‘beijing’])</p>
+<p><strong>10、判断city列里是否包含beijing和shanghai，然后将符合条件的数据提取出来</strong></p>
+<p>df_inner.loc[df_inner[‘city’].isin([‘beijing’,’shanghai’])]</p>
+<p><strong>11、提取前三个字符，并生成数据表</strong></p>
+<p>pd.DataFrame(category.str[:3])</p>
+<h2 id="六、数据筛选"><a href="#六、数据筛选" class="headerlink" title="六、数据筛选"></a>六、数据筛选</h2><p>使用与、或、非三个条件配合大于、小于、等于对数据进行筛选，并进行计数和求和。</p>
+<p><strong>1、使用“与”进行筛选</strong></p>
+<p>df_inner.loc[(df_inner[‘age’] &gt; 25) &amp; (df_inner[‘city’] == ‘beijing’), [‘id’,’city’,’age’,’category’,’gender’]]</p>
+<p><strong>2、使用“或”进行筛选</strong></p>
+<p>df_inner.loc[(df_inner[‘age’] &gt; 25) | (df_inner[‘city’] == ‘beijing’), [‘id’,’city’,’age’,’category’,’gender’]].sort([‘age’])</p>
+<p><strong>3、使用“非”条件进行筛选</strong></p>
+<p>df_inner.loc[(df_inner[‘city’] != ‘beijing’), [‘id’,’city’,’age’,’category’,’gender’]].sort([‘id’])</p>
+<p><strong>4、对筛选后的数据按city列进行计数</strong></p>
+<p>df_inner.loc[(df_inner[‘city’] != ‘beijing’), [‘id’,’city’,’age’,’category’,’gender’]].sort([‘id’]).city.count()</p>
+<p><strong>5、使用query函数进行筛选</strong></p>
+<p>df_inner.query(‘city == [“beijing”, “shanghai”]’)</p>
+<p><strong>6、对筛选后的结果按prince进行求和</strong></p>
+<p>df_inner.query(‘city == [“beijing”, “shanghai”]’).price.sum()</p>
+<h2 id="七、数据汇总"><a href="#七、数据汇总" class="headerlink" title="七、数据汇总"></a>七、数据汇总</h2><p>主要函数是groupby和pivote_table</p>
+<p><strong>1、对所有的列进行计数汇总</strong></p>
+<p>df_inner.groupby(‘city’).count()</p>
+<p><strong>2、按城市对id字段进行计数</strong></p>
+<p>df_inner.groupby(‘city’)[‘id’].count()</p>
+<p><strong>3、对两个字段进行汇总计数</strong></p>
+<p>df_inner.groupby([‘city’,’size’])[‘id’].count()</p>
+<p><strong>4、对city字段进行汇总，并分别计算prince的合计和均值</strong></p>
+<p>df_inner.groupby(‘city’)[‘price’].agg([len,np.sum, np.mean])</p>
+<h2 id="八、数据统计"><a href="#八、数据统计" class="headerlink" title="八、数据统计"></a>八、数据统计</h2><p>数据采样，计算标准差，协方差和相关系数</p>
+<p><strong>1、简单的数据采样</strong></p>
+<p>df_inner.sample(n=3)</p>
+<p><strong>2、手动设置采样权重</strong></p>
+<pre><code>weights = [0, 0, 0, 0, 0.5, 0.5] 
+df_inner.sample(n=2, weights=weights)</code></pre><p><strong>3、采样后不放回</strong></p>
+<p>df_inner.sample(n=6, replace=False)</p>
+<p><strong>4、采样后放回</strong></p>
+<p>df_inner.sample(n=6, replace=True)</p>
+<p><strong>5、 数据表描述性统计</strong></p>
+<p>df_inner.describe().round(2).T #round函数设置显示小数位，T表示转置</p>
+<p><strong>6、计算列的标准差</strong></p>
+<p>df_inner[‘price’].std()</p>
+<p><strong>7、计算两个字段间的协方差</strong></p>
+<p>df_inner[‘price’].cov(df_inner[‘m-point’])</p>
+<p><strong>8、数据表中所有字段间的协方差</strong></p>
+<p>df_inner.cov()</p>
+<p><strong>9、两个字段的相关性分析</strong></p>
+<p>df_inner[‘price’].corr(df_inner[‘m-point’]) #相关系数在-1到1之间，接近1为正相关，接近-1为负相关，0为不相关</p>
+<p><strong>10、数据表的相关性分析</strong></p>
+<p>df_inner.corr()</p>
+<h2 id="九、数据输出"><a href="#九、数据输出" class="headerlink" title="九、数据输出"></a>九、数据输出</h2><p>分析后的数据可以输出为xlsx格式和csv格式</p>
+<p><strong>1、写入Excel</strong></p>
+<p>df_inner.to_excel(‘excel_to_python.xlsx’, sheet_name=’bluewhale_cc’)</p>
+<p><strong>2、写入到CSV</strong></p>
+<p>df_inner.to_csv(‘excel_to_python.csv’)</p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -903,7 +1599,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">958.4k</span>&nbsp;字
+                class="white-color">1107.1k</span>&nbsp;字
             
             
             

@@ -364,21 +364,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-08-18
+                    2021-08-25
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    6.6k
+                    7.1k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    23 分
+                    26 分
                 </div>
                 
 
@@ -483,7 +483,7 @@
 
     count <span class="token operator">=</span> <span class="token number">0</span>
 
-    <span class="token keyword">while</span> len<span class="token punctuation">(</span>seqSet<span class="token punctuation">)</span> <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">:</span>
+    <span class="token keyword">while</span> len<span class="token punctuation">(</span>seqSet<span class="token punctuation">)</span> <span class="token operator">&gt;</span> <span class="token number">0</span><span class="token punctuation">:</span>
 
         <span class="token comment" spellcheck="true"># choose a row of matrix randomly</span>
         randomSeq <span class="token operator">=</span> random<span class="token punctuation">.</span>choice<span class="token punctuation">(</span>seqSet<span class="token punctuation">)</span>
@@ -624,6 +624,101 @@
 </ul>
 <p><strong>代码实现1：</strong> <a href="https://github.com/1e0ng/simhash" target="_blank" rel="noopener">SimHash</a></p>
 <p><strong>代码实现2：</strong> <a href="https://github.com/seomoz/simhash-py" target="_blank" rel="noopener">SimHash_py</a></p>
+<h2 id="LSH-with-Cosine-Distance"><a href="#LSH-with-Cosine-Distance" class="headerlink" title="LSH with Cosine Distance"></a>LSH with Cosine Distance</h2><h3 id="Source-code"><a href="#Source-code" class="headerlink" title="Source code"></a>Source code</h3><p>Here is the code for LSH based on <strong>cosine distance</strong>:</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> __future__ <span class="token keyword">import</span> division
+<span class="token keyword">import</span> numpy <span class="token keyword">as</span> np
+<span class="token keyword">import</span> math
+
+<span class="token keyword">def</span> <span class="token function">signature_bit</span><span class="token punctuation">(</span>data<span class="token punctuation">,</span> planes<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token triple-quoted-string string">"""
+    LSH signature generation using random projection
+    Returns the signature bits for two data points.
+    The signature bits of the two points are different
+     only for the plane that divides the two points.
+     """</span>
+    sig <span class="token operator">=</span> <span class="token number">0</span>
+    <span class="token keyword">for</span> p <span class="token keyword">in</span> planes<span class="token punctuation">:</span>
+        sig <span class="token operator">&lt;&lt;</span><span class="token operator">=</span>  <span class="token number">1</span>        
+        <span class="token keyword">if</span> np<span class="token punctuation">.</span>dot<span class="token punctuation">(</span>data<span class="token punctuation">,</span> p<span class="token punctuation">)</span> <span class="token operator">&gt;=</span> <span class="token number">0</span><span class="token punctuation">:</span>
+            sig <span class="token operator">|</span><span class="token operator">=</span> <span class="token number">1</span>
+    <span class="token keyword">return</span> sig
+
+<span class="token keyword">def</span> <span class="token function">bitcount</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token triple-quoted-string string">"""
+    gets the number of bits set to 1
+    """</span>
+    count <span class="token operator">=</span> <span class="token number">0</span>
+    <span class="token keyword">while</span> n<span class="token punctuation">:</span>
+        count <span class="token operator">+=</span> <span class="token number">1</span>
+        n <span class="token operator">=</span> n <span class="token operator">&amp;</span> <span class="token punctuation">(</span>n<span class="token number">-1</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> count
+
+<span class="token keyword">def</span> <span class="token function">length</span><span class="token punctuation">(</span>v<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token triple-quoted-string string">"""returns the length of a vector"""</span>
+      <span class="token keyword">return</span> math<span class="token punctuation">.</span>sqrt<span class="token punctuation">(</span>np<span class="token punctuation">.</span>dot<span class="token punctuation">(</span>v<span class="token punctuation">,</span> v<span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token keyword">if</span> __name__ <span class="token operator">==</span> <span class="token string">'__main__'</span><span class="token punctuation">:</span>
+    dim <span class="token operator">=</span> <span class="token number">20</span>       <span class="token comment" spellcheck="true"># dimension of data points (# of features)</span>
+    bits <span class="token operator">=</span> <span class="token number">1024</span>    <span class="token comment" spellcheck="true"># number of bits (planes) per signature</span>
+    run <span class="token operator">=</span> <span class="token number">10</span>       <span class="token comment" spellcheck="true"># number of runs</span>
+    avg <span class="token operator">=</span> <span class="token number">0</span>
+
+    <span class="token keyword">for</span> r <span class="token keyword">in</span> xrange<span class="token punctuation">(</span>run<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token comment" spellcheck="true"># Generate two data points p1, p2</span>
+        pt1 <span class="token operator">=</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>randn<span class="token punctuation">(</span>dim<span class="token punctuation">)</span>
+        pt2 <span class="token operator">=</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>randn<span class="token punctuation">(</span>dim<span class="token punctuation">)</span>
+
+        <span class="token comment" spellcheck="true"># reference planes as many as bits (= signature bits)</span>
+        ref_planes <span class="token operator">=</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>randn<span class="token punctuation">(</span>bits<span class="token punctuation">,</span> dim<span class="token punctuation">)</span>
+
+        <span class="token comment" spellcheck="true"># signature bits for two data points</span>
+        sig1 <span class="token operator">=</span> signature_bit<span class="token punctuation">(</span>pt1<span class="token punctuation">,</span> ref_planes<span class="token punctuation">)</span>
+        sig2 <span class="token operator">=</span> signature_bit<span class="token punctuation">(</span>pt2<span class="token punctuation">,</span> ref_planes<span class="token punctuation">)</span>
+
+         <span class="token comment" spellcheck="true"># Calculates exact angle difference</span>
+        cosine <span class="token operator">=</span> np<span class="token punctuation">.</span>dot<span class="token punctuation">(</span>pt1<span class="token punctuation">,</span>pt2<span class="token punctuation">)</span><span class="token operator">/</span>length<span class="token punctuation">(</span>pt1<span class="token punctuation">)</span><span class="token operator">/</span>length<span class="token punctuation">(</span>pt2<span class="token punctuation">)</span>
+        exact <span class="token operator">=</span> <span class="token number">1</span> <span class="token operator">-</span> math<span class="token punctuation">.</span>acos<span class="token punctuation">(</span>cosine<span class="token punctuation">)</span><span class="token operator">/</span>math<span class="token punctuation">.</span>pi
+
+        <span class="token comment" spellcheck="true"># Calculates angle difference using LSH based on cosine distance</span>
+        <span class="token comment" spellcheck="true"># It's using signature bits' count</span>
+        cosine_hash <span class="token operator">=</span> <span class="token number">1</span> <span class="token operator">-</span> bitcount<span class="token punctuation">(</span>sig1<span class="token operator">^</span>sig2<span class="token punctuation">)</span><span class="token operator">/</span>bits
+
+        <span class="token comment" spellcheck="true"># Difference between exact and LSH</span>
+        diff <span class="token operator">=</span> abs<span class="token punctuation">(</span>cosine_hash<span class="token operator">-</span>exact<span class="token punctuation">)</span><span class="token operator">/</span>exact
+        avg <span class="token operator">+=</span> diff
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'exact %.3f, hash %.3f, diff %.3f'</span><span class="token punctuation">)</span> <span class="token operator">%</span><span class="token punctuation">(</span>exact<span class="token punctuation">,</span> cosine_hash<span class="token punctuation">,</span> diff<span class="token punctuation">)</span>
+
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'avg diff = %.3f'</span><span class="token punctuation">)</span> <span class="token operator">%</span><span class="token punctuation">(</span>avg<span class="token operator">/</span>run<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>Output:</p>
+<pre><code>exact 0.477, hash 0.447, diff 0.062
+exact 0.439, hash 0.454, diff 0.035
+exact 0.433, hash 0.467, diff 0.077
+exact 0.503, hash 0.522, diff 0.040
+exact 0.583, hash 0.613, diff 0.052
+exact 0.490, hash 0.494, diff 0.009
+exact 0.563, hash 0.570, diff 0.014
+exact 0.482, hash 0.479, diff 0.006
+exact 0.506, hash 0.521, diff 0.029
+exact 0.485, hash 0.479, diff 0.010
+avg diff = 0.033</code></pre><p>The code has two important parameters:</p>
+<ol>
+<li><p>dim - This is the dimension of data points which are the features. These are generated using NumPy’s random function:</p>
+<pre class="line-numbers language-python"><code class="language-python">pt1 <span class="token operator">=</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>randn<span class="token punctuation">(</span>dim<span class="token punctuation">)</span>
+pt2 <span class="token operator">=</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>randn<span class="token punctuation">(</span>dim<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>We created two points to test the similarity.</p>
+</li>
+<li><p>bits - This is the number of bits (planes) per signature. The reference planes are generated as many as bits.</p>
+<pre class="line-numbers language-python"><code class="language-python">ref_planes <span class="token operator">=</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>randn<span class="token punctuation">(</span>bits<span class="token punctuation">,</span> dim<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>These bits are used as signature bits for the points we are interested in their similarity. These signature bits of the two points are different only for the plane that divides the two points. as we can see from the function signature_bit():</p>
+<pre class="line-numbers language-python"><code class="language-python">sig <span class="token operator">=</span> <span class="token number">0</span>
+<span class="token keyword">for</span> p <span class="token keyword">in</span> planes<span class="token punctuation">:</span>
+    sig <span class="token operator">&lt;&lt;</span><span class="token operator">=</span>  <span class="token number">1</span>        
+    <span class="token keyword">if</span> np<span class="token punctuation">.</span>dot<span class="token punctuation">(</span>data<span class="token punctuation">,</span> p<span class="token punctuation">)</span> <span class="token operator">&gt;=</span> <span class="token number">0</span><span class="token punctuation">:</span>
+    sig <span class="token operator">|</span><span class="token operator">=</span> <span class="token number">1</span>
+<span class="token keyword">return</span> sig<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+</ol>
+<p>We run the code several times to get averaged difference, and it’s because for each we’re testing with different points and different features.</p>
 <h2 id="时间复杂度"><a href="#时间复杂度" class="headerlink" title="时间复杂度"></a>时间复杂度</h2><p><img src="/images/loading.gif" data-original="../images/algorithm/image-20210817211359112.png" alt=""></p>
 <script>
         document.querySelectorAll('.github-emoji')
@@ -1044,7 +1139,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">958.4k</span>&nbsp;字
+                class="white-color">1107.1k</span>&nbsp;字
             
             
             

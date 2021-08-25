@@ -364,21 +364,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-08-16
+                    2021-08-25
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    14.2k
+                    77.7k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    50 分
+                    279 分
                 </div>
                 
 
@@ -394,7 +394,488 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="Transformer"><a href="#Transformer" class="headerlink" title="Transformer"></a>Transformer</h1><p><strong>原论文：<a href="https://proceedings.neurips.cc/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf" target="_blank" rel="noopener">Attention Is All You Need</a></strong></p>
+                <h1 id="Self-Attention"><a href="#Self-Attention" class="headerlink" title="Self Attention"></a>Self Attention</h1><p>CNN以后,我们要讲另外一个常见的Network架构,这个架构叫做Self-Attention,而这个Self-Attention</p>
+<h2 id="Sophisticated-Input"><a href="#Sophisticated-Input" class="headerlink" title="Sophisticated Input"></a>Sophisticated Input</h2><p>到目前為止,我们的Network的<strong>Input</strong>都是<strong>一个向量</strong>,不管是在预测这个,YouTube观看人数的问题上啊,还是影像处理上啊,我们的输入都可以看作是一个向量,然后我们的输出,可能是一个<strong>数值</strong>,这个是<strong>Regression</strong>,可能是一个<strong>类别</strong>,这是<strong>Classification</strong></p>
+<img src="/images/loading.gif" data-original="../images/CTF/image-20210403221220604.png" alt="image-20210403221220604" style="zoom: 67%;">
+
+<p>但假设我们遇到更復杂的问题呢,假设我们说<strong>输入是多个向量</strong>,而且这个<strong>输入的向量的数目是会改变的</strong>呢</p>
+<p>我们刚才在讲影像辨识的时候,我还特别强调我们假设输入的<strong>影像大小都是一样</strong>的,那现在假设每次我们Model输入的Sequence的数目,Sequence的长度都不一样呢,那这个时候应该要怎麼处理？</p>
+<h2 id="Vector-Set-as-Input"><a href="#Vector-Set-as-Input" class="headerlink" title="Vector Set as Input"></a>Vector Set as Input</h2><h3 id="文字处理"><a href="#文字处理" class="headerlink" title="文字处理"></a>文字处理</h3><p>假设我们今天要Network的输入是一个句子,每一个句子的长度都不一样,每个句子裡面词汇的数目都不一样</p>
+<p><img src="/images/loading.gif" data-original="../images/CTF/image-20210403221757797.png" alt="image-20210403221757797"></p>
+<p>如果我们把一个<strong>句子裡面的每一个词汇,都描述成一个向量</strong>,那我们的Model的<strong>输入</strong>,就会<strong>是一个Vector Set</strong>,而且这个Vector Set的大小,每次都不一样,句子的长度不一样,那你的Vector Set的大小就不一样</p>
+<p>那<strong>怎麼把一个词汇表示成一个向量</strong>,最简单的做法是==One-Hot的Encoding==</p>
+<img src="/images/loading.gif" data-original="../images/CTF/image-20210403222112679.png" alt="image-20210403222112679" style="zoom:67%;">
+
+<p>你就开一个很长很长的向量,这个向量的长度跟世界上存在的词汇的数目是一样多的,每一个维度对应到一个词汇,Apple就是100,Bag就是010,Cat就是001,以此类推</p>
+<p>但是这样子的表示方法有一个非常严重的问题,它假设所有的<strong>词汇彼此之间都是没有关係</strong>的,从这个向量裡面你看不到：Cat跟Dog都是动物所以他们比较接近,Cat跟Apple一个动物一个植物,所以他们比较不相像。这个向量裡面,没有任何语义的资讯</p>
+<p>有另外一个方法叫做==Word Embedding==</p>
+<img src="/images/loading.gif" data-original="../images/CTF/image-20210403222544230.png" alt="image-20210403222544230" style="zoom:67%;">
+
+<p>Word Embedding就是,我们会给每一个词汇一个向量,而这个<strong>向量是有语义的资讯的</strong></p>
+<p>如果你把Word Embedding画出来的话,你会发现,所有的动物可能聚集成一团,所有的植物可能聚集成一团,所有的动词可能聚集成一团等等</p>
+<p>Word Embedding，如果你有兴趣的话,可以看一下以下的录影<a href="https://youtu.be/X7PH3NuYW0Q,总之你现在在网路上,可以载到一种东西叫做Word" target="_blank" rel="noopener">https://youtu.be/X7PH3NuYW0Q,总之你现在在网路上,可以载到一种东西叫做Word</a> Embedding,这个Word Embedding,会给每一个词汇一个向量,而<strong>一个句子就是一排长度不一的向量</strong></p>
+<h3 id="声音信号"><a href="#声音信号" class="headerlink" title="声音信号"></a>声音信号</h3><p>一段声音讯号其实是一排向量,怎麼说呢,我们会把一段声音讯号取一个范围,这个范围叫做一个==Window==</p>
+<img src="/images/loading.gif" data-original="../images/CTF/image-20210404160614690.png" alt="image-20210404160614690" style="zoom:50%;">
+
+<p>把这个Window裡面的资讯描述成一个向量,这个向量就叫做一个==Frame==,在语音上,我们会把<strong>一个向量叫做一个Frame</strong>,通常这个Window的长度就是25个Millisecond</p>
+<p>把这麼一个小段的声音讯号变成一个Frame,变成一个向量就有百百种做法,那这边就不细讲</p>
+<p>一小段25个Millisecond裡面的语音讯号,為了要描述一整段的声音讯号,你会把这个<strong>Window往右移一点</strong>,通常移动的大小是10个Millisecond</p>
+<img src="/images/loading.gif" data-original="../images/CTF/image-20210404161620047.png" alt="image-20210404161620047" style="zoom:50%;">
+
+<p>一段声音讯号,你就是用一串向量来表示,而因為每一个Window啊,他们往右移都是移动10个Millisecond,所以一秒鐘的声音讯号有100个向量,所以一分鐘的声音讯号,就有这个100乘以60,就有6000个向量</p>
+<p>所以语音其实很复杂的,一小段的声音讯号,它裡面包含的资讯量其实是非常可观的</p>
+<h3 id="图"><a href="#图" class="headerlink" title="图"></a>图</h3><p>一个Graph 一个图,也是一堆向量,我们知道说Social Network就是一个Graph</p>
+<img src="/images/loading.gif" data-original="../images/CTF/image-20210404161854708.png" alt="image-20210404161854708" style="zoom:50%;">
+
+<p>在Social Network上面<strong>每一个节点就是一个人</strong>,然后<strong>节点跟节点之间的edge就是他们两个的关系连接</strong>,比如说是不是朋友等等</p>
+<p>而<strong>每一个节点可以看作是一个向量</strong>,你可以拿每一个人的,比如说他的Profile裡面的资讯啊,他的性别啊 他的年龄啊,他的工作啊 他讲过的话啊等等,把这些资讯用一个向量来表示</p>
+<p>所以一个Social Network 一个Graph,你也可以看做是一堆的向量所组成的</p>
+<h3 id="分子信息"><a href="#分子信息" class="headerlink" title="分子信息"></a>分子信息</h3><p>一个分子,它也可以看作是一个Graph</p>
+<img src="/images/loading.gif" data-original="../images/CTF/image-20210404162239665.png" alt="image-20210404162239665" style="zoom:50%;">
+
+<p>现在Drug Discovery的应用非常地受到重视,尤其是在Covid-19这一段时间,很多人都期待,也许用机器学习,可以在Drug Discovery上面做到什麼突破,那这个时候,你就需要把一个分子,当做是你的模型的输入</p>
+<p><strong>一个分子可以看作是一个Graph</strong>,分子上面的每一个球,也就是<strong>每一个原子，可以表述成一个向量</strong></p>
+<p>一个<strong>原子可以用One-Hot Vector</strong>来表示,氢就是1000,碳就是0100,然后这个氧就是0010,所以一个分子就是一个Graph,它就是一堆向量。</p>
+<h2 id="What-is-the-output"><a href="#What-is-the-output" class="headerlink" title="What is the output?"></a>What is the output?</h2><p>我们刚才已经看说输入是一堆向量,它可以是文字,可以是语音,可以是Graph,那这个时候,我们有可能有什麼样的输出呢,有三种可能性</p>
+<h3 id="1-每一个向量都有一个对应的Label"><a href="#1-每一个向量都有一个对应的Label" class="headerlink" title="1. 每一个向量都有一个对应的Label"></a>1. 每一个向量都有一个对应的Label</h3><p>当你的模型,看到输入是四个向量的时候,它就要输出四个Label,而每一个Label,它可能是一个数值,那就是Regression的问题,如果每个Label是一个Class,那就是一个Classification的问题</p>
+<img src="/images/loading.gif" data-original="../images/CTF/image-20210404165717142.png" alt="image-20210404165717142" style="zoom:50%;">
+
+<ul>
+<li><p>举例来说 在文字处理上,假设你今天要做的是==POS Tagging==,POS Tagging就是词性标註,你要让机器自动决定每一个词汇 它是什麼样的词性,它是名词 还是动词 还是形容词等等</p>
+<p>这个任务啊,其实并没有很容易,举例来说,你现在看到一个句子,I saw a saw</p>
+<p>这并不是打错,并不是“我看一个看”,而是“我看到一个锯子”,这个第二个saw当名词用的时候,它是锯子，那所以机器要知道,第一个saw是个动词,第二个saw虽然它也是个saw,但它是名词,但是每一个输入的词汇,都要有一个对应的输出的词性</p>
+<p>这个任务就是,输入跟输出的长度是一样的Case,这个就是属於第一个类型的输出</p>
+</li>
+<li><p>那如果是语音的话,你可以想想看我们作业二就是这样子的任务</p>
+<p>虽然我们作业二,没有给大家一个完整的Sequence,我们是把每一个每一个每一个Vector分开给大家了,但是串起来就是一段声音讯号裡面,有一串Vector,每一个Vector你都要决定,它是哪一个Phonetic，这是一个语音辨识的简化版</p>
+</li>
+<li><p>或者是如果是Social Network的话,就是给一个Graph</p>
+<p>你的Model要决定每一个节点,它有什麼样的特性,比如说他会不会买某一个商品,这样我们才知道说,要不要推荐某一个商品给他,</p>
+<p>所以以上就是举输入跟输出 数目一样的例子</p>
+</li>
+</ul>
+<h3 id="2-一整个Sequence-只需要输出一个Label"><a href="#2-一整个Sequence-只需要输出一个Label" class="headerlink" title="2. 一整个Sequence,只需要输出一个Label"></a>2. 一整个Sequence,只需要输出一个Label</h3><img src="/images/loading.gif" data-original="../images/CTF/image-20210404165454032.png" alt="image-20210404165454032" style="zoom:50%;">
+
+<ul>
+<li><p>举例来说,如果是文字的话,我们就说Sentiment Analysis</p>
+<p>Sentiment Analysis就是给机器看一段话,它要<strong>决定说这段话是正面的还是负面的</strong></p>
+<p>那你可以想像说这种应用很有用,假设你的公司开发了一个產品,这个產品上线了,你想要知道网友的评价怎麼样,但是你又不可能一则一则网友的留言都去分析,那也许你就可以用这种,Sentiment Analysis的技术,让机器自动去判读说,当一则贴文裡面有提到某个產品的时候,它是正面的 还是负面的,那你就可以知道你的產品,在网友心中的评价怎麼样,这个是Sentiment Analysis给一整个句子,只需要一个Label,那Positive或Negative,那这个就是第二类的输出</p>
+</li>
+<li><p>那如果是语音的例子的话呢,在作业四裡面我们会做语者辨认,机器要听一段声音,然后决定他是谁讲的</p>
+</li>
+<li><p>或者是如果是Graph的话呢,今天你可能想要给一个分子,然后要预测说这个分子,比如说它有没有毒性,或者是它的亲水性如何,那这就是给一个Graph 输出一个Label</p>
+</li>
+</ul>
+<h3 id="3-机器要自己决定-应该要输出多少个Label"><a href="#3-机器要自己决定-应该要输出多少个Label" class="headerlink" title="3. 机器要自己决定,应该要输出多少个Label"></a>3. 机器要自己决定,应该要输出多少个Label</h3><p>我们不知道应该输出多少个Label,机器要自己决定,应该要输出多少个Label,可能你输入是N个向量,输出可能是N’个Label,為什麼是N’,机器自己决定</p>
+<img src="/images/loading.gif" data-original="../images/CTF/image-20210404170045293.png" alt="image-20210404170045293" style="zoom: 50%;">
+
+<p>这种任务又叫做==sequence to sequence==的任务,那我们在作业五会有sequence to sequence的作业,所以这个之后我们还会再讲</p>
+<ul>
+<li>翻译就是sequence to sequence的任务,因為输入输出是不同的语言,它们的词汇的数目本来就不会一样多</li>
+<li>或者是语音辨识也是,真正的语音辨识也是一个sequence to sequence的任务,输入一句话,然后输出一段文字,这也是一个sequence to sequence的任务</li>
+</ul>
+<p>第二种类型有作业四,感兴趣可以去看看作业四的程式，那因為上课时间有限,所以上课,我们今天就先只讲第一个类型,也就是输入跟输出数目一样多的状况</p>
+<h2 id="Sequence-Labeling"><a href="#Sequence-Labeling" class="headerlink" title="Sequence Labeling"></a>Sequence Labeling</h2><p>那这种输入跟输出数目一样多的状况又叫做==Sequence Labeling==,你要给Sequence裡面的每一个向量,都给它一个Label,那要怎麼解Sequence Labeling的问题呢</p>
+<p>那直觉的想法就是我们就拿个<strong>Fully-Connected的Network</strong></p>
+<img src="/images/loading.gif" data-original="../images/CTF/image-20210404172216111.png" alt="image-20210404172216111" style="zoom: 33%;">
+
+<p>然后虽然这个输入是一个Sequence,但我们就各个击破,不要管它是不是一个Sequence,把每一个向量,分别输入到Fully-Connected的Network裡面</p>
+<p>然后Fully-Connected的Network就会给我们输出,那现在看看,你要做的是Regression还是Classification,產生正确的对应的输出,就结束了,</p>
+<p>那这麼做显然有<strong>非常大的瑕疵</strong>,假设今天是,词性标记的问题,你给机器一个句子,I saw a saw,对Fully-Connected Network来说,<strong>后面这一个saw跟前面这个saw完全一模一样</strong>,它们是同一个词汇啊</p>
+<p>既然Fully-Connected的Network<strong>输入同一个词汇,它没有理由输出不同的东西</strong></p>
+<p>但实际上,你期待第一个saw要输出动词,第二个saw要输出名词,但对Network来说它不可能做到,因為这两个saw 明明是一模一样的,你叫它一个要输出动词,一个要输出名词,它会非常地困惑,完全不知道要怎麼处理</p>
+<p>所以怎麼办,有没有可能<strong>让Fully-Connected的Network,考虑更多的,比如说上下文的Context的资讯</strong>呢</p>
+<p>这是有可能的,你就<strong>把前后几个向量都串起来,一起丢到Fully-Connected的Network就结束了</strong></p>
+<img src="/images/loading.gif" data-original="../images/CTF/image-20210404172839097.png" alt="image-20210404172839097" style="zoom: 33%;">
+
+<p>在作业二裡面,我们不是只看一个Frame,去判断这个Frame属於哪一个Phonetic,也就属於哪一个音标,而是看这个Frame的前面五个加后面五个,也就总共看十一个Frame,来决定它是哪一个音标</p>
+<img src="/images/loading.gif" data-original="../images/CTF/image-20210404173219186.png" alt="image-20210404173219186" style="zoom: 33%;">
+
+<p>所以我们可以给Fully-Connected的Network,一整个Window的资讯,让它可以考虑一些上下文的,跟我现在要考虑的这个向量,相邻的其他向量的资讯</p>
+<p>但是<strong>这样子的方法还是有极限</strong>,作业二就算是给你Sequence的资讯,你考虑整个Sequence,你可能也很难再做的更好啦,作业二考虑前后五个Frame,其实就可以得到很不错的结果了,所以你要过Strong Baseline,重点并不在於考虑整个Sequence,你就不需要往那个方向想了,用助教现有给你的Data,你就可以轻易的过Strong Baseline,</p>
+<p>但是真正的问题,但是如果今天我们有某一个任务,不是考虑一个Window就可以解决的,而是要<strong>考虑一整个Sequence才能够解决</strong>的话,那要怎麼办呢</p>
+<img src="/images/loading.gif" data-original="../images/CTF/image-20210404173257899.png" alt="image-20210404173257899" style="zoom:33%;">
+
+<p>那有人可能会想说这个很容易，我就<strong>把Window开大一点啊,大到可以把整个Sequence盖住就结束了</strong></p>
+<p>但是，今天<strong>Sequence的长度是有长有短的</strong>,我们刚才有说,我们输入给我们的Model的Sequence的长度,每次可能都不一样</p>
+<p>如果你今天说我真的要开一个Window,把整个Sequence盖住,那你可能要<strong>统计一下你的训练资料</strong>,然后看看你的训练资料裡面,最长的Sequence有多长,然后开一个Window比最长的Sequence还要长,你才有可能把整个Sequence盖住</p>
+<p>但是你开一个这麼大的Window,意味著说你的Fully-Connected的Network,它需要非常多的参数,那可能不只<strong>运算量很大,可能还容易Overfitting</strong></p>
+<p>所以有没有更好的方法,来考虑整个Input Sequence的资讯呢,这就要用到我们接下来要跟大家介绍的,==Self-Attention==这个技术</p>
+<h2 id="Self-Attention-1"><a href="#Self-Attention-1" class="headerlink" title="Self-Attention"></a>Self-Attention</h2><p>Self-Attention的运作方式就是,<strong>Self-Attention会吃一整个Sequence的资讯</strong></p>
+<img src="/images/loading.gif" data-original="../images/CTF/image-20210404174805338.png" alt="image-20210404174805338" style="zoom: 33%;">
+
+<p>然后你Input几个Vector,它就输出几个Vector,比如说你这边Input一个深蓝色的Vector,这边就给你一个另外一个Vector</p>
+<p>这边给个浅蓝色,它就给你另外一个Vector,这边输入4个Vector,它就Output 4个Vector</p>
+<p>那这4个Vector有什麼特别的地方呢,<strong>这4个Vector,他们都是考虑一整个Sequence以后才得到的</strong>,那等一下我会讲说Self-Attention,怎麼考虑一整个Sequence的资讯</p>
+<p>所以这边每一个向量,我们特别给它一个黑色的框框代表说它不是一个普通的向量</p>
+<img src="/images/loading.gif" data-original="../images/CTF/image-20210404193106925.png" alt="image-20210404193106925" style="zoom: 33%;">
+
+<p>如此一来你这个Fully-Connected的Network,它就不是只考虑一个非常小的范围,或一个小的Window,而是考虑整个Sequence的资讯,再来决定现在应该要输出什麼样的结果，这个就是Self-Attention。</p>
+<p><strong>Self-Attention不是只能用一次,你可以叠加很多次</strong></p>
+<img src="/images/loading.gif" data-original="../images/CTF/image-20210404194146583.png" alt="image-20210404194146583" style="zoom: 33%;">
+
+<p>可以Self-Attention的输出,通过Fully-Connected Network以后,再做一次Self-Attention,Fully-Connected的Network,再过一次Self-Attention,再重新考虑一次整个Input Sequence的资讯,再丢到另外一个Fully-Connected的Network,最后再得到最终的结果</p>
+<p>所以<strong>可以把Fully-Connected的Network,跟Self-Attention交替使用</strong></p>
+<ul>
+<li>Self-Attention处理整个Sequence的资讯</li>
+<li>Fully-Connected的Network,专注於处理某一个位置的资讯</li>
+<li>再用Self-Attention,再把整个Sequence资讯再处理一次</li>
+<li>然后交替使用Self-Attention跟Fully-Connected</li>
+</ul>
+<p>有关Self-Attention,最知名的相关的文章,就是《Attention is all you need》.那在这篇Paper裡面呢,Google提出了==Transformer==这样的Network架构,那Transformer就是变形金刚,所以提到这个Network的时候呢,我们就会有变形金刚这个形象</p>
+<img src="/images/loading.gif" data-original="../images/CTF/image-20210404201325728.png" alt="image-20210404201325728" style="zoom:67%;">
+
+<p>Transformer我们今天还不会讲到,但我们之后会讲到,Transformer裡面一个最重要的Module就是Self-Attention,它就是变形金刚的火种源</p>
+<p>那这篇Paper最厉害的地方,就是它有一个<strong>霸气的名字Attention is all you need.</strong></p>
+<p>那其实像Self-Attention这样的架构,最早我并不会说它是出现在《Attention is all you need》这样的Paper,因為其实很多更早的Paper,就有提出过类似的架构,只是不见得叫做Self-Attention,比如说叫做Self-Matching,或者是叫别的名字,不过呢是Attention is all you need.这篇Paper,把Self-Attention这个Module,把它发扬光大</p>
+<p>那Self-Attention是怎麼运作的呢</p>
+<h3 id="Self-Attention过程"><a href="#Self-Attention过程" class="headerlink" title="Self-Attention过程"></a>Self-Attention过程</h3><p>Self-Attention的Input,它就是一串的Vector,那<strong>这个Vector可能是你整个Network的Input,它也可能是某个Hidden Layer的Output</strong>,所以我们这边不是用$x$来表示它,</p>
+<img src="/images/loading.gif" data-original="../images/CTF/image-20210404202435331.png" alt="image-20210404202435331" style="zoom: 33%;">
+
+<p>我们用$a$来表示它，代表它有可能是前面已经做过一些处理,它是某个Hidden Layer的Output,那Input一排a这个向量以后,Self-Attention要Output另外一排b这个向量</p>
+<p>那这<strong>每一个b都是考虑了所有的a以后才生成出来的</strong>,所以这边刻意画了非常非常多的箭头,告诉你$b^1 $考虑了$a^1$到$a^4$產生的,$b^2$考虑$a^1$到$a^4$產生的,$b^3 b^4$也是一样,考虑整个input的sequence,才產生出来的</p>
+<p>那接下来呢就是要跟大家说明,<strong>怎麼產生$b^1$这个向量</strong>,那你知道怎麼產生$b^1$这个向量以后,你就知道怎麼產生剩下$b^1 b^2 b^3 b^4$剩下的向量</p>
+<p>这里有一个<strong>特别的机制</strong>,<strong>这个机制是根据$a^1$这个向量,找出整个很长的sequence裡面,到底哪些部分是重要的,哪些部分跟判断$a^1$是哪一个label是有关係的,哪些部分是我们要决定$a^1$的class,决定$a^1$的regression数值的时候,所需要用到的资讯</strong></p>
+<img src="/images/loading.gif" data-original="../images/CTF/image-20210404202942477.png" alt="image-20210404202942477" style="zoom: 33%;">
+
+<p><strong>每一个向量跟$a^1$的关联的程度,用一个数值叫α来表示</strong></p>
+<p>这个self-attention的module,<strong>怎麼自动决定两个向量之间的关联性</strong>呢,你给它两个向量$a^1$跟$a^4$,它怎麼决定$a^1$跟$a^4$有多相关,然后给它一个数值α呢,那这边呢你就需要一个<strong>计算attention的模组</strong></p>
+<img src="/images/loading.gif" data-original="../images/CTF/image-20210404204458431.png" alt="image-20210404204458431" style="zoom: 33%;">
+
+<p>这个计算attention的模组,就是拿<strong>两个向量作為输入</strong>,然后它就直接输出α那个数值,</p>
+<p>计算这个α的数值有各种不同的做法</p>
+<ul>
+<li><p>比较常见的做法呢,叫做用==dot product==,<strong>输入的这两个向量分别乘上两个不同的矩阵</strong>,左边这个向量乘上$W^q$这个矩阵得到矩阵$q$,右边这个向量乘上$W^k$这个矩阵得到矩阵$k$</p>
+<p>再把$q$跟$k$做dot product,就是把他们做element-wise 的相乘,再全部加起来以后就得到一个 scalar,这个scalar就是α,这是一种计算α的方式</p>
+</li>
+<li><p>有另外一个叫做==Additive==的计算方式,它的计算方法就是,把同样这两个向量通过$W^q$ $W^k$,得到$q$跟$k$,那我们不是把它做Dot-Product,是把它这个串起来,然后丢到这个过一个Activation Function</p>
+<p>然后再通过一个Transform,然后得到α</p>
+</li>
+</ul>
+<p>总之有非常多不同的方法,可以计算Attention,可以计算这个α的数值,可以计算这个关联的程度</p>
+<p>但是在接下来的讨论裡面,我们都<strong>只用左边这个方法</strong>,这也是今日最常用的方法,也<strong>是用在Transformer裡面的方法</strong></p>
+<p>那你就要把这边的$a^1$去跟这边的$a^2 a^3 a^4$,分别都去计算他们之间的关联性,也就是计算他们之间的α</p>
+<img src="/images/loading.gif" data-original="../images/CTF/image-20210404211656032.png" alt="image-20210404211656032" style="zoom: 50%;">
+
+<p>你把$a^1$乘上$W^q $得到$q^1$,那这个q有一个名字,我们叫做==Query==,它就像是你搜寻引擎的时候,去搜寻相关文章的问题,就像搜寻相关文章的关键字,所以这边叫做Query</p>
+<p>然后接下来呢,$a^2 a^3 a^4$你都要去把它乘上$W^k$,得到$k$这个Vector,$k$这个Vector叫做==Key==,那你把这个<strong>Query q1,跟这个Key k2,算Inner-Product就得到α</strong></p>
+<p>我们这边用$α_{1,2}$来代表说,Query是1提供的,Key是2提供的时候,这个1跟2他们之间的关联性,这个α这个关联性叫做==Attention的Score==,叫做Attention的分数,</p>
+<p>接下来也要跟$a^3 a^4$来计算</p>
+<img src="/images/loading.gif" data-original="../images/CTF/image-20210404211950882.png" alt="image-20210404211950882" style="zoom: 50%;">
+
+<p>把$a_3$乘上$W^k$,得到另外一个Key也就是$k^3$,$a^4$乘上$W^k$得到$k^4$,然后你再把$k^3$这个Key,跟$q^1$这个Query做Inner-Product,得到1跟3之间的关联性,得到1跟3的Attention,你把$k^4$跟$q^1$做Dot-Product,得到$α_{1,4}$,得到1跟4之间的关联性</p>
+<p>其实一般在实作时候,<strong>$q^1$也会跟自己算关联性</strong>,自己跟自己计算关联性这件事情有多重要,你可以自己在做作业的时候试试看,看这件事情的影响大不大了</p>
+<p>计算出,a1跟每一个向量的关联性以后,接下来这边会<strong>接入一个Soft-Max</strong></p>
+<img src="/images/loading.gif" data-original="../images/CTF/image-20210404212945356.png" alt="image-20210404212945356" style="zoom:50%;">
+
+<p><strong>这个Soft-Max跟分类的时候的那个Soft-Max是一模一样的</strong>,所以Soft-Max的输出就是一排α,所以本来有一排α,通过Soft-Max就得到$α’$</p>
+<p>这边你<strong>不一定要用Soft-Max,用别的替代也没问题</strong>,比如说有人尝试过说做个ReLU,这边通通做个ReLU,那结果发现还比Soft-Max好一点,所以这边你不一定要用Soft-Max,这边你要用什麼Activation Function都行,你高兴就好,你可以试试看,那Soft-Max是最常见的,那你可以自己试试看,看能不能试出比Soft-Max更好的结果</p>
+<p>接下来得到这个$α’$以后,我们就要根据这个$α’$去抽取出这个Sequence裡面重要的资讯,根据这个α我们已经知道说,哪些向量跟$a^1$是最有关係的,怎麼抽取重要的资讯呢,</p>
+<img src="/images/loading.gif" data-original="../images/CTF/image-20210404213559086.png" alt="image-20210404213559086" style="zoom:50%;">
+
+<ul>
+<li><p>首先把$a^1$到$a^4$这边每一个向量,乘上$W^v $得到新的向量,这边分别就是用$v^1 v^2 v^3 v^4$来表示</p>
+</li>
+<li><p>接下来把这边的$v^1$到$v^4$,每一个向量都去乘上Attention的分数,都去乘上$α’$</p>
+</li>
+<li><p>然后再把它加起来,得到$b^1$</p>
+</li>
+</ul>
+<p>$$<br>b^1=\sum_i\alpha’_{1,i}v^i<br>$$</p>
+<p>如果某一个向量它得到的分数越高,比如说如果$a^1$跟$a^2$的关联性很强,这个$α’$得到的值很大,那我们今天在做Weighted Sum以后,得到的$b^1$的值,就可能会比较接近$v^2$</p>
+<p>所以<strong>谁的那个Attention的分数最大,谁的那个$v$就会Dominant你抽出来的结果</strong></p>
+<p>所以这边呢我们就讲了怎麼从一整个Sequence 得到$b^1$</p>
+<p>从这一排 vector 得到 $b^1$,跟从这一排 vector 得到 $b^2$,它的操作是一模一样的.要强调一点是,这边的 $b^1$ 到 $b^4$,它们并<strong>不需要依序產生</strong>,它们是一次同时被计算出来的</p>
+<p>怎麼计算这个 $b^2$？我们现在的主角,就变成 $a^2$</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210409093744204.png" alt="image-20210409093744204" style="zoom:50%;">
+
+<ul>
+<li><p>把 $a^2$ 乘上一个 matrix,变成 $q^2$</p>
+</li>
+<li><p>然后接下来根据 $q^2$,去对$a^1$到 $a^4$ 这四个位置,都去计算 attention 的 score</p>
+<ul>
+<li>把 $q^2$ 跟 $k^1$ 做个这个 dot product</li>
+<li>把 $q^2$ 跟 $k^2$ 也做个 dot product</li>
+<li>把 $q^2$ 跟 $k^3$ 也做 dot product</li>
+<li>把 $q^2$ 跟 $k^4$ 也做 dot product,得到四个分数</li>
+</ul>
+</li>
+<li><p>得到这四个分数以后,可能还会做一个 normalization,比如说 softmax,然后得到最后的 attention 的 score,$α’<em>{2,1} \space α’</em>{2,2}  \space α’<em>{2,3}  \space α’</em>{2,4}$那我们这边用 $α’$表示经过 normalization 以后的attention score</p>
+</li>
+<li><p>接下来拿这四个数值,分别乘上 $v^1  \space  v^2 \space  v^3 \space  v^4$</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210409094148657.png" alt="image-20210409094148657" style="zoom:50%;">
+
+<ul>
+<li>把 $α’_{2,1}$乘上 $v^1$</li>
+<li>把 $α’_{2,2}$ 乘上 $v^2$</li>
+<li>把 $α’_{2,3}$ 乘上 $v^3$</li>
+<li>把 $α’_{2,4}$ 乘上 $v^4$,然后全部加起来就是 $ b^2$</li>
+</ul>
+<p>$$<br>b^2=\sum_iα’_{2,i}v^i<br>$$</p>
+</li>
+</ul>
+<p>同理就可以,由 $a^3$ 乘一个 transform 得到 $q^3$,然后就计算 $b^3$,从 $a^4$ 乘一个 transform 得到 $q^4$,就计算 $b^4$,以上说的是  Self-attention 它运作的过程</p>
+<h2 id="矩阵的角度"><a href="#矩阵的角度" class="headerlink" title="矩阵的角度"></a>矩阵的角度</h2><p>接下来我们从矩阵乘法的角度,再重新讲一次我们刚才讲的,Self-attention 是怎麼运作的</p>
+<p>我们现在已经知道每一个 a 都產生 q k v</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210409100334528.png" alt="image-20210409100334528" style="zoom:50%;">
+
+<p>如果要用矩阵运算表示这个操作的话,是什麼样子呢</p>
+<p>我们每一个 a,都乘上一个矩阵,我们这边用 $W^q$ 来表示它,得到 $q^i$,每一个 a 都要乘上 $W^q$,得到$q^i$,<strong>这些不同的 a 你可以把它合起来,当作一个矩阵来看待</strong></p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210409100755718.png" alt="image-20210409100755718" style="zoom:67%;">
+
+<p>一样$a^2\space a^3\space a^4 $也都乘上 $W^q$ 得到$q^2 q^3 $跟 $q^4$,那你可以<strong>把 a1 到 a4 拼起来</strong>,看作是一个矩阵,这个矩阵我们用 I 来表示，这个矩阵的四个 column 就是 $a^1$ 到 $a^4$</p>
+<p>$I$ 乘上 $W^q$ 就得到另外一个矩阵,我们用 $Q$ 来表示它,这个 $Q$ 就是把 $q^1$ 到 $q^4$ 这四个 vector 拼起来,就是 $Q$ 的四个 column</p>
+<p>所以我们从 $a^1$ 到 $a^4$,得到  $q^1$ 到 $q^4$这个操作,其实就是<strong>把 I 这个矩阵,乘上另外一个矩阵 $W^q$，得到矩阵$Q$</strong>。$I$ 这个矩阵它裡面的 column就是我们 Self-attention 的 input是 $a^1$ 到 $a^4$；<strong>$W^q$其实是 network 的参数,它是等一下会被learn出来的</strong> ；$Q$ 的四个 column,就是  $q^1$ 到 $q^4$</p>
+<p>接下来產生 k 跟 v 的操作跟 q 是一模一样的</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210409101331347.png" alt="image-20210409101331347" style="zoom:67%;">
+
+<p>所以每一个 a 得到 q k v ,其实就是把输入的这个,vector sequence 乘上三个不同的矩阵,你就得到了 q,得到了 k,跟得到了 v</p>
+<p>下一步是,每一个 q 都会去跟每一个 k,去计算这个 inner product,去<strong>得到这个 attention 的分数</strong></p>
+<p>那得到 attention 分数这一件事情,如果从矩阵操作的角度来看,它在做什麼样的事情呢</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210409102703364.png" alt="image-20210409102703364" style="zoom: 50%;">
+
+<p>你就是把 $q^1$ 跟 $k^1$ 做 inner product,得到 $α<em>{1,1}$,所以 $α</em>{1,1}$就是 $q^1$ 跟$k^1$ 的 inner product,那这边我就把这个,$k^1$它背后的这个向量,把它画成比较宽一点代表说它是 transpose</p>
+<p>同理 $α<em>{1,2}$ 就是 $q^1$ 跟 $k^2$,做 inner product, $α</em>{1,3}$  就是 $q^1$ 跟 $k^3$ 做 inner product,这个  $α_{1,4}$  就是 $q^1$ 跟 $k^4$ 做 inner product</p>
+<p>那这个四个步骤的操作,你其实可以把它拼起来,看作是<strong>矩阵跟向量相乘</strong></p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210409102832459.png" alt="image-20210409102832459" style="zoom:67%;">
+
+<p>这四个动作,你可以看作是我们<strong>把 $k^1$ 到 $k^4$ 拼起来,当作是一个矩阵的四个 row</strong></p>
+<p>那我们刚才讲过说,我们不只是 $q^1$,要对$k^1$ 到 $k^4$ 计算 attention,$q^2,q^3,q^4$也要对 $k^1$ 到 $k^4$ 计算 attention,操作其实都是一模一样的</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210409103622596.png" alt="image-20210409103622596" style="zoom:67%;">
+
+<p>所以这些 <strong>attention 的分数可以看作是两个矩阵的相乘</strong>,一个矩阵它的 row,就是 $k^1$ 到 $k^4$,另外一个矩阵它的 column </p>
+<p>我们会在 attention 的分数,<strong>做一下 normalization</strong>,比如说你会做 softmax,你会对这边的每一个 column,每一个 column 做 softmax,让每一个 column 裡面的值相加是 1</p>
+<p>之前有讲过说 其实这边做 <strong>softmax不是唯一的选项</strong>,你完全可以选择其他的操作,比如说 ReLU 之类的,那其实得到的结果也不会比较差,通过了 softmax 以后,它得到的值有点不一样了,所以我们用 $A’$,来表示通过 softmax 以后的结果</p>
+<p>我们已经计算出 $A’ $</p>
+<p>那我们把这个$v^1$ 到 $v^4$乘上这边的 α 以后,就可以得到 b</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210409105513608.png" alt="image-20210409105513608" style="zoom:67%;">
+
+<p>你就把$v^1$ 到 $v^4$ 拼起来,你<strong>把 $v^1$ 到 $v^4$当成是V 这个矩阵的四个 column</strong>,把它拼起来,然后接下来你把 v 乘上,$A’$ 的第一个 column 以后,你得到的结果就是 $b^1$</p>
+<p>如果你熟悉线性代数的话,你知道说把这个 $A’$ 乘上 V,就是把 $A’$的第一个 column,乘上 V 这一个矩阵,你会得到你 output 矩阵的第一个 column</p>
+<p>而把 A 的第一个 column乘上 V 这个矩阵做的事情,其实就是把 V 这个矩阵裡面的每一个 column,<strong>根据第 $A’$ 这个矩阵裡面的每一个 column 裡面每一个 element,做 weighted sum</strong>,那就得到 $b^1$</p>
+<p>那就是这边的操作,把 $v^1$ 到 $v^4$ 乘上 weight,全部加起来得到 $b^1$,</p>
+<p>如果你是用矩阵操作的角度来看它,就是把$ A’$ 的第一个 column 乘上 V,就得到 $b^1$,然后接下来就是以此类推</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210409105935046.png" alt="image-20210409105935046" style="zoom: 67%;">
+
+<p>就是以此类推,把 $A’$ 的第二个 column 乘上 V,就得到 $b^2$,$A’$ 的第三个 column 乘上 V 就得到 $b^3$,$A’$ 的最后一个 column 乘上 V,就得到 $b^4$</p>
+<p>所以我们等於就是把 $A’$ 这个矩阵,乘上 V 这个矩阵,得到 O 这个矩阵,O 这个矩阵裡面的每一个 column,就是 Self-attention 的输出,也就是 $b^1$ 到 $b^4$,</p>
+<p>所以其实整个 Self-attention,我们在讲操作的时候,我们在最开始的时候 跟你讲的时候我们讲说,我们先產生了 q k v,然后再根据这个 q 去找出相关的位置,然后再对 v 做 weighted sum,其实这一串操作,<strong>就是一连串矩阵的乘法而已</strong></p>
+<p>我们再复习一下我们刚才看到的矩阵乘法</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210409110638357.png" alt="image-20210409110638357" style="zoom:50%;">
+
+<ul>
+<li><p>I 是 Self-attention 的 input,Self-attention 的 input 是一排的vector,这排 vector 拼起来当作矩阵的 column,就是 I</p>
+</li>
+<li><p>这个 input 分别乘上三个矩阵,$W^q$ $W^k$ 跟$ W^v$,得到 Q K V </p>
+</li>
+<li><p>这三个矩阵,接下来 Q 乘上 K 的 transpose,得到 A 这个矩阵,A 的矩阵你可能会做一些处理,得到 $A’$,那有时候我们会把这个 $A’$,叫做 ==Attention Matrix==，<strong>生成Q矩阵就是为了得到Attention的score</strong></p>
+</li>
+<li><p>然后接下来你把 $A’$ 再乘上 V,就得到 O,O 就是 Self-attention 这个 layer 的输出,<strong>生成V是为了计算最后的b，也就是矩阵O</strong></p>
+</li>
+</ul>
+<p>所以 Self-attention 输入是 I,输出是 O,那你会发现说虽然是叫 attention,但是<strong>其实 Self-attention layer 裡面,唯一需要学的参数,就只有 $W^q$ $W^k$ 跟$ W^v$ 而已,只有$W^q$ $W^k$ 跟$ W^v$是未知的</strong>,是需要透过我们的训练资料把它找出来的</p>
+<p>但是其他的操作都没有未知的参数,都是我们人為设定好的,都不需要透过 training data 找出来,那这整个就是 Self-attention 的操作,从 I 到 O 就是做了 Self-attention</p>
+<h2 id="Multi-head-Self-attention"><a href="#Multi-head-Self-attention" class="headerlink" title="Multi-head Self-attention"></a>Multi-head Self-attention</h2><p>Self-attention 有一个进阶的版本,叫做 ==Multi-head Self-attention==, Multi-head Self-attention,其实今天的使用是非常地广泛的</p>
+<p>在作业 4 裡面,助教原来的 code 4 有,Multi-head Self-attention,它的 head 的数目是设成 2,那刚才助教有给你提示说,把 head 的数目改少一点 改成 1,其实就可以过medium baseline</p>
+<p>但并不代表所有的任务,都适合用比较少的 head,有一些任务,比如说翻译,比如说语音辨识,其实用比较多的 head,你反而可以得到比较好的结果</p>
+<p>至於<strong>需要用多少的 head,这个又是另外一个 hyperparameter</strong>,也是你需要调的</p>
+<p>那為什麼我们会需要比较多的 head 呢,你可以想成说相关这件事情</p>
+<p>我们在做这个 Self-attention 的时候,我们就是用 q 去找相关的 k,但是<strong>==相关==这件事情有很多种不同的形式</strong>,有很多种不同的定义,所以也许我们不能只有一个 q,我们应该要有多个 q,<strong>不同的 q 负责不同种类的相关性</strong></p>
+<p>所以假设你要做 Multi-head Self-attention 的话,你会怎麼操作呢?</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210412193656512.png" alt="image-20210412193656512" style="zoom:50%;">
+
+<ul>
+<li>先把 a 乘上一个矩阵得到 q</li>
+<li>再把 q 乘上另外两个矩阵,分别得到 $q^1$ 跟 $q^2$,那这边还有 这边是用两个上标,i 代表的是位置,然后这个 1 跟 2 代表是,这个位置的第几个 q,所以这边有 $q^{i,1}$ 跟 $q^{i,2}$,代表说我们有两个 head</li>
+</ul>
+<p>我们认為这个问题,裡面有两种不同的相关性,是我们需要產生两种不同的 head,来找两种不同的相关性</p>
+<p>既然 q 有两个,那 k 也就要有两个,那 v 也就要有两个,从 q 得到 $q^1 q^2$,从 k 得到 $k^1 k^2$,从 v 得到 $v^1 v^2$,那其实就是把 q 把 k 把 v,分别乘上两个矩阵,得到这个不同的 head,就这样子而已,</p>
+<p>对另外一个位置,也做一样的事情</p>
+<p>只是现在$q^1$,它在算这个 attention 的分数的时候,它就不要管那个 $k^2$ 了</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210412194346086.png" alt="image-20210412194346086" style="zoom:50%;">
+
+<ul>
+<li><p>所以 $q_{i,1}$ 就跟 $k^{i,1}$ 算 attention</p>
+</li>
+<li><p>$q_{i,1}$ 就跟 $k^{j,1}$ 算 attention,也就是算这个 dot product,然后得到这个 attention 的分数</p>
+</li>
+<li><p>然后今天在做 weighted sum 的时候,也不要管 $v^2$ 了,看 $V^{i,1}$ 跟 $v^{j,1}$ 就好,所以你把 attention 的分数乘 $v^{i,1}$,把 attention 的分数乘 $v^{j,1}$</p>
+</li>
+<li><p>然后接下来就得到 $b^{i,1}$</p>
+</li>
+</ul>
+<p>这边只用了其中一个 head,那你会用另外一个 head,也做一模一样的事情</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210412194533453.png" alt="image-20210412194533453" style="zoom:50%;">
+
+<p>所以 $q^2$ 只对 $k^2$ 做 attention,它们在做 weighted sum 的时候,只对 $v^2$ 做 weighted sum,然后接下来你就得到 $b^{i,2}$</p>
+<p>如果你有多个 head,有 8 个 head 有 16 个 head,那也是一样的操作,那这边是用两个 head 来当作例子,来给你看看有两个 head 的时候,是怎麼操作的,现在得到 $b^{i,1}$ 跟 $b^{i,2}$</p>
+<p>然后接下来你可能会把 $b^{i,1}$ 跟 $b^{i,2}$,把它接起来,然后再通过一个 transform</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210412194643379.png" alt="image-20210412194643379" style="zoom:67%;">
+
+<p>也就是再乘上一个矩阵,然后得到 bi,然后再送到下一层去,那这个就是 Multi-head attention,一个这个 Self-attention 的变形</p>
+<h2 id="Positional-Encoding"><a href="#Positional-Encoding" class="headerlink" title="Positional Encoding"></a>Positional Encoding</h2><h3 id="No-position-information-in-self-attention"><a href="#No-position-information-in-self-attention" class="headerlink" title="No position information in self-attention"></a>No position information in self-attention</h3><p>那讲到目前為止,你会发现说 Self-attention 的这个 layer,它少了一个也许很重要的资讯,这个资讯是<strong>位置的资讯</strong></p>
+<p>对一个 Self-attention layer 而言,每一个 input,它是出现在 sequence 的最前面,还是最后面,它是完全没有这个资讯的</p>
+<p>对 Self-attention 而言,<strong>位置 1 跟位置 2 跟位置 3 跟位置 4,完全没有任何差别,这四个位置的操作其实是一模一样</strong>,对它来说 q1 到跟 q4 的距离,并没有特别远,1 跟 4 的距离并没有特别远,2 跟 3 的距离也没有特别近</p>
+<p>对它来说就是天涯若比邻,所有的位置之间的距离都是一样的,没有任何一个位置距离比较远,也没有任何位置距离比较近,也没有谁在整个 sequence 的最前面,也没有谁在整个 sequence 的最后面</p>
+<p>但是这样子设计可能会有一些问题,因為有时候位置的资讯也许很重要,举例来说,我们在做这个 POS tagging,就是词性标记的时候,也许你知道说<strong>动词比较不容易出现在句首</strong>,所以如果我们知道说,某一个词汇它是放在句首的,那它是动词的可能性可能就比较低,这样子的位置的资讯往往也是有用的</p>
+<h3 id="Each-positon-has-a-unique-positional-vector-e-i"><a href="#Each-positon-has-a-unique-positional-vector-e-i" class="headerlink" title="Each positon has a unique positional vector $e^i$"></a>Each positon has a unique positional vector $e^i$</h3><p>可是在我们到目前為止,讲的 Self-attention 的操作裡面,根本就没有位置的资讯,所以怎麼办呢,所以你做 Self-attention 的时候,如果你觉得位置的资讯是一个重要的事情,那你可以把位置的资讯把它塞进去,怎麼把位置的资讯塞进去呢,这边就要用到一个叫做,==positional encoding== 的技术</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210412201736447.png" alt="image-20210412201736447" style="zoom:67%;">
+
+<p>你為每一个位置设定一个 vector,叫做 positional vector,这边<strong>用 $e^i$ 来表示,上标 i 代表是位置,每一个不同的位置</strong>,就有不同的 vector,就是 $e^1$ 是一个 vector,$e^2$ 是一个vector,$e^{128}$ 是一个vector,不同的位置都有一个它专属的 e,然后把这个 e 加到 $a^i$ 上面,就结束了</p>
+<p>就是告诉你的 Self-attention,位置的资讯,如果它看到说 $a^i$ 好像有被加上 $ e^i$,它就知道说现在出现的位置,应该是在 i 这个位置</p>
+<p>最早的这个 transformer,就 Attention Is All You Need 那篇 paper 裡面,它用的 $ e^i$长的是这个样子</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210412201911959.png" alt="image-20210412201911959" style="zoom:50%;">
+
+<p>这边这个图上面,每一个 column 就代表一个 e,第一个位置就是 $e^1$,第二个位置就是 $e^2$,第三个位置就是 $e^3$,以此类推</p>
+<p>所以它就是把这边这个向量,放在第一个位置,把这个向量加到第二个位置的 a上,把这个向量加到第三个位置的 a 上,以此类推,每一个位置都有一个专属的 e,希望透过给每一个位置不同的 e,你的 model 在处理这个 input 的时候,它可以知道现在的 input,它的位置的资讯是什麼样子</p>
+<h3 id="Hand-crafted-or-Learned-from-data"><a href="#Hand-crafted-or-Learned-from-data" class="headerlink" title="Hand-crafted or Learned from data"></a>Hand-crafted or Learned from data</h3><p>这样子的 positional vector,它是 handcrafted 的,也就是它是人设的,那人设的这个 vector 有很多问题,就假设我现在在定这个 vector 的时候,只定到 128,那我现在 sequence 的长度,如果是 129 怎麼办呢</p>
+<p>不过在最早的那个,Attention Is All You Need paper裡面,没有这个问题,<strong>它 vector 是透过某一个规则所產生的</strong>,透过一个很神奇的sin cos 的 function 所產生的</p>
+<p>其实你不一定要这麼產生, <strong>positional encoding仍然是一个尚待研究的问题</strong>,你可以创造自己新的方法,或甚至 positional encoding,是可以根据资料学出来的</p>
+<p>那有关 positional encoding,你可以再参考一下文献,这个是一个尚待研究的问题,比如说我这边引用了一篇,这个是去年放在 arxiv 上的论文,所以可以想见这其实都是很新的论文</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210412203355853.png" alt="image-20210412203355853" style="zoom:50%;">
+
+<p>裡面就是比较了跟提出了,新的 positional encoding</p>
+<ul>
+<li>比如说这个是最早的 positional encoding,它是用一个神奇的 sin function 所產生的</li>
+<li>那如果你的 positional encoding,你把 positional encoding 裡面的数值,当作 network 参数的一部分,直接 learn 出来,看起来是这个样子的,这个图是那个横著看的,它是横著看的,它是每一个 row,代表一个 position,好 所以这个是这个最原始的,用 sin function 產生的,这个是 learn 出来的</li>
+<li>它裡面又有神奇的做法,比如说这个,这个是用 RNN 生出来的,positional encording 是用 RNN 出来的,这篇 paper 提出来的叫做 FLOATER,是用个神奇的 network 生出来的,</li>
+</ul>
+<p>总之你有各式各样不同的方法,来產生 positional encoding,那目前我们还不知道哪一种方法最好,这是一个尚待研究中的问题,所以你不用纠结说,為什麼 Sinusoidal 最好,<strong>你永远可以提出新的做法</strong></p>
+<h2 id="Applications-…"><a href="#Applications-…" class="headerlink" title="Applications …"></a>Applications …</h2><p>Self-attention 当然是用得很广,我们已经提过很多次 transformer 这个东西</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210412204520085.png" alt="image-20210412204520085" style="zoom: 67%;">
+
+<p>那我们大家也都知道说,在 NLP 的领域有一个东西叫做 BERT,BERT 裡面也用到 Self-attention,所以 Self-attention 在 NLP 上面的应用,是大家都耳熟能详的</p>
+<p>但 <strong>Self-attention,不是只能用在 NLP 相关的应用上,它还可以用在很多其他的问题上</strong>,</p>
+<h3 id="Self-attention-for-Speech"><a href="#Self-attention-for-Speech" class="headerlink" title="Self-attention for Speech"></a>Self-attention for Speech</h3><p>比如说在做语音的时候,你也可以用 Self-attention,不过在做语音的时候,你可能会对 Self-attention,做一些小小的改动</p>
+<p>因為一般语音的,如果你要把一段声音讯号,表示成一排向量的话,这排<strong>向量可能会非常地长</strong>,</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210412205436769.png" alt="image-20210412205436769" style="zoom:67%;">
+
+<p>而每一个向量,其实只代表了 10 millisecond 的长度而已,所以如果今天是 1 秒鐘的声音讯号,它就有 100 个向量了,5 秒鐘的声音讯号,就 500 个向量了,你随便讲一句话,都是上千个向量了</p>
+<p>所以一段声音讯号,你要描述它的时候,那个像这个 vector 的 sequence 它的长度是非常可观的,那可观的 sequence,可观的长度,会造成什麼问题呢</p>
+<p>你想想看,我们今天在<strong>计算这个 attention matrix 的时候,它的 计算complexity 是长度的平方</strong></p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210412210111322.png" alt="image-20210412210111322" style="zoom:67%;">
+
+<p>计算这个 attention matrix A′你需要做 L 乘以 L 次的 inner product,那如果这个 L 的值很大的话,它的计算量就很可观,你也需要很大的这个 memory,才能够把这个矩阵存下来</p>
+<p>所以今天如果在做语音辨识的时候,一句话所產生的这个 attention matrix,可能会太大,大到你根本就不容易处理,不容易训练,所以怎麼办呢</p>
+<p>在做语音的时候,有一招叫做 ==Truncated Self-attention==</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210412210322691.png" alt="image-20210412210322691" style="zoom:50%;">
+
+<p>Truncated Self-attention 做的事情就是,我们今天在做 Self-attention 的时候,<strong>不要看一整句话,就我们就只看一个小的范围就好</strong></p>
+<p>那至於<strong>这个范围应该要多大,那个是人设定的</strong></p>
+<p>那為什麼我们知道说,今天在做语音辨识的时候,也许只需要看一个小的范围就好,那就是<strong>取决於你对这个问题的理解</strong>,也许我们要辨识这个位置有什麼样的<strong>phoneme</strong>,这个位置有什麼样的内容,我们并不需要看整句话,只要看这句话,跟它前后一定范围之内的资讯,其实就可以判断</p>
+<p>所以如果在做 Self-attention 的时候,也许没有必要看过一整个句子,也许没有必要让 Self-attention 考虑一整个句子,也许只需要考虑一个小范围就好,这样就可以加快运算的速度，这个是 Truncated Self-attention,</p>
+<h3 id="Self-attention-for-Image"><a href="#Self-attention-for-Image" class="headerlink" title="Self-attention for Image"></a>Self-attention for Image</h3><p>那其实 Self-attention ,还可以被用在影像上,Self-attention</p>
+<p>那到目前為止,我们在讲 Self-attention 的时候,我们都说 <strong>Self-attention 适用的范围是：输入是一个 vector set 的时候</strong></p>
+<p>一张图片啊,我们把它看作是一个很长的向量,那<strong>其实一张图片,我们也可以换一个观点,把它看作是一个 vector 的 set</strong></p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210412214143979.png" alt="image-20210412214143979" style="zoom:67%;">
+
+<p>这个是一个解析度 5 乘以 10 的图片,那这一张图片呢,可以看作是一个 tensor,这个 tensor 的大小是 5 乘以 10 乘以 3,3 代表 RGB 这 3 个 channel</p>
+<p>你可以把每一个位置的 pixel,看作是一个三维的向量,所以<strong>每一个 pixel,其实就是一个三维的向量</strong>,那<strong>整张图片,其实就是 5 乘以 10 个向量的set</strong></p>
+<p>所以我们其实可以换一个角度,影像这个东西,其实也是一个 vector set,它既然也是一个 vector set 的话,你完全可以用 Self-attention 来处理一张图片,那有没有人用 Self-attention 来处理一张图片呢,是有的</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210412214417887.png" alt="image-20210412214417887" style="zoom:50%;">
+
+<p>那这边就举了两个例子,来给大家参考,那现在把 Self-attention 用在影像处理上,也不算是一个非常石破天惊的事情,</p>
+<h4 id="Self-attention-v-s-CNN"><a href="#Self-attention-v-s-CNN" class="headerlink" title="Self-attention v.s. CNN"></a>Self-attention v.s. CNN</h4><p>我们可以来比较一下,Self-attention 跟 CNN 之间,有什麼样的差异或者是关联性</p>
+<p>如果我们今天,是用 Self-attention 来处理一张图片,代表说,假设这个是你要考虑的 pixel,那它產生 query,其他 pixel 產生 key,</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210412214915856.png" alt="image-20210412214915856" style="zoom:50%;">
+
+<p>你今天在做 inner product 的时候,你考虑的不是一个小的receptive field的信息,而是整张影像的资讯</p>
+<p>但是今天在做 CNN 的时候,,会画出一个 receptive field,每一个 filter,每一个 neural,只考虑 receptive field 范围裡面的资讯</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210412215451745.png" alt="image-20210412215451745" style="zoom:50%;">
+
+<ul>
+<li><p>所以如果我们比较 CNN 跟 Self-attention 的话,<strong>CNN 可以看作是一种简化版的 Self-attention</strong>，因為在做CNN的时候,我们只考虑 receptive field 裡面的资讯,而在做 Self-attention 的时候,我们是考虑整张图片的资讯,所以 CNN,是简化版的 Self-attention</p>
+</li>
+<li><p>或者是你可以反过来说,<strong>Self-attention 是一个复杂化的 CNN</strong></p>
+</li>
+</ul>
+<p>在 CNN 裡面,我们要划定 receptive field,每一个 neural,只考虑 receptive field 裡面的资讯,而 <strong>receptive field 的范围跟大小,是人决定的,</strong></p>
+<p>而对 Self-attention 而言,我们用 attention,去找出相关的 pixel,就好像是 <strong>receptive field 是自动被学出的</strong>,network 自己决定说,receptive field 的形状长什麼样子,network 自己决定说,以这个 pixel 為中心,哪些 pixel 是我们真正需要考虑的,那些 pixel 是相关的</p>
+<p><strong>所以 receptive field 的范围,不再是人工划定,而是让机器自己学出来</strong></p>
+<p>其实你可以读一篇 paper,叫做 On the Relationship,between Self-attention and Convolutional Layers</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210412215841085.png" alt="image-20210412215841085" style="zoom:50%;">
+
+<p>在这篇 paper 裡面,会用数学的方式严谨的告诉你说,其实这个 <strong>CNN就是 Self-attention 的特例,Self-attention 只要设定合适的参数,它可以做到跟 CNN 一模一样的事情</strong></p>
+<p>所以 self attention,是更 flexible 的 CNN,而 CNN 是有受限制的 Self-attention,Self-attention 只要透过某些设计,某些限制,它就会变成 CNN</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210412220020641.png" alt="image-20210412220020641" style="zoom:50%;">
+
+<p>那这也不是很旧的 paper,你发现它放到网路上的时间呢,是 19 年的 11 月,所以你知道这些,我们今天上课裡面讲的东西,其实都是很新的资讯</p>
+<p>既然Self-attention 比较 flexible,之前有讲说<strong>比较 flexible 的 model,比较需要更多的 data,如果你 data 不够,就有可能 overfitting</strong></p>
+<p>而小的 model,而比较有限制的 model,它适合在 data 小的,少的时候,它可能比较不会 overfitting,那如果你这个限制设的好,也会有不错的结果</p>
+<p>如果你今天用不同的 data 量,来训练 CNN 跟 Self-attention,你确实可以看到我刚才讲的现象</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210412220707729.png" alt="image-20210412220707729" style="zoom:50%;">
+
+<p>那这个实验结果,来自於 An image is worth 16 乘以 16 的 words,这个是 Google 的 paper,它就是把这个 Self-attention,apply 在影像上面</p>
+<p>那其实<strong>把一张影像呢,拆成 16 乘以 16 个 patch,它把每一个 patch想像成是一个 word</strong>,因為一般我们这个 Self-attention,比较常用在 NLP 上面,所以他就说,想像每一个 patch 其实就是一个 word,所以他就取了一个很 fancy 的 title,叫做一张图呢,值 16 乘以 16 个文字</p>
+<p>横轴是训练的影像的量,那你发现说,对 Google 来说 用的,所谓的资料量比较少,也是你没有办法用的资料量啦这边有 10 个 million 就是,1000 万张图,是资料量比较小的 setting,然后资料量比较大的 setting 呢,有 3 亿张图片,在这个实验裡面呢,比较了 Self-attention 是浅蓝色的这一条线,跟 CNN 是深灰色的这条线</p>
+<p>就会发现说,<strong>随著资料量越来越多,那 Self-attention 的结果就越来越好,最终在资料量最多的时候,Self-attention 可以超过 CNN,但在资料量少的时候,CNN 它是可以比 Self-attention,得到更好的结果的</strong></p>
+<p>那為什麼会这样,你就可以从 CNN 跟 Self-attention,它们的弹性来加以解释</p>
+<ul>
+<li>Self-attention 它弹性比较大,所以需要比较多的训练资料,训练资料少的时候,就会 overfitting</li>
+<li>而 CNN 它弹性比较小,在训练资料少的时候,结果比较好,但训练资料多的时候,它没有办法从更大量的训练资料得到好处</li>
+</ul>
+<p>所以这个就是 Self-attention 跟 CNN 的比较，那 Self-attention 跟 CNN,谁比较好呢,<strong>我应该选哪一个呢,事实上你也可以都用</strong>,在我们作业四裡面,如果你要做 strong baseline 的话,就特别给你一个提示,就是用 conformer,裡面就是有用到 Self-attention,也有用到 CNN</p>
+<h3 id="Self-attention-v-s-RNN"><a href="#Self-attention-v-s-RNN" class="headerlink" title="Self-attention v.s. RNN"></a>Self-attention v.s. RNN</h3><p>我们来比较一下,Self-attention 跟 RNN,RNN就是 recurrent neural network,这门课裡面现在就不会讲到 recurrent neural network,因為 recurrent neural network 的角色,很大一部分都可以用 Self-attention 来取代了,</p>
+<p>但是 RNN 是什麼呢,假设你想知道的话,那这边很快地三言两语把它带过去,RNN 跟 Self-attention 一样,都是要处理 input 是一个 sequence 的状况</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210413093042847.png" alt="image-20210413093042847" style="zoom:50%;">
+
+<p>在 RNN 裡面呢</p>
+<ul>
+<li>左边是你的 input sequence,你有一个 memory 的 vector</li>
+<li>然后你有一个 RNN 的 block,这个 RNN 的 block 呢,它吃 memory 的 vector,吃第一个 input 的 vector</li>
+<li>然后 output 一个东西,然后根据这个 output 的东西,我们通常叫做这个 hidden,这个 hidden 的 layer 的 output</li>
+<li>然后通过这个 fully connected network,然后再去做你想要的 prediction</li>
+</ul>
+<p>接下来当sequence 裡面,第二个 vector 作為 input 的时候,也会把前一个时间点吐出来的东西,当做下一个时间点的输入,再丢进 RNN 裡面,然后再產生新的 vector,再拿去给 fully connected network</p>
+<p>然后第三个 vector 进来的时候,你把第三个 vector 跟前一个时间点的输出,一起丢进 RNN,再產生新的输出,然后在第四个时间点</p>
+<p>第四个 vector 输入的时候,把第四个 vector 跟前一个时间点,產生出来的输出,再一起做处理,得到新的输出,再通过 fully connected network 的 layer,这个就是 RNN</p>
+<p>Recurrent Neural Network跟 Self-attention 做的事情其实也非常像,它们的 <strong>input 都是一个 vector sequence</strong></p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210413152809037.png" alt="image-20210413152809037" style="zoom:50%;">
+
+<p>Self-attention output 是另外一个 vector sequence,这裡面的每一个 vector,都<strong>考虑了整个 input sequence 以后</strong>,再给 fully connected network 去做处理</p>
+<p>那 RNN 呢,它也会 output 另外一群 vector,这另外一排 vector 也会给,fully connected network 做进一步的处理,那 Self-attention 跟 RNN 有什麼不同呢</p>
+<p>当然一个非常显而易见的不同,你可能会说,这边的每一个 vector,它都考虑了整个 input 的 sequence,而 RNN 每一个 vector,只考虑了左边已经输入的 vector,它没有考虑右边的 vector,那这是一个很好的观察</p>
+<p>但是 <strong>RNN 其实也可以是双向的</strong>,所以如果你 RNN 用双向的 RNN 的话,其实这边的每一个 hidden 的 output,每一个 memory 的 output,其实也可以看作是考虑了整个 input 的 sequence</p>
+<p>但是假设我们把 RNN 的 output,跟 Self-attention 的 output 拿来做对比的话,就算你用 bidirectional 的 RNN,还是有一些差别的</p>
+<ul>
+<li><p>对 RNN 来说,假设最右边这个黄色的 vector,要考虑最左边的这个输入,那它必须要把最左边的输入存在 memory 裡面,然后接下来都不能够忘掉,一路带到最右边,才能够在最后一个时间点被考虑</p>
+</li>
+<li><p>但对 Self-attention 来说没有这个问题,它只要这边输出一个 query,这边输出一个 key,只要它们 match 得起来,天涯若比邻,你可以从非常远的 vector,在整个 sequence 上非常远的 vector,轻易地抽取资讯,所以这是 RNN 跟 Self-attention,一个不一样的地方</p>
+</li>
+</ul>
+<p>还有另外一个更主要的不同是,RNN 今天在处理的时候, input 一排 sequence,output 一排 sequence 的时候,<strong>RNN 是没有办法平行化的</strong></p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210413153504431.png" alt="image-20210413153504431" style="zoom:50%;">
+
+<p>RNN 它今天 input 一排是 vector,output 另外一排 vector 的时候,它没有办法一次处理,没有办法平行处理所有的 output</p>
+<p>但 Self-attention 有一个优势,是它可以平行处理所有的输出,你今天 input 一排 vector,再 output 这四个 vector 的时候,<strong>这四个 vector 是平行產生的,并不需要等谁先运算完才把其他运算出来</strong>,output 的这个 vector,裡面的 output 这个 vector sequence 裡面,每一个 vector 都是同时產生出来的</p>
+<p>所以在运算速度上,Self-attention 会比 RNN 更有效率</p>
+<p>那你今天发现说,<strong>很多的应用都往往把 RNN 的架构,逐渐改成 Self-attention 的架构了</strong>,如果你想要更进一步了解,RNN 跟 Self-attention 的关係的话,你可以看下面这篇文章,Transformers are RNNs,裡面会告诉你说,Self-attention 你加上了什麼东西以后,其实它就变成了 RNN,发现说这也不是很旧的 paper,这个是去年的六月放到 arXiv 上</p>
+<p>所以今天讲的都是一些很新的研究成果,那 RNN 的部分呢,我们这门课就不会提到,假设你对 RNN 有兴趣的话,以下是这一门课之前的上课录影,那 RNN 的部分,因為这一次不会讲到,所以特别有做了英文的版本,RNN 呢 是中文英文版本,都同时有放在 YouTube 上面</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210413153721866.png" alt="image-20210413153721866" style="zoom:50%;">
+
+<h3 id="Self-attention-for-Graph"><a href="#Self-attention-for-Graph" class="headerlink" title="Self-attention for Graph"></a>Self-attention for Graph</h3><p>Graph 也可以看作是一堆 vector,那如果是一堆 vector,就可以用 Self-attention 来处理,所以 Self-attention 也可以用在 Graph 上面,但是当我们把 Self-attention,用在Graph 上面的时候,有什麼样特别的地方呢,、</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210413154403199.png" alt="image-20210413154403199" style="zoom:50%;">
+
+<p>在 Graph 上面,每一个 node 可以表示成一个向量,但<strong>不只有 node 的资讯,还有 edge 的资讯</strong>,我们知道哪些 node 之间是有相连的,也就是哪些 node 是有关联的</p>
+<p>我们知道哪些向量间是有关联,那之前我们在做 Self-attention 的时候,所谓的关联性是 network 自己找出来的,但是现在既然有了 Graph 的资讯,<strong>有了 edge 的资讯,那关联性也许就不需要透过机器自动找出来,这个图上面的 edge 已经暗示了我们,node 跟 node 之间的关联性</strong></p>
+<p>所以今天当你把 Self-attention,用在 Graph 上面的时候,你有一个选择是你在做这个,Attention Matrix 计算的时候,你可以<strong>只计算有 edge 相连的 node 就好</strong></p>
+<p>举例来说在这个图上,node 1 跟 node 8 有相连,那我们只需要计算 node 1 跟 node 8,这两个向量之间的 attention 的分数,那 1 跟 6 相连,所以只有 1 跟 6 之间,需要计算 attention 的分数,1 跟 5 有相连,所以只有 1 跟 5 需要计算 attention 的分数,2 跟 3 有相连,所以只有 2 跟 3 需要计算 attention 的分数,以此类推</p>
+<p>那如果两个 node 之间没有相连,那其实很有可能就暗示我们,这两个 node 之间没有关係,<strong>既然没有关係,我们就不需要再去计算它的 attention score,直接把它设為 0 就好了</strong></p>
+<p>因為这个 <strong>Graph 往往是人為根据某些 domain knowledge 建出来的</strong>,那 domain knowledge 告诉我们说,这两个向量彼此之间没有关联,我们就没有必要再用机器去学习这件事情</p>
+<p>其实当我们把 Self-attention,按照我们这边讲的这种限制,用在 Graph 上面的时候,其实就是一种 Graph Neural Network,也就是一种 GNN</p>
+<p>那我知道 GNN,现在也是一个很 fancy 的题目,那我不会说 Self-attention 就要囊括了,所有 GNN 的各种变形了,但把 Self-attention 用在 Graph 上面,是某一种类型的 Graph Neural Network,那这边呢,一样我们也没有办法细讲了,GNN 这边坑也是很深啊,这边水是很深,那就放一下助教之前上课的连结</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210413154823956.png" alt="image-20210413154823956" style="zoom:50%;">
+
+<p>大概花了快三个小时,在讲 Graph Neural Network,而且其实还没有讲完,就告诉你说这个 Graph Neural Network,也是有非常深的技术,这边水也是很深,那这不是我们今天这一堂课可以讲的内容,好 </p>
+<h2 id="More"><a href="#More" class="headerlink" title="More"></a>More</h2><p>其实Self-attention 有非常非常多的变形,你可以看一篇 paper 叫做,Long Range Arena,裡面比较了各种不同的 Self-attention 的变形</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210413155347467.png" alt="image-20210413155347467" style="zoom:50%;">
+
+<p>因為 Self-attention 它最大的问题就是,<strong>它的运算量非常地大</strong>,所以怎麼样减少 Self-attention 的运算量,是一个未来的重点,可以看到这边有,各种各式各样 Self-attention 的变形</p>
+<p> Self-attention 最早是,用在 Transformer 上面,所以很多人讲 Transformer 的时候,其实它指的就是这个 Self-attention,有人说广义的 Transformer,指的就是 Self-attention,那所以后来各式各样的,Self-attention 的变形都这样做,都叫做是什麼 former,比如说 Linformer Performer Reformer 等等,所以 Self-attention 的变形,现在都叫做 xxformer</p>
+<p>那可以看到，往右代表它运算的速度,所以有很多各式各样新的 xxformer,它们的速度会比原来的 Transformer 快,但是快的速度带来的就是 performance 变差</p>
+<p>这个纵轴代表是 performance,所以它们往往比原来的 Transformer,performance 差一点,但是速度会比较快</p>
+<p>那到底什麼样的 Self-attention,才能够真的又快又好,这仍然是一个尚待研究的问题,如果你对 Self-attention,想要进一步研究的话,你还可以看一下,Efficient Transformers: A Survey 这篇 paper,裡面会跟你介绍,各式各样 Self-attention 的变形。</p>
+<h1 id="Transformer"><a href="#Transformer" class="headerlink" title="Transformer"></a>Transformer</h1><p><strong>原论文：<a href="https://proceedings.neurips.cc/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf" target="_blank" rel="noopener">Attention Is All You Need</a></strong></p>
 <hr>
 <p>注意力（Attention）机制由Bengio团队与2014年提出并在近年广泛的应用在深度学习中的各个领域，例如在计算机视觉方向用于捕捉图像上的感受野，或者NLP中用于定位关键token或者特征。谷歌团队近期提出的用于生成词向量的BERT算法在NLP的11项任务中取得了效果的大幅提升，堪称2018年深度学习领域最振奋人心的消息。而BERT算法的最重要的部分便是Transformer，因此，在了解Bert前首先要了解Transformer是什么。</p>
 <p>Transformer中抛弃了传统的CNN和RNN，整个网络结构完全是由Attention机制组成。更准确地讲，Transformer由且仅由self-Attenion和Feed Forward Neural Network组成。一个基于Transformer的可训练的神经网络可以通过堆叠Transformer的形式进行搭建，作者的实验是通过搭建编码器和解码器各6层，总共12层的Encoder-Decoder，并在机器翻译中取得了BLEU值得新高。</p>
@@ -427,13 +908,13 @@
 <p>Transformer虽然摒弃了RNN的循环结构和CNN的局部相关性，但对于序列来说，最重要的其实还是先后顺序。看前面self-attention的处理方式，实际上与“词袋”模型没什么区别，这样忽略了位置信息的缺陷肯定是要通过一定的手段来弥补。</p>
 <p>论文中提出了一个非常“smart”的方式来加入位置信息，就是这里的Positional Encoding，它对于每个位置pos进行编码，然后与相应位置的word embedding进行相加，构成当前位置的新word embedding。它采用如下的公式为每个pos进行编码：</p>
 <p><img src="/images/loading.gif" data-original="../images/paper/image-20210816223321808.png" alt=""></p>
-<h3 id="Self-Attention"><a href="#Self-Attention" class="headerlink" title="Self-Attention"></a>Self-Attention</h3><h4 id="Self-Attention-1"><a href="#Self-Attention-1" class="headerlink" title="Self-Attention"></a>Self-Attention</h4><p>接下来我们详细看一下self-attention，其思想和attention类似，但是self-attention是Transformer用来将其他相关单词的“理解”转换成我们正常理解的单词的一种思路，我们看个例子：<br><code>The animal didn't cross the street because it was too tired</code><br>这里的it到底代表的是animal还是street呢，对于我们来说能很简单的判断出来，但是对于机器来说，是很难判断的，self-attention就能够让机器把it和animal联系起来<br><img src="/images/loading.gif" data-original="../images/paper/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ppYW93b3Nob3V6aQ==,size_16,color_FFFFFF,t_70-162912618144845" alt=""><br>接下来我们看下详细的处理过程。</p>
+<h3 id="Self-Attention-2"><a href="#Self-Attention-2" class="headerlink" title="Self-Attention"></a>Self-Attention</h3><h4 id="Self-Attention-3"><a href="#Self-Attention-3" class="headerlink" title="Self-Attention"></a>Self-Attention</h4><p>接下来我们详细看一下self-attention，其思想和attention类似，但是self-attention是Transformer用来将其他相关单词的“理解”转换成我们正常理解的单词的一种思路，我们看个例子：<br><code>The animal didn't cross the street because it was too tired</code><br>这里的it到底代表的是animal还是street呢，对于我们来说能很简单的判断出来，但是对于机器来说，是很难判断的，self-attention就能够让机器把it和animal联系起来<br><img src="/images/loading.gif" data-original="../images/paper/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ppYW93b3Nob3V6aQ==,size_16,color_FFFFFF,t_70-162912618144845" alt=""><br>接下来我们看下详细的处理过程。</p>
 <p>1、首先，self-attention会计算出三个新的向量，在论文中，向量的维度是512维，我们把这三个向量分别称为Query、Key、Value，这三个向量是用embedding向量与一个矩阵相乘得到的结果，这个矩阵是随机初始化的，维度为（64，512）注意第二个维度需要和embedding的维度一样，其值在BP的过程中会一直进行更新，得到的这三个向量的维度是64低于embedding维度的。</p>
 <p><img src="/images/loading.gif" data-original="../images/paper/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ppYW93b3Nob3V6aQ==,size_16,color_FFFFFF,t_70-162912622611447" alt=""><br>那么Query、Key、Value这三个向量又是什么呢？这三个向量对于attention来说很重要，当你理解了下文后，你将会明白这三个向量扮演者什么的角色。</p>
 <p>2、计算self-attention的分数值，该分数值决定了当我们在某个位置encode一个词时，对输入句子的其他部分的关注程度。这个分数值的计算方法是Query与Key做点乘，以下图为例，首先我们需要针对Thinking这个词，计算出其他词对于该词的一个分数值，首先是针对于自己本身即q1·k1，然后是针对于第二个词即q1·k2<br><img src="/images/loading.gif" data-original="../images/paper/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ppYW93b3Nob3V6aQ==,size_16,color_FFFFFF,t_70-162912623154849" alt=""><br>3、接下来，把点成的结果除以一个常数，这里我们除以8，这个值一般是采用上文提到的矩阵的第一个维度的开方即64的开方8，当然也可以选择其他的值，然后把得到的结果做一个softmax的计算。得到的结果即是每个词对于当前位置的词的相关性大小，当然，当前位置的词相关性肯定会会很大<br><img src="/images/loading.gif" data-original="../images/paper/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ppYW93b3Nob3V6aQ==,size_16,color_FFFFFF,t_70-162912623885951" alt=""><br>4、下一步就是把Value和softmax得到的值进行相乘，并相加，得到的结果即是self-attetion在当前节点的值。<br><img src="/images/loading.gif" data-original="../images/paper/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ppYW93b3Nob3V6aQ==,size_16,color_FFFFFF,t_70-162912624335753" alt=""><br>在实际的应用场景，为了提高计算速度，我们采用的是矩阵的方式，直接计算出Query, Key, Value的矩阵，然后把embedding的值与三个矩阵直接相乘，把得到的新矩阵Q与K相乘，乘以一个常数，做softmax操作，最后乘上V矩阵<br><img src="/images/loading.gif" data-original="../images/paper/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ppYW93b3Nob3V6aQ==,size_16,color_FFFFFF,t_70-162912624711755" alt=""><br><img src="/images/loading.gif" data-original="../images/paper/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ppYW93b3Nob3V6aQ==,size_16,color_FFFFFF,t_70-162912625166057" alt=""><br>这种通过 query 和 key 的相似性程度来确定 value 的权重分布的方法被称为scaled dot-product attention。其实scaled dot-Product attention就是我们常用的使用点积进行相似度计算的attention，只是多除了一个（为K的维度）起到调节作用，使得内积不至于太大。<br><img src="/images/loading.gif" data-original="../images/paper/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ppYW93b3Nob3V6aQ==,size_16,color_FFFFFF,t_70-162912625521359" alt=""></p>
 <h4 id="Multi-Headed-Attention"><a href="#Multi-Headed-Attention" class="headerlink" title="Multi-Headed Attention"></a>Multi-Headed Attention</h4><p>这篇论文更厉害的地方是给self-attention加入了另外一个机制，被称为“multi-headed” attention，该机制理解起来很简单，就是说不仅仅只初始化一组Q、K、V的矩阵，而是初始化多组，tranformer是使用了8组，所以最后得到的结果是8个矩阵。<br><img src="/images/loading.gif" data-original="../images/paper/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ppYW93b3Nob3V6aQ==,size_16,color_FFFFFF,t_70-162912626824661" alt=""><br><img src="/images/loading.gif" data-original="../images/paper/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ppYW93b3Nob3V6aQ==,size_16,color_FFFFFF,t_70-162912627276563" alt=""><br>这给我们留下了一个小的挑战，前馈神经网络没法输入8个矩阵呀，这该怎么办呢？所以我们需要一种方式，把8个矩阵降为1个，首先，我们把8个矩阵连在一起，这样会得到一个大的矩阵，再随机初始化一个矩阵和这个组合好的矩阵相乘，最后得到一个最终的矩阵。<br><img src="/images/loading.gif" data-original="../images/paper/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ppYW93b3Nob3V6aQ==,size_16,color_FFFFFF,t_70-162912627601365" alt=""><br>这就是multi-headed attention的全部流程了，这里其实已经有很多矩阵了，我们把所有的矩阵放到一张图内看一下总体的流程。<br><img src="/images/loading.gif" data-original="../images/paper/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ppYW93b3Nob3V6aQ==,size_16,color_FFFFFF,t_70-162912627904567" alt=""><br>多头attention（Multi-head attention）整个过程可以简述为：Query，Key，Value首先进过一个线性变换，然后输入到放缩点积attention（注意这里要做h次，其实也就是所谓的多头，每一次算一个头，而且每次Q，K，V进行线性变换的参数W是不一样的），然后将h次的放缩点积attention结果进行拼接，再进行一次线性变换得到的值作为多头attention的结果。可以看到，google提出来的多头attention的不同之处在于进行了h次计算而不仅仅算一次，论文中说到这样的好处是可以允许模型在不同的表示子空间里学习到相关的信息，后面还会根据attention可视化来验证。<br><img src="/images/loading.gif" data-original="../images/paper/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ppYW93b3Nob3V6aQ==,size_16,color_FFFFFF,t_70-162912628251069" alt=""><br>那么在整个模型中，是如何使用attention的呢？如下图，首先在编码器到解码器的地方使用了多头attention进行连接，K，V，Q分别是编码器的层输出（这里K=V)和解码器中都头attention的输入。其实就和主流的机器翻译模型中的attention一样，利用解码器和编码器attention来进行翻译对齐。然后在编码器和解码器中都使用了多头自注意力self-attention来学习文本的表示。Self-attention即K=V=Q，例如输入一个句子，那么里面的每个词都要和该句子中的所有词进行attention计算。目的是学习句子内部的词依赖关系，捕获句子的内部结构。</p>
 <p><img src="/images/loading.gif" data-original="../images/paper/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ppYW93b3Nob3V6aQ==,size_16,color_FFFFFF,t_70-162912628572571" alt=""><br>对于使用自注意力机制的原因，论文中提到主要从三个方面考虑（每一层的复杂度，是否可以并行，长距离依赖学习），并给出了和RNN，CNN计算复杂度的比较。可以看到，如果输入序列n小于表示维度d的话，每一层的时间复杂度self-attention是比较有优势的。当n比较大时，作者也给出了一种解决方案self-attention（restricted）即每个词不是和所有词计算attention，而是只与限制的r个词去计算attention。在并行方面，多头attention和CNN一样不依赖于前一时刻的计算，可以很好的并行，优于RNN。在长距离依赖上，由于self-attention是每个词和所有词都要计算attention，所以不管他们中间有多长距离，最大的路径长度也都只是1。可以捕获长距离依赖关系。<br><img src="/images/loading.gif" data-original="../images/paper/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ppYW93b3Nob3V6aQ==,size_16,color_FFFFFF,t_70-162912628906273" alt=""><br>现在我们已经接触了attention的header，让我们重新审视我们之前的例子，看看例句中的“it”这个单词在不同的attention header情况下会有怎样不同的关注点（这里不同颜色代表attention不同头的结果，颜色越深attention值越大）。<br><img src="/images/loading.gif" data-original="../images/paper/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ppYW93b3Nob3V6aQ==,size_16,color_FFFFFF,t_70-162912629367775" alt=""><br>当我们对“it”这个词进行编码时，一个注意力的焦点主要集中在“animal”上，而另一个注意力集中在“tired”（两个heads）<br>但是，如果我们将所有注意力添加到图片中，可能有点难理解：<br><img src="/images/loading.gif" data-original="../images/paper/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ppYW93b3Nob3V6aQ==,size_16,color_FFFFFF,t_70-162912629690777" alt=""></p>
-<h4 id="Positional-Encoding"><a href="#Positional-Encoding" class="headerlink" title="Positional Encoding"></a>Positional Encoding</h4><p>到目前为止，transformer模型中还缺少一种解释输入序列中单词顺序的方法。为了处理这个问题，transformer给encoder层和decoder层的输入添加了一个额外的向量Positional Encoding，维度和embedding的维度一样，这个向量采用了一种很独特的方法来让模型学习到这个值，这个向量能决定当前词的位置，或者说在一个句子中不同的词之间的距离。这个位置向量的具体计算方法有很多种，论文中的计算方法如下<br><img src="/images/loading.gif" data-original="../images/paper/20190407193730682.png" alt=""><br>其中pos是指当前词在句子中的位置，i是指向量中每个值的index，可以看出，在偶数位置，使用正弦编码，在奇数位置，使用余弦编码。最后把这个Positional Encoding与embedding的值相加，作为输入送到下一层。<br><img src="/images/loading.gif" data-original="../images/paper/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ppYW93b3Nob3V6aQ==,size_16,color_FFFFFF,t_70-162912636770480" alt=""><br>为了让模型捕捉到单词的顺序信息，我们添加位置编码向量信息（POSITIONAL ENCODING），位置编码向量不需要训练，它有一个规则的产生方式（上图公式)。</p>
+<h4 id="Positional-Encoding-1"><a href="#Positional-Encoding-1" class="headerlink" title="Positional Encoding"></a>Positional Encoding</h4><p>到目前为止，transformer模型中还缺少一种解释输入序列中单词顺序的方法。为了处理这个问题，transformer给encoder层和decoder层的输入添加了一个额外的向量Positional Encoding，维度和embedding的维度一样，这个向量采用了一种很独特的方法来让模型学习到这个值，这个向量能决定当前词的位置，或者说在一个句子中不同的词之间的距离。这个位置向量的具体计算方法有很多种，论文中的计算方法如下<br><img src="/images/loading.gif" data-original="../images/paper/20190407193730682.png" alt=""><br>其中pos是指当前词在句子中的位置，i是指向量中每个值的index，可以看出，在偶数位置，使用正弦编码，在奇数位置，使用余弦编码。最后把这个Positional Encoding与embedding的值相加，作为输入送到下一层。<br><img src="/images/loading.gif" data-original="../images/paper/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ppYW93b3Nob3V6aQ==,size_16,color_FFFFFF,t_70-162912636770480" alt=""><br>为了让模型捕捉到单词的顺序信息，我们添加位置编码向量信息（POSITIONAL ENCODING），位置编码向量不需要训练，它有一个规则的产生方式（上图公式)。</p>
 <p>如果我们的嵌入维度为4，那么实际上的位置编码就如下图所示：<br><img src="/images/loading.gif" data-original="../images/paper/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ppYW93b3Nob3V6aQ==,size_16,color_FFFFFF,t_70-162912637216182" alt=""><br>那么生成位置向量需要遵循怎样的规则呢？</p>
 <p>观察下面的图形，每一行都代表着对一个矢量的位置编码。因此第一行就是我们输入序列中第一个字的嵌入向量，每行都包含512个值，每个值介于1和-1之间。我们用颜色来表示1，-1之间的值，这样方便可视化的方式表现出来：<br><img src="/images/loading.gif" data-original="../images/paper/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ppYW93b3Nob3V6aQ==,size_16,color_FFFFFF,t_70-162912637655284" alt=""><br>这是一个20个字（行）的（512）列位置编码示例。你会发现它咋中心位置被分为了2半，这是因为左半部分的值是一由一个正弦函数生成的，而右半部分是由另一个函数（余弦)生成。然后将它们连接起来形成每个位置编码矢量。</p>
 <h4 id="Layer-normalization"><a href="#Layer-normalization" class="headerlink" title="Layer normalization"></a>Layer normalization</h4><p>在transformer中，每一个子层（self-attetion，ffnn）之后都会接一个残差模块，并且有一个Layer normalization<br><img src="/images/loading.gif" data-original="../images/paper/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ppYW93b3Nob3V6aQ==,size_16,color_FFFFFF,t_70-162912638029786" alt=""><br>在进一步探索其内部计算方式，我们可以将上面图层可视化为下图：<br><img src="/images/loading.gif" data-original="../images/paper/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ppYW93b3Nob3V6aQ==,size_16,color_FFFFFF,t_70-162912638386588" alt=""><br>残差模块相信大家都很清楚了，这里不再讲解，主要讲解下Layer normalization。Normalization有很多种，但是它们都有一个共同的目的，那就是把输入转化成均值为0方差为1的数据。我们在把数据送入激活函数之前进行normalization（归一化)，因为我们不希望输入数据落在激活函数的饱和区。</p>
@@ -464,6 +945,566 @@
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://zhuanlan.zhihu.com/p/48508221" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/48508221</a></p>
 <p><a href="https://blog.csdn.net/zhouchen1998/article/details/107006263" target="_blank" rel="noopener">https://blog.csdn.net/zhouchen1998/article/details/107006263</a></p>
 <p><a href="https://blog.csdn.net/Magical_Bubble/article/details/89083225" target="_blank" rel="noopener">https://blog.csdn.net/Magical_Bubble/article/details/89083225</a></p>
+<h2 id="Sequence-to-sequence-Seq2seq"><a href="#Sequence-to-sequence-Seq2seq" class="headerlink" title="Sequence-to-sequence (Seq2seq)"></a>Sequence-to-sequence (Seq2seq)</h2><p>Transformer就是一个,==Sequence-to-sequence==的model,他的缩写,我们会写做==Seq2seq==,那Sequence-to-sequence的model,又是什麼呢</p>
+<p>我们之前在讲input a sequence的,case的时候,我们说input是一个sequence,那output有几种可能</p>
+<ul>
+<li>一种是input跟output的长度一样,这个是在作业二的时候做的</li>
+<li>有一个case是output指,output一个东西,这个是在作业四的时候做的</li>
+<li>那接来作业五的case是,我们不知道应该要output多长,由机器自己决定output的长度,即Seq2seq</li>
+</ul>
+<ol>
+<li><p>举例来说,Seq2seq一个很好的应用就是 <strong>语音辨识</strong></p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210429093940488.png" alt="image-20210429093940488" style="zoom: 80%;">
+
+<p>在做语音辨识的时候,输入是声音讯号,声音讯号其实就是一串的vector,输出是语音辨识的结果,也就是输出的这段    声音讯号,所对应的文字</p>
+<p>我们这边用圈圈来代表文字,每一个圈圈就代表,比如说中文裡面的一个方块子,今天<strong>输入跟输出的长度,当然是有一些关係,但是却没有绝对的关係</strong>，输入的声音讯号,他的长度是大T,我们并没有办法知道说,根据大T输出的这个长度N一定是多少。</p>
+<p><strong>输出的长度由机器自己决定</strong>,由机器自己去听这段声音讯号的内容,自己决定他应该要输出几个文字,他输出的语音辨识结果,输出的句子裡面应该包含几个字,由机器自己来决定,这个是语音辨识</p>
+</li>
+<li><p>还有很多其他的例子,比如说作业五我们会做机器翻译</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210429100049464.png" alt="image-20210429100049464" style="zoom:80%;">
+
+<p>让机器读一个语言的句子,输出另外一个语言的句子,那在做机器翻译的时候,<strong>输入的文字的长度是N,输出的句子的长度是N’,那N跟N’之间的关係,也要由机器自己来决定</strong></p>
+<p>输入机器学习这个句子,输出是machine learning,输入是有四个字,输出有两个英文的词汇,但是并不是所有中文跟英文的关係,都是输出就是输入的二分之一,到底输入一段句子,输出英文的句子要多长,由机器自己决定</p>
+</li>
+<li><p>甚至可以做更复杂的问题,比如说做语音翻译</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210429100418127.png" alt="image-20210429100418127" style="zoom:80%;">
+
+<p>语音翻译就是,你对机器说一句话,比如说machine learning,他输出的不是英文,他直接<strong>把他听到的英文的声音讯号翻译成中文文字</strong></p>
+<p>你对他说machine learning,他输出的是机器学习</p>
+<p>為什麼我们要做,Speech Translation这样的任务,為什麼我们不直接先做一个语音辨识,再做一个机器翻译,把语音辨识系统跟机器翻译系统,接起来 就直接是语音翻译？</p>
+<p>因為<strong>世界上有很多语言,他根本连文字都没有</strong>,世界上有超过七千种语言,那其实在这七千种语言,有超过半数其实是没有文字的,对这些没有文字的语言而言,你要做语音辨识,可能根本就没有办法,因為他没有文字,所以你根本就没有办法做语音辨识,但我们有没有可能对这些语言,做语音翻译,直接把它翻译成,我们有办法阅读的文字</p>
+</li>
+</ol>
+<h3 id="Hokkien（闽南语、台语）"><a href="#Hokkien（闽南语、台语）" class="headerlink" title="Hokkien（闽南语、台语）"></a>Hokkien（闽南语、台语）</h3><p>一个很好的例子也许就是,台语的语音辨识,但我不会说台语没有文字,很多人觉得台语是有文字的,但台语的文字并没有那麼普及,现在听说小学都有教台语的文字了,但台语的文字,并不是一般人能够看得懂的</p>
+<p>如果你做语音辨识,你给机器一段台语,然后它可能输出是母汤,你根本就不知道,这段话在说什麼。</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210429102344921.png" alt="image-20210429102344921" style="zoom:67%;">
+
+<p>所以我们期待说机器也许可以做语音的翻译,对它讲一句台语,它直接输出的是同样意思的,中文的句子,那这样一般人就可以看懂</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210429102425315.png" alt="image-20210429102425315" style="zoom: 67%;">
+
+<p>我们可以训练一个类神经网路,这个类神经网路听某一种语言,的声音讯号,输出是另外一种语言的文字。</p>
+<p>今天你要训练一个neural network,你就需要有input跟output的配合,你需要有台语的声音讯号,跟中文文字的对应关係,那这样的资料是比较容易收集的。比如说YouTube上面,有很多的乡土剧</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210429102635671.png" alt="image-20210429102635671" style="zoom: 67%;">
+
+<p>乡土剧就是,台语语音 中文字幕,所以你只要它的台语语音载下来,中文字幕载下来,你就有台语声音讯号,跟中文之间的对应关係,你就可以硬train一个模型,然后叫机器直接做台语的语音辨识,输入台语 输出中文</p>
+<p>那你可能会觉得这个想法很狂,而且好像听起来有很多很多的问题,那我们实验室就载了,一千五百个小时的乡土剧的资料,然后 就真的拿来训练一个,语音辨识系统</p>
+<p>你可能会觉得说,这听起来有很多的问题</p>
+<ul>
+<li>乡土剧有很多杂讯,有很多的音乐,不要管它这样子</li>
+<li>乡土剧的字幕,不一定跟声音有对起来,就不要管它这样子</li>
+<li>台语还有一些,比如说台罗拼音,台语也是有类似音标这种东西,也许我们可以先辨识成音标,当作一个中介,然后在从音标转成中文,也没有这样做 </li>
+</ul>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210429103037724.png" alt="image-20210429103037724" style="zoom:67%;">
+
+<p>直接训练一个模型,输入是声音讯号,输出直接就是中文的文字,这种没有想太多 直接资料倒进去,就训练一个模型的行為,就叫作==硬train一发==</p>
+<p>那你可能会想说,这样子硬train一发到底能不能够,做一个台语语音辨识系统呢,其实 还真的是有可能的,以下是一些真正的结果</p>
+<p>机器在听的一千五百个小时的,乡土剧以后,你可以对它输入一句台语,然后他就输出一句中文的文字,以下是真正的例子</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210429104632912.png" alt="image-20210429104632912" style="zoom: 67%;">
+
+<p>机器听到的声音是这样子的</p>
+<ul>
+<li>你的身体撑不住(台语),那机器输出是什麼呢,它的输出是 你的身体撑不住,这个声音讯号是你的身体撑不住(台语),但机器并不是输出无勘,而是它就输出撑不住</li>
+<li>或者是机器听到的,是这样的声音讯号,没事你為什麼要请假(台语),没事你為什麼要请假,机器听到没事(台语),它并不是输出 没代没誌,它是输出 没事,这样听到四个音节没代没誌(台语),但它知道说台语的没代没誌(台语),翻成中文 也许应该输出 没事,所以机器的输出是,没事你為什麼要请假</li>
+<li>但机器其实也是蛮容易犯错的,底下特别找机个犯错的例子,给你听一下,你听听这一段声音讯号,不会腻吗(台语),他说不会腻吗(台语),我自己听到的时候我觉得,我跟机器的答案是一样的,就是说<strong>要生了吗</strong>,但其实这句话,正确的答案就是,不会腻吗(台语),不会腻吗</li>
+<li>当然机器在倒装,你知道有时候你从台语,转成中文句子需要倒装,在倒装的部分感觉就没有太学起来,举例来说它听到这样的句子,我有跟厂长拜託(台语),他说我有跟厂长拜託(台语),那机器的输出是,我有帮厂长拜託,但是你知道说这句话,其实是倒装,我有跟厂长拜託(台语),是我拜託厂长,但机器对於它来说,如果台语跟中文的关係需要倒装的话,看起来学习起来还是有一点困难</li>
+</ul>
+<p>这个例子想要告诉你说,直接台语声音讯号转繁体中文,不是没有可能,是有可能可以做得到的,那其实台湾有很多人都在做,台语的语音辨识,如果你想要知道更多有关,台语语音辨识的事情的话,可以看一下下面这个<a href="https://sites.google.com/speech.ntut.edu.tw/fsw/home/challenge-2020" target="_blank" rel="noopener">网站</a></p>
+<h4 id="Text-to-Speech-TTS-Synthesis"><a href="#Text-to-Speech-TTS-Synthesis" class="headerlink" title="Text-to-Speech (TTS) Synthesis"></a>Text-to-Speech (TTS) Synthesis</h4><p>台语语音辨识反过来,就是台语的<strong>语音合成</strong>,我们如果是一个模型,输入台语声音 输出中文的文字,那就是语音辨识,反过来 输入文字 输出声音讯号,就是语音合成</p>
+<p>这边就是demo一下台语的语音合成,这个资料用的是,台湾 媠声(台语)的资料,来找GOOGLE台湾媠声(台语),就可以找到这个资料集,裡面就是台语的声音讯号,听起来像是这个样子</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210429105644179.png" alt="image-20210429105644179" style="zoom:67%;">
+
+<p>比如说你跟它说,欢迎来到台湾台大语音处理实验室</p>
+<p>不过这边是需要跟大家说明一下,现在还没有真的做End to End的模型,<strong>这边模型还是分成两阶</strong>,他会先把中文的文字,转成台语的台罗拼音,就像是台语的KK音标,在把台语的KK音标转成声音讯号,不过从台语的KK音标,转成声音讯号这一段,就是一个像是Transformer的network,其实是一个叫做echotron的model,它本质上就是一个Seq2Seq model,大概长的是这个样子</p>
+<p>所以你输入文字,欢迎来到台大语音处理实验室,机器的输出是这个样子的,欢迎来到台大(台语),语音处理实验室(台语),或是你对他说这一句中文,然后他输出的台语是这个样子,最近肺炎真严重(台语),要记得戴口罩 勤洗手(台语),有病就要看医生(台语)</p>
+<p>所以你真的是可以,合出台语的声音讯号的,就用我们在这一门课裡面学到的,Transformer或者是Seq2Seq的model</p>
+<h3 id="Seq2seq-for-Chatbot"><a href="#Seq2seq-for-Chatbot" class="headerlink" title="Seq2seq for Chatbot"></a>Seq2seq for Chatbot</h3><p>刚才讲的是跟语音比较有关的,那在<strong>文字</strong>上,也会很广泛的使用了Seq2Seq model</p>
+<p>举例来说你可以用Seq2Seq model,来训练一个聊天机器人</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210429110313820.png" alt="image-20210429110313820" style="zoom:67%;">
+
+<p>聊天机器人就是你对它说一句话,它要给你一个回应,<strong>输入输出都是文字</strong>,文字就是一个vector Sequence,所以你完全可以用Seq2Seq 的model,来做一个聊天机器人</p>
+<p>你就要<strong>收集大量人的对话</strong>,像这种对话你可以收集,电视剧 电影的台词 等等,你可以收集到,一堆人跟人之间的对话</p>
+<p>假设在对话裡面有出现,某一个人说Hi,和另外一个人说,Hello How are you today,那你就可以教机器说,看到输入是Hi,那你的输出就要跟,Hello how are you today,越接近越好</p>
+<p>那就可以训练一个Seq2Seq model,那跟它说一句话,它就会给你一个回应</p>
+<h3 id="Question-Answering-QA"><a href="#Question-Answering-QA" class="headerlink" title="Question Answering (QA)"></a>Question Answering (QA)</h3><p>那事实上Seq2Seq model,在NLP的领域,在natural language processing的领域的使用,是比你想像的更為广泛,其实很多<strong>natural language processing的任务,都可以想成是==question answering,QA==的任务</strong></p>
+<p>Question Answering,就是给机器读一段文字,然后你问机器一个问题,希望他可以给你一个正确的答案</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210429163745845.png" alt="image-20210429163745845" style="zoom: 80%;">
+
+<ul>
+<li>假设你今天想做的是翻译,那机器读的文章就是一个英文句子,<strong>问题</strong>就是这个句子的德文翻译是什麼,然后输出的<strong>答案</strong>就是德文</li>
+<li>或者是你想要叫机器自动作摘要,摘要就是给机器读一篇长的文章,叫他把长的文章的重点节录出来,那你就是给机器一段文字,<strong>问题</strong>是这段文字的摘要是什麼,然后期待他<strong>答案</strong>可以输出一个摘要</li>
+<li>或者是你想要叫机器做Sentiment analysis,Sentiment analysis就是机器要自动判断一个句子,是正面的还是负面的；假设你有做了一个產品,然后上线以后,你想要知道网友的评价,但是你又不可能一直找人家ptt上面,把每一篇文章都读过,所以就做一个Sentiment analysis model,看到有一篇文章裡面,有提到你的產品,然后就把这篇文章丢到,你的model裡面,去判断这篇文章,是正面还是负面。你就给机器要判断正面还负面的文章,<strong>问题</strong>就是这个句子,是正面还是负面的,然后希望机器可以告诉你<strong>答案</strong></li>
+</ul>
+<p>所以各式各样的NLP的问题,往往都可以看作是QA的问题,而<strong>QA的问题,就可以用Seq2Seq model来解</strong></p>
+<p>具体来说就是有一个Seq2Seq model输入,就是有问题跟文章把它接在一起,输出就是问题的答案,就结束了,你的问题加文章合起来,是一段很长的文字,答案是一段文字</p>
+<p>Seq2Seq model只要是<strong>输入一段文字</strong>,<strong>输出一段文字</strong>,只要是<strong>输入一个Sequence</strong>,<strong>输出一个Sequence</strong>就可以解,所以你可以把QA的问题,硬是用Seq2Seq model解,叫它读一篇文章读一个问题,然后就直接输出答案,所以各式各样NLP的任务,其实都有机会使用Seq2Seq model</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210429201442155.png" alt="image-20210429201442155" style="zoom:67%;">
+
+<p>必须要强调一下,对多数NLP的任务,或对多数的语音相关的任务而言,往往為这些任务<strong>客製化模型,你会得到更好的结果</strong></p>
+<p>但是各个任务客製化的模型,就不是我们这一门课的重点了,如果你对人类语言处理,包括语音 包括自然语言处理,这些相关的任务有兴趣的话呢,可以参考一下以下课程网页的[连结](Source webpage: <a href="https://speech.ee.ntu.edu.tw/~hylee/dlhlp/2020-spring.html),就是去年上的深度学习,与人类语言处理,这门课的内容裡面就会教你,各式各样的任务最好的模型,应该是什麼" target="_blank" rel="noopener">https://speech.ee.ntu.edu.tw/~hylee/dlhlp/2020-spring.html),就是去年上的深度学习,与人类语言处理,这门课的内容裡面就会教你,各式各样的任务最好的模型,应该是什麼</a></p>
+<p>举例来说在做语音辨识,我们刚才讲的是一个Seq2Seq model,输入一段声音讯号,直接输出文字,今天啊 Google的 pixel4,Google官方告诉你说,Google pixel4也是用,N to N的Neural network,pixel4裡面就是,有一个Neural network,输入声音讯号,输出就直接是文字</p>
+<p>但他其实用的不是Seq2Seq model,他用的是一个叫做,RNN transducer的 model,像这些模型他就是為了,语音的某些特性所设计,这样其实可以表现得更好,至於每一个任务,有什麼样客製化的模型,这个就是另外一门课的主题,就不是我们今天想要探讨的重点</p>
+<h3 id="Seq2seq-for-Syntactic-Parsing"><a href="#Seq2seq-for-Syntactic-Parsing" class="headerlink" title="Seq2seq for Syntactic Parsing"></a>Seq2seq for Syntactic Parsing</h3><p>在语音还有自然语言处理上的应用,其实有很多应用,你<strong>不觉得他是一个Seq2Seq model的问题,但你都可以硬用Seq2Seq model的问题硬解他</strong></p>
+<p>举例来说<strong>文法剖析</strong>,给机器一段文字,比如Deep learning is very powerful</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210429202108751.png" alt="image-20210429202108751" style="zoom:67%;">
+
+<p>机器要做的事情是產生,一个<strong>文法的剖析树</strong> 告诉我们,deep加learning合起来,是一个名词片语,very加powerful合起来,是一个形容词片语,形容词片语加is以后会变成,一个动词片语,动词片语加名词片语合起来,是一个句子</p>
+<p>那今天文法剖析要做的事情,就是產生这样子的一个Syntactic tree,所以在文法剖析的任务裡面,假设你想要deep learning解的话,输入是一段文字,他是一个Sequence,但输出看起来不像是一个Sequence,输出是一个树状的结构,但<strong>事实上一个树状的结构,可以硬是把他看作是一个Sequence</strong></p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210429202417748.png" alt="image-20210429202417748" style="zoom:67%;">
+
+<p>这个树状结构可以对应到一个,这样子的Sequence,从这个Sequence裡面,你也可以看出</p>
+<ul>
+<li>这个树状的结构有一个S，有一个左括号,有一个右括号</li>
+<li>S裡面有一个noun phrase,有一个左括号跟右括号</li>
+<li>NP裡面有一个左括号跟右括号,NP裡面有is</li>
+<li>然后有这个形容词片语,他有一个左括号右括号</li>
+</ul>
+<p>这一个<strong>Sequence就代表了这一个tree 的structure</strong>,你先把tree 的structure,转成一个Sequence以后,你就可以用Seq2Seq model硬解他</p>
+<p>train一个Seq2Seq model,读这个句子,然后直接输入这一串文字,再把这串文字转成一个树状的结构,你就可以硬是用Seq2Seq model,来做文法剖析这件事,这个概念听起来非常的狂,但这是真的可以做得到的,</p>
+<p>你可以读一篇文章叫做,grammar as a Foreign Language</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210429203059333.png" alt="image-20210429203059333" style="zoom:67%;">
+
+<p>这篇文章其实不是太新的文章,你会发现她放在arxiv上面的时间,是14年的年底,所以其实也是一个,上古神兽等级的文章,这篇文章问世的时候,那个时候Seq2Seq model还不流行,那时候Seq2Seq model,主要只有被用在翻译上,所以这篇文章的title才会取说,grammar as a Foreign Language</p>
+<p>他把文法剖析这件事情,当作是一个翻译的问题,把文法当作是另外一种语言,直接套用当时人们认為,只能用在翻译上的模型硬做,结果他得到state of the art的结果</p>
+<p>我(李宏毅老师)其实在国际会议的时候,有遇过这个第一作者Oriol Vlnyals,那个时候Seq2Seq model,还是个非常潮的东西,那个时候在我的认知裡面,我觉得这个模型,应该是挺难train的,我问他说,train Seq2Seq model有没有什麼tips,没想到你做个文法剖析,用Seq2Seq model,居然可以硬做到state of the art,这应该有什麼很厉害的tips吧</p>
+<p>他说什麼没有什麼tips,他说我连Adam都没有用,我直接gradient descent,就train起来了,我第一次train就成功了,只是我要冲到state of the art,还是稍微调了一下参数而已,我也不知道是真的还假的啦,不过今天Seq2Seq model,真的是已经被很广泛地,应用在各式各样的应用上了</p>
+<h3 id="multi-label-classification"><a href="#multi-label-classification" class="headerlink" title="multi-label classification"></a>multi-label classification</h3><p>还有一些任务可以用seq2seq’s model,举例来说 ==multi-label的classification==</p>
+<p>==multi-class==的classification,跟==multi-label==的classification,听起来名字很像,但他们其实是不一样的事情,multi-class的classification意思是说,我们有不只一个class机器要做的事情,是从数个class裡面,选择某一个class出来</p>
+<p>但是multi-label的classification,意思是说<strong>同一个东西,它可以属於多个class</strong>,举例来说 你在做文章分类的时候</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210429203936697.png" alt="image-20210429203936697" style="zoom:67%;">
+
+<p>可能这篇文章 属於class 1跟3,这篇文章属於class 3 9 17等等,你可能会说,这种multi-label classification的问题,能不能<strong>直接把它当作一个multi-class classification的问题来解</strong></p>
+<p>举例来说,我把这些文章丢到一个classifier裡面</p>
+<ul>
+<li>本来classifier只会输出一个答案,输出分数最高的那个答案</li>
+<li>我现在就输出分数最高的前三名,看看能不能解,multi-label的classification的问题</li>
+</ul>
+<p>但<strong>这种方法可能是行不通的</strong>,因為每一篇文章对应的class的数目,根本不一样 有些东西 有些文章,对应的class的数目,是两个 有的是一个 有的是三个</p>
+<p>所以 如果你说 我直接取一个threshold,我直接取分数最高的前三名,class file output分数最高的前三名,来当作我的输出 显然,不一定能够得到好的结果 那怎麼办呢</p>
+<p>这边可以用seq2seq硬做,<strong>输入一篇文章</strong> <strong>输出就是class</strong> 就结束了,机器自己决定 它要输出几个class</p>
+<p>我们说seq2seq model,就是由机器自己决定输出几个东西,输出的output sequence的长度是多少,既然 你没有办法决定class的数目,那就让机器帮你决定,每篇文章 要属於多少个class</p>
+<h3 id="Seq2seq-for-Object-Detection"><a href="#Seq2seq-for-Object-Detection" class="headerlink" title="Seq2seq for Object Detection"></a>Seq2seq for Object Detection</h3><p>或者是object detection,这个看起来跟seq2seq model,应该八竿子打不著的问题,它也可以用seq2seq’s model硬解</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210429204527490.png" alt="image-20210429204527490" style="zoom: 50%;">
+
+<p>object detection就是给机器一张图片,然后它把图片裡面的物件框出来,把它框出说 这个是斑马 这个也是斑马,但这种问题 可以用seq2seq’s硬做,至於怎麼做 我们这边就不细讲,我在这边放一个文献,放一个连结给大家参考,讲这麼多就是要告诉你说,seq2seq’s model 它是一个,很powerful的model,它是一个很有用的model</p>
+<h2 id="Encoder-Decoder"><a href="#Encoder-Decoder" class="headerlink" title="Encoder-Decoder"></a>Encoder-Decoder</h2><p>我们现在就是要来学,怎麼做seq2seq这件事,一般的seq2seq’s model,它裡面会分成两块 一块是Encoder,另外一块是Decoder</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210429205404198.png" alt="image-20210429205404198" style="zoom:67%;">
+
+<p>你input一个sequence有Encoder,负责处理这个sequence,再把处理好的结果丢给Decoder,由Decoder决定,它要输出什麼样的sequence,等一下 我们都还会再细讲,Encoder跟 Decoder内部的架构</p>
+<p>seq2seq model的起源,其实非常的早 在14年的9月,就有一篇seq2seq’s model,用在翻译的文章 被放到Arxiv上</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210429205447815.png" alt="image-20210429205447815" style="zoom:67%;">
+
+<p>可以想像当时的seq2seq’s model,看起来还是比较阳春的,今天讲到seq2seq’s model的时候,大家第一个会浮现在脑中的,可能都是我们今天的主角,也就是transformer</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210429205517760.png" alt="image-20210429205517760" style="zoom:50%;">
+
+<p>它有一个Encoder架构,有一个Decoder架构,它裡面有很多花花绿绿的block,等一下就会讲一下,这裡面每一个花花绿绿的block,分别在做的事情是什麼</p>
+<h3 id="Encoder"><a href="#Encoder" class="headerlink" title="Encoder"></a>Encoder</h3><p>seq2seq model ==Encoder==要做的事情,就是<strong>给一排向量，输出另外一排向量</strong></p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210429205911444.png" alt="image-20210429205911444" style="zoom:67%;">
+
+<p>给一排向量、输出一排向量这件事情,很多模型都可以做到,可能第一个想到的是,我们刚刚讲完的self-attention,其实不只self-attention,RNN CNN 其实也都能够做到,input一排向量,output另外一个同样长度的向量</p>
+<p>在transformer裡面,transformer的Encoder,用的就是self-attention,这边看起来有点复杂,我们用另外一张图,来仔细地解释一下,这个Encoder的架构,等一下再来跟原始的transformer的,论文裡面的图进行比对,</p>
+<p>现在的Encoder裡面,会<strong>分成很多很多的block</strong></p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210429210126607.png" alt="image-20210429210126607" style="zoom:67%;">
+
+<p>每一个block都是输入一排向量,输出一排向量,你输入一排向量 第一个block,第一个block输出另外一排向量,再输给另外一个block,到最后一个block,会输出最终的vector sequence,<strong>每一个block 其实,并不是neural network的一层</strong></p>
+<p><strong>每一个block裡面做的事情,是好几个layer在做的事情</strong>,在transformer的Encoder裡面,每一个block做的事情,大概是这样子的</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210429210257652.png" alt="image-20210429210257652" style="zoom: 50%;">
+
+<ul>
+<li>先做一个self-attention,input一排vector以后,做self-attention,考虑整个sequence的资讯，Output另外一排vector.</li>
+<li>接下来这一排vector,会再丢到fully connected的feed forward network裡面,再output另外一排vector,这一排vector就是block的输出</li>
+</ul>
+<p>事实上在原来的<strong>transformer裡面,它做的事情是更复杂的</strong></p>
+<p>在之前self-attention的时候,我们说 输入一排vector,就输出一排vector,这边的每一个vector,它是考虑了 所有的input以后,所得到的结果</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210429210831750.png" alt="image-20210429210831750" style="zoom:50%;">
+
+<p>在transformer裡面,它加入了一个设计,我们<strong>不只是输出这个vector</strong>,我们还要<strong>把这个vector加上它的input</strong>,它要把input拉过来 直接加给输出,得到新的output </p>
+<p>也就是说,这边假设这个vector叫做$a$,这个vector叫做$b$ 你要把$a+b$当作是新的输出</p>
+<p>这样子的network架构,叫做==residual connection==,那其实这种residual connection,在deep learning的领域用的是非常的广泛,之后如果我们有时间的话,再来详细介绍,為什麼要用residual connection</p>
+<p>那你现在就先知道说,有一种network设计的架构,叫做<strong>residual connection,它会把input直接跟output加起来,得到新的vector</strong></p>
+<p>得到residual的结果以后,再把它做一件事情叫做normalization,这边用的不是batch normalization,这边用的叫做==layer normalization==</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210429211313025.png" alt="image-20210429211313025" style="zoom:50%;">
+
+<p>layer normalization做的事情,比bacth normalization更简单一点</p>
+<p>输入一个向量 输出另外一个向量,不需要考虑batch,它会<strong>把输入的这个向量,计算它的mean跟standard deviation</strong></p>
+<p>但是要注意一下,<strong>==batch normalization==是对不同example,不同feature的同一个dimension,去计算mean跟standard deviation</strong></p>
+<p>但<strong>==layer normalization==,它是对同一个feature,同一个example裡面,不同的dimension,去计算mean跟standard deviation</strong></p>
+<p>计算出mean,跟standard deviation以后,就可以做一个normalize,我们把input 这个vector裡面每一个,dimension减掉mean,再除以standard deviation以后得到x’,就是layer normalization的输出<br>$$<br>x’_i=\frac{x_i-m}{\sigma}<br>$$<br>得到layer normalization的输出以后,它的这个输出 才是FC network的输入</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210429211858981.png" alt="image-20210429211858981" style="zoom:50%;">
+
+<p>而<strong>FC network这边,也有residual的架构</strong>,所以 我们会把FC network的input,跟它的output加起来 做一下residual,得到新的输出</p>
+<p>这个FC network做完residual以后,还不是结束 你要把residual的结果,<strong>再做一次layer normalization</strong>,得到的输出,才是residual network裡面,一个block的输出,所以这个是挺复杂的</p>
+<p>所以我们这边讲的 这一个图,其实就是我们刚才讲的那件事情</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210429212721750.png" alt="image-20210429212721750" style="zoom:50%;">
+
+<ul>
+<li>首先 你有self-attention,其实在input的地方,还有加上positional encoding,我们之前已经有讲过,如果你只光用self-attention,你没有未知的资讯,所以你需要加上positional的information,然后在这个图上,有特别画出positional的information</li>
+<li>Multi-Head Attention,这个就是self-attention的block,这边有特别强调说,它是Multi-Head的self-attention</li>
+<li>Add&amp;norm,就是residual加layer normalization,我们刚才有说self-attention,有加上residual的connection,加下来还要过layer normalization,这边这个图上的Add&amp;norm,就是residual加layer norm的意思</li>
+<li>接下来,要过feed forward network</li>
+<li>fc的feed forward network以后再做一次Add&amp;norm,再做一次residual加layer norm,才是一个block的输出,</li>
+<li>然后这个block会重复n次,这个复杂的block,其实在之后会讲到的,一个非常重要的模型BERT裡面,会再用到 BERT,它其实就是transformer的encoder</li>
+</ul>
+<h2 id="To-Learn-more"><a href="#To-Learn-more" class="headerlink" title="To Learn more"></a>To Learn more</h2><p>讲到这边 你心裡一定充满了问号,就是為什麼 transformer的encoder,要这样设计 不这样设计行不行?</p>
+<p>行 不一定要这样设计,这个encoder的network架构,现在设计的方式,本文是按照原始的论文讲给你听的,但<strong>原始论文的设计 不代表它是最好的,最optimal的设计</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210429213356887.png" alt="image-20210429213356887"></p>
+<ul>
+<li>有一篇文章叫,<a href="https://arxiv.org/abs/2002.04745" target="_blank" rel="noopener">on layer normalization in the transformer architecture</a>，它问的问题就是 為什麼,layer normalization是放在那个地方呢,為什麼我们是先做,residual再做layer normalization,能不能够把layer normalization,放到每一个block的input,也就是说 你做residual以后,再做layer normalization,再加进去 你可以看到说左边这个图,是原始的transformer,右边这个图是稍微把block,更换一下顺序以后的transformer,更换一下顺序以后 结果是会比较好的,这就代表说,原始的transformer 的架构,并不是一个最optimal的设计,你永远可以思考看看,有没有更好的设计方式</li>
+<li>再来还有一个问题就是,為什麼是layer norm 為什麼是别的,不是别的,為什麼不做batch normalization,也许这篇paper可以回答你的问题,这篇paper是<a href="https://arxiv.org/abs/2003.07845" target="_blank" rel="noopener">Power Norm：,Rethinking Batch Normalization In Transformers</a>,它首先告诉你说 為什麼,batch normalization不如,layer normalization,在Transformers裡面為什麼,batch normalization不如,layer normalization,接下来在说,它提出来一个power normalization,一听就是很power的意思,都可以比layer normalization,还要performance差不多或甚至好一点</li>
+</ul>
+<h2 id="Decoder-–-Autoregressive-AT"><a href="#Decoder-–-Autoregressive-AT" class="headerlink" title="Decoder – Autoregressive (AT)"></a>Decoder – Autoregressive (AT)</h2><p>Decoder其实有两种,接下来会花比较多时间介绍,比较常见的 ==Autoregressive  Decoder==,这个 Autoregressive 的 Decoder,是怎麼运作的</p>
+<p>用<strong>语音辨识</strong>,来当作例子来说明,或用在作业裡面的<strong>机器翻译</strong>,其实是一模一样的,你只是把输入输出,改成不同的东西而已</p>
+<p><strong>语音辨识</strong>就是<strong>输入一段声音,输出一串文字</strong>,你会把一段声音输入给 Encoder,比如说你对机器说,机器学习,机器收到一段声音讯号,声音讯号 进入 Encoder以后,输出会是什麼,输出会变成一排 Vector</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210505192814682.png" alt="image-20210505192814682" style="zoom: 50%;">
+
+<p><strong>Encoder</strong> 做的事情,就是<strong>输入一个 Vector Sequence</strong>,<strong>输出另外一个 Vector Sequence</strong></p>
+<p>接下来,就轮到 Decoder 运作了,<strong>Decoder 要做的事情就是產生输出</strong>,也就是<strong>產生语音辨识的结果</strong>, Decoder 怎麼產生这个语音辨识的结果</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210505193416391.png" alt="image-20210505193416391" style="zoom:50%;">
+
+<p>Decoder 做的事情,就是<strong>把 Encoder 的输出先读进去</strong>,至於怎麼读进去,这个我们等一下再讲 我们先,你先假设 Somehow 就是有某种方法,把 Encoder 的输出读到 Decoder 裡面,这步我们等一下再处理</p>
+<p>Decoder 怎麼產生一段文字</p>
+<p>首先,你要先给它一个特殊的符号,这个特殊的符号,代表开始,在助教的投影片裡面,是写 Begin Of Sentence,缩写是 BOS</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210505193652691.png" alt="image-20210505193652691" style="zoom:50%;">
+
+<p>就是 Begin 的意思,这个是一个 Special 的 Token,你就是在你的个 Lexicon 裡面,你就在你可能,本来 Decoder 可能產生的文字裡面,多加一个特殊的字,这个字就代表了 BEGIN,代表了开始这个事情</p>
+<p>在这个机器学习裡面,假设你要处理 NLP 的问题,<strong>每一个 Token,你都可以把它用一个 One-Hot 的 Vector 来表示</strong>,One-Hot Vector 就其中一维是 1,其他都是 0,所以 <strong>BEGIN 也是用 One-Hot Vector 来表示</strong>,其中一维是 1,其他是 0</p>
+<p>接下来Decoder 会<strong>吐出一个向量,这个 Vector 的长度很长,跟你的 Vocabulary 的 Size 是一样的</strong></p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210505194403395.png" alt="image-20210505194403395" style="zoom:50%;">
+
+<p>==Vocabulary Size==则是什麼意思</p>
+<p>你就先想好说,你的 Decoder <strong>输出的单位</strong>是什麼,假设我们今天做的是中文的语音辨识,我们 Decoder 输出的是中文,你这边的 Vocabulary 的 Size ,可能就是中文的方块字的数目</p>
+<p><strong>不同的字典,给你的数字可能是不一样的</strong>,常用的中文的方块字,大概两 三千个,一般人,可能认得的四 五千个,在更多都是罕见字 冷僻的字,所以你就看看说,你要让你的 Decoder,输出哪些可能的中文的方块字,你就把它列在这边</p>
+<p>举例来说,你觉得这个 Decoder,能够输出常见的 3000 个方块字就好了,就把它列在这个地方,不同的语言,它输出的单位 不见不会不一样,这个取决於你对个语言的理解</p>
+<p>比如说英文,你可以选择输出<strong>字母的 A 到 Z</strong>,输出英文的字母,但你可能会觉得字母这个单位太小了,有人可能会选择输出<strong>英文的词汇</strong>,英文的词汇是用空白作為间隔的,但如果都用词汇当作输出,又太多了</p>
+<p>所以你会发现,刚才在助教的投影片裡面,助教说他是用 Subword 当作英文的单位,就有一些方法,可以把英文的字首字根切出来,拿字首字根当作单位,如果中文的话,我觉得就比较单纯,通常今天你可能就用中文的这个方块字,来当作单位</p>
+<p>每一个中文的字,都会对应到一个数值,因為在<strong>產生这个向量之前,你通常会先跑一个 Softmax</strong>,就跟做分类一样,所以这一个向量裡面的分数,它是一个 Distribution,也就是,它这个向量裡面的值,它全部加起来,总和 会是 1</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210505195003941.png" alt="image-20210505195003941" style="zoom: 67%;">
+
+<p><strong>分数最高的一个中文字,它就是最终的输出</strong></p>
+<p>在这个例子裡面,机的分数最高,所以机,就当做是这个 Decoder 第一个输出</p>
+<p>然后接下来,你<strong>把“机”当做是 Decoder 新的 Input</strong>,原来 Decoder 的 Input,只有 BEGIN 这个特别的符号,现在它除了 BEGIN 以外,它还有“机”作為它的 Input</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210505195340257.png" alt="image-20210505195340257" style="zoom:50%;">
+
+<p>所以 Decoder <strong>现在它有两个输入</strong></p>
+<ul>
+<li>一个是 <strong>BEGIN</strong> 这个符号</li>
+<li>一个是<strong>“机”</strong></li>
+</ul>
+<p>根据这两个输入,它输出一个蓝色的向量,根据这个蓝色的向量裡面,给每一个中文的字的分数,我们会决定第二个输出，哪一个字的分数最高,它就是输出,假设”器”的分数最高,<strong>“器”就是输出</strong></p>
+<p>然后现在 Decoder </p>
+<ul>
+<li>看到了 BEGIN</li>
+<li>看到了”机” </li>
+<li>看到了”器”</li>
+</ul>
+<p>它接下来,还要再决定接下来要输出什麼,它可能,就输出”学”,这一个过程就反覆的持续下去</p>
+<p>所以现在 Decode </p>
+<ul>
+<li><p>看到了 BEGIN </p>
+</li>
+<li><p>看到了”机” </p>
+</li>
+<li><p>看到了”器”</p>
+</li>
+<li><p>还有”学”</p>
+</li>
+</ul>
+<p><strong>Encoder 这边其实也有输入</strong>,等一下再讲 Encoder 的输入,Decoder 是怎麼处理的,</p>
+<p>所以 Decoder 看到 Encoder 这边的输入,看到”机”  看到”器” 看到”学”,决定接下来输出一个向量,这个向量裡面,”习”这个中文字的分数最高的,所以它就输出”习”</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210505203022207.png" alt="image-20210505203022207" style="zoom:50%;">
+
+<p><strong>然后这个 Process ,就反覆持续下去</strong>,这边有一个关键的地方,我们特别用红色的虚线把它标出来</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210505203437172.png" alt="image-20210505203437172" style="zoom:67%;">
+
+<p>也就是说 Decoder 看到的输入,其实是它在前一个时间点,自己的输出,<strong>Decoder 会把自己的输出,当做接下来的输入</strong></p>
+<p>如果Decoder 看到<strong>错误的输入</strong>,让 Decoder 看到自己產生出来的错误的输入,再被 Decoder 自己吃进去,会不会造成 ==Error Propagation== 的问题</p>
+<p>Error Propagation 的问题就是,<strong>一步错 步步错</strong>这样,就是在这个地方,如果不小心把机器的“器”,不小心写成天气的”气”,会不会接下来就整个句子都坏掉了,都没有办法再產生正确的词汇了?</p>
+<p>有可能,这个等一下,我们最后会稍微讲一下,这个问题要怎麼处理,我们现在,先无视这个问题,继续走下去</p>
+<p>我们来看一下这个 <strong>Decoder内部的结构</strong>长什麼样子</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210505203958558.png" alt="image-20210505203958558" style="zoom:50%;">
+
+<p>那我们这边,<strong>把 Encoder 的部分先暂时省略掉</strong>,那在 Transformer 裡面,Decoder 的结构,长得是这个样子的,看起来有点复杂,比 Encoder 还稍微复杂一点,</p>
+<p>那我们现在先把 Encoder 跟 Decoder 放在一起</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210505204215642.png" alt="image-20210505204215642" style="zoom:50%;">
+
+<p>稍微比较一下它们之间的差异,那你会发现说,如果我们把 Decoder 中间这一块,<strong>中间这一块把它盖起来,其实 Encoder 跟 Decoder,并没有那麼大的差别</strong></p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210505204300084.png" alt="image-20210505204300084" style="zoom:50%;">
+
+<p>你看 Encoder 这边,Multi-Head Attention,然后 Add &amp; Norm,Feed Forward,Add &amp; Norm,重复 N 次,Decoder 其实也是一样</p>
+<p>当我们把中间这一块遮起来以后,我们等一下再讲,遮起来这一块裡面做了什麼事,但当我们把中间这块遮起来以后,欸 那 Decoder 也是,有一个 Multi-Head Attention,Add &amp; Norm,然后 Feed Forward,然后 Add &amp; Norm,所以 Encoder 跟 Decoder,其实并没有非常大的差别,除了中间这一块不一样的地方,</p>
+<p>那只是最后,我们可能会再做一个 Softmax,使得它的输出变成一个机率,那这边有一个<strong>稍微不一样的地方</strong>是,在 Decoder 这边,Multi-Head Attention 这一个 Block 上面,还<strong>加了一个 ==Masked==</strong>,</p>
+<p>这个 Masked 的意思是这样子的,这是我们原来的 Self-Attention</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210505204547594.png" alt="image-20210505204547594" style="zoom: 67%;">
+
+<p>Input 一排 Vector,Output 另外一排 Vector,这一排 Vector <strong>每一个输出</strong>,都要看过完整的 Input 以后,才做决定,所以输出 $b^1$ 的时候,其实是根据 $a^1$ 到 $a^4$ 所有的资讯,去输出 $b^1$</p>
+<p>当我们把 Self-Attention,转成 Masked Attention 的时候,它的不同点是,现在我们不能再看右边的部分,也就是產生 $b^1$ 的时候,我们只能考虑 $a^1$ 的资讯,你不能够再考虑 $a^2$ $a^3$ $a^4$</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210505205155734.png" alt="image-20210505205155734" style="zoom:50%;">
+
+<p>產生 $b^2$ 的时候,你只能考虑 $a^1$ $a^2$ 的资讯,不能再考虑 $a^3$ $a^4$ 的资讯</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210505205223197.png" alt="image-20210505205223197" style="zoom:50%;">
+
+<p>產生 $b^3$ 的时候,你就不能考虑 $a^4$ 的资讯,</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210505205307428.png" alt="image-20210505205307428" style="zoom:50%;">
+
+<p>產生 $b^4$ 的时候,你可以用整个 Input Sequence 的资讯,这个就是 Masked 的 Self-Attention,</p>
+<p>讲得更具体一点,你做的事情是,当我们要產生 $b^2$ 的时候,我们只拿第二个位置的 Query $b^2$,去跟第一个位置的 Key,和第二个位置的 Key,去计算 Attention,第三个位置跟第四个位置,就不管它,不去计算 Attention</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210505205618457.png" alt="image-20210505205618457" style="zoom:50%;">
+
+<p>我们这样子不去管这个 $a^2$ 右边的地方,只考虑 $a^1$ 跟 $a^2$,只考虑 $q^1$ $q^2$,只考虑 $k^1$ $k^2$,$q^2$ 只跟 $k^1$ 跟 $k^2$ 去计算 Attention,然后最后只计算 $b^1$ 跟 $b^2$ 的 Weighted Sum</p>
+<p>然后当我们输出这个 $b^2$ 的时候,$b^2$ 就只考虑了 $a^1$ 跟 $a^2$,就没有考虑到 $a^3$ 跟 $a^4$</p>
+<p>那為什麼会这样,為什麼需要加 Masked </p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210505205746128.png" alt="image-20210505205746128" style="zoom:50%;">
+
+<p>这件事情其实非常地直觉:我们一开始 Decoder 的运作方式,它是<strong>一个一个输出</strong>,所以是先有 $a^1$ 再有 $a^2$,再有 $a^3$ 再有 $a^4$</p>
+<p><strong>这跟原来的 Self-Attention 不一样</strong>,原来的 Self-Attention,$a^1$ 跟 $a^4$ 是一次整个输进去你的 Model 裡面的,在我们讲 Encoder 的时候,Encoder 是一次把 $a^1$ 跟 $a^4$,都整个都读进去</p>
+<p>但是对 Decoder 而言,先有 $a^1$ 才有 $a^2$,才有 $a^3$ 才有 $a^4$,所以实际上,当你有 $a^2$,你要计算 $b^2$ 的时候,你是没有 $a^3$ 跟 $a^4$ 的,所以你根本就没有办法把 $a^3$ $a^4$ 考虑进来</p>
+<p>所以这就是為什麼,在那个 Decoder 的那个图上面,Transformer 原始的 Paper 特别跟你强调说,<strong>那不是一个一般的 Attention,这是一个 Masked 的 Self-Attention</strong>,意思只是想要告诉你说,Decoder 它的 Tokent,<strong>它输出的东西是一个一个產生的,所以它只能考虑它左边的东西,它没有办法考虑它右边的东西</strong></p>
+<p>讲了 Decoder 的运作方式,但是这边,还有一个非常关键的问题,<strong>Decoder 必须自己决定,输出的 Sequence 的长度</strong></p>
+<p>可是到底输出的 Sequence 的长度应该是多少,我们不知道</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210505210300099.png" alt="image-20210505210300099" style="zoom:50%;">
+
+<p>你没有办法轻易的从输入的 Sequence 的长度,就知道输出的 Sequence 的长度是多少,并不是说,输入是 4 个向量,输出一定就是 4 个向量</p>
+<p>这边在这个例子裡面,输入跟输出的长度是一样的,但是你知道实际上在你真正的应用裡面,并不是这样,输入跟输出长度的关係,是非常复杂的,我们其实是期待机器可以自己学到,今天给它一个 Input Sequence 的时候,Output 的 Sequence 应该要多长</p>
+<p>但在我们目前的这整个 Decoder的这个运作的机制裡面,<strong>机器不知道它什麼时候应该停下来</strong>,它產生完习以后,它还可以继续重复一模一样的 Process,就把习,当做输入,然后也许 Decoder ,就会接一个惯,然后接下来,就一直持续下去,<strong>永远都不会停下来</strong></p>
+<p>这就让我想到推文接龙</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210505210657053.png" alt="image-20210505210657053" style="zoom:50%;">
+
+<p>我不知道大家知不到这是什麼,这是一个这个古老的民俗传统,流传在 PTT 上面,这个民俗传统是怎麼运作的,就有一个人,先推一个中文字,然后推一个超,然后接下来,就会有另外一个乡民,去推另外一个字,然后可以接上去的,所以就可以產生一排的词汇啦,一排字啦,就是超人正大中天外飞仙草,不知道在说些什麼,这个是 Process ,可以持续好几个月,都不停下来,我也不知道為什麼,那怎麼让这个 Process 停下来,那要怎麼让它停下来</p>
+<p>要<strong>有人冒险去推一个断,推个断,它就停下来了</strong></p>
+<p>所以我们要让 Decoder 做的事情,也是一样,要让它可以输出一个断,所以你要<strong>特别準备一个特别的符号</strong>,这个符号,就叫做断,我们这边,用 END 来表示这个特殊的符号</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210505210756634.png" alt="image-20210505210756634" style="zoom:50%;">
+
+<p>所以除了所有中文的方块字,还有 BEGIN 以外,你还要<strong>準备一个特殊的符号,叫做”断”</strong>,那其实在助教的程式裡面,它是把 BEGIN 跟 END,就是开始跟这个断,用同一个符号来表示</p>
+<p>反正这个,这个 BEGIN 只会在输入的时候出现,断只会在输出的时候出现,所以在助教的程式裡面,如果你仔细研究一下的话,会发现说 END 跟 BEGIN,用的其实是同一个符号,但你用不同的符号,也是完全可以的,也完全没有问题</p>
+<p>所以我们现在,当把”习”当作输入以后,就 Decoder 看到 Encoder 输出的这个 Embedding,看到了 “BEGIN”,然后”机” “器” “学” “习”以后,看到这些资讯以后 它要知道说,这个语音辨识的结果已经结束了,不需要再產生更多的词汇了</p>
+<p>它產生出来的向量END,就是断的那个符号,它的机率必须要是最大的,然后你就输出断这个符号,那整个运作的过程,整个 Decoder 產生 Sequence 的过程,就结束了</p>
+<p>这个就是 ==Autoregressive  Decoder==,它运作的方式</p>
+<h2 id="Decoder-–-Non-autoregressive-NAT"><a href="#Decoder-–-Non-autoregressive-NAT" class="headerlink" title="Decoder – Non-autoregressive (NAT)"></a>Decoder – Non-autoregressive (NAT)</h2><p>用两页投影片,非常简短地讲一下,Non-Autoregressive 的 Model</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210505213222908.png" alt="image-20210505213222908" style="zoom:50%;">
+
+<p>Non-Autoregressive ,通常缩写成 NAT,所以有时候 Autoregressive 的 Model,也缩写成 AT,Non-Autoregressive 的 Model 是怎麼运作的</p>
+<h3 id="AT-v-s-NAT"><a href="#AT-v-s-NAT" class="headerlink" title="AT v.s. NAT"></a>AT v.s. NAT</h3><p>这个 ==Autoregressive== 的 Model 是</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210505213259792.png" alt="image-20210505213259792" style="zoom:67%;">
+
+<p><strong>先输入 BEGIN</strong>,<strong>然后</strong>出现 w1,然后<strong>再</strong>把 w1 当做输入,<strong>再</strong>输出 w2,<strong>直到输出 END 為止</strong></p>
+<p>那 ==NAT== 是这样,它<strong>不是依次產生</strong></p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210505213441943.png" alt="image-20210505213441943" style="zoom:67%;">
+
+<p>就假设我们现在產生是中文的句子,它不是依次產生一个字,它是<strong>一次把整个句子都產生出来</strong></p>
+<p>NAT 的 Decoder<strong>可能吃的是一整排的 BEGIN 的 Token</strong>,你就把一堆一排 BEGIN 的 Token 都丢给它,让它一次產生一排 Token 就结束了</p>
+<p>举例来说,如果你丢给它 4 个 BEGIN 的 Token,它就產生 4 个中文的字,变成一个句子,就结束了，所以它只要一个步骤,就可以完成句子的生成</p>
+<p>这边你可能会问一个问题：刚才不是说不知道输出的长度应该是多少吗,那我们这边<strong>怎麼知道 BEGIN 要放多少个</strong>,当做 NAT Decoder 的收入？</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210505214100885.png" alt="image-20210505214100885" style="zoom:50%;">
+
+<p>没错 这件事没有办法很自然的知道,没有办法很直接的知道,所以有几个,所以有几个做法</p>
+<ul>
+<li>一个做法是,你<strong>另外learn一个 Classifier</strong>,这个 Classifier ,它吃 Encoder 的 Input,然后输出是一个数字,这个数字代表 Decoder 应该要输出的长度,这是一种可能的做法</li>
+<li>另一种可能做法就是,你就不管三七二十一,<strong>给它一堆 BEGIN 的 Token</strong>,你就假设说,你现在输出的句子的长度,绝对不会超过 300 个字,你就假设一个句子长度的上限,然后 BEGIN ,你就给它 300 个 BEGIN,然后就会输出 300 个字嘛,然后,你再看看<strong>什麼地方输出 END</strong>,输出 END 右边的,就当做它没有输出,就结束了,这是另外一种处理 NAT 的这个 Decoder,它应该输出的长度的方法</li>
+</ul>
+<p>那 NAT 的 Decoder,它有什麼样的<strong>好处</strong>,</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210505214412075.png" alt="image-20210505214412075" style="zoom:67%;">
+
+<ul>
+<li><p>它第一个好处是,<strong>并行化</strong>,这个 AT 的 Decoder,它在输出它的句子的时候,是一个一个一个字產生的,所以你有你的,假设要输出长度一百个字的句子,那你就需要做一百次的 Decode</p>
+<p>但是 NAT 的 Decoder 不是这样,不管句子的长度如何,都是<strong>一个步骤就產生出完整的句子</strong>,所以在速度上,NAT 的 Decoder 它会跑得比,AT 的 Decoder 要快,那你可以想像说,这个 NAT Decoder 的想法显然是在,由这个 Transformer 以后,有这种 Self-Attention 的 Decoder 以后才有的</p>
+<p>因為以前如果你是用那个 ==LSTM==,用 ==RNN== 的话,那你就算给它一排 BEGIN,它也没有办法同时產生全部的输出,它的输出还是一个一个產生的,所以在没有这个 Self-Attention 之前,只有 RNN,只有 LSTM 的时候,根本就不会有人想要做什麼 NAT 的 Decoder,不过自从有了 Self-Attention 以后,那 NAT 的 Decoder,现在就算是一个热门的研究的主题了</p>
+</li>
+<li><p>那 NAT 的 Decoder 还有另外一个好处就是,你比较能够<strong>控制它输出的长度</strong>,举语音合成為例,其实在语音合成裡面,NAT 的 Decoder 算是非常常用的,它并不是一个什麼稀罕 罕见的招数</p>
+<p>比如说有,所以语音合成今天你都可以用,Sequence To Sequence 的模型来做,那最知名的,是一个叫做 ==Tacotron== 的模型,那它是 AT 的 Decoder</p>
+<p>那有另外一个模型叫 ==FastSpeech==,那它是 NAT 的 Decoder,那 NAT 的 Decoder 有一个好处,就是你可以控制你输出的长度,那我们刚才说怎麼决定,NAT 的 Decoder 输出多长</p>
+<p>你可能有一个 Classifier,决定 NAT 的 Decoder 应该输出的长度,那如果在做语音合成的时候,假设你现在突然想要让你的系统讲快一点,加速,那你就把那个 Classifier 的 Output 除以二,它讲话速度就变两倍快,然后如果你想要这个讲话放慢速度,那你就把那个 Classifier 输出的那个长度,它 Predict 出来的长度乘两倍,那你的这个 Decoder ,说话的速度就变两倍慢</p>
+<p>所以你可以如果有这种 NAT 的 Decoder,那你有 Explicit 去 Model,Output  长度应该是多少的话,你就比较有机会去控制,你的 Decoder 输出的长度应该是多少,你就可以做种种的变化</p>
+</li>
+</ul>
+<p>NAT 的 Decoder,最近它之所以是一个热门研究主题,就是它虽然表面上看起来有种种的厉害之处,尤其是平行化是它最大的优势,但是 <strong>NAT 的 Decoder ,它的 Performance,往往都不如 AT 的 Decoder</strong></p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210505214728437.png" alt="image-20210505214728437" style="zoom:50%;">
+
+<p>所以发现有很多很多的研究试图让,NAT 的 Decoder 的 Performance 越来越好,试图去逼近 AT 的 Decoder,不过今天你要让 NAT 的 Decoder,跟 AT 的 Decoder Performance 一样好,你<strong>必须要用非常多的 Trick</strong> 才能够办到,就 AT 的 Decoder 随便 Train 一下,NAT 的 Decoder 你要花很多力气,才有可能跟 AT 的 Performance 差不多</p>
+<p>為什麼 NAT 的 Decoder Performance 不好,有一个问题我们今天就不细讲了,叫做 ==Multi-Modality== 的问题,那如果你想要这个深入了解 NAT,那就把之前上课,助教这个上课补充的内容,连结<a href="https://youtu.be/jvyKmU4OM3c放在这边给大家参考" target="_blank" rel="noopener">https://youtu.be/jvyKmU4OM3c放在这边给大家参考</a></p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210505214815786.png" alt="image-20210505214815786" style="zoom:50%;">
+
+<h2 id="Encoder-Decoder-1"><a href="#Encoder-Decoder-1" class="headerlink" title="Encoder-Decoder"></a>Encoder-Decoder</h2><p>接下来就要讲<strong>Encoder 跟 Decoder它们中间是怎麼传递资讯</strong>的了,也就是我们要讲,刚才我们刻意把它遮起来的那一块</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210506103314101.png" alt="image-20210506103314101" style="zoom: 80%;">
+
+<p>这块叫做 ==Cross Attention==,它是连接 Encoder 跟 Decoder 之间的桥樑,那这一块裡面啊,会发现有<strong>两个输入来自於 Encoder</strong>,Encoder 提供两个箭头,然后 <strong>Decoder 提供了一个箭头</strong>,所以从左边这两个箭头,Decoder 可以读到 Encoder 的输出</p>
+<p>那这个模组实际上是怎麼运作的呢,那我们就实际把它运作的过程跟大家展示一下</p>
+<p>这个是你的 Encoder</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210506104141482.png" alt="image-20210506104141482" style="zoom: 50%;">
+
+<p>输入一排向量,输出一排向量,我们叫它 $a^1 a^2 a^3$</p>
+<p>接下来 轮到你的 Decoder,你的 Decoder 呢,会先吃 BEGIN 当做,BEGIN 这个 Special 的 Token,那 BEGIN 这个 Special 的 Token 读进来以后,你可能会经过 Self-Attention,这个 Self-Attention 是有做 Mask 的,然后得到一个向量,就是 Self-Attention 就算是有做 Mask,还是一样输入多少长度的向量,输出就是多少向量</p>
+<p>所以输入一个向量 输出一个向量,然后接下来把这个向量呢,乘上一个矩阵做一个 Transform,得到一个 Query 叫做 q</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210506105155338.png" alt="image-20210506105155338" style="zoom: 50%;">
+
+<p>然后这边的 $a^1 a^2 a^3$ 呢,也都產生 Key,Key1 Key2 Key3,那把这个 q 跟 $k^1 k^2 k^3$,去计算 Attention 的分数,得到 $α_1 α_2 α_3$,当然你可能一样会做 Softmax,把它稍微做一下 Normalization,所以我这边加一个 ‘,代表它可能是做过 Normalization</p>
+<p>接下来再把 $α_1 α_2 α_3$,就乘上 $v^1 v^2 v^3$,再把它 Weighted Sum 加起来会得到 v</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210506105352521.png" alt="image-20210506105352521" style="zoom:50%;">
+
+<p>那这一个 V,就是接下来会丢到 Fully-Connected 的,Network 做接下来的处理,那这个步骤就是 q 来自於 Decoder,k 跟 v 来自於 Encoder,这个步骤就叫做 Cross Attention</p>
+<p>所以 <strong>Decoder 就是凭藉著產生一个 q,去 Encoder 这边抽取资讯出来,当做接下来的 Decoder 的,Fully-Connected 的 Network 的 Input</strong></p>
+<p>当然这个,就现在假设產生第二个,第一个这个中文的字產生一个“机”,接下来的运作也是一模一样的</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210506105747730.png" alt="image-20210506105747730" style="zoom: 50%;">
+
+<p>输入 BEGIN 输入机,產生一个向量,这个向量一样乘上一个 Linear 的 Transform,得到 q’,得到一个 Query,这个 Query 一样跟 $k^1 k^2 k^3$,去计算 Attention 的分数,一样跟 $v^1 v^2 v^3$ 做 Weighted Sum 做加权,然后加起来得到 v’,交给接下来 Fully-Connected Network 做处理</p>
+<p>所以这就是Cross Attention 的运作的过程</p>
+<p>也许有人会有<strong>疑问</strong>：那这个 Encoder 有很多层啊,Decoder 也有很多层啊,从刚才的讲解裡面好像听起来,这个 Decoder 不管哪一层,都是<strong>拿 Encoder 的最后一层的输出</strong>这样对吗？</p>
+<p>对,<strong>在原始 Paper 裡面的实做是这样子</strong>,那一定要这样吗</p>
+<p><strong>不一定要这样</strong>,你永远可以自己兜一些新的想法,所以我这边就是引用一篇论文告诉你说,也有人尝试不同的 Cross Attension 的方式</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210506111930819.png" alt="image-20210506111930819" style="zoom: 67%;">
+
+<p>Encoder 这边有很多层,Decoder 这边有很多层,為什麼 Decoder 这边每一层都一定要看,Encoder 的最后一层输出呢,能不能够有各式各样不同的连接方式,这完全可以当做一个研究的问题来 Study</p>
+<h2 id="Training"><a href="#Training" class="headerlink" title="Training"></a>Training</h2><p>已经清楚说 Input 一个 Sequence,是怎麼得到最终的输出,那接下来就进入训练的部分</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210506121209178.png" alt="image-20210506121209178" style="zoom:50%;">
+
+<p>刚才讲的都还只是,假设你模型训练好以后它是怎麼运作的,它是怎麼做 Testing 的,它是怎麼做 Inference 的,Inference 就是 Testing ，那是怎麼做训练的呢？</p>
+<p>接下来就要讲怎麼做训练,那如果是做语音辨识,那你要有<strong>训练资料</strong>,你要收集一大堆的声音讯号,每一句声音讯号都要有工读生来听打一下,打出说它的这个对应的词汇是什麼</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210506122534592.png" alt="image-20210506122534592"></p>
+<p>工读生听这段是机器学习,他就把机器学习四个字打出来,所以就知道说你的这个 Transformer,应该要学到 听到这段声音讯号,它的输出就是机器学习这四个中文字</p>
+<p>那怎麼让机器学到这件事呢</p>
+<p>我们已经知道说输入这段声音讯号,第一个应该要输出的中文字是“机”,所以今天当我们把 BEGIN,丢给这个 Encoder 的时候,它第一个输出应该要跟“机”越接近越好</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210506122929142.png" alt="image-20210506122929142" style="zoom:50%;">
+
+<p><strong>“机”这个字会被表示成一个 One-Hot 的 Vector</strong>,在这个 Vector 裡面,只有机对应的那个维度是 1,其他都是 0,这是正确答案,那我们的 Decoder,它的输出是一个 Distribution,是一个机率的分布,我们会希望这一个机率的分布,跟这个 One-Hot 的 Vector 越接近越好</p>
+<p>所以你会去计算这个 Ground Truth,跟这个 Distribution 它们之间的 Cross Entropy,然后我们希望这个 ==Cross Entropy== 的值,越小越好</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210506123013981.png" alt="image-20210506123013981" style="zoom:50%;">
+
+<p>它就<strong>跟分类很像</strong>,刚才助教在讲解作业的时候也有提到这件事情,你可以想成每一次我们在產生,每一次 Decoder 在產生一个中文字的时候,其实就是做了一次分类的问题,中文字假设有四千个,那就是<strong>做有四千个类别的分类的问题</strong></p>
+<p>所以实际上训练的时候这个样子,我们已经知道输出应该是“机器学习”这四个字,就告诉你的 Decoder ,现在你第一次的输出 第二次的输出,第三次的输出 第四次输出,应该分别就是“机” “器” “学”跟“习”,这四个中文字的 One-Hot Vector,我们<strong>希望我们的输出,跟这四个字的 One-Hot Vector 越接近越好</strong></p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210506124154943.png" alt="image-20210506124154943" style="zoom:50%;">
+
+<p>在训练的时候,每一个输出都会有一个 Cross Entropy,每一个输出跟 One-Hot Vector,跟它对应的正确答案都有一个 Cross Entropy,我们要希望所有的 Cross Entropy 的总和最小,越小越好</p>
+<p>所以这边做了四次分类的问题,我们希望这些分类的问题,它总合起来的 Cross Entropy 越小越好,<strong>还有 END 这个符号</strong></p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210506150925655.png" alt="image-20210506150925655" style="zoom:50%;">
+
+<p>那这个就是 Decoder 的训练：<strong>把 Ground Truth ,正确答案给它,希望 Decoder 的输出跟正确答案越接近越好</strong></p>
+<p>那这边有一件值得我们注意的事情,在<strong>训练</strong>的时候我们会给 Decoder 看<strong>正确答案</strong>,也就是我们会告诉它说</p>
+<ul>
+<li>在已经有 “BEGIN”,在有”机”的情况下你就要输出”器”</li>
+<li>有 “BEGIN” 有”机” 有”器”的情况下输出”学”</li>
+<li>有 “BEGIN” 有”机” 有”器” 有”学”的情况下输出”习”</li>
+<li>有 “BEGIN” 有”机” 有”器” 有”学” 有”习”的情况下,你就要输出”断”</li>
+</ul>
+<p>在 Decoder 训练的时候,我们会在输入的时候给它<strong>正确的答案</strong>,那这件事情叫做 ==Teacher Forcing==</p>
+<p>那这个时候你马上就会有一个问题了</p>
+<ul>
+<li>训练的时候,Decoder 有偷看到正确答案了</li>
+<li>但是测试的时候,显然没有正确答案可以给 Decoder 看</li>
+</ul>
+<p>刚才也有强调说在真正使用这个模型,在 Inference 的时候,Decoder 看到的是自己的输入,这<strong>中间显然有一个 ==Mismatch==</strong>,那等一下我们会有一页投影片的说明,有什麼样可能的解决方式</p>
+<h2 id="Tips"><a href="#Tips" class="headerlink" title="Tips"></a>Tips</h2><p>那接下来,不侷限於 Transformer ,讲一些训练这种 Sequence To Sequence Model 的Tips</p>
+<h3 id="Copy-Mechanism"><a href="#Copy-Mechanism" class="headerlink" title="Copy Mechanism"></a>Copy Mechanism</h3><p>在我们刚才的讨论裡面,我们都要求 Decoder 自己產生输出,但是对很多任务而言,也许 <strong>Decoder 没有必要自己创造输出</strong>出来,它需要做的事情,也许是<strong>从输入的东西裡面复製</strong>一些东西出来</p>
+<p>像这种复製的行為在哪些任务会用得上呢,一个例子是做聊天机器人</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210506160219468.png" alt="image-20210506160219468" style="zoom: 67%;">
+
+<ul>
+<li><p>人对机器说:你好 我是库洛洛,</p>
+</li>
+<li><p>机器应该回答说:库洛洛你好 很高兴认识你</p>
+</li>
+</ul>
+<p>对机器来说,它其实<strong>没有必要创造</strong>库洛洛这个词汇,这对机器来说一定会是一个非常怪异的词汇,所以它可能很难,在训练资料裡面可能一次也没有出现过,所以它不太可能正确地產生这段词汇出来</p>
+<p>但是假设今天机器它在学的时候,它学到的是看到输入的时候说我是某某某,就直接把某某某,不管这边是什麼复製出来说某某某你好</p>
+<p>那这样子机器的<strong>训练显然会比较容易</strong>,它显然比较有可能得到正确的结果,所以复製对於对话来说,可能是一个需要的技术 需要的能力</p>
+<h3 id="Summarization"><a href="#Summarization" class="headerlink" title="Summarization"></a>Summarization</h3><p>或者是在做摘要的时候,你可能更需要 Copy 这样子的技能</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210506160548411.png" alt="image-20210506160548411" style="zoom:67%;">
+
+<p>摘要就是,你要训练一个模型,然后这个<strong>模型去读一篇文章,然后產生这篇文章的摘要</strong></p>
+<p>那这个任务完全是有办法做的,你就是收集大量的文章,那每一篇文章都有人写的摘要,然后你就训练一个,Sequence-To-Sequence 的 Model,就结束了</p>
+<p>你要做这样的任务,<strong>只有一点点的资料是做不起来的</strong>,有的同学收集个几万篇文章,然后训练一个这样的,Sequence-To-Sequence Model,发现结果有点差</p>
+<p>你要训练这种,你要叫机器说合理的句子,通常这个==百万篇文章==是需要的,所以如果你有百万篇文章,那些文章都有人标的摘要,那有时候你会把,直接把文章标题当作摘要,那这样就不需要花太多人力来标,你是可以训练一个,直接可以帮你读一篇文章,做个摘要的模型</p>
+<p>对<strong>摘要</strong>这个任务而言,其实<strong>从文章裡面直接复製一些资讯出来</strong>,可能是一个很关键的能力,那 Sequence-To-Sequence Model,有没有办法做到这件事呢,那简单来说就是有,那我们就不会细讲</p>
+<p>最早有从输入复製东西的能力的模型,叫做 Pointer Network</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210506161130631.png" alt="image-20210506161130631" style="zoom: 67%;">
+
+<p>那这个过去上课是有讲过的,我把<a href="https://youtu.be/VdOyqNQ9aww" target="_blank" rel="noopener">录影</a>放在这边给大家参考,好 那后来还有一个变形,叫做 Copy Network,那你可以看一下这一篇,Copy Mechanism,就是 Sequence-To-Sequence,有没有问题,你看 Sequence-To-Sequence Model,是怎麼做到从输入复製东西到输出来的</p>
+<h3 id="Guided-Attention"><a href="#Guided-Attention" class="headerlink" title="Guided Attention"></a>Guided Attention</h3><p>机器就是一个黑盒子,有时候它裡面学到什麼东西,你实在是搞不清楚,那有时候它会犯<strong>非常低级的错误</strong></p>
+<p>这边举的例子是<strong>语音合成</strong></p>
+<p>你完全可以就是训练一个,Sequence-To-Sequence 的 Model,Transformer 就是一个例子</p>
+<ul>
+<li>收集很多的声音,文字跟声音讯号的对应关係</li>
+<li>然后接下来告诉你的,Sequence-To-Sequence Model ,看到这段中文的句子,你就输出这段声音</li>
+<li>然后就没有然后,就==硬 Train 一发==就结束了,然后机器就可以学会做语音合成了</li>
+</ul>
+<p>像这样的方法做出来结果,其实还不错,</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210506161940442.png" alt="image-20210506161940442" style="zoom:67%;">
+
+<p>举例来说我叫机器连说 4 次发财,看看它会怎麼讲,机器输出的结果是:发财 发财 发财 发财</p>
+<p>就发现很神奇,我输入的发财是明明是同样的词汇,只是重复 4 次,机器居然自己有一些抑扬顿挫,它怎麼学到这件事,不知道,它自己训练出来就是这个样子</p>
+<p>那你让它讲 3 次发财也没问题,那它讲 2 次发财也没问题,让它讲 1 次发财,<strong>它不念“发”</strong> </p>
+<p>不知道為什麼这样子,就是你这个 Sequence-To-Sequence Model,有时候 Train 出来就是,会產生莫名其妙的结果,<strong>也许在训练资料裡面,这种非常短的句子很少</strong>,所以机器不知道要怎麼处理这种非常短的句子,你叫它念发财,它把发省略掉只念财,你居然叫它念 4 次的发财,重复 4 次没问题,叫它只念一次,居然会有问题,就是这麼的奇怪</p>
+<p>当然其实这个例子并没有那麼常出现,就这个用 Sequence-To-Sequence,Learn 出来 TTS,也没有你想像的那麼差,这个要找这种差的例子也是挺花时间的,要花很多时间才找得到这种差的例子,但这样子的例子是存在的</p>
+<p>所以怎麼办呢</p>
+<p>我们刚才发现说机器居然<strong>漏字</strong>了,输入有一些东西它居然没有看到,我们能不能<strong>够强迫它,一定要把输入的每一个东西通通看过</strong>呢</p>
+<p>这个是有可能的,这招就叫做 ==Guided Attention==</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210506162647905.png" alt="image-20210506162647905" style="zoom:80%;">
+
+<p>像语音辨识这种任务,你其实很难接受说,你讲一句话,今天辨识出来,居然有一段机器没听到,或语音合成你输入一段文字,语音合出来居然有一段没有念到,这个人很难接受</p>
+<p>那如果是其它应用,比如说 Chat Bot,或者是 Summary,可能就没有那麼严格,因為对一个 Chat Bot 来说,输入后一句话,它就回一句话,它到底有没有把整句话看完,其实你 Somehow 也不在乎,你其实也搞不清楚</p>
+<p>但是<strong>对语音辨识 语音合成,Guiding Attention,可能就是一个比较重要的技术</strong></p>
+<p>Guiding Attention 要做的事情就是,<strong>要求机器它在做 Attention 的时候,是有固定的方式的</strong>,举例来说,对语音合成或者是语音辨识来说,我们想像中的 <strong>Attention,应该就是由左向右</strong></p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210506163030902.png" alt="image-20210506163030902" style="zoom:67%;">
+
+<p>在这个例子裡面,我们用红色的这个曲线,来代表 Attention 的分数,这个越高就代表 Attention 的值越大</p>
+<p>我们以语音合成為例,那你的输入就是一串文字,那你在合成声音的时候,显然是<strong>由左念到右</strong>,所以机器应该是,先看最左边输入的词汇產生声音,再看中间的词汇產生声音,再看右边的词汇產生声音</p>
+<p>如果你今天在做语音合成的时候,你发现机器的 Attention,是<strong>颠三倒四的</strong>,它先看最后面,接下来再看前面,那再胡乱看整个句子,那显然有些是做错了,显然有些是,Something is wrong,有些是做错了,</p>
+<p>所以 Guiding Attention 要做的事情就是,强迫 Attention 有一个固定的样貌,那如果你对这个问题,本身就已经有理解知道说,语音合成 TTS 这样的问题,你的 Attention 的分数,Attention 的位置都应该由左向右,那不如就直接把这个限制,放进你的 Training 裡面,要求机器学到 Attention,就应该要由左向右</p>
+<p>那这件事怎麼做呢,有一些关键词汇我就放在这边,让大家自己 Google 了,比如说某某 Mnotonic Attention,或 Location-Aware 的 Attention,那这个部分也是大坑,也不细讲,那就留给大家自己研究</p>
+<h3 id="Beam-Search"><a href="#Beam-Search" class="headerlink" title="Beam Search"></a>Beam Search</h3><p>Beam Search ,我们这边举一个例子,在这个例子裡面我们假设说,我们现在的这个 <strong>Decoder就只能產生两个字</strong>,一个叫做 A 一个叫做 B</p>
+<p>那对 Decoder 而言,它做的事情就是,<strong>每一次在第一个 Time Step,它在 A B 裡面决定一个,然后决定了 A 以后,再把 A 当做输入,然后再决定 A B 要选哪一个</strong></p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210506163652097.png" alt="image-20210506163652097" style="zoom: 50%;">
+
+<p>那举例来说,它可能选 B 当作输入,再决定 A B 要选哪一个,那在我们刚才讲的 Process 裡面,每一次 Decoder 都是选,分数最高的那一个</p>
+<p>我们<strong>每次都是选Max 的那一个</strong>,所以假设 A 的分数 0.6,B 的分数 0.4,Decoder 的第一次就会输出 A,然后接下来假设 B 的分数 0.6,A 的分数 0.4,Decoder 就会输出 B,好,然后再假设把 B 当做 Input,就现在输入已经有 A 有 B 了,然后接下来,A 的分数 0.4,B 的分数 0.6,那 Decoder 就会选择输出 B,所以输出就是 A 跟 B 跟 B</p>
+<p>那像这样子每次找分数最高的那个 Token,每次找分数最高的那个字,来当做输出这件事情叫做,==Greedy Decoding==</p>
+<p>但是 Greedy Decoding,一定是更好的方法吗,有没有可能我们在第一步的时候,先稍微捨弃一点东西</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210506164137822.png" alt="image-20210506164137822" style="zoom:50%;">
+
+<p>比如说第一步虽然 B 是 0.4,但我们就先选 0.4 这个 B,然后接下来我们选了 B 以后,也许接下来的 B 的可能性就大增,就变成 0.9,然后接下来第三个步骤,B 的可能性也是 0.9</p>
+<p>如果你比较红色的这一条路,跟绿色这条路的话,你会发现说绿色这一条路,虽然一开始第一个步骤,你选了一个比较差的输出,但是<strong>接下来的结果是好的</strong></p>
+<p>这个就跟那个天龙八部的真龙棋局一样,对不对,先堵死自己一块,结果接下来反而赢了</p>
+<p>那所以我,如果我们要怎麼找到,这个最好的绿色这一条路呢,也许一个可能是,<strong>爆搜所有可能的路径</strong>,但问题是我们实际上,<strong>并没有办法爆搜所有可能的路径</strong>,因為实际上每一个转捩点可以的选择太多了,如果是在对中文而言,我们中文有 4000 个字,所以这个树每一个地方分叉,都是 4000 个可能的路径,你走两三步以后,你就无法穷举</p>
+<p>所以怎麼办呢,有一个演算法叫做 ==Beam Search==,它用比较有效的方法,找一个 Approximate,找一个估测的 Solution,找一个不是很精準的,不是完全精準的 Solution,这个技术叫做 Beam Search,那这个也留给大家自己 Google,好 </p>
+<p>那这个 Beam Search 这个技术,到底有没有用呢,有趣的事就是,<strong>它有时候有用,有时候没有用,</strong>你会看到有些文献告诉你说,Beam Search 是一个很烂的东西</p>
+<p>举例来说这篇 Paper 叫做,The Curious Case Of Neural Text Degeneration,那这个任务要做的事情是,Sentence Completion,也就是机器先读一段句子,接下来它要把这个句子的后半段,把它完成,你给它一则新闻,或者是一个故事的前半部,哇 它自己发挥它的想像创造力,把这个文章,把故事的后半部把它写完</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210506164817398.png" alt="image-20210506164817398" style="zoom:67%;">
+
+<p>那你会发现说,Beam Search 在这篇文章裡面,一开头就告诉你说,Beam Search 自己有问题：如果你用 Beam Search 的话,会发现说机器不断讲重复的话,它不断开始陷入鬼打墙 无穷迴圈,不断说重复的话</p>
+<p>如果你今天不是用 Beam Search,有加一些随机性,虽然结果不一定完全好,但是看起来至少是比较正常的句子,所以有趣的事情是,有时候对 Decorder 来说,没有找出分数最高的路,反而结果是比较好的</p>
+<p>这个时候你又觉得乱乱的 对不对,就是刚才前一页投影片才说,要找出分数最高的路,现在又要讲说<strong>找出分数最高的路不见得比较好</strong>,到底是怎麼回事呢</p>
+<p>那其实这个就是要,<strong>看你的任务的本身的特性</strong></p>
+<ul>
+<li><p>就假设一个任务,它的<strong>答案非常地明确</strong></p>
+<p>举例来说,什麼叫答案非常明确呢,比如说语音辨识,说一句话辨识的结果就只有一个可能,就那一串文字就是你唯一可能的正确答案,并没有什麼模糊的地带</p>
+<p>对这种任务而言,通常 Beam Search 就会比较有帮助,那什麼样的任务</p>
+</li>
+<li><p><strong>你需要机器发挥一点创造力的时候,这时候 Beam Search 就比较没有帮助</strong>,</p>
+<p>举例来说在这边的 Sentence Completion,给你一个句子,给你故事的前半部,后半部有无穷多可能的发展方式,那这种需要有一些创造力的,有不是只有一个答案的任务,往往会比较需要在 Decoder 裡面,加入随机性,还有另外一个 Decoder,也非常需要随机性的任务,叫做语音合成,TTS 就是语音合成的缩写</p>
+</li>
+</ul>
+<p>这也许就呼应了一个英文的谚语,就是要<strong>接受没有事情是完美的,那真正的美也许就在不完美之中</strong>,对於 TTS 或 Sentence Completion 来说,Decoder 找出最好的结果,不见得是人类觉得最好的结果,反而是奇怪的结果,那你加入一些随机性,结果反而会是比较好的</p>
+<h3 id="Optimizing-Evaluation-Metrics"><a href="#Optimizing-Evaluation-Metrics" class="headerlink" title="Optimizing Evaluation Metrics?"></a>Optimizing Evaluation Metrics?</h3><p>在作业裡面,我们评估的标準用的是,BLEU Score,BLEU Score 是你的 Decoder,先產生一个完整的句子以后,再去跟正确的答案一整句做比较,我们是拿两个句子之间做比较,才算出 BLEU Score</p>
+<p>但我们在训练的时候显然不是这样,<strong>训练</strong>的时候,<strong>每一个词汇是分开考虑的</strong>,训练的时候,我们 Minimize 的是 Cross Entropy,Minimize Cross Entropy,真的可以 Maximize BLEU Score 吗</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210506165953175.png" alt="image-20210506165953175" style="zoom: 67%;">
+
+<p>不一定,因為这两个根本就是,它们可能有一点点的关联,但它们又没有那麼直接相关,它们根本就是两个不同的数值,所以我们 Minimize Cross Entropy,不见得可以让 BLEU Score 比较大</p>
+<p>所以你发现说在助教的程式裡面,助教在做 Validation 的时候,并不是拿 Cross Entropy 来挑最好的 Model,而是挑 BLEU Score 最高的那一个 Model,所以我们训练的时候,是看 Cross Entropy,但是我们实际上你作业真正评估的时候,看的是 BLEU Score,所以你 Validation Set,其实应该考虑用 BLEU Score</p>
+<p>那接下来有人就会想说,那我们能不能<strong>在 Training 的时候,就考虑 BLEU Score 呢</strong>,我们能不能够训练的时候就说,我的 Loss 就是,BLEU Score 乘一个负号,那我们要 Minimize 那个 Loss,假设你的 Loss 是,BLEU Score乘一个负号,它也等於就是 Maximize BLEU Score</p>
+<p>但是<strong>这件事实际上没有那麼容易</strong>,你当然可以把 BLEU Score,当做你训练的时候,你要最大化的一个目标,但是 BLEU Score 本身很复杂,它是不能微分的,</p>
+<p>这边之所以採用 Cross Entropy,而且是每一个中文的字分开来算,就是因為这样我们才有办法处理,如果你是要计算,两个句子之间的 BLEU Score,这一个 Loss,根本就没有办法做微分,那怎麼办呢</p>
+<p>这边就教大家一个口诀,遇到你在 Optimization 无法解决的问题,==用 RL 硬 Train 一发==就对了这样,遇到你无法 Optimize 的 Loss Function,把它当做是 RL 的 Reward,把你的 Decoder 当做是 Agent,它当作是 RL,Reinforcement Learning 的问题硬做</p>
+<p>其实也是有可能可以做的,<strong>有人真的这样试过</strong>,我把 Reference 列在这边给大家参考,当然这是一个比较难的做法,那并没有特别推荐你在作业裡面用这一招</p>
+<h3 id="Scheduled-Sampling"><a href="#Scheduled-Sampling" class="headerlink" title="Scheduled Sampling"></a>Scheduled Sampling</h3><p>那我们要讲到,我们刚才反覆提到的问题了,就是<strong>训练跟测试居然是不一致</strong>的</p>
+<p>测试的时候,Decoder 看到的是自己的输出,所以测试的时候,Decoder 会看到一些错误的东西,但是在训练的时候,Decoder 看到的是完全正确的,那这个不一致的现象叫做,==Exposure Bias==</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210506170906750.png" alt="image-20210506170906750" style="zoom:67%;">
+
+<p>假设 Decoder 在训练的时候,永远只看过正确的东西,那在测试的时候,你只要有一个错,那就会<strong>一步错 步步错</strong>,因為对 Decoder 来说,它从来没有看过错的东西,它看到错的东西会非常的惊奇,然后接下来它產生的结果可能都会错掉</p>
+<p>所以要怎麼解决这个问题呢</p>
+<p>有一个可以的思考的方向是,<strong>给 Decoder 的输入加一些错误的东西</strong>,就这麼直觉,你不要给 Decoder 都是正确的答案,偶尔给它一些错的东西,它反而会学得更好,这一招叫做,==Scheduled Sampling==,它不是那个 Schedule Learning Rate,刚才助教有讲 Schedule Learning Rate,那是另外一件事,不相干的事情,这个是 Scheduled Sampling</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210506171120911.png" alt="image-20210506171120911" style="zoom:67%;">
+
+<p>Scheduled Sampling 其实很早就有了,这个是 15 年的 Paper,很早就有 Scheduled Sampling,在还没有 Transformer,只有 LSTM 的时候,就已经有 Scheduled Sampling,但是 Scheduled Sampling 这一招,它其实会伤害到,Transformer 的平行化的能力,那细节可以再自己去了解一下,所以对 Transformer 来说,它的 Scheduled Sampling,另有招数跟传统的招数,跟原来最早提在,这个 LSTM上被提出来的招数,也不太一样,那我把一些 Reference 的,列在这边给大家参考</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210506171143270.png" alt="image-20210506171143270" style="zoom:67%;">
+
+<p>好 那以上我们就讲完了,Transformer 和种种的训练技巧,这个我们已经讲完了 Encoder,讲完了 Decoder,也讲完了它们中间的关係,也讲了怎麼训练,也讲了种种的 Tip</p>
 <h1 id="Bert"><a href="#Bert" class="headerlink" title="Bert"></a>Bert</h1><h2 id="NLP发展史"><a href="#NLP发展史" class="headerlink" title="NLP发展史"></a>NLP发展史</h2><p>关于NLP发展史，特别推荐weizier的<a href="https://zhuanlan.zhihu.com/p/50443871" target="_blank" rel="noopener">NLP的巨人肩膀</a>。<br>现对NLP发展脉络简要梳理如下：<br><img src="/images/loading.gif" data-original="../images/paper/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ppYW93b3Nob3V6aQ==,size_16,color_FFFFFF,t_70-16291256648489" alt=""></p>
 <ul>
 <li>2001 - Neural language models（神经语言模型）</li>
@@ -586,6 +1627,707 @@
 <p>第四，Bert比较适合解决输入长度不太长的NLP任务，而输入比较长的任务，典型的比如文档级别的任务，Bert解决起来可能就不太好。主要原因在于：Transformer的self attention机制因为要对任意两个单词做attention计算，所以时间复杂度是n平方，n是输入的长度。如果输入长度比较长，Transformer的训练和推理速度掉得比较厉害，于是，这点约束了Bert的输入长度不能太长。所以对于输入长一些的文档级别的任务，Bert就不容易解决好。结论是：Bert更适合解决句子级别或者段落级别的NLP任务。</p>
 <p>如果有小伙伴坚持看到这里的话深表感谢，本来要继续写源码分析和具体的实践了。时间关系，等下周再抽时间写源码分析与实践部分吧。本文仅用于笔者自己总结自己BERT学习之路，期间引用很多专家学者的观点思路，深表感谢。第一次驾驭这么长的技术文章，每个知识点都想写点，感觉越写越乱。若有读者在阅读本文期间有不好的阅读体验深表歉意。</p>
 <h2 id="参考-1"><a href="#参考-1" class="headerlink" title="参考"></a>参考</h2><p><a href="https://zhuanlan.zhihu.com/p/46652512" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/46652512</a></p>
+<h2 id="Self-supervised-Learning"><a href="#Self-supervised-Learning" class="headerlink" title="Self-supervised Learning"></a><strong>Self-supervised Learning</strong></h2><img src="/images/loading.gif" data-original="../images/ML/image-20210531133245185.png" alt="image-20210531133245185" style="zoom: 67%;">
+
+<ul>
+<li><p>每个人都应该熟悉监督学习，当我们做监督学习时，我们只有一个模型，这个模型的输入是x，输出是y。</p>
+<p>假设你今天想做情感分析，你就是让机器阅读一篇文章，而机器需要对这篇文章进行分类，是正面的还是负面的，你必须先找到大量的文章，你需要对所有的文章进行label。我们需要<strong>有标签和文章数据来训练监督模型</strong></p>
+</li>
+<li><p>“Self-supervised “是用另一种方式来监督，没有标签。假设我们只有一堆没有label的文章，但我们试图找到一种方法把它<strong>分成两部分</strong>。</p>
+<p>我们让其中一部分作为模型的输入数据，另一部分作为标签。</p>
+<p>假设你有没有label的数据，例如，一篇文章叫x，我们把x分成两部分，<strong>一部分叫x’，另一部分叫x’’</strong>，我知道现在的说明很抽象。稍后，当我们真正谈论BERT时，你可以更好地理解Self-supervised的含义，以及如何在明明没有办法进行监督训练的情况下，最终还是找到了自己进行监督训练的方法。</p>
+<p>我们把x分成两部分，x’和x’’，然后把<strong>x’输入模型，让它输出y</strong>。如果我们在模型训练中使用标签，我们称之为监督学习。由于在Self-supervised学习中不使用标签，我们可以说，Self-supervised学习也是一种无监督的学习方法。但之所以叫Self-supervised Learning，是为了让定义更清晰。</p>
+</li>
+<li><p>“Self-supervised Learning “这个词，当初Yann LeCun说过，其实并不是一个老词。根据2019年4月在Facebook上的一个帖子，他说，我现在说的这个方法，他叫Self-supervised Learning。为什么不叫无监督学习呢？因为无监督学习是一个比较大的家族，里面有很多不同的方法，为了让定义更清晰，我们叫它 “自监督”，比如我们之前提到的cycle gan，也是无监督学习的一个案例，我们也不使用标注的配对数据，但是，它和Self-supervised Learning还是有点区别。在无监督学习的范畴内，有很多方法，Self-supervised Learning就是其中之一。</p>
+</li>
+</ul>
+<h3 id="Masking-Input"><a href="#Masking-Input" class="headerlink" title="Masking Input"></a>Masking Input</h3><p>Self-supervised Learning是什么意思呢，我们直接拿BERT模型来说。</p>
+<p>首先，<strong>BERT是一个transformer的Encoder</strong>，我们已经讲过transformer了，我们也花了很多时间来介绍Encoder和Decoder，transformer中的Encoder它实际上是BERT的架构，它和transformer的Encoder完全一样，里面有很多Self-Attention和Residual connection，还有Normalization等等，那么，这就是BERT。</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210531143454640.png" alt="image-20210531143454640" style="zoom: 50%;">
+
+<p>如果你已经忘记了Encoder里有哪些部件，你需要记住的关键点是，<strong>BERT可以输入一行向量，然后输出另一行向量，输出的长度与输入的长度相同</strong>。 </p>
+<p>BERT一般用于自然语言处理，用于文本场景，所以一般来说，它的输入是一串文本，也是一串数据。</p>
+<p>当我们真正谈论Self-Attention的时候，我们也说<strong>不仅文本是一种序列，而且语音也可以看作是一种序列，甚至图像也可以看作是一堆向量</strong>。BERT同样的想法是，不仅用于NLP，或者用于文本，它也可以用于语音和视频。</p>
+<p>接下来我们需要做的是，随机<strong>盖住</strong>一些输入的文字，<strong>被mask的部分是随机决定的</strong>，例如，我们输入100个token，什么是token？在中文文本中，我们通常把一个汉字看作是一个token，当我们输入一个句子时，其中的一些词会被随机mask。</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210531145127641.png" alt="image-20210531145127641" style="zoom: 50%;">
+
+<p>mask的具体实现有<strong>两种方法</strong>。</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210531154230714.png" alt="image-20210531154230714" style="zoom: 50%;">
+
+<ul>
+<li>第一种方法是，用一个<strong>特殊的符号替换句子中的一个词</strong>，我们用 “MASK “标记来表示这个特殊符号，你可以把它看作一个新字，这个字完全是一个新词，它不在你的字典里，这意味着mask了原文。</li>
+<li>另外一种方法，<strong>随机</strong>把某一个字<strong>换成另一个字</strong>。中文的 “湾”字被放在这里，然后你可以选择另一个中文字来替换它，它可以变成 “一 “字，变成 “天 “字，变成 “大 “字，或者变成 “小 “字，我们只是用随机选择的某个字来替换它</li>
+</ul>
+<p>所以有两种方法来做mask，一种是添加一个特殊的标记 “MASK”，另一种是用一个字来替换某个字。</p>
+<p>两种方法都可以使用。<strong>使用哪种方法也是随机决定的</strong>。因此，当BERT进行训练时，向BERT输入一个句子，<strong>先随机决定哪一部分的汉字将被mask</strong>。</p>
+<p>mask后，一样是输入一个序列，我们把BERT的相应输出看作是另一个序列，接下来，我们在输入序列中寻找mask部分的相应输出，然后，这个向量将通过一个==Linear transform==。</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210531155411799.png" alt="image-20210531155411799" style="zoom: 50%;">
+
+<p>所谓的Linear transform是指，输入向量将与一个<strong>矩阵相乘</strong>，然后做softmax，输出一个分布。</p>
+<p>这与我们在Seq2Seq模型中提到的使用transformer进行翻译时的输出分布相同。输出是一个很长的向量，包含我们想要处理的每个汉字，每一个字都对应到一个分数。</p>
+<p>在训练过程中。我们知道被mask的字符是什么，而BERT不知道，我们可以用一个one-hot vector来表示这个字符，并使输出和one-hot vector之间的交叉熵损失最小。</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210531162753479.png" alt="image-20210531162753479" style="zoom:50%;">
+
+<p>或者说得简单一点，我们实际上是在解决一个<strong>分类问题</strong>。现在，BERT要做的是，<strong>预测什么被盖住</strong>。被掩盖的字符，属于 “湾”类。</p>
+<p>在训练中，我们<strong>在BERT之后添加一个线性模型</strong>，并将它们<strong>一起训练</strong>。所以，BERT里面是一个transformer的Encoder，它有一堆参数。这两个需要共同训练，并试图<strong>预测被覆盖的字符是什么</strong>，这叫做mask。</p>
+<h3 id="Next-Sentence-Prediction-1"><a href="#Next-Sentence-Prediction-1" class="headerlink" title="Next Sentence Prediction"></a>Next Sentence Prediction</h3><p>事实上，当我们训练BERT时，除了mask之外，我们还会使用另一种方法，这种额外的方法叫做==Next Sentence Prediction== 。</p>
+<p>它的意思是，我们从数据库中拿出两个句子，这是我们通过在互联网上抓取和搜索文件得到的大量句子集合，我们在这<strong>两个句子之间</strong>添加一个<strong>特殊标记</strong>。这样，BERT就可以知道，这两个句子是不同的句子，因为这两个句子之间有一个分隔符。</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210531170205964.png" alt="image-20210531170205964" style="zoom:50%;">
+
+<p>我们还将在句子的<strong>开头</strong>添加一个<strong>特殊标记</strong>，这里我们用CLS来表示这个特殊标记。</p>
+<p>现在，我们有一个很长的序列，包括<strong>两个句子</strong>，由SEP标记和前面的CLS标记分开。如果我们把它传给BERT，它应该输出一个序列，因为输入也是一个序列，这毕竟是Encoder的目的。</p>
+<p>我们将<strong>只看CLS的输出</strong>，我们将把它乘以一个Linear transform。</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210531182906656.png" alt="image-20210531182906656" style="zoom:50%;">
+
+<p>现在它必须做一个<strong>二分类问题</strong>，有两个可能的输出：是或不是。这个方法被称为Next Sentence Prediction ，所以我们需要预测，第二句是否是第一句的后续句。</p>
+<p>然而，后来的研究发现，对于BERT要做的任务来说，<strong>Next Sentence Prediction 并没有真正的帮助</strong>。例如，有一篇论文叫 “Robustly Optimized BERT Approach”，简称RoBERTa。在这篇论文中，它明确指出，实施Next Sentence Prediction ，几乎没有任何帮助。然后，这个概念不知不觉地成为主流。</p>
+<p>在这之后，另一篇论文说下一句话预测没有用，所以在它之后的许多论文也开始说它没有用。例如，SCAN-BERT和XLNet都说Next Sentence Prediction 方法是无用的。它可能是无用的原因之一是，<strong>Next Sentence Prediction 太简单了</strong>，是一项容易的任务。</p>
+<p>这个任务的典型方法是，首先随机选择一个句子，然后从数据库中或随机选择要与前一个句子相连的句子。通常，当我们随机选择一个句子时，它看起来与前一个句子有很大不同。对于BERT来说，预测两个句子是否相连并不是太难。因此，在训练BERT完成Next Sentence Prediction 的任务时，<strong>没有学到什么太有用的东西</strong>。</p>
+<p>还有一种类似于Next Sentence Prediction 的方法，它在纸面上看起来更有用，它被称为==Sentence order prediction==，简称SOP。</p>
+<p>这个方法的主要思想是，我们最初挑选的两个句子可能是相连的。可能有两种可能性：要么句子1在句子2后面相连，要么句子2在句子1后面相连。有两种可能性，我们问BERT是哪一种。</p>
+<p>也许因为这个任务更难，它似乎更有效。它被用在一个叫ALBERT的模型中，这是BERT的高级版本。由于ALBERT这个名字与爱因斯坦相似，我在幻灯片中放了一张爱因斯坦的图片。</p>
+<p>当我们训练时，我们要求BERT学习两个任务。</p>
+<ul>
+<li><p>一个是掩盖一些字符，具体来说是汉字，然后要求它填补缺失的字符。</p>
+</li>
+<li><p>另一个任务表明它能够预测两个句子是否有顺序关系。</p>
+</li>
+</ul>
+<p>所以总的来说，BERT它学会了如何填空。BERT的神奇之处在于，在你训练了一个填空的模型之后，它还可以<strong>用于其他任务</strong>。这些任务<strong>不一定与填空有关</strong>，也可能是完全不同的任务，但BERT仍然可以用于这些任务，这些任务是BERT实际使用的任务，它们被称为==Downstream Tasks==(下游任务)，以后我们将谈论一些Downstream Tasks 的例子。</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210531184824660.png" alt="image-20210531184824660" style="zoom:50%;">
+
+<p>所谓的 “Downstream Tasks  “是指，你真正关心的任务。但是，当我们想让BERT学习做这些任务时，我们仍然<strong>需要一些标记的信息</strong>。</p>
+<p>总之，BERT只是学习填空，但是，以后可以用来做各种你感兴趣的Downstream Tasks 。它就像胚胎中的干细胞,它有各种无限的潜力，虽然它还没有使用它的力量,它只能填空,但以后它有能力解决各种任务。我们只需要给它一点数据来激发它，然后它就能做到。</p>
+<p>BERT分化成各种任务的功能细胞，被称为==Fine-tune==(微调)。所以，我们经常听到有人说，他对BERT进行了微调，也就是说他手上有一个BERT，他对这个BERT进行了微调，使它能够完成某种任务，与微调相反，在微调之前产生这个BERT的过程称为==预训练==。</p>
+<p>所以，生成BERT的过程就是Self-supervised学习。但是，你也可以称之为预训练。如果你知道它是什么，你不应该在其他地方寻找Self-supervised学习的模型，直接应用在作业上。因为这些方法，往往带有令人难以置信的强大能力，这将使你要做的事情变得很无聊。</p>
+<p>接下来其实还有一个BERT的作业。作业7是使用BERT。所以,在作业7中,,当然,你可以使用预训练的模型。这是你唯一可以使用预训练模型的作业,因为作业7是,微调BERT。所以，你当然要使用预训练的BERT，来进行微调。所以，只有在作业7中，你可以使用预训练的模型。</p>
+<p>好的，在我们谈论如何微调BERT之前，我们应该先看看它的能力。今天，为了测试Self-supervised学习的能力，通常，你会在<strong>多个任务上测试</strong>它。因为我们刚才说，BERT就像一个胚胎干细胞，它要分化成各种任务的功能细胞，我们通常不会只在一个任务上测试它的能力，你会让这个BERT分化成各种任务的功能细胞，看看它在每个任务上的准确性，然后我们取其平均值，得到一个总分。这种不同任务的集合，，我们可以称之为任务集。任务集中最著名的基准被称为==GLUE==，它是General Language Understanding Evaluation的缩写。</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210531190756100.png" alt="image-20210531190756100" style="zoom:50%;">
+
+<p>在GLUE中，总共有9个任务。一般来说，你想知道像BERT这样的模型是否被训练得很好。所以，你实际上会得到9个模型，用于9个单独的任务。你看看这<strong>9个任务的平均准确率</strong>，然后，你得到一个值。这个值代表这个Self-supervised模型的性能。</p>
+<p>让我们看看BERT在GLUE上的性能。</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210531192024270.png" alt="image-20210531192024270" style="zoom:67%;">
+
+<p>有了BERT，GLUE得分，也就是9个任务的平均得分，确实逐年增加。在这张图中，,横轴表示不同的模型，这里列出了，你可以发现，除了ELMO和GPT，其他的还有很多BERT，各种BERT。 </p>
+<p><strong>黑色的线</strong>，表示<strong>人类的工作</strong>，也就是人类在这个任务上的准确度，那么，我们把这个当作1，这里每一个点代表一个任务，那么，你为什么要和人类的准确度进行比较呢？</p>
+<p>人类的准确度是1，如果他们比人类好，这些点的值就会大于1，如果他们比人类差，这些点的值就会小于1，这是因为这些任务，其评价指标可能不是准确度。每个任务使用的评价指标是不同的，它可能不是准确度。如果我们只是比较它们的值，可能是没有意义的。所以，这里我们看的是人类之间的差异。</p>
+<p>所以，你会发现，在原来的9个任务中，只有1个任务，机器可以比人类做得更好。随着越来越多的技术被提出，越来越多的,还有3个任务可以比人类做得更好。对于那些远不如人类的任务，,它们也在逐渐追赶。</p>
+<p><strong>蓝色曲线</strong>表示机器<strong>GLUE得分的平均值</strong>。还发现最近的一些强势模型，例如XLNET，甚至超过了人类。当然，这只是这些数据集的结果，并不意味着机器真的在总体上超过了人类。它<strong>在这些数据集上超过了人类</strong>。这意味着这些数据集并不能代表实际的表现，而且难度也不够大。</p>
+<p>所以，在GLUE之后，有人做了Super GLUE。他们找到了更难的自然语言处理任务，让机器来解决。好了！展示这幅图的意义主要是告诉大家，有了BERT这样的技术，机器在自然语言处理方面的能力确实又向前迈进了一步。</p>
+<p>BERT到底是怎么用的呢？我们将给出4个关于BERT的应用案例，</p>
+<h2 id="How-to-use-BERT"><a href="#How-to-use-BERT" class="headerlink" title="How to use BERT"></a>How to use BERT</h2><h3 id="Case-1：-Sentiment-analysis"><a href="#Case-1：-Sentiment-analysis" class="headerlink" title="Case 1： Sentiment analysis"></a>Case 1： Sentiment analysis</h3><p>第一个案例是这样的，我们假设我们的Downstream Tasks 是输入一个序列，然后输出一个class，这是一个分类问题。</p>
+<p>比如说Sentiment analysis情感分析，就是给机器一个句子，让它判断这个句子是正面的还是负面的。</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210531193903820.png" alt="image-20210531193903820" style="zoom: 67%;">
+
+<p>对于BERT来说，它是如何解决情感分析的问题的？</p>
+<p>你只要给它一个句子，也就是你想用它来判断情绪的句子，然后把<strong>CLS标记放在这个句子的前面</strong>，我刚才提到了CLS标记。我们把CLS标记放在前面，扔到BERT中,这4个输入实际上对应着4个输出。然后，我们<strong>只看CLS的部分。</strong>CLS在这里输出一个向量，我们对它进行Linear transform，也就是将它乘以一个Linear transform的矩阵，这里省略了Softmax。</p>
+<p>然而，在实践中，你必须为你的Downstream Tasks 提供<strong>标记数据</strong>，换句话说，BERT没有办法从头开始解决情感分析问题，你仍然需要向BERT提供一些标记数据，你需要向它提供大量的句子，以及它们的正负标签，来训练这个BERT模型。</p>
+<p>在训练的时候，Linear transform和BERT模型都是利用Gradient descent来更新参数的。</p>
+<ul>
+<li>Linear transform的参数是<strong>随机初始化</strong>的</li>
+<li>而BERT的参数是由<strong>学会填空的BERT初始化</strong>的。</li>
+</ul>
+<p>每次我们训练模型的时候，我们都要初始化参数，我们利用梯度下降来更新这些参数，然后尝试minimize loss，</p>
+<p>例如，我们正在做情感分类，但是，我们现在有BERT。我们不必随机初始化所有的参数。,我们唯一随机初始化的部分是Linear这里。BERT的骨干是一个巨大的transformer的Encoder。这个网络的参数不是随机初始化的。把学过填空的BERT参数，放到这个地方的BERT中作为参数初始化。</p>
+<p>我们为什么要这样做呢？为什么要用学过填空的BERT，再放到这里呢？最直观和最简单的原因是，它比随机初始化新参数的网络表现更好。当你把学会填空的BERT放在这里时，它将获得比随机初始化BERT更好的性能。</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210531195445254.png" alt="image-20210531195445254" style="zoom: 67%;">
+
+<p>在这里有篇文章中有一个例子。横轴是训练周期，纵轴是训练损失，到目前为止，大家对这种图一定很熟悉，随着训练的进行，损失当然会越来越低，这个图最有趣的地方是，有各种任务。我们不会解释这些任务的细节，我只想说明有各种任务。</p>
+<ul>
+<li>“fine-tune”是指模型被用于预训练，这是网络的BERT部分。该部分的参数是由学习到的BERT的参数来初始化的，以填补空白。</li>
+<li>scratch表示整个模型，包括BERT和Encoder部分都是随机初始化的。</li>
+</ul>
+<p>首先，在训练网络时，scratch与用学习填空的BERT初始化的网络相比，<strong>损失下降得比较慢</strong>，最后，用随机初始化参数的网络的损失仍然高于用学习填空的BERT初始化的参数。</p>
+<ul>
+<li>当你进行Self-supervised学习时，你使用了大量的<strong>无标记数据</strong>。</li>
+<li>另外，Downstream Tasks 需要少量的<strong>标记数据</strong>。</li>
+</ul>
+<p>所谓的 “半监督 “是指，你有大量的无标签数据和少量的有标签数据，这种情况被称为 “半监督”，所以使用BERT的整个过程是连续应用Pre-Train和Fine-Tune，它可以被视为一种半监督方法。</p>
+<h3 id="Case-2-：POS-tagging"><a href="#Case-2-：POS-tagging" class="headerlink" title="Case 2 ：POS tagging"></a>Case 2 ：POS tagging</h3><p>第二个案例是，输入一个序列，然后输出另一个序列，而输入和输出的长度是一样的。我们在讲Self-Attention的时候，也举了类似的例子。 例如，==POS tagging==。</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210531201554657.png" alt="image-20210531201554657" style="zoom: 67%;">
+
+<p>POS tagging的意思是词性标记。你给机器一个句子，它必须告诉你这个句子中每个词的词性，即使这个词是相同的，也可能有不同的词性。</p>
+<p>你只需向BERT输入一个句子。之后，对于这个句子中的每一个标记，它是一个中文单词，有一个代表这个单词的相应向量。然后，这些向量会依次通过Linear transform和Softmax层。最后，网络会预测给定单词所属的类别，例如，它的词性。</p>
+<p>当然，类别取决于你的任务，如果你的任务不同，相应的类别也会不同。接下来你要做的事情和案例1完全一样。换句话说，你需要有一些标记的数据。这仍然是一个典型的分类问题。唯一不同的是，BERT部分，即网络的Encoder部分，其参数不是随机初始化的。在<strong>预训练过程中，它已经找到了不错的参数</strong>。</p>
+<p>当然，我们在这里展示的例子属于自然语言处理。但是，你可以把这些例子改成<strong>其他任务</strong>，例如，你可以把它们改成语音任务，或者改成计算机视觉任务。我在Self-supervised Learning一节中提到，语音、文本和图像都可以表示为一排向量。虽然下面的例子是文字，但这项技术<strong>不仅限于处理文字</strong>，它还可以用于其他任务，如计算机视觉。 </p>
+<h3 id="Case-3：Natural-Language-Inference"><a href="#Case-3：Natural-Language-Inference" class="headerlink" title="Case 3：Natural Language Inference"></a>Case 3：Natural Language Inference</h3><p>在案例3中，模型输入两个句子，输出一个类别。好了，第三个案例以两个句子为输入，输出一个类别，什么样的任务采取这样的输入和输出？ 最常见的是Natural Language Inference ，它的缩写是NLI</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210531204427699.png" alt="image-20210531204427699" style="zoom:50%;">
+
+<p>机器要做的是判断，是否有可能<strong>从前提中推断出假设</strong>。这个前提与这个假设相矛盾吗？或者说它们不是相矛盾的句子？</p>
+<p>在这个例子中，我们的前提是，一个人骑着马，然后他跳过一架破飞机，这听起来很奇怪。但这个句子实际上是这样的。这是一个基准语料库中的例子。</p>
+<p>这里的<strong>假设</strong>是，这个人在一个餐馆。所以<strong>推论</strong>说这是一个<strong>矛盾</strong>。</p>
+<p>所以机器要做的是，把两个句子作为输入，并输出这两个句子之间的关系。这种任务很常见。它可以用在哪里呢？例如，舆情分析。给定一篇文章，下面有一个评论，这个消息是同意这篇文章，还是反对这篇文章？该模型想要预测的是每条评论的位置。事实上，有很多应用程序接收两个句子，并输出一个类别。</p>
+<p>BERT是如何解决这个问题的？你只要给它两个句子，我们在这两个句子之间放一个<strong>特殊的标记</strong>，并在最开始放CLS标记。</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210531205328650.png" alt="image-20210531205328650" style="zoom:50%;">
+
+<p>这个序列是BERT的输入。但我们只把CLS标记作为Linear transform的输入。它决定这两个输入句子的类别。对于NLI，你必须问，这两个句子是否是矛盾的。它是用一些<strong>预先训练好的权重来初始化的</strong>。</p>
+<h3 id="Case-4：Extraction-based-Question-Answering-QA"><a href="#Case-4：Extraction-based-Question-Answering-QA" class="headerlink" title="Case 4：Extraction-based Question Answering (QA)"></a>Case 4：Extraction-based Question Answering (QA)</h3><p>如果你不理解前面的案例，就忘掉它们。这第四个案例，就是我们在作业7中要做的。作业7是一个问题回答系统。也就是说，在机器读完一篇文章后，你问它一个问题，它将给你一个答案。</p>
+<p>但是，这里的问题和答案稍有限制。这是Extraction-based的QA。也就是说，我们假设<strong>答案必须出现在文章</strong>中。答案必须是文章中的一个片段。</p>
+<p>在这个任务中，一个输入序列包含<strong>一篇文章</strong>和<strong>一个问题</strong>，文章和问题都是一个<strong>序列</strong>。对于中文来说，每个d代表一个汉字，每个q代表一个汉字。你把d和q放入QA模型中，我们希望它输出<strong>两个正整数s和e</strong>。根据这两个正整数，我们可以直接从文章中<strong>截取一段</strong>，它就是答案。这个片段就是正确的答案。</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210531210147402.png" alt="image-20210531210147402" style="zoom:50%;">
+
+<p>这听起来很疯狂，但是，这是现在使用的一个相当标准的方法。六年前，当我第一次听说这个机制可以解决QA任务时，我简直不敢相信。但是，无论如何，这是今天一个非常普遍的方法。</p>
+<p>好吧，如果你仍然不明白我在说什么，更具体地说，这里有一个问题和一篇文章，正确答案是 “gravity”。机器如何输出正确答案？</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210531210438108.png" alt="image-20210531210438108" style="zoom:50%;">
+
+<p>你的保证模型应该输出，s等于17，e等于17，来表示gravity。因为它是整篇文章中的第17个词，所以s等于17，e等于17，意味着输出第17个词作为答案。</p>
+<p>或者举另一个例子，答案是，”within a cloud”，这是文章中的第77至79个词。你的模型要做的是，输出77和79这两个正整数，那么文章中从第77个词到第79个词的分割应该是最终的答案。这就是作业7要你做的。</p>
+<p>当然，我们不是从头开始训练QA模型，为了训练这个QA模型，我们<strong>使用BERT预训练的模型</strong>。</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210531211424994.png" alt="image-20210531211424994" style="zoom:50%;">
+
+<p>这个解决方案是这样的。对于BERT来说，你必须向它展示一个问题，一篇文章，以及在问题和文章之间的一个特殊标记，然后我们在开头放一个CLS标记。</p>
+<p>在这个任务中，你唯一需要<strong>从头训练</strong>的只有<strong>两个向量</strong>。”从头训练 “是指<strong>随机初始化</strong>。这里我们用橙色向量和蓝色向量来表示，这两个向量的长度与BERT的输出相同。</p>
+<p>假设BERT的输出是768维的向量，这两个向量也是768维的向量。那么，如何使用这两个向量？</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210531211722751.png" alt="image-20210531211722751" style="zoom:50%;">
+
+<ul>
+<li><p>首先,计算这个<strong>橙色向量</strong>和那些与文件相对应的<strong>输出向量的内积</strong>,由于有3个代表文章的标记,它将输出三个向量,计算这三个向量与橙色向量的内积,你将得到三个值,然后将它们通过softmax函数,你将得到另外三个值。</p>
+<p>这个内积<strong>和attention很相似</strong>，你可以把橙色部分看成是query，黄色部分看成是key，这是一个attention，那么我们应该尝试找到分数最大的位置，就是这里，橙色向量和d2的内积，如果这是最大值，s应该等于2，你输出的起始位置应该是2</p>
+</li>
+<li><p>蓝色部分做的是完全一样的事情。</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210531212341601.png" alt="image-20210531212341601" style="zoom:50%;">
+
+<p>蓝色部分代表答案的终点，我们计算这个蓝色向量与文章对应的黄色向量的内积，然后，我们在这里也使用softmax，最后，找到最大值，如果第三个值是最大的，e应该是3，正确答案是d2和d3。</p>
+</li>
+</ul>
+<p>因为答案必须在文章中，如果<strong>答案不在文章中，你就不能使用这个技巧</strong>。这就是一个QA模型需要做的。注意，这两个向量是随机初始化的,而BERT是通过它预先训练的权重初始化的。</p>
+<h2 id="Q-amp-A"><a href="#Q-amp-A" class="headerlink" title="Q&amp;A"></a>Q&amp;A</h2><p><strong>Q：</strong>BERT的输入长度有限制吗？</p>
+<p><strong>A：</strong>理论上，没有。在现实中，是的，在理论上，因为BERT模型，是一个transformer的Encoder，所以它可以输入很长的序列，只要你必须能够做Self-Attention，但Self-Attention的计算复杂性是非常高的。所以你会发现，在实践中，BERT实际上不能输入太长的序列，你最多可以输入512长度的序列，如果你输入一个512长度的序列，Self-Attention在中间就要产生512乘以512大小的Attention Metric，那么你可能会被计算所淹没。所以实际上它的长度不是无限的。在助教的程序中，已经为大家处理了这个问题。我们限制了BERT的输入长度，而且用一篇文章来训练需要很长的时间。然后每次，我们只取其中的一段进行训练。我们不会将整篇文章输入BERT。因为你想要的距离太长了，你的训练会有问题。</p>
+<p><strong>Q：</strong> “它与填空题有什么关系？</p>
+<p><strong>A：</strong>“,哇，这个问题很好。,你会认为这个填空题只是一个填空题。但我要在这里做一个Q&amp;A。,这两件事之间有什么关系呢？这里先卖个关子，待会会试着回答你。</p>
+<h2 id="Training-BERT-is-challenging"><a href="#Training-BERT-is-challenging" class="headerlink" title="Training BERT is challenging!"></a>Training BERT is challenging!</h2><p>BERT是这样一个著名的模型，它可以做任何事情，那么你可能会认为BERT，在预训练中，它只是填空题，但是，<strong>你自己真的不能把它训练起来</strong>。</p>
+<p>首先，谷歌最早的BERT,它使用的<strong>数据规模已经很大</strong>了,它的数据中包含了30亿个词汇,30亿个词汇有多少？,是《哈利波特全集》的3000倍。,《哈利波特全集》大约是100万个词汇。,那么谷歌在训练BERT时，最早的BERT，它使用的数据量是《哈利波特全集》的3000倍。</p>
+<p>所以你处理起来会比较痛苦,<strong>更痛苦的是训练过程</strong>,为什么我知道训练过程是痛苦的呢,因为我们实验室有一个学生,他其实是助教之一,他自己试着训练一个BERT,他觉得他不能重现谷歌的结果,好,那么在这个图中,纵轴代表GLUE分数,我们刚才讲到GLUE,对吧?有9个任务，平均有9个任务，,平均分数就叫GLUE分数,好的，那么蓝线就是，谷歌原来的BERT的GLUE分数。</p>
+<p>那么我们的目标其实不是实现BERT，我们的目标是实现ALBERT。ALBERT是一个高级版本，是橙色的线，蓝线是我们自己训练的ALBERT，但是我们实际训练的不是最大版本，BERT有一个base版本和一个large版本。对于大版本，我们很难自己训练它，所以我们尝试用最小的版本来训练，看它是否与谷歌的结果相同。</p>
+<p>你可能会说这30亿个数据，30亿个词似乎有很多数据。实际上，因为它是无标签数据，所以你只是从互联网上整理了一堆文本，有相同的信息量。所以你要<strong>爬上这个级别的信息并不难，难的是训练过程</strong></p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210531213307987.png" alt="image-20210531213307987" style="zoom:50%;">
+
+<p>好的，这个横轴是训练过程，参数更新多少次，大约一百万次的更新，需要多长时间，用TPU运行8天，所以你的TPU要运行8天，如果你在Colab上做，这个至少要运行200天，你甚至可能到明年才能得到结果。</p>
+<p>所以，你真的很难自己训练这种BERT模型。幸运的是，作业只是对它进行微调。你可以在Colab上进行微调，在Colab上微调BERT只需要半小时到一小时。但是，如果你想从头开始训练它，也就是说，训练它做填空题，这将需要大量的时间，而且，你不能在Colab上自己完成它。</p>
+<h2 id="BERT-Embryology-胚胎學"><a href="#BERT-Embryology-胚胎學" class="headerlink" title="BERT Embryology (胚胎學)"></a>BERT Embryology (胚胎學)</h2><p>谷歌已经训练了BERT，而且这些Pre-Train模型是公开的，我们自己训练一个，结果和谷歌的BERT差不多，这有什么意义呢？</p>
+<p>其实是想建立==BERT胚胎学==。”BERT胚胎学是什么意思？”</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210531213717327.png" alt="image-20210531213717327" style="zoom:50%;">
+
+<p>我们知道在BERT的训练过程中需要非常大的计算资源，所以我们想知道有没有可能，<strong>节省这些计算资源</strong>？有没有可能让它训练得更快？,要知道如何让它训练得更快，也许我们可以从观察它的训练过程开始。</p>
+<p>过去没有人观察过BERT的训练过程。因为在谷歌的论文中，他们只是告诉你，我有这个BERT。然后它在各种任务中做得很好。</p>
+<p>BERT在学习填空的过程中，学到了什么？”它在这个过程中何时学会填动词？什么时候学会填名词？ 什么时候学会填代词？ 没有人研究过这个问题。</p>
+<p>所以我们自己训练BERT后，可以观察到BERT什么时候学会填什么词汇，它是如何提高填空能力的？ 好了，细节不是这门课的重点，所以我不在这里讲了。我把论文的链接<a href="https://arxiv.org/abs/2010.02480放在这里，供大家参考。不过可以提前爆冷一下就是：事实和你直观想象的不一样。" target="_blank" rel="noopener">https://arxiv.org/abs/2010.02480放在这里，供大家参考。不过可以提前爆冷一下就是：事实和你直观想象的不一样。</a></p>
+<h2 id="Pre-training-a-seq2seq-model"><a href="#Pre-training-a-seq2seq-model" class="headerlink" title="Pre-training a seq2seq model"></a>Pre-training a seq2seq model</h2><p>我们补充一点，上述的任务都不包括，Seq2Seq模型，如果我们要解决，Seq2Seq模型呢？BERT只是一个预训练Encoder，有没有办法预训练Seq2Seq模型的Decoder？</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210531215129537.png" alt="image-20210531215129537" style="zoom:50%;">
+
+<p>有，你就说我有一个Seq2Seq模型，有一个transformer，还有一个Encoder和Decoder。输入是一串句子，输出是一串句子，中间用Cross Attention连接起来，然后你故意在Encoder的输入上做一些<strong>干扰来破坏它</strong>，我以后会具体告诉你我说的 “破坏 “是什么意思</p>
+<p>Encoder看到的是被破坏的结果，那么Decoder应该输出句子被破坏前的结果，训练这个模型实际上是预训练一个Seq2Seq模型。</p>
+<p>有一篇论文叫MASS</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210531215548872.png" alt="image-20210531215548872" style="zoom:50%;">
+
+<p>在MASS中，它说破坏的方法是，就像BERT做的那样，只要遮住一些地方就可以了，然后有各种方法来破坏它，比如，删除一些词，打乱词的顺序，旋转词的顺序。或者插入一个MASK，再去掉一些词。总之，有各种方法。在破坏了输入的句子之后，它可以通过Seq2Seq模型来恢复它。</p>
+<p>有一篇论文叫BART，它就是用了所有这些方法。我发现用所有可能的方法更好，它可以比MASS更好。我想问一个问题，为什么不是芝麻街的人物？</p>
+<p>你可能会问,有那么多的mask方法,哪种方法更好呢?也许你想自己做一些实验来试试,让我告诉你,你不需要做,谷歌为你做的,有一篇论文叫T5。</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210531220057728.png" alt="image-20210531220057728" style="zoom:50%;">
+
+<p>T5的全称是Transfer Text-To-Text Transformer，有五个T，所以叫T5。在这个T5里面，它只是做了各种尝试，它做了你能想象的所有组合。这篇论文有67页，你可以回去读一下，看看结论。</p>
+<p>T5是在一个语料库上训练的，叫 “Colossal Clean Crawled Corpus”，对于这个数据集，Colossal就是巨无霸，就是非常巨大的意思，它叫C4，你用C4来训练T5，大家都是命名高手。这个命名非常强大，这个C4有多大？</p>
+<p>C4是一个公共数据集，你可以下载它，它是公共的，但是它的原始文件大小是7TB，你可以下载它，但是你不知道把它保存在哪里，加载之后，你可以通过脚本做预处理，由谷歌提供。这个脚本有一个文件，我看到它在网站上发布了，语料库网站上的文件说，用一个GPU做预处理需要355天，你可以下载它，但你在预处理时有问题。</p>
+<p>所以，你可以发现，在深度学习中，数据量和模型都很惊人。</p>
+<h2 id="Why-does-BERT-work"><a href="#Why-does-BERT-work" class="headerlink" title="Why does BERT work?"></a>Why does BERT work?</h2><p>“为什么BERT有用？”</p>
+<p>最常见的解释是，当输入一串文本时，每个文本都有一个对应的向量。对于这个向量，我们称之为embedding。</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210601220428320.png" alt="image-20210601220428320" style="zoom:50%;">
+
+<p>它的特别之处在于，这些向量代表了<strong>输入词</strong>的<strong>含义</strong>。例如，模型输入 “台湾大学”（国立台湾大学），输出4个向量。这4个向量分别代表 “台”、”湾”、”大 “和 “学”</p>
+<p>更具体地说，如果你把这些词所对应的向量画出来，或者计算它们之间的<strong>距离</strong></p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210601221038391.png" alt="image-20210601221038391" style="zoom:50%;">
+
+<p>你会发现，<strong>意思比较相似的词</strong>，它们的<strong>向量比较接近</strong>。例如，水果和草都是植物，它们的向量比较接近。但这是一个假的例子，我以后会给你看一个真正的例子。”鸟 “和 “鱼 “是动物，所以它们可能更接近。</p>
+<p>你可能会问，中文有歧义，其实不仅是中文，很多语言都有歧义，<strong>BERT可以考虑上下文</strong>，所以，同一个词，比如说 “苹果”，它的上下文和另一个 “苹果 “不同，它们的向量也不会相同。</p>
+<p>水果 “苹果 “和手机 “苹果 “都是 “苹果”，但根据上下文，它们的<strong>含义是不同</strong>的。所以，它的<strong>向量和相应的embedding会有很大不同</strong>。水果 “苹果 “可能更接近于 “草”，手机 “苹果 “可能更接近于 “电”。</p>
+<p>现在我们看一个真实的例子。假设我们现在考虑 “苹果 “这个词，我们会收集很多有 “苹果 “这个词的句子，比如 “喝苹果汁”、”苹果Macbook “等等。然后，我们把这些句子放入BERT中。</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210601222431820.png" alt="image-20210601222431820" style="zoom:50%;">
+
+<p>接下来，我们将计算 “苹果 “一词的相应embedding。输入 “喝苹果汁”，得到一个 “苹果 “的向量。为什么不一样呢？在Encoder中存在Self-Attention，所以根据 “苹果 “一词的不同语境，得到的向量会有所不同。接下来，我们计算这些结果之间的==cosine similarity==，即计算它们的相似度。</p>
+<p>结果是这样的，这里有10个句子</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210602212341684.png" alt="image-20210602212341684" style="zoom: 50%;">
+
+<ul>
+<li><p>前5个句子中的 “苹果 “代表<strong>可食用</strong>的苹果。例如，第一句是 “我今天买了苹果吃”，第二句是 “进口富士苹果平均每公斤多少钱”，第三句是 “苹果茶很难喝”，第四句是 “智利苹果的季节来了”，第五句是 “关于进口苹果的事情”，这五个句子都有 “苹果 “一词，</p>
+</li>
+<li><p>后面五个句子也有 “苹果 “一词，但提到的是<strong>苹果公司</strong>的苹果。例如，”苹果即将在下个月发布新款iPhone”，”苹果获得新专利”，”我今天买了一部苹果手机”，”苹果股价下跌”，”苹果押注指纹识别技术”，共有十个 “苹果”</p>
+</li>
+</ul>
+<p>计算每一对之间的相似度，得到一个10×10的矩阵。<strong>相似度越高，这个颜色就越浅</strong>。所以，自己和自己之间的相似度一定是最大的，自己和别人之间的相似度一定是更小的。</p>
+<p>但前五个 “苹果 “和后五个 “苹果 “之间的相似度相对较低。</p>
+<p>BERT知道，前五个 “苹果 “是指可食用的苹果，所以它们比较接近。最后五个 “苹果 “指的是苹果公司，所以它们比较接近。所以<strong>BERT知道，上下两堆 “苹果 “的含义不同</strong>。</p>
+<p>BERT的这些向量是输出向量，每个向量代表该词的含义。BERT在填空的过程中已经学会了每个汉字的意思。”,也许它真的理解了中文，对它来说，汉字不再是毫无关联的，既然它理解了中文，它就可以在接下来的任务中做得更好。</p>
+<p>那么接下来你可能会问，”为什么BERT有如此神奇的能力？”,为什么……,为什么它能输出代表输入词含义的向量？ 这里，约翰-鲁伯特-弗斯，一位60年代的语言学家，提出了一个假说。他说，要知道一个词的意思，我们需要看它的 “<strong>Company</strong>“，也就是经常和它<strong>一起出现的词汇</strong>，也就是它的<strong>上下文</strong>。</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210602213418100.png" alt="image-20210602213418100" style="zoom:50%;">
+
+<p>一个词的意思，取决于它的上下文</p>
+<ul>
+<li><p>所以以苹果（apple）中的果字为例。如果它经常与 “吃”、”树 “等一起出现，那么它可能指的是可食用的苹果。</p>
+</li>
+<li><p>如果它经常与电子、专利、股票价格等一起出现，那么它可能指的是苹果公司。</p>
+</li>
+</ul>
+<p>当我们训练BERT时，我们给它w1、w2、w3和w4，我们覆盖w2，并告诉它预测w2，而它就是从上下文中提取信息来预测w2。所以这个向量是其上下文信息的精华，可以用来预测w2是什么。</p>
+<p>这样的想法在BERT之前已经存在了。在word embedding中，有一种技术叫做CBOW。</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210602213758001.png" alt="image-20210602213758001" style="zoom:50%;">
+
+<p>CBOW所做的，与BERT完全一样。做一个空白，并要求它预测空白处的内容。这个CBOW，这个word embedding技术，可以给每个词汇一个向量，代表这个词汇的意义。</p>
+<p>CBOW是一个非常简单的模型，它使用两个变换，是一个<strong>非常简单的模型</strong>，有人会问，”为什么它只使用两个变换？”，”它可以更复杂吗？”，CBOW的作者，Thomas Mikolov，曾经来到台湾。当时我在上课的时候，经常有人问我，为什么CBOW只用线性，为什么不用深度学习，我问过Thomas Mikolov这个问题，他说可以用深度学习，但是之所以选择线性模型，一个简单的模型，最大的担心，其实是<strong>算力问题</strong>。当时的计算能力和现在不在一个数量级上，可能是2016年的时候，几年前的技术也不在一个数量级上，当时要训练一个非常大的模型还是比较困难的，所以他选择了一个比较简单的模型。 </p>
+<p>今天，当你使用<strong>BERT</strong>的时候，就相当于一个<strong>深度版本的CBOW</strong>，你可以做更复杂的事情，而且BERT还可以根据不同的语境，从同一个词汇产生不同的embedding。因为它是一个考虑到语境的高级版本的词embedding，BERT也被称为Contextualized embedding，这些由BERT提取的向量或embedding被称为Contextualized embedding，希望大家能接受这个答案。</p>
+<p>但是，这个答案，它真的是真的吗？这是你在文献中听到最多的答案。当你和别人讨论BERT时，这是大多数人都会告诉你的理由。它真的是真的吗？这里有一个难以理解的，由我们实验室的一个学生做的实验。实验是这样的：我们应用为文本训练的BERT对蛋白质、DNA链和音乐进行分类。</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210602214418404.png" alt="image-20210602214418404" style="zoom:50%;">
+
+<p>让我们以DNA链的分类为例。DNA是一系列的脱氧核团核酸，有四种，分别用A、T、C和G表示，所以一条DNA链是这样的。</p>
+<p>你可能会问，”EI IE和N代表什么？”不要在意细节，我也不知道，总之，这是一个分类问题。只要用训练数据和标记数据来训练它，就可以了。</p>
+<p>神奇的部分来了，DNA可以用ATCG来表示，现在，我们要用BERT来对DNA进行分类</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210602214824169.png" alt="image-20210602214824169" style="zoom:50%;">
+
+<p>例如，”A “是 “we”，”T “是 “you”，”C “是 “he”，”G “是 “she”。对应的词并不重要，你可以随机生成。”A “可以对应任何词汇，”T”、”C “和 “G “也可以，这并不重要，对结果影响很小。只是这串文字无法理解。</p>
+<p>例如，”AGAC “变成了 “we she we he”，不知道它在说什么。</p>
+<p>然后，把它扔进一个一般的BERT，用CLS标记，一个输出向量，一个Linear transform，对它进行分类。只是分类到了DNA类,我不知道他们是什么意思。</p>
+<p>和以前一样，Linear transform使用随机初始化，而BERT是通过预训练模型初始化的。但用于初始化的模型，是学习填空的模型。它已经学会了英语填空。</p>
+<p>你可能会认为,这个实验完全是无稽之谈。如果我们把一个DNA序列预处理成一个无意义的序列,那么BERT的目的是什么? 大家都知道,BERT可以分析一个有效句子的语义,你怎么能给它一个无法理解的句子呢? 做这个实验的意义是什么? </p>
+<p>蛋白质有三种分类，那么蛋白质是由氨基酸组成的，有十种氨基酸，只要给每个氨基酸一个随机的词汇，那么DNA是一组ATCG，音乐也是一组音符，给它每个音符一个词汇，然后，把它作为一个文章分类问题来做。</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210602215524076.png" alt="image-20210602215524076" style="zoom:50%;">
+
+<p>你会发现，如果你不使用BERT，你得到的结果是蓝色部分，如果你使用BERT，你得到的结果是红色部分，这实际上更好，你们大多数人现在一定很困惑。</p>
+<p>这个实验只能用神奇来形容，没有人知道它为什么有效，而且目前还没有很好的解释，我之所以要谈这个实验，是想告诉你们，要了解BERT的力量，还有很多工作要做。</p>
+<p>我并不是要否认BERT能够分析句子的含义这一事实。从embedding中，我们清楚地观察到，BERT知道每个词的含义，它能找出含义相似的词和不相似的词。但正如我想指出的那样，即使你给它一个无意义的句子，它仍然可以很好地对句子进行分类。</p>
+<p>所以，<strong>也许它的力量并不完全来自于对实际文章的理解</strong>。也许还有其他原因。例如，也许，BERT只是一套更好的初始参数。也许这与语义不一定有关。也许这套初始参数，只是在训练大型模型时更好。</p>
+<p>是这样吗？这个问题<strong>需要进一步研究</strong>来回答。我之所以要讲这个实验，是想让大家知道，我们目前使用的模型往往是非常新的，需要进一步的研究，以便我们了解它的能力。</p>
+<p>你今天学到的关于BERT的知识，只是沧海一粟。我会把一些视频的链接放在这里。</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210602215747103.png" alt="image-20210602215747103" style="zoom:50%;">
+
+<p>如果你想了解更多关于BERT的知识，你可以参考这些链接。你的作业不需要它，,这学期剩下的时间也不需要。我只想告诉你，BERT还有很多其他的变种。</p>
+<h2 id="Multi-lingual-BERT"><a href="#Multi-lingual-BERT" class="headerlink" title="Multi-lingual BERT"></a>Multi-lingual BERT</h2><p>接下来，我要讲的是，一种叫做Multi-lingual BERT的BERT。Multi-lingual BERT有什么神奇之处？</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210602220031527.png" alt="image-20210602220031527" style="zoom:50%;">
+
+<p>它是由很多语言来训练的，比如中文、英文、德文、法文等等，用填空题来训练BERT，这就是Multi-lingual BERT的训练方式。</p>
+<h3 id="Zero-shot-Reading-Comprehension"><a href="#Zero-shot-Reading-Comprehension" class="headerlink" title="Zero-shot Reading Comprehension"></a>Zero-shot Reading Comprehension</h3><p>google训练了一个Multi-lingual BERT，它能够做这104种语言的填空题。神奇的地方来了，如果你用<strong>英文</strong>问答<strong>数据</strong>训练它，它就会自动学习如何做<strong>中文问答</strong></p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210602220224565.png" alt="image-20210602220224565" style="zoom:50%;">
+
+<p>我不知道你是否完全理解我的意思，所以这里有一个真实的实验例子。</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210602220621646.png" alt="image-20210602220621646" style="zoom:50%;">
+
+<p>这是一些训练数据。他们用SQuAD进行fine-tune。这是一个英文Q&amp;A数据集。中文数据集是由台达电发布的，叫DRCD。这个数据集也是我们在作业中要用到的数据集。</p>
+<p>在BERT提出之前，效果并不好。在BERT之前，最强的模型是QANet。它的正确率只有……，嗯，我是说F1得分，而不是准确率，但你可以暂时把它看成是准确率或正确率。</p>
+<p>如果我们允许用中文填空题进行预训练，然后用中文Q&amp;A数据进行微调，那么它在中文Q&amp;A测试集上的正确率达到89%。因此，其表现是相当令人印象深刻的。</p>
+<p>神奇的是，如果我们把一个Multi-lingual的BERT，用英文Q&amp;A数据进行微调，它仍然可以回答中文Q&amp;A问题，并且有78%的正确率，这几乎与QANet的准确性相同。它从未接受过中文和英文之间的翻译训练，也从未阅读过中文Q&amp;A的数据收集。,它在没有任何准备的情况下参加了这个中文Q&amp;A测试，尽管它从未见过中文测试，但不知为何，它能回答这些问题。</p>
+<h3 id="Cross-lingual-Alignment"><a href="#Cross-lingual-Alignment" class="headerlink" title="Cross-lingual Alignment?"></a>Cross-lingual Alignment?</h3><p>你们中的一些人可能会说：”它在预训练中读过104种语言，104种语言中的一种是中文，是吗？ 如果是，这并不奇怪。”但是在预训练中，学习的目标是填空。它只能用中文填空。有了这些知识，再加上做英文问答的能力，不知不觉中，它就自动学会了做中文问答。</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210602220948753.png" alt="image-20210602220948753" style="zoom:50%;">
+
+<p>听起来很神奇，那么BERT是怎么做到的呢？一个简单的解释是：也许对于多语言的BERT来说，<strong>不同的语言并没有那么大的差异</strong>。无论你用中文还是英文显示，对于具有相同含义的单词，它们的embedding都很接近。汉语中的 “跳 “与英语中的 “jump “接近，汉语中的 “鱼 “与英语中的 “fish “接近，汉语中的 “游 “与英语中的 “swim “接近，也许在学习过程中它已经自动学会了。</p>
+<p>它是可以被验证的。我们实际上做了一些验证。验证的标准被称为Mean Reciprocal Rank，缩写为MRR。我们在这里不做详细说明。你只需要知道，<strong>MRR的值越高，不同embedding之间的Alignment就越好</strong>。</p>
+<p>更好的Alignment意味着，具有相同含义但来自不同语言的词将被转化为更接近的向量。如果MRR高，那么具有相同含义但来自不同语言的词的向量就更接近。</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210602221257119.png" alt="image-20210602221257119" style="zoom:50%;">
+
+<p>这条深蓝色的线是谷歌发布的104种语言的Multi-lingual BERT的MRR，它的值非常高，这说明不同语言之间没有太大的差别。Multi-lingual BERT只看意思，不同语言对它没有太大的差别。</p>
+<p>橙色这条是我们试图自己训练Multi-lingual BERT。我们使用的<strong>数据较少</strong>，每种语言只使用了20万个句子。数据较少。我们自我训练的模型结果并不好。我们不知道为什么我们的Multi-lingual BERT不能将不同的语言统一起来。似乎它不能学习那些在不同语言中具有相同含义的符号，它们应该具有相同的含义。这个问题困扰了我们很长时间。</p>
+<p>为什么我们要做这个实验？为什么我们要自己训练Multi-lingual BERT？因为我们想了解，是什么让Multi-lingual BERT。我们想设置不同的参数，不同的向量，看看哪个向量会影响Multi-lingual BERT。</p>
+<p>但是我们发现，对于我们的Multi-lingual BERT来说，无论你如何调整参数，它就是不能达到Multi-lingual的效果，它就是不能达到Alignment的效果。我们把数据量<strong>增加了五倍</strong>，看看能不能达到Alignment的效果。在做这个实验之前，大家都有点抵触，大家都觉得有点害怕，因为训练时间要比原来的长五倍。</p>
+<p>训练了两天后，什么也没发生，损失甚至不能减少，就在我们要放弃的时候，损失突然下降了</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210602221752573.png" alt="image-20210602221752573" style="zoom:50%;">
+
+<p>用了8个V100来训练，我们的实验室也没有8个V100，是在NCHC（国家高性能计算中心）的机器上运行的，训练了两天后，损失没有下降，似乎失败了。当我们要放弃的时候，损失下降了。</p>
+<p>这是某个学生在Facebook上发的帖子，我在这里引用它来告诉你，我当时心里的感叹。整个实验，必须运行一个多星期，才能把它学好，每一种语言1000K的数据。</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210602221914782.png" alt="image-20210602221914782" style="zoom:50%;">
+
+<p>所以看起来，<strong>数据量是一个非常关键的因素</strong>，关系到能否成功地将不同的语言排列在一起。所以有时候，神奇的是，很多问题或很多现象，只有在有足够的数据量时才会显现出来。它可以在A语言的QA上进行训练，然后直接转移到B语言上，从来没有人说过这一点</p>
+<p>这是过去几年才出现的，一个可能的原因是，过去没有足够的数据，现在有足够的数据，现在有大量的计算资源，所以这个现象现在有可能被观察到。</p>
+<p>最后一个神奇的实验，我觉得这件事很奇怪</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210602222118762.png" alt="image-20210602222118762" style="zoom:50%;">
+
+<p>你说BERT可以把不同语言中含义相同的符号放在一起，使它们的向量接近。但是，当训练多语言的BERT时，如果给它英语，它可以用英语填空，如果给它中文，它可以用中文填空，它不会混在一起</p>
+<p>那么，如果不同语言之间没有区别，怎么可能只用英语标记来填英语句子呢？为什么它不会用中文符号填空呢？它就是不填，这说明它知道语言的信息也是不同的，那些不同语言的符号毕竟还是不同的，它并没有完全抹去语言信息，所以我想出了一个研究课题，我们来找找，语言信息在哪里。</p>
+<p>后来我们发现，语言信息并没有隐藏得很深。一个学生发现，我们把所有<strong>英语单词</strong>的embedding，放到多语言的BERT中，<strong>取embedding的平均值</strong>，我们对<strong>中文单词</strong>也做<strong>同样的事情</strong>。在这里，我们给Multi-lingual BERT一个英语句子，并得到它的embedding。我们在embedding中<strong>加上</strong>这个<strong>蓝色的向量</strong>，这就是<strong>英语和汉语之间的差距</strong>。</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210602222406050.png" alt="image-20210602222406050" style="zoom:50%;">
+
+<p>这些向量，从Multi-lingual BERT的角度来看，变成了汉语。有了这个神奇的东西，你可以做一个奇妙的无监督翻译。</p>
+<p>例如，你给BERT看这个中文句子。</p>
+<img src="/images/loading.gif" data-original="https://gitee.com/unclestrong/deep-learning21_note/raw/master/imgbed/image-20210602222544789.png" alt="image-20210602222544789" style="zoom: 50%;">
+
+<p>这个中文句子是，”能帮助我的小女孩在小镇的另一边，，没人能够帮助我”，现在我们把这个句子扔到Multi-lingual BERT中。</p>
+<p>然后我们取出Multi-lingual BERT中的一个层，它不需要是最后一层，可以是任何一层。我们拿出某一层，给它一个embedding，加上这个蓝色的向量。对它来说，这个句子马上就从中文变成了英文。</p>
+<p>在向BERT输入英文后，通过在中间加一个<strong>蓝色的向量来转换隐藏</strong>层，转眼间，中文就出来了。”没有人可以帮助我”，变成了 “是（是）没有人（没有人）可以帮助我（我）”，”我 “变成了 “我”，”没有人 “变成了 “没有人”，所以它在某种程度上可以做无监督的标记级翻译，尽管它并不完美，神奇的是，Multi-lingual的BERT仍然保留了语义信息。</p>
+<h2 id="GPT"><a href="#GPT" class="headerlink" title="GPT"></a>GPT</h2><p>除了BERT以外,还有下一个,也是鼎鼎有名的模型,就是==GPT==系列的模型</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210605213111747.png" alt="image-20210605213111747" style="zoom:50%;">
+
+<p>BERT做的是填空题,GPT就是改一下我们现在在,self-supervised learning的时候,要模型做的任务</p>
+<h2 id="Predict-Next-Token"><a href="#Predict-Next-Token" class="headerlink" title="Predict Next Token"></a>Predict Next Token</h2><p>GPT要做的任务是,<strong>预测接下来,会出现的token是什麼</strong></p>
+<p>举例来说,假设你的训练资料裡面,有一个句子是台湾大学,那GPT拿到这一笔训练资料的时候,它做的事情是这样</p>
+<p>你给它BOS这个token,然后GPT output一个embedding,然后接下来,你用这个embedding去预测下一个,应该出现的token是什麼</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210606121532206.png" alt="image-20210606121532206" style="zoom:50%;">
+
+<p>那在这个句子裡面,根据这笔训练资料,下一个应该出现的token是”台”,所以你要训练你的模型,根据第一个token,根据BOS给你的embedding,那它要输出”台”这个token</p>
+<p>这个部分,详细来看就是这样,你有一个embedding,这边用h来表示,然后通过一个Linear Transform,再通过一个softmax,得到一个distribution,跟一般你做分类的问题是一样的,接下来,你希望你output的distribution,跟正确答案的Cross entropy,越小越好,也就是你要去预测,下一个出现的token是什麼</p>
+<p>好那接下来要做的事情,就是<strong>以此类推</strong>了,你给你的GPT,BOS跟”台”,它產生embedding,接下来它会预测,下一个出现的token是什麼,那你告诉它说,下一个应该出现的token,是”湾”</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210606121740014.png" alt="image-20210606121740014" style="zoom:50%;">
+
+<p>好 再反覆继续下去,你给它BOS “台”跟”湾”,然后预测下一个应该出现的token,它应该要预测”大”</p>
+<p>你给它”台”跟”湾”跟”大”,接下来,下一个应该出现的token是”学”</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210606121900835.png" alt="image-20210606121900835" style="zoom:50%;">
+
+<p>那这边呢,是指拿一笔资料 一个句子,来给GPT训练,当然实际上你不会只用一笔句子,你会用成千上万个句子,来训练这个模型,然后就这样子说完了</p>
+<p>它厉害的地方就是,用了很多资料,训了一个异常巨大的模型</p>
+<p>那这边有一个小小的,应该要跟大家说的地方,是说这个GPT的模型,它像是一个transformer的decoder,不过拿掉BOS的attention这个部分,也就是说,你会做那个<strong>mask的attention</strong></p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210606122539643.png" alt="image-20210606122539643" style="zoom:50%;">
+
+<p>就是你现在在预测给BOS,预测台的时候,你不会看到接下来出现的词汇,给它台要预测湾的时候,你不会看到接下来要输入的词汇,以此类推 这个就是GPT</p>
+<p>那这个GPT最知名的就是,因為GPT可以预测下一个token,那所以它有<strong>生成的能力</strong>,你可以让它不断地预测下一个token,產生完整的文章,所以我每次提到GPT的时候,它的形象都是一隻独角兽</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210606122833149.png" alt="image-20210606122833149" style="zoom:50%;">
+
+<p>GPT系列最知名的一个例子,就是用GPT写了一篇,跟独角兽有关的新闻,因為他放一个假新闻,然后那个假新闻裡面说,在安地斯山脉发现独角兽等等,一个活灵活现的假新闻</p>
+<p>為了让你更清楚了解,GPT运作起来是什麼样子,那这个线上有一个demo的网页,叫做talk to transformer,就是有人把一个比较小的,不是那个最大的GPT的模型,不是public available的,有人把比较小的GPT模型放在线上,让你可以输入一个句子,让它会把接下来的其餘的内容,把它补完</p>
+<h2 id="How-to-use-GPT"><a href="#How-to-use-GPT" class="headerlink" title="How to use GPT?"></a>How to use GPT?</h2><p>怎麼把它用在downstream 的任务上呢,举例来说,怎麼把它用在question answering,或者是其他的,跟人类语言处理有关的任务上呢</p>
+<p><strong>GPT用的想法跟BERT不一样</strong>,其实我要强调一下,GPT也可以跟BERT用一样的做法</p>
+<p>在使用BERT时，把BERT model 拿出来,后面接一个简单的linear的classifier,那你就可以做很多事情,你也可以把GPT拿出来,接一个简单的classifier,我相信也是会有效</p>
+<p>但是在GPT的论文中,它没有这样做,它有一个更狂的想法,為什麼会有更狂的想法呢,因為首先就是,BERT那一招BERT用过了嘛,所以总不能再用一样的东西,这样写paper就没有人觉得厉害了,然后再来就是,<strong>GPT这个模型,也许真的太大了</strong>,大到连fine tune可能都有困难</p>
+<p>我们在用BERT的时候,你要把BERT模型,后面接一个linear classifier,然后BERT也是你的,要train的model的一部分,所以它的参数也是要调的,所以在刚才助教公告的,BERT相关的作业裡面,你还是需要花一点时间来training,虽然助教说你大概20分鐘,就可以train完了,因為你并不是要train一个,完整的BERT的模型,BERT的模型在之前,在做这个填空题的时候,已经训练得差不多了,你只需要微调它就好了,但是微调还是要花时间的,也许GPT实在是太过巨大,巨大到要微调它,要train一个epoch,可能都有困难,所以GPT系列,有一个更狂的使用方式</p>
+<p>这个更狂的使用方式<strong>和人类更接近</strong>,你想想看假设你去考,譬如说托福的听力测验,你是怎麼去考</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210606123755043.png" alt="image-20210606123755043" style="zoom:67%;">
+
+<ul>
+<li><p>首先你会看到一个题目的说明,告诉你说现在要考选择题,请从ABCD四个选项裡面,选出正确的答案等等</p>
+</li>
+<li><p>然后给你一个范例,告诉你说这是题目,然后正确的答案是多少</p>
+</li>
+<li><p>然后你看到新的问题,期待你就可以举一反三开始作答</p>
+<p>GPT系列要做的事情就是,这个模型能不能够,做一样的事情呢</p>
+</li>
+</ul>
+<h3 id="“In-context”-Learning"><a href="#“In-context”-Learning" class="headerlink" title="“In-context” Learning"></a>“In-context” Learning</h3><h4 id="“Few-shot”-Learning"><a href="#“Few-shot”-Learning" class="headerlink" title="“Few-shot” Learning"></a>“Few-shot” Learning</h4><p>举例来说假设要GPT这个模型做翻译</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210606124815390.png" alt="image-20210606124815390" style="zoom:50%;">
+
+<ul>
+<li><p>你就先打Translate English to French</p>
+</li>
+<li><p>就先给它这个句子,这个句子代表问题的描述</p>
+</li>
+<li><p>然后给它几个范例跟它说,sea otter然后=&gt;,后面就应该长这个样子</p>
+</li>
+<li><p>或者是这个什麼plush girafe,plush girafe后面,就应该长这个样子等等</p>
+</li>
+<li><p>然后接下来,你问它说cheese=&gt;,叫它把后面的补完,希望它就可以產生翻译的结果</p>
+</li>
+</ul>
+<p>不知道大家能不能够了解,这一个想法是多麼地狂,在training的时候,GPT并没有教它做翻译这件事,它唯一学到的就是,给一段文字的前半段,把后半段补完,就像我们刚才给大家示范的例子一样,现在我们直接给它前半段的文字,就长这个样子,告诉它说你要做翻译了,给你几个例子,告诉你说翻译是怎麼回事,接下来给它cheese这个英文单字,后面能不能就直接接出,法文的翻译结果呢</p>
+<p>这个在GPT的文献裡面,叫做==Few-shot Learning==,但是它跟一般的Few-shot Learning,又不一样,所谓Few Shot的意思是说,确实只给了它一点例子,所以叫做Few Shot,但是它不是一般的learning,这裡面<strong>完全没有gradient descent</strong>,完全没有要去调,GPT那个模型参数的意思,所以在GPT的文献裡面,把这种训练给了一个特殊的名字,它们叫做==In-context Learning==,代表说它不是一种,一般的learning,它连gradient descent都没有做</p>
+<h4 id="“One-shot”-Learning-“Zero-shot”-Learning"><a href="#“One-shot”-Learning-“Zero-shot”-Learning" class="headerlink" title="“One-shot” Learning  “Zero-shot” Learning"></a>“One-shot” Learning  “Zero-shot” Learning</h4><p>当然你也可以给GPT更大的挑战,我们在考托福听力测验的时候,都只给一个例子而已,那GPT可不可以只看一个例子,就知道它要做翻译这件事,这个叫One-shot Learning</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210606125626034.png" alt="image-20210606125626034" style="zoom:50%;">
+
+<p>还有更狂的,是Zero-shot Learning,直接给它一个叙述,说我们现在要做翻译了,GPT能不能够自己就看得懂,就自动知道说要来做翻译这件事情呢,那如果能够做到的话,那真的就非常地惊人了,那GPT系列,到底有没有达成这个目标呢,这个是一个见仁见智的问题啦</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210606125840803.png" alt="image-20210606125840803" style="zoom:50%;">
+
+<p>它不是完全不可能答对,但是<strong>正确率有点低</strong>,相较於你可以微调模型,正确率是有点低的,那细节你就再看看GPT那篇文章</p>
+<p>第三代的GPT,它测试了42个任务,这个纵轴是正确率,这些实线 这三条实线,是42个任务的平均正确率,那这边包括了Few Shot,One Shot跟Zero Shot,三条线分别代表Few Shot,One Shot跟Zero Shot,横轴代表模型的大小,它们测试了一系列不同大小的模型,从只有0.1个billion的参数,到175个billion的参数,那从只有0.1个billion的参数,到175个billion的参数,我们看Few Shot的部分,从20几%的正确率 平均正确率,一直做到50几%的平均正确率,那至於50几％的平均正确率,算是有做起来 还是没有做起来,那这个就是见仁见智的问题啦</p>
+<p>目前看起来状况是,<strong>有些任务它还真的学会了</strong>,举例来说2这个加减法,你给它一个数字加另外一个数字,它真的可以得到,正确的两个数字加起来的结果,但是有些任务,它可能怎麼学都学不会,譬如说一些跟<strong>逻辑推理</strong>有关的任务,它的结果就非常<strong>非常地惨</strong>,好 那有关GPT3的细节,这个就留给大家再自己研究,然后这边有一个过去上课的录影,我把连结放在这边给大家参考</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210606125955641.png" alt="image-20210606125955641" style="zoom:50%;">
+
+<h2 id="Beyond-Text"><a href="#Beyond-Text" class="headerlink" title="Beyond Text"></a>Beyond Text</h2><p>到目前為止我们举的例子,都是只有跟文字有关,但是你不要误会说,这种self-supervised learning的概念,只能用在文字上</p>
+<p>在CV,CV就是computer vision,也就是影像,<strong>在语音跟影像的应用上也都可以用,self-supervised learning的技术</strong>,那其实今天,self-supervised learning的技术,非常非常地多,我们讲的<strong>BERT跟GPT系列,它只是三个类型的,这个self-supervised learning的方法,的其中一种</strong>,它们是属於<strong>prediction</strong>那一类</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210606130238304.png" alt="image-20210606130238304" style="zoom:50%;">
+
+<p>那其实还有其他的类型,那就不是我们这一堂课要讲的,那接下来的课程,你可能会觉得有点流水帐,就是我们每一个主题呢,就是告诉你说这个主题裡面,有什麼 但是细节这个更多的知识,就留给大家自己来做更进一步的研究,所以这些投影片,只是要告诉你说,在self-supervised learning这个部分,我们讲的只是整个领域的其中一小块,那还有更多的内容,是等待大家去探索的</p>
+<h3 id="Image-SimCLR"><a href="#Image-SimCLR" class="headerlink" title="Image - SimCLR"></a>Image - SimCLR</h3><p>好那有关影像的部分呢,我们就真的不会细讲,我这边就是放两页投影片带过去,告诉你说有一招非常有名的,叫做SimCLR,它的概念也不难,我相信你自己读论文,应该也有办法看懂它</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210606131729016.png" alt="image-20210606131729016" style="zoom:50%;">
+
+<h3 id="Image-BYOL"><a href="#Image-BYOL" class="headerlink" title="Image - BYOL"></a>Image - BYOL</h3><p>那还有很奇怪的,叫做BYOL</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210606131759516.png" alt="image-20210606131759516" style="zoom:50%;">
+
+<p>BYOL这个东西呢,我们是不太可能在上课讲它,為什麼呢,因為根本不知道它為什麼会work,不是 这个是很新的论文,这个是去年夏天的论文,那这个论文是,假设它不是已经发表的文章,然后学生来跟我提这个想法,我一定就是,我一定不会让他做,这不可能会work的,这是个不可能会实现的想法,不可能会成功的,这个想法感觉有一个巨大的瑕疵,但不知道為什麼它是work的,而且还曾经一度得到,state of the art的结果,deep learning就是这麼神奇,</p>
+<h3 id="Speech"><a href="#Speech" class="headerlink" title="Speech"></a>Speech</h3><p>那在语音的部分,你也完全可以使用,self-supervised learning的概念</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210606131932143.png" alt="image-20210606131932143" style="zoom:50%;">
+
+<p>你完全可以试著训练,语音版的BERT</p>
+<p>那怎麼训练语音版的BERT呢,你就看看文字版的BERT,是怎麼训练的,譬如说做填空题,语音也可以做填空题,就把一段声音讯号盖起来,叫机器去猜盖起来的部分是什麼嘛,语音也可以预测接下来会出现的内容,讲GPT就是预测,接下来要出现的token嘛,那语音你也可以叫它预测,叫模型预测接下来会出现的声音去套,所以你也可以做语音版的GPT,不管是语音版的BERT,语音版的GPT,其实都已经有很多相关的研究成果了</p>
+<h3 id="Speech-GLUE-SUPERB"><a href="#Speech-GLUE-SUPERB" class="headerlink" title="Speech GLUE - SUPERB"></a>Speech GLUE - SUPERB</h3><p>不过其实在语音上,相较於文字处理的领域,还是有一些比较缺乏的东西,那我认為现在很缺乏的一个东西,就是像GLUE这样子的benchmark corpus</p>
+<p>在自然语言处理的领域,在文字上有GLUE这个corpus,我们在这门课的刚开头,这个投影片的刚开头,就告诉你说有一个,这个基準的资料库叫做GLUE,它裡面有九个NLP的任务,今天你要知道BERT做得好不好,就让它去跑那九个任务在去平均,那代表这个self-supervised learning,模型的好坏</p>
+<p>但在语音上 到目前為止,还没有类似的基準的资料库,所以我们实验室就跟其他的研究团队,共同开发了一个语音版的GLUE</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210606132651689.png" alt="image-20210606132651689" style="zoom:50%;">
+
+<p>我们叫做SUPERB,它是Speech processing Universal,PERformance Benchmark的缩写,你知道今天你做什麼模型,都一定要硬凑梗才行啦,所以这边也是要硬凑一个梗,把它叫做SUPERB</p>
+<p>那其实我们已经準备了差不多了,其实网站都已经做好了,只等其他团队的人看过以后,就可以上线了,所以现在虽然还没有上线,但是再过一阵子,你应该就可以找得到相关的连结</p>
+<p>在这个基準语料库裡面,包含了十个不同的任务,那语音其实有非常多不同的面向,很多人讲到语音相关的技术,都只知道语音辨识把声音转成文字,但这并不是语音技术的全貌,语音其实包含了非常丰富的资讯,它除了有内容的资讯,就是你说了什麼,还有其他的资讯,举例来说这句话是谁说的,举例这个人说这句话的时候,他的语气是什麼样,还有这句话背后,它到底有什麼样的语意,所以我们準备了十个不同的任务,这个任务包含了语音不同的面向,包括去检测一个模型,它能够识别内容的能力,识别谁在说话的能力,识别他是怎麼说的能力,甚至是识别这句话背后语意的能力,从全方位来检测一个,self-supervised learning的模型,它在理解人类语言上的能力</p>
+<p>而且我们还有一个Toolkit,这个Toolkit裡面就包含了,各式各样的,self-supervised learning的模型</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210606132740802.png" alt="image-20210606132740802" style="zoom:50%;">
+
+<p>还有这些,self-supervised learning的模型,它可以做的,各式各样语音的下游的任务,然后把连结放在这边给大家参考</p>
+<p>讲这些只是想告诉大家说,self-supervised learning的技术,不是只能被用在文字上,在这个影像上 在语音上,都仍然有非常大的空间可以使用,self-supervised learning的技术,好 那这个,self-supervised learning的部分呢,这个BERT跟GPT我们就讲到这边,</p>
+<h1 id="Auto-Encoder"><a href="#Auto-Encoder" class="headerlink" title="Auto Encoder"></a>Auto Encoder</h1><h2 id="Self-supervised-Learning-Framework"><a href="#Self-supervised-Learning-Framework" class="headerlink" title="Self-supervised Learning Framework"></a><strong>Self-supervised Learning Framework</strong></h2><p>在讲 Auto-Encoder 之前,其实 Auto-Encoder 也可以算是,Self-Supervised Learning 的一环,所以再让我们用非常短的时间,来看一下Self-Supervised Learning 的 Framework</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210620141205144.png" alt="image-20210620141205144" style="zoom: 50%;">
+
+<p>首先你有大量的没有标注的资料,用这些没有标注的资料,你可以去训练一个模型,你必须发明一些不需要标注资料的任务,比如说做填空题,比如说预测下一个 Token</p>
+<p>这个不用标注资料的学习叫做,==Self-Supervised Learning==,或者是也有人叫 ==Pre-Training==,那用这些不用标注资料的任务,学完一个模型以后,它本身没有什麽用,BERT 只能做填空题,GPT 只能够把一句话补完,但是你可以把它用在其他下游的任务裡面</p>
+<p>你可以把 Self-Supervised Learning 的 Model,做一点点的微微的调整,就可以用在下游的任务裡面</p>
+<p>在有 BERT 在有 GPT 之前,其实有一个更古老的任务,更古老的不需要用标注资料的任务,就叫做 Auto-Encoder,所以你也可以<strong>把 Auto-Encoder,看作是 Self-Supervised Learning 的,一种 Pre-Train 的方法</strong></p>
+<p>当然可能不是所有人都会同意这个观点,有人可能会说这个 Auto-Encoder,不算是 Self-Supervised Learning,这个 Auto-Encoder 很早就有了嘛,2006 年 15 年前就有了嘛,然后 Self-Supervised Learning 是,19 年才有这个词彙嘛,所以 Auto-Encoder,不算 Self-Supervised Learning 的一环</p>
+<p>那这个都是见仁见智的问题,这种名词定义的问题,真的我们就不用太纠结在这个地方,从 Self-Supervised Learning,它是不需要用 Label Data 来训练,这个观点来看,Auto-Encoder 我认为它可以算是,Self-Supervised Learning 的其中的一种方法,它就跟填空 预测,接下来的 Token 是很类似的概念,只是用的是另外不一样的想法</p>
+<h2 id="Auto-encoder"><a href="#Auto-encoder" class="headerlink" title="Auto-encoder"></a>Auto-encoder</h2><p>Auto-Encoder 是怎麽运作的呢,那现在我们,因为刚才在讲 Self-Supervised Learning 的时候,都是用文字做例子,那现在我们换成用影像来做例子</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210620143611383.png" style="zoom:50%;">
+
+<p>假设你有非常大量的图片,在 Auto-Encoder 裡面你有两个 Network,一个叫做 Encoder,一个叫做 Decoder,他们就是两个 Network</p>
+<ul>
+<li><p>Encoder 把一张图片读进来,它把这张图片变成一个向量,就 Encoder 它可能是很多层的 CNN,把一张图片读进来,它的输出是一个向量,接下来这个向量会变成 Decoder 的输入</p>
+</li>
+<li><p>Decoder 会产生一张图片,所以 Decoder 的 Network 的架构,可能会像是 GAN 裡面的 Generator,它是 11 个向量输出一张图片</p>
+</li>
+</ul>
+<p><strong>训练的目标</strong>是希望,<strong>Encoder 的输入</strong>跟 <strong>Decoder 的输出,越接近越好</strong></p>
+<p>假设你把图片看作是一个很长的向量的话,我们就希望这个向量跟 Decoder 的输出,这个向量,这两个向量他们的距离越接近越好,也有人把这件事情叫做 ==Reconstruction==,叫做重建</p>
+<p>因为我们就是把一张图片,压缩成一个向量,接下来 Decoder 要根据这个向量,重建原来的图片,那我们希望原输入的结果,跟重建后的结果越接近越好</p>
+<p>讲到这边你可能会发现说,这个东西 这个概念似曾相似,没错 我们在讲 ==Cycle GAN== 的时候,已经讲过了这个概念</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210620143955632.png" style="zoom:50%;">
+
+<p>我们说在做 Cycle GAN 的时候,我们会需要两个 Generator,第一个 Generator,把 X Domain 的图片转到 Y Domain,另外一个 Generator,把 Y Domain 的图片转回来,希望最原先的图片,跟转完两次后的图片越接近越好</p>
+<p>那这边 Encoder 和 Decoder,这个 Auto-Encoder 的概念,跟 Cycle GAN 其实是一模一样的,都是希望所有的图片经过两次转换以后,要跟原来的输出越接近越好,而这个训练的过程,完全不需要任何的标注资料,你只需要蒐集到大量的图片,你就可以做这个训练</p>
+<p>所以它是一个 <strong>Unsupervised Learning 的方法</strong>,跟 Self-Supervised 那一系列,Pre-Training 的做法一样,你<strong>完全不需要任何的标注资料</strong></p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210620144344821.png" style="zoom:50%;">
+
+<p>那像这样子这个 Encoder 的输出,有时候我们叫它 Embedding,我们在讲 BERT 的时候,也提过 Embedding 这个词彙了,那有的人叫它 Representation,有的人叫它 Code,因为 Encoder 是一个编码嘛,所以这个有人把这个 Vector 叫做 Code,那其实指的都是同一件事情</p>
+<p>怎麽把 Train 的 Auto-Encoder,用在 Downstream 的任务裡面呢</p>
+<p>常见的用法就是,原来的图片,你也可以把它看作是一个很长的向量,但这个<strong>向量太长了 不好处理</strong>,那怎麽办呢</p>
+<p>你把这个图片丢到 <strong>Encoder 以后,输出另外一个向量,这个向量你会让它比较短</strong>,比如说只有 10 维 只有 100 维,那你拿这个新的向量来做你接下来的任务,也就是图片不再是一个很高维度的向量,它通过 Encoder 的压缩以后,变成了一个低维度的向量,你再拿这个低维度的向量,来做接下来想做的事情,这就是常见的,Auto-Encoder用在 Downstream 的任务,用在下游任务的方法</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210620145148352.png" style="zoom:50%;">
+
+<p>那因为通常 Encoder 的输入,是一个维度非常高的向量,而 Encoder 的输出,也就是我们的 Embedding,Representation 或者 Code,它是一个非常低维度的向量,比如说输入是 100×100 的图片,那 100×100 那就是 1 万维的向量了,如果是 RGB 那就是 3 万维的向量</p>
+<p>但是通常 Encoder 的 Output 你会设得很小,比如说 10，100 这样的等级,所以这个这边会有一个特别窄的地方,所以这个部分,这个 Encoder 的输出,有时候又叫做 ==Bottleneck==,叫做瓶颈,就本来输入是很宽的,输出也是很宽的 中间特别窄,所以这一段就叫做 Bottleneck</p>
+<p>而 Encoder 做的事情,是把本来很高维度的东西,转成低维度的东西,把高维度的东西转成低维度的东西又叫做 ==Dimension Reduction==</p>
+<p>Dimension Reduction 这个技术,我相信你在 Machine Learning 相关的应用上,应该常常听到这个名词,那有关 Dimension Reduction 的技术,它其实牵涉的非常非常地广,所以我们这边就不再细讲,因为这门课,我们只专注在深度学习相关的技术,你可以把 Auto-Encoder 的 Encoder,当作拿来做 Dimension Reduction,那其他还有很多不是 Deep Learning Base的,不是以深度学习为基础的,Dimension Reduction的技术,我就把录影的连接留在这边</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210620145329493.png" alt="image-20210620145329493" style="zoom:33%;">
+
+<p>比如说 PCA 比如说 T-SNE,我就把录影的连结留在这边给大家参考</p>
+<h2 id="Why-Auto-encoder"><a href="#Why-Auto-encoder" class="headerlink" title="Why Auto-encoder?"></a>Why Auto-encoder?</h2><p>好 那 Auto-Encoder 到底好在哪裡,当我们把一个高维度的图片,变成一个低维度的向量的时候,到底带来什麽样的帮助,这让我想到神鵰侠侣的其中一段</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210620150818809.png" alt="image-20210620150818809" style="zoom:50%;">
+
+<p>神鵰侠侣裡面有一段,就是杨过进去那个绝情谷,遇到这个绝情谷谷主公孙止的弟子,就是樊一翁,樊一翁就是这个人,那樊一翁的武器是什麽,他的武器除了一根钢杖以外,还有他的鬍子,他可以去甩动他的鬍子当做一个软鞭来使用,他的鬍子甩起来有两丈那麽长,可以是一个很厉害的武器,杨过跟他打了很久都难分上下</p>
+<p>突然呢杨过说,我在三招之内一定要剪掉你的鬍子,大家突然都很诧异,想说杨过虽然武功可能比樊一翁还高一点,但是也没有高太多,怎麽有办法三招就剪掉他的鬍子,后来杨过真的在三招内剪掉他的鬍子,为什麽呢,因为杨过发现说,这个鬍子是由头所操控的,虽然鬍子甩开来有两丈那麽长,但是头能够做的变化还是有限的,所以虽然表面鬍子的鞭法非常地厉害,但是只要直接去打他的头,就直接去打他脸,就会逼著他不得不闪避,就会逼著他这个鬍子能够动的路线变得有限,然后就打败了樊一翁,就把他的鬍子剪掉了,故事结束,那这个跟 Auto-Encoder 有什麽关係呢</p>
+<p>好 我们来想一下,Auto-Encoder 这件事情它要做的,是<strong>把一张图片压缩又还原回来,</strong>但是还原这件事情为什麽能成功呢</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210620151248207.png" style="zoom: 67%;">
+
+<p>你想想看假设本来图片是 3×3,3×3 很小,但我们就假设 3×3 好了,本来的图片是 3×3,你要用 9 个数值来描述一张 3×3 的图片,假设 Encoder 输出的这个向量是二维的,我们怎麽有可能从二维的向量,去还原 3×3 的图片,还原9个数值呢</p>
+<p>我们怎麽有办法把 9 个数值变成 2 个数值,又还原成 3,又还原回 9 个数值呢</p>
+<p>能够做到这件事情是因为,<strong>对于影像来说,并不是所有 3×3 的矩阵都是图片</strong>,<strong>图片的变化其实是有限的</strong>,你随便 Sample 一个 Random 的 Noise,随便 Sample 一个矩阵,出来它通常都不是你会看到的图片</p>
+<p>举例来说,假设图片是 3×3 的,那它的变化,虽然表面上应该要有 3×3 个数值,才能够描述 3×3 的图片,但是也许它的变化实际上是有限的</p>
+<p>也许你把图片蒐集起来发现说</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210620151538900.png" alt="image-20210620151538900" style="zoom:50%;">
+
+<p>它只有这样子的类型,跟这样子的类型,其他类型根本就不是,你一般在训练的时候会看到的状况,就是因为说图片的变化还是有限的</p>
+<p>所以你在做这个 Encoder 的时候,Encoder 可以说,我就只用两个维度就可以描述一张图片,虽然图片是 3×3,应该用 9 个数值才能够储存,但是实际上它的变化也许只有两种类型,那你就可以说看到这种类型,我就左边这个维度是 1 右边是 0,看到这种类型就左边这个维度是 0,右边这个维度是 1</p>
+<p>那所以对应到刚才这个樊一翁的例子</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210620151716975.png" alt="image-20210620151716975" style="zoom:50%;">
+
+<p>就是这个鬍子是图片複杂的状态,是原来图片的 Pixel,是原来图片的像素</p>
+<p>而 Encoder 做的事情就是化繁为简,本来比较複杂的东西,它只是<strong>表面上比较複杂,事实上它的变化其实是有限的</strong>,你只要找出它有限的变化,你就可以把本来複杂的东西,把它变得用比较简单的方法来表示它</p>
+<p>如果我们可以把複杂的图片,用比较简单的方法来表示它,那我们就只需要比较少的训练资料,在下游的任务裡面,我们可能就只需要比较少的训练资料,就可以让机器学到,我们本来要它学的事情,这个就是 Auto-Encoder 的概念</p>
+<h2 id="Auto-encoder-is-not-a-new-idea"><a href="#Auto-encoder-is-not-a-new-idea" class="headerlink" title="Auto-encoder is not a new idea"></a><strong>Auto-encoder is not a new idea</strong></h2><p>那 Auto-Encoder,它从来都不是一个新的想法,它真的是非常非常地有历史,举例来说在这个 Hinton,Hinton 就是 Deep Learning 之父</p>
+<p>Hinton 在 06 年的 Science 的 Paper 裡面,就有提到 Auto-Encoder 这个概念,只是那个时候用的 Network,跟今天用的 Network,当然还是有很多不一样的地方,我们讲 2006 年是 15 年前,15 年前的 Auto-Encoder 长什麽样子</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210620152427521.png" alt="image-20210620152427521" style="zoom:50%;">
+
+<p>那个时候人们<strong>不觉得,Deep 的 Network 是 Train 得起来的</strong>,那时候觉得说这个把 Network 叠很多很多层,然后每一层一起 Train 不太可能成功,所以那时候的信念是,<strong>每一层应该分开训练</strong>,所以 Hinton 用的是一个叫做,Restricted Boltzmann Machine 的技术,缩写是 RBM</p>
+<p>我们特别把 Hinton 15 年前的文章,把它的裡面的这个,Paper 裡面的图拿出来给大家看一下,过去 15 年前,人们是怎麽看待深度学习这个问题,那个时候觉得说,要 Train 一个这个很深的 Network 不太可能,每一层分开要 Train,虽然这个说很深也没有很深,只是三层,这个跟你作业 2 做得还要更shallow,但是在15年前这个已经是,哇 很深啊 它有三层太可怕了</p>
+<p>那这个三层要分开来训练才可以,那这边说分开来训练这件事情叫做 Pretraining,但它跟 Self-Supervised Learning 的 Pre-Train,又不一样</p>
+<p>假设你说 Auto-Encoder 这个东西是 Pre-Train,那现在这个 Pre-Train 是,Pre-Train 的 Pre-Train,它是要 Pre-Train 那个 Auto-Encoder,而且每一层用一个叫做 RBM 的技术,分开来训练</p>
+<p>先把每一层都训练好,再全部接起来做微调这件事情,那这边的微调并不是 BERT 的微调,它是微调那个 Pre-Train 的 Model</p>
+<p>那这个 Restricted Boltzmann Machine,你会发现今天很少有人在提到它了,它其实不是一个 Deep Learning 的技术,它有点複杂,我们在这门课裡面也没有打算要深入细讲,什麽是 Restricted Boltzmann Machine,那为什麽现在都没有什麽人用它呢,就是因为<strong>它没有什麽用</strong></p>
+<p>在10年前呢,都相信这个 Deep 的 Network,一定要用 Restricted Boltzmann Machine,然后其实 Hinton 后来在 2012 年的时候,有一篇 Paper 偷偷在结尾下一个结论说,<strong>其实 Restricted Boltzmann Machine,也没有什麽必要</strong> ,所以后来就没有什麽人再用Restricted Boltzmann Machine</p>
+<p>而且那时候还有一个神奇的信念,是觉得说那个 Encoder Decoder,它必须是对称,所以 Encoder 的第一层,跟 Encoder 的最后,跟 Decoder 的最后一层,他们必须互为 Transfers,不过现在已经没有,比较少有人在使用这样子的限制,好 这张投影片只想告诉你说,<strong>Auto-Encoder 不是新的概念,它是一个非常有历史的概念</strong></p>
+<h2 id="De-noising-Auto-encoder"><a href="#De-noising-Auto-encoder" class="headerlink" title="De-noising Auto-encoder"></a>De-noising Auto-encoder</h2><p>那 Auto-Encoder 还有一个常见的变形,叫做 De-Noising 的 Auto-Encoder</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210620154032761.png" style="zoom: 67%;">
+
+<p>De-Noising 的 Auto-Encoder 是说,我们把原来要输进去给 Encoder 的图片,<strong>加上一些杂讯</strong>,就自己随便找一个杂讯把它加进去,然后一样通过 Encoder,一样再通过 Decoder,试图还原原来的图片</p>
+<p>那我们现在还原的,不是 Encoder 的输入,Encoder 的输入的图片是有加杂讯的,我们要还原的不是 Encoder 的输入,我们<strong>要还原的是加入杂讯之前的结果</strong></p>
+<p>所以你会发现说,现在 Encoder 跟 Decoder,除了还原原来的图片这个任务以外,它还<strong>多了一个任务</strong>,这个任务是什麽,这个任务就是,它必须要<strong>自己学会把杂讯去掉</strong></p>
+<p>Encoder 看到的是没有杂讯的图片,但 Decode要还原的目标是,Encoder 看到的是有加杂讯的图片,但 Decoder 要还原的目标是,没有加杂讯的图片,所以 Encoder 加 Decoder,他们合起来必须要联手能够把杂讯去掉,这样你才能够把,De-Noising 的 Auto-Encoder 训练起来</p>
+<p>那说到 De-Noising 的 Auto-Encoder,有没有发现这个概念,其实也一点都不陌生呢,De-Noising 的 Auto-Encoder,也不算是太新的技术,至少在 2008 年的时候,就已经有相关的论文了</p>
+<p>但是如果你看今天的 BERT 的话,其实你也可以把它看作就是一个,De-Noising 的 Auto-Encoder</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210620160217845.png" alt="image-20210620160217845" style="zoom:67%;">
+
+<p>输入我们会加 Masking,那些 <strong>Masking 其实就是 Noise</strong>,BERT 的模型就是 Encoder,它的输出就是 Embedding</p>
+<p>在讲 BERT 的技术的时候,我们就告诉你说这个输出就叫做 Embedding,接下来有一个 Linear 的模型,就是 Decoder,Decoder 要做的事情,就是还原原来的句子,也就是把填空题被盖住的地方,把它还原回来,所以我们可以说,BERT 其实就是一个,De-Noising 的 Auto-Encoder</p>
+<p>有同学可能会问说,为什麽这个 Decoder 一定要 Linear 的呢,它<strong>不一定要是 Linear</strong>,它可以不是 Linear</p>
+<p>或者是我们换一个说法,这个 BERT 它有 12 层,最小的那个 BERT 有 12 层,比较大的有 24 层或者是 48 层,好 那最小的 BERT 是 12 层,如果我们说这个 12 层中间,第 6 层的输出是 Embedding,那你其实也可以说剩下的 6 层,就是 Decoder,你可以说 BERT,就假设你在用 BERT 的时候,你用的不是第 12 层的输出,而是第 6 层的输出,那你完全可以说,BERT 的前 6 层就是 Encoder,后面 6 层就是 Decoder,总之这个 Decoder,没有一定要是 Linear</p>
+<h2 id="Feature-Disentangle"><a href="#Feature-Disentangle" class="headerlink" title="Feature Disentangle"></a>Feature Disentangle</h2><p>接下来啊,除了 Aauto-Encoder,可以用来做当 strime 的任务以外,我还想跟大家分享一下,Aauto-Encoder 其他有意思的应用： ==Feature  Disentanglement==</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210714145952267.png" alt="image-20210714145952267" style="zoom:67%;">
+
+<p>Disentangle 的意思就是,把一堆本来纠缠在一起的东西把它解开</p>
+<p>那为什么会有 Disentangle 这个议题呢,我们来想想看,Aauto-Encoder 它在做的事情是什么</p>
+<p>Auto-Encoder 在做的事情是</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210714150218260.png" alt="image-20210714150218260" style="zoom:67%;">
+
+<ul>
+<li>如果是图片的话,就是把一张图片变成一个 Code,再把 Code 呢 变回图片,既然这个 Code 可以变回图片,代表说这个 Code 裡面啊,有很多的资讯,包含图片裡面所有的资讯,举例来说,图片裡面有什么样的东西啊,图片的色泽纹理啊等等</li>
+<li>Auto-Encoder 这个概念也不是只能用在影像上,如果用在语音上,你可以把一段声音丢到 Encoder 裡面,变成向量 再丢回 Decoder,变回原来的声音,代表这个向量包含了,语音裡面所有重要的资讯,包括这句话的内容是什么,就是 Encoder 的资讯,还有这句话是谁说的,就是 Speaker 语者的资讯</li>
+<li>那如果今天是一篇文章,丢到 Encoder 裡面变成向量,这个向量通过 Decoder 会变回原来的文章,那这个向量裡面有什么,它可能包含文章裡面,文句的句法的资讯,也包含了语意的资讯,但是这些资讯是全部纠缠在一个向量裡面,我们并不知道一个向量的哪些维,代表了哪些资讯</li>
+</ul>
+<p>举例来说,如果我们今天把一段声音讯号丢进 Encoder,它会给我们一个向量,但是这个向量裡面,哪些维度代表了这句话的内容,哪些维度代表这句话的语者,也就是谁说的,我们没有这样的资讯</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210717133633109.png" alt="image-20210717133633109" style="zoom:67%;">
+
+<p>而 Feature Disentangle 想要做到的事情就是,我们有没有可能想办法,在 Train 一个 Aauto-Encoder 的时候,同时有办法知道,这个 Representation,或又叫做 Embedding,或又叫做 Code,我们这个 <strong>Embedding 的哪些维度代表了哪些资讯</strong>呢</p>
+<p>我们有没有可能做到说 Encoder 输出一个,举例来说 100 维的向量,我们知道说<strong>前 50 维就代表了这句话的内容</strong>,<strong>后 50 维就代表了这句话说话人的特徵</strong>呢,那这样子的技术就叫做 Feature Disentangle</p>
+<p>我们就是主要就想告诉大家说,Feature Disentangle 是有办法做的,那至于实际上怎么做,我在这边就列几篇论文,给有兴趣的同学参考,如果你没有兴趣的话,就知道说这件事情是可行的,我们有可能知道 Aauto-Encoder 裡面,每一个 Dimension 代表了什么样的资讯</p>
+<p>这边举一个语音上的应用,这个应用叫做 Voice Conversion,Voice Conversion 的中文叫做语者转换,所以也许你没有听过语者转换这个词彙,但是你一定看过它的应用,它就是柯南的领结变身器</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210717140504984.png" alt="image-20210717140504984" style="zoom:67%;">
+
+<p>这个在二十年前,阿笠博士就已经做得很成功了啦</p>
+<p>那只是过去,阿笠博士在做这个 Voice Conversion 的时候啊,我们需要成对的声音讯号,也就是假设你要把 A 的声音转成 B 的声音,你必须把 A 跟 B 都找来,叫他唸一模一样的句子</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210717140541591.png" alt="image-20210717140541591" style="zoom:67%;">
+
+<p>就 A 说好 How are you,B 也说好 How are you,A 说 Good morning,B 也说 Good morning,他们两个各说一样的句子,说个 1000 句,接下来呢,就结束了,就是 <strong>Supervised Learning 的问题</strong>啊,你有成对的资料,Train 一个 Supervised 的 Model,把 A 的声音丢进去,输出就变成 B 的声音,就结束了</p>
+<p>但是如果 A 跟 B 都需要唸一模一样的句子,念个 500 1000 句,显然是不切实际的,举例来说,假设我想要把我的声音转成新垣结衣的声音,我得把新垣结衣找来,更退一万步说,假设我真的把新垣结衣找来,她也不会说中文啊,所以她没有办法跟我唸一模一样的句子</p>
+<p>而今天有了 Feature Disentangle 的技术以后,也许我们期待机器可以做到,<strong>就给它 A 的声音 给它 B 的声音,A 跟 B 不需要唸同样的句子,甚至不需要讲同样的语言,机器也有可能学会把 A 的声音转成 B 的声音</strong></p>
+<p>那实际上是怎么做的呢,假设我们收集到一大堆人类的声音讯号,然后拿这堆声音讯号呢,去 Train 一个 Aauto-Encoder,同时我们又做了 Feature Disentangle 的技术,所以我们<strong>知道在 Encoder 的输出裡面,哪些维度代表了语音的内容,哪些维度代表了语者的特徵</strong></p>
+<p>接下来,我们就可以<strong>把两句话,声音跟内容的部分互换</strong></p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210717155052660.png" alt="image-20210717155052660" style="zoom:67%;">
+
+<p>举例来说,这边是我的声音,我说 How are you,丢进 Encoder 以后,那你就可以抽出,你就知道说这个 Encoder 裡面,<strong>某些维度代表 How are you 的内容,某些维度代表我的声音</strong></p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210717211046635.png" alt="image-20210717211046635" style="zoom:67%;">
+
+<p>今天你把这个你老婆的声音丢进 Encoder,它就知道某一些维度,代表你老婆说的话的内容,某一些维度,代表你老婆声音的特徵,接下来我们只要<strong>把我说话的内容的部分取出来</strong>,<strong>把你老婆说话的声音特徵的部分取出来,把它拼起来</strong>,丢到 Decoder 裡面,就可以用<strong>你老婆的声音,讲我说的话的内容</strong></p>
+<p>这件事情真的有可能办到吗,以下是真正的例子,听起来像是这个样子,Do you want to study a PhD,这个是我的声音，那把我的声音丢到 Encoder 裡面以后呢,你可以想像说在 Encoder 裡面,我们知道哪些维度代表了念博班这件事,哪些维度代表了我的声音</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210717212919024.png" alt="image-20210717212919024" style="zoom:67%;">
+
+<p>那为了简化起见,它输出 100 维的向量,前 50 维代表内容,后 50 维代表说话人的特徵,好 接下来这句话是你老婆说的,仕事忙しいのがな,不知道 不太确定在说什么,就是日文啊</p>
+<p>接下来呢,就把我的声音的前 50 维,代表内容的部分取出来,把你老婆的,把你老婆的声音丢进 Encoder 以后,后 50 维的部分抽出来,拼起来,一样是一个 100 维的向量,丢到 Decoder 裡面,看看输出来的声音,是不是就是你老婆叫你念博班的声音,听起来像是这个样子,Do you want to study a PhD</p>
+<p>那其实反过来也可以啦,就是换成把日文的部分拿出来,把我的声音的特徵拿出来,一样串成一个 100 维的向量,丢到 Decoder 裡面,它听起来就会变成这样,仕事忙しいのがな,我也不知道自己在说什么就是了</p>
+<p>所以确实用 Feature Disentangle,你有机会做到 Voice Conversion,那其实在影像上,在 NLP 上,也都可以有类似的应用,所以可以想想看,Feature Disentangle 可以做什么样的事情</p>
+<h2 id="Discrete-Latent-Representation"><a href="#Discrete-Latent-Representation" class="headerlink" title="Discrete Latent Representation"></a>Discrete Latent Representation</h2><p>下一个要跟大家讲的应用,叫做 Discrete Latent Representation</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210718145909442.png" alt="image-20210718145909442" style="zoom:67%;">
+
+<p>到目前为止我们都假设这个 Embedding,它就是一个向量,这样就是一串数字,它是 Real Numbers,那它可不可以是别的东西呢</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210718150617371.png" alt="image-20210718150617371" style="zoom:50%;">
+
+<ul>
+<li>举例来说,它可不可以是 Binary,Binary 的好处也许是说,每一个维度,它就代表了某种特徵的有或者是没有,举例来说,输入的这张图片,如果是女生,可能第一维就是 1,男生第一维就是 0,如果有戴眼镜,就是第三维 1,没有戴眼镜 就是第三维是 0,也许我们把这个向量,这个 Embedding 变成 Binary,变成只有 0 跟 1 的数字,可以让我们再解释 Encoder 输出的时候,更为容易</li>
+<li>甚至有没有可能这个向量,强迫它一定要是 One-Hot 呢,也就只有一维是 1,其他就是 0,如果我们强迫它是 One-Hot,也就是每一个东西图片丢进去,你只可以有,你的 Embedding 裡面只可以有一维是 1,其他都是 0 的话,那可以做到什么样的效果呢,也许可以做到 unSupervised 的分类,举例来说,假设你有一大堆的,假设你想要做那个手写数字辨识,你有 0 到 9 的图片,你把 0 到 9 的图片统统收集起来,Train 一个这样子的 Aauto-Encoder,然后强迫中间的 Latent Representation,强迫中间的这个 Code 啊,一定要是 One-Hot Vector,那你这个 Code 正好设个 10 维,也许每一个 One-Hot 的 Code,所以这 10 维,就有 10 种可能的 One-Hot 的 Code,也许每一种 One-Hot 的 Code,正好就对应到一个数字也说不定,所以今天如果用 One-Hot 的 Vector,来当做你的 Embedding 的话,也许就可以做到完全在没有,完全没有Llabel Data 的情况下,让机器自动学会分类</li>
+</ul>
+<p>其实还有其他,在这种啊 Discrete 的 Representation 的这个,技术裡面啊,其中最知名的就是 ==VQVAE==,Vector Quantized Variational Aauto-Encoder,</p>
+<p>VQVAE 啊,是这样子运作的,就是你输入一张图片,Encoder 呢 输出一个向量,这个向量它是一般的向量,它是 Continuous 的,但接下来你有一个 ==Codebook==</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210803095530316.png" alt="image-20210803095530316" style="zoom:50%;">
+
+<p>所谓 Codebook 的意思就是,你有一排向量,这排向量也是 Learn 出来的,你把 Encoder 的输出,去跟这排向量都去算个<strong>相似度</strong>,那你发现这件事情啊,其实跟 Self-attention 有点像,上面这个 Vector 就是 Query,下面这些 Vector 就是 Key,那接下来呢就看这些 Vector 裡面,谁的<strong>相似度最大</strong>,那你把相似度最大的那个 Vector 拿出来</p>
+<p>这边就是那个,这个 Key 跟那个 Value,是等于是共用同一个 Vector</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210803100016342.png" alt="image-20210803100016342" style="zoom:50%;">
+
+<p>如果你把这整个 Process,用 Self-attention 来比喻的话,那就等于是 Key 跟 Value 是共同的 Vector,然后把这个 Vector 呢,丢到 Decoder 裡面,然后要它输出一张图片,然后接下来 Training 的时候,就是要让输入跟输出越接近越好</p>
+<p>这一个 Decoder,这个 Encoder,这一个 Codebook,都是一起从资料裡面被学出来的,这样做的好处就是你就可以,你就有 Discrete 的这个 Latent Representation,也就是说这边 Decoder 的输入,一定是这边这个 Codebook,裡面的向量的其中一个,假设你 Codebook 裡面有 32 个向量,那你 Decoder 的输入,就只有 32 种可能,你等于就是让你的这个 Embedding,它是离散的,它没有无穷无尽的可能,它只有 32 种可能而已</p>
+<p>那其实像这样子的技术啊,如果你拿它 把它用在语音上,你就是一段声音讯号输进来,通过 Encoder 以后产生一个向量,接下来呢,你去计算这个相似度,把最像的那个向量拿出来丢给 Decoder,再输出一样的声音讯号,这个时候你会发现说你的 Codebook 啊,可能可以学到最基本的发音部位</p>
+<p>举例来说 你的,这个最基本的发音单位啊,又叫做 ==Phonetic==,那如果你不知道 Phonetic 是什么的话,你就把它想成是 KK 音标,那你就会发现说,这个 Codebook 裡面每一个 Vector,它就对应到某一个发音,就对应到 KK 音标裡面的某一个符号,这个是 VQVAE</p>
+<h3 id="Text-as-Representation"><a href="#Text-as-Representation" class="headerlink" title="Text as Representation"></a>Text as Representation</h3><p>那其实还有更多疯狂的想法,Representation 一定要是向量吗,能不能是别的东西</p>
+<p>举例来说,它能不能是一段文字,是可以的</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210803101112898.png" alt="image-20210803101112898" style="zoom:50%;">
+
+<p>假设我们现在要做文字的 Aauto-Encoder,那文字的 Aauto-Encoder 的概念,跟语音的影像的没有什么不同,就是你有一个 Encoder,一篇文章丢进去,也许产生一个什么东西 一个向量,把这个向量丢到 Decoder,再让它还原原来的文章,但我们现在可不可以不要用向量,来当做 Embedding,我们可不可以说我们的 Embedding,就是一串文字呢</p>
+<p>如果把 Embedding 变成一串文字,有什么好处呢,也许这串文字就是文章的摘要,因为你想想看,把一篇文章丢到 Encoder 的裡面,它输出一串文字,而这串文字,可以通过 Decoder 还原回原来的文章,那代表说这段文字,是这篇文章的精华,也就是这篇文章最关键的内容,也就是这篇文章的摘要</p>
+<p>不过啊 这边的 Encoder,显然需要是一个 <strong>Seq2seq 的 Model</strong>,比如说 Transformer,因为我们这边输入是文章嘛,这边输出是一串文字嘛,这个 Decoder 输入是一串文字,输出是文章嘛,所以都是输入一串东西,输出一串东西,输入一串文字 输出一串文字,所以 Encoder 跟 Decoder,显然都必须要是一个 Seq2seq 的 Model</p>
+<p>它不是一个普通的 Aauto-Encoder,它是一个 seq2seq2seq 的 Aauto-Encoder,它把长的 Sequence 转成短的 Sequence,再把短的 Sequence 还原回长的 Sequence,而这个 Aauto-Encoder 大家训练的时候,不需要标注的资料,因为训练 Aauto-Encoder,只需要收集大量的文章,收集大量没有标注的资料,在这边就是大量的文章就可以了</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210803101235002.png" alt="image-20210803101235002" style="zoom:50%;">
+
+<p>如果你真的可以训练出这个模型,如果这串文字真的可以代表摘要的话,你就是让机器自动学会做摘要这件事,让机器自动学会做,unSupervised 的 Summarization</p>
+<p>但是真的有这么容易吗,实际上这样 <strong>Train 起来以后发现是行不通的</strong>,为什么,因为这两个 Encoder 跟 Decoder 之间,会发明自己的暗号啊,所以它会产生一段文字,那这段文字是你看不懂的,你看不懂的文字,这 Decoder 可以看得懂,它还原得了原来的文章,但是人看不懂,所以它根本就不是一段摘要,所以怎么办呢</p>
+<p><strong>再用 GAN 的概念,加上一个 Discriminator</strong></p>
+<p>Discriminator 看过人写的句子,所以它知道人写的句子长什么样子,但这些句子,不需要是这些文章的摘要性,另外一堆句子,所以它知道人写的句子长什么样子</p>
+<p>然后呢,这个 Encoder 要想办法去骗过 Discriminator,Encoder 要想办法产生一段句子,这段句子不只可以透过 Decoder,还原回原来的文章,还要是 Discriminator 觉得像是人写的句子,期待通过这个方法,就可以强迫 Encoder,不只产生一段密码可以给 Decoder 去破解,而是产生一段人看得懂的摘要</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210803102018852.png" alt="image-20210803102018852" style="zoom:50%;">
+
+<p>那你可能会问说,这个 Network 要怎么 Train 啊,这个 Output 是一串文字哦,那这个文字要怎么接给 Discriminator,跟这个 Decoder 呢,告诉你,看到你没办法 Train 的问题,就用 RL 硬做,这样这边就是 RL 硬做就结束了这样子</p>
+<p>你可能会觉得这个概念有点像 <strong>CycleGAN</strong>,没错 你可以想这根本就是 CycleGAN,就是这是一个 Generator,这是另外一个 Generator,这是 Discriminator,你要输入跟输出越接近越好,其实这根本就是 CycleGAN,我们只是从 Aauto-Encoder 的角度,来看待 CycleGAN 这个想法而已,</p>
+<p>那实际上做的结果是怎么样呢,以下是真正 Network 输出的结果啦,你给它读一篇文章,然后它就用 Aauto-Encoder 的方法,拿 300 万篇文章做训练以后,然后看看给它一篇新的文章,它可不可以是,那个 Encoder 的输出的句子,是不是就是人可以看得懂的摘要</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210803102224453.png" alt="image-20210803102224453" style="zoom:50%;">
+
+<p>举例来说,给 Encoder 看这篇文章,它的输出是,澳大利亚加强体育竞赛之外的药品检查,看起来还可以,那这边有一个特别强的啦,就是这篇文章是,中华民国奥林匹克委员会,今天接到一九九二年冬季奥运会邀请函,丢给 Encoder 之后,它的输出是奥委会接获冬季奥运会邀请函,它知道把奥林匹克委员会,自己就缩写成奥委会,这个不知道怎么回事,它自己就学到了这件事情</p>
+<p>当然很多时候,它也是会犯错的,我特别喜欢举这种极其犯错的例子</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210803102507802.png" alt="image-20210803102507802" style="zoom:50%;">
+
+<p>举例来说,你给它读这篇文章,印度尼西亚苏门答腊岛近日来连降暴雨,机器产生的摘要是什么呢</p>
+<p>Encoder 的输出是,印尼门洪水泛滥,印尼门是什么东西呢,大概就是印度尼西亚苏门的缩写啦,可能人类写的句子裡面,常常出现罗生门 (风二门),等等什么门,所以机器觉得,Encoder 觉得印度尼西亚苏门,应该可以缩写成印尼门</p>
+<p>那有时候它也会产生莫名其妙的句子啊,比如说把这篇文章给机器读了以后,Encoder 的输出是,合肥领导干部下基层做搞迎来送往规定一律简,不知道在说些什么,总之是个句子 不知道在说些什么,好 所以这个例子只是想要告诉你说,我们确实有可能,拿一段文字来当做 Embedding</p>
+<p>其实还有更狂的,我还看过有拿 Tree Structure,当做 Embedding,就一段文字把它变成 Tree Structure,再用 Tree Structure 还原一段文字,</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210803102648978.png" alt="image-20210803102648978" style="zoom:50%;">
+
+<p>好 我把 Reference 列在这边给大家参考</p>
+<h2 id="More-Applications"><a href="#More-Applications" class="headerlink" title="More Applications"></a>More Applications</h2><img src="/images/loading.gif" data-original="../images/ML/image-20210803103329473.png" alt="image-20210803103329473" style="zoom:50%;">
+
+<p>接下来啊,还有 Aauto-Encoder 更多的应用,Aauto-Encoder 还可以拿来做些什么事情呢,举例来说,我们刚才用的都是 Encoder,那其实 Decoder 也有作用</p>
+<h3 id="Generator"><a href="#Generator" class="headerlink" title="Generator"></a>Generator</h3><p>你把 Decoder 拿出来,这不就是一个 <strong>Generator</strong> 吗,我们说 Generator,不是就是要吃一个向量,产生一个东西,比如说一张图片吗,而 Decoder 不正好是吃一个向量,产生一张图片吗,所以 Decoder,你可以把它<strong>当做一个 Generator 来使用</strong></p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210803104340119.png" alt="image-20210803104340119" style="zoom:50%;">
+
+<p>你可以从一个已知的 Distribution,比如说 Gaussian Distribution,Sample 一个向量,丢给 Decoder,看看它能不能够输出一张图</p>
+<p>事实上在我们之前,在讲这个 Generative Model 的时候,其实有提到说除了 GAN 以外,还有另外两种 Generative 的 Model,其中一个就叫做 VAE,Variarional 的 Aauto-Encoder,你看它名字裡面的 Aauto-Encoder,显然是跟 Aauto-Encoder 非常有关係的,它其实就是把 Aauto-Encoder 的 Decoder 拿出来,当做 Generator 来用,那实际上它还有做一些其他的事情啊,至于它实际上做了什么其他的事情,就留给大家自己研究</p>
+<p>所以 Aauto-Encoder Train 完以后,也顺便得到了一个 Decoder</p>
+<h3 id="Compression"><a href="#Compression" class="headerlink" title="Compression"></a>Compression</h3><p>Aauto-Encoder 可以拿来<strong>做压缩</strong></p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210803104611861.png" alt="image-20210803104611861" style="zoom:50%;">
+
+<p>我们今天知道说你在做图片,我们图片如果太大的话,也会有一些压缩的方法,比如说 JPEG 的压缩,而 Aauto-Encoder 也可以拿来做压缩,你完全可以把 Encoder 的输出,当做是一个压缩的结果,因为一张图片,是一个非常高维的向量,而一般我们 Encoder 的输出,是一个非常低维的向量,你完全可以把那个向量,看作是一个压缩的结果</p>
+<p>所以你的 Encoder 做的事情,就是压缩,你的 Decoder 做的事情,就是解压缩</p>
+<p>只是这个压缩啊,它是那种 lossy 的压缩,所谓 <strong>lossy 的压缩就是它会失真</strong>,因为在 Train Aauto-Encoder 的时候,你没有办法 Train 到说,输入的图片跟输出的图片,100% 完全一模一样啦,它还是会有一些差距的</p>
+<p>所以这样子的 Aauto-Encoder 的压缩技术,你拿这样子的技术来做压缩,那你的图片是会失真的,就跟 JPEG 图片会失真一样,用这个 Aauto-Encoder 来做压缩,你的图片也是会失真的</p>
+<h3 id="Anomaly-Detection"><a href="#Anomaly-Detection" class="headerlink" title="Anomaly Detection"></a>Anomaly Detection</h3><p>那接下来,就是我们在作业裡面要使用的技术,在作业裡面我们会拿 Aauto-Encoder,来做 Anomaly 的 Detection,那我在规划作业的时候,其实就是想要 Aauto-Encoder 出一个作业,那 Aauto-Encoder 的技术很多,那最后我决定做 Anomaly 的 Detection，因为这个是你在非常多的场合,都有机会应用到的一个技术</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210803110021868.png" alt="image-20210803110021868" style="zoom:50%;">
+
+<p>Anomaly 的 Detection ,假设你有一堆的训练资料,这边用 X1 到 XN 来表示我们的训练资料,而 Anomaly Detection,它的中文通常翻译成异常检测</p>
+<p>异常检测要做的事情就是,<strong>来了一笔新的资料,它到底跟我们之前在训练资料裡面看过的资料,相不相似</strong>呢,也就是说你需要找出,你需要有一个异常检测的系统,这个异常检测的系统,是透过大量你已经看过的资料训练出来的</p>
+<ul>
+<li>给它一笔新的资料,如果这笔新的资料,看起来像是训练资料裡面的 Data,就说它是正常的</li>
+<li>如果看起来不像是训练资料裡面的 Data,就说它是异常的</li>
+</ul>
+<p>那其实 Anomaly,Anomaly 这个词啊,有很多不同的其他的称呼,比如说有时候你会叫它 Outlier,有时候你会叫它 Novelty,有时候你会叫它 Exceptions,但其实指的都是同样的事情,你就是要看某一笔新的资料,它跟之前看过的资料到底相不相似,但是所谓的<strong>相似这件事啊,其实并没有非常明确的定义</strong>,它是见仁见智的,会根据你的应用情境而有所不同</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210803133222034.png" alt="image-20210803133222034" style="zoom:50%;">
+
+<p>举例来说</p>
+<ul>
+<li>假设现在你的训练资料这个都是雷丘,那这个皮卡丘就算是异常的东西</li>
+<li>但是假设你的训练资料裡面,你所有的动物都是皮卡丘,那雷丘就是异常的东西,所以我们并不会说,某一个东西它一定就是 Normal,一定就是 Anomaly,我们不会说某个东西它一定是正常或异常,它<strong>是正常或异常,取决于你的训练资料长什么样子</strong></li>
+<li>或者是说假设你的训练资料裡面,通通都是宝可梦,那雷丘跟皮卡丘通通都算是正常的,而可能数码宝贝,亚古兽知道吗,这应该是亚古兽 对不对,亚古兽算是异常的</li>
+</ul>
+<p>那个这个异常检测有什么样的应用呢</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210803133604585.png" alt="image-20210803133604585" style="zoom:50%;">
+
+<ul>
+<li>举例来说,它可以来做诈欺侦测,假设你的训练资料裡面,有一大堆信用卡的交易纪录,那我们可以想像说,多数信用卡的交易都是正常的,那你拿这些正常的信用卡训练的交易纪录,来训练一个异常检测的模型,那有一笔新的交易纪录进来,你就可以让机器帮你判断说,这笔纪录算是正常的 还是异常的,所以这种异常检测的技术,可以拿来做诈欺侦测</li>
+<li>或者是它可以拿来做网路的这个侵入侦测,举例来说,你有很多连线的纪录资料,那你相信多数人连到你的网站的时候,他的行为都是正常的,多数人都是好人,你收集到一大堆正常的连线的纪录,那接下来有一笔新的连线进来,你可以根据过去正常的连线,训练出一个异常检测的模型,看看新的连线,它是正常的连线 还是异常的连线,它是有攻击性的 还是正常的连线,或者是它在医学上也可能有应用,你收集到一大堆正常细胞的资料,拿来训练一个异常检测的模型,那也许看到一个新的细胞,它可以知道这个细胞有没有突变,也许有突变,它就是一个癌细胞等等</li>
+</ul>
+<p>那讲到这边有人可能会想说,Anomaly Detection 异常检测的问题,我们能不能够把它当做<strong>二元分类</strong>的问题来看啊</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210803133706511.png" alt="image-20210803133706511"></p>
+<p>你说你要做诈欺侦测,你就收集一大堆正常的信用卡纪录,一堆诈欺的信用卡纪录,训练一个 Binary 的 Classifier,就结束啦,就这样子不是吗,</p>
+<p>比较<strong>难点就是你要收资料</strong></p>
+<p>这种异常检测的问题它的难点,正在就在收资料上面,通常你<strong>比较有办法收集到正常的资料,你比较不容易收集到异常的资料</strong>,你可能有一大堆信用卡交易的纪录,但是多数信用卡交易的纪录可能都是正常的,异常的资料相较于正常的资料,可能非常地少,甚至有一些异常的资料混在正常的裡面,你也不太可,你可能也完全没有办法侦测出来,所以在这一种异常检测的问题裡面</p>
+<p>我们往往假设,我们有一大堆正常的资料,但我们几乎没有异常的资料,所以它<strong>不是一个一般的分类的问题</strong>,这种分类的问题又叫做 ==One Class 的分类问题==,就是我们只有一个类别的资料,那你怎么训练一个模型,因为你想你要训练一个分类器,你得有两个类别的资料,你才能训练分类器啊,如果只有一个类别的资料,那我们可以训练什么东西,这个时候就是 Aauto-Encoder,可以派得上用场的时候了</p>
+<p>举例来说,假设我们现在想要做一个系统,这个系统是要侦测说一张图片</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210803134026264.png" alt="image-20210803134026264" style="zoom:50%;">
+
+<p>举例来说,它是不是真人的人脸,那你可以找到一大堆图片,它都是真正的人脸,那我们就拿这些真人的人脸,来训练一个 Aauto-Encoder</p>
+<p>这个是你老婆的照片,那你可以拿它来训练一个 Aauto-Encoder,那你训练完这个 Aauto-Encoder 以后,在测试的时候,如果进来的也是你老婆的照片,那因为在训练的时候有看过这样的照片,所以它可以顺利地被还原回来</p>
+<p>你可以计算这一张照片通过 Encoder,再通过 Decoder 以后,它的变化有多大,你可以去<strong>计算这个输入的照片,跟这个输出的照片,它们的差异有多大</strong>,如果差异很小,你的 Decoder 可以顺利地还原原来的照片,代表这样类型的照片,是在训练的时候有看过的,不过反过来说,假设有一张照片是训练的时候没有看过的</p>
+<p>举例来说这根本不是人的照</p>
+<img src="/images/loading.gif" data-original="../images/ML/image-20210803134138489.png" alt="image-20210803134138489" style="zoom:50%;">
+
+<p>她是那个凉宫春日,但是她不是真人,她是一个动画的人物,她是二次元的人物,一个二次元人物的照片,输入 Encoder 再输出 Decoder 以后,</p>
+<p>因为这是没有看过的东西,这是训练的时候没有看过的照片,那你的 Decoder,就很难把它还原回来,如果你计算输入跟输出的差异,发现差异非常地大,那就代表说,现在输入给 Encoder 的这张照片,可能是一个异常的状况,可能是训练的时候没有看过的状况,所以你就可以看 reconstruction 的 loss,这个 reconstruction 的好坏,来决定说你现在在测试的时候,看到这张照片,是不是训练的时候有看过同类型的照片,</p>
+<p>这个就是我们,好 那这个就是我们在作业裡面,要大家做的事情啦</p>
+<h3 id="More-about-Anomaly-Detection"><a href="#More-about-Anomaly-Detection" class="headerlink" title="More about Anomaly Detection"></a>More about Anomaly Detection</h3><p>那这个异常检测啊,其实也是另外一门学问,那我们课堂上就没有时间讲了,异常检测不是只能用 Aauto-Encoder 这个技术,Aauto-Encoder 这个技术,只是众多可能方法裡面的其中一个,我们拿它来当做 Aauto-Encoder 的作业,因为我相信,你未来有很多的机会用得上异常检测这个技术,那实际上有关异常检测更完整的介绍,我们把过去上课的录影放在这边,给大家参考,</p>
+<p>•Part 1: <a href="https://youtu.be/gDp2LXGnVLQ" target="_blank" rel="noopener">https://youtu.be/gDp2LXGnVLQ</a></p>
+<p>•Part 2: <a href="https://youtu.be/cYrNjLxkoXs" target="_blank" rel="noopener">https://youtu.be/cYrNjLxkoXs</a></p>
+<p>•Part 3: <a href="https://youtu.be/ueDlm2FkCnw" target="_blank" rel="noopener">https://youtu.be/ueDlm2FkCnw</a></p>
+<p>•Part 4: <a href="https://youtu.be/XwkHOUPbc0Q" target="_blank" rel="noopener">https://youtu.be/XwkHOUPbc0Q</a></p>
+<p>•Part 5: <a href="https://youtu.be/Fh1xFBktRLQ" target="_blank" rel="noopener">https://youtu.be/Fh1xFBktRLQ</a></p>
+<p>•Part 6: <a href="https://youtu.be/LmFWzmn2rFY" target="_blank" rel="noopener">https://youtu.be/LmFWzmn2rFY</a></p>
+<p>•Part 7: <a href="https://youtu.be/6W8FqUGYyDo" target="_blank" rel="noopener">https://youtu.be/6W8FqUGYyDo</a></p>
+<p>那以上就是有关 Aauto-Encoder 的部分</p>
+<h1 id="AR-amp-NAR"><a href="#AR-amp-NAR" class="headerlink" title="AR &amp; NAR"></a>AR &amp; NAR</h1><p>回归分析（regression analysis）是确定两种或两种以上变数间相互依赖的定量关系的一种统计分析方法。运用十分广泛，回归分析按照涉及的自变量的多少，可分为一元回归分析和多元回归分析；按照自变量和因变量之间的关系类型，可分为线性回归分析和非线性回归分析。<br>回归(regression)：Y变量为连续数值型(continuous numerical variable)。</p>
+<h3 id="应用现状"><a href="#应用现状" class="headerlink" title="应用现状"></a>应用现状</h3><p>目前主流的神经机器翻译模型为自回归模型，每一步的译文单词的生成都依赖于之前的翻译结果，因此模型只能逐词生成译文，翻译速度较慢。Gu等人提出的非自回归神经机器翻译模型(NAT)对目标词的生成进行独立的建模，因此能够并行解码出整句译文，显著地提升了模型的翻译速度。然而，非自回归模型在翻译质量上与自回归模型有较大差距，主要表现为模型在长句上的翻译效果较差，译文中包含较多的重复词和漏译错误等。<br>非自回归(Non-autoregressive，NAR)模型并行生成序列的所有标记，与自回归(AR)模型相比，生成速度更快，但代价是准确性较低。在神经机器翻译(neural machine translation，NMT)、自动语音识别(automatic speech recognition，ASR)和语音合成(TTS)等不同的任务中，人们提出了包括知识提取和源-目标对齐在内的不同技术来弥补AR和NAR模型之间的差距。在这些技术的帮助下，NAR模型可以在某些任务中赶上AR模型的准确性，但在其他任务中则不能。</p>
+<h2 id="AR"><a href="#AR" class="headerlink" title="AR"></a>AR</h2><p>AR模型，即自回归（AutoRegressive, AR）模型又称为时间序列模型，数学表达式为:<br><img src="/images/loading.gif" data-original="../images/ML/image-20210825125333345.png" alt=""><br>此处的n表示n阶自回归。<br>AR模型是一种线性预测，利用前期若干时刻的随机变量的线性组合来描述以后某时刻随机变量的线性回归模型。即已知N个数据，可由模型推出第N点前面或后面的数据（设推出P点），所以其本质类似于插值，其目的都是为了增加有效数据，只是AR模型是由N点递推，而插值是由两点（或少数几点)去推导多点，所以AR模型要比插值方法效果更好。<br>NLP中的 sequence2sequence 和 Transformer 都是AR模型。</p>
+<h2 id="NAR"><a href="#NAR" class="headerlink" title="NAR"></a>NAR</h2><p>举例说明：在机器翻译中，不同于自回归(Autoregressive Translation , ART)模型需要用已生成的词来预测下一个位置的词，非自回归 (Non-Autoregressive Translation, NART)模型打破了生成时的串行顺序，希望一次能够解码出整个目标句子，从而解决AT模型所带来的问题。<br>与自回归模型相比，非自回归（Non-Autoregressive）模型尝试同时生成一整个序列，从而解决上述三个问题。一个简单的非自回归模型直接假设目标序列的每个词都是独立的。然而这一独立性假设过强，显然与实际问题不符。为了缓解独立性假设过强的问题，一个方案是引入隐变量z，得到：<br><img src="/images/loading.gif" data-original="../images/ML/image-20210825125402913.png" alt=""><br>假定给定隐变量的前提下，目标序列的每个词是独立的，则：<br><img src="/images/loading.gif" data-original="../images/ML/image-20210825125422560.png" alt=""><br>从上面的公式可以看出，隐变量需要保存关于目标序列的全部信息，才能解码整个目标序列。因此隐变量的概率分布必须有足够的复杂度。</p>
+<h3 id="semi-NAR"><a href="#semi-NAR" class="headerlink" title="semi-NAR"></a>semi-NAR</h3><p>参考：<a href="https://mp.weixin.qq.com/s/pe2E69Gpw0nT9sSHvtBGSg" target="_blank" rel="noopener">自回归与非自回归模型不可兼得？预训练模型BANG全都要！</a><br>自回归每次会使用已生成的序列作为已知信息预测未来的一个单词，最终再把每个时间步生成的单词拼成一个完整的序列输出。这其中的时延成为了线上使用或者实时使用这些预训练的自然语言生成模型的瓶颈。<br>在非自回归模型中，每个单词之间没有依赖关系，整个输出序列的每个单词被并行地同步预测。虽然其推断速度得到了很大改善，但是生成质量却往往弱于自回归模型。<br>为了平衡推断速度和生成质量，半非自回归的模型被提出和研究。半非自回归的经典做法是把非自回归生成的结果进行多次迭代，但不同半非自回归模型的算法差异比较大。由于和自回归相比，非自回归和半非自回归的依赖关系学习和生成难度较大，所以它们往往在文本-文本翻译，或者语音-文本翻译，文本-语音翻译等输入输出较为对齐的任务上可以提供不错的生成效果，但是很少在问答、对话、摘要等任务上进行研究，而这些领域被自回归生成验证可以拥有不错的生成质量且在预训练下得到提升。</p>
+<h3 id="微软-BANG"><a href="#微软-BANG" class="headerlink" title="微软-BANG"></a>微软-BANG</h3><p>论文：<a href="https://arxiv.org/abs/2012.15525" target="_blank" rel="noopener">BANG: Bridging Autoregressive and Non-autoregressive Generation with Large Scale Pretraining</a>.<br>近两年，预训练技术的发展极大地提高了自然语言生成的效果，但随着数据量和模型大小的增加，模型在使用时的推断耗时也随之变大。为了降低自回归生成的时延，并行预测目标语句所有单词的非自回归模型被提出。然而，非自回归和半非自回归的依赖关系学习和生成难度较大，它们的生成质量往往弱于自回归模型。针对上述问题，微软亚洲研究院的研究员们提出了新的自然语言生成预训练 BANG；并指出自回归和非自回归生成可以被统一地理解为，有多大比例的上文信息可以被使用。</p>
+<blockquote>
+<p>BANG 的贡献主要有：</p>
+<ul>
+<li>BANG 在大规模预训练中，通过考虑遮盖任意长度的前文来沟通自回归和非自回归生成；</li>
+<li>提出跨流可见的多流注意力机制来实现高效的预训练，所有单词在考虑到任意长度前文被遮盖的前提下都可被并行预测；</li>
+<li>对于不同的需求状况，BANG 支持自回归微调，非自回归微调和半非自回归微调。BANG 第一次把不同的生成方案在同一个预训练模型里进行支持；</li>
+<li>研究员们在 16GB 的英语语料上进行了预训练，在摘要、对话、问题生成上，BANG 对自回归效果和半非自回归效果带来了显著的提升，并达到了与非预训练的 Transformer 自回归模型相似的评测结果。对于自回归生成的微调，BANG 也可以和当前主流的自回归预训练模型达到相似的结果。</li>
+</ul>
+</blockquote>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -1005,7 +2747,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">958.4k</span>&nbsp;字
+                class="white-color">1107.1k</span>&nbsp;字
             
             
             

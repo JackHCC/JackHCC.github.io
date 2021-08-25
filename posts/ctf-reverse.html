@@ -371,14 +371,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    2.5k
+                    2.6k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    9 分
+                    10 分
                 </div>
                 
 
@@ -489,7 +489,7 @@
 <p>当然，有些题目 base64 的索引表是会变的，一些变种的 base64 主要 就是修改了这个索引表。</p>
 <h2 id="Tea"><a href="#Tea" class="headerlink" title="Tea"></a>Tea</h2><p>在<a href="https://zh.wikipedia.org/wiki/%E5%AF%86%E7%A0%81%E5%AD%A6" target="_blank" rel="noopener">密码学</a>中，<strong>微型加密算法</strong>（Tiny Encryption Algorithm，TEA）是一种易于描述和<a href="https://zh.wikipedia.org/w/index.php?title=%E6%89%A7%E8%A1%8C&amp;action=edit&amp;redlink=1" target="_blank" rel="noopener">执行</a>的<a href="https://zh.wikipedia.org/wiki/%E5%A1%8A%E5%AF%86%E7%A2%BC" target="_blank" rel="noopener">块密码</a>，通常只需要很少的代码就可实现。其设计者是<a href="https://zh.wikipedia.org/wiki/%E5%89%91%E6%A1%A5%E5%A4%A7%E5%AD%A6" target="_blank" rel="noopener">剑桥大学计算机实验室</a>的<a href="https://zh.wikipedia.org/w/index.php?title=%E5%A4%A7%E5%8D%AB%C2%B7%E6%83%A0%E5%8B%92&amp;action=edit&amp;redlink=1" target="_blank" rel="noopener">大卫·惠勒</a>与<a href="https://zh.wikipedia.org/w/index.php?title=%E7%BD%97%E6%9D%B0%C2%B7%E5%B0%BC%E8%BE%BE%E5%A7%86&amp;action=edit&amp;redlink=1" target="_blank" rel="noopener">罗杰·尼达姆</a>。</p>
 <p>参考代码：</p>
-<pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdint.h></span></span>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdint.h&gt;</span></span>
 
 <span class="token keyword">void</span> <span class="token function">encrypt</span> <span class="token punctuation">(</span>uint32_t<span class="token operator">*</span> v<span class="token punctuation">,</span> uint32_t<span class="token operator">*</span> k<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     uint32_t v0<span class="token operator">=</span>v<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> v1<span class="token operator">=</span>v<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> sum<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">,</span> i<span class="token punctuation">;</span>           <span class="token comment" spellcheck="true">/* set up */</span>
@@ -497,8 +497,8 @@
     uint32_t k0<span class="token operator">=</span>k<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> k1<span class="token operator">=</span>k<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> k2<span class="token operator">=</span>k<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">,</span> k3<span class="token operator">=</span>k<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">;</span>   <span class="token comment" spellcheck="true">/* cache key */</span>
     <span class="token keyword">for</span> <span class="token punctuation">(</span>i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">32</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>                       <span class="token comment" spellcheck="true">/* basic cycle start */</span>
         sum <span class="token operator">+</span><span class="token operator">=</span> delta<span class="token punctuation">;</span>
-        v0 <span class="token operator">+</span><span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>v1<span class="token operator">&lt;&lt;</span><span class="token number">4</span><span class="token punctuation">)</span> <span class="token operator">+</span> k0<span class="token punctuation">)</span> <span class="token operator">^</span> <span class="token punctuation">(</span>v1 <span class="token operator">+</span> sum<span class="token punctuation">)</span> <span class="token operator">^</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>v1<span class="token operator">>></span><span class="token number">5</span><span class="token punctuation">)</span> <span class="token operator">+</span> k1<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        v1 <span class="token operator">+</span><span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>v0<span class="token operator">&lt;&lt;</span><span class="token number">4</span><span class="token punctuation">)</span> <span class="token operator">+</span> k2<span class="token punctuation">)</span> <span class="token operator">^</span> <span class="token punctuation">(</span>v0 <span class="token operator">+</span> sum<span class="token punctuation">)</span> <span class="token operator">^</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>v0<span class="token operator">>></span><span class="token number">5</span><span class="token punctuation">)</span> <span class="token operator">+</span> k3<span class="token punctuation">)</span><span class="token punctuation">;</span>  
+        v0 <span class="token operator">+</span><span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>v1<span class="token operator">&lt;&lt;</span><span class="token number">4</span><span class="token punctuation">)</span> <span class="token operator">+</span> k0<span class="token punctuation">)</span> <span class="token operator">^</span> <span class="token punctuation">(</span>v1 <span class="token operator">+</span> sum<span class="token punctuation">)</span> <span class="token operator">^</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>v1<span class="token operator">&gt;&gt;</span><span class="token number">5</span><span class="token punctuation">)</span> <span class="token operator">+</span> k1<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        v1 <span class="token operator">+</span><span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>v0<span class="token operator">&lt;&lt;</span><span class="token number">4</span><span class="token punctuation">)</span> <span class="token operator">+</span> k2<span class="token punctuation">)</span> <span class="token operator">^</span> <span class="token punctuation">(</span>v0 <span class="token operator">+</span> sum<span class="token punctuation">)</span> <span class="token operator">^</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>v0<span class="token operator">&gt;&gt;</span><span class="token number">5</span><span class="token punctuation">)</span> <span class="token operator">+</span> k3<span class="token punctuation">)</span><span class="token punctuation">;</span>  
     <span class="token punctuation">}</span>                                              <span class="token comment" spellcheck="true">/* end cycle */</span>
     v<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token operator">=</span>v0<span class="token punctuation">;</span> v<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token operator">=</span>v1<span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
@@ -508,8 +508,8 @@
     uint32_t delta<span class="token operator">=</span><span class="token number">0x9e3779b9</span><span class="token punctuation">;</span>                     <span class="token comment" spellcheck="true">/* a key schedule constant */</span>
     uint32_t k0<span class="token operator">=</span>k<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> k1<span class="token operator">=</span>k<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> k2<span class="token operator">=</span>k<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">,</span> k3<span class="token operator">=</span>k<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">;</span>   <span class="token comment" spellcheck="true">/* cache key */</span>
     <span class="token keyword">for</span> <span class="token punctuation">(</span>i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span> i<span class="token operator">&lt;</span><span class="token number">32</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>                         <span class="token comment" spellcheck="true">/* basic cycle start */</span>
-        v1 <span class="token operator">-</span><span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>v0<span class="token operator">&lt;&lt;</span><span class="token number">4</span><span class="token punctuation">)</span> <span class="token operator">+</span> k2<span class="token punctuation">)</span> <span class="token operator">^</span> <span class="token punctuation">(</span>v0 <span class="token operator">+</span> sum<span class="token punctuation">)</span> <span class="token operator">^</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>v0<span class="token operator">>></span><span class="token number">5</span><span class="token punctuation">)</span> <span class="token operator">+</span> k3<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        v0 <span class="token operator">-</span><span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>v1<span class="token operator">&lt;&lt;</span><span class="token number">4</span><span class="token punctuation">)</span> <span class="token operator">+</span> k0<span class="token punctuation">)</span> <span class="token operator">^</span> <span class="token punctuation">(</span>v1 <span class="token operator">+</span> sum<span class="token punctuation">)</span> <span class="token operator">^</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>v1<span class="token operator">>></span><span class="token number">5</span><span class="token punctuation">)</span> <span class="token operator">+</span> k1<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        v1 <span class="token operator">-</span><span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>v0<span class="token operator">&lt;&lt;</span><span class="token number">4</span><span class="token punctuation">)</span> <span class="token operator">+</span> k2<span class="token punctuation">)</span> <span class="token operator">^</span> <span class="token punctuation">(</span>v0 <span class="token operator">+</span> sum<span class="token punctuation">)</span> <span class="token operator">^</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>v0<span class="token operator">&gt;&gt;</span><span class="token number">5</span><span class="token punctuation">)</span> <span class="token operator">+</span> k3<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        v0 <span class="token operator">-</span><span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>v1<span class="token operator">&lt;&lt;</span><span class="token number">4</span><span class="token punctuation">)</span> <span class="token operator">+</span> k0<span class="token punctuation">)</span> <span class="token operator">^</span> <span class="token punctuation">(</span>v1 <span class="token operator">+</span> sum<span class="token punctuation">)</span> <span class="token operator">^</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>v1<span class="token operator">&gt;&gt;</span><span class="token number">5</span><span class="token punctuation">)</span> <span class="token operator">+</span> k1<span class="token punctuation">)</span><span class="token punctuation">;</span>
         sum <span class="token operator">-</span><span class="token operator">=</span> delta<span class="token punctuation">;</span>                                   
     <span class="token punctuation">}</span>                                              <span class="token comment" spellcheck="true">/* end cycle */</span>
     v<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token operator">=</span>v0<span class="token punctuation">;</span> v<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token operator">=</span>v1<span class="token punctuation">;</span>
@@ -521,11 +521,11 @@
     int i =0, j = 0;
     char k[256] = {0};
     unsigned char tmp = 0;
-    for (i=0;i<256;i++) {
+    for (i=0;i&lt;256;i++) {
         s[i] = i;
         k[i] = key[i%Len];
     }
-    for (i=0; i<256; i++) {
+    for (i=0; i&lt;256; i++) {
         j=(j+s[i]+k[i])%256;
         tmp = s[i];
         s[i] = s[j]; //交换s[i]和s[j]
@@ -538,16 +538,7 @@ void rc4_crypt(unsigned char *s, unsigned char *Data, unsigned long Len) //加�
     int i = 0, j = 0, t = 0;
     unsigned long k = 0;
     unsigned char tmp;
-    for(k=0;k<Len;k++) {
-        i=(i+1)%256;
-        j=(j+s[i])%256;
-        tmp = s[i];
-        s[i] = s[j]; //交换s[x]和s[y]
-        s[j] = tmp;
-        t=(s[i]+s[j])%256;
-        Data[k] ^= s[t];
-     }
-} <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+    for(k=0;k<len;k++) {="" i="(i+1)%256;" j="(j+s[i])%256;" tmp="s[i];" s[i]="s[j];" 交换s[x]和s[y]="" s[j]="tmp;" t="(s[i]+s[j])%256;" data[k]="" ^="s[t];" }="" <span="" aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></len;k++)></code></pre>
 <p>通过分析初始化代码，可以看出初始化代码中，对字符数组s进行了初始化赋值，且赋值分别递增。之后对s进行了256次交换操作。通过识别初始化代码，可以知道rc4算法。</p>
 <p>其伪代码表示为：</p>
 <p>初始化长度为256的<a href="https://zh.wikipedia.org/wiki/S%E7%9B%92" target="_blank" rel="noopener">S盒</a>。第一个for循环将0到255的互不重复的元素装入S盒。第二个for循环根据密钥打乱S盒。</p>
@@ -1484,8 +1475,7 @@ gdb&gt;</code></pre><p>可以看到程序无法检测到调试器了.</p>
 <p>然后会弹出窗口, 选择完整转储, 保存为<code>dump.exe</code>文件</p>
 <p><img src="/images/loading.gif" data-original="../images/CTF/upx-dll-unpack-11.png" alt=""></p>
 <p>dump 完成后, 选择<code>转储到文件</code>, 这里选择修复我们刚刚 dump 出的 dump.exe, 得到一个<code>dump\_.exe</code>. 这时整个脱壳就完成了</p>
-<h1 id="DLL-文件脱壳"><a href="#DLL-文件脱壳" class="headerlink" title="DLL 文件脱壳"></a>DLL 文件脱壳</h1><p>这里需要联系上篇的 <a href="https://ctf-wiki.org/reverse/unpack/manually-fix-iat/index.html" target="_blank" rel="noopener">手动查找 IAT 并使用 ImportREC 重建</a></p>
-<p>例题文件你可以点击此处下载: <a href="https://github.com/ctf-wiki/ctf-challenges/blob/master/reverse/unpack/example/unpack_dll.zip" target="_blank" rel="noopener">unpack_dll.zip</a></p>
+<h1 id="DLL-文件脱壳"><a href="#DLL-文件脱壳" class="headerlink" title="DLL 文件脱壳"></a>DLL 文件脱壳</h1><p>例题文件你可以点击此处下载: <a href="https://github.com/ctf-wiki/ctf-challenges/blob/master/reverse/unpack/example/unpack_dll.zip" target="_blank" rel="noopener">unpack_dll.zip</a></p>
 <p>因为<code>Dll</code>脱壳需要这一步骤. <code>Dll</code>脱壳的最关键的步骤在于<code>使用LordPE修改其Dll的标志</code>, 用<code>LordPE</code>打开<code>UnpackMe.dll</code>, 然后在特征值那里点击<code>...</code>, 然后取消勾选<code>DLL</code>标志, 保存后, 系统就会将该文件视作一个可执行文件.</p>
 <p><img src="/images/loading.gif" data-original="../images/CTF/upx-dll-unpack-12.png" alt=""></p>
 <p>我们将<code>UnpackMe.dll</code>后缀名改成<code>UnpackMe.exe</code>, 然后用 OD 载入.</p>
@@ -2546,30 +2536,29 @@ exit(1);</code></pre><p>接下来这一段, 很奇怪不是吗. 这里<code>v19 
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="far fa-dot-circle"></i>&nbsp;本篇
-            </div>
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/posts/ctf-reverse.html">
+                <a href="/posts/ctf-pwn.html">
                     <div class="card-image">
                         
                         
-                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/10.jpg" class="responsive-img" alt="CTF-Reverse要点">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/3.jpg" class="responsive-img" alt="CTF-Pwn Stack Overflow要点">
                         
-                        <span class="card-title">CTF-Reverse要点</span>
+                        <span class="card-title">CTF-Pwn Stack Overflow要点</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            CTF逆向学习要点
+                            CTF Pwn Stack Overflow学习要点
                         
                     </div>
                     <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-08-18
-                            </span>
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-08-18
+                        </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -2582,12 +2571,11 @@ exit(1);</code></pre><p>接下来这一段, 很奇怪不是吗. 这里<code>v19 
                         </span>
                     </div>
                 </div>
-
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/CTF-Reverse/">
-                        <span class="chip bg-color">CTF-Reverse</span>
+                    <a href="/tags/CTF-Pwn/">
+                        <span class="chip bg-color">CTF-Pwn</span>
                     </a>
                     
                 </div>
@@ -2700,7 +2688,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">958.4k</span>&nbsp;字
+                class="white-color">1107.1k</span>&nbsp;字
             
             
             
