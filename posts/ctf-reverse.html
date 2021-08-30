@@ -466,14 +466,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    2.5k
+                    4.4k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    9 分
+                    18 分
                 </div>
                 
 
@@ -790,29 +790,30 @@ var int digest := h0 append h1 append h2 append h3 //(expressed as little-endian
 .text:00401171                 call    process_input
 .text:00401176                 jmp     short locExit</code></pre><p>如上, IDA 只有这里调用过<code>GetDlgItemTextA</code>并且调用了两次分别获取<code>inputName</code>和<code>inputKey</code>. 随后初始化了一个变量为 0, 因为还不明白这个变量的作用, 因此先重命名为<code>var_a</code>. 之后进行了一次函数调用并 jmp 跳转. 因为 jmp 跳转位置的代码是一些退出程序的代码, 因此我们可以断定上面的这个 call, 是在调用处理用户输入的函数. 因此将 jmp 的位置重命名为<code>locExit</code>, 函数则重命名为<code>process_input</code>.</p>
 <h2 id="处理用户输入"><a href="#处理用户输入" class="headerlink" title="处理用户输入"></a>处理用户输入</h2><p>我们进入<code>process_input</code>函数, 该函数仅仅对输入字符串进行了很简单的处理.</p>
-<pre><code>  result = strlength((int)inputName);
-  if ( v1 &gt;= 7 )                                // v1 = length of inputName
-  {
-    *(_DWORD *)&amp;lenOfName = v1;
-    result = strlength((int)inputKey);
-    if ( v2 &gt;= 7 )                              // v2 = length of inputKey
-    {
-      i = 0;
-      do
-      {
-        inputName[i] ^= i;
-        ++i;
-      }
-      while ( i &lt;= *(_DWORD *)&amp;lenOfName );
-      unk_4031CE = i;
-      dword_4031C8 = dword_4035FF;
-      initVM();
-      initVM();
-      __debugbreak();
-      JUMPOUT(*(_DWORD *)&amp;word_4012CE);
-    }
-  }
-  return result;</code></pre><p>首先是这个<code>strlength()</code>函数. 函数使用<code>cld; repne scasb; not ecx; dec ecx</code>来计算字符串长度并将结果保存在<code>ecx</code>里. 是汇编基础知识就不多介绍. 所以我们将该函数重命名为<code>strlength</code></p>
+<pre class="line-numbers language-c"><code class="language-c">  result <span class="token operator">=</span> <span class="token function">strlength</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">)</span>inputName<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span> v1 <span class="token operator">>=</span> <span class="token number">7</span> <span class="token punctuation">)</span>                                <span class="token comment" spellcheck="true">// v1 = length of inputName</span>
+  <span class="token punctuation">{</span>
+    <span class="token operator">*</span><span class="token punctuation">(</span>_DWORD <span class="token operator">*</span><span class="token punctuation">)</span><span class="token operator">&amp;</span>lenOfName <span class="token operator">=</span> v1<span class="token punctuation">;</span>
+    result <span class="token operator">=</span> <span class="token function">strlength</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">)</span>inputKey<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span> v2 <span class="token operator">>=</span> <span class="token number">7</span> <span class="token punctuation">)</span>                              <span class="token comment" spellcheck="true">// v2 = length of inputKey</span>
+    <span class="token punctuation">{</span>
+      i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+      <span class="token keyword">do</span>
+      <span class="token punctuation">{</span>
+        inputName<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">^</span><span class="token operator">=</span> i<span class="token punctuation">;</span>
+        <span class="token operator">++</span>i<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+      <span class="token keyword">while</span> <span class="token punctuation">(</span> i <span class="token operator">&lt;=</span> <span class="token operator">*</span><span class="token punctuation">(</span>_DWORD <span class="token operator">*</span><span class="token punctuation">)</span><span class="token operator">&amp;</span>lenOfName <span class="token punctuation">)</span><span class="token punctuation">;</span>
+      unk_4031CE <span class="token operator">=</span> i<span class="token punctuation">;</span>
+      dword_4031C8 <span class="token operator">=</span> dword_4035FF<span class="token punctuation">;</span>
+      <span class="token function">initVM</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token function">initVM</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token function">__debugbreak</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token function">JUMPOUT</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">(</span>_DWORD <span class="token operator">*</span><span class="token punctuation">)</span><span class="token operator">&amp;</span>word_4012CE<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">return</span> result<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>首先是这个<code>strlength()</code>函数. 函数使用<code>cld; repne scasb; not ecx; dec ecx</code>来计算字符串长度并将结果保存在<code>ecx</code>里. 是汇编基础知识就不多介绍. 所以我们将该函数重命名为<code>strlength</code></p>
 <pre><code>.text:004011C2 arg_0           = dword ptr  8
 .text:004011C2
 .text:004011C2                 push    ebp
@@ -829,18 +830,20 @@ var int digest := h0 append h1 append h2 append h3 //(expressed as little-endian
 .text:004011D5                 retn    4
 .text:004011D5 strlength       endp</code></pre><p>而在 IDA 生成的伪 C 代码处有<code>v1</code>和<code>v2</code>, 我对其进行了注解, 可以看汇编, 里面是使用<code>ecx</code>与<code>7</code>进行比较, 而<code>ecx</code>是字符串的长度, 于是我们可以知道, 这里对输入的要求是: <em>inputName 和 inputKey 的长度均不少于 7</em></p>
 <p>当<code>inputName</code>和<code>inputKey</code>长度均不少于 7 时, 那么就可以对输入进行简单的变换. 以下是一个循环</p>
-<pre><code>      i = 0;
-      do
-      {
-        inputName[i] ^= i;
-        ++i;
-      }
-      while ( i &lt;= *(_DWORD *)&amp;lenOfName );</code></pre><p>对应的 python 代码即</p>
-<pre><code>def obfuscate(username):
-    s = ""
-    for i in range(len(username)):
-        s += chr(ord(username[i]) ^ i)
-    return s</code></pre><p>函数之后对一些变量进行了赋值 (这些并不重要, 就忽略不讲了.)</p>
+<pre class="line-numbers language-c"><code class="language-c">      i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+      <span class="token keyword">do</span>
+      <span class="token punctuation">{</span>
+        inputName<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">^</span><span class="token operator">=</span> i<span class="token punctuation">;</span>
+        <span class="token operator">++</span>i<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+      <span class="token keyword">while</span> <span class="token punctuation">(</span> i <span class="token operator">&lt;=</span> <span class="token operator">*</span><span class="token punctuation">(</span>_DWORD <span class="token operator">*</span><span class="token punctuation">)</span><span class="token operator">&amp;</span>lenOfName <span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>对应的 python 代码即</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">obfuscate</span><span class="token punctuation">(</span>username<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    s <span class="token operator">=</span> <span class="token string">""</span>
+    <span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span>len<span class="token punctuation">(</span>username<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        s <span class="token operator">+=</span> chr<span class="token punctuation">(</span>ord<span class="token punctuation">(</span>username<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">^</span> i<span class="token punctuation">)</span>
+    <span class="token keyword">return</span> s<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>函数之后对一些变量进行了赋值 (这些并不重要, 就忽略不讲了.)</p>
 <h2 id="注册-SEH"><a href="#注册-SEH" class="headerlink" title="注册 SEH"></a>注册 SEH</h2><pre><code>.text:004012B5                 push    offset seh_handler
 .text:004012BA                 push    large dword ptr fs:0
 .text:004012C1                 mov     large fs:0, esp
@@ -959,45 +962,47 @@ var int digest := h0 append h1 append h2 append h3 //(expressed as little-endian
 </tr>
 </tbody></table>
 <p>我们再来看分析后的<code>initVM</code>函数</p>
-<pre><code>int initVM()
-{
-  int result; // eax@1
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">initVM</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+  <span class="token keyword">int</span> result<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// eax@1</span>
 
-  r1 = 0;
-  r2 = 0;
-  r3 = 0;
-  result = (unsigned __int8)inputName[(unsigned __int8)cur_index];
-  r4 = (unsigned __int8)inputName[(unsigned __int8)cur_index];
-  vm_sp = 0x32;
-  vm_pc = 0;
-  vm_flags_zf = 0;
-  vm_flags_sf = 0;
-  ++cur_index;
-  return result;
-}</code></pre><p>这里有 4 个通用寄存器 (<code>r1/r2/r3/r4</code>), 1 个<code>sp</code>指针和 1 个<code>pc</code>指针, 标志<code>zf</code>和<code>sf</code>. 先前我们不知道的<code>var_a</code>也被重命名为<code>cur_index</code>, 指向的是<code>inputName</code>当前正在处理的字符索引.</p>
+  r1 <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  r2 <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  r3 <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  result <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">unsigned</span> __int8<span class="token punctuation">)</span>inputName<span class="token punctuation">[</span><span class="token punctuation">(</span><span class="token keyword">unsigned</span> __int8<span class="token punctuation">)</span>cur_index<span class="token punctuation">]</span><span class="token punctuation">;</span>
+  r4 <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">unsigned</span> __int8<span class="token punctuation">)</span>inputName<span class="token punctuation">[</span><span class="token punctuation">(</span><span class="token keyword">unsigned</span> __int8<span class="token punctuation">)</span>cur_index<span class="token punctuation">]</span><span class="token punctuation">;</span>
+  vm_sp <span class="token operator">=</span> <span class="token number">0x32</span><span class="token punctuation">;</span>
+  vm_pc <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  vm_flags_zf <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  vm_flags_sf <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  <span class="token operator">++</span>cur_index<span class="token punctuation">;</span>
+  <span class="token keyword">return</span> result<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这里有 4 个通用寄存器 (<code>r1/r2/r3/r4</code>), 1 个<code>sp</code>指针和 1 个<code>pc</code>指针, 标志<code>zf</code>和<code>sf</code>. 先前我们不知道的<code>var_a</code>也被重命名为<code>cur_index</code>, 指向的是<code>inputName</code>当前正在处理的字符索引.</p>
 <p>对于 VM 实现的多个指令我们就不再多说, 重点来看下<code>check</code>部分的操作.</p>
-<pre><code>int __fastcall check(int a1)
-{
-  char v1; // al@1
-  int result; // eax@4
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">int</span> __fastcall <span class="token function">check</span><span class="token punctuation">(</span><span class="token keyword">int</span> a1<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+  <span class="token keyword">char</span> v1<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// al@1</span>
+  <span class="token keyword">int</span> result<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// eax@4</span>
 
-  v1 = r1;
-  if ( (unsigned __int8)r1 &lt; 0x21u )
-    v1 = r1 + 0x21;
-  LOBYTE(a1) = cur_index;
-  if ( v1 == inputKey[a1] )
-  {
-    if ( (unsigned __int8)cur_index &gt;= (unsigned __int8)lenOfName )
-      result = MessageBoxA(0, aGoodJobNowWrit, Caption, 0);
-    else
-      result = initVM();
-  }
-  else
-  {
-    result = MessageBoxA(0, Text, Caption, 0);
-  }
-  return result;
-}</code></pre><p>如果<code>r1</code>中的值跟<code>inputKey[cur_index]</code>相等, 那么会继续判断是否已经检查完了整个<code>inputName</code>, 如果没有出错且比对结束, 那么就会弹出<code>Good job! Now write a keygen.</code>的消息框. 否则会继续<code>initVM</code>进入下一轮循环.(出错了当然是弹出消息框提示错误了.)</p>
+  v1 <span class="token operator">=</span> r1<span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span> <span class="token punctuation">(</span><span class="token keyword">unsigned</span> __int8<span class="token punctuation">)</span>r1 <span class="token operator">&lt;</span> <span class="token number">0x21u</span> <span class="token punctuation">)</span>
+    v1 <span class="token operator">=</span> r1 <span class="token operator">+</span> <span class="token number">0x21</span><span class="token punctuation">;</span>
+  <span class="token function">LOBYTE</span><span class="token punctuation">(</span>a1<span class="token punctuation">)</span> <span class="token operator">=</span> cur_index<span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span> v1 <span class="token operator">==</span> inputKey<span class="token punctuation">[</span>a1<span class="token punctuation">]</span> <span class="token punctuation">)</span>
+  <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span> <span class="token punctuation">(</span><span class="token keyword">unsigned</span> __int8<span class="token punctuation">)</span>cur_index <span class="token operator">>=</span> <span class="token punctuation">(</span><span class="token keyword">unsigned</span> __int8<span class="token punctuation">)</span>lenOfName <span class="token punctuation">)</span>
+      result <span class="token operator">=</span> <span class="token function">MessageBoxA</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> aGoodJobNowWrit<span class="token punctuation">,</span> Caption<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">else</span>
+      result <span class="token operator">=</span> <span class="token function">initVM</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">else</span>
+  <span class="token punctuation">{</span>
+    result <span class="token operator">=</span> <span class="token function">MessageBoxA</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> Text<span class="token punctuation">,</span> Caption<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">return</span> result<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>如果<code>r1</code>中的值跟<code>inputKey[cur_index]</code>相等, 那么会继续判断是否已经检查完了整个<code>inputName</code>, 如果没有出错且比对结束, 那么就会弹出<code>Good job! Now write a keygen.</code>的消息框. 否则会继续<code>initVM</code>进入下一轮循环.(出错了当然是弹出消息框提示错误了.)</p>
 <p><code>cur_index</code>会在<code>initVM</code>中自增 1, 那么还记得之前在<code>process_input</code>里有执行 2 次<code>initVM</code>吗. 因为有执行 2 次<code>initVM</code>, 所以我们的<code>inputKey</code>的前 2 位可以是任意字符.</p>
 <pre><code>      unk_4031CE = i;
       opcode = vm_pc;
@@ -1038,44 +1043,45 @@ $ sudo make install</code></pre><ul>
 <pre><code>cd bindings/python
 python setup.py install</code></pre><p>对于 Windows, 在执行完上述命令后, 还需要将<a href="http://www.unicorn-engine.org/download/" target="_blank" rel="noopener">下载</a>页面的<code>Windows core engine</code>的所有 dll 文件复制到<code>C:\locationtopython\Lib\site-packages\unicorn</code>位置处.</p>
 <h2 id="使用-unicorn-的快速指南"><a href="#使用-unicorn-的快速指南" class="headerlink" title="使用 unicorn 的快速指南"></a>使用 unicorn 的快速指南</h2><p>我们将会展示如何使用 python 调用 unicorn 的 api 以及它是如何轻易地模拟二进制代码. 当然这里用的 api 仅是一小部分, 但对于入门已经足够了.</p>
-<pre><code> 1 from __future__ import print_function
- 2 from unicorn import *
- 3 from unicorn.x86_const import *
- 4 
- 5 # code to be emulated
- 6 X86_CODE32 = b"\x41\x4a" # INC ecx; DEC edx
- 7 
- 8 # memory address where emulation starts
- 9 ADDRESS = 0x1000000
-10 
-11 print("Emulate i386 code")
-12 try:
-13     # Initialize emulator in X86-32bit mode
-14     mu = Uc(UC_ARCH_X86, UC_MODE_32)
-15 
-16     # map 2MB memory for this emulation
-17     mu.mem_map(ADDRESS, 2 * 1024 * 1024)
-18 
-19     # write machine code to be emulated to memory
-20     mu.mem_write(ADDRESS, X86_CODE32)
-21 
-22     # initialize machine registers
-23     mu.reg_write(UC_X86_REG_ECX, 0x1234)
-24     mu.reg_write(UC_X86_REG_EDX, 0x7890)
-25 
-26     # emulate code in infinite time &amp; unlimited instructions
-27     mu.emu_start(ADDRESS, ADDRESS + len(X86_CODE32))
-28 
-29     # now print out some registers
-30     print("Emulation done. Below is the CPU context")
-31 
-32     r_ecx = mu.reg_read(UC_X86_REG_ECX)
-33     r_edx = mu.reg_read(UC_X86_REG_EDX)
-34     print("&gt;&gt;&gt; ECX = 0x%x" %r_ecx)
-35     print("&gt;&gt;&gt; EDX = 0x%x" %r_edx)
-36 
-37 except UcError as e:
-38     print("ERROR: %s" % e)</code></pre><p>运行结果如下:</p>
+<pre class="line-numbers language-python"><code class="language-python"> <span class="token number">1</span> <span class="token keyword">from</span> __future__ <span class="token keyword">import</span> print_function
+ <span class="token number">2</span> <span class="token keyword">from</span> unicorn <span class="token keyword">import</span> <span class="token operator">*</span>
+ <span class="token number">3</span> <span class="token keyword">from</span> unicorn<span class="token punctuation">.</span>x86_const <span class="token keyword">import</span> <span class="token operator">*</span>
+ <span class="token number">4</span> 
+ <span class="token number">5</span> <span class="token comment" spellcheck="true"># code to be emulated</span>
+ <span class="token number">6</span> X86_CODE32 <span class="token operator">=</span> b<span class="token string">"\x41\x4a"</span> <span class="token comment" spellcheck="true"># INC ecx; DEC edx</span>
+ <span class="token number">7</span> 
+ <span class="token number">8</span> <span class="token comment" spellcheck="true"># memory address where emulation starts</span>
+ <span class="token number">9</span> ADDRESS <span class="token operator">=</span> <span class="token number">0x1000000</span>
+<span class="token number">10</span> 
+<span class="token number">11</span> <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Emulate i386 code"</span><span class="token punctuation">)</span>
+<span class="token number">12</span> <span class="token keyword">try</span><span class="token punctuation">:</span>
+<span class="token number">13</span>     <span class="token comment" spellcheck="true"># Initialize emulator in X86-32bit mode</span>
+<span class="token number">14</span>     mu <span class="token operator">=</span> Uc<span class="token punctuation">(</span>UC_ARCH_X86<span class="token punctuation">,</span> UC_MODE_32<span class="token punctuation">)</span>
+<span class="token number">15</span> 
+<span class="token number">16</span>     <span class="token comment" spellcheck="true"># map 2MB memory for this emulation</span>
+<span class="token number">17</span>     mu<span class="token punctuation">.</span>mem_map<span class="token punctuation">(</span>ADDRESS<span class="token punctuation">,</span> <span class="token number">2</span> <span class="token operator">*</span> <span class="token number">1024</span> <span class="token operator">*</span> <span class="token number">1024</span><span class="token punctuation">)</span>
+<span class="token number">18</span> 
+<span class="token number">19</span>     <span class="token comment" spellcheck="true"># write machine code to be emulated to memory</span>
+<span class="token number">20</span>     mu<span class="token punctuation">.</span>mem_write<span class="token punctuation">(</span>ADDRESS<span class="token punctuation">,</span> X86_CODE32<span class="token punctuation">)</span>
+<span class="token number">21</span> 
+<span class="token number">22</span>     <span class="token comment" spellcheck="true"># initialize machine registers</span>
+<span class="token number">23</span>     mu<span class="token punctuation">.</span>reg_write<span class="token punctuation">(</span>UC_X86_REG_ECX<span class="token punctuation">,</span> <span class="token number">0x1234</span><span class="token punctuation">)</span>
+<span class="token number">24</span>     mu<span class="token punctuation">.</span>reg_write<span class="token punctuation">(</span>UC_X86_REG_EDX<span class="token punctuation">,</span> <span class="token number">0x7890</span><span class="token punctuation">)</span>
+<span class="token number">25</span> 
+<span class="token number">26</span>     <span class="token comment" spellcheck="true"># emulate code in infinite time &amp; unlimited instructions</span>
+<span class="token number">27</span>     mu<span class="token punctuation">.</span>emu_start<span class="token punctuation">(</span>ADDRESS<span class="token punctuation">,</span> ADDRESS <span class="token operator">+</span> len<span class="token punctuation">(</span>X86_CODE32<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token number">28</span> 
+<span class="token number">29</span>     <span class="token comment" spellcheck="true"># now print out some registers</span>
+<span class="token number">30</span>     <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Emulation done. Below is the CPU context"</span><span class="token punctuation">)</span>
+<span class="token number">31</span> 
+<span class="token number">32</span>     r_ecx <span class="token operator">=</span> mu<span class="token punctuation">.</span>reg_read<span class="token punctuation">(</span>UC_X86_REG_ECX<span class="token punctuation">)</span>
+<span class="token number">33</span>     r_edx <span class="token operator">=</span> mu<span class="token punctuation">.</span>reg_read<span class="token punctuation">(</span>UC_X86_REG_EDX<span class="token punctuation">)</span>
+<span class="token number">34</span>     <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">">>> ECX = 0x%x"</span> <span class="token operator">%</span>r_ecx<span class="token punctuation">)</span>
+<span class="token number">35</span>     <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">">>> EDX = 0x%x"</span> <span class="token operator">%</span>r_edx<span class="token punctuation">)</span>
+<span class="token number">36</span> 
+<span class="token number">37</span> <span class="token keyword">except</span> UcError <span class="token keyword">as</span> e<span class="token punctuation">:</span>
+<span class="token number">38</span>     <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"ERROR: %s"</span> <span class="token operator">%</span> e<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>运行结果如下:</p>
 <pre><code>$ python test1.py 
 Emulate i386 code
 Emulation done. Below is the CPU context
@@ -1105,76 +1111,77 @@ Emulation done. Below is the CPU context
 <p>显然, 除开一直在打印的句子外, 我们发现了一些有趣的字符串:</p>
 <pre><code>.rodata:0000000000400A53 00000006 C KEY:
 .rodata:0000000000400A5F 0000001F C OK YOU WIN. HERE'S YOUR FLAG:</code></pre><p>我们根据<code>OK YOU WIN. HERE'S YOUR FLAG:</code>的交叉引用来到关键代码处 (我删去了一些不必要的代码).</p>
-<pre><code>int __cdecl main(int argc, const char **argv, const char **envp)
-{
-  qmemcpy(v23, &amp;unk_400A7E, sizeof(v23));
-  v3 = v22;
-  for ( i = 9LL; i; --i )
-  {
-    *(_DWORD *)v3 = 0;
-    v3 += 4;
-  }
-  v20 = 0x31337;
-  v21 = time(0LL);
-  do
-  {
-    v11 = 0LL;
-    do
-    {
-      v5 = 0LL;
-      v6 = time(0LL);
-      srand(233811181 - v21 + v6); // 初始化随机数种子
-      v7 = v22[v11];
-      v22[v11] = rand() ^ v7;   // 伪随机数
-      v8 = (&amp;funny)[8 * v11];
-      while ( v5 &lt; strlen(v8) )
-      {
-        v9 = v8[v5];
-        if ( (_BYTE)v9 == 105 )
-        {
-          v24[(signed int)v5] = 105;
-        }
-        else
-        {
-          if ( (_DWORD)v5 &amp;&amp; v8[v5 - 1] != 32 )
-            v10 = __ctype_toupper_loc();    // 大写
-          else
-            v10 = __ctype_tolower_loc();    // 小写
-          v24[(signed int)v5] = (*v10)[v9];
-        }
-        ++v5;
-      }
-      v24[(signed int)v5] = 0;
-      ++v11;
-      __printf_chk(1LL, " 鈾%80s 鈾玕n", v24); // 乱码的其实是一个音符
-      sleep(1u);
-    }
-    while ( v11 != 36 );
-    --v20;
-  }
-  while ( v20 );
-  v13 = v22;    // key存储在v22数组内
-  __printf_chk(1LL, "KEY: ", v12);
-  do
-  {
-    v14 = (unsigned __int8)*v13++;
-    __printf_chk(1LL, "%02x ", v14); // 输出key
-  }
-  while ( v13 != v23 );
-  v15 = 0LL;
-  putchar(10);
-  __printf_chk(1LL, "OK YOU WIN. HERE'S YOUR FLAG: ", v16);
-  do
-  {
-    v17 = v23[v15] ^ v22[v15];  // 跟key的值有异或
-    ++v15;
-    putchar(v17);   // 输出flag
-  }
-  while ( v15 != 36 );
-  putchar(10);      // 输出换行
-  result = 0;
-  return result;
-}</code></pre><p>整个的代码流程主要就是在不断地循环输出<code>funny</code>里的句子, 满足循环条件后输出<code>key</code>, 并用<code>key</code>进行异或得到<code>flag</code>的值.</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">int</span> __cdecl <span class="token function">main</span><span class="token punctuation">(</span><span class="token keyword">int</span> argc<span class="token punctuation">,</span> <span class="token keyword">const</span> <span class="token keyword">char</span> <span class="token operator">*</span><span class="token operator">*</span>argv<span class="token punctuation">,</span> <span class="token keyword">const</span> <span class="token keyword">char</span> <span class="token operator">*</span><span class="token operator">*</span>envp<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+  <span class="token function">qmemcpy</span><span class="token punctuation">(</span>v23<span class="token punctuation">,</span> <span class="token operator">&amp;</span>unk_400A7E<span class="token punctuation">,</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>v23<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  v3 <span class="token operator">=</span> v22<span class="token punctuation">;</span>
+  <span class="token keyword">for</span> <span class="token punctuation">(</span> i <span class="token operator">=</span> <span class="token number">9LL</span><span class="token punctuation">;</span> i<span class="token punctuation">;</span> <span class="token operator">--</span>i <span class="token punctuation">)</span>
+  <span class="token punctuation">{</span>
+    <span class="token operator">*</span><span class="token punctuation">(</span>_DWORD <span class="token operator">*</span><span class="token punctuation">)</span>v3 <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    v3 <span class="token operator">+</span><span class="token operator">=</span> <span class="token number">4</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  v20 <span class="token operator">=</span> <span class="token number">0x31337</span><span class="token punctuation">;</span>
+  v21 <span class="token operator">=</span> <span class="token function">time</span><span class="token punctuation">(</span><span class="token number">0LL</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">do</span>
+  <span class="token punctuation">{</span>
+    v11 <span class="token operator">=</span> <span class="token number">0LL</span><span class="token punctuation">;</span>
+    <span class="token keyword">do</span>
+    <span class="token punctuation">{</span>
+      v5 <span class="token operator">=</span> <span class="token number">0LL</span><span class="token punctuation">;</span>
+      v6 <span class="token operator">=</span> <span class="token function">time</span><span class="token punctuation">(</span><span class="token number">0LL</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token function">srand</span><span class="token punctuation">(</span><span class="token number">233811181</span> <span class="token operator">-</span> v21 <span class="token operator">+</span> v6<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 初始化随机数种子</span>
+      v7 <span class="token operator">=</span> v22<span class="token punctuation">[</span>v11<span class="token punctuation">]</span><span class="token punctuation">;</span>
+      v22<span class="token punctuation">[</span>v11<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">rand</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">^</span> v7<span class="token punctuation">;</span>   <span class="token comment" spellcheck="true">// 伪随机数</span>
+      v8 <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token operator">&amp;</span>funny<span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">8</span> <span class="token operator">*</span> v11<span class="token punctuation">]</span><span class="token punctuation">;</span>
+      <span class="token keyword">while</span> <span class="token punctuation">(</span> v5 <span class="token operator">&lt;</span> <span class="token function">strlen</span><span class="token punctuation">(</span>v8<span class="token punctuation">)</span> <span class="token punctuation">)</span>
+      <span class="token punctuation">{</span>
+        v9 <span class="token operator">=</span> v8<span class="token punctuation">[</span>v5<span class="token punctuation">]</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span> <span class="token punctuation">(</span>_BYTE<span class="token punctuation">)</span>v9 <span class="token operator">==</span> <span class="token number">105</span> <span class="token punctuation">)</span>
+        <span class="token punctuation">{</span>
+          v24<span class="token punctuation">[</span><span class="token punctuation">(</span><span class="token keyword">signed</span> <span class="token keyword">int</span><span class="token punctuation">)</span>v5<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">105</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">else</span>
+        <span class="token punctuation">{</span>
+          <span class="token keyword">if</span> <span class="token punctuation">(</span> <span class="token punctuation">(</span>_DWORD<span class="token punctuation">)</span>v5 <span class="token operator">&amp;&amp;</span> v8<span class="token punctuation">[</span>v5 <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">!=</span> <span class="token number">32</span> <span class="token punctuation">)</span>
+            v10 <span class="token operator">=</span> <span class="token function">__ctype_toupper_loc</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment" spellcheck="true">// 大写</span>
+          <span class="token keyword">else</span>
+            v10 <span class="token operator">=</span> <span class="token function">__ctype_tolower_loc</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment" spellcheck="true">// 小写</span>
+          v24<span class="token punctuation">[</span><span class="token punctuation">(</span><span class="token keyword">signed</span> <span class="token keyword">int</span><span class="token punctuation">)</span>v5<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token operator">*</span>v10<span class="token punctuation">)</span><span class="token punctuation">[</span>v9<span class="token punctuation">]</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token operator">++</span>v5<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+      v24<span class="token punctuation">[</span><span class="token punctuation">(</span><span class="token keyword">signed</span> <span class="token keyword">int</span><span class="token punctuation">)</span>v5<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+      <span class="token operator">++</span>v11<span class="token punctuation">;</span>
+      <span class="token function">__printf_chk</span><span class="token punctuation">(</span><span class="token number">1LL</span><span class="token punctuation">,</span> <span class="token string">" 鈾%80s 鈾玕n"</span><span class="token punctuation">,</span> v24<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 乱码的其实是一个音符</span>
+      <span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">1u</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">while</span> <span class="token punctuation">(</span> v11 <span class="token operator">!=</span> <span class="token number">36</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token operator">--</span>v20<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">while</span> <span class="token punctuation">(</span> v20 <span class="token punctuation">)</span><span class="token punctuation">;</span>
+  v13 <span class="token operator">=</span> v22<span class="token punctuation">;</span>    <span class="token comment" spellcheck="true">// key存储在v22数组内</span>
+  <span class="token function">__printf_chk</span><span class="token punctuation">(</span><span class="token number">1LL</span><span class="token punctuation">,</span> <span class="token string">"KEY: "</span><span class="token punctuation">,</span> v12<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">do</span>
+  <span class="token punctuation">{</span>
+    v14 <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">unsigned</span> __int8<span class="token punctuation">)</span><span class="token operator">*</span>v13<span class="token operator">++</span><span class="token punctuation">;</span>
+    <span class="token function">__printf_chk</span><span class="token punctuation">(</span><span class="token number">1LL</span><span class="token punctuation">,</span> <span class="token string">"%02x "</span><span class="token punctuation">,</span> v14<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 输出key</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">while</span> <span class="token punctuation">(</span> v13 <span class="token operator">!=</span> v23 <span class="token punctuation">)</span><span class="token punctuation">;</span>
+  v15 <span class="token operator">=</span> <span class="token number">0LL</span><span class="token punctuation">;</span>
+  <span class="token function">putchar</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">__printf_chk</span><span class="token punctuation">(</span><span class="token number">1LL</span><span class="token punctuation">,</span> <span class="token string">"OK YOU WIN. HERE'S YOUR FLAG: "</span><span class="token punctuation">,</span> v16<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">do</span>
+  <span class="token punctuation">{</span>
+    v17 <span class="token operator">=</span> v23<span class="token punctuation">[</span>v15<span class="token punctuation">]</span> <span class="token operator">^</span> v22<span class="token punctuation">[</span>v15<span class="token punctuation">]</span><span class="token punctuation">;</span>  <span class="token comment" spellcheck="true">// 跟key的值有异或</span>
+    <span class="token operator">++</span>v15<span class="token punctuation">;</span>
+    <span class="token function">putchar</span><span class="token punctuation">(</span>v17<span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment" spellcheck="true">// 输出flag</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">while</span> <span class="token punctuation">(</span> v15 <span class="token operator">!=</span> <span class="token number">36</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">putchar</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">;</span>      <span class="token comment" spellcheck="true">// 输出换行</span>
+  result <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> result<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>整个的代码流程主要就是在不断地循环输出<code>funny</code>里的句子, 满足循环条件后输出<code>key</code>, 并用<code>key</code>进行异或得到<code>flag</code>的值.</p>
 <p>但我们可以发现, 整个循环的次数相对来说是比较少的. 所以我们可以采用一些方法, 让循环进行得更快一些. 比如说我手动 patch 一下, 不让程序输出字符串 (实际上<code>printf</code>的耗时是相当多的), 其次就是使用<code>LD_PRELOAD</code>使得程序的<code>sleep()</code>失效. 可以很明显地节省时间.</p>
 <p>手动 patch 的过程比较简单. 我们可以找到代码位置, 然后用一些十六进制编辑器进行修改. 当然我们也可以使用<code>IDA</code>来进行 patch 工作.</p>
 <pre><code>.text:00000000004007B7                 call    ___printf_chk
@@ -1183,15 +1190,16 @@ Emulation done. Below is the CPU context
 <p>将<code>4007B7</code>到<code>4007BD</code>之间的汇编代码全部修改为<code>nop</code>即可. 然后选择菜单<code>Edit-&gt;Patch Program-&gt;Apply patches to input file</code>. 当然最好做一个备份 (即勾选<code>Create a backup</code>), 然后点击 OK 即可 (我重命名为了<code>patched.elf</code>, 下载链接: <a href="https://github.com/ctf-wiki/ctf-challenges/blob/master/reverse/linux-re/2014_hitb/patched.elf" target="_blank" rel="noopener">patched.elf</a>).</p>
 <p><img src="/images/loading.gif" data-original="../images/CTF/ida_apply.png" alt=""></p>
 <p>现在进入<code>LD_PRELOAD</code>部分. 这里我们简单编写一下 c 代码, 下载链接: <a href="https://github.com/ctf-wiki/ctf-challenges/blob/master/reverse/linux-re/2014_hitb/time.c" target="_blank" rel="noopener">time.c</a></p>
-<pre><code>static int t = 0x31337;
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">static</span> <span class="token keyword">int</span> t <span class="token operator">=</span> <span class="token number">0x31337</span><span class="token punctuation">;</span>
 
-void sleep(int sec) {
-    t += sec;
-}
+<span class="token keyword">void</span> <span class="token function">sleep</span><span class="token punctuation">(</span><span class="token keyword">int</span> sec<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    t <span class="token operator">+</span><span class="token operator">=</span> sec<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
 
-int time() {
-    return t;
-}</code></pre><p>然后使用命令<code>gcc --shared time.c -o time.so</code>生成动态链接文件. 当然也给出了下载链接: <a href="https://github.com/ctf-wiki/ctf-challenges/blob/master/reverse/linux-re/2014_hitb/time.so" target="_blank" rel="noopener">time.so</a></p>
+<span class="token keyword">int</span> <span class="token function">time</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> t<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>然后使用命令<code>gcc --shared time.c -o time.so</code>生成动态链接文件. 当然也给出了下载链接: <a href="https://github.com/ctf-wiki/ctf-challenges/blob/master/reverse/linux-re/2014_hitb/time.so" target="_blank" rel="noopener">time.so</a></p>
 <p>然后打开 linux 终端, 运行命令: <code>LD_PRELOAD=./time.so ./patched.elf</code></p>
 <p><img src="/images/loading.gif" data-original="../images/CTF/ld_preload.png" alt=""></p>
 <p>过一会, 你就能听到 CPU 疯狂运转的声音, 然后很快就出来了 flag.</p>
@@ -1296,16 +1304,17 @@ Code:                   ; code continues here &lt;--- pushed return address + 9
 <p>Reference: <a href="http://www.stonedcoder.org/~kd/lib/14-61-1-PB.pdf" target="_blank" rel="noopener">Beginners Guide to Basic Linux Anti Anti Debugging Techniques</a></p>
 </blockquote>
 <h1 id="Detecting-Breakpoints"><a href="#Detecting-Breakpoints" class="headerlink" title="Detecting Breakpoints"></a>Detecting Breakpoints</h1><p>gdb 通过替换目标地址的字节为<code>0xcc</code>来实现断点, 这里给出一个简单的检测<code>int 3</code>断点的示例:</p>
-<pre><code>void foo() {
-    printf("Hello\n");
-}
-int main() {
-    if ((*(volatile unsigned *)((unsigned)foo) &amp; 0xff) == 0xcc) {
-        printf("BREAKPOINT\n");
-        exit(1);
-    }
-    foo();
-}</code></pre><p>正常运行程序会输出 Hello, 但是如果之前有在<code>foo</code>函数这里设置<code>cc</code>断点并运行, gdb 则无法断下, 并会输出<code>BREAKPOINT</code>.</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">void</span> <span class="token function">foo</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"Hello\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">(</span><span class="token keyword">volatile</span> <span class="token keyword">unsigned</span> <span class="token operator">*</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">unsigned</span><span class="token punctuation">)</span>foo<span class="token punctuation">)</span> <span class="token operator">&amp;</span> <span class="token number">0xff</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">0xcc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"BREAKPOINT\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">exit</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token function">foo</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>正常运行程序会输出 Hello, 但是如果之前有在<code>foo</code>函数这里设置<code>cc</code>断点并运行, gdb 则无法断下, 并会输出<code>BREAKPOINT</code>.</p>
 <pre><code># gdb ./x
 gdb&gt; bp foo
 Breakpoint 1 at 0x804838c
@@ -1314,11 +1323,12 @@ BREAKPOINT
 Program exited with code 01.</code></pre><p>这个要绕过也很简单, 那就是需要阅读汇编代码并注意设置断点不要在<code>foo</code>函数入口处. 实际情况就要看检测断点的位置是哪里.</p>
 <p>这种监视断点的反调试技术, 关键不在于如何绕过它, 而是在于如何检测它. 在这个示例中可以很轻松的发现, 程序也有打印出相应的信息. 在实际情况中, 程序不会输出任何信息, 断点也无法轻易地断下. 我们可以使用<code>perl</code>脚本过滤反汇编代码中有关<code>0xcc</code>的代码出来进行检查.</p>
 <p>我们可以使用 perl 脚本过滤反汇编代码中有关 0xcc 的代码出来进行检查</p>
-<pre><code>#!/usr/bin/perl
-while(&lt;&gt;)
-{
-    if($_ =~ m/([0-9a-f][4]:\s*[0-9a-f \t]*.*0xcc)/ ){ print; }
-}</code></pre><p>显示结果</p>
+<pre class="line-numbers language-c"><code class="language-c">#<span class="token operator">!</span><span class="token operator">/</span>usr<span class="token operator">/</span>bin<span class="token operator">/</span>perl
+<span class="token keyword">while</span><span class="token punctuation">(</span><span class="token operator">&lt;</span><span class="token operator">></span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span>$_ <span class="token operator">=</span><span class="token operator">~</span> m<span class="token operator">/</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token operator">-</span>9a<span class="token operator">-</span>f<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">:</span>\s<span class="token operator">*</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token operator">-</span>9a<span class="token operator">-</span>f \t<span class="token punctuation">]</span><span class="token operator">*</span><span class="token punctuation">.</span><span class="token operator">*</span><span class="token number">0xcc</span><span class="token punctuation">)</span><span class="token operator">/</span> <span class="token punctuation">)</span><span class="token punctuation">{</span> print<span class="token punctuation">;</span> <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>显示结果</p>
 <pre><code># objdump -M intel -d xxx | ./antibp.pl
       80483be: 3d cc 00 00 00 cmp eax,0xcc</code></pre><p>检测到后, 既可以将 0xcc 修改成 0x00 或 0x90, 也可以做任何你想做的操作.</p>
 <p>改变 0xcc 也同样可能带来问题, 就如上篇介绍一样, 程序如果有进行文件校验, 那么我们的改变是会被检测到的. 可能的情况下, 程序也不只是对函数入口点进行检测, 也会在一个循环里对整个函数进行检测.</p>
@@ -1327,15 +1337,16 @@ while(&lt;&gt;)
 <p>Reference: <a href="http://www.stonedcoder.org/~kd/lib/14-61-1-PB.pdf" target="_blank" rel="noopener">Beginners Guide to Basic Linux Anti Anti Debugging Techniques</a></p>
 </blockquote>
 <h1 id="Detecting-debugging"><a href="#Detecting-debugging" class="headerlink" title="Detecting debugging"></a>Detecting debugging</h1><p>检测调试器的方法很多, 比如检测进程名之类. 这里我们介绍一种方法, 就是通过检测一些函数的调用情况来分析程序当前是否处于被调试状态</p>
-<pre><code>int main()
-{
-    if (ptrace(PTRACE_TRACEME, 0, 1, 0) &lt; 0) {
-        printf("DEBUGGING... Bye\n");
-        return 1;
-    }
-    printf("Hello\n");
-    return 0;
-}</code></pre><p>一个进程只能被一个进程 ptrace, 如果你自己调用 ptrace, 那么其它程序就无法通过 ptrace 调试或向你的程序注入代码.</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">ptrace</span><span class="token punctuation">(</span>PTRACE_TRACEME<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"DEBUGGING... Bye\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"Hello\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>一个进程只能被一个进程 ptrace, 如果你自己调用 ptrace, 那么其它程序就无法通过 ptrace 调试或向你的程序注入代码.</p>
 <p>如果程序当前被 gdb 调试, 那么 ptrace 函数就会返回错误, 也就侧面表明了检测到了调试器的存在.</p>
 <h2 id="绕过方法-1"><a href="#绕过方法-1" class="headerlink" title="绕过方法 1"></a>绕过方法 1</h2><p>显然 ptrace 只能作用于使用 ptrace 的调试器, 我们可以用不使用 ptrace 的调试器.</p>
 <p>我们也可以通过打补丁的方式将 ptrace 函数擦除, 更简单就是将 ptrace 的调用代码或是之后的校验给擦除了.</p>
@@ -1378,12 +1389,13 @@ No registers.
 gdb&gt;</code></pre><h2 id="绕过方法-2"><a href="#绕过方法-2" class="headerlink" title="绕过方法 2"></a>绕过方法 2</h2><p>方法 2 就是编写自己的 ptrace 函数</p>
 <p>如前几篇所述, <code>LD_PRELOAD</code>环境变量可以将可执行文件指向我们自己的 ptrace 函数.</p>
 <p>我们写一个 ptrace 函数并生成目标文件</p>
-<pre><code>// -- ptrace.c --
-// gcc -shared ptrace.c -o ptrace.so
-int ptrace(int i, int j, int k, int l)
-{
-    printf(" PTRACE CALLED!\n");
-}</code></pre><p>我们接下来就可以通过设置环境变量 LD_PRELOAD 来使用我们自己的 ptrace 函数, 当然这里是可以在 gdb 中进行设置</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token comment" spellcheck="true">// -- ptrace.c --</span>
+<span class="token comment" spellcheck="true">// gcc -shared ptrace.c -o ptrace.so</span>
+<span class="token keyword">int</span> <span class="token function">ptrace</span><span class="token punctuation">(</span><span class="token keyword">int</span> i<span class="token punctuation">,</span> <span class="token keyword">int</span> j<span class="token punctuation">,</span> <span class="token keyword">int</span> k<span class="token punctuation">,</span> <span class="token keyword">int</span> l<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">" PTRACE CALLED!\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>我们接下来就可以通过设置环境变量 LD_PRELOAD 来使用我们自己的 ptrace 函数, 当然这里是可以在 gdb 中进行设置</p>
 <pre><code>gdb&gt; set environment LD_PRELOAD ./ptrace.so
 gdb&gt; run
 PTRACE CALLED!
@@ -1974,19 +1986,20 @@ call CheckRemoteDebuggerPresent
 leave
 test ebp, ebp
 jne being_debugged</code></pre><h2 id="如何绕过-1"><a href="#如何绕过-1" class="headerlink" title="如何绕过"></a>如何绕过</h2><p>比如有如下的代码</p>
-<pre><code>int main(int argc, char *argv[])
-{
-    BOOL isDebuggerPresent = FALSE;
-    if (CheckRemoteDebuggerPresent(GetCurrentProcess(), &amp;isDebuggerPresent ))
-    {
-        if (isDebuggerPresent )
-        {
-            std::cout &lt;&lt; "Stop debugging program!" &lt;&lt; std::endl;
-            exit(-1);
-        }
-    }
-    return 0;
-}</code></pre><p>我们可以直接修改<code>isDebuggerPresent</code>的值或修改跳转条件来绕过 (注意不是<code>CheckRemoteDebuggerPresent</code>的 izhi, 它的返回值是用于表示函数是否正确执行).</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token keyword">int</span> argc<span class="token punctuation">,</span> <span class="token keyword">char</span> <span class="token operator">*</span>argv<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    BOOL isDebuggerPresent <span class="token operator">=</span> FALSE<span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">CheckRemoteDebuggerPresent</span><span class="token punctuation">(</span><span class="token function">GetCurrentProcess</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>isDebuggerPresent <span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>isDebuggerPresent <span class="token punctuation">)</span>
+        <span class="token punctuation">{</span>
+            std<span class="token punctuation">:</span><span class="token punctuation">:</span>cout <span class="token operator">&lt;&lt;</span> <span class="token string">"Stop debugging program!"</span> <span class="token operator">&lt;&lt;</span> std<span class="token punctuation">:</span><span class="token punctuation">:</span>endl<span class="token punctuation">;</span>
+            <span class="token function">exit</span><span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>我们可以直接修改<code>isDebuggerPresent</code>的值或修改跳转条件来绕过 (注意不是<code>CheckRemoteDebuggerPresent</code>的 izhi, 它的返回值是用于表示函数是否正确执行).</p>
 <p>但如果要针对<code>CheckRemoteDebuggerPresent</code>这个 api 函数进行修改的话. 首先要知道<code>CheckRemoteDebuggerPresent</code>内部其实是通过调用<code>NtQueryInformationProcess</code>来完成功能的. 而我们就需要对<code>NtQueryInformationProcess</code>的返回值进行修改. 我们将在<a href="https://ctf-wiki.org/reverse/windows/anti-debug/ntqueryinformationprocess/" target="_blank" rel="noopener"> NtQueryInformationProcess 篇</a>进行介绍.</p>
 <h1 id="NtQueryInformationProcess"><a href="#NtQueryInformationProcess" class="headerlink" title="NtQueryInformationProcess"></a>NtQueryInformationProcess</h1><pre><code>NTSTATUS WINAPI NtQueryInformationProcess(
   _In_      HANDLE           ProcessHandle,
@@ -2071,27 +2084,28 @@ call NtQueryInformationProcess
 leave
 test ebp, ebp
 je being_debugged</code></pre><h1 id="ZwSetInformationThread"><a href="#ZwSetInformationThread" class="headerlink" title="ZwSetInformationThread"></a>ZwSetInformationThread</h1><h2 id="关于-ZwSetInformationThread"><a href="#关于-ZwSetInformationThread" class="headerlink" title="关于 ZwSetInformationThread"></a>关于 ZwSetInformationThread</h2><p>ZwSetInformationThread 等同于 NtSetInformationThread，通过为线程设置 ThreadHideFromDebugger，可以禁止线程产生调试事件，代码如下</p>
-<pre><code>#include &lt;Windows.h&gt;
-#include &lt;stdio.h&gt;
+<pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;Windows.h></span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
 
-typedef DWORD(WINAPI* ZW_SET_INFORMATION_THREAD) (HANDLE, DWORD, PVOID, ULONG);
-#define ThreadHideFromDebugger 0x11
-VOID DisableDebugEvent(VOID)
-{
-    HINSTANCE hModule;
-    ZW_SET_INFORMATION_THREAD ZwSetInformationThread;
-    hModule = GetModuleHandleA("Ntdll");
-    ZwSetInformationThread = (ZW_SET_INFORMATION_THREAD)GetProcAddress(hModule, "ZwSetInformationThread");
-    ZwSetInformationThread(GetCurrentThread(), ThreadHideFromDebugger, 0, 0);
-}
+<span class="token keyword">typedef</span> <span class="token function">DWORD</span><span class="token punctuation">(</span>WINAPI<span class="token operator">*</span> ZW_SET_INFORMATION_THREAD<span class="token punctuation">)</span> <span class="token punctuation">(</span>HANDLE<span class="token punctuation">,</span> DWORD<span class="token punctuation">,</span> PVOID<span class="token punctuation">,</span> ULONG<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token macro property">#<span class="token directive keyword">define</span> ThreadHideFromDebugger 0x11</span>
+VOID <span class="token function">DisableDebugEvent</span><span class="token punctuation">(</span>VOID<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    HINSTANCE hModule<span class="token punctuation">;</span>
+    ZW_SET_INFORMATION_THREAD ZwSetInformationThread<span class="token punctuation">;</span>
+    hModule <span class="token operator">=</span> <span class="token function">GetModuleHandleA</span><span class="token punctuation">(</span><span class="token string">"Ntdll"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    ZwSetInformationThread <span class="token operator">=</span> <span class="token punctuation">(</span>ZW_SET_INFORMATION_THREAD<span class="token punctuation">)</span><span class="token function">GetProcAddress</span><span class="token punctuation">(</span>hModule<span class="token punctuation">,</span> <span class="token string">"ZwSetInformationThread"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">ZwSetInformationThread</span><span class="token punctuation">(</span><span class="token function">GetCurrentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> ThreadHideFromDebugger<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
 
-int main()
-{
-    printf("Begin\n");
-    DisableDebugEvent();
-    printf("End\n");
-    return 0;
-}</code></pre><p>关键代码为<code>ZwSetInformationThread(GetCurrentThread(), ThreadHideFromDebugger, 0, 0);</code>，如果处于调试状态，执行完该行代码，程序就会退出</p>
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"Begin\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">DisableDebugEvent</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"End\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>关键代码为<code>ZwSetInformationThread(GetCurrentThread(), ThreadHideFromDebugger, 0, 0);</code>，如果处于调试状态，执行完该行代码，程序就会退出</p>
 <h2 id="如何绕过-2"><a href="#如何绕过-2" class="headerlink" title="如何绕过"></a>如何绕过</h2><p>注意到该处 ZwSetInformationThread 函数的第 2 个参数为 ThreadHideFromDebugger，其值为 0x11。调试执行到该函数时，若发现第 2 个参数值为 0x11，跳过或者将 0x11 修改为其他值即可</p>
 <h1 id="花指令"><a href="#花指令" class="headerlink" title="花指令"></a>花指令</h1><h2 id="原理-2"><a href="#原理-2" class="headerlink" title="原理"></a>原理</h2><p>花指令是企图隐藏掉不想被逆向工程的代码块 (或其它功能) 的一种方法, 在真实代码中插入一些垃圾代码的同时还保证原有程序的正确执行, 而程序无法很好地反编译, 难以理解程序内容, 达到混淆视听的效果.</p>
 <h2 id="例题-1"><a href="#例题-1" class="headerlink" title="例题"></a>例题</h2><p>这里以<code>看雪.TSRC 2017CTF秋季赛</code>第二题作为讲解. 题目下载链接: <a href="https://github.com/ctf-wiki/ctf-challenges/blob/master/reverse/anti-debug/2017_pediy/ctf2017_Fpc.exe" target="_blank" rel="noopener">ctf2017_Fpc.exe</a></p>
@@ -2123,203 +2137,215 @@ int main()
 <p><img src="/images/loading.gif" data-original="../images/CTF/ida_strings-1629299409941124.png" alt=""></p>
 <p>显然, 字符串表明程序中可能有各种检测, 比如检测进程名<code>ollydbg.exe</code>, <code>ImmunityDebugger.exe</code>, <code>idaq.exe</code>和<code>Wireshark.exe</code>. 然后也有其他的检测. 我们也看到了字符串<code>password is wrong</code>和<code>You password is correct</code>的字样. 同时还发现了一个很有可能就是待解密的 flag 的字符串. 那么我们就先根据<code>password is wrong</code>的交叉引用来到关键函数处.</p>
 <p>如下所示: 程序果然使用了大量的反调试技巧.</p>
-<pre><code>int __cdecl main(int argc, const char **argv, const char **envp)
-{
-  v23 = 0;
-  memset(&amp;v24, 0, 0x3Fu);
-  v22 = 1;
-  printf("Input password &gt;");
-  v3 = (FILE *)sub_40223D();
-  fgets(&amp;v23, 64, v3);
-  strcpy(v21, "I have a pen.");
-  v22 = strncmp(&amp;v23, v21, 0xDu); // 1. 直接比较明文字符串与输入字符串
-  if ( !v22 )
-  {
-    puts("Your password is correct.");
-    if ( IsDebuggerPresent() == 1 )     // 2. API: IsDebuggerPresent()
-    {
-      puts("But detected debugger!");
-      exit(1);
-    }
-    if ( sub_401120() == 0x70 )         // 3. 检测PEB的0x68偏移处是否为0x70. 检测NtGlobalFlag()
-    {
-      puts("But detected NtGlobalFlag!");
-      exit(1);
-    }
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">int</span> __cdecl <span class="token function">main</span><span class="token punctuation">(</span><span class="token keyword">int</span> argc<span class="token punctuation">,</span> <span class="token keyword">const</span> <span class="token keyword">char</span> <span class="token operator">*</span><span class="token operator">*</span>argv<span class="token punctuation">,</span> <span class="token keyword">const</span> <span class="token keyword">char</span> <span class="token operator">*</span><span class="token operator">*</span>envp<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+  v23 <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  <span class="token function">memset</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>v24<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0x3Fu</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  v22 <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+  <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"Input password >"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  v3 <span class="token operator">=</span> <span class="token punctuation">(</span>FILE <span class="token operator">*</span><span class="token punctuation">)</span><span class="token function">sub_40223D</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">fgets</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>v23<span class="token punctuation">,</span> <span class="token number">64</span><span class="token punctuation">,</span> v3<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">strcpy</span><span class="token punctuation">(</span>v21<span class="token punctuation">,</span> <span class="token string">"I have a pen."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  v22 <span class="token operator">=</span> <span class="token function">strncmp</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>v23<span class="token punctuation">,</span> v21<span class="token punctuation">,</span> <span class="token number">0xDu</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 1. 直接比较明文字符串与输入字符串</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span> <span class="token operator">!</span>v22 <span class="token punctuation">)</span>
+  <span class="token punctuation">{</span>
+    <span class="token function">puts</span><span class="token punctuation">(</span><span class="token string">"Your password is correct."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span> <span class="token function">IsDebuggerPresent</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">1</span> <span class="token punctuation">)</span>     <span class="token comment" spellcheck="true">// 2. API: IsDebuggerPresent()</span>
+    <span class="token punctuation">{</span>
+      <span class="token function">puts</span><span class="token punctuation">(</span><span class="token string">"But detected debugger!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token function">exit</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span> <span class="token function">sub_401120</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">0x70</span> <span class="token punctuation">)</span>         <span class="token comment" spellcheck="true">// 3. 检测PEB的0x68偏移处是否为0x70. 检测NtGlobalFlag()</span>
+    <span class="token punctuation">{</span>
+      <span class="token function">puts</span><span class="token punctuation">(</span><span class="token string">"But detected NtGlobalFlag!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token function">exit</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
-    /*  BOOL WINAPI CheckRemoteDebuggerPresent(
+    <span class="token comment" spellcheck="true">/*  BOOL WINAPI CheckRemoteDebuggerPresent(
      *    _In_    HANDLE hProcess,
      *    _Inout_ PBOOL  pbDebuggerPresent
      *  );
-     */
-    v4 = GetCurrentProcess();
-    CheckRemoteDebuggerPresent(v4, &amp;pbDebuggerPresent);
-    if ( pbDebuggerPresent )            // 4. API: CheckRemoteDebuggerPresent()
-    {
-      printf("But detected remotedebug.\n");
-      exit(1);
-    }
-    v13 = GetTickCount();
-    for ( i = 0; i == 100; ++i )
-      Sleep(1u);
-    v16 = 1000;
-    if ( GetTickCount() - v13 &gt; 1000 )  // 5. 检测时间差
-    {
-      printf("But detected debug.\n");
-      exit(1);
-    }
-    lpFileName = "\\\\.\\Global\\ProcmonDebugLogger";
-    if ( CreateFileA("\\\\.\\Global\\ProcmonDebugLogger", 0x80000000, 7u, 0, 3u, 0x80u, 0) != (HANDLE)-1 )
-    {
-      printf("But detect %s.\n", &amp;lpFileName);      // 6. 检测ProcessMonitor
-      exit(1);
-    }
-    v11 = sub_401130();     // 7. API: CreateToolhelp32Snapshot()检测进程
-    if ( v11 == 1 )
-    {
-      printf("But detected Ollydbg.\n");
-      exit(1);
-    }
-    if ( v11 == 2 )
-    {
-      printf("But detected ImmunityDebugger.\n");
-      exit(1);
-    }
-    if ( v11 == 3 )
-    {
-      printf("But detected IDA.\n");
-      exit(1);
-    }
-    if ( v11 == 4 )
-    {
-      printf("But detected WireShark.\n");
-      exit(1);
-    }
-    if ( sub_401240() == 1 )    // 8. 通过vmware的I/O端口进行检测
-    {
-      printf("But detected VMware.\n");
-      exit(1);
-    }
-    v17 = 1;
-    v20 = 1;
-    v12 = 0;
-    v19 = 1 / 0;
-    ms_exc.registration.TryLevel = -2;  // 9. SEH
-    printf("But detected Debugged.\n");
-    exit(1);
-  }
-  printf("password is wrong.\n");
-  return 0;
-}</code></pre><p>我在代码里写了注释, 列出了其中所使用的 9 个保护技术部分. 我们来逐一分析一下吧.</p>
-<h2 id="比较明文字符串"><a href="#比较明文字符串" class="headerlink" title="比较明文字符串"></a>比较明文字符串</h2><pre><code>printf("Input password &gt;");
-v3 = (FILE *)sub_40223D();
-fgets(&amp;v23, 64, v3);
-strcpy(v21, "I have a pen.");
-v22 = strncmp(&amp;v23, v21, 0xDu); // 1. 直接比较明文字符串与输入字符串
-if ( !v22 )  {
-    ......
-}</code></pre><p>这里就是输出<code>Input password &gt;</code>. 然后用<code>fgets()</code>获取用户输入的字符串, 将<code>I have a pen.</code>复制到<code>v21</code>的缓冲区中, 然后用<code>strncmp</code>比对用户输入与<code>I have a pen.</code>的内容, 并将比较结果返回给<code>v22</code>. 以下会根据<code>v22</code>, 也就是根据输入的<code>password</code>是否正确, 而进行跳转.</p>
-<h2 id="IsDebuggerPresent"><a href="#IsDebuggerPresent" class="headerlink" title="IsDebuggerPresent()"></a>IsDebuggerPresent()</h2><pre><code>puts("Your password is correct.");
-if ( IsDebuggerPresent() == 1 )     // 2. API: IsDebuggerPresent()
-{
-    puts("But detected debugger!");
-    exit(1);
-}</code></pre><p>显然, 输入的<code>password</code>正确, 就会输出提示<code>Your password is correct.</code>. ??? 不觉得奇怪吗. 难道<code>I have a pen.</code>就是我们的 flag 了吗? 不不不当然不是. 这其实是一个陷阱, 既然你知道了<code>I have a pen.</code>那么就肯定有通过某种逆向手段在对程序进行分析. 所以接下来的部分就开始进行一些反调试或其他的检测手段 (实际中也可以出现这样的陷阱).</p>
+     */</span>
+    v4 <span class="token operator">=</span> <span class="token function">GetCurrentProcess</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">CheckRemoteDebuggerPresent</span><span class="token punctuation">(</span>v4<span class="token punctuation">,</span> <span class="token operator">&amp;</span>pbDebuggerPresent<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span> pbDebuggerPresent <span class="token punctuation">)</span>            <span class="token comment" spellcheck="true">// 4. API: CheckRemoteDebuggerPresent()</span>
+    <span class="token punctuation">{</span>
+      <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"But detected remotedebug.\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token function">exit</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    v13 <span class="token operator">=</span> <span class="token function">GetTickCount</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">==</span> <span class="token number">100</span><span class="token punctuation">;</span> <span class="token operator">++</span>i <span class="token punctuation">)</span>
+      <span class="token function">Sleep</span><span class="token punctuation">(</span><span class="token number">1u</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    v16 <span class="token operator">=</span> <span class="token number">1000</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span> <span class="token function">GetTickCount</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span> v13 <span class="token operator">></span> <span class="token number">1000</span> <span class="token punctuation">)</span>  <span class="token comment" spellcheck="true">// 5. 检测时间差</span>
+    <span class="token punctuation">{</span>
+      <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"But detected debug.\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token function">exit</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    lpFileName <span class="token operator">=</span> <span class="token string">"\\\\.\\Global\\ProcmonDebugLogger"</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span> <span class="token function">CreateFileA</span><span class="token punctuation">(</span><span class="token string">"\\\\.\\Global\\ProcmonDebugLogger"</span><span class="token punctuation">,</span> <span class="token number">0x80000000</span><span class="token punctuation">,</span> <span class="token number">7u</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">3u</span><span class="token punctuation">,</span> <span class="token number">0x80u</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token punctuation">(</span>HANDLE<span class="token punctuation">)</span><span class="token operator">-</span><span class="token number">1</span> <span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+      <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"But detect %s.\n"</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>lpFileName<span class="token punctuation">)</span><span class="token punctuation">;</span>      <span class="token comment" spellcheck="true">// 6. 检测ProcessMonitor</span>
+      <span class="token function">exit</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    v11 <span class="token operator">=</span> <span class="token function">sub_401130</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>     <span class="token comment" spellcheck="true">// 7. API: CreateToolhelp32Snapshot()检测进程</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span> v11 <span class="token operator">==</span> <span class="token number">1</span> <span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+      <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"But detected Ollydbg.\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token function">exit</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span> v11 <span class="token operator">==</span> <span class="token number">2</span> <span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+      <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"But detected ImmunityDebugger.\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token function">exit</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span> v11 <span class="token operator">==</span> <span class="token number">3</span> <span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+      <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"But detected IDA.\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token function">exit</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span> v11 <span class="token operator">==</span> <span class="token number">4</span> <span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+      <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"But detected WireShark.\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token function">exit</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span> <span class="token function">sub_401240</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">1</span> <span class="token punctuation">)</span>    <span class="token comment" spellcheck="true">// 8. 通过vmware的I/O端口进行检测</span>
+    <span class="token punctuation">{</span>
+      <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"But detected VMware.\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token function">exit</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    v17 <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    v20 <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    v12 <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    v19 <span class="token operator">=</span> <span class="token number">1</span> <span class="token operator">/</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    ms_exc<span class="token punctuation">.</span>registration<span class="token punctuation">.</span>TryLevel <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">2</span><span class="token punctuation">;</span>  <span class="token comment" spellcheck="true">// 9. SEH</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"But detected Debugged.\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">exit</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"password is wrong.\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>我在代码里写了注释, 列出了其中所使用的 9 个保护技术部分. 我们来逐一分析一下吧.</p>
+<h2 id="比较明文字符串"><a href="#比较明文字符串" class="headerlink" title="比较明文字符串"></a>比较明文字符串</h2><pre class="line-numbers language-c"><code class="language-c"><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"Input password >"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+v3 <span class="token operator">=</span> <span class="token punctuation">(</span>FILE <span class="token operator">*</span><span class="token punctuation">)</span><span class="token function">sub_40223D</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">fgets</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>v23<span class="token punctuation">,</span> <span class="token number">64</span><span class="token punctuation">,</span> v3<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">strcpy</span><span class="token punctuation">(</span>v21<span class="token punctuation">,</span> <span class="token string">"I have a pen."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+v22 <span class="token operator">=</span> <span class="token function">strncmp</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>v23<span class="token punctuation">,</span> v21<span class="token punctuation">,</span> <span class="token number">0xDu</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 1. 直接比较明文字符串与输入字符串</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span> <span class="token operator">!</span>v22 <span class="token punctuation">)</span>  <span class="token punctuation">{</span>
+    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这里就是输出<code>Input password &gt;</code>. 然后用<code>fgets()</code>获取用户输入的字符串, 将<code>I have a pen.</code>复制到<code>v21</code>的缓冲区中, 然后用<code>strncmp</code>比对用户输入与<code>I have a pen.</code>的内容, 并将比较结果返回给<code>v22</code>. 以下会根据<code>v22</code>, 也就是根据输入的<code>password</code>是否正确, 而进行跳转.</p>
+<h2 id="IsDebuggerPresent"><a href="#IsDebuggerPresent" class="headerlink" title="IsDebuggerPresent()"></a>IsDebuggerPresent()</h2><pre class="line-numbers language-c"><code class="language-c"><span class="token function">puts</span><span class="token punctuation">(</span><span class="token string">"Your password is correct."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span> <span class="token function">IsDebuggerPresent</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">1</span> <span class="token punctuation">)</span>     <span class="token comment" spellcheck="true">// 2. API: IsDebuggerPresent()</span>
+<span class="token punctuation">{</span>
+    <span class="token function">puts</span><span class="token punctuation">(</span><span class="token string">"But detected debugger!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">exit</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>显然, 输入的<code>password</code>正确, 就会输出提示<code>Your password is correct.</code>. ??? 不觉得奇怪吗. 难道<code>I have a pen.</code>就是我们的 flag 了吗? 不不不当然不是. 这其实是一个陷阱, 既然你知道了<code>I have a pen.</code>那么就肯定有通过某种逆向手段在对程序进行分析. 所以接下来的部分就开始进行一些反调试或其他的检测手段 (实际中也可以出现这样的陷阱).</p>
 <p>一开始的是<code>IsDebuggerPresent()</code>, 根据返回结果判断是否存在调试. 如果不太清楚的话, 可以返回去看 <a href="https://ctf-wiki.org/reverse/windows/anti-debug/isdebuggerpresent/" target="_blank" rel="noopener">IsDebuggerPresent()</a> 篇</p>
 <h2 id="NtGlobalFlag-1"><a href="#NtGlobalFlag-1" class="headerlink" title="NtGlobalFlag"></a>NtGlobalFlag</h2><p>接下来是检测<code>NtGlobalFlag</code>这个字段的标志位. 通过检测 PEB 的字段值是否为<code>0x70</code>来检测调试器, 如果不太清楚的话, 可以返回去看 <a href="https://ctf-wiki.org/reverse/windows/anti-debug/ntglobalflag/" target="_blank" rel="noopener">NtGlobalFlag</a> 篇</p>
-<pre><code>if ( sub_401120() == 0x70 )         // 3. 检测PEB的0x68偏移处是否为0x70. 检测NtGlobalFlag()
-{
-    puts("But detected NtGlobalFlag!");
-    exit(1);
-}</code></pre><p>那我们来简单看一下<code>sub_401120()</code>好了</p>
-<pre><code>int sub_401120()
-{
-  return *(_DWORD *)(__readfsdword(48) + 0x68) &amp; 0x70;
-}</code></pre><p><code>0x68</code>是 PEB 的<code>NtGlobalFlag</code>字段对应偏移值. <code>0x70</code>是<code>FLG_HEAP_ENABLE_TAIL_CHECK (0x10)</code>, <code>FLG_HEAP_ENABLE_FREE_CHECK (0x20)</code> 和<code>FLG_HEAP_VALIDATE_PARAMETERS (0x40)</code>这三个标志</p>
-<h2 id="CheckRemoteDebuggerPresent-1"><a href="#CheckRemoteDebuggerPresent-1" class="headerlink" title="CheckRemoteDebuggerPresent"></a>CheckRemoteDebuggerPresent</h2><pre><code>/*  BOOL WINAPI CheckRemoteDebuggerPresent(
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">if</span> <span class="token punctuation">(</span> <span class="token function">sub_401120</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">0x70</span> <span class="token punctuation">)</span>         <span class="token comment" spellcheck="true">// 3. 检测PEB的0x68偏移处是否为0x70. 检测NtGlobalFlag()</span>
+<span class="token punctuation">{</span>
+    <span class="token function">puts</span><span class="token punctuation">(</span><span class="token string">"But detected NtGlobalFlag!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">exit</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>那我们来简单看一下<code>sub_401120()</code>好了</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">sub_401120</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+  <span class="token keyword">return</span> <span class="token operator">*</span><span class="token punctuation">(</span>_DWORD <span class="token operator">*</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token function">__readfsdword</span><span class="token punctuation">(</span><span class="token number">48</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">0x68</span><span class="token punctuation">)</span> <span class="token operator">&amp;</span> <span class="token number">0x70</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p><code>0x68</code>是 PEB 的<code>NtGlobalFlag</code>字段对应偏移值. <code>0x70</code>是<code>FLG_HEAP_ENABLE_TAIL_CHECK (0x10)</code>, <code>FLG_HEAP_ENABLE_FREE_CHECK (0x20)</code> 和<code>FLG_HEAP_VALIDATE_PARAMETERS (0x40)</code>这三个标志</p>
+<h2 id="CheckRemoteDebuggerPresent-1"><a href="#CheckRemoteDebuggerPresent-1" class="headerlink" title="CheckRemoteDebuggerPresent"></a>CheckRemoteDebuggerPresent</h2><pre class="line-numbers language-c"><code class="language-c"><span class="token comment" spellcheck="true">/*  BOOL WINAPI CheckRemoteDebuggerPresent(
  *    _In_    HANDLE hProcess,
  *    _Inout_ PBOOL  pbDebuggerPresent
  *  );
- */
-v4 = GetCurrentProcess();
-CheckRemoteDebuggerPresent(v4, &amp;pbDebuggerPresent);
-if ( pbDebuggerPresent )            // 4. API: CheckRemoteDebuggerPresent()
-{
-    printf("But detected remotedebug.\n");
-    exit(1);
-}</code></pre><p>这里我顺便在注释里列出了<code>CheckRemoteDebuggerPresent()</code>这个 API 的函数原型. 如果检测到调试器的存在, 会将<code>pbDebuggerPresent</code>设置为一个非零值. 根据其值检测调试器 (<a href="https://ctf-wiki.org/reverse/windows/anti-debug/checkremotedebuggerpresent/" target="_blank" rel="noopener">CheckRemoteDebuggerPresent()</a> 篇)</p>
-<h2 id="时间差检测"><a href="#时间差检测" class="headerlink" title="时间差检测"></a>时间差检测</h2><pre><code>v13 = GetTickCount();
-for ( i = 0; i == 100; ++i )    // 睡眠
-    Sleep(1u);
-v16 = 1000;
-if ( GetTickCount() - v13 &gt; 1000 )  // 5. 检测时间差
-{
-    printf("But detected debug.\n");
-    exit(1);
-}</code></pre><p><code>GetTickCount</code>会返回启动到现在的毫秒数, 循环里光是<code>sleep(1)</code>就进行了 100 次, 也就是 100 毫秒. 两次得到的时间作差如果大于 1000 毫秒, 时差明显大于所耗的时间, 也就间接检测到了调试.</p>
-<h2 id="ProcessMonitor"><a href="#ProcessMonitor" class="headerlink" title="ProcessMonitor"></a>ProcessMonitor</h2><pre><code>lpFileName = "\\\\.\\Global\\ProcmonDebugLogger";
-if ( CreateFileA("\\\\.\\Global\\ProcmonDebugLogger", 0x80000000, 7u, 0, 3u, 0x80u, 0) != (HANDLE)-1 )
-{
-    printf("But detect %s.\n", &amp;lpFileName);      // 6. 检测ProcessMonitor
-    exit(1);
-}</code></pre><p>这里通过检测设备文件<code>\\\\.\\Global\\ProcmonDebugLogger</code>来检测<code>ProcessMonitor</code></p>
+ */</span>
+v4 <span class="token operator">=</span> <span class="token function">GetCurrentProcess</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">CheckRemoteDebuggerPresent</span><span class="token punctuation">(</span>v4<span class="token punctuation">,</span> <span class="token operator">&amp;</span>pbDebuggerPresent<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span> pbDebuggerPresent <span class="token punctuation">)</span>            <span class="token comment" spellcheck="true">// 4. API: CheckRemoteDebuggerPresent()</span>
+<span class="token punctuation">{</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"But detected remotedebug.\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">exit</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这里我顺便在注释里列出了<code>CheckRemoteDebuggerPresent()</code>这个 API 的函数原型. 如果检测到调试器的存在, 会将<code>pbDebuggerPresent</code>设置为一个非零值. 根据其值检测调试器 (<a href="https://ctf-wiki.org/reverse/windows/anti-debug/checkremotedebuggerpresent/" target="_blank" rel="noopener">CheckRemoteDebuggerPresent()</a> 篇)</p>
+<h2 id="时间差检测"><a href="#时间差检测" class="headerlink" title="时间差检测"></a>时间差检测</h2><pre class="line-numbers language-c"><code class="language-c">v13 <span class="token operator">=</span> <span class="token function">GetTickCount</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">for</span> <span class="token punctuation">(</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">==</span> <span class="token number">100</span><span class="token punctuation">;</span> <span class="token operator">++</span>i <span class="token punctuation">)</span>    <span class="token comment" spellcheck="true">// 睡眠</span>
+    <span class="token function">Sleep</span><span class="token punctuation">(</span><span class="token number">1u</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+v16 <span class="token operator">=</span> <span class="token number">1000</span><span class="token punctuation">;</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span> <span class="token function">GetTickCount</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span> v13 <span class="token operator">></span> <span class="token number">1000</span> <span class="token punctuation">)</span>  <span class="token comment" spellcheck="true">// 5. 检测时间差</span>
+<span class="token punctuation">{</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"But detected debug.\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">exit</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><code>GetTickCount</code>会返回启动到现在的毫秒数, 循环里光是<code>sleep(1)</code>就进行了 100 次, 也就是 100 毫秒. 两次得到的时间作差如果大于 1000 毫秒, 时差明显大于所耗的时间, 也就间接检测到了调试.</p>
+<h2 id="ProcessMonitor"><a href="#ProcessMonitor" class="headerlink" title="ProcessMonitor"></a>ProcessMonitor</h2><pre class="line-numbers language-c"><code class="language-c">lpFileName <span class="token operator">=</span> <span class="token string">"\\\\.\\Global\\ProcmonDebugLogger"</span><span class="token punctuation">;</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span> <span class="token function">CreateFileA</span><span class="token punctuation">(</span><span class="token string">"\\\\.\\Global\\ProcmonDebugLogger"</span><span class="token punctuation">,</span> <span class="token number">0x80000000</span><span class="token punctuation">,</span> <span class="token number">7u</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">3u</span><span class="token punctuation">,</span> <span class="token number">0x80u</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token punctuation">(</span>HANDLE<span class="token punctuation">)</span><span class="token operator">-</span><span class="token number">1</span> <span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"But detect %s.\n"</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>lpFileName<span class="token punctuation">)</span><span class="token punctuation">;</span>      <span class="token comment" spellcheck="true">// 6. 检测ProcessMonitor</span>
+    <span class="token function">exit</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这里通过检测设备文件<code>\\\\.\\Global\\ProcmonDebugLogger</code>来检测<code>ProcessMonitor</code></p>
 <h2 id="检测进程名"><a href="#检测进程名" class="headerlink" title="检测进程名"></a>检测进程名</h2><p>这里通过执行<code>sub_401130()</code>函数来检测进程, 并根据检测到的不同进程, 返回相应的值.</p>
-<pre><code>v11 = sub_401130();     // 7. API: CreateToolhelp32Snapshot()检测进程
-if ( v11 == 1 )
-{
-    printf("But detected Ollydbg.\n");
-    exit(1);
-}
-if ( v11 == 2 )
-{
-    printf("But detected ImmunityDebugger.\n");
-    exit(1);
-}
-if ( v11 == 3 )
-{
-    printf("But detected IDA.\n");
-    exit(1);
-}
-if ( v11 == 4 )
-{
-    printf("But detected WireShark.\n");
-    exit(1);
-}</code></pre><p>我们就来看一下<code>sub_401130()</code>函数</p>
-<pre><code>signed int sub_401130()
-{
-  PROCESSENTRY32 pe; // [sp+0h] [bp-138h]@1
-  HANDLE hSnapshot; // [sp+130h] [bp-8h]@1
-  int i; // [sp+134h] [bp-4h]@1
+<pre class="line-numbers language-c"><code class="language-c">v11 <span class="token operator">=</span> <span class="token function">sub_401130</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>     <span class="token comment" spellcheck="true">// 7. API: CreateToolhelp32Snapshot()检测进程</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span> v11 <span class="token operator">==</span> <span class="token number">1</span> <span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"But detected Ollydbg.\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">exit</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span> v11 <span class="token operator">==</span> <span class="token number">2</span> <span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"But detected ImmunityDebugger.\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">exit</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span> v11 <span class="token operator">==</span> <span class="token number">3</span> <span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"But detected IDA.\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">exit</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span> v11 <span class="token operator">==</span> <span class="token number">4</span> <span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"But detected WireShark.\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">exit</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>我们就来看一下<code>sub_401130()</code>函数</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">signed</span> <span class="token keyword">int</span> <span class="token function">sub_401130</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+  PROCESSENTRY32 pe<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// [sp+0h] [bp-138h]@1</span>
+  HANDLE hSnapshot<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// [sp+130h] [bp-8h]@1</span>
+  <span class="token keyword">int</span> i<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// [sp+134h] [bp-4h]@1</span>
 
-  pe.dwSize = 296;
-  memset(&amp;pe.cntUsage, 0, 0x124u);
-  hSnapshot = CreateToolhelp32Snapshot(2u, 0);
-  for ( i = Process32First(hSnapshot, &amp;pe); i == 1; i = Process32Next(hSnapshot, &amp;pe) )
-  {
-    if ( !_stricmp(pe.szExeFile, "ollydbg.exe") )
-      return 1;
-    if ( !_stricmp(pe.szExeFile, "ImmunityDebugger.exe") )
-      return 2;
-    if ( !_stricmp(pe.szExeFile, "idaq.exe") )
-      return 3;
-    if ( !_stricmp(pe.szExeFile, "Wireshark.exe") )
-      return 4;
-  }
-  return 0;
-}</code></pre><p>这里使用了 API: <code>CreateToolhelp32Snapshot</code>来获取当前的进程信息. 并在 for 循环里依次比对. 如果找到指定的进程名, 就直接返回相应的值. 然后根据返回值跳转到不同的分支里.</p>
+  pe<span class="token punctuation">.</span>dwSize <span class="token operator">=</span> <span class="token number">296</span><span class="token punctuation">;</span>
+  <span class="token function">memset</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>pe<span class="token punctuation">.</span>cntUsage<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0x124u</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  hSnapshot <span class="token operator">=</span> <span class="token function">CreateToolhelp32Snapshot</span><span class="token punctuation">(</span><span class="token number">2u</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">for</span> <span class="token punctuation">(</span> i <span class="token operator">=</span> <span class="token function">Process32First</span><span class="token punctuation">(</span>hSnapshot<span class="token punctuation">,</span> <span class="token operator">&amp;</span>pe<span class="token punctuation">)</span><span class="token punctuation">;</span> i <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">;</span> i <span class="token operator">=</span> <span class="token function">Process32Next</span><span class="token punctuation">(</span>hSnapshot<span class="token punctuation">,</span> <span class="token operator">&amp;</span>pe<span class="token punctuation">)</span> <span class="token punctuation">)</span>
+  <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span> <span class="token operator">!</span><span class="token function">_stricmp</span><span class="token punctuation">(</span>pe<span class="token punctuation">.</span>szExeFile<span class="token punctuation">,</span> <span class="token string">"ollydbg.exe"</span><span class="token punctuation">)</span> <span class="token punctuation">)</span>
+      <span class="token keyword">return</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span> <span class="token operator">!</span><span class="token function">_stricmp</span><span class="token punctuation">(</span>pe<span class="token punctuation">.</span>szExeFile<span class="token punctuation">,</span> <span class="token string">"ImmunityDebugger.exe"</span><span class="token punctuation">)</span> <span class="token punctuation">)</span>
+      <span class="token keyword">return</span> <span class="token number">2</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span> <span class="token operator">!</span><span class="token function">_stricmp</span><span class="token punctuation">(</span>pe<span class="token punctuation">.</span>szExeFile<span class="token punctuation">,</span> <span class="token string">"idaq.exe"</span><span class="token punctuation">)</span> <span class="token punctuation">)</span>
+      <span class="token keyword">return</span> <span class="token number">3</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span> <span class="token operator">!</span><span class="token function">_stricmp</span><span class="token punctuation">(</span>pe<span class="token punctuation">.</span>szExeFile<span class="token punctuation">,</span> <span class="token string">"Wireshark.exe"</span><span class="token punctuation">)</span> <span class="token punctuation">)</span>
+      <span class="token keyword">return</span> <span class="token number">4</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这里使用了 API: <code>CreateToolhelp32Snapshot</code>来获取当前的进程信息. 并在 for 循环里依次比对. 如果找到指定的进程名, 就直接返回相应的值. 然后根据返回值跳转到不同的分支里.</p>
 <h2 id="检测-VMware"><a href="#检测-VMware" class="headerlink" title="检测 VMware"></a>检测 VMware</h2><p>检测 VMware 也是检测一些特征. 根据检测的结果进行判断.</p>
-<pre><code>if ( sub_401240() == 1 )    // 8. 通过vmware的I/O端口进行检测
-{
-    printf("But detected VMware.\n");
-    exit(1);
-}</code></pre><p>来看<code>sub_401240()</code>函数.</p>
-<pre><code>signed int sub_401240()
-{
-  unsigned __int32 v0; // eax@1
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">if</span> <span class="token punctuation">(</span> <span class="token function">sub_401240</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">1</span> <span class="token punctuation">)</span>    <span class="token comment" spellcheck="true">// 8. 通过vmware的I/O端口进行检测</span>
+<span class="token punctuation">{</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"But detected VMware.\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">exit</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>来看<code>sub_401240()</code>函数.</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">signed</span> <span class="token keyword">int</span> <span class="token function">sub_401240</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+  <span class="token keyword">unsigned</span> __int32 v0<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// eax@1</span>
 
-  v0 = __indword(0x5658u);
-  return 1;
-}</code></pre><p>这是 VMware 的一个 “后门”I/O 端口, <code>0x5658 = "VX"</code>. 如果程序在 VMware 内运行, 程序使用<code>In</code>指令通过<code>0x5658</code>端口读取数据时, <code>EBX</code>寄存器的值就会变为<code>0x564D5868</code>(<code>0x564D5868 == "VMXh"</code>)</p>
+  v0 <span class="token operator">=</span> <span class="token function">__indword</span><span class="token punctuation">(</span><span class="token number">0x5658u</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> <span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这是 VMware 的一个 “后门”I/O 端口, <code>0x5658 = "VX"</code>. 如果程序在 VMware 内运行, 程序使用<code>In</code>指令通过<code>0x5658</code>端口读取数据时, <code>EBX</code>寄存器的值就会变为<code>0x564D5868</code>(<code>0x564D5868 == "VMXh"</code>)</p>
 <p>看 IDA 反编译出的伪 C 代码并不很直观地体现这点, 我们看汇编代码就清楚了</p>
 <pre><code>.text:0040127A                 push    edx
 .text:0040127B                 push    ecx
@@ -2332,13 +2358,14 @@ if ( v11 == 4 )
 .text:00401292                 pop     ebx
 .text:00401293                 pop     ecx
 .text:00401294                 pop     edx</code></pre><p>更多阅读: <a href="https://isc.sans.edu/diary/E-cards+don%3Ft+like+virtual+environments/3190" target="_blank" rel="noopener">E-cards don?t like virtual environments</a></p>
-<h2 id="SEH"><a href="#SEH" class="headerlink" title="SEH"></a>SEH</h2><pre><code>v17 = 1;
-v20 = 1;
-v12 = 0;
-v19 = 1 / 0;    // 9. SEH
-ms_exc.registration.TryLevel = -2;
-printf("But detected Debugged.\n");
-exit(1);</code></pre><p>接下来这一段, 很奇怪不是吗. 这里<code>v19 = 1 / 0;</code>明显是不合常理的, 会产生一个除零异常. 而后面的<code>ms_exc.registration.TryLevel = -2;</code>这是解除异常, <code>TryLevel=TRYLEVEL_NONE (-2)</code> . 来看汇编代码.</p>
+<h2 id="SEH"><a href="#SEH" class="headerlink" title="SEH"></a>SEH</h2><pre class="line-numbers language-c"><code class="language-c">v17 <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+v20 <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+v12 <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+v19 <span class="token operator">=</span> <span class="token number">1</span> <span class="token operator">/</span> <span class="token number">0</span><span class="token punctuation">;</span>    <span class="token comment" spellcheck="true">// 9. SEH</span>
+ms_exc<span class="token punctuation">.</span>registration<span class="token punctuation">.</span>TryLevel <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">2</span><span class="token punctuation">;</span>
+<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"But detected Debugged.\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">exit</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>接下来这一段, 很奇怪不是吗. 这里<code>v19 = 1 / 0;</code>明显是不合常理的, 会产生一个除零异常. 而后面的<code>ms_exc.registration.TryLevel = -2;</code>这是解除异常, <code>TryLevel=TRYLEVEL_NONE (-2)</code> . 来看汇编代码.</p>
 <pre><code>.text:004015B8                 mov     [ebp+var_88], 1
 .text:004015C2                 mov     [ebp+var_7C], 1
 .text:004015C9                 mov     [ebp+var_9C], 0
@@ -2886,7 +2913,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">1257.5k</span>&nbsp;字
+                class="white-color">1222.3k</span>&nbsp;字
             
             
             

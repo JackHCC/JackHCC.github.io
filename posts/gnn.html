@@ -502,37 +502,51 @@ plt.show()</code></pre><p><img src="/images/loading.gif" data-original="../image
 <pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#度</span>
 nx<span class="token punctuation">.</span>degree<span class="token punctuation">(</span>G<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 <p>&gt;&gt;&gt;</p>
-<p>DegreeView({‘A’: 2, ‘B’: 2, ‘C’: 3, ‘D’: 1, ‘E’: 1, ‘F’: 2, ‘G’: 2, ‘H’: 1})</p>
-<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#连通分量</span>
+<pre><code>DegreeView({'A': 2, 'B': 2, 'C': 3, 'D': 1, 'E': 1, 'F': 2, 'G': 2, 'H': 1})</code></pre><pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#连通分量</span>
 list<span class="token punctuation">(</span>nx<span class="token punctuation">.</span>connected_components<span class="token punctuation">(</span>G<span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 <p>&gt;&gt;&gt;</p>
-<p>[{‘A’, ‘B’, ‘C’, ‘D’}, {‘E’, ‘F’, ‘G’, ‘H’}]</p>
-<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#图直径:所有两两节点直接最短路径的最大值</span>
+<pre><code>[{'A', 'B', 'C', 'D'}, {'E', 'F', 'G', 'H'}]</code></pre><pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#图直径:所有两两节点直接最短路径的最大值</span>
 subG<span class="token operator">=</span>nx<span class="token punctuation">.</span>subgraph<span class="token punctuation">(</span>G<span class="token punctuation">,</span><span class="token punctuation">[</span><span class="token string">"A"</span><span class="token punctuation">,</span><span class="token string">"B"</span><span class="token punctuation">,</span><span class="token string">"C"</span><span class="token punctuation">,</span><span class="token string">"D"</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
 nx<span class="token punctuation">.</span>diameter<span class="token punctuation">(</span>subG<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 <p>&gt;&gt;&gt;</p>
-<p>2</p>
-<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#路径长度</span>
+<pre><code>2</code></pre><pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#路径长度</span>
 nx<span class="token punctuation">.</span>shortest_path_length<span class="token punctuation">(</span>G<span class="token punctuation">,</span>source<span class="token operator">=</span><span class="token string">"A"</span><span class="token punctuation">,</span>target<span class="token operator">=</span><span class="token string">"D"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 <p>&gt;&gt;&gt;</p>
-<p>2</p>
-<h3 id="二-中心性指标"><a href="#二-中心性指标" class="headerlink" title="二.中心性指标"></a>二.中心性指标</h3><p>中心性指标主要用于衡量节点在图中的重要性/影响力，我们对节点重要性的解释有很多，不同的解释下判定中心性的指标也有所不同，通常有这些：点度中心性，中介中心性，接近中心性，特征向量中心性，PageRank，hits</p>
+<pre><code>2</code></pre><h3 id="二-中心性指标"><a href="#二-中心性指标" class="headerlink" title="二.中心性指标"></a>二.中心性指标</h3><p>中心性指标主要用于衡量节点在图中的重要性/影响力，我们对节点重要性的解释有很多，不同的解释下判定中心性的指标也有所不同，通常有这些：点度中心性，中介中心性，接近中心性，特征向量中心性，PageRank，hits</p>
 <pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#点度中心性</span>
 <span class="token comment" spellcheck="true">#节点的邻居越多，它就越重要，定义为：度/(节点数-1)</span>
 nx<span class="token punctuation">.</span>degree_centrality<span class="token punctuation">(</span>G<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 <p>&gt;&gt;&gt;</p>
-<p>{‘A’: 0.2857142857142857,<br>‘B’: 0.2857142857142857,<br>‘C’: 0.42857142857142855,<br>‘D’: 0.14285714285714285,<br>‘E’: 0.14285714285714285,<br>‘F’: 0.2857142857142857,<br>‘G’: 0.2857142857142857,<br>‘H’: 0.14285714285714285}</p>
-<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#中介中心性</span>
+<pre><code>{'A': 0.2857142857142857,
+'B': 0.2857142857142857,
+'C': 0.42857142857142855,
+'D': 0.14285714285714285,
+'E': 0.14285714285714285,
+'F': 0.2857142857142857,
+'G': 0.2857142857142857,
+'H': 0.14285714285714285}</code></pre><pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#中介中心性</span>
 <span class="token comment" spellcheck="true">#如果该节点出现该其它两两节点路径上的次数越多，它就越重要</span>
 nx<span class="token punctuation">.</span>betweenness_centrality<span class="token punctuation">(</span>G<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 <p>&gt;&gt;&gt;</p>
-<p>{‘A’: 0.0,<br>‘B’: 0.0,<br>‘C’: 0.09523809523809523,<br>‘D’: 0.0,<br>‘E’: 0.0,<br>‘F’: 0.09523809523809523,<br>‘G’: 0.09523809523809523,<br>‘H’: 0.0}</p>
-<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#接近中心性</span>
+<pre><code>{'A': 0.0,
+'B': 0.0,
+'C': 0.09523809523809523,
+'D': 0.0,
+'E': 0.0,
+'F': 0.09523809523809523,
+'G': 0.09523809523809523,
+'H': 0.0}</code></pre><pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#接近中心性</span>
 <span class="token comment" spellcheck="true">#如果该节点与其它节点之间的距离越近，它就越重要</span>
 nx<span class="token punctuation">.</span>closeness_centrality<span class="token punctuation">(</span>G<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 <p>&gt;&gt;&gt;</p>
-<p>{‘A’: 0.3214285714285714,<br>‘B’: 0.3214285714285714,<br>‘C’: 0.42857142857142855,<br>‘D’: 0.2571428571428571,<br>‘E’: 0.21428571428571427,<br>‘F’: 0.3214285714285714,<br>‘G’: 0.3214285714285714,<br>‘H’: 0.21428571428571427}</p>
-<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#特征向量中心性</span>
+<pre><code>{'A': 0.3214285714285714,
+'B': 0.3214285714285714,
+'C': 0.42857142857142855,
+'D': 0.2571428571428571,
+'E': 0.21428571428571427,
+'F': 0.3214285714285714,
+'G': 0.3214285714285714,
+'H': 0.21428571428571427}</code></pre><pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#特征向量中心性</span>
 <span class="token comment" spellcheck="true">#定义：取邻接矩阵特征分解后，最大特征值对应的特征向量</span>
 <span class="token comment" spellcheck="true">#与某节点连接的节点的邻居越多，就越重要</span>
 <span class="token comment" spellcheck="true">#新增加一个节点I来连接两块连通分量</span>
@@ -544,16 +558,46 @@ plt<span class="token punctuation">.</span>show<span class="token punctuation">(
 <p> &gt;&gt;&gt;<br><img src="/images/loading.gif" data-original="../images/ML/output_10_0.png" alt=""></p>
 <pre class="line-numbers language-python"><code class="language-python">nx<span class="token punctuation">.</span>eigenvector_centrality<span class="token punctuation">(</span>G<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>&gt;&gt;&gt;</p>
-<p>{‘A’: 0.44885390912200857,<br>‘B’: 0.5468450989996043,<br>‘C’: 0.5135021004101872,<br>‘D’: 0.21736961615213216,<br>‘E’: 0.09799461776528895,<br>‘F’: 0.2314938976977582,<br>‘G’: 0.11938887762076224,<br>‘H’: 0.0505393145300136,<br>‘I’: 0.3294789107351654}</p>
-<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#pagerank</span>
+<pre><code>{'A': 0.44885390912200857,
+'B': 0.5468450989996043,
+'C': 0.5135021004101872,
+'D': 0.21736961615213216,
+'E': 0.09799461776528895,
+'F': 0.2314938976977582,
+'G': 0.11938887762076224,
+'H': 0.0505393145300136,
+'I': 0.3294789107351654}</code></pre><pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#pagerank</span>
 nx<span class="token punctuation">.</span>pagerank<span class="token punctuation">(</span>G<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 <p>&gt;&gt;&gt;</p>
-<p>{‘A’: 0.10252135128679807,<br>‘B’: 0.14929077894067944,<br>‘C’: 0.153726203840718,<br>‘D’: 0.06022249294537078,<br>‘E’: 0.06475108608528522,<br>‘F’: 0.16971188372812845,<br>‘G’: 0.1235500933464885,<br>‘H’: 0.06917616539981883,<br>‘I’: 0.1070499444267125}</p>
-<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#hits</span>
+<pre><code>{'A': 0.10252135128679807,
+'B': 0.14929077894067944,
+'C': 0.153726203840718,
+'D': 0.06022249294537078,
+'E': 0.06475108608528522,
+'F': 0.16971188372812845,
+'G': 0.1235500933464885,
+'H': 0.06917616539981883,
+'I': 0.1070499444267125}</code></pre><pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#hits</span>
 nx<span class="token punctuation">.</span>hits<span class="token punctuation">(</span>G<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 <p>&gt;&gt;&gt;</p>
-<p>({‘A’: 0.17564701604305502,<br>‘B’: 0.21399245433642766,<br>‘C’: 0.2009454874842481,<br>‘D’: 0.08506205753671801,<br>‘E’: 0.03834543957793587,<br>‘F’: 0.09058495722206274,<br>‘G’: 0.04671661924357704,<br>‘H’: 0.019775570471702603,<br>‘I’: 0.1289303980842729},<br>{‘A’: 0.1756470158158291,<br>‘B’: 0.21399245588711766,<br>‘C’: 0.2009454869245228,<br>‘D’: 0.085062057946483,<br>‘E’: 0.03834543855419052,<br>‘F’: 0.09058495938682286,<br>‘G’: 0.04671661787549817,<br>‘H’: 0.01977557118599924,<br>‘I’: 0.1289303964235366})</p>
-<h2 id="Graph-Embedding"><a href="#Graph-Embedding" class="headerlink" title="Graph Embedding"></a>Graph Embedding</h2><h3 id="一-DeepWalk原理"><a href="#一-DeepWalk原理" class="headerlink" title="一. DeepWalk原理"></a>一. DeepWalk原理</h3><p>其实就两个阶段：<br>1）对图随机游走得到一个序列；<br>2）将该序列进行word2vec训练得到embedding  </p>
+<pre><code>({'A': 0.17564701604305502,
+'B': 0.21399245433642766,
+'C': 0.2009454874842481,
+'D': 0.08506205753671801,
+'E': 0.03834543957793587,
+'F': 0.09058495722206274,
+'G': 0.04671661924357704,
+'H': 0.019775570471702603,
+'I': 0.1289303980842729},
+{'A': 0.1756470158158291,
+'B': 0.21399245588711766,
+'C': 0.2009454869245228,
+'D': 0.085062057946483,
+'E': 0.03834543855419052,
+'F': 0.09058495938682286,
+'G': 0.04671661787549817,
+'H': 0.01977557118599924,
+'I': 0.1289303964235366})</code></pre><h2 id="Graph-Embedding"><a href="#Graph-Embedding" class="headerlink" title="Graph Embedding"></a>Graph Embedding</h2><h3 id="一-DeepWalk原理"><a href="#一-DeepWalk原理" class="headerlink" title="一. DeepWalk原理"></a>一. DeepWalk原理</h3><p>其实就两个阶段：<br>1）对图随机游走得到一个序列；<br>2）将该序列进行word2vec训练得到embedding  </p>
 <p>下面利用对word进行embbeding训练举例，我选择了当前的一条关于新冠的新闻，对其分词构建一个带权有向图，权重为其相邻两词的出现的次数</p>
 <pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#准备预料</span>
 corpus<span class="token operator">=</span><span class="token triple-quoted-string string">"""新华社河内5月29日电（记者蒋声雄 黄硕）越南卫生部长阮青龙29日宣布该国发现新的新冠病毒变异毒株，它是此前在英国和印度发现的变异毒株的混合体。
@@ -563,8 +607,12 @@ corpus<span class="token operator">=</span><span class="token triple-quoted-stri
 <span class="token punctuation">.</span>replace<span class="token punctuation">(</span><span class="token string">"\n"</span><span class="token punctuation">,</span><span class="token string">""</span><span class="token punctuation">)</span><span class="token punctuation">.</span>replace<span class="token punctuation">(</span><span class="token string">"，"</span><span class="token punctuation">,</span><span class="token string">""</span><span class="token punctuation">)</span><span class="token punctuation">.</span>replace<span class="token punctuation">(</span><span class="token string">"、"</span><span class="token punctuation">,</span><span class="token string">""</span><span class="token punctuation">)</span><span class="token punctuation">.</span>replace<span class="token punctuation">(</span><span class="token string">"（"</span><span class="token punctuation">,</span><span class="token string">""</span><span class="token punctuation">)</span><span class="token punctuation">.</span>replace<span class="token punctuation">(</span><span class="token string">"）"</span><span class="token punctuation">,</span><span class="token string">""</span><span class="token punctuation">)</span><span class="token punctuation">.</span>replace<span class="token punctuation">(</span><span class="token string">" "</span><span class="token punctuation">,</span><span class="token string">""</span><span class="token punctuation">)</span><span class="token punctuation">.</span>replace<span class="token punctuation">(</span><span class="token string">"“"</span><span class="token punctuation">,</span><span class="token string">""</span><span class="token punctuation">)</span><span class="token punctuation">.</span>replace<span class="token punctuation">(</span><span class="token string">"”"</span><span class="token punctuation">,</span><span class="token string">""</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token string">"。"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <pre class="line-numbers language-python"><code class="language-python">corpus<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>&gt;&gt;&gt;</p>
-<p>[‘新华社河内5月29日电记者蒋声雄黄硕越南卫生部长阮青龙29日宣布该国发现新的新冠病毒变异毒株它是此前在英国和印度发现的变异毒株的混合体’,<br>‘阮青龙当天在越南全国新冠疫情防控视频会议上说这种变异毒株混合体非常危险传播性更强能在空气中迅速传播’,<br>‘这一新发现的毒株混合体尚未命名’,<br>‘据越南快报网报道此前在越南已发现7种新冠病毒变异毒株包括最早在印度和英国发现的变异毒株’,<br>‘越南于今年4月底出现新一轮新冠疫情首都河内南部胡志明市中部岘港市等主要城市出现多个本土病例北部北江省某工业园内发生大规模感染新冠病毒事件’,<br>‘据越通社报道截至当地时间29日12时越南累计确诊新冠本土病例5213例其中自4月27日以来新增确诊新冠本土病例3643例’]</p>
-<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> jieba
+<pre><code>['新华社河内5月29日电记者蒋声雄黄硕越南卫生部长阮青龙29日宣布该国发现新的新冠病毒变异毒株它是此前在英国和印度发现的变异毒株的混合体',
+'阮青龙当天在越南全国新冠疫情防控视频会议上说这种变异毒株混合体非常危险传播性更强能在空气中迅速传播',
+'这一新发现的毒株混合体尚未命名',
+'据越南快报网报道此前在越南已发现7种新冠病毒变异毒株包括最早在印度和英国发现的变异毒株',
+'越南于今年4月底出现新一轮新冠疫情首都河内南部胡志明市中部岘港市等主要城市出现多个本土病例北部北江省某工业园内发生大规模感染新冠病毒事件',
+'据越通社报道截至当地时间29日12时越南累计确诊新冠本土病例5213例其中自4月27日以来新增确诊新冠本土病例3643例']</code></pre><pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> jieba
 lines<span class="token operator">=</span><span class="token punctuation">[</span>list<span class="token punctuation">(</span>jieba<span class="token punctuation">.</span>cut<span class="token punctuation">(</span>line<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">for</span> line <span class="token keyword">in</span> corpus<span class="token punctuation">]</span><span class="token comment" spellcheck="true">#分词</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 <p>Building prefix dict from the default dictionary …<br>Loading model from cache C:\Users\Alei\AppData\Local\Temp\jieba.cache<br>Loading model cost 0.619 seconds.<br>Prefix dict has been built successfully.</p>
 <pre class="line-numbers language-python"><code class="language-python">word_cnt<span class="token operator">=</span><span class="token punctuation">{</span><span class="token punctuation">}</span>
@@ -603,8 +651,7 @@ plt<span class="token punctuation">.</span>show<span class="token punctuation">(
 <pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#test</span>
 walk_one_time<span class="token punctuation">(</span>G<span class="token punctuation">,</span><span class="token string">"变异"</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 <p>&gt;&gt;&gt;</p>
-<p>[‘变异’, ‘毒株’, ‘它’, ‘是’, ‘此前’]</p>
-<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#将上面的过程重复多次，即可得到一个新的corpus</span>
+<pre><code>['变异', '毒株', '它', '是', '此前']</code></pre><pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#将上面的过程重复多次，即可得到一个新的corpus</span>
 <span class="token keyword">def</span> <span class="token function">deep_walk</span><span class="token punctuation">(</span>G<span class="token punctuation">,</span>walk_len<span class="token operator">=</span><span class="token number">10</span><span class="token punctuation">,</span>num_seqs<span class="token operator">=</span><span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
     corpus<span class="token operator">=</span><span class="token punctuation">[</span><span class="token punctuation">]</span>
     <span class="token keyword">for</span> _ <span class="token keyword">in</span> range<span class="token punctuation">(</span>num_seqs<span class="token punctuation">)</span><span class="token punctuation">:</span>
@@ -614,8 +661,7 @@ walk_one_time<span class="token punctuation">(</span>G<span class="token punctua
 <pre class="line-numbers language-python"><code class="language-python">new_corpus<span class="token operator">=</span>deep_walk<span class="token punctuation">(</span>G<span class="token punctuation">)</span>
 new_corpus<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 <p>&gt;&gt;&gt;</p>
-<p>[‘包括’, ‘最早’, ‘在’, ‘越南’, ‘快报’, ‘网’, ‘报道’, ‘截至’, ‘当地’, ‘时间’]</p>
-<h3 id="三-Word2Vec的训练"><a href="#三-Word2Vec的训练" class="headerlink" title="三.Word2Vec的训练"></a>三.Word2Vec的训练</h3><p>word2vec的训练可以使用gensim工具包，word2vec的原理包括两点：    </p>
+<pre><code>['包括', '最早', '在', '越南', '快报', '网', '报道', '截至', '当地', '时间']</code></pre><h3 id="三-Word2Vec的训练"><a href="#三-Word2Vec的训练" class="headerlink" title="三.Word2Vec的训练"></a>三.Word2Vec的训练</h3><p>word2vec的训练可以使用gensim工具包，word2vec的原理包括两点：    </p>
 <p>1）基于语言模型的原理，语言模型的作用用于判断一个句子出现的概率，由于句子通常会被分词，所有语言模型可以看作判断一个词语序列的出现概率，好的语言模型应该能做到比如如下的判断：   </p>
 <p>$$<br>Proba([[变异],[毒株],[混合体],[非常],[危险]])&gt;Proba([[变异],[危险],[混合体],[非常],[毒株]])<br>$$</p>
 <p>显然，第一句是人话，第二句读不通  </p>
@@ -645,11 +691,11 @@ model <span class="token operator">=</span> word2vec<span class="token punctuati
 <pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#查看embedding</span>
 model<span class="token punctuation">.</span>wv<span class="token punctuation">[</span><span class="token string">"变异"</span><span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 <p>&gt;&gt;&gt;</p>
-<p>array([-0.19377613,  0.10809163, -0.16566691, -0.09616406,  0.00191299],<br>dtype=float32)</p>
-<pre class="line-numbers language-python"><code class="language-python">model<span class="token punctuation">.</span>wv<span class="token punctuation">[</span><span class="token string">"混合体"</span><span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre><code>array([-0.19377613,  0.10809163, -0.16566691, -0.09616406,  0.00191299],
+dtype=float32)</code></pre><pre class="line-numbers language-python"><code class="language-python">model<span class="token punctuation">.</span>wv<span class="token punctuation">[</span><span class="token string">"混合体"</span><span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>&gt;&gt;&gt;</p>
-<p>array([ 0.15368475, -0.18145339,  0.00444265,  0.05817473, -0.01261494],<br>dtype=float32)</p>
-<p>这样，我们就为图上的每个节点训练出了一个embedding，另外上面的训练过程实际是采用了CBOW的方式，即用上下文来预测某个词，而实际deepwalk更多是使用<strong>skip-gram</strong>的方式，即利用单个词去预测它的上下文（上面图中的箭头反向），这样训练的embedding效果通常会更好</p>
+<pre><code>array([ 0.15368475, -0.18145339,  0.00444265,  0.05817473, -0.01261494],
+dtype=float32)</code></pre><p>这样，我们就为图上的每个节点训练出了一个embedding，另外上面的训练过程实际是采用了CBOW的方式，即用上下文来预测某个词，而实际deepwalk更多是使用<strong>skip-gram</strong>的方式，即利用单个词去预测它的上下文（上面图中的箭头反向），这样训练的embedding效果通常会更好</p>
 <h3 id="四-Node2Vec原理"><a href="#四-Node2Vec原理" class="headerlink" title="四.Node2Vec原理"></a>四.Node2Vec原理</h3><p>Node2vec其实是对于DeepWalk中第2)步，随机游走方式的调整，以学习到图结构的同质性和结构性信息。这里：  </p>
 <p>1）同质性是指相邻两节点之间应该具有较高的相似度；    </p>
 <p>2）结构性是指邻居结构相似的两节点之间应该具有较高的相似度，即使这两节点之间没有路径连接    </p>
@@ -722,22 +768,19 @@ plt<span class="token punctuation">.</span>show<span class="token punctuation">(
 corpus<span class="token operator">=</span>node2vec<span class="token punctuation">.</span>deep_walk<span class="token punctuation">(</span>G<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 <pre class="line-numbers language-python"><code class="language-python">corpus<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token number">1</span><span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>&gt;&gt;&gt;</p>
-<p>[[‘s1’, ‘u’, ‘s3’, ‘s4’, ‘s2’, ‘u’, ‘s1’, ‘s3’, ‘u’, ‘s1’]]</p>
-<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#训练</span>
+<pre><code>[['s1', 'u', 's3', 's4', 's2', 'u', 's1', 's3', 'u', 's1']]</code></pre><pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#训练</span>
 <span class="token keyword">from</span> gensim<span class="token punctuation">.</span>models <span class="token keyword">import</span> word2vec
 model <span class="token operator">=</span> word2vec<span class="token punctuation">.</span>Word2Vec<span class="token punctuation">(</span>corpus<span class="token punctuation">,</span>window<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">,</span>vector_size<span class="token operator">=</span><span class="token number">5</span><span class="token punctuation">,</span>min_count<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 <pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#查看embedding</span>
 model<span class="token punctuation">.</span>wv<span class="token punctuation">[</span><span class="token string">'u'</span><span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 <p>&gt;&gt;&gt;</p>
-<p>array([-0.14191031,  0.13018166,  0.1809364 , -0.10049632, -0.07593277],<br>dtype=float32)</p>
-<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#计算相似度</span>
+<pre><code>array([-0.14191031,  0.13018166,  0.1809364 , -0.10049632, -0.07593277],
+dtype=float32)</code></pre><pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#计算相似度</span>
 model<span class="token punctuation">.</span>wv<span class="token punctuation">.</span>similarity<span class="token punctuation">(</span><span class="token string">"u"</span><span class="token punctuation">,</span><span class="token string">"s5"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 <p>&gt;&gt;&gt;</p>
-<p>0.07862966</p>
-<pre class="line-numbers language-python"><code class="language-python">model<span class="token punctuation">.</span>wv<span class="token punctuation">.</span>similarity<span class="token punctuation">(</span><span class="token string">"u"</span><span class="token punctuation">,</span><span class="token string">"s6"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre><code>0.07862966</code></pre><pre class="line-numbers language-python"><code class="language-python">model<span class="token punctuation">.</span>wv<span class="token punctuation">.</span>similarity<span class="token punctuation">(</span><span class="token string">"u"</span><span class="token punctuation">,</span><span class="token string">"s6"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>&gt;&gt;&gt;</p>
-<p>0.6219288</p>
-<h2 id="GCN"><a href="#GCN" class="headerlink" title="GCN"></a>GCN</h2><h3 id="GCN原理"><a href="#GCN原理" class="headerlink" title="GCN原理"></a>GCN原理</h3><p><strong>1.1  问题1：</strong> 先看一个例子，假如我们有如下的5个用户，他们编号为0~4，且知道他们的关系如下，假如我们现在面对的是车险反欺诈的预测场景，已知编号1，2的为欺诈客户（正样本），编号4的为正常客户（负样本），现在要我们预测剩下的编号0，3的客户是欺诈客户还是正常客户？该怎么办呢？<br><img src="/images/loading.gif" data-original="../images/ML/image-20210829200722942.png" alt=""></p>
+<pre><code>0.6219288</code></pre><h2 id="GCN"><a href="#GCN" class="headerlink" title="GCN"></a>GCN</h2><h3 id="GCN原理"><a href="#GCN原理" class="headerlink" title="GCN原理"></a>GCN原理</h3><p><strong>1.1  问题1：</strong> 先看一个例子，假如我们有如下的5个用户，他们编号为0~4，且知道他们的关系如下，假如我们现在面对的是车险反欺诈的预测场景，已知编号1，2的为欺诈客户（正样本），编号4的为正常客户（负样本），现在要我们预测剩下的编号0，3的客户是欺诈客户还是正常客户？该怎么办呢？<br><img src="/images/loading.gif" data-original="../images/ML/image-20210829200722942.png" alt=""></p>
 <p>我想基于前三节的内容至少可以有两个思路：   </p>
 <p>（1）基于度指标：计算当前节点的邻居节点中欺诈客户的占比，那么0号客户周围1/1的客户都是欺诈客户，所以他也是欺诈客户，而客户3周围有2/3的客户都是欺诈客户，所以他也是欺诈客户<br>（2）基于Graph Embedding：基于DeepWalk或者Node2Vec的方式为每个用户学习一个Embedding，然后计算它与邻居Embedding的相似度，然后统计累计相似度占比最高的标签为当前节点的标签，或者直接将这些Embedding送到一个分类器进行训练    </p>
 <p><strong>1.2 问题2：</strong> 而我们在处理实际数据时，可能并不仅仅只有他们之间的关系数据，还会有他们各自的因子数据，比如年龄，最近半年的贷款额，最近一月的消费额度这三项，我们将其加到图中（已经归一化处理）   </p>
@@ -785,16 +828,20 @@ dataset <span class="token operator">=</span> CoraData<span class="token punctua
 <p><strong>链接矩阵</strong>：表示文章之间的引用关系，这里是稀疏矩阵的格式</p>
 <pre class="line-numbers language-python"><code class="language-python">dataset<span class="token punctuation">.</span>adjacency<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>&gt;&gt;&gt;</p>
-<p>&lt;2708x2708 sparse matrix of type ‘&lt;class ‘numpy.float32’&gt;’<br>with 10556 stored elements in COOrdinate format&gt;</p>
-<p><strong>因子信息</strong>：2708X1433的矩阵，即2708篇文章的BOW表示</p>
+<pre><code>&lt;2708x2708 sparse matrix of type '&lt;class 'numpy.float32'&gt;'
+with 10556 stored elements in COOrdinate format&gt;</code></pre><p><strong>因子信息</strong>：2708X1433的矩阵，即2708篇文章的BOW表示</p>
 <pre class="line-numbers language-python"><code class="language-python">dataset<span class="token punctuation">.</span>x<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>&gt;&gt;&gt;</p>
-<p>array([[0., 0., 0., …, 0., 0., 0.],<br>[0., 0., 0., …, 0., 0., 0.],<br>[0., 0., 0., …, 0., 0., 0.],<br>…,<br>[0., 0., 0., …, 0., 0., 0.],<br>[0., 0., 0., …, 0., 0., 0.],<br>[0., 0., 0., …, 0., 0., 0.]], dtype=float32)</p>
-<p><strong>标签信息</strong>：2708X1，分别标记了2708篇文章的7种类别</p>
+<pre><code>array([[0., 0., 0., ..., 0., 0., 0.],
+[0., 0., 0., ..., 0., 0., 0.],
+[0., 0., 0., ..., 0., 0., 0.],
+...,
+[0., 0., 0., ..., 0., 0., 0.],
+[0., 0., 0., ..., 0., 0., 0.],
+[0., 0., 0., ..., 0., 0., 0.]], dtype=float32)</code></pre><p><strong>标签信息</strong>：2708X1，分别标记了2708篇文章的7种类别</p>
 <pre class="line-numbers language-python"><code class="language-python">dataset<span class="token punctuation">.</span>y<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>&gt;&gt;&gt;</p>
-<p>array([3, 4, 4, …, 3, 3, 3], dtype=int64)</p>
-<p><strong>构建$\tilde{L}_{sym}$的代码</strong>：  </p>
+<pre><code>array([3, 4, 4, ..., 3, 3, 3], dtype=int64)</code></pre><p><strong>构建$\tilde{L}_{sym}$的代码</strong>：  </p>
 <pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">normalization</span><span class="token punctuation">(</span>adjacency<span class="token punctuation">)</span><span class="token punctuation">:</span>
     <span class="token triple-quoted-string string">"""计算 L=D^-0.5 * (A+I) * D^-0.5"""</span>
     adjacency <span class="token operator">+=</span> sp<span class="token punctuation">.</span>eye<span class="token punctuation">(</span>adjacency<span class="token punctuation">.</span>shape<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
@@ -943,8 +990,19 @@ model <span class="token operator">=</span> GraphSage<span class="token punctuat
 <span class="token keyword">print</span><span class="token punctuation">(</span>model<span class="token punctuation">)</span>
 criterion <span class="token operator">=</span> nn<span class="token punctuation">.</span>CrossEntropyLoss<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>to<span class="token punctuation">(</span>DEVICE<span class="token punctuation">)</span>
 optimizer <span class="token operator">=</span> optim<span class="token punctuation">.</span>Adam<span class="token punctuation">(</span>model<span class="token punctuation">.</span>parameters<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> lr<span class="token operator">=</span>LEARNING_RATE<span class="token punctuation">,</span> weight_decay<span class="token operator">=</span><span class="token number">5e</span><span class="token operator">-</span><span class="token number">4</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>GraphSage(<br>    in_features=1433, num_neighbors_list=[10, 10]<br>    (gcn): ModuleList(<br>    (0): SageGCN(<br>        in_features=1433, out_features=64, aggr_hidden_method=sum<br>        (aggregator): NeighborAggregator(in_features=1433, out_features=64, aggr_method=mean)<br>    )<br>    (1): SageGCN(<br>        in_features=64, out_features=7, aggr_hidden_method=sum<br>        (aggregator): NeighborAggregator(in_features=64, out_features=7, aggr_method=mean)<br>    )<br>    )<br>)</p>
-<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">for</span> e <span class="token keyword">in</span> range<span class="token punctuation">(</span>EPOCHS<span class="token punctuation">)</span><span class="token punctuation">:</span>
+<pre><code>GraphSage(
+    in_features=1433, num_neighbors_list=[10, 10]
+    (gcn): ModuleList(
+    (0): SageGCN(
+        in_features=1433, out_features=64, aggr_hidden_method=sum
+        (aggregator): NeighborAggregator(in_features=1433, out_features=64, aggr_method=mean)
+    )
+    (1): SageGCN(
+        in_features=64, out_features=7, aggr_hidden_method=sum
+        (aggregator): NeighborAggregator(in_features=64, out_features=7, aggr_method=mean)
+    )
+    )
+)</code></pre><pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">for</span> e <span class="token keyword">in</span> range<span class="token punctuation">(</span>EPOCHS<span class="token punctuation">)</span><span class="token punctuation">:</span>
     model<span class="token punctuation">.</span>train<span class="token punctuation">(</span><span class="token punctuation">)</span>
     <span class="token keyword">for</span> batch <span class="token keyword">in</span> range<span class="token punctuation">(</span>NUM_BATCH_PER_EPOCH<span class="token punctuation">)</span><span class="token punctuation">:</span>
         batch_src_index <span class="token operator">=</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>choice<span class="token punctuation">(</span>train_index<span class="token punctuation">,</span> size<span class="token operator">=</span><span class="token punctuation">(</span>BTACH_SIZE<span class="token punctuation">,</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
@@ -1092,37 +1150,74 @@ g<span class="token punctuation">.</span>edata<span class="token punctuation">[<
 <pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#查看</span>
 g<span class="token punctuation">.</span>ndata<span class="token punctuation">[</span><span class="token string">"nx"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>g<span class="token punctuation">.</span>edata<span class="token punctuation">[</span><span class="token string">"ex"</span><span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 <p>&gt;&gt;&gt;</p>
-<p>(tensor([[ 0.6239,  0.3987, -0.6238],<br>        [-0.7141, -1.0818, -1.0757],<br>        [-0.0540,  1.1078,  0.2700],<br>        [ 0.5681, -1.0023, -1.4963],<br>        [-1.3526, -0.5072,  0.3111],<br>        [ 0.4039,  0.1909,  2.4836],<br>        [ 0.2190,  0.9467, -0.6446],<br>        [-0.5860, -1.7527, -1.0872],<br>        [ 0.8450,  0.9458, -0.5495],<br>        [ 1.3140,  0.4514,  0.5442]]),<br>tensor([[-0.5180, -0.1497,  0.4278],<br>        [ 0.7970, -0.1222, -0.5810],<br>        [-0.9885,  0.7971, -1.0056],<br>        [-0.5377,  0.3229, -0.1410],<br>        [ 1.2062,  1.3272, -0.4768],<br>        [-0.6856,  0.9685, -1.3733],<br>        [ 1.0140, -0.1059,  1.4300],<br>        [-0.4088,  0.5824, -0.4151],<br>        [ 1.4490, -1.0892,  0.2116],<br>        [ 0.2986, -0.0652, -0.4363],<br>        [ 0.7020,  0.6645, -1.1004],<br>        [ 0.7326,  0.5491,  0.8222],<br>        [-0.5815, -1.3774,  0.7640],<br>        [ 1.1323, -1.4232,  0.2073],<br>        [-0.3632, -1.3108, -1.2507],<br>        [-0.7597, -1.1140,  0.2626],<br>        [-0.8476, -1.2887, -0.7922]]))</p>
-<p><strong>2.2 利用apply_edges进行消息传递</strong>  </p>
+<pre><code>(tensor([[ 0.6239,  0.3987, -0.6238],
+        [-0.7141, -1.0818, -1.0757],
+        [-0.0540,  1.1078,  0.2700],
+        [ 0.5681, -1.0023, -1.4963],
+        [-1.3526, -0.5072,  0.3111],
+        [ 0.4039,  0.1909,  2.4836],
+        [ 0.2190,  0.9467, -0.6446],
+        [-0.5860, -1.7527, -1.0872],
+        [ 0.8450,  0.9458, -0.5495],
+        [ 1.3140,  0.4514,  0.5442]]),
+tensor([[-0.5180, -0.1497,  0.4278],
+        [ 0.7970, -0.1222, -0.5810],
+        [-0.9885,  0.7971, -1.0056],
+        [-0.5377,  0.3229, -0.1410],
+        [ 1.2062,  1.3272, -0.4768],
+        [-0.6856,  0.9685, -1.3733],
+        [ 1.0140, -0.1059,  1.4300],
+        [-0.4088,  0.5824, -0.4151],
+        [ 1.4490, -1.0892,  0.2116],
+        [ 0.2986, -0.0652, -0.4363],
+        [ 0.7020,  0.6645, -1.1004],
+        [ 0.7326,  0.5491,  0.8222],
+        [-0.5815, -1.3774,  0.7640],
+        [ 1.1323, -1.4232,  0.2073],
+        [-0.3632, -1.3108, -1.2507],
+        [-0.7597, -1.1140,  0.2626],
+        [-0.8476, -1.2887, -0.7922]]))</code></pre><p><strong>2.2 利用apply_edges进行消息传递</strong>  </p>
 <p>apply_edges可以完成第一个函数的操作，即将两节点特征和边特征进行某种操作，然后将结果保存回边上，我们先用dgl自带的api，将$u,v$节点的特征相加然后赋值到边上</p>
 <pre class="line-numbers language-python"><code class="language-python">g<span class="token punctuation">.</span>apply_edges<span class="token punctuation">(</span>dgl<span class="token punctuation">.</span>function<span class="token punctuation">.</span>u_add_v<span class="token punctuation">(</span><span class="token string">"nx"</span><span class="token punctuation">,</span><span class="token string">"nx"</span><span class="token punctuation">,</span><span class="token string">"add_x"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token comment" spellcheck="true">#第一个nx表示u上的nx特征，第二个表示v上的nx特征，add_x表示赋值到边上的特征</span>
 g<span class="token punctuation">.</span>edata<span class="token punctuation">[</span><span class="token string">"add_x"</span><span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 <p>&gt;&gt;&gt;</p>
-<p>tensor([[-0.0902, -0.6831, -1.6995],        [ 0.5699,  1.5065, -0.3538],        [ 1.1919, -0.6036, -2.1202],        [-0.7288, -0.1085, -0.3128],        [-0.7681,  0.0260, -0.8057],        [-0.1461, -2.0841, -2.5721],        [-1.4066,  0.6007,  0.5811],        [-0.7846, -1.5095, -1.1853],        [ 0.3500,  1.2987,  2.7536],        [-0.9487, -0.3163,  2.7946],        [ 0.6229,  1.1375,  1.8389],        [-0.1821, -1.5618,  1.3964],        [-0.3670, -0.8060, -1.7318],        [ 1.0640,  1.8925, -1.1941],        [ 1.5330,  1.3981, -0.1005],        [ 0.2589, -0.8069, -1.6367],        [ 2.1590,  1.3972, -0.0053]])</p>
-<p>这个过程也可以写自定义函数进行操作</p>
+<pre><code>tensor([[-0.0902, -0.6831, -1.6995],        [ 0.5699,  1.5065, -0.3538],        [ 1.1919, -0.6036, -2.1202],        [-0.7288, -0.1085, -0.3128],        [-0.7681,  0.0260, -0.8057],        [-0.1461, -2.0841, -2.5721],        [-1.4066,  0.6007,  0.5811],        [-0.7846, -1.5095, -1.1853],        [ 0.3500,  1.2987,  2.7536],        [-0.9487, -0.3163,  2.7946],        [ 0.6229,  1.1375,  1.8389],        [-0.1821, -1.5618,  1.3964],        [-0.3670, -0.8060, -1.7318],        [ 1.0640,  1.8925, -1.1941],        [ 1.5330,  1.3981, -0.1005],        [ 0.2589, -0.8069, -1.6367],        [ 2.1590,  1.3972, -0.0053]])</code></pre><p>这个过程也可以写自定义函数进行操作</p>
 <pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">message_func</span><span class="token punctuation">(</span>edges<span class="token punctuation">)</span><span class="token punctuation">:</span>     <span class="token keyword">return</span> <span class="token punctuation">{</span><span class="token string">'new_add_x'</span><span class="token punctuation">:</span> edges<span class="token punctuation">.</span>src<span class="token punctuation">[</span><span class="token string">'nx'</span><span class="token punctuation">]</span> <span class="token operator">+</span> edges<span class="token punctuation">.</span>dst<span class="token punctuation">[</span><span class="token string">'nx'</span><span class="token punctuation">]</span><span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <pre class="line-numbers language-python"><code class="language-python">g<span class="token punctuation">.</span>apply_edges<span class="token punctuation">(</span>message_func<span class="token punctuation">)</span>g<span class="token punctuation">.</span>edata<span class="token punctuation">[</span><span class="token string">"new_add_x"</span><span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>&gt;&gt;&gt;</p>
-<p>tensor([[-0.0902, -0.6831, -1.6995],        [ 0.5699,  1.5065, -0.3538],        [ 1.1919, -0.6036, -2.1202],        [-0.7288, -0.1085, -0.3128],        [-0.7681,  0.0260, -0.8057],        [-0.1461, -2.0841, -2.5721],        [-1.4066,  0.6007,  0.5811],        [-0.7846, -1.5095, -1.1853],        [ 0.3500,  1.2987,  2.7536],        [-0.9487, -0.3163,  2.7946],        [ 0.6229,  1.1375,  1.8389],        [-0.1821, -1.5618,  1.3964],        [-0.3670, -0.8060, -1.7318],        [ 1.0640,  1.8925, -1.1941],        [ 1.5330,  1.3981, -0.1005],        [ 0.2589, -0.8069, -1.6367],        [ 2.1590,  1.3972, -0.0053]])</p>
-<p><strong>2.3 利用update_all组合消息传递函数与聚合函数</strong>  </p>
+<pre><code>tensor([[-0.0902, -0.6831, -1.6995],        [ 0.5699,  1.5065, -0.3538],        [ 1.1919, -0.6036, -2.1202],        [-0.7288, -0.1085, -0.3128],        [-0.7681,  0.0260, -0.8057],        [-0.1461, -2.0841, -2.5721],        [-1.4066,  0.6007,  0.5811],        [-0.7846, -1.5095, -1.1853],        [ 0.3500,  1.2987,  2.7536],        [-0.9487, -0.3163,  2.7946],        [ 0.6229,  1.1375,  1.8389],        [-0.1821, -1.5618,  1.3964],        [-0.3670, -0.8060, -1.7318],        [ 1.0640,  1.8925, -1.1941],        [ 1.5330,  1.3981, -0.1005],        [ 0.2589, -0.8069, -1.6367],        [ 2.1590,  1.3972, -0.0053]])</code></pre><p><strong>2.3 利用update_all组合消息传递函数与聚合函数</strong>  </p>
 <p>update_all将消息传递和聚合函数一并进行操作，下面演示先将邻居节点特征加到边，然后再将边特征加到节点</p>
 <pre class="line-numbers language-python"><code class="language-python">g<span class="token punctuation">.</span>update_all<span class="token punctuation">(</span>dgl<span class="token punctuation">.</span>function<span class="token punctuation">.</span>u_add_v<span class="token punctuation">(</span><span class="token string">"nx"</span><span class="token punctuation">,</span><span class="token string">"nx"</span><span class="token punctuation">,</span><span class="token string">"add_x"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>             dgl<span class="token punctuation">.</span>function<span class="token punctuation">.</span>sum<span class="token punctuation">(</span><span class="token string">"add_x"</span><span class="token punctuation">,</span><span class="token string">"add_edge_x"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>g<span class="token punctuation">.</span>ndata<span class="token punctuation">[</span><span class="token string">"add_edge_x"</span><span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>&gt;&gt;&gt;</p>
-<p>tensor([[ 0.0000,  0.0000,  0.0000],        [-0.0902, -0.6831, -1.6995],        [-0.1982,  1.5326, -1.1595],        [ 1.0459, -2.6876, -4.6922],        [-2.9200, -1.0173, -0.9170],        [-0.5987,  0.9824,  5.5482],        [ 0.6229,  1.1375,  1.8389],        [-0.5491, -2.3679, -0.3355],        [ 1.3229,  1.0856, -2.8309],        [ 3.6919,  2.7953, -0.1058]])</p>
-<p>当然，也可以自定义</p>
+<pre><code>tensor([[ 0.0000,  0.0000,  0.0000],        [-0.0902, -0.6831, -1.6995],        [-0.1982,  1.5326, -1.1595],        [ 1.0459, -2.6876, -4.6922],        [-2.9200, -1.0173, -0.9170],        [-0.5987,  0.9824,  5.5482],        [ 0.6229,  1.1375,  1.8389],        [-0.5491, -2.3679, -0.3355],        [ 1.3229,  1.0856, -2.8309],        [ 3.6919,  2.7953, -0.1058]])</code></pre><p>当然，也可以自定义</p>
 <pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">reduce_func</span><span class="token punctuation">(</span>nodes<span class="token punctuation">)</span><span class="token punctuation">:</span>     <span class="token keyword">return</span> <span class="token punctuation">{</span><span class="token string">'new_add_edge_x'</span><span class="token punctuation">:</span> torch<span class="token punctuation">.</span>sum<span class="token punctuation">(</span>nodes<span class="token punctuation">.</span>mailbox<span class="token punctuation">[</span><span class="token string">'add_x'</span><span class="token punctuation">]</span><span class="token punctuation">,</span> dim<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <pre class="line-numbers language-python"><code class="language-python">g<span class="token punctuation">.</span>update_all<span class="token punctuation">(</span>dgl<span class="token punctuation">.</span>function<span class="token punctuation">.</span>u_add_v<span class="token punctuation">(</span><span class="token string">"nx"</span><span class="token punctuation">,</span><span class="token string">"nx"</span><span class="token punctuation">,</span><span class="token string">"add_x"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>             reduce_func<span class="token punctuation">)</span>g<span class="token punctuation">.</span>ndata<span class="token punctuation">[</span><span class="token string">"new_add_edge_x"</span><span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>&gt;&gt;&gt;</p>
-<p>tensor([[ 0.0000,  0.0000,  0.0000],        [-0.0902, -0.6831, -1.6995],        [-0.1982,  1.5326, -1.1595],        [ 1.0459, -2.6876, -4.6922],        [-2.9200, -1.0173, -0.9170],        [-0.5987,  0.9824,  5.5482],        [ 0.6229,  1.1375,  1.8389],        [-0.5491, -2.3679, -0.3355],        [ 1.3229,  1.0856, -2.8309],        [ 3.6919,  2.7953, -0.1058]])</p>
-<p><strong>2.3 更新函数：最后组合聚合特征和原特征</strong><br>这部分操作就很容易了，因为聚合特征和原特征都在节点上了，所以我们直接操作即可，比如相加</p>
+<pre><code>tensor([[ 0.0000,  0.0000,  0.0000],        [-0.0902, -0.6831, -1.6995],        [-0.1982,  1.5326, -1.1595],        [ 1.0459, -2.6876, -4.6922],        [-2.9200, -1.0173, -0.9170],        [-0.5987,  0.9824,  5.5482],        [ 0.6229,  1.1375,  1.8389],        [-0.5491, -2.3679, -0.3355],        [ 1.3229,  1.0856, -2.8309],        [ 3.6919,  2.7953, -0.1058]])</code></pre><p><strong>2.3 更新函数：最后组合聚合特征和原特征</strong><br>这部分操作就很容易了，因为聚合特征和原特征都在节点上了，所以我们直接操作即可，比如相加</p>
 <pre class="line-numbers language-python"><code class="language-python">g<span class="token punctuation">.</span>ndata<span class="token punctuation">[</span><span class="token string">"nx"</span><span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>&gt;&gt;&gt;</p>
-<p>tensor([[ 0.6239,  0.3987, -0.6238],<br>        [-0.7141, -1.0818, -1.0757],<br>        [-0.0540,  1.1078,  0.2700],<br>        [ 0.5681, -1.0023, -1.4963],<br>        [-1.3526, -0.5072,  0.3111],<br>        [ 0.4039,  0.1909,  2.4836],<br>        [ 0.2190,  0.9467, -0.6446],<br>        [-0.5860, -1.7527, -1.0872],<br>        [ 0.8450,  0.9458, -0.5495],<br>        [ 1.3140,  0.4514,  0.5442]])</p>
-<pre class="line-numbers language-python"><code class="language-python">g<span class="token punctuation">.</span>ndata<span class="token punctuation">[</span><span class="token string">"nx"</span><span class="token punctuation">]</span><span class="token operator">=</span>g<span class="token punctuation">.</span>ndata<span class="token punctuation">[</span><span class="token string">"nx"</span><span class="token punctuation">]</span><span class="token operator">+</span>g<span class="token punctuation">.</span>ndata<span class="token punctuation">[</span><span class="token string">"add_edge_x"</span><span class="token punctuation">]</span>
+<pre><code>tensor([[ 0.6239,  0.3987, -0.6238],
+        [-0.7141, -1.0818, -1.0757],
+        [-0.0540,  1.1078,  0.2700],
+        [ 0.5681, -1.0023, -1.4963],
+        [-1.3526, -0.5072,  0.3111],
+        [ 0.4039,  0.1909,  2.4836],
+        [ 0.2190,  0.9467, -0.6446],
+        [-0.5860, -1.7527, -1.0872],
+        [ 0.8450,  0.9458, -0.5495],
+        [ 1.3140,  0.4514,  0.5442]])</code></pre><pre class="line-numbers language-python"><code class="language-python">g<span class="token punctuation">.</span>ndata<span class="token punctuation">[</span><span class="token string">"nx"</span><span class="token punctuation">]</span><span class="token operator">=</span>g<span class="token punctuation">.</span>ndata<span class="token punctuation">[</span><span class="token string">"nx"</span><span class="token punctuation">]</span><span class="token operator">+</span>g<span class="token punctuation">.</span>ndata<span class="token punctuation">[</span><span class="token string">"add_edge_x"</span><span class="token punctuation">]</span>
 g<span class="token punctuation">.</span>ndata<span class="token punctuation">[</span><span class="token string">"nx"</span><span class="token punctuation">]</span><span class="token comment" spellcheck="true">#注意从第二行开始看</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 <p>&gt;&gt;&gt;</p>
-<p>tensor([[ 0.6239,  0.3987, -0.6238],<br>        [-0.8044, -1.7649, -2.7753],<br>        [-0.2522,  2.6404, -0.8895],<br>        [ 1.6139, -3.6899, -6.1886],<br>        [-4.2726, -1.5244, -0.6059],<br>        [-0.1948,  1.1733,  8.0318],<br>        [ 0.8419,  2.0842,  1.1943],<br>        [-1.1352, -4.1206, -1.4227],<br>        [ 2.1679,  2.0314, -3.3804],<br>        [ 5.0059,  3.2467,  0.4384]])</p>
-<h3 id="PageRank算法"><a href="#PageRank算法" class="headerlink" title="PageRank算法"></a>PageRank算法</h3><p>关于PageRank的原理，大家可以参考<a href="https://nbviewer.jupyter.org/github/zhulei227/ML_Notes/blob/master/notebooks/12_07_PGM_%E9%A9%AC%E5%B0%94%E7%A7%91%E5%A4%AB%E9%93%BE_PageRank%E7%AE%97%E6%B3%95.ipynb" target="_blank" rel="noopener">&gt;&gt;note</a><br><img src="/images/loading.gif" data-original="../images/ML/image-20210829201724741.png" alt=""></p>
+<pre><code>tensor([[ 0.6239,  0.3987, -0.6238],
+        [-0.8044, -1.7649, -2.7753],
+        [-0.2522,  2.6404, -0.8895],
+        [ 1.6139, -3.6899, -6.1886],
+        [-4.2726, -1.5244, -0.6059],
+        [-0.1948,  1.1733,  8.0318],
+        [ 0.8419,  2.0842,  1.1943],
+        [-1.1352, -4.1206, -1.4227],
+        [ 2.1679,  2.0314, -3.3804],
+        [ 5.0059,  3.2467,  0.4384]])</code></pre><h3 id="PageRank算法"><a href="#PageRank算法" class="headerlink" title="PageRank算法"></a>PageRank算法</h3><p>关于PageRank的原理，大家可以参考<a href="https://nbviewer.jupyter.org/github/zhulei227/ML_Notes/blob/master/notebooks/12_07_PGM_%E9%A9%AC%E5%B0%94%E7%A7%91%E5%A4%AB%E9%93%BE_PageRank%E7%AE%97%E6%B3%95.ipynb" target="_blank" rel="noopener">&gt;&gt;note</a><br><img src="/images/loading.gif" data-original="../images/ML/image-20210829201724741.png" alt=""></p>
 <p>如图，以节点A举例，他的PR更新公示可以表示为：   </p>
 <p>$$<br>PR_A^{(t+1)}=w_{BA}PR_B^{(t)}+w_{CA}PR_C^{(t)}<br>$$</p>
 <p>这里，$w_{BA}$表示边$(B,A)$上的权重，在默认情况下，我们可以设置为节点$B$的出度的倒数，而$PR_{*}$则表示某节点的PR值，下面利用DGL来计算PR，节点编号0 ~ 3分别对应上面的节点A ~ D</p>
@@ -1140,22 +1235,19 @@ g<span class="token operator">=</span>dgl<span class="token punctuation">.</span
 g<span class="token punctuation">.</span>apply_edges<span class="token punctuation">(</span>message_func<span class="token punctuation">)</span>
 g<span class="token punctuation">.</span>edata<span class="token punctuation">[</span><span class="token string">"weight"</span><span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 <p>&gt;&gt;&gt;</p>
-<p>tensor([0.3333, 0.3333, 0.3333, 0.5000, 0.5000, 1.0000, 0.5000, 0.5000])</p>
-<p><strong>计算PR</strong></p>
+<pre><code>tensor([0.3333, 0.3333, 0.3333, 0.5000, 0.5000, 1.0000, 0.5000, 0.5000])</code></pre><p><strong>计算PR</strong></p>
 <pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#随机初始化一组PR</span>
 prs<span class="token operator">=</span>torch<span class="token punctuation">.</span>exp<span class="token punctuation">(</span>torch<span class="token punctuation">.</span>randn<span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
 prs<span class="token operator">=</span>prs<span class="token operator">/</span>torch<span class="token punctuation">.</span>sum<span class="token punctuation">(</span>prs<span class="token punctuation">)</span>
 prs<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 <p>&gt;&gt;&gt;</p>
-<p>tensor([0.1702, 0.3912, 0.1391, 0.2994])</p>
-<pre class="line-numbers language-python"><code class="language-python">g<span class="token punctuation">.</span>ndata<span class="token punctuation">[</span><span class="token string">"pr"</span><span class="token punctuation">]</span><span class="token operator">=</span>prs<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre><code>tensor([0.1702, 0.3912, 0.1391, 0.2994])</code></pre><pre class="line-numbers language-python"><code class="language-python">g<span class="token punctuation">.</span>ndata<span class="token punctuation">[</span><span class="token string">"pr"</span><span class="token punctuation">]</span><span class="token operator">=</span>prs<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">for</span> _ <span class="token keyword">in</span> range<span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
     g<span class="token punctuation">.</span>update_all<span class="token punctuation">(</span>dgl<span class="token punctuation">.</span>function<span class="token punctuation">.</span>u_dot_e<span class="token punctuation">(</span><span class="token string">"pr"</span><span class="token punctuation">,</span><span class="token string">"weight"</span><span class="token punctuation">,</span><span class="token string">"weighted_pr"</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token comment" spellcheck="true">#将源节点上的pr与边上的weight相乘后放到边上的weighted_pr变量中</span>
                  dgl<span class="token punctuation">.</span>function<span class="token punctuation">.</span>sum<span class="token punctuation">(</span><span class="token string">"weighted_pr"</span><span class="token punctuation">,</span><span class="token string">"pr"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token comment" spellcheck="true">#将所有入边上的weighted_pr求和后赋值到目标节点的pr变量中</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 <pre class="line-numbers language-python"><code class="language-python">g<span class="token punctuation">.</span>ndata<span class="token punctuation">[</span><span class="token string">"pr"</span><span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>&gt;&gt;&gt;</p>
-<p>tensor([0.3333, 0.2222, 0.2222, 0.2222])</p>
-<p>上面的实现不够严谨，为了防止没有出度或者没有入度的节点，其实需要在聚合的时候再添加一个平滑项（见上面链接中的note）</p>
+<pre><code>tensor([0.3333, 0.2222, 0.2222, 0.2222])</code></pre><p>上面的实现不够严谨，为了防止没有出度或者没有入度的节点，其实需要在聚合的时候再添加一个平滑项（见上面链接中的note）</p>
 <h3 id="GCN的DGL实现"><a href="#GCN的DGL实现" class="headerlink" title="GCN的DGL实现"></a>GCN的DGL实现</h3><p>我们先拎GCN出来看看，如何将其拆分为3个基本函数的形式，我们先回顾一下它的矩阵更新形式：   </p>
 <p>$$<br>X^{(t+1)}=\sigma(\tilde{L}_{sym}X^{(t)}W^{(t)})<br>$$<br>我们可以如下拆解：   </p>
 <p><strong>消息传递函数</strong>   </p>
@@ -1221,8 +1313,9 @@ dataset <span class="token operator">=</span> CoraData<span class="token punctua
 <p>Using Cached file: E:\datas\Algs\GNN\cora\processed_cora_dgl.pkl<br>Cached file: E:\datas\Algs\GNN\cora\processed_cora_dgl.pkl</p>
 <pre class="line-numbers language-python"><code class="language-python">dataset<span class="token punctuation">.</span>dgl_graph<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>&gt;&gt;&gt;</p>
-<p>Graph(num_nodes=2708, num_edges=24424,<br>        ndata_schemes={}<br>        edata_schemes={})</p>
-<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#如果有GPU则使用GPUdevice = "cuda" if torch.cuda.is_available() else "cpu"#接着预处理剩下的数据x = dataset.x / dataset.x.sum(1, keepdims=True)# 归一化数据，使得每一行和为1tensor_x = torch.from_numpy(x).to(device)tensor_y = torch.from_numpy(dataset.y).to(device)tensor_train_mask = torch.from_numpy(dataset.trn_mask).to(device)tensor_val_mask = torch.from_numpy(dataset.val_mask).to(device)tensor_test_mask = torch.from_numpy(dataset.test_mask).to(device)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre><code>Graph(num_nodes=2708, num_edges=24424,
+        ndata_schemes={}
+        edata_schemes={})</code></pre><pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#如果有GPU则使用GPUdevice = "cuda" if torch.cuda.is_available() else "cpu"#接着预处理剩下的数据x = dataset.x / dataset.x.sum(1, keepdims=True)# 归一化数据，使得每一行和为1tensor_x = torch.from_numpy(x).to(device)tensor_y = torch.from_numpy(dataset.y).to(device)tensor_train_mask = torch.from_numpy(dataset.trn_mask).to(device)tensor_val_mask = torch.from_numpy(dataset.val_mask).to(device)tensor_test_mask = torch.from_numpy(dataset.test_mask).to(device)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#2.构建模型model = GCNNet().to(device)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">accuracy</span><span class="token punctuation">(</span>mask<span class="token punctuation">)</span><span class="token punctuation">:</span>    model<span class="token punctuation">.</span>eval<span class="token punctuation">(</span><span class="token punctuation">)</span>    <span class="token keyword">with</span> torch<span class="token punctuation">.</span>no_grad<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>        logits <span class="token operator">=</span> model<span class="token punctuation">(</span>dataset<span class="token punctuation">.</span>dgl_graph<span class="token punctuation">,</span> tensor_x<span class="token punctuation">)</span>        test_mask_logits <span class="token operator">=</span> logits<span class="token punctuation">[</span>mask<span class="token punctuation">]</span>        predict_y <span class="token operator">=</span> test_mask_logits<span class="token punctuation">.</span>max<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span>        accuracy <span class="token operator">=</span> torch<span class="token punctuation">.</span>eq<span class="token punctuation">(</span>predict_y<span class="token punctuation">,</span> tensor_y<span class="token punctuation">[</span>mask<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">.</span>float<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>mean<span class="token punctuation">(</span><span class="token punctuation">)</span>    <span class="token keyword">return</span> accuracy<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#3.训练模型</span>
@@ -1263,8 +1356,7 @@ plt<span class="token punctuation">.</span>plot<span class="token punctuation">(
 plt<span class="token punctuation">.</span>plot<span class="token punctuation">(</span>trn_acc_history<span class="token punctuation">)</span>
 plt<span class="token punctuation">.</span>legend<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'val acc'</span><span class="token punctuation">,</span><span class="token string">'trn acc'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>&gt;&gt;&gt;</p>
-<p>&lt;matplotlib.legend.Legend at 0x1a3b8099f60&gt;</p>
-<p>​<br><img src="/images/loading.gif" data-original="../images/ML/output_9_1.png" alt=""><br>​    </p>
+<pre><code>&lt;matplotlib.legend.Legend at 0x1a3b8099f60&gt;</code></pre><p>​<br><img src="/images/loading.gif" data-original="../images/ML/output_9_1.png" alt=""><br>​    </p>
 <h3 id="异质图RGCN-节点预测"><a href="#异质图RGCN-节点预测" class="headerlink" title="异质图RGCN_节点预测"></a>异质图RGCN_节点预测</h3><h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><p>我们通常处理的更多的还是异构图，异构图包含了多种类型的节点以及多种类型的边，我们之前介绍的GCN/GAT/SAGE目前都只能应用于同质图（只有一种节点类型，一种边类型），那如何将同质图的算法扩展到异构图呢？一种通常的做法是：  </p>
 <blockquote>
 <p>（1）将异构图按照边的类别将切分为多个子图；<br>（2）然后分别在这些子图上运行图算法；<br>（3）最后将各子图的结果再进行一次聚合  </p>
@@ -1356,8 +1448,12 @@ opt <span class="token operator">=</span> torch<span class="token punctuation">.
     loss<span class="token punctuation">.</span>backward<span class="token punctuation">(</span><span class="token punctuation">)</span>
     opt<span class="token punctuation">.</span>step<span class="token punctuation">(</span><span class="token punctuation">)</span>
     <span class="token keyword">print</span><span class="token punctuation">(</span>loss<span class="token punctuation">.</span>item<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>1.8662775754928589<br>1.851954698562622<br>1.8382809162139893<br>1.8252463340759277<br>1.812849998474121</p>
-<h3 id="异质图RGCN-边预测"><a href="#异质图RGCN-边预测" class="headerlink" title="异质图RGCN_边预测"></a>异质图RGCN_边预测</h3><h4 id="原理-1"><a href="#原理-1" class="headerlink" title="原理"></a>原理</h4><p>边的预测我们可以基于它所关联的俩节点来计算，对于单个输出预测，等价于我们需要定义如下的一个函数：   </p>
+<p>&gt;&gt;&gt;</p>
+<pre><code>1.8662775754928589
+1.851954698562622
+1.8382809162139893
+1.8252463340759277
+1.812849998474121</code></pre><h3 id="异质图RGCN-边预测"><a href="#异质图RGCN-边预测" class="headerlink" title="异质图RGCN_边预测"></a>异质图RGCN_边预测</h3><h4 id="原理-1"><a href="#原理-1" class="headerlink" title="原理"></a>原理</h4><p>边的预测我们可以基于它所关联的俩节点来计算，对于单个输出预测，等价于我们需要定义如下的一个函数：   </p>
 <p>$$<br>score_{(i,j)}=g(h_i,h_j)<br>$$</p>
 <p>即构造一个函数，输入俩向量$h_i,h_j$（分别表示俩节点特征），然后输出一个标量（表示边的输出），最简单的我们可以使用内积$&lt;h_i,h_j&gt;$，或者将$h_i,h_j$拼接后再进行一次线性变换$w^T(h_i||h_j)$，或者将$h_i,h_j$相加后再进行一次线性变换$w^T(h_i+h_j)$，这里可以是任意你能想到的方式（不过要可导），而这个操作我们可以利用dgl的<strong>apply_edges</strong>这个api来实现，比如下面分别实现内积和线性变换的操作</p>
 <pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> dgl<span class="token punctuation">.</span>function <span class="token keyword">as</span> fn
@@ -1578,8 +1674,12 @@ opt <span class="token operator">=</span> torch<span class="token punctuation">.
     loss<span class="token punctuation">.</span>backward<span class="token punctuation">(</span><span class="token punctuation">)</span>
     opt<span class="token punctuation">.</span>step<span class="token punctuation">(</span><span class="token punctuation">)</span>
     <span class="token keyword">print</span><span class="token punctuation">(</span>loss<span class="token punctuation">.</span>item<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>1.327864170074463<br>1.3069148063659668<br>1.277003288269043<br>1.2585861682891846<br>1.246128797531128</p>
-<h3 id="整图预测"><a href="#整图预测" class="headerlink" title="整图预测"></a>整图预测</h3><h4 id="原理-3"><a href="#原理-3" class="headerlink" title="原理"></a>原理</h4><p>整图预测是针对图层面的学习任务，比如判断某药物分子是否具有某种理化性质，再比如判断某社团是否具有欺诈可能，这需要我们对整个图提取它的特征表示，然后再基于此构建我们的学习任务，图的整体特征无外乎来源于三部分：1）节点特征；2）边特征；3）结构信息，基于这些信息，我们可以通过许多方式来构建图特征，DGL提供了一些简单的API，比如对各节点特征求和/求平均/pooling等，这可以方便我们构建一些基准图预测模型，下面我们利用对节点特征求平均的方式构建图特征，这可以通过<code>dgl.mean_nodes</code>这个API很方便的实现，它相当于做了如下计算：    </p>
+<p>&gt;&gt;&gt;</p>
+<pre><code>1.327864170074463
+1.3069148063659668
+1.277003288269043
+1.2585861682891846
+1.246128797531128</code></pre><h3 id="整图预测"><a href="#整图预测" class="headerlink" title="整图预测"></a>整图预测</h3><h4 id="原理-3"><a href="#原理-3" class="headerlink" title="原理"></a>原理</h4><p>整图预测是针对图层面的学习任务，比如判断某药物分子是否具有某种理化性质，再比如判断某社团是否具有欺诈可能，这需要我们对整个图提取它的特征表示，然后再基于此构建我们的学习任务，图的整体特征无外乎来源于三部分：1）节点特征；2）边特征；3）结构信息，基于这些信息，我们可以通过许多方式来构建图特征，DGL提供了一些简单的API，比如对各节点特征求和/求平均/pooling等，这可以方便我们构建一些基准图预测模型，下面我们利用对节点特征求平均的方式构建图特征，这可以通过<code>dgl.mean_nodes</code>这个API很方便的实现，它相当于做了如下计算：    </p>
 <p>$$<br>h_g=\frac{1}{|V|}\sum_{v\in V }h_v<br>$$</p>
 <p>$h_v$表示节点$v$的特征，然后基于$h_g$特征向量，构建我们预测模型</p>
 <h4 id="实现-5"><a href="#实现-5" class="headerlink" title="实现"></a>实现</h4><p>利用dgl自带的MiniGCDataset数据集，它包括如下的8种类别的图结构<br><img src="/images/loading.gif" data-original="../images/ML/image-20210829203210021.png" alt=""></p>
@@ -1669,8 +1769,7 @@ epoch_losses <span class="token operator">=</span> <span class="token punctuatio
 plt<span class="token punctuation">.</span>plot<span class="token punctuation">(</span>epoch_losses<span class="token punctuation">)</span>
 plt<span class="token punctuation">.</span>legend<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">"loss"</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>&gt;&gt;&gt;</p>
-<p>&lt;matplotlib.legend.Legend at 0x2658c2b9dd8&gt;</p>
-<p><img src="/images/loading.gif" data-original="../images/ML/output_4_1.png" alt=""></p>
+<pre><code>&lt;matplotlib.legend.Legend at 0x2658c2b9dd8&gt;</code></pre><p><img src="/images/loading.gif" data-original="../images/ML/output_4_1.png" alt=""></p>
 <pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#4.测试</span>
 model<span class="token punctuation">.</span>eval<span class="token punctuation">(</span><span class="token punctuation">)</span>
 test_X<span class="token punctuation">,</span> test_Y <span class="token operator">=</span> map<span class="token punctuation">(</span>list<span class="token punctuation">,</span> zip<span class="token punctuation">(</span><span class="token operator">*</span>testset<span class="token punctuation">)</span><span class="token punctuation">)</span>
@@ -1687,8 +1786,14 @@ pred_Y <span class="token operator">=</span> torch<span class="token punctuation
 <span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>metrics <span class="token keyword">import</span> confusion_matrix
 confusion_matrix<span class="token punctuation">(</span>test_Y<span class="token punctuation">,</span> pred_Y<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 <p>&gt;&gt;&gt;</p>
-<p>array([[10,  0,  0,  0,  0,  0,  0,  0],<br>    [ 0,  5,  0,  0,  3,  2,  0,  0],<br>    [ 0,  0, 10,  0,  0,  0,  0,  0],<br>    [ 0,  0,  0,  7,  0,  0,  3,  0],<br>    [ 0,  0,  3,  0,  0,  0,  0,  7],<br>    [ 0,  0,  0,  0,  2,  6,  0,  2],<br>    [ 0,  0,  0,  0,  0,  0, 10,  0],<br>    [ 0,  0,  0,  0,  0,  0,  0, 10]], dtype=int64)</p>
-<h3 id="批量采样训练"><a href="#批量采样训练" class="headerlink" title="批量采样训练"></a>批量采样训练</h3><p>实际业务中，我们需要处理的图往往很大，可能会有上亿的节点和边，如果把这些数据进行全量训练，GPU显存很难放的下，所以我们需要使用类似于DNN中那样的随机批量学习的方式进行训练，与DNN中的批量学习不同，GNN对单个训练样本的训练还需要利用到它的邻居节点，而且每多增加一层网络，所需的邻居样本还要往外扩展一层，所以对于$k$层的GNN网络，我们需要对训练样本进行$k$阶的子图采样操作（回想一下之前GraphSAGE代码中采样…），借助于DGL的api，我们只需要多添加2行代码就可以了…</p>
+<pre><code>array([[10,  0,  0,  0,  0,  0,  0,  0],
+    [ 0,  5,  0,  0,  3,  2,  0,  0],
+    [ 0,  0, 10,  0,  0,  0,  0,  0],
+    [ 0,  0,  0,  7,  0,  0,  3,  0],
+    [ 0,  0,  3,  0,  0,  0,  0,  7],
+    [ 0,  0,  0,  0,  2,  6,  0,  2],
+    [ 0,  0,  0,  0,  0,  0, 10,  0],
+    [ 0,  0,  0,  0,  0,  0,  0, 10]], dtype=int64)</code></pre><h3 id="批量采样训练"><a href="#批量采样训练" class="headerlink" title="批量采样训练"></a>批量采样训练</h3><p>实际业务中，我们需要处理的图往往很大，可能会有上亿的节点和边，如果把这些数据进行全量训练，GPU显存很难放的下，所以我们需要使用类似于DNN中那样的随机批量学习的方式进行训练，与DNN中的批量学习不同，GNN对单个训练样本的训练还需要利用到它的邻居节点，而且每多增加一层网络，所需的邻居样本还要往外扩展一层，所以对于$k$层的GNN网络，我们需要对训练样本进行$k$阶的子图采样操作（回想一下之前GraphSAGE代码中采样…），借助于DGL的api，我们只需要多添加2行代码就可以了…</p>
 <pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#1.准备数据</span>
 <span class="token keyword">import</span> numpy <span class="token keyword">as</span> np
 <span class="token keyword">import</span> torch
@@ -1783,8 +1888,7 @@ opt <span class="token operator">=</span> torch<span class="token punctuation">.
 plt<span class="token punctuation">.</span>plot<span class="token punctuation">(</span>losses<span class="token punctuation">)</span>
 plt<span class="token punctuation">.</span>legend<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">"loss"</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 <p>&gt;&gt;&gt;</p>
-<p>&lt;matplotlib.legend.Legend at 0x281a2e53fd0&gt;</p>
-<p>​<br><img src="/images/loading.gif" data-original="../images/ML/output_10_1.png" alt=""><br>​    </p>
+<pre><code>&lt;matplotlib.legend.Legend at 0x281a2e53fd0&gt;</code></pre><p>​<br><img src="/images/loading.gif" data-original="../images/ML/output_10_1.png" alt=""><br>​    </p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -2305,7 +2409,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">1257.5k</span>&nbsp;字
+                class="white-color">1222.3k</span>&nbsp;字
             
             
             

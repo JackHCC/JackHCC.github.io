@@ -459,7 +459,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-08-09
+                    2021-08-30
                 </div>
                 
 
@@ -498,24 +498,24 @@
 </ul>
 <p>根据具体情况，这些步骤可以通过一个命令或一步一步执行，一些步骤可以省略或与其他步骤组合。</p>
 <p>下面我将描述使用F2PY的三种典型方法。以下示例 <code>Fortran 77代码</code> 将说明：</p>
-<pre class="line-numbers language-python"><code class="language-python">C FILE<span class="token punctuation">:</span> FIB1<span class="token punctuation">.</span>F
-      SUBROUTINE FIB<span class="token punctuation">(</span>A<span class="token punctuation">,</span>N<span class="token punctuation">)</span>
+<pre class="line-numbers language-fortran"><code class="language-fortran">C <span class="token keyword">FILE</span><span class="token punctuation">:</span> FIB1.F
+      <span class="token keyword">SUBROUTINE</span> FIB<span class="token punctuation">(</span>A<span class="token punctuation">,</span>N<span class="token punctuation">)</span>
 C
 C     CALCULATE FIRST N FIBONACCI NUMBERS
 C
-      INTEGER N
-      REAL<span class="token operator">*</span><span class="token number">8</span> A<span class="token punctuation">(</span>N<span class="token punctuation">)</span>
-      DO I<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span>N
-         IF <span class="token punctuation">(</span>I<span class="token punctuation">.</span>EQ<span class="token number">.1</span><span class="token punctuation">)</span> THEN
-            A<span class="token punctuation">(</span>I<span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token number">0.</span><span class="token number">0D0</span>
-         ELSEIF <span class="token punctuation">(</span>I<span class="token punctuation">.</span>EQ<span class="token number">.2</span><span class="token punctuation">)</span> THEN
-            A<span class="token punctuation">(</span>I<span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token number">1.</span><span class="token number">0D0</span>
-         ELSE 
+      <span class="token keyword">INTEGER</span> N
+      <span class="token keyword">REAL</span><span class="token operator">*</span><span class="token number">8</span> A<span class="token punctuation">(</span>N<span class="token punctuation">)</span>
+      <span class="token keyword">DO</span> I<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span>N
+         <span class="token keyword">IF</span> <span class="token punctuation">(</span>I.EQ<span class="token number">.1</span><span class="token punctuation">)</span> <span class="token keyword">THEN</span>
+            A<span class="token punctuation">(</span>I<span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token number">0.0D0</span>
+         <span class="token keyword">ELSEIF</span> <span class="token punctuation">(</span>I.EQ<span class="token number">.2</span><span class="token punctuation">)</span> <span class="token keyword">THEN</span>
+            A<span class="token punctuation">(</span>I<span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token number">1.0D0</span>
+         <span class="token keyword">ELSE</span> 
             A<span class="token punctuation">(</span>I<span class="token punctuation">)</span> <span class="token operator">=</span> A<span class="token punctuation">(</span>I<span class="token number">-1</span><span class="token punctuation">)</span> <span class="token operator">+</span> A<span class="token punctuation">(</span>I<span class="token number">-2</span><span class="token punctuation">)</span>
-         ENDIF
-      ENDDO
-      END
-C END FILE FIB1<span class="token punctuation">.</span>F<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+         <span class="token keyword">ENDIF</span>
+      <span class="token keyword">ENDDO</span>
+      <span class="token keyword">END</span>
+C <span class="token keyword">END FILE</span> FIB1.F<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h2 id="快捷的方式"><a href="#快捷的方式" class="headerlink" title="快捷的方式"></a>快捷的方式</h2><p>将Fortran子例程包装<code>FIB</code>到Python 的最快方法是运行</p>
 <pre class="line-numbers language-python"><code class="language-python">python <span class="token operator">-</span>m numpy<span class="token punctuation">.</span>f2py <span class="token operator">-</span>c fib1<span class="token punctuation">.</span>f <span class="token operator">-</span>m fib1<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>此命令构建（参见<code>-c</code>flag，不带参数执行以查看命令行选项的说明）扩展模块（请参阅标志）到当前目录。现在，在Python中，可以通过以下方式访问Fortran子例程：<code>python -m numpy.f2py</code>fib1.so<code>-m</code>FIB<code>fib1.fib</code></p>
@@ -575,18 +575,18 @@ fib<span class="token punctuation">.</span>error<span class="token punctuation">
 <li><p>首先，我们<code>fib1.f</code>通过运行创建一个签名文件</p>
 <pre class="line-numbers language-python"><code class="language-python">python <span class="token operator">-</span>m numpy<span class="token punctuation">.</span>f2py fib1<span class="token punctuation">.</span>f <span class="token operator">-</span>m fib2 <span class="token operator">-</span>h fib1<span class="token punctuation">.</span>pyf<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>签名文件保存到<code>fib1.pyf</code>（见<code>-h</code>标志），其内容如下所示。</p>
-<pre class="line-numbers language-python"><code class="language-python">!    <span class="token operator">-</span><span class="token operator">*</span><span class="token operator">-</span> f90 <span class="token operator">-</span><span class="token operator">*</span><span class="token operator">-</span>
-python module fib2 ! <span class="token keyword">in</span> 
-    interface  ! <span class="token keyword">in</span> <span class="token punctuation">:</span>fib2
-        subroutine fib<span class="token punctuation">(</span>a<span class="token punctuation">,</span>n<span class="token punctuation">)</span> ! <span class="token keyword">in</span> <span class="token punctuation">:</span>fib2<span class="token punctuation">:</span>fib1<span class="token punctuation">.</span>f
-            real<span class="token operator">*</span><span class="token number">8</span> dimension<span class="token punctuation">(</span>n<span class="token punctuation">)</span> <span class="token punctuation">:</span><span class="token punctuation">:</span> a
-            integer optional<span class="token punctuation">,</span>check<span class="token punctuation">(</span>len<span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token operator">>=</span>n<span class="token punctuation">)</span><span class="token punctuation">,</span>depend<span class="token punctuation">(</span>a<span class="token punctuation">)</span> <span class="token punctuation">:</span><span class="token punctuation">:</span> n<span class="token operator">=</span>len<span class="token punctuation">(</span>a<span class="token punctuation">)</span>
-        end subroutine fib
-    end interface 
-end python module fib2
+<pre class="line-numbers language-fortran"><code class="language-fortran"><span class="token comment" spellcheck="true">!    -*- f90 -*-</span>
+python <span class="token keyword">module</span> fib2 <span class="token comment" spellcheck="true">! in </span>
+    <span class="token keyword">interface</span>  <span class="token comment" spellcheck="true">! in :fib2</span>
+        <span class="token keyword">subroutine</span> fib<span class="token punctuation">(</span>a<span class="token punctuation">,</span>n<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">! in :fib2:fib1.f</span>
+            <span class="token keyword">real</span><span class="token operator">*</span><span class="token number">8</span> <span class="token keyword">dimension</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span> <span class="token operator">::</span> a
+            <span class="token keyword">integer</span> <span class="token keyword">optional</span><span class="token punctuation">,</span>check<span class="token punctuation">(</span>len<span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token operator">>=</span>n<span class="token punctuation">)</span><span class="token punctuation">,</span>depend<span class="token punctuation">(</span>a<span class="token punctuation">)</span> <span class="token operator">::</span> n<span class="token operator">=</span>len<span class="token punctuation">(</span>a<span class="token punctuation">)</span>
+        <span class="token keyword">end subroutine</span> fib
+    <span class="token keyword">end interface</span> 
+<span class="token keyword">end</span> python <span class="token keyword">module</span> fib2
 
-! This file was auto<span class="token operator">-</span>generated <span class="token keyword">with</span> f2py <span class="token punctuation">(</span>version<span class="token punctuation">:</span><span class="token number">2.28</span><span class="token punctuation">.</span><span class="token number">198</span><span class="token operator">-</span><span class="token number">1366</span><span class="token punctuation">)</span><span class="token punctuation">.</span>
-! See http<span class="token punctuation">:</span><span class="token operator">//</span>cens<span class="token punctuation">.</span>ioc<span class="token punctuation">.</span>ee<span class="token operator">/</span>projects<span class="token operator">/</span>f2py2e<span class="token operator">/</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<span class="token comment" spellcheck="true">! This file was auto-generated with f2py (version:2.28.198-1366).</span>
+<span class="token comment" spellcheck="true">! See http://cens.ioc.ee/projects/f2py2e/</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 </li>
 <li><p>接下来，我们将教导F2PY参数<code>n</code>是一个输入参数（use <code>intent(in)</code>属性），结果，即<code>a</code>调用Fortran函数后的内容<code>FIB</code>，应该返回给Python（use <code>intent(out)</code>属性）。此外，<code>a</code>应使用input参数给出的大小动态创建数组<code>n</code>（use <code>depend(n)</code>属性表示依赖关系）。</p>
 <p>修改后的版本<code>fib1.pyf</code>（保存为 <code>fib2.pyf</code>）的内容如下：</p>
@@ -624,27 +624,27 @@ Return objects<span class="token punctuation">:</span>
 <h2 id="快捷而聪明的方式"><a href="#快捷而聪明的方式" class="headerlink" title="快捷而聪明的方式"></a>快捷而聪明的方式</h2><p>如上所述，包装Fortran函数的“智能方法”适用于包装（例如第三方）Fortran代码，对其源代码的修改是不可取的，甚至也不可能。</p>
 <p>但是，如果编辑Fortran代码是可以接受的，则在大多数情况下可以跳过生成中间签名文件。即，可以使用所谓的F2PY指令将F2PY特定属性直接插入到Fortran源代码中。F2PY指令定义了特殊注释行（<code>Cf2py</code>例如，从Fortran编译器开始），但是F2PY将它们解释为普通行。</p>
 <p>下面显示了示例Fortran代码的修改版本，保存为<code>fib3.f</code>：</p>
-<pre class="line-numbers language-python"><code class="language-python">C FILE<span class="token punctuation">:</span> FIB3<span class="token punctuation">.</span>F
-      SUBROUTINE FIB<span class="token punctuation">(</span>A<span class="token punctuation">,</span>N<span class="token punctuation">)</span>
+<pre class="line-numbers language-fortran"><code class="language-fortran">C <span class="token keyword">FILE</span><span class="token punctuation">:</span> FIB3.F
+      <span class="token keyword">SUBROUTINE</span> FIB<span class="token punctuation">(</span>A<span class="token punctuation">,</span>N<span class="token punctuation">)</span>
 C
 C     CALCULATE FIRST N FIBONACCI NUMBERS
 C
-      INTEGER N
-      REAL<span class="token operator">*</span><span class="token number">8</span> A<span class="token punctuation">(</span>N<span class="token punctuation">)</span>
-Cf2py intent<span class="token punctuation">(</span><span class="token keyword">in</span><span class="token punctuation">)</span> n
-Cf2py intent<span class="token punctuation">(</span>out<span class="token punctuation">)</span> a
+      <span class="token keyword">INTEGER</span> N
+      <span class="token keyword">REAL</span><span class="token operator">*</span><span class="token number">8</span> A<span class="token punctuation">(</span>N<span class="token punctuation">)</span>
+Cf2py <span class="token keyword">intent</span><span class="token punctuation">(</span><span class="token keyword">in</span><span class="token punctuation">)</span> n
+Cf2py <span class="token keyword">intent</span><span class="token punctuation">(</span><span class="token keyword">out</span><span class="token punctuation">)</span> a
 Cf2py depend<span class="token punctuation">(</span>n<span class="token punctuation">)</span> a
-      DO I<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span>N
-         IF <span class="token punctuation">(</span>I<span class="token punctuation">.</span>EQ<span class="token number">.1</span><span class="token punctuation">)</span> THEN
-            A<span class="token punctuation">(</span>I<span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token number">0.</span><span class="token number">0D0</span>
-         ELSEIF <span class="token punctuation">(</span>I<span class="token punctuation">.</span>EQ<span class="token number">.2</span><span class="token punctuation">)</span> THEN
-            A<span class="token punctuation">(</span>I<span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token number">1.</span><span class="token number">0D0</span>
-         ELSE 
+      <span class="token keyword">DO</span> I<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span>N
+         <span class="token keyword">IF</span> <span class="token punctuation">(</span>I.EQ<span class="token number">.1</span><span class="token punctuation">)</span> <span class="token keyword">THEN</span>
+            A<span class="token punctuation">(</span>I<span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token number">0.0D0</span>
+         <span class="token keyword">ELSEIF</span> <span class="token punctuation">(</span>I.EQ<span class="token number">.2</span><span class="token punctuation">)</span> <span class="token keyword">THEN</span>
+            A<span class="token punctuation">(</span>I<span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token number">1.0D0</span>
+         <span class="token keyword">ELSE</span> 
             A<span class="token punctuation">(</span>I<span class="token punctuation">)</span> <span class="token operator">=</span> A<span class="token punctuation">(</span>I<span class="token number">-1</span><span class="token punctuation">)</span> <span class="token operator">+</span> A<span class="token punctuation">(</span>I<span class="token number">-2</span><span class="token punctuation">)</span>
-         ENDIF
-      ENDDO
-      END
-C END FILE FIB3<span class="token punctuation">.</span>F<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+         <span class="token keyword">ENDIF</span>
+      <span class="token keyword">ENDDO</span>
+      <span class="token keyword">END</span>
+C <span class="token keyword">END FILE</span> FIB3.F<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>现在可以在一个命令中执行构建扩展模块：</p>
 <pre class="line-numbers language-python"><code class="language-python">python <span class="token operator">-</span>m numpy<span class="token punctuation">.</span>f2py <span class="token operator">-</span>c <span class="token operator">-</span>m fib3 fib3<span class="token punctuation">.</span>f<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>请注意，生成的包装器与<code>FIB</code>前一种情况一样“智能”：</p>
@@ -686,43 +686,43 @@ Return objects<span class="token punctuation">:</span>
 end <span class="token punctuation">[</span>python module <span class="token punctuation">[</span><span class="token operator">&lt;</span>modulename<span class="token operator">></span><span class="token punctuation">]</span><span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>这里括号 <code>[]</code> 表示可选部分，点 <code>...</code> 表示前一部分中的一个或多个。 因此，<code>[]...</code> 读取前一部分的零个或多个。</p>
 <h2 id="Fortran-C-的例程签名"><a href="#Fortran-C-的例程签名" class="headerlink" title="Fortran / C 的例程签名"></a>Fortran / C 的例程签名</h2><p>Fortran例程的签名具有以下结构：</p>
-<pre class="line-numbers language-python"><code class="language-python"><span class="token punctuation">[</span><span class="token operator">&lt;</span>typespec<span class="token operator">></span><span class="token punctuation">]</span> function <span class="token operator">|</span> subroutine <span class="token operator">&lt;</span>routine name<span class="token operator">></span> \
-              <span class="token punctuation">[</span> <span class="token punctuation">(</span> <span class="token punctuation">[</span><span class="token operator">&lt;</span>arguments<span class="token operator">></span><span class="token punctuation">]</span> <span class="token punctuation">)</span> <span class="token punctuation">]</span> <span class="token punctuation">[</span> result <span class="token punctuation">(</span> <span class="token operator">&lt;</span>entityname<span class="token operator">></span> <span class="token punctuation">)</span> <span class="token punctuation">]</span>
-  <span class="token punctuation">[</span><span class="token operator">&lt;</span>argument<span class="token operator">/</span>variable type declarations<span class="token operator">></span><span class="token punctuation">]</span>
-  <span class="token punctuation">[</span><span class="token operator">&lt;</span>argument<span class="token operator">/</span>variable attribute statements<span class="token operator">></span><span class="token punctuation">]</span>
-  <span class="token punctuation">[</span><span class="token operator">&lt;</span>use statements<span class="token operator">></span><span class="token punctuation">]</span>
-  <span class="token punctuation">[</span><span class="token operator">&lt;</span>common block statements<span class="token operator">></span><span class="token punctuation">]</span>
-  <span class="token punctuation">[</span><span class="token operator">&lt;</span>other statements<span class="token operator">></span><span class="token punctuation">]</span>
-end <span class="token punctuation">[</span> function <span class="token operator">|</span> subroutine <span class="token punctuation">[</span><span class="token operator">&lt;</span>routine name<span class="token operator">></span><span class="token punctuation">]</span> <span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-fortran"><code class="language-fortran">[<span class="token operator">&lt;</span>typespec<span class="token operator">></span>] <span class="token keyword">function</span> | <span class="token keyword">subroutine</span> <span class="token operator">&lt;</span>routine name<span class="token operator">></span> \
+              [ <span class="token punctuation">(</span> [<span class="token operator">&lt;</span>arguments<span class="token operator">></span>] <span class="token punctuation">)</span> ] [ <span class="token keyword">result</span> <span class="token punctuation">(</span> <span class="token operator">&lt;</span>entityname<span class="token operator">></span> <span class="token punctuation">)</span> ]
+  [<span class="token operator">&lt;</span>argument<span class="token operator">/</span>variable <span class="token keyword">type</span> declarations<span class="token operator">></span>]
+  [<span class="token operator">&lt;</span>argument<span class="token operator">/</span>variable attribute statements<span class="token operator">></span>]
+  [<span class="token operator">&lt;</span><span class="token keyword">use</span> statements<span class="token operator">></span>]
+  [<span class="token operator">&lt;</span><span class="token keyword">common</span> block statements<span class="token operator">></span>]
+  [<span class="token operator">&lt;</span>other statements<span class="token operator">></span>]
+<span class="token keyword">end</span> [ <span class="token keyword">function</span> | <span class="token keyword">subroutine</span> [<span class="token operator">&lt;</span>routine name<span class="token operator">></span>] ]<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>从Fortran例程签名中，F2PY生成具有以下签名的 Python/C 扩展函数：</p>
 <pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token operator">&lt;</span>routine name<span class="token operator">></span><span class="token punctuation">(</span><span class="token operator">&lt;</span>required arguments<span class="token operator">></span><span class="token punctuation">[</span><span class="token punctuation">,</span><span class="token operator">&lt;</span>optional arguments<span class="token operator">></span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
      <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
      <span class="token keyword">return</span> <span class="token operator">&lt;</span><span class="token keyword">return</span> variables<span class="token operator">></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 <p>Fortran块数据的签名具有以下结构：</p>
-<pre class="line-numbers language-python"><code class="language-python">block data <span class="token punctuation">[</span> <span class="token operator">&lt;</span>block data name<span class="token operator">></span> <span class="token punctuation">]</span>
-  <span class="token punctuation">[</span><span class="token operator">&lt;</span>variable type declarations<span class="token operator">></span><span class="token punctuation">]</span>
-  <span class="token punctuation">[</span><span class="token operator">&lt;</span>variable attribute statements<span class="token operator">></span><span class="token punctuation">]</span>
-  <span class="token punctuation">[</span><span class="token operator">&lt;</span>use statements<span class="token operator">></span><span class="token punctuation">]</span>
-  <span class="token punctuation">[</span><span class="token operator">&lt;</span>common block statements<span class="token operator">></span><span class="token punctuation">]</span>
-  <span class="token punctuation">[</span><span class="token operator">&lt;</span>include statements<span class="token operator">></span><span class="token punctuation">]</span>
-end <span class="token punctuation">[</span> block data <span class="token punctuation">[</span><span class="token operator">&lt;</span>block data name<span class="token operator">></span><span class="token punctuation">]</span> <span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-fortran"><code class="language-fortran"><span class="token keyword">block data</span> [ <span class="token operator">&lt;</span><span class="token keyword">block data</span> name<span class="token operator">></span> ]
+  [<span class="token operator">&lt;</span>variable <span class="token keyword">type</span> declarations<span class="token operator">></span>]
+  [<span class="token operator">&lt;</span>variable attribute statements<span class="token operator">></span>]
+  [<span class="token operator">&lt;</span><span class="token keyword">use</span> statements<span class="token operator">></span>]
+  [<span class="token operator">&lt;</span><span class="token keyword">common</span> block statements<span class="token operator">></span>]
+  [<span class="token operator">&lt;</span><span class="token keyword">include</span> statements<span class="token operator">></span>]
+<span class="token keyword">end</span> [ <span class="token keyword">block data</span> [<span class="token operator">&lt;</span><span class="token keyword">block data</span> name<span class="token operator">></span>] ]<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h3 id="类型声明"><a href="#类型声明" class="headerlink" title="类型声明"></a>类型声明</h3><p><code>&lt;argument/variable type declaration&gt;</code> 部分的定义是：</p>
-<pre class="line-numbers language-python"><code class="language-python"><span class="token operator">&lt;</span>typespec<span class="token operator">></span> <span class="token punctuation">[</span> <span class="token punctuation">[</span><span class="token operator">&lt;</span>attrspec<span class="token operator">></span><span class="token punctuation">]</span> <span class="token punctuation">:</span><span class="token punctuation">:</span> <span class="token punctuation">]</span> <span class="token operator">&lt;</span>entitydecl<span class="token operator">></span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-fortran"><code class="language-fortran"><span class="token operator">&lt;</span>typespec<span class="token operator">></span> [ [<span class="token operator">&lt;</span>attrspec<span class="token operator">></span>] <span class="token operator">::</span> ] <span class="token operator">&lt;</span>entitydecl<span class="token operator">></span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>当</p>
-<pre class="line-numbers language-python"><code class="language-python"><span class="token operator">&lt;</span>typespec<span class="token operator">></span> <span class="token punctuation">:</span><span class="token operator">=</span> byte <span class="token operator">|</span> character <span class="token punctuation">[</span><span class="token operator">&lt;</span>charselector<span class="token operator">></span><span class="token punctuation">]</span>
-           <span class="token operator">|</span> complex <span class="token punctuation">[</span><span class="token operator">&lt;</span>kindselector<span class="token operator">></span><span class="token punctuation">]</span> <span class="token operator">|</span> real <span class="token punctuation">[</span><span class="token operator">&lt;</span>kindselector<span class="token operator">></span><span class="token punctuation">]</span>
-           <span class="token operator">|</span> double complex <span class="token operator">|</span> double precision
-           <span class="token operator">|</span> integer <span class="token punctuation">[</span><span class="token operator">&lt;</span>kindselector<span class="token operator">></span><span class="token punctuation">]</span> <span class="token operator">|</span> logical <span class="token punctuation">[</span><span class="token operator">&lt;</span>kindselector<span class="token operator">></span><span class="token punctuation">]</span>
+<pre class="line-numbers language-fortran"><code class="language-fortran"><span class="token operator">&lt;</span>typespec<span class="token operator">></span> <span class="token punctuation">:</span><span class="token operator">=</span> byte | <span class="token keyword">character</span> [<span class="token operator">&lt;</span>charselector<span class="token operator">></span>]
+           | <span class="token keyword">complex</span> [<span class="token operator">&lt;</span>kindselector<span class="token operator">></span>] | <span class="token keyword">real</span> [<span class="token operator">&lt;</span>kindselector<span class="token operator">></span>]
+           | double <span class="token keyword">complex</span> | <span class="token keyword">double precision</span>
+           | <span class="token keyword">integer</span> [<span class="token operator">&lt;</span>kindselector<span class="token operator">></span>] | <span class="token keyword">logical</span> [<span class="token operator">&lt;</span>kindselector<span class="token operator">></span>]
 
 <span class="token operator">&lt;</span>charselector<span class="token operator">></span> <span class="token punctuation">:</span><span class="token operator">=</span> <span class="token operator">*</span> <span class="token operator">&lt;</span>charlen<span class="token operator">></span>
-               <span class="token operator">|</span> <span class="token punctuation">(</span> <span class="token punctuation">[</span>len<span class="token operator">=</span><span class="token punctuation">]</span> <span class="token operator">&lt;</span>len<span class="token operator">></span> <span class="token punctuation">[</span> <span class="token punctuation">,</span> <span class="token punctuation">[</span>kind<span class="token operator">=</span><span class="token punctuation">]</span> <span class="token operator">&lt;</span>kind<span class="token operator">></span><span class="token punctuation">]</span> <span class="token punctuation">)</span>
-               <span class="token operator">|</span> <span class="token punctuation">(</span> kind<span class="token operator">=</span> <span class="token operator">&lt;</span>kind<span class="token operator">></span> <span class="token punctuation">[</span> <span class="token punctuation">,</span> len<span class="token operator">=</span> <span class="token operator">&lt;</span>len<span class="token operator">></span> <span class="token punctuation">]</span> <span class="token punctuation">)</span>
-<span class="token operator">&lt;</span>kindselector<span class="token operator">></span> <span class="token punctuation">:</span><span class="token operator">=</span> <span class="token operator">*</span> <span class="token operator">&lt;</span>intlen<span class="token operator">></span> <span class="token operator">|</span> <span class="token punctuation">(</span> <span class="token punctuation">[</span>kind<span class="token operator">=</span><span class="token punctuation">]</span> <span class="token operator">&lt;</span>kind<span class="token operator">></span> <span class="token punctuation">)</span>
+               | <span class="token punctuation">(</span> [len<span class="token operator">=</span>] <span class="token operator">&lt;</span>len<span class="token operator">></span> [ <span class="token punctuation">,</span> [<span class="token keyword">kind</span><span class="token operator">=</span>] <span class="token operator">&lt;</span><span class="token keyword">kind</span><span class="token operator">></span>] <span class="token punctuation">)</span>
+               | <span class="token punctuation">(</span> <span class="token keyword">kind</span><span class="token operator">=</span> <span class="token operator">&lt;</span><span class="token keyword">kind</span><span class="token operator">></span> [ <span class="token punctuation">,</span> len<span class="token operator">=</span> <span class="token operator">&lt;</span>len<span class="token operator">></span> ] <span class="token punctuation">)</span>
+<span class="token operator">&lt;</span>kindselector<span class="token operator">></span> <span class="token punctuation">:</span><span class="token operator">=</span> <span class="token operator">*</span> <span class="token operator">&lt;</span>intlen<span class="token operator">></span> | <span class="token punctuation">(</span> [<span class="token keyword">kind</span><span class="token operator">=</span>] <span class="token operator">&lt;</span><span class="token keyword">kind</span><span class="token operator">></span> <span class="token punctuation">)</span>
 
-<span class="token operator">&lt;</span>entitydecl<span class="token operator">></span> <span class="token punctuation">:</span><span class="token operator">=</span> <span class="token operator">&lt;</span>name<span class="token operator">></span> <span class="token punctuation">[</span> <span class="token punctuation">[</span> <span class="token operator">*</span> <span class="token operator">&lt;</span>charlen<span class="token operator">></span> <span class="token punctuation">]</span> <span class="token punctuation">[</span> <span class="token punctuation">(</span> <span class="token operator">&lt;</span>arrayspec<span class="token operator">></span> <span class="token punctuation">)</span> <span class="token punctuation">]</span>
-                      <span class="token operator">|</span> <span class="token punctuation">[</span> <span class="token punctuation">(</span> <span class="token operator">&lt;</span>arrayspec<span class="token operator">></span> <span class="token punctuation">)</span> <span class="token punctuation">]</span> <span class="token operator">*</span> <span class="token operator">&lt;</span>charlen<span class="token operator">></span> <span class="token punctuation">]</span>
-                     <span class="token operator">|</span> <span class="token punctuation">[</span> <span class="token operator">/</span> <span class="token operator">&lt;</span>init_expr<span class="token operator">></span> <span class="token operator">/</span> <span class="token operator">|</span> <span class="token operator">=</span> <span class="token operator">&lt;</span>init_expr<span class="token operator">></span> <span class="token punctuation">]</span> \
-                       <span class="token punctuation">[</span> <span class="token punctuation">,</span> <span class="token operator">&lt;</span>entitydecl<span class="token operator">></span> <span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<span class="token operator">&lt;</span>entitydecl<span class="token operator">></span> <span class="token punctuation">:</span><span class="token operator">=</span> <span class="token operator">&lt;</span>name<span class="token operator">></span> [ [ <span class="token operator">*</span> <span class="token operator">&lt;</span>charlen<span class="token operator">></span> ] [ <span class="token punctuation">(</span> <span class="token operator">&lt;</span>arrayspec<span class="token operator">></span> <span class="token punctuation">)</span> ]
+                      | [ <span class="token punctuation">(</span> <span class="token operator">&lt;</span>arrayspec<span class="token operator">></span> <span class="token punctuation">)</span> ] <span class="token operator">*</span> <span class="token operator">&lt;</span>charlen<span class="token operator">></span> ]
+                     | [ <span class="token operator">/</span> <span class="token operator">&lt;</span>init_expr<span class="token operator">></span> <span class="token operator">/</span> | <span class="token operator">=</span> <span class="token operator">&lt;</span>init_expr<span class="token operator">></span> ] \
+                       [ <span class="token punctuation">,</span> <span class="token operator">&lt;</span>entitydecl<span class="token operator">></span> ]<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>并且</p>
 <ul>
 <li><code>&lt;attrspec&gt;</code> is a comma separated list of attributes;</li>
@@ -2323,7 +2323,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">1257.5k</span>&nbsp;字
+                class="white-color">1222.3k</span>&nbsp;字
             
             
             

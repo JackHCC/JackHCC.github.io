@@ -538,32 +538,33 @@
 <p>-I, 指定头文件所在的文件夹，本例中预编译器会尝试搜索/path/to/include文件夹。</p>
 <h3 id="gdb命令"><a href="#gdb命令" class="headerlink" title="gdb命令"></a>gdb命令</h3><h4 id="使用规则及高频选项"><a href="#使用规则及高频选项" class="headerlink" title="使用规则及高频选项"></a>使用规则及高频选项</h4><pre><code>gdb [选项] 程序名称
 -p #指定一个pid，调试正在运行的程序</code></pre><h4 id="高频调试指令"><a href="#高频调试指令" class="headerlink" title="高频调试指令"></a>高频调试指令</h4><p><img src="/images/loading.gif" data-original="../images/basic/-1627309500804430" alt=""></p>
-<h4 id="调试代码"><a href="#调试代码" class="headerlink" title="调试代码"></a>调试代码</h4><pre><code>#include &lt;stdio.h&gt;
-#include &lt;unistd.h&gt;
-#include &lt;stdlib.h&gt;
-#include &lt;string.h&gt;
-int gval = 100;
-int mycopy(char *buf)
-{
- strcpy(buf, "我爱我的祖国");
- return gval;
-}
-int main()
-{
- int i = 0;
-printf("gval:%d\n", gval);
-for (i = 0; i &amp;lt; 10; i++) {
-    gval += i;
-    printf("gval:%d\n", gval);
-}   
-char *buf = "我爱我家";
-printf("%s\n", buf);
-buf = NULL;
-mycopy(buf);
-printf("%s\n", buf);
+<h4 id="调试代码"><a href="#调试代码" class="headerlink" title="调试代码"></a>调试代码</h4><pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;unistd.h></span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdlib.h></span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;string.h></span></span>
+<span class="token keyword">int</span> gval <span class="token operator">=</span> <span class="token number">100</span><span class="token punctuation">;</span>
+<span class="token keyword">int</span> <span class="token function">mycopy</span><span class="token punctuation">(</span><span class="token keyword">char</span> <span class="token operator">*</span>buf<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+ <span class="token function">strcpy</span><span class="token punctuation">(</span>buf<span class="token punctuation">,</span> <span class="token string">"我爱我的祖国"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token keyword">return</span> gval<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+ <span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"gval:%d\n"</span><span class="token punctuation">,</span> gval<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">for</span> <span class="token punctuation">(</span>i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&amp;</span>lt<span class="token punctuation">;</span> <span class="token number">10</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    gval <span class="token operator">+</span><span class="token operator">=</span> i<span class="token punctuation">;</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"gval:%d\n"</span><span class="token punctuation">,</span> gval<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>   
+<span class="token keyword">char</span> <span class="token operator">*</span>buf <span class="token operator">=</span> <span class="token string">"我爱我家"</span><span class="token punctuation">;</span>
+<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%s\n"</span><span class="token punctuation">,</span> buf<span class="token punctuation">)</span><span class="token punctuation">;</span>
+buf <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span>
+<span class="token function">mycopy</span><span class="token punctuation">(</span>buf<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%s\n"</span><span class="token punctuation">,</span> buf<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-return 0;
-}</code></pre><h4 id="gdb-调试之调试前提"><a href="#gdb-调试之调试前提" class="headerlink" title="gdb 调试之调试前提"></a>gdb 调试之调试前提</h4><p>并非所有的程序都可以直接调试，gdb 程序的前提是即将调试的程序中必须包含有调试符号信息。因此在程序编译生成时必须指定生成debug版本的程序，因为只有debug版本的程序在编译生成的时候才会加入程序的调试符号信息。</p>
+<span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="gdb-调试之调试前提"><a href="#gdb-调试之调试前提" class="headerlink" title="gdb 调试之调试前提"></a>gdb 调试之调试前提</h4><p>并非所有的程序都可以直接调试，gdb 程序的前提是即将调试的程序中必须包含有调试符号信息。因此在程序编译生成时必须指定生成debug版本的程序，因为只有debug版本的程序在编译生成的时候才会加入程序的调试符号信息。</p>
 <pre><code>[san@San doc]$ ls -l test.c
 -rw-rw-r-- 1 san san 460 Apr 20 15:40 test.c
 [san@San doc]$ gcc -g test.c -o test
@@ -1253,7 +1254,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">1257.5k</span>&nbsp;字
+                class="white-color">1222.3k</span>&nbsp;字
             
             
             

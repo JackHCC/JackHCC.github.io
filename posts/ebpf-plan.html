@@ -1459,28 +1459,29 @@
 <p>相比于操作系统提供的静态计数器（counters、gauges），eBPF 能在内核中收集和聚合自定义 metric， 并能从不同数据源来生成可观测数据。这既扩展了可观测性的深度，也显著减少了整体系统开销， 因为现在可以选择只收集需要的数据，并且后者是直方图或类似的格式，而非原始采样数据。</p>
 <h3 id="Linux驱动模块开发"><a href="#Linux驱动模块开发" class="headerlink" title="Linux驱动模块开发"></a>Linux驱动模块开发</h3><h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><p>Linux 内核的整体结构已经非常庞大,而其包含的组件也非常多。这会导致两个问题,一是生成的内核会很大,二是如果我们要在现有的内核中新增或删除功能,将不得不重新编译内核。Linux 提供了这样的一种机制,这种机制被称为模块(Module)。使得编译出的内核本身并不需要包含所有功能,而在这些功能需要被使用的时候,其对应的代码被动态地加载到内核中。</p>
 <h4 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h4><p>先来看一个最简单的内核模块“Hello World”，代码如下：</p>
-<pre><code>#include &lt;linux/init.h&gt;
-#include &lt;linux/module.h&gt;
+<pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;linux/init.h></span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;linux/module.h></span></span>
 
-static int hello_init(void) /初始化函数/
-{
- printk(KERN_INFO " Hello World enter\n");
- return 0;
-}
+<span class="token keyword">static</span> <span class="token keyword">int</span> <span class="token function">hello_init</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span> <span class="token operator">/</span>初始化函数<span class="token operator">/</span>
+<span class="token punctuation">{</span>
+ <span class="token function">printk</span><span class="token punctuation">(</span>KERN_INFO <span class="token string">" Hello World enter\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
 
-static void hello_exit(void) /卸载函数/
-{
- printk(KERN_INFO " Hello World exit\n ");
-}
+<span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">hello_exit</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span> <span class="token operator">/</span>卸载函数<span class="token operator">/</span>
+<span class="token punctuation">{</span>
+ <span class="token function">printk</span><span class="token punctuation">(</span>KERN_INFO <span class="token string">" Hello World exit\n "</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
 
-module_init(hello_init); /模块初始化/
-module_exit(hello_exit); /卸载模块/
+<span class="token function">module_init</span><span class="token punctuation">(</span>hello_init<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token operator">/</span>模块初始化<span class="token operator">/</span>
+<span class="token function">module_exit</span><span class="token punctuation">(</span>hello_exit<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token operator">/</span>卸载模块<span class="token operator">/</span>
 
-MODULE_LICENSE("Dual BSD/GPL"); /许可声明/
+<span class="token function">MODULE_LICENSE</span><span class="token punctuation">(</span><span class="token string">"Dual BSD/GPL"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token operator">/</span>许可声明<span class="token operator">/</span>
 
-MODULE_AUTHOR("Linux");
-MODULE_DESCRIPTION("A simple Hello World Module");
-MODULE_ALIAS("a simplest module");</code></pre><p>这个模块定义了两个函数, 一个在模块加载到内核时被调用( hello_init )以及一个在模块被去除时被调用( hello_exit ). moudle_init 和 module_exit 这几行使用了特别的内核宏来指出这两个函数的角色. 另一个特别的宏 (MODULE_LICENSE) 是用来告知内核, 该模块带有一个自由的许可证.</p>
+<span class="token function">MODULE_AUTHOR</span><span class="token punctuation">(</span><span class="token string">"Linux"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">MODULE_DESCRIPTION</span><span class="token punctuation">(</span><span class="token string">"A simple Hello World Module"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">MODULE_ALIAS</span><span class="token punctuation">(</span><span class="token string">"a simplest module"</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这个模块定义了两个函数, 一个在模块加载到内核时被调用( hello_init )以及一个在模块被去除时被调用( hello_exit ). moudle_init 和 module_exit 这几行使用了特别的内核宏来指出这两个函数的角色. 另一个特别的宏 (MODULE_LICENSE) 是用来告知内核, 该模块带有一个自由的许可证.</p>
 <p>注：内核模块中用于输出的函数是内核空间的 printk()而非用户空间的 printf()，具体用法参考附件 printk函数介绍。</p>
 <h4 id="几个常用命令"><a href="#几个常用命令" class="headerlink" title="几个常用命令"></a>几个常用命令</h4><h5 id="加载模块"><a href="#加载模块" class="headerlink" title="加载模块"></a>加载模块</h5><p>通过“insmod ./hello.ko”命令可以加载，加载时输出“Hello World enter”。</p>
 <h5 id="卸载模块"><a href="#卸载模块" class="headerlink" title="卸载模块"></a>卸载模块</h5><p>通过“rmmod hello”命令可以卸载，卸载时输出“Hello World exit”。</p>
@@ -1507,29 +1508,33 @@ depends: </code></pre><h4 id="Linux-内核模块程序的结构"><a href="#Linux
 <p>5、模块导出符号（可选） 内核模块可以导出符号（symbol，对应于函数或变量），这样其它模块可以使用本模块中的变量或函数。 </p>
 <p>6、模块作者等信息声明（可选） 用于申明模块作者的相关信息，一般用于备注作者姓名、邮箱等。</p>
 <h5 id="模块加载函数"><a href="#模块加载函数" class="headerlink" title="模块加载函数"></a>模块加载函数</h5><p>Linux 内核模块加载函数一般以_ _init 标识声明,典型的模块加载函数如下：</p>
-<pre><code>static int _ _init initialization_function(void)
-{
-/* 初始化代码 */
-}
-module_init(initialization_function);</code></pre><p>模块加载函数必须以“module_init(函数名)”的形式被指定。它返回整型值,若初始化成功,应返回 0。而在初始化失败时,应该返回错误编码。在 Linux 内核里,错误编码是一个负值。</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">static</span> <span class="token keyword">int</span> _ _init <span class="token function">initialization_function</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+<span class="token comment" spellcheck="true">/* 初始化代码 */</span>
+<span class="token punctuation">}</span>
+<span class="token function">module_init</span><span class="token punctuation">(</span>initialization_function<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>模块加载函数必须以“module_init(函数名)”的形式被指定。它返回整型值,若初始化成功,应返回 0。而在初始化失败时,应该返回错误编码。在 Linux 内核里,错误编码是一个负值。</p>
 <p>在 Linux 2.6 内核中,可以使用 request_module(const char *fmt, …)函数加载内核模块,驱动开发人员可以通过调用。</p>
-<pre><code>request_module(module_name);
-/**** 或者 ****/
-request_module("char-major-%d-%d", MAJOR(dev), MINOR(dev));</code></pre><p>注意：在 Linux 中,所有标识为_ init 的函数在连接的时候都放在.init.text 这个区段内,此外,所有的 init 函数在区段.initcall.init 中还保存了一份函数指针,在初始化时内核会通过这些函数指针调用这些 _init 函数,并在初始化完成后,释放 init 区段(包括.init.text、.initcall.init 等)。</p>
-<h5 id="模块卸载函数"><a href="#模块卸载函数" class="headerlink" title="模块卸载函数"></a>模块卸载函数</h5><pre><code>static void _ _exit cleanup_function(void)
-{
-/* 释放代码 */
-}
-module_exit(cleanup_function);</code></pre><p>模块卸载函数在模块卸载的时候执行,不返回任何值,必须以“module_exit(函数名)”的形式来指定。通常来说,模块卸载函数要完成与模块加载函数相反的功能,如下所示。</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token function">request_module</span><span class="token punctuation">(</span>module_name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">/**** 或者 ****/</span>
+<span class="token function">request_module</span><span class="token punctuation">(</span><span class="token string">"char-major-%d-%d"</span><span class="token punctuation">,</span> <span class="token function">MAJOR</span><span class="token punctuation">(</span>dev<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">MINOR</span><span class="token punctuation">(</span>dev<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>注意：在 Linux 中,所有标识为_ init 的函数在连接的时候都放在.init.text 这个区段内,此外,所有的 init 函数在区段.initcall.init 中还保存了一份函数指针,在初始化时内核会通过这些函数指针调用这些 _init 函数,并在初始化完成后,释放 init 区段(包括.init.text、.initcall.init 等)。</p>
+<h5 id="模块卸载函数"><a href="#模块卸载函数" class="headerlink" title="模块卸载函数"></a>模块卸载函数</h5><pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">static</span> <span class="token keyword">void</span> _ _exit <span class="token function">cleanup_function</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+<span class="token comment" spellcheck="true">/* 释放代码 */</span>
+<span class="token punctuation">}</span>
+<span class="token function">module_exit</span><span class="token punctuation">(</span>cleanup_function<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>模块卸载函数在模块卸载的时候执行,不返回任何值,必须以“module_exit(函数名)”的形式来指定。通常来说,模块卸载函数要完成与模块加载函数相反的功能,如下所示。</p>
 <p>若模块加载函数注册了 XXX,则模块卸载函数应该注销 XXX。</p>
 <p>若模块加载函数动态申请了内存,则模块卸载函数应释放该内存。</p>
 <p>若模块加载函数申请了硬件资源(中断、DMA 通道、I/O 端口和 I/O 内存等)的占用,则模块卸载函数应释放这些硬件资源。</p>
 <p>若模块加载函数开启了硬件,则卸载函数中一般要关闭之。</p>
 <h5 id="模块参数"><a href="#模块参数" class="headerlink" title="模块参数"></a>模块参数</h5><p>用“module_param(参数名,参数类型,参数读/写权限)”为模块定义一个参数,例如下列代码定义了 1 个整型参数和 1 个字符指针参数:</p>
-<pre><code>static char *book_name = " dissecting Linux Device Driver ";
-static int num = 4 000;
-module_param(num, int, S_IRUGO);
-module_param(book_name, charp, S_IRUGO);</code></pre><p>参数类型可以是 byte、short、ushort、int、uint、long、ulong、charp(字符指针)、bool 或 invbool(布尔的反),在模块被编译时会将 module_param 中声明的类型与变量定义的类型进行比较,判断是否一致。</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">static</span> <span class="token keyword">char</span> <span class="token operator">*</span>book_name <span class="token operator">=</span> <span class="token string">" dissecting Linux Device Driver "</span><span class="token punctuation">;</span>
+<span class="token keyword">static</span> <span class="token keyword">int</span> num <span class="token operator">=</span> <span class="token number">4</span> <span class="token number">000</span><span class="token punctuation">;</span>
+<span class="token function">module_param</span><span class="token punctuation">(</span>num<span class="token punctuation">,</span> <span class="token keyword">int</span><span class="token punctuation">,</span> S_IRUGO<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">module_param</span><span class="token punctuation">(</span>book_name<span class="token punctuation">,</span> charp<span class="token punctuation">,</span> S_IRUGO<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>参数类型可以是 byte、short、ushort、int、uint、long、ulong、charp(字符指针)、bool 或 invbool(布尔的反),在模块被编译时会将 module_param 中声明的类型与变量定义的类型进行比较,判断是否一致。</p>
 <p>在装载内核模块时,用户可以向模块传递参数,形式为“insmode(或 modprobe)模块名 参数名=参数值”,如果不传递,参数将使用模块内定义的缺省值。</p>
 <h5 id="内核模块的符号导出"><a href="#内核模块的符号导出" class="headerlink" title="内核模块的符号导出"></a>内核模块的符号导出</h5><p>模块可以使用如下宏导出符号到内核符号表：</p>
 <pre><code>EXPORT_SYMBOL(符号名);
@@ -2072,7 +2077,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">1257.5k</span>&nbsp;字
+                class="white-color">1222.3k</span>&nbsp;字
             
             
             

