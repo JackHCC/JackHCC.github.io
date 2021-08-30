@@ -26,9 +26,9 @@
     
     <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/jquery/jquery.min.js"></script>
     
-<meta name="generator" content="Hexo 4.2.0"><link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
-<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
-</head>
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
 
 
 <body>
@@ -320,10 +320,105 @@
 
 
 
-<main class="container content">
+<main class="post-container content">
 
     
-    <!-- 文章内容详情 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        height: calc(100vh - 250px);
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 30px;
+        bottom: 146px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
 <div id="artDetail">
     <div class="card">
         <div class="card-content article-info">
@@ -357,14 +452,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2020-02-28
+                    2020-03-09
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-08-25
+                    2021-08-30
                 </div>
                 
 
@@ -397,31 +492,41 @@
                 <h1 id="python照片墙设计"><a href="#python照片墙设计" class="headerlink" title="python照片墙设计"></a>python照片墙设计</h1><h3 id="代码规划："><a href="#代码规划：" class="headerlink" title="代码规划："></a>代码规划：</h3><ul>
 <li>将爬虫爬取的图片进行处理，减小尺寸</li>
 <li>将处理好的图片进行照片墙设计<h3 id="图片处理ImageSolve-py-批量处理"><a href="#图片处理ImageSolve-py-批量处理" class="headerlink" title="图片处理ImageSolve.py:批量处理"></a>图片处理ImageSolve.py:批量处理</h3></li>
-<li>导入库：PIL:图像处理；glob<pre><code>from PIL import Image
-import os.path
-import glob</code></pre></li>
-<li>定义ReSize函数：<pre><code>#由于爬虫获取的照片尺寸太大，我们更改爬虫获取的照片尺寸大小
-def Resize(file, outdir, width, height):
-  imgFile = Image.open(file)
-  try:
-      newImage = imgFile.resize((width, height), Image.BILINEAR)    #更改尺寸
-      newImage.save(os.path.join(outdir, os.path.basename(file)))     #输出保存图片
-  except Exception as e:
-      print(e)</code></pre></li>
-<li>处理后照片的存储<pre><code>for file in glob.glob("res\\*.jpg"):  # 图片所在的目录
-  Resize(file, "new", 100, 100)  # 新图片存放的目录</code></pre><h3 id="照片墙展示"><a href="#照片墙展示" class="headerlink" title="照片墙展示"></a>照片墙展示</h3></li>
-<li>导入库<pre><code>import sys
-from PyQt5.QtGui import QPixmap
-from PyQt5.QtWidgets import *</code></pre></li>
-<li>Qt窗口基本创建<pre><code>app = QApplication(sys.argv)
-</code></pre></li>
+<li>导入库：PIL:图像处理；glob<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> PIL <span class="token keyword">import</span> Image
+<span class="token keyword">import</span> os<span class="token punctuation">.</span>path
+<span class="token keyword">import</span> glob<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+</li>
+<li>定义ReSize函数：<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#由于爬虫获取的照片尺寸太大，我们更改爬虫获取的照片尺寸大小</span>
+<span class="token keyword">def</span> <span class="token function">Resize</span><span class="token punctuation">(</span>file<span class="token punctuation">,</span> outdir<span class="token punctuation">,</span> width<span class="token punctuation">,</span> height<span class="token punctuation">)</span><span class="token punctuation">:</span>
+  imgFile <span class="token operator">=</span> Image<span class="token punctuation">.</span>open<span class="token punctuation">(</span>file<span class="token punctuation">)</span>
+  <span class="token keyword">try</span><span class="token punctuation">:</span>
+      newImage <span class="token operator">=</span> imgFile<span class="token punctuation">.</span>resize<span class="token punctuation">(</span><span class="token punctuation">(</span>width<span class="token punctuation">,</span> height<span class="token punctuation">)</span><span class="token punctuation">,</span> Image<span class="token punctuation">.</span>BILINEAR<span class="token punctuation">)</span>    <span class="token comment" spellcheck="true">#更改尺寸</span>
+      newImage<span class="token punctuation">.</span>save<span class="token punctuation">(</span>os<span class="token punctuation">.</span>path<span class="token punctuation">.</span>join<span class="token punctuation">(</span>outdir<span class="token punctuation">,</span> os<span class="token punctuation">.</span>path<span class="token punctuation">.</span>basename<span class="token punctuation">(</span>file<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>     <span class="token comment" spellcheck="true">#输出保存图片</span>
+  <span class="token keyword">except</span> Exception <span class="token keyword">as</span> e<span class="token punctuation">:</span>
+      <span class="token keyword">print</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li>处理后照片的存储<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">for</span> file <span class="token keyword">in</span> glob<span class="token punctuation">.</span>glob<span class="token punctuation">(</span><span class="token string">"res\\*.jpg"</span><span class="token punctuation">)</span><span class="token punctuation">:</span>  <span class="token comment" spellcheck="true"># 图片所在的目录</span>
+  Resize<span class="token punctuation">(</span>file<span class="token punctuation">,</span> <span class="token string">"new"</span><span class="token punctuation">,</span> <span class="token number">100</span><span class="token punctuation">,</span> <span class="token number">100</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># 新图片存放的目录</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h3 id="照片墙展示"><a href="#照片墙展示" class="headerlink" title="照片墙展示"></a>照片墙展示</h3></li>
+<li>导入库<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> sys
+<span class="token keyword">from</span> PyQt5<span class="token punctuation">.</span>QtGui <span class="token keyword">import</span> QPixmap
+<span class="token keyword">from</span> PyQt5<span class="token punctuation">.</span>QtWidgets <span class="token keyword">import</span> <span class="token operator">*</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+</li>
+<li>Qt窗口基本创建<pre class="line-numbers language-python"><code class="language-python">app <span class="token operator">=</span> QApplication<span class="token punctuation">(</span>sys<span class="token punctuation">.</span>argv<span class="token punctuation">)</span>
+win <span class="token operator">=</span> QWidget<span class="token punctuation">(</span><span class="token punctuation">)</span>
+win<span class="token punctuation">.</span>resize<span class="token punctuation">(</span><span class="token number">760</span><span class="token punctuation">,</span> <span class="token number">540</span><span class="token punctuation">)</span>
+win<span class="token punctuation">.</span>move<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span>
+layout<span class="token operator">=</span>QGridLayout<span class="token punctuation">(</span>win<span class="token punctuation">)</span>
+positionSet<span class="token punctuation">(</span><span class="token punctuation">)</span>
+win<span class="token punctuation">.</span>setWindowTitle<span class="token punctuation">(</span><span class="token string">'GUI'</span><span class="token punctuation">)</span>
+win<span class="token punctuation">.</span>show<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li>背景图设置<pre class="line-numbers language-python"><code class="language-python">b<span class="token operator">=</span>QLabel<span class="token punctuation">(</span>win<span class="token punctuation">)</span>
+b<span class="token punctuation">.</span>setPixmap<span class="token punctuation">(</span>QPixmap<span class="token punctuation">(</span><span class="token string">"bg.jpg"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+b<span class="token punctuation">.</span>setGeometry<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">820</span><span class="token punctuation">,</span><span class="token number">640</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+</li>
+<li>布局函数<pre><code>def positionSet():</code></pre><h3 id="结果展示"><a href="#结果展示" class="headerlink" title="结果展示"></a>结果展示</h3><img src="/images/loading.gif" data-original="../images/basic/1240-1627231951204970" alt=""></li>
 </ul>
-<p>win = QWidget()<br>win.resize(760, 540)<br>win.move(0, 0)<br>layout=QGridLayout(win)</p>
-<p>positionSet()<br>win.setWindowTitle(‘GUI’)<br>win.show()</p>
-<pre><code>+ 背景图设置</code></pre><p>b=QLabel(win)<br>b.setPixmap(QPixmap(“bg.jpg”))<br>b.setGeometry(0,0,820,640)</p>
-<pre><code>+ 布局函数</code></pre><p>def positionSet():</p>
-<p>```</p>
-<h3 id="结果展示"><a href="#结果展示" class="headerlink" title="结果展示"></a>结果展示</h3><p><img src="/images/loading.gif" data-original="../images/basic/1240-1627231951204970" alt=""></p>
 <p>源码地址：<a href="https://github.com/JackHCC/SlideShow" target="_blank" rel="noopener">https://github.com/JackHCC/SlideShow</a></p>
 <script>
         document.querySelectorAll('.github-emoji')
@@ -676,7 +781,7 @@ from PyQt5.QtWidgets import *</code></pre></li>
         repo: 'JackHCC.github.io',
         owner: 'JackHCC',
         admin: "JackHCC",
-        id: '2020-02-28T21-45-50',
+        id: '2020-03-09T21-45-50',
         distractionFreeMode: false  // Facebook-like distraction free mode
     });
 
@@ -718,7 +823,7 @@ from PyQt5.QtWidgets import *</code></pre></li>
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2020-02-28
+                            <i class="far fa-clock fa-fw icon-date"></i>2020-03-10
                         </span>
                         <span class="publish-author">
                             
@@ -767,7 +872,7 @@ from PyQt5.QtWidgets import *</code></pre></li>
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-02-28
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-03-08
                             </span>
                         <span class="publish-author">
                             
@@ -825,6 +930,100 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
 </style>
 
 
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('4'),
+            headingSelector: 'h1, h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h1, h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
     
 
 </main>
@@ -842,7 +1041,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">1254k</span>&nbsp;字
+                class="white-color">1257.5k</span>&nbsp;字
             
             
             

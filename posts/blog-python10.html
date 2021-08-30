@@ -26,9 +26,9 @@
     
     <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/jquery/jquery.min.js"></script>
     
-<meta name="generator" content="Hexo 4.2.0"><link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
-<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
-</head>
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
 
 
 <body>
@@ -320,10 +320,105 @@
 
 
 
-<main class="container content">
+<main class="post-container content">
 
     
-    <!-- 文章内容详情 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        height: calc(100vh - 250px);
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 30px;
+        bottom: 146px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
 <div id="artDetail">
     <div class="card">
         <div class="card-content article-info">
@@ -357,14 +452,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2020-02-28
+                    2020-03-10
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-07-26
+                    2021-08-30
                 </div>
                 
 
@@ -395,44 +490,49 @@
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <h1 id="利用关键词动态爬取想要的图片"><a href="#利用关键词动态爬取想要的图片" class="headerlink" title="利用关键词动态爬取想要的图片"></a>利用关键词动态爬取想要的图片</h1><h3 id="导入相关库"><a href="#导入相关库" class="headerlink" title="导入相关库"></a>导入相关库</h3><p>主要是requests库</p>
-<pre><code>import re  # 导入正则表达式模块
-import requests  # python HTTP客户端 编写爬虫和测试服务器经常用到的模块
-import random  # 随机生成一个数，范围[0,1]
-import os #创建路径</code></pre><h3 id="写爬虫爬取图片函数"><a href="#写爬虫爬取图片函数" class="headerlink" title="写爬虫爬取图片函数"></a>写爬虫爬取图片函数</h3><pre><code>def spiderPic(html, keyword):       #html：网页；keyword：关键词
-    print('正在查找 ' + keyword + ' 对应的图片,请稍后......')
-    for addr in re.findall('"objURL":"(.*?)"', html, re.S):  # 动态查找URL
-        print('正在爬取URL地址：' + str(addr)[0:40] + '...')  # 爬取的地址长度超过40时，用'...'代替后面的内容
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> re  <span class="token comment" spellcheck="true"># 导入正则表达式模块</span>
+<span class="token keyword">import</span> requests  <span class="token comment" spellcheck="true"># python HTTP客户端 编写爬虫和测试服务器经常用到的模块</span>
+<span class="token keyword">import</span> random  <span class="token comment" spellcheck="true"># 随机生成一个数，范围[0,1]</span>
+<span class="token keyword">import</span> os <span class="token comment" spellcheck="true">#创建路径</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="写爬虫爬取图片函数"><a href="#写爬虫爬取图片函数" class="headerlink" title="写爬虫爬取图片函数"></a>写爬虫爬取图片函数</h3><pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">spiderPic</span><span class="token punctuation">(</span>html<span class="token punctuation">,</span> keyword<span class="token punctuation">)</span><span class="token punctuation">:</span>       <span class="token comment" spellcheck="true">#html：网页；keyword：关键词</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'正在查找 '</span> <span class="token operator">+</span> keyword <span class="token operator">+</span> <span class="token string">' 对应的图片,请稍后......'</span><span class="token punctuation">)</span>
+    <span class="token keyword">for</span> addr <span class="token keyword">in</span> re<span class="token punctuation">.</span>findall<span class="token punctuation">(</span><span class="token string">'"objURL":"(.*?)"'</span><span class="token punctuation">,</span> html<span class="token punctuation">,</span> re<span class="token punctuation">.</span>S<span class="token punctuation">)</span><span class="token punctuation">:</span>  <span class="token comment" spellcheck="true"># 动态查找URL</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'正在爬取URL地址：'</span> <span class="token operator">+</span> str<span class="token punctuation">(</span>addr<span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">:</span><span class="token number">40</span><span class="token punctuation">]</span> <span class="token operator">+</span> <span class="token string">'...'</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># 爬取的地址长度超过40时，用'...'代替后面的内容</span>
 
-        try:
-            pics = requests.get(addr, timeout=10)  # 请求URL时间（最大10秒）
-        except requests.exceptions.ConnectionError:
-            print('您当前请求的URL地址出现错误')
-            continue
+        <span class="token keyword">try</span><span class="token punctuation">:</span>
+            pics <span class="token operator">=</span> requests<span class="token punctuation">.</span>get<span class="token punctuation">(</span>addr<span class="token punctuation">,</span> timeout<span class="token operator">=</span><span class="token number">10</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># 请求URL时间（最大10秒）</span>
+        <span class="token keyword">except</span> requests<span class="token punctuation">.</span>exceptions<span class="token punctuation">.</span>ConnectionError<span class="token punctuation">:</span>
+            <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'您当前请求的URL地址出现错误'</span><span class="token punctuation">)</span>
+            <span class="token keyword">continue</span>
 
-        fq = open('E:\\img\\' + (keyword + '_' + str(random.randrange(0, 1000, 4)) + '.jpg'), 'wb')  # 下载图片，并保存和命名
-        fq.write(pics.content)
-        fq.close()</code></pre><h3 id="主函数"><a href="#主函数" class="headerlink" title="主函数"></a>主函数</h3><pre><code>if __name__ == '__main__':
-    word = input('请输入你要搜索的图片关键字：')
-    result = requests.get(
-        # 通过百度引擎搜索关键词链接
-        'http://image.baidu.com/search/index?tn=baiduimage&amp;ps=1&amp;ct=201326592&amp;lm=-1&amp;cl=2&amp;nc=1&amp;ie=utf-8&amp;word=' + word)
-</code></pre><h3 id="存放图片文件夹创建"><a href="#存放图片文件夹创建" class="headerlink" title="存放图片文件夹创建"></a>存放图片文件夹创建</h3><p>加入判断是否存在该文件目录</p>
-<pre><code>path='E:\\img\\';
-# 判断路径是否存在
-isExists = os.path.exists(path)
+        fq <span class="token operator">=</span> open<span class="token punctuation">(</span><span class="token string">'E:\\img\\'</span> <span class="token operator">+</span> <span class="token punctuation">(</span>keyword <span class="token operator">+</span> <span class="token string">'_'</span> <span class="token operator">+</span> str<span class="token punctuation">(</span>random<span class="token punctuation">.</span>randrange<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1000</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">'.jpg'</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">'wb'</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># 下载图片，并保存和命名</span>
+        fq<span class="token punctuation">.</span>write<span class="token punctuation">(</span>pics<span class="token punctuation">.</span>content<span class="token punctuation">)</span>
+        fq<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="主函数"><a href="#主函数" class="headerlink" title="主函数"></a>主函数</h3><pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">if</span> __name__ <span class="token operator">==</span> <span class="token string">'__main__'</span><span class="token punctuation">:</span>
+    word <span class="token operator">=</span> input<span class="token punctuation">(</span><span class="token string">'请输入你要搜索的图片关键字：'</span><span class="token punctuation">)</span>
+    result <span class="token operator">=</span> requests<span class="token punctuation">.</span>get<span class="token punctuation">(</span>
+        <span class="token comment" spellcheck="true"># 通过百度引擎搜索关键词链接</span>
+        <span class="token string">'http://image.baidu.com/search/index?tn=baiduimage&amp;ps=1&amp;ct=201326592&amp;lm=-1&amp;cl=2&amp;nc=1&amp;ie=utf-8&amp;word='</span> <span class="token operator">+</span> word<span class="token punctuation">)</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="存放图片文件夹创建"><a href="#存放图片文件夹创建" class="headerlink" title="存放图片文件夹创建"></a>存放图片文件夹创建</h3><p>加入判断是否存在该文件目录</p>
+<pre class="line-numbers language-python"><code class="language-python">path<span class="token operator">=</span><span class="token string">'E:\\img\\'</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true"># 判断路径是否存在</span>
+isExists <span class="token operator">=</span> os<span class="token punctuation">.</span>path<span class="token punctuation">.</span>exists<span class="token punctuation">(</span>path<span class="token punctuation">)</span>
 
-### 判断结果
-if not isExists:
-    # 如果不存在则创建目录
-    # 创建目录操作函数
-    os.makedirs(path)
-    print
-    path + '创建成功'
+<span class="token comment" spellcheck="true">### 判断结果</span>
+<span class="token keyword">if</span> <span class="token operator">not</span> isExists<span class="token punctuation">:</span>
+    <span class="token comment" spellcheck="true"># 如果不存在则创建目录</span>
+    <span class="token comment" spellcheck="true"># 创建目录操作函数</span>
+    os<span class="token punctuation">.</span>makedirs<span class="token punctuation">(</span>path<span class="token punctuation">)</span>
+    <span class="token keyword">print</span>
+    path <span class="token operator">+</span> <span class="token string">'创建成功'</span>
 
-else:
-    # 如果目录存在则不创建，并提示目录已存在
-    print
-    path + ' 目录已存在'</code></pre><h3 id="调用函数"><a href="#调用函数" class="headerlink" title="调用函数"></a>调用函数</h3><pre><code>spiderPic(result.text, word)</code></pre><h3 id="数据展示"><a href="#数据展示" class="headerlink" title="数据展示"></a>数据展示</h3><p>我们在输入提示后输入关键词 “风景”并开始爬取图片<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627231956750972" alt=""><br>爬取的图片在img文件夹中</p>
+<span class="token keyword">else</span><span class="token punctuation">:</span>
+    <span class="token comment" spellcheck="true"># 如果目录存在则不创建，并提示目录已存在</span>
+    <span class="token keyword">print</span>
+    path <span class="token operator">+</span> <span class="token string">' 目录已存在'</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="调用函数"><a href="#调用函数" class="headerlink" title="调用函数"></a>调用函数</h3><pre class="line-numbers language-python"><code class="language-python">spiderPic<span class="token punctuation">(</span>result<span class="token punctuation">.</span>text<span class="token punctuation">,</span> word<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h3 id="数据展示"><a href="#数据展示" class="headerlink" title="数据展示"></a>数据展示</h3><p>我们在输入提示后输入关键词 “风景”并开始爬取图片<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627231956750972" alt=""><br>爬取的图片在img文件夹中</p>
 <p>源码地址：<a href="https://github.com/JackHCC/KeyWord-Crawler" target="_blank" rel="noopener">https://github.com/JackHCC/KeyWord-Crawler</a></p>
 <script>
         document.querySelectorAll('.github-emoji')
@@ -687,7 +787,7 @@ else:
         repo: 'JackHCC.github.io',
         owner: 'JackHCC',
         admin: "JackHCC",
-        id: '2020-02-28T21-50-50',
+        id: '2020-03-10T21-50-50',
         distractionFreeMode: false  // Facebook-like distraction free mode
     });
 
@@ -729,7 +829,7 @@ else:
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2020-02-28
+                            <i class="far fa-clock fa-fw icon-date"></i>2020-03-11
                         </span>
                         <span class="publish-author">
                             
@@ -778,7 +878,7 @@ else:
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-02-28
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-03-09
                             </span>
                         <span class="publish-author">
                             
@@ -836,6 +936,100 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
 </style>
 
 
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('4'),
+            headingSelector: 'h1, h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h1, h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
     
 
 </main>
@@ -853,7 +1047,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">1254k</span>&nbsp;字
+                class="white-color">1257.5k</span>&nbsp;字
             
             
             

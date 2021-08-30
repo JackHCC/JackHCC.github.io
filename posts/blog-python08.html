@@ -26,9 +26,9 @@
     
     <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/jquery/jquery.min.js"></script>
     
-<meta name="generator" content="Hexo 4.2.0"><link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
-<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
-</head>
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
 
 
 <body>
@@ -320,10 +320,105 @@
 
 
 
-<main class="container content">
+<main class="post-container content">
 
     
-    <!-- 文章内容详情 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        height: calc(100vh - 250px);
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 30px;
+        bottom: 146px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
 <div id="artDetail">
     <div class="card">
         <div class="card-content article-info">
@@ -357,14 +452,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2020-02-28
+                    2020-03-08
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-07-27
+                    2021-08-30
                 </div>
                 
 
@@ -403,55 +498,63 @@
 <p>(5)增强学习：通过观察周围环境来学习。每个动作都会对环境有所影响，学习对象根据观察到的周围环境的反馈来做出判断。</p>
 <h1 id="sklearn使用"><a href="#sklearn使用" class="headerlink" title="sklearn使用"></a>sklearn使用</h1><h2 id="1-获取数据"><a href="#1-获取数据" class="headerlink" title="1. 获取数据"></a>1. 获取数据</h2><h3 id="1-1-导入sklearn数据集"><a href="#1-1-导入sklearn数据集" class="headerlink" title="1.1 导入sklearn数据集"></a>1.1 导入sklearn数据集</h3><p>　　sklearn中包含了大量的优质的数据集，在你学习机器学习的过程中，你可以通过使用这些数据集实现出不同的模型，从而提高你的动手实践能力，同时这个过程也可以加深你对理论知识的理解和把握。（这一步我也亟需加强，一起加油！^-^）</p>
 <p>首先呢，要想使用sklearn中的数据集，必须导入datasets模块：</p>
-<pre><code>from sklearn import datasets</code></pre><p> 下图中包含了大部分sklearn中数据集，调用方式也在图中给出，这里我们拿iris的数据来举个例子：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> sklearn <span class="token keyword">import</span> datasets<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p> 下图中包含了大部分sklearn中数据集，调用方式也在图中给出，这里我们拿iris的数据来举个例子：</p>
 <p>　　<img src="/images/loading.gif" data-original="../images/basic/1240-1627231910335960" alt=""></p>
 <p><img src="/images/loading.gif" data-original="../images/basic/1240-1627231914139962" alt=""></p>
-<pre><code>iris = datasets.load_iris() # 导入数据集
-X = iris.data # 获得其特征向量
-y = iris.target # 获得样本label</code></pre><h3 id="1-2-创建数据集"><a href="#1-2-创建数据集" class="headerlink" title="1.2 创建数据集"></a>1.2 创建数据集</h3><p>　　你除了可以使用sklearn自带的数据集，还可以自己去创建训练样本，具体用法参见《<a href="http://scikit-learn.org/stable/datasets/" target="_blank" rel="noopener">Dataset loading utilities</a>》，这里我们简单介绍一些，sklearn中的samples generator包含的大量创建样本数据的方法：</p>
+<pre class="line-numbers language-python"><code class="language-python">iris <span class="token operator">=</span> datasets<span class="token punctuation">.</span>load_iris<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true"># 导入数据集</span>
+X <span class="token operator">=</span> iris<span class="token punctuation">.</span>data <span class="token comment" spellcheck="true"># 获得其特征向量</span>
+y <span class="token operator">=</span> iris<span class="token punctuation">.</span>target <span class="token comment" spellcheck="true"># 获得样本label</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<h3 id="1-2-创建数据集"><a href="#1-2-创建数据集" class="headerlink" title="1.2 创建数据集"></a>1.2 创建数据集</h3><p>　　你除了可以使用sklearn自带的数据集，还可以自己去创建训练样本，具体用法参见《<a href="http://scikit-learn.org/stable/datasets/" target="_blank" rel="noopener">Dataset loading utilities</a>》，这里我们简单介绍一些，sklearn中的samples generator包含的大量创建样本数据的方法：</p>
 <p>　　 <img src="/images/loading.gif" data-original="../images/basic/1240-1627231917666964" alt=""></p>
 <p><img src="/images/loading.gif" data-original="../images/basic/1240-1627231922118966" alt=""></p>
 <p>下面我们拿分类问题的样本生成器举例子：</p>
-<pre><code>from sklearn.datasets.samples_generator import make_classification
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>datasets<span class="token punctuation">.</span>samples_generator <span class="token keyword">import</span> make_classification
 
-X, y = make_classification(n_samples=6, n_features=5, n_informative=2, 
-    n_redundant=2, n_classes=2, n_clusters_per_class=2, scale=1.0, 
-    random_state=20)
- # n_samples：指定样本数 
-# n_features：指定特征数
- # n_classes：指定几分类 
-# random_state：随机种子，使得随机状可重</code></pre><pre><code>&gt;&gt;&gt; for x_,y_ in zip(X,y): print(y_,end=': ') print(x_)
+X<span class="token punctuation">,</span> y <span class="token operator">=</span> make_classification<span class="token punctuation">(</span>n_samples<span class="token operator">=</span><span class="token number">6</span><span class="token punctuation">,</span> n_features<span class="token operator">=</span><span class="token number">5</span><span class="token punctuation">,</span> n_informative<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">,</span> 
+    n_redundant<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">,</span> n_classes<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">,</span> n_clusters_per_class<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">,</span> scale<span class="token operator">=</span><span class="token number">1.0</span><span class="token punctuation">,</span> 
+    random_state<span class="token operator">=</span><span class="token number">20</span><span class="token punctuation">)</span>
+ <span class="token comment" spellcheck="true"># n_samples：指定样本数 </span>
+<span class="token comment" spellcheck="true"># n_features：指定特征数</span>
+ <span class="token comment" spellcheck="true"># n_classes：指定几分类 </span>
+<span class="token comment" spellcheck="true"># random_state：随机种子，使得随机状可重</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token operator">>></span><span class="token operator">></span> <span class="token keyword">for</span> x_<span class="token punctuation">,</span>y_ <span class="token keyword">in</span> zip<span class="token punctuation">(</span>X<span class="token punctuation">,</span>y<span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword">print</span><span class="token punctuation">(</span>y_<span class="token punctuation">,</span>end<span class="token operator">=</span><span class="token string">': '</span><span class="token punctuation">)</span> <span class="token keyword">print</span><span class="token punctuation">(</span>x_<span class="token punctuation">)</span>
 
-0: [-0.6600737  -0.0558978   0.82286793  1.1003977  -0.93493796] 
-1: [ 0.4113583   0.06249216 -0.90760075 -1.41296696  2.059838 ] 
-1: [ 1.52452016 -0.01867812  0.20900899  1.34422289 -1.61299022]
-0: [-1.25725859  0.02347952 -0.28764782 -1.32091378 -0.88549315]
-0: [-3.28323172  0.03899168 -0.43251277 -2.86249859 -1.10457948] 
-1: [ 1.68841011  0.06754955 -1.02805579 -0.83132182  0.93286635]</code></pre><h2 id="2-数据预处理"><a href="#2-数据预处理" class="headerlink" title="2. 数据预处理"></a>2. 数据预处理</h2><p>　　数据预处理阶段是机器学习中不可缺少的一环，它会使得数据更加有效的被模型或者评估器识别。下面我们来看一下sklearn中有哪些平时我们常用的函数：</p>
-<pre><code>from sklearn import preprocessing</code></pre><h3 id="2-1-数据归一化"><a href="#2-1-数据归一化" class="headerlink" title="2.1 数据归一化"></a>2.1 数据归一化</h3><p>　　为了使得训练数据的标准化规则与测试数据的标准化规则同步，preprocessing中提供了很多Scaler：</p>
-<pre><code>data = [[0, 0], [0, 0], [1, 1], [1, 1]] # 1\. 基于mean和std的标准化
-scaler = preprocessing.StandardScaler().fit(train_data)
-scaler.transform(train_data)
-scaler.transform(test_data) # 2\. 将每个特征值归一化到一个固定范围
-scaler = preprocessing.MinMaxScaler(feature_range=(0, 1)).fit(train_data)
-scaler.transform(train_data)
-scaler.transform(test_data) #feature_range: 定义归一化范围，注用（）括起来</code></pre><h3 id="2-2-正则化（normalize）"><a href="#2-2-正则化（normalize）" class="headerlink" title="2.2 正则化（normalize）"></a>2.2 正则化（<code>normalize</code>）</h3><p>　　当你想要计算两个样本的相似度时必不可少的一个操作，就是正则化。其思想是：首先求出样本的p-范数，然后该样本的所有元素都要除以该范数，这样最终使得每个样本的范数都为1。</p>
-<pre><code>&gt;&gt;&gt; X = [[ 1., -1.,  2.],
-...      [ 2.,  0.,  0.],
-...      [ 0., 1., -1.]] 
-&gt;&gt;&gt; X_normalized = preprocessing.normalize(X, norm='l2') 
-&gt;&gt;&gt; X_normalized                                      
-array([[ 0.40..., -0.40...,  0.81...],
-       [ 1.  ...,  0\.  ...,  0\.  ...],
-       [ 0\.  ..., 0.70..., -0.70...]])</code></pre><h3 id="2-3-one-hot编码"><a href="#2-3-one-hot编码" class="headerlink" title="2.3 one-hot编码"></a>2.3 one-hot编码</h3><p>　　one-hot编码是一种对离散特征值的编码方式，在LR模型中常用到，用于给线性模型增加非线性能力。</p>
-<pre><code>data = [[0, 0, 3], [1, 1, 0], [0, 2, 1], [1, 0, 2]]
-encoder = preprocessing.OneHotEncoder().fit(data)
-enc.transform(data).toarray()</code></pre><h2 id="3-数据集拆分"><a href="#3-数据集拆分" class="headerlink" title="3. 数据集拆分"></a>3. 数据集拆分</h2><p>　　在得到训练数据集时，通常我们经常会把训练数据集进一步拆分成训练集和验证集，这样有助于我们模型参数的选取。</p>
-<pre><code># 作用：将数据集划分为 训练集和测试集 # 格式：train_test_split(*arrays, **options)
-from sklearn.mode_selection import train_test_split
+<span class="token number">0</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">0.6600737</span>  <span class="token operator">-</span><span class="token number">0.0558978</span>   <span class="token number">0.82286793</span>  <span class="token number">1.1003977</span>  <span class="token operator">-</span><span class="token number">0.93493796</span><span class="token punctuation">]</span> 
+<span class="token number">1</span><span class="token punctuation">:</span> <span class="token punctuation">[</span> <span class="token number">0.4113583</span>   <span class="token number">0.06249216</span> <span class="token operator">-</span><span class="token number">0.90760075</span> <span class="token operator">-</span><span class="token number">1.41296696</span>  <span class="token number">2.059838</span> <span class="token punctuation">]</span> 
+<span class="token number">1</span><span class="token punctuation">:</span> <span class="token punctuation">[</span> <span class="token number">1.52452016</span> <span class="token operator">-</span><span class="token number">0.01867812</span>  <span class="token number">0.20900899</span>  <span class="token number">1.34422289</span> <span class="token operator">-</span><span class="token number">1.61299022</span><span class="token punctuation">]</span>
+<span class="token number">0</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">1.25725859</span>  <span class="token number">0.02347952</span> <span class="token operator">-</span><span class="token number">0.28764782</span> <span class="token operator">-</span><span class="token number">1.32091378</span> <span class="token operator">-</span><span class="token number">0.88549315</span><span class="token punctuation">]</span>
+<span class="token number">0</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">3.28323172</span>  <span class="token number">0.03899168</span> <span class="token operator">-</span><span class="token number">0.43251277</span> <span class="token operator">-</span><span class="token number">2.86249859</span> <span class="token operator">-</span><span class="token number">1.10457948</span><span class="token punctuation">]</span> 
+<span class="token number">1</span><span class="token punctuation">:</span> <span class="token punctuation">[</span> <span class="token number">1.68841011</span>  <span class="token number">0.06754955</span> <span class="token operator">-</span><span class="token number">1.02805579</span> <span class="token operator">-</span><span class="token number">0.83132182</span>  <span class="token number">0.93286635</span><span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="2-数据预处理"><a href="#2-数据预处理" class="headerlink" title="2. 数据预处理"></a>2. 数据预处理</h2><p>　　数据预处理阶段是机器学习中不可缺少的一环，它会使得数据更加有效的被模型或者评估器识别。下面我们来看一下sklearn中有哪些平时我们常用的函数：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> sklearn <span class="token keyword">import</span> preprocessing<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h3 id="2-1-数据归一化"><a href="#2-1-数据归一化" class="headerlink" title="2.1 数据归一化"></a>2.1 数据归一化</h3><p>　　为了使得训练数据的标准化规则与测试数据的标准化规则同步，preprocessing中提供了很多Scaler：</p>
+<pre class="line-numbers language-python"><code class="language-python">data <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token comment" spellcheck="true"># 1\. 基于mean和std的标准化</span>
+scaler <span class="token operator">=</span> preprocessing<span class="token punctuation">.</span>StandardScaler<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>fit<span class="token punctuation">(</span>train_data<span class="token punctuation">)</span>
+scaler<span class="token punctuation">.</span>transform<span class="token punctuation">(</span>train_data<span class="token punctuation">)</span>
+scaler<span class="token punctuation">.</span>transform<span class="token punctuation">(</span>test_data<span class="token punctuation">)</span> <span class="token comment" spellcheck="true"># 2\. 将每个特征值归一化到一个固定范围</span>
+scaler <span class="token operator">=</span> preprocessing<span class="token punctuation">.</span>MinMaxScaler<span class="token punctuation">(</span>feature_range<span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>fit<span class="token punctuation">(</span>train_data<span class="token punctuation">)</span>
+scaler<span class="token punctuation">.</span>transform<span class="token punctuation">(</span>train_data<span class="token punctuation">)</span>
+scaler<span class="token punctuation">.</span>transform<span class="token punctuation">(</span>test_data<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">#feature_range: 定义归一化范围，注用（）括起来</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="2-2-正则化（normalize）"><a href="#2-2-正则化（normalize）" class="headerlink" title="2.2 正则化（normalize）"></a>2.2 正则化（<code>normalize</code>）</h3><p>　　当你想要计算两个样本的相似度时必不可少的一个操作，就是正则化。其思想是：首先求出样本的p-范数，然后该样本的所有元素都要除以该范数，这样最终使得每个样本的范数都为1。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token operator">>></span><span class="token operator">></span> X <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">[</span> <span class="token number">1</span><span class="token punctuation">.</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">.</span><span class="token punctuation">,</span>  <span class="token number">2</span><span class="token punctuation">.</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>      <span class="token punctuation">[</span> <span class="token number">2</span><span class="token punctuation">.</span><span class="token punctuation">,</span>  <span class="token number">0</span><span class="token punctuation">.</span><span class="token punctuation">,</span>  <span class="token number">0</span><span class="token punctuation">.</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>      <span class="token punctuation">[</span> <span class="token number">0</span><span class="token punctuation">.</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">.</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">.</span><span class="token punctuation">]</span><span class="token punctuation">]</span> 
+<span class="token operator">>></span><span class="token operator">></span> X_normalized <span class="token operator">=</span> preprocessing<span class="token punctuation">.</span>normalize<span class="token punctuation">(</span>X<span class="token punctuation">,</span> norm<span class="token operator">=</span><span class="token string">'l2'</span><span class="token punctuation">)</span> 
+<span class="token operator">>></span><span class="token operator">></span> X_normalized                                      
+array<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">[</span> <span class="token number">0.40</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">0.40</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">,</span>  <span class="token number">0.81</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+       <span class="token punctuation">[</span> <span class="token number">1</span><span class="token punctuation">.</span>  <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">,</span>  <span class="token number">0</span>\<span class="token punctuation">.</span>  <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">,</span>  <span class="token number">0</span>\<span class="token punctuation">.</span>  <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+       <span class="token punctuation">[</span> <span class="token number">0</span>\<span class="token punctuation">.</span>  <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">,</span> <span class="token number">0.70</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">0.70</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="2-3-one-hot编码"><a href="#2-3-one-hot编码" class="headerlink" title="2.3 one-hot编码"></a>2.3 one-hot编码</h3><p>　　one-hot编码是一种对离散特征值的编码方式，在LR模型中常用到，用于给线性模型增加非线性能力。</p>
+<pre class="line-numbers language-python"><code class="language-python">data <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">]</span>
+encoder <span class="token operator">=</span> preprocessing<span class="token punctuation">.</span>OneHotEncoder<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>fit<span class="token punctuation">(</span>data<span class="token punctuation">)</span>
+enc<span class="token punctuation">.</span>transform<span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">.</span>toarray<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<h2 id="3-数据集拆分"><a href="#3-数据集拆分" class="headerlink" title="3. 数据集拆分"></a>3. 数据集拆分</h2><p>　　在得到训练数据集时，通常我们经常会把训练数据集进一步拆分成训练集和验证集，这样有助于我们模型参数的选取。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 作用：将数据集划分为 训练集和测试集 # 格式：train_test_split(*arrays, **options)</span>
+<span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>mode_selection <span class="token keyword">import</span> train_test_split
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42) 
-""" 参数           返回
+X_train<span class="token punctuation">,</span> X_test<span class="token punctuation">,</span> y_train<span class="token punctuation">,</span> y_test <span class="token operator">=</span> train_test_split<span class="token punctuation">(</span>X<span class="token punctuation">,</span> y<span class="token punctuation">,</span> test_size<span class="token operator">=</span><span class="token number">0.3</span><span class="token punctuation">,</span> random_state<span class="token operator">=</span><span class="token number">42</span><span class="token punctuation">)</span> 
+<span class="token triple-quoted-string string">""" 参数           返回
 ---
 arrays：样本数组，包含特征向量和标签
 
@@ -468,48 +571,53 @@ shuffle - 是否在分割之前对数据进行洗牌（默认True）
 
 
 分割后的列表，长度=2*len(arrays), 
-　　(train-test split) """</code></pre><h2 id="4-定义模型"><a href="#4-定义模型" class="headerlink" title="4. 定义模型"></a>4. 定义模型</h2><p>　　在这一步我们首先要分析自己数据的类型，搞清出你要用什么模型来做，然后我们就可以在sklearn中定义模型了。sklearn为所有模型提供了非常相似的接口，这样使得我们可以更加快速的熟悉所有模型的用法。在这之前我们先来看看模型的常用属性和功能：</p>
-<pre><code># 拟合模型
-model.fit(X_train, y_train) # 模型预测
-model.predict(X_test) # 获得这个模型的参数
-model.get_params() # 为模型进行打分
-model.score(data_X, data_y) # 线性回归：R square； 分类问题： acc</code></pre><h3 id="4-1-线性回归"><a href="#4-1-线性回归" class="headerlink" title="4.1 线性回归"></a>4.1 线性回归</h3><pre><code>from sklearn.linear_model import LinearRegression # 定义线性回归模型
-model = LinearRegression(fit_intercept=True, normalize=False, 
-    copy_X=True, n_jobs=1) 
-""" 参数
+　　(train-test split) """</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="4-定义模型"><a href="#4-定义模型" class="headerlink" title="4. 定义模型"></a>4. 定义模型</h2><p>　　在这一步我们首先要分析自己数据的类型，搞清出你要用什么模型来做，然后我们就可以在sklearn中定义模型了。sklearn为所有模型提供了非常相似的接口，这样使得我们可以更加快速的熟悉所有模型的用法。在这之前我们先来看看模型的常用属性和功能：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 拟合模型</span>
+model<span class="token punctuation">.</span>fit<span class="token punctuation">(</span>X_train<span class="token punctuation">,</span> y_train<span class="token punctuation">)</span> <span class="token comment" spellcheck="true"># 模型预测</span>
+model<span class="token punctuation">.</span>predict<span class="token punctuation">(</span>X_test<span class="token punctuation">)</span> <span class="token comment" spellcheck="true"># 获得这个模型的参数</span>
+model<span class="token punctuation">.</span>get_params<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true"># 为模型进行打分</span>
+model<span class="token punctuation">.</span>score<span class="token punctuation">(</span>data_X<span class="token punctuation">,</span> data_y<span class="token punctuation">)</span> <span class="token comment" spellcheck="true"># 线性回归：R square； 分类问题： acc</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="4-1-线性回归"><a href="#4-1-线性回归" class="headerlink" title="4.1 线性回归"></a>4.1 线性回归</h3><pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>linear_model <span class="token keyword">import</span> LinearRegression <span class="token comment" spellcheck="true"># 定义线性回归模型</span>
+model <span class="token operator">=</span> LinearRegression<span class="token punctuation">(</span>fit_intercept<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span> normalize<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">,</span> 
+    copy_X<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span> n_jobs<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">)</span> 
+<span class="token triple-quoted-string string">""" 参数
 ---
     fit_intercept：是否计算截距。False-模型没有截距
     normalize： 当fit_intercept设置为False时，该参数将被忽略。 如果为真，则回归前的回归系数X将通过减去平均值并除以l2-范数而归一化。
-     n_jobs：指定线程数 """</code></pre><p>　　　　　　<img src="/images/loading.gif" data-original="../images/basic/1240-1627231933848968" alt=""></p>
-<h3 id="4-2-逻辑回归LR"><a href="#4-2-逻辑回归LR" class="headerlink" title="4.2 逻辑回归LR"></a>4.2 逻辑回归LR</h3><pre><code>from sklearn.linear_model import LogisticRegression # 定义逻辑回归模型
-model = LogisticRegression(penalty=’l2’, dual=False, tol=0.0001, C=1.0, 
-    fit_intercept=True, intercept_scaling=1, class_weight=None, 
-    random_state=None, solver=’liblinear’, max_iter=100, multi_class=’ovr’, 
-    verbose=0, warm_start=False, n_jobs=1) 
-"""参数
+     n_jobs：指定线程数 """</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>　　　　　　<img src="/images/loading.gif" data-original="../images/basic/1240-1627231933848968" alt=""></p>
+<h3 id="4-2-逻辑回归LR"><a href="#4-2-逻辑回归LR" class="headerlink" title="4.2 逻辑回归LR"></a>4.2 逻辑回归LR</h3><pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>linear_model <span class="token keyword">import</span> LogisticRegression <span class="token comment" spellcheck="true"># 定义逻辑回归模型</span>
+model <span class="token operator">=</span> LogisticRegression<span class="token punctuation">(</span>penalty<span class="token operator">=</span>’l2’<span class="token punctuation">,</span> dual<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">,</span> tol<span class="token operator">=</span><span class="token number">0.0001</span><span class="token punctuation">,</span> C<span class="token operator">=</span><span class="token number">1.0</span><span class="token punctuation">,</span> 
+    fit_intercept<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span> intercept_scaling<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span> class_weight<span class="token operator">=</span>None<span class="token punctuation">,</span> 
+    random_state<span class="token operator">=</span>None<span class="token punctuation">,</span> solver<span class="token operator">=</span>’liblinear’<span class="token punctuation">,</span> max_iter<span class="token operator">=</span><span class="token number">100</span><span class="token punctuation">,</span> multi_class<span class="token operator">=</span>’ovr’<span class="token punctuation">,</span> 
+    verbose<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">,</span> warm_start<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">,</span> n_jobs<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">)</span> 
+<span class="token triple-quoted-string string">"""参数
 ---
     penalty：使用指定正则化项（默认：l2）
-    dual: n_samples &gt; n_features取False（默认）
+    dual: n_samples > n_features取False（默认）
     C：正则化强度的反，值越小正则化强度越大
     n_jobs: 指定线程数
     random_state：随机数生成器
-    fit_intercept: 是否需要常量 """</code></pre><h3 id="4-3-朴素贝叶斯算法NB"><a href="#4-3-朴素贝叶斯算法NB" class="headerlink" title="4.3 朴素贝叶斯算法NB"></a>4.3 朴素贝叶斯算法NB</h3><pre><code>from sklearn import naive_bayes
-model = naive_bayes.GaussianNB() # 高斯贝叶斯
-model = naive_bayes.MultinomialNB(alpha=1.0, fit_prior=True, class_prior=None)
-model = naive_bayes.BernoulliNB(alpha=1.0, binarize=0.0, fit_prior=True, class_prior=None) 
-""" 文本分类问题常用MultinomialNB
+    fit_intercept: 是否需要常量 """</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="4-3-朴素贝叶斯算法NB"><a href="#4-3-朴素贝叶斯算法NB" class="headerlink" title="4.3 朴素贝叶斯算法NB"></a>4.3 朴素贝叶斯算法NB</h3><pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> sklearn <span class="token keyword">import</span> naive_bayes
+model <span class="token operator">=</span> naive_bayes<span class="token punctuation">.</span>GaussianNB<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true"># 高斯贝叶斯</span>
+model <span class="token operator">=</span> naive_bayes<span class="token punctuation">.</span>MultinomialNB<span class="token punctuation">(</span>alpha<span class="token operator">=</span><span class="token number">1.0</span><span class="token punctuation">,</span> fit_prior<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span> class_prior<span class="token operator">=</span>None<span class="token punctuation">)</span>
+model <span class="token operator">=</span> naive_bayes<span class="token punctuation">.</span>BernoulliNB<span class="token punctuation">(</span>alpha<span class="token operator">=</span><span class="token number">1.0</span><span class="token punctuation">,</span> binarize<span class="token operator">=</span><span class="token number">0.0</span><span class="token punctuation">,</span> fit_prior<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span> class_prior<span class="token operator">=</span>None<span class="token punctuation">)</span> 
+<span class="token triple-quoted-string string">""" 文本分类问题常用MultinomialNB
 参数
 ---
     alpha：平滑参数
     fit_prior：是否要学习类的先验概率；false-使用统一的先验概率
     class_prior: 是否指定类的先验概率；若指定则不能根据参数调整
-    binarize: 二值化的阈值，若为None，则假设输入由二进制向量组成 """</code></pre><h3 id="4-4-决策树DT"><a href="#4-4-决策树DT" class="headerlink" title="4.4 决策树DT"></a>4.4 决策树DT</h3><pre><code>from sklearn import tree 
-model = tree.DecisionTreeClassifier(criterion=’gini’, max_depth=None, 
-    min_samples_split=2, min_samples_leaf=1, min_weight_fraction_leaf=0.0, 
-    max_features=None, random_state=None, max_leaf_nodes=None, 
-    min_impurity_decrease=0.0, min_impurity_split=None,
-     class_weight=None, presort=False) 
-"""参数
+    binarize: 二值化的阈值，若为None，则假设输入由二进制向量组成 """</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="4-4-决策树DT"><a href="#4-4-决策树DT" class="headerlink" title="4.4 决策树DT"></a>4.4 决策树DT</h3><pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> sklearn <span class="token keyword">import</span> tree 
+model <span class="token operator">=</span> tree<span class="token punctuation">.</span>DecisionTreeClassifier<span class="token punctuation">(</span>criterion<span class="token operator">=</span>’gini’<span class="token punctuation">,</span> max_depth<span class="token operator">=</span>None<span class="token punctuation">,</span> 
+    min_samples_split<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">,</span> min_samples_leaf<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span> min_weight_fraction_leaf<span class="token operator">=</span><span class="token number">0.0</span><span class="token punctuation">,</span> 
+    max_features<span class="token operator">=</span>None<span class="token punctuation">,</span> random_state<span class="token operator">=</span>None<span class="token punctuation">,</span> max_leaf_nodes<span class="token operator">=</span>None<span class="token punctuation">,</span> 
+    min_impurity_decrease<span class="token operator">=</span><span class="token number">0.0</span><span class="token punctuation">,</span> min_impurity_split<span class="token operator">=</span>None<span class="token punctuation">,</span>
+     class_weight<span class="token operator">=</span>None<span class="token punctuation">,</span> presort<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">)</span> 
+<span class="token triple-quoted-string string">"""参数
 ---
     criterion ：特征选择准则gini/entropy
     max_depth：树的最大深度，None-尽量下分
@@ -517,33 +625,38 @@ model = tree.DecisionTreeClassifier(criterion=’gini’, max_depth=None,
     min_samples_leaf：叶子节点所需要的最小样本数
     max_features: 寻找最优分割点时的最大特征数
     max_leaf_nodes：优先增长到最大叶子节点数
-    min_impurity_decrease：如果这种分离导致杂质的减少大于或等于这个值，则节点将被拆分。 """</code></pre><h3 id="4-5-支持向量机SVM"><a href="#4-5-支持向量机SVM" class="headerlink" title="4.5 支持向量机SVM"></a>4.5 支持向量机SVM</h3><pre><code>from sklearn.svm import SVC
-model = SVC(C=1.0, kernel=’rbf’, gamma=’auto’) 
-"""参数
+    min_impurity_decrease：如果这种分离导致杂质的减少大于或等于这个值，则节点将被拆分。 """</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="4-5-支持向量机SVM"><a href="#4-5-支持向量机SVM" class="headerlink" title="4.5 支持向量机SVM"></a>4.5 支持向量机SVM</h3><pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>svm <span class="token keyword">import</span> SVC
+model <span class="token operator">=</span> SVC<span class="token punctuation">(</span>C<span class="token operator">=</span><span class="token number">1.0</span><span class="token punctuation">,</span> kernel<span class="token operator">=</span>’rbf’<span class="token punctuation">,</span> gamma<span class="token operator">=</span>’auto’<span class="token punctuation">)</span> 
+<span class="token triple-quoted-string string">"""参数
 ---
     C：误差项的惩罚参数C
-    gamma: 核相关系数。浮点数，If gamma is ‘auto’ then 1/n_features will be used instead. """</code></pre><h3 id="4-6-k近邻算法KNN"><a href="#4-6-k近邻算法KNN" class="headerlink" title="4.6 k近邻算法KNN"></a>4.6 k近邻算法KNN</h3><pre><code>from sklearn import neighbors #定义kNN分类模型
-model = neighbors.KNeighborsClassifier(n_neighbors=5, n_jobs=1) # 分类
-model = neighbors.KNeighborsRegressor(n_neighbors=5, n_jobs=1) # 回归
-"""参数
+    gamma: 核相关系数。浮点数，If gamma is ‘auto’ then 1/n_features will be used instead. """</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="4-6-k近邻算法KNN"><a href="#4-6-k近邻算法KNN" class="headerlink" title="4.6 k近邻算法KNN"></a>4.6 k近邻算法KNN</h3><pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> sklearn <span class="token keyword">import</span> neighbors <span class="token comment" spellcheck="true">#定义kNN分类模型</span>
+model <span class="token operator">=</span> neighbors<span class="token punctuation">.</span>KNeighborsClassifier<span class="token punctuation">(</span>n_neighbors<span class="token operator">=</span><span class="token number">5</span><span class="token punctuation">,</span> n_jobs<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true"># 分类</span>
+model <span class="token operator">=</span> neighbors<span class="token punctuation">.</span>KNeighborsRegressor<span class="token punctuation">(</span>n_neighbors<span class="token operator">=</span><span class="token number">5</span><span class="token punctuation">,</span> n_jobs<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true"># 回归</span>
+<span class="token triple-quoted-string string">"""参数
 ---
     n_neighbors： 使用邻居的数目
-    n_jobs：并行任务数 """</code></pre><h3 id="4-7-多层感知机（神经网络）"><a href="#4-7-多层感知机（神经网络）" class="headerlink" title="4.7 多层感知机（神经网络）"></a>4.7 多层感知机（神经网络）</h3><pre><code>from sklearn.neural_network import MLPClassifier # 定义多层感知机分类算法
-model = MLPClassifier(activation='relu', solver='adam', alpha=0.0001) """参数
+    n_jobs：并行任务数 """</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="4-7-多层感知机（神经网络）"><a href="#4-7-多层感知机（神经网络）" class="headerlink" title="4.7 多层感知机（神经网络）"></a>4.7 多层感知机（神经网络）</h3><pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>neural_network <span class="token keyword">import</span> MLPClassifier <span class="token comment" spellcheck="true"># 定义多层感知机分类算法</span>
+model <span class="token operator">=</span> MLPClassifier<span class="token punctuation">(</span>activation<span class="token operator">=</span><span class="token string">'relu'</span><span class="token punctuation">,</span> solver<span class="token operator">=</span><span class="token string">'adam'</span><span class="token punctuation">,</span> alpha<span class="token operator">=</span><span class="token number">0.0001</span><span class="token punctuation">)</span> <span class="token triple-quoted-string string">"""参数
 ---
     hidden_layer_sizes: 元祖
     activation：激活函数
     solver ：优化算法{‘lbfgs’, ‘sgd’, ‘adam’}
-    alpha：L2惩罚(正则化项)参数。 """</code></pre><h2 id="5-模型评估与选择篇"><a href="#5-模型评估与选择篇" class="headerlink" title="5. 模型评估与选择篇"></a>5. 模型评估与选择篇</h2><h3 id="5-1-交叉验证"><a href="#5-1-交叉验证" class="headerlink" title="5.1 交叉验证"></a>5.1 交叉验证</h3><pre><code>from sklearn.model_selection import cross_val_score
-cross_val_score(model, X, y=None, scoring=None, cv=None, n_jobs=1)
- """参数
+    alpha：L2惩罚(正则化项)参数。 """</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="5-模型评估与选择篇"><a href="#5-模型评估与选择篇" class="headerlink" title="5. 模型评估与选择篇"></a>5. 模型评估与选择篇</h2><h3 id="5-1-交叉验证"><a href="#5-1-交叉验证" class="headerlink" title="5.1 交叉验证"></a>5.1 交叉验证</h3><pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>model_selection <span class="token keyword">import</span> cross_val_score
+cross_val_score<span class="token punctuation">(</span>model<span class="token punctuation">,</span> X<span class="token punctuation">,</span> y<span class="token operator">=</span>None<span class="token punctuation">,</span> scoring<span class="token operator">=</span>None<span class="token punctuation">,</span> cv<span class="token operator">=</span>None<span class="token punctuation">,</span> n_jobs<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">)</span>
+ <span class="token triple-quoted-string string">"""参数
 ---
     model：拟合数据的模型
     cv ： k-fold
-    scoring: 打分参数-‘accuracy’、‘f1’、‘precision’、‘recall’ 、‘roc_auc’、'neg_log_loss'等等 """</code></pre><h3 id="5-2-检验曲线"><a href="#5-2-检验曲线" class="headerlink" title="5.2 检验曲线"></a>5.2 检验曲线</h3><p>　　使用检验曲线，我们可以更加方便的改变模型参数，获取模型表现。</p>
-<pre><code>from sklearn.model_selection import validation_curve
-train_score, test_score = validation_curve(model, X, y, param_name, param_range, cv=None, scoring=None, n_jobs=1) 
-"""参数
+    scoring: 打分参数-‘accuracy’、‘f1’、‘precision’、‘recall’ 、‘roc_auc’、'neg_log_loss'等等 """</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="5-2-检验曲线"><a href="#5-2-检验曲线" class="headerlink" title="5.2 检验曲线"></a>5.2 检验曲线</h3><p>　　使用检验曲线，我们可以更加方便的改变模型参数，获取模型表现。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>model_selection <span class="token keyword">import</span> validation_curve
+train_score<span class="token punctuation">,</span> test_score <span class="token operator">=</span> validation_curve<span class="token punctuation">(</span>model<span class="token punctuation">,</span> X<span class="token punctuation">,</span> y<span class="token punctuation">,</span> param_name<span class="token punctuation">,</span> param_range<span class="token punctuation">,</span> cv<span class="token operator">=</span>None<span class="token punctuation">,</span> scoring<span class="token operator">=</span>None<span class="token punctuation">,</span> n_jobs<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">)</span> 
+<span class="token triple-quoted-string string">"""参数
 ---
     model:用于fit和predict的对象
     X, y: 训练集的特征和标签
@@ -554,16 +667,19 @@ train_score, test_score = validation_curve(model, X, y, param_name, param_range,
 返回值
 ---
    train_score: 训练集得分（array）
-    test_score: 验证集得分（array） """</code></pre><p><a href="http://scikit-learn.org/stable/auto_examples/model_selection/plot_validation_curve.html#sphx-glr-auto-examples-model-selection-plot-validation-curve-py" target="_blank" rel="noopener">例子</a></p>
+    test_score: 验证集得分（array） """</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><a href="http://scikit-learn.org/stable/auto_examples/model_selection/plot_validation_curve.html#sphx-glr-auto-examples-model-selection-plot-validation-curve-py" target="_blank" rel="noopener">例子</a></p>
 <h2 id="6-保存模型"><a href="#6-保存模型" class="headerlink" title="6. 保存模型"></a>6. 保存模型</h2><p>　　最后，我们可以将我们训练好的model保存到本地，或者放到线上供用户使用，那么如何保存训练好的model呢？主要有下面两种方式：</p>
-<h3 id="6-1-保存为pickle文件"><a href="#6-1-保存为pickle文件" class="headerlink" title="6.1 保存为pickle文件"></a>6.1 保存为pickle文件</h3><pre><code>import pickle # 保存模型
-with open('model.pickle', 'wb') as f:
-    pickle.dump(model, f) # 读取模型
-with open('model.pickle', 'rb') as f:
-    model = pickle.load(f)
-model.predict(X_test)</code></pre><h3 id="6-2-sklearn自带方法joblib"><a href="#6-2-sklearn自带方法joblib" class="headerlink" title="6.2 sklearn自带方法joblib"></a>6.2 sklearn自带方法joblib</h3><pre><code>from sklearn.externals import joblib # 保存模型
-joblib.dump(model, 'model.pickle') #载入模型
-model = joblib.load('model.pickle')</code></pre><script>
+<h3 id="6-1-保存为pickle文件"><a href="#6-1-保存为pickle文件" class="headerlink" title="6.1 保存为pickle文件"></a>6.1 保存为pickle文件</h3><pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> pickle <span class="token comment" spellcheck="true"># 保存模型</span>
+<span class="token keyword">with</span> open<span class="token punctuation">(</span><span class="token string">'model.pickle'</span><span class="token punctuation">,</span> <span class="token string">'wb'</span><span class="token punctuation">)</span> <span class="token keyword">as</span> f<span class="token punctuation">:</span>
+    pickle<span class="token punctuation">.</span>dump<span class="token punctuation">(</span>model<span class="token punctuation">,</span> f<span class="token punctuation">)</span> <span class="token comment" spellcheck="true"># 读取模型</span>
+<span class="token keyword">with</span> open<span class="token punctuation">(</span><span class="token string">'model.pickle'</span><span class="token punctuation">,</span> <span class="token string">'rb'</span><span class="token punctuation">)</span> <span class="token keyword">as</span> f<span class="token punctuation">:</span>
+    model <span class="token operator">=</span> pickle<span class="token punctuation">.</span>load<span class="token punctuation">(</span>f<span class="token punctuation">)</span>
+model<span class="token punctuation">.</span>predict<span class="token punctuation">(</span>X_test<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="6-2-sklearn自带方法joblib"><a href="#6-2-sklearn自带方法joblib" class="headerlink" title="6.2 sklearn自带方法joblib"></a>6.2 sklearn自带方法joblib</h3><pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>externals <span class="token keyword">import</span> joblib <span class="token comment" spellcheck="true"># 保存模型</span>
+joblib<span class="token punctuation">.</span>dump<span class="token punctuation">(</span>model<span class="token punctuation">,</span> <span class="token string">'model.pickle'</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">#载入模型</span>
+model <span class="token operator">=</span> joblib<span class="token punctuation">.</span>load<span class="token punctuation">(</span><span class="token string">'model.pickle'</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
             if (!el.dataset.src) { return; }
@@ -816,7 +932,7 @@ model = joblib.load('model.pickle')</code></pre><script>
         repo: 'JackHCC.github.io',
         owner: 'JackHCC',
         admin: "JackHCC",
-        id: '2020-02-28T21-40-50',
+        id: '2020-03-08T21-40-50',
         distractionFreeMode: false  // Facebook-like distraction free mode
     });
 
@@ -858,7 +974,7 @@ model = joblib.load('model.pickle')</code></pre><script>
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2020-02-28
+                            <i class="far fa-clock fa-fw icon-date"></i>2020-03-09
                         </span>
                         <span class="publish-author">
                             
@@ -907,7 +1023,7 @@ model = joblib.load('model.pickle')</code></pre><script>
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-02-28
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-03-07
                             </span>
                         <span class="publish-author">
                             
@@ -965,6 +1081,100 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
 </style>
 
 
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('4'),
+            headingSelector: 'h1, h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h1, h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
     
 
 </main>
@@ -982,7 +1192,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">1254k</span>&nbsp;字
+                class="white-color">1257.5k</span>&nbsp;字
             
             
             

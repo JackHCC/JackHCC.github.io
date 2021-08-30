@@ -26,9 +26,9 @@
     
     <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/jquery/jquery.min.js"></script>
     
-<meta name="generator" content="Hexo 4.2.0"><link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
-<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
-</head>
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
 
 
 <body>
@@ -320,10 +320,105 @@
 
 
 
-<main class="container content">
+<main class="post-container content">
 
     
-    <!-- 文章内容详情 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        height: calc(100vh - 250px);
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 30px;
+        bottom: 146px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
 <div id="artDetail">
     <div class="card">
         <div class="card-content article-info">
@@ -357,14 +452,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2020-02-28
+                    2020-03-03
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-08-25
+                    2021-08-30
                 </div>
                 
 
@@ -395,65 +490,68 @@
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <h1 id="Pikaqiu-用turtle绘画的皮卡丘"><a href="#Pikaqiu-用turtle绘画的皮卡丘" class="headerlink" title="Pikaqiu 用turtle绘画的皮卡丘"></a>Pikaqiu 用turtle绘画的皮卡丘</h1><ol>
-<li>首先我们导入turtle库和time库（用来做动画使用）:<pre><code>import turtle as t
-import time</code></pre></li>
-<li>由于turtle没有画曲线的函数，因此我们自定义画曲线函数,函数有4个参数，ang偏转角度，dis移动步长，step步长增幅，n遍历次数，说白了就是将曲线转化为很多条短长的直线：<pre><code>#画左偏曲线函数
-def radian_left(ang,dis,step,n):
- for i in range(n):
-     dis+=step #dis增大step
-     t.lt(ang) #向左转ang度
-     t.fd(dis) #向前走dis的步长    
-def radian_right(ang,dis,step,n):
- for i in range(n):
-     dis+=step
-     t.rt(ang) #向左转ang度
-     t.fd(dis) #向前走dis的步长</code></pre></li>
-<li>定义画耳朵，眼睛，嘴，轮廓，脚画尾巴的函数，具体见python文件</li>
-<li>初始化皮卡丘：<pre><code>#初始化
-def Init():
- InitEars()
- InitTail()
- InitFoots()
- InitBody()
- InitFace()
- InitHands()
- InitEyes()</code></pre></li>
-<li>定义Upgrade函数和Upgarde_init函数制作眨眼动画：<pre><code>#眨眼睛
-def Upgarde():
- InitEars()
- InitTail()
- InitFoots()
- InitBody()
- InitFace()
- InitHands()
- CloseEyes()
-def Upgarde_Init():
- InitEars()
- InitTail()
- InitFoots()
- InitBody()
- InitFace()
- InitHands()
- InitEyes()</code></pre><ol start="6">
-<li>Main函数定义：<pre><code>def main():
-Init()  
-t.tracer(False)   
-#眨眼睛动画
-for i in range(30):
-  if i%2==0:
-      t.reset()
-      t.hideturtle()
-      Upgarde()
-      t.update()
-      time.sleep(0.3)
-  else:
-      t.reset()
-      t.hideturtle()
-      Upgarde_Init()
-      t.update()
-      time.sleep(1)        </code></pre><h1 id="展示"><a href="#展示" class="headerlink" title="展示"></a>展示</h1><img src="/images/loading.gif" data-original="../images/basic/1240-1627231533869808" alt=""></li>
-</ol>
+<li>首先我们导入turtle库和time库（用来做动画使用）:<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> turtle <span class="token keyword">as</span> t
+<span class="token keyword">import</span> time<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 </li>
+<li>由于turtle没有画曲线的函数，因此我们自定义画曲线函数,函数有4个参数，ang偏转角度，dis移动步长，step步长增幅，n遍历次数，说白了就是将曲线转化为很多条短长的直线：<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#画左偏曲线函数</span>
+<span class="token keyword">def</span> <span class="token function">radian_left</span><span class="token punctuation">(</span>ang<span class="token punctuation">,</span>dis<span class="token punctuation">,</span>step<span class="token punctuation">,</span>n<span class="token punctuation">)</span><span class="token punctuation">:</span>
+ <span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token punctuation">:</span>
+     dis<span class="token operator">+=</span>step <span class="token comment" spellcheck="true">#dis增大step</span>
+     t<span class="token punctuation">.</span>lt<span class="token punctuation">(</span>ang<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">#向左转ang度</span>
+     t<span class="token punctuation">.</span>fd<span class="token punctuation">(</span>dis<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">#向前走dis的步长    </span>
+<span class="token keyword">def</span> <span class="token function">radian_right</span><span class="token punctuation">(</span>ang<span class="token punctuation">,</span>dis<span class="token punctuation">,</span>step<span class="token punctuation">,</span>n<span class="token punctuation">)</span><span class="token punctuation">:</span>
+ <span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token punctuation">:</span>
+     dis<span class="token operator">+=</span>step
+     t<span class="token punctuation">.</span>rt<span class="token punctuation">(</span>ang<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">#向左转ang度</span>
+     t<span class="token punctuation">.</span>fd<span class="token punctuation">(</span>dis<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">#向前走dis的步长</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li>定义画耳朵，眼睛，嘴，轮廓，脚画尾巴的函数，具体见python文件</li>
+<li>初始化皮卡丘：<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#初始化</span>
+<span class="token keyword">def</span> <span class="token function">Init</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+ InitEars<span class="token punctuation">(</span><span class="token punctuation">)</span>
+ InitTail<span class="token punctuation">(</span><span class="token punctuation">)</span>
+ InitFoots<span class="token punctuation">(</span><span class="token punctuation">)</span>
+ InitBody<span class="token punctuation">(</span><span class="token punctuation">)</span>
+ InitFace<span class="token punctuation">(</span><span class="token punctuation">)</span>
+ InitHands<span class="token punctuation">(</span><span class="token punctuation">)</span>
+ InitEyes<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li>定义Upgrade函数和Upgarde_init函数制作眨眼动画：<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#眨眼睛</span>
+<span class="token keyword">def</span> <span class="token function">Upgarde</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+ InitEars<span class="token punctuation">(</span><span class="token punctuation">)</span>
+ InitTail<span class="token punctuation">(</span><span class="token punctuation">)</span>
+ InitFoots<span class="token punctuation">(</span><span class="token punctuation">)</span>
+ InitBody<span class="token punctuation">(</span><span class="token punctuation">)</span>
+ InitFace<span class="token punctuation">(</span><span class="token punctuation">)</span>
+ InitHands<span class="token punctuation">(</span><span class="token punctuation">)</span>
+ CloseEyes<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">Upgarde_Init</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+ InitEars<span class="token punctuation">(</span><span class="token punctuation">)</span>
+ InitTail<span class="token punctuation">(</span><span class="token punctuation">)</span>
+ InitFoots<span class="token punctuation">(</span><span class="token punctuation">)</span>
+ InitBody<span class="token punctuation">(</span><span class="token punctuation">)</span>
+ InitFace<span class="token punctuation">(</span><span class="token punctuation">)</span>
+ InitHands<span class="token punctuation">(</span><span class="token punctuation">)</span>
+ InitEyes<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li>Main函数定义：<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+ Init<span class="token punctuation">(</span><span class="token punctuation">)</span>  
+ t<span class="token punctuation">.</span>tracer<span class="token punctuation">(</span><span class="token boolean">False</span><span class="token punctuation">)</span>   
+ <span class="token comment" spellcheck="true">#眨眼睛动画</span>
+ <span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span><span class="token number">30</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+     <span class="token keyword">if</span> i<span class="token operator">%</span><span class="token number">2</span><span class="token operator">==</span><span class="token number">0</span><span class="token punctuation">:</span>
+         t<span class="token punctuation">.</span>reset<span class="token punctuation">(</span><span class="token punctuation">)</span>
+         t<span class="token punctuation">.</span>hideturtle<span class="token punctuation">(</span><span class="token punctuation">)</span>
+         Upgarde<span class="token punctuation">(</span><span class="token punctuation">)</span>
+         t<span class="token punctuation">.</span>update<span class="token punctuation">(</span><span class="token punctuation">)</span>
+         time<span class="token punctuation">.</span>sleep<span class="token punctuation">(</span><span class="token number">0.3</span><span class="token punctuation">)</span>
+     <span class="token keyword">else</span><span class="token punctuation">:</span>
+         t<span class="token punctuation">.</span>reset<span class="token punctuation">(</span><span class="token punctuation">)</span>
+         t<span class="token punctuation">.</span>hideturtle<span class="token punctuation">(</span><span class="token punctuation">)</span>
+         Upgarde_Init<span class="token punctuation">(</span><span class="token punctuation">)</span>
+         t<span class="token punctuation">.</span>update<span class="token punctuation">(</span><span class="token punctuation">)</span>
+         time<span class="token punctuation">.</span>sleep<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>        <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="展示"><a href="#展示" class="headerlink" title="展示"></a>展示</h1><img src="/images/loading.gif" data-original="../images/basic/1240-1627231533869808" alt=""></li>
 </ol>
 <p>视频动画可以打包下载该文件，点击pikaqiu.mp4观看<br><a href="https://github.com/JackHCC/Pikaqiu" target="_blank" rel="noopener">Github源码下载地址</a></p>
 <script>
@@ -709,7 +807,7 @@ for i in range(30):
         repo: 'JackHCC.github.io',
         owner: 'JackHCC',
         admin: "JackHCC",
-        id: '2020-02-28T20-18-50',
+        id: '2020-03-03T20-18-50',
         distractionFreeMode: false  // Facebook-like distraction free mode
     });
 
@@ -751,7 +849,7 @@ for i in range(30):
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2020-02-28
+                            <i class="far fa-clock fa-fw icon-date"></i>2020-03-04
                         </span>
                         <span class="publish-author">
                             
@@ -800,7 +898,7 @@ for i in range(30):
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-02-28
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-03-02
                             </span>
                         <span class="publish-author">
                             
@@ -858,6 +956,100 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
 </style>
 
 
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('4'),
+            headingSelector: 'h1, h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h1, h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
     
 
 </main>
@@ -875,7 +1067,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">1254k</span>&nbsp;字
+                class="white-color">1257.5k</span>&nbsp;字
             
             
             

