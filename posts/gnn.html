@@ -459,21 +459,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-08-30
+                    2021-09-03
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    15k
+                    21k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    69 分
+                    90 分
                 </div>
                 
 
@@ -489,7 +489,7 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="图基础与中心指标"><a href="#图基础与中心指标" class="headerlink" title="图基础与中心指标"></a>图基础与中心指标</h2><h3 id="一-基础属性"><a href="#一-基础属性" class="headerlink" title="一.基础属性"></a>一.基础属性</h3><p><strong>基本定义</strong>：节点、边<br><strong>基本类型</strong>：有向图、无向图；加权图，非加权图；连通图，非连通图；连通分量，强连通分量，弱连通分量；二部图<br><strong>邻居，𝑘阶邻居，度</strong><br><strong>子图、𝑘阶子图、路径、图直径</strong><br><strong>表示方式</strong>: 邻接矩阵，关联矩阵<br><strong>遍历方式</strong>：深度优先，广度优先</p>
+                <h1 id="基本应用"><a href="#基本应用" class="headerlink" title="基本应用"></a>基本应用</h1><h2 id="图基础与中心指标"><a href="#图基础与中心指标" class="headerlink" title="图基础与中心指标"></a>图基础与中心指标</h2><h3 id="一-基础属性"><a href="#一-基础属性" class="headerlink" title="一.基础属性"></a>一.基础属性</h3><p><strong>基本定义</strong>：节点、边<br><strong>基本类型</strong>：有向图、无向图；加权图，非加权图；连通图，非连通图；连通分量，强连通分量，弱连通分量；二部图<br><strong>邻居，𝑘阶邻居，度</strong><br><strong>子图、𝑘阶子图、路径、图直径</strong><br><strong>表示方式</strong>: 邻接矩阵，关联矩阵<br><strong>遍历方式</strong>：深度优先，广度优先</p>
 <pre><code>#构建图
 %matplotlib inline
 from matplotlib import pyplot as plt
@@ -1889,6 +1889,287 @@ plt<span class="token punctuation">.</span>plot<span class="token punctuation">(
 plt<span class="token punctuation">.</span>legend<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">"loss"</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 <p>&gt;&gt;&gt;</p>
 <pre><code>&lt;matplotlib.legend.Legend at 0x281a2e53fd0&gt;</code></pre><p>​<br><img src="/images/loading.gif" data-original="../images/ML/output_10_1.png" alt=""><br>​    </p>
+<h1 id="图网络解释"><a href="#图网络解释" class="headerlink" title="图网络解释"></a>图网络解释</h1><p>原论文：<a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&amp;arnumber=4700287" target="_blank" rel="noopener">The graph neural network model</a></p>
+<h2 id="GNN"><a href="#GNN" class="headerlink" title="GNN"></a>GNN</h2><ol>
+<li><p>很多领域的数据的底层关系可以表示为图结构，如计算机视觉、分子化学、分子生物学、模式识别、数据挖掘等领域。</p>
+<p>最简单的图结构为单节点图，以及作为节点序列的图，更复杂的图结构包括树、无环图、带环图等。</p>
+</li>
+<li><p>关于图的任务可以分为两类：</p>
+<ul>
+<li><p>基于图的任务<code>graph-focused</code>：以图为单位，直接在图结构的数据上实现分类或者回归。</p>
+<p>如：图表示化学化合物，每个顶点表示一个原子或者化学基团、边表示化学键。模型可以用于评估被检测的化合物的类别。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/adc557597d3c3ecfb0c351e61b5bdbb2.png" alt=""></p>
+</li>
+<li><p>基于节点的任务 <code>node-focused</code>：以节点为单位，在每个结点上实现分类或者回归。如：</p>
+<ul>
+<li><p>目标检测任务中需要检测图像是否包含特定的目标并进行目标定位。该问题可以通过一个映射函数来解决，该映射函数根据相应区域是否属于目标对象从而对邻接的顶点进行分类。</p>
+<p>如下图所示，对应于城堡的黑色顶点的输出为<code>1</code>，其它顶点输出为 <code>0</code> 。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2af9fa9e9f42cbcb89ae2a1f204485a3.png" alt=""></p>
+</li>
+<li><p>网页分类任务中需要判断每个网页的类别。我们将所有的网页视作一个大图，每个网页代表一个顶点、网页之间的超链接代表边。可以利用网页的内容和图结构来进行建模。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/3253eb9068afcecb35c09221a503d05e.png" alt=""></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>传统的机器学习算法通过使用预处理阶段来处理图结构的数据。在这一阶段，算法将图结构数据映射到一个更简单的表达<code>representation</code>，如一个实值向量。即：预处理阶段首先将图结构的数据“压缩” 为实值向量，然后使用 <code>list-based</code> 数据处理技术来处理。</p>
+<p>在数据压缩过程中，一些重要的信息（如：每个顶点的拓扑依赖性）可能会被丢失。最终的效果严重依赖于数据预处理算法。</p>
+<p>最近有很多算法尝试在预处理阶段保留数据的图结构性质，其基本思路是：利用图的结点之间的拓扑关系对图结构的数据进行编码，从而在数据预处理过程中融合图的结构信息。递归神经网络<code>RNN</code>、马尔科夫链都是这类技术。</p>
+<p>论文 <code>《The graph neural network model》</code> 提出了 <code>GNN</code> 模型，该模型扩展了<code>RNN</code> 和马尔科夫链技术，适合处理图结构的数据。</p>
+<ul>
+<li><code>GNN</code> 既适用于 <code>graph-focused</code> 任务，又适用于 <code>node-focused</code> 任务。</li>
+<li><code>GNN</code> 扩展了<code>RNN</code>，它可以处理更广泛的图任务，包括无环图、带环图、有向图、无向图等。</li>
+<li><code>GNN</code> 扩展了马尔科夫链，它通过引入学习算法并扩大了可建模的随机过程的类型从而扩展了随机游走理论。</li>
+</ul>
+</li>
+<li><p><code>GNN</code> 是基于消息扩散机制 <code>information diffusion mechanism</code> 。图由一组处理单元来处理，每个处理单元对应于图的一个顶点。</p>
+<ul>
+<li>处理单元之间根据图的连接性来链接。</li>
+<li>处理单元之间交换信息并更新单元状态，直到达到稳定的平衡为止。</li>
+<li>通过每个处理单元的稳定状态可以得到对应顶点的输出。</li>
+<li>为确保始终存在唯一的稳定状态，消息扩散机制存在约束。</li>
+</ul>
+</li>
+</ol>
+<h3 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20210903094959341.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903095022946.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903095051917.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903095117747.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903095224632.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903095241775.png" alt=""></p>
+<h4 id="方程求解算法"><a href="#方程求解算法" class="headerlink" title="方程求解算法"></a>方程求解算法</h4><p><img src="/images/loading.gif" data-original="../images/ML/image-20210903095335459.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903095358128.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/e7b64cb02cdf984b592f9cbdaae378e0.png" alt=""></p>
+<h4 id="参数学习算法"><a href="#参数学习算法" class="headerlink" title="参数学习算法"></a>参数学习算法</h4><p><img src="/images/loading.gif" data-original="../images/ML/image-20210903095453658.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903095522966.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903095552140.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903095614573.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903095730419.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903095746578.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903095807563.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903095832380.png" alt=""></p>
+<p>8.实际上编码网络仅仅类似于静态的前馈神经网络，但是编码网络的<code>layer</code> 层数是动态确定的，并且网络权重根据输入图的拓扑结构来共享。因此为静态网络设计的二阶学习算法、剪枝算法、以及逐层学习算法无法直接应用于 <code>GNN</code> 。</p>
+<h4 id="转移函数和输出函数"><a href="#转移函数和输出函数" class="headerlink" title="转移函数和输出函数"></a>转移函数和输出函数</h4><p><img src="/images/loading.gif" data-original="../images/ML/image-20210903095925053.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903095956742.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903100014627.png" alt=""></p>
+<h3 id="模型分析"><a href="#模型分析" class="headerlink" title="模型分析"></a>模型分析</h3><h4 id="RNN"><a href="#RNN" class="headerlink" title="RNN"></a>RNN</h4><p><img src="/images/loading.gif" data-original="../images/ML/image-20210903100055121.png" alt=""></p>
+<h4 id="随机游走"><a href="#随机游走" class="headerlink" title="随机游走"></a>随机游走</h4><p><img src="/images/loading.gif" data-original="../images/ML/image-20210903100430936.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903100449376.png" alt=""></p>
+<h4 id="计算复杂度"><a href="#计算复杂度" class="headerlink" title="计算复杂度"></a>计算复杂度</h4><p><img src="/images/loading.gif" data-original="../images/ML/image-20210903100524586.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903100607915.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903100631909.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903100647155.png" alt=""></p>
+<h4 id="不动点"><a href="#不动点" class="headerlink" title="不动点"></a>不动点</h4><p><code>GNN</code> 的核心是不动点理论，通过顶点的消息传播使得整张图的每个顶点的状态收敛，然后在收敛的状态基础上预测。</p>
+<p>这里存在两个局限：</p>
+<ul>
+<li><p><code>GNN</code> 将顶点之间的边仅仅视为一种消息传播手段，并未区分边的功能。</p>
+</li>
+<li><p>基于不动点的收敛会导致顶点之间的状态存在较多的消息共享，从而导致顶点状态之间过于光滑 <code>over smooth</code> ，这将使得顶点之间缺少区分度。</p>
+<p>如下图所示，每个像素点和它的上下左右、以及斜上下左右八个像素点相邻。初始时刻蓝色没有信息量，绿色、黄色、红色各有一部分信息。</p>
+<p>开始时刻，不同像素点的区分非常明显；在不动点的收敛过程中，所有像素点都趋向于一致，最终整个系统的信息分布比较均匀。最终，虽然每个像素点都感知到了全局信息，但是我们已经无法根据每个像素点的最终状态来区分它们。</p>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/e67a79049891e9b69335cb4527c0c47b.gif" alt=""></p>
+<h2 id="GCN-1"><a href="#GCN-1" class="headerlink" title="GCN"></a>GCN</h2><p>原论文：Spectral Networks and Deep Locally Connected Networks on Graphs</p>
+<ol>
+<li><p>卷积神经网络 <code>CNN</code> 要求输入数据为网格结构，并且要求数据在网格中具有平移不变性，如一维语音、二维图像、三维视频都是这类数据的典型代表。<code>CNN</code> 充分利用了以下几个特点来大幅度降低模型的参数数量：</p>
+<ul>
+<li>权重共享：同一个卷积核可以应用于不同的位置。</li>
+<li>空间局部性：卷积核的大小通常都远远小于输入信号的尺寸。</li>
+<li>多尺度：通过步长大于一的卷积或者池化操作来减少参数，并获得更大的感受野 <code>receptive field</code> 。</li>
+</ul>
+<p>在网格数据结构中，顶点的邻居数量都是固定的。但是在很多任务中，数据并不是网格结构，如社交网络数据。在这些图数据结构中，顶点的邻居数量是不固定的。</p>
+<p>图结构是一种比网格结构更通用的结构，论文 <code>《Spectral Networks and Deep Locally Connected Networks on Graphs》</code> 在图结构上扩展了卷积的概念，并提出了两种构建方式：</p>
+<ul>
+<li>基于空域的卷积构建<code>Spatial Construction</code> ：直接在原始图结构上执行卷积。</li>
+<li>基于谱域的卷积构建<code>Spectral Construction</code> ：对图结构进行傅里叶变换之后，在谱域进行卷积。</li>
+</ul>
+</li>
+<li><p>在网格数据中的卷积可以采用固定大小的卷积核来抽取特征；但是在图数据中，传统的卷积核无能为力。图卷积的本质是找到适合于图结构的可学习的卷积核。</p>
+</li>
+</ol>
+<h3 id="空域构建"><a href="#空域构建" class="headerlink" title="空域构建"></a>空域构建</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20210903101049350.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/1ac74457e5080fdbff591c9ff2b485cc.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903101125182.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903101145142.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903101209271.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903101237066.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903101254895.png" alt=""></p>
+<h3 id="图卷积"><a href="#图卷积" class="headerlink" title="图卷积"></a>图卷积</h3><h4 id="拉普拉斯算子"><a href="#拉普拉斯算子" class="headerlink" title="拉普拉斯算子"></a>拉普拉斯算子</h4><p><img src="/images/loading.gif" data-original="../images/ML/image-20210903101327520.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903101349178.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903101408237.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903101427245.png" alt=""></p>
+<h4 id="卷积"><a href="#卷积" class="headerlink" title="卷积"></a>卷积</h4><p><img src="/images/loading.gif" data-original="../images/ML/image-20210903101501142.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903101531862.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903101550937.png" alt=""></p>
+<h3 id="频域构建"><a href="#频域构建" class="headerlink" title="频域构建"></a>频域构建</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20210903101613969.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903101635435.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903101654905.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903101726283.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903101753772.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903101821939.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903101847390.png" alt=""></p>
+<h2 id="Fast-GCN"><a href="#Fast-GCN" class="headerlink" title="Fast GCN"></a>Fast GCN</h2><p>原论文：<a href="https://proceedings.neurips.cc/paper/2016/file/04df4d434d481c5bb723be1b6df1ee65-Paper.pdf" target="_blank" rel="noopener">Convolutional Neural Networks on Graphs with Fast Localized Spectral Filtering</a></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903101930702.png" alt=""></p>
+<h3 id="模型-1"><a href="#模型-1" class="headerlink" title="模型"></a>模型</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20210903102114370.png" alt=""></p>
+<h4 id="卷积核"><a href="#卷积核" class="headerlink" title="卷积核"></a>卷积核</h4><p><img src="/images/loading.gif" data-original="../images/ML/image-20210903102217719.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903102313023.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903102333120.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903102356106.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903102420802.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903102439023.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903102457809.png" alt=""></p>
+<h4 id="图粗化"><a href="#图粗化" class="headerlink" title="图粗化"></a>图粗化</h4><p><img src="/images/loading.gif" data-original="../images/ML/image-20210903102522322.png" alt=""></p>
+<h4 id="池化"><a href="#池化" class="headerlink" title="池化"></a>池化</h4><p><img src="/images/loading.gif" data-original="../images/ML/image-20210903102553485.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903102621045.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210903102649676.png" alt=""></p>
+<h2 id="Semi-Supervised-GCN"><a href="#Semi-Supervised-GCN" class="headerlink" title="Semi-Supervised GCN"></a>Semi-Supervised GCN</h2><p>原论文：<a href="https://arxiv.org/pdf/1609.02907.pdf?fbclid=IwAR0BgJeoKHIAvPuSE9fJ0_IQOEu5l75yxyNo7PUC08RTOFlm_IIo5YmcnQM" target="_blank" rel="noopener">SEMI-SUPERVISED CLASSIFICATION WITH GRAPH CONVOLUTIONAL NETWORKS</a></p>
+<p>图的半监督学习方法大致分为两大类：</p>
+<ul>
+<li><p>基于图的拉普拉斯矩阵正则化的方法， 包括标签传播算法<code>label propagation</code>、流行正则化算法<code>manifold regularization</code> 。</p>
+</li>
+<li><p>基于图嵌入的方法，包括 <code>DeepWalk、LINE</code> 等。</p>
+<p>但是基于图嵌入的方法需要一个<code>pipeline</code>，其中包括生成随机游走序列、执行半监督训练等多个步骤，而每个步骤都需要分别进行优化。</p>
+</li>
+</ul>
+<p>论文<code>《 SEMI-SUPERVISED CLASSIFICATION WITH GRAPH CONVOLUTIONAL NETWORKS》</code> 提出了一种可扩展的、基于<code>Graph</code> 的半监督学习方法，该方法基于一个有效的、能直接对<code>Graph</code> 进行操作的卷积神经网络变种。</p>
+<p>该模型基于频域卷积的局部一阶近似来选择卷积网络结构，其计算复杂度为 <img src="/images/loading.gif" data-original="https://static.sitestack.cn/projects/huaxiaozhuan-ai/72fefaa1d0ea1670a551ea3407087d62.svg" alt="四、Semi-Supervised GCN - 图1"> ，其中 <img src="/images/loading.gif" data-original="https://static.sitestack.cn/projects/huaxiaozhuan-ai/4365d8a30ced9f1330d84230f785e7cd.svg" alt="四、Semi-Supervised GCN - 图2"> 为边的数量。</p>
+<p>该模型学到的隐层<code>representation</code> 既能够编码图的局部结构，又能够编码顶点的特征。</p>
+<h2 id="分子指纹GCN"><a href="#分子指纹GCN" class="headerlink" title="分子指纹GCN"></a>分子指纹GCN</h2><p>原论文：<a href="https://arxiv.org/pdf/1509.09292.pdf" target="_blank" rel="noopener">Convolutional Networks on Graphs for Learning Molecular Fingerprints</a></p>
+<p>在材料设计领域的最新工作已经将神经网络用于材料筛选，其任务是通过学习样本来预测新型分子的特性。预测分子特性通常需要将分子图作为输入，然后构建模型来预测。在分子图中顶点表示原子，边表示化学键。</p>
+<p>这个任务的一个难点在于：输入的分子图可以具有任意大小和任意形状，而大多数机器学习模型只能够处理固定大小、固定形状的输入。</p>
+<p>目前主流的方法是通过<code>hash</code> 函数对分子图进行预处理从而生成固定大小的指纹向量<code>fingerprint vector</code>，该指纹向量作为分子的特征灌入后续的模型中。</p>
+<p>论文<code>《Convolutional Networks on Graphs for Learning Molecular Fingerprints》</code> 提出了分子指纹<code>GCN</code> 模型，该模型用一个可微的神经网络代替了分子指纹部分。</p>
+<p>神经网络以原始的分子图作为输入，采用卷积层来抽取特征，然后通过全局池化来结合所有原子的特征。这种方式使得我们可以端到端的进行分子预测。</p>
+<p>相比较传统的指纹向量的方式，我们的方法具有以下优势：</p>
+<ul>
+<li><p>预测能力强：通过实验比较可以发现，我们的模型比传统的指纹向量能够提供更好的预测能力。</p>
+</li>
+<li><p>模型简洁：为了对所有可能的子结构进行编码，传统的指纹向量必须维度非常高。而我们的模型只需要对相关特征进行编码，模型的维度相对而言低得多，这降低了下游的计算量。</p>
+</li>
+<li><p>可解释性：传统的指纹向量对每个片段<code>fragment</code> 进行不同的编码，片段之间没有相似的概念。即：相似的片段不一定有相似的编码；相似的编码也不一定代表了相似的片段。</p>
+<p>我们的模型中，每个特征都可以由相似但是不同的分子片段激活，因此相似的片段具有相似的特征，相似的特征也代表了相似的片段。这使得特征的<code>representation</code> 更具有意义。</p>
+</li>
+</ul>
+<h2 id="GGS-NN"><a href="#GGS-NN" class="headerlink" title="GGS-NN"></a>GGS-NN</h2><p>原论文：<a href="https://arxiv.org/pdf/1511.05493.pdf" target="_blank" rel="noopener">GATED GRAPH SEQUENCE NEURAL NETWORKS</a></p>
+<ol>
+<li><p>目前关于图神经网络模型的工作主要集中在单输出模型上，如<code>graph-level</code> 的分类。实际上有一些图任务需要输出序列，如：输出一条包含特定属性的顶点组成的路径。</p>
+<p>论文<code>《GATED GRAPH SEQUENCE NEURAL NETWORKS》</code> 基于 <code>GNN</code> 模型进行修改，它使用门控循环单元 <code>gated recurrent units</code> 以及现代的优化技术，并扩展到序列输出的形式。这种模型被称作门控图序列神经网络<code>Gated Graph Sequence Neural Networks:GGS-NNs</code> 。</p>
+<p>在<code>Graph</code> 数据结构上，<code>GGS-NNs</code> 相比于单纯的基于序列的模型（如<code>LSTM</code>）具有有利的归纳偏置<code>inductive biases</code> 。</p>
+<blockquote>
+<p>归纳偏置：算法对于学习的问题做的一些假设，这些假设就称作归纳偏置。它可以理解为贝叶斯学习中的“先验<code>prior</code>”，即对模型的偏好。</p>
+<ul>
+<li><code>CNN</code> 的归纳偏置为：局部性<code>locality</code>和平移不变性<code>spatial invariance</code>。即：空间相近的元素之间联系较紧、空间较远的元素之间没有联系；卷积核权重共享。</li>
+<li><code>RNN</code> 的归纳偏置为：序列性<code>sequentiality</code> 和时间不变性 <code>time invariance</code>。即：序列顺序上的 <code>timestep</code> 之间有联系；<code>RNN</code> 权重共享。</li>
+</ul>
+</blockquote>
+</li>
+<li><p>在图上学习<code>representation</code> 有两种方式：</p>
+<ul>
+<li>学习输入图的 <code>representation</code> 。这也是目前大多数模型的处理方式。</li>
+<li>在生成一系列输出的过程中学习内部状态的 <code>representation</code>，其中的挑战在于：如何学习 <code>representation</code>，它既能对已经生成的部分输出序列进行编码（如路径输出任务中，已经产生的路径），又能对后续待生成的部分输出序列进行编码（如路径输出任务中，剩余路径）。</li>
+</ul>
+</li>
+</ol>
+<h2 id="PATCHY-SAN"><a href="#PATCHY-SAN" class="headerlink" title="PATCHY-SAN"></a>PATCHY-SAN</h2><p>原论文：<a href="http://proceedings.mlr.press/v48/niepert16.pdf" target="_blank" rel="noopener">Learning Convolutional Neural Networks for Graphs</a></p>
+<ol>
+<li><p>很多重要问题都可以视为图数据得学习问题。考虑以下两个问题：</p>
+<ul>
+<li>给定一组图作为训练数据，学习一个用于对未见过的图（即测试图）进行分类或者回归的函数。其中训练集中任意两个图的结构不一定是相同的。例如：给定一组化合物以及它们对于癌细胞活性抑制效果，用于预测新的化合物对于癌细胞活性抑制的结果。</li>
+<li>给定一张大图，学习该图的<code>representation</code> 从而可以推断未见过的图属性，如顶点类型（即顶点分类）、缺失边（即链接预测）。</li>
+</ul>
+</li>
+<li><p>卷积神经网络<code>CNN</code> 在图像领域中大获成功。图像<code>image</code> 也是一种图<code>graph</code> ，但是它是一种特殊的正方形的网格图，其中顶点表示像素。如下图所示，黑色/白色顶点表示像素的不同取值（黑色取值为<code>1</code>、白色取值为<code>0</code> ），红色顶点表示当前卷积核的中心位置。<code>(a)</code> 图给出了一个 <code>3x3</code> 卷积核在一个 <code>4x4</code> 图像上的卷积过程，其中步幅为<code>1</code>、采用非零填充。</p>
+<p>我们可以将 <code>CNN</code> 视为遍历一个顶点序列（即图<code>(a)</code> 中的红色顶点 <code>1,2,3,4</code> ）、然后为该序列中的每个顶点生成固定大小的邻域子图（即图<code>(b)</code> 中的 <code>3x3</code> 网格） 的过程。其中邻域子图作为感受野<code>receptive field</code>，用于特征抽取（抽取感受野中顶点的特征）。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/760e39197c2dd0004b571d76b2d285df.png" alt=""></p>
+<p>由于像素点的隐式空间顺序，从左到右以及从上到下唯一确定了这个顶点序列。在<code>NLP</code> 问题中，句子也隐式的从左到右确定了单词的顺序。但是对于图<code>graph</code> 问题，难以针对不同的问题给予一个合适的顶点顺序。同时数据集中不同图的结构不同，不同图的顶点之间都无法对应。</p>
+<p>因此如果希望将卷积神经网络应用到图结构上，必须解决两个问题：</p>
+<ul>
+<li>为图确定一个顶点序列，其中我们为序列中的每个顶点创建邻域子图。</li>
+<li>邻域图的归一化，即将邻域子图映射到向量空间，从而方便后续的卷积运算（因为卷积核无法作用于子图上）。</li>
+</ul>
+<p>论文<code>《Learning Convolutional Neural Networks for Graphs》</code> 提出了一种学习任意图的卷积神经网络框架 <code>PATCHY-SAN</code> ，该框架解决了这两个问题。<code>PATCHY-SAN</code> 适用于无向图/有向图，可以处理连续/离散的顶点和边的属性，也支持多种类型的边。</p>
+<p>对于每个输入的<code>graph</code>，<code>PATCHY-SAN</code> 方法首先确定了一个顶点序列；然后，对序列中每个顶点提取一个正好由 <img src="/images/loading.gif" data-original="https://static.sitestack.cn/projects/huaxiaozhuan-ai/cc2f295f0763f0ecede26c79e869fe9a.svg" alt="七、PATCHY-SAN - 图2"> 个顶点组成的邻域并归一化邻域，归一化的邻域将作为当前顶点的感受野；最后，就像 <code>CNN</code> 的感受野一样，可以将一些特征学习组件（如卷积层、<code>dense</code> 层)作用到归一化邻域上。其整体架构如下图所示，其中红色顶点表示顶点序列中的顶点。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/074c89685c6e42200fc84ba04d19cc73.png" alt=""></p>
+</li>
+<li><p><code>PATCHY-SAN</code> 方法具有以下优势：</p>
+<ul>
+<li>计算高效，原生支持并行计算，并且可用于大型图。</li>
+<li>支持特征可视化，可以深入了解图的结构属性。</li>
+<li>相比较与 <code>graph kernel</code> 方法，<code>PATCHY-SAN</code> 无需依赖任何特征工程就可以学到具体任务的特征。</li>
+</ul>
+</li>
+</ol>
+<h2 id="GraphSage"><a href="#GraphSage" class="headerlink" title="GraphSage"></a>GraphSage</h2><p>原论文：<a href="https://proceedings.neurips.cc/paper/2017/file/5dd9db5e033da9c6fb5ba83c7a7ebea9-Paper.pdf" target="_blank" rel="noopener">Inductive Representation Learning on Large Graphs</a></p>
+<ol>
+<li><p>在大型<code>Graph</code> 中，顶点的低维<code>embedding</code> 在从内容推荐到蛋白质功能识别等各项任务中都非常有效。</p>
+<p>之前的工作都集中在从单个指定的图来学习顶点 <code>embedding</code>，这些方法都是 <code>transductive</code> 的。但是，很多实际应用需要为从未见过的顶点或者全新的图来快速生成 <code>embedding</code> ，即需要 <code>inductive</code> 能力。这种 <code>inductive</code> 能力对于生产中的机器学习系统至关重要，这些机器学习系统需要在不断变化的图上运行，并不断遇到从未见过的顶点（如 <code>Youtube</code> 上的新用户、新视频）。 另外这种 <code>inductive</code> 能力还可以促进图的泛化，例如我们在已知的分子结构图上训练模型，然后该模型可以为新的分子图产生顶点 <code>embedding</code> 。</p>
+<ul>
+<li><p>与 <code>transductiv</code> 相比，<code>inductive</code> 的顶点 <code>embedding</code> 更为困难，因为这需要泛化到从未就按过的顶点。而这需要将新观察到的子图 “对齐” 到模型已经训练过的旧的子图。<code>inductive</code> 框架必须学会识别顶点邻域的结构属性，从而识别每个顶点（包括新发现的顶点）在图的局部角色以及全局位置。</p>
+</li>
+<li><p>大多数现有的顶点<code>embedding</code> 方法本质都是 <code>transductive</code> 的。这些方法都使用基于矩阵分解来直接优化每个顶点的 <code>embedding</code> 。因为它们是在单个固定的图上对顶点进行训练和预测，因此天然地无法推广到未见过的顶点。</p>
+<p>也可以修改这些方法来满足<code>inductinve</code> 的要求， 如针对新的未见过的顶点进行若干轮额外的梯度下降。但是这种方式的计算代价较高，也容易导致顶点 <code>embedding</code> 在重新训练期间发生漂移。</p>
+</li>
+</ul>
+<p>最近也有通过图卷积（如<code>Semi-Supervised GCN</code> ）来学习图结构的方法，但是这些方法也是以 <code>transductive</code> 的方式在使用。论文<code>《Inductive Representation Learning on Large Graphs》</code> 提出了一个通用的、称作 <code>Graph Sample and Aggregage:GraphSAGE</code> 的学习框架，该框架将图卷积推广到 <code>inductinve</code> 无监督学习。</p>
+</li>
+<li><p><code>GraphSage</code> 是一种<code>inductive</code> 的顶点 <code>embedding</code> 方法。与基于矩阵分解的<code>embedding</code> 方法不同，<code>GraphSage</code> 利用顶点特征（如文本属性、顶点画像信息、顶点的<code>degree</code> 等）来学习，并泛化到从未见过的顶点。</p>
+<ul>
+<li>通过将顶点特征融合到学习算法中，<code>GraphSage</code> 可以同时学习每个顶点的邻域拓扑结构，以及顶点特征在邻域中的分布。<code>GraphSage</code> 不仅可以应用于顶点特征丰富的图（如引文网络、生物分子网络），还可以应用到没有任何顶点特征的简单的图，此时可以采用顶点的结构属性来作为顶点特征（如顶点<code>degree</code> ）。</li>
+<li><code>GraphSage</code> 并没有为每个顶点训练一个 <code>embedding</code>，而是训练了一组聚合函数，这些聚合函数用于从顶点的局部邻域中聚合信息特征。在测试期间，我们使用训练好的模型的聚合函数来为从未见过的顶点生成 <code>embedding</code> 。</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/d7b0083456e9d0a24f6fa2460514e6dd.png" alt=""></p>
+</li>
+<li><p>和之前的 <code>embedding</code> 方法类似，<code>GraphSage</code> 设计了一个无监督损失函数。该损失函数允许对<code>GraphSage</code> 进行无监督训练，而无需任何特定于具体任务监督信息。论文还展示了以监督方式来训练 <code>GraphSage</code> 。</p>
+<p>论文在三个顶点分类 <code>benchmark</code> 上评估了<code>GraphSave</code> 方法，从而验证了<code>GraphSage</code> 在从未见过的数据上具有优秀的顶点 <code>embedding</code> 能力。</p>
+<p>最后论文研究了 <code>GraphSave</code> 的表达能力，并通过理论分析证明了：虽然<code>GraphSage</code> 是基于顶点特征的，但是它能够学得顶点在图中角色的结构信息。</p>
+</li>
+<li><p><code>GraphSave</code> 方法和 <code>Semi-Supervised GCN</code> 密切相关。原始的 <code>Semi-Supervised GCN</code> 以 <code>transductive</code> 的方式进行半监督学习，这要求在训练过程中已知完整的图拉普拉斯算子。<code>GraphSage</code> 的一个简单变种可以视为 <code>Semi-Supervised GCN</code> 框架以 <code>inductive</code> 方式的扩展。</p>
+</li>
+</ol>
+<h2 id="GAT-1"><a href="#GAT-1" class="headerlink" title="GAT"></a>GAT</h2><p>原论文：<a href="https://arxiv.org/pdf/1710.10903.pdf" target="_blank" rel="noopener">GRAPH ATTENTION NETWORKS</a></p>
+<ol>
+<li><p>卷积神经网络<code>CNN</code> 已经成功应用于图像分类、语义分割以及机器翻译之类的问题，其底层数据结构为网格状结构<code>grid-like structure</code> 。但很多任务涉及到无法以网状结构表示的数据，如：社交网络、电信网络等，而这些数据通常可以用图的方式来组织。</p>
+<ul>
+<li><p>早期图领域任务通常作为有向无环图，采用循环神经网络<code>RNN</code> 来处理。后来发展出图神经网络<code>GNN</code> 作为 <code>RNN</code> 的泛化来直接处理更通用的图，如循环图、有向图、无环图。</p>
+<p><code>GNN</code> 包含一个迭代过程来传播顶点状态直至达到状态平衡，即不动点；然后再根据顶点状态为每个顶点生成输出。<code>GG-NN</code> 通过在顶点状态传播过程中使用门控循环单元来改进这一方法。</p>
+</li>
+<li><p>另一个方向是将卷积推广到图领域，有两种推广思路：谱方法<code>spectral approach</code> 、非谱方法<code>non-spectral approach</code> 。</p>
+<ul>
+<li><p>谱方法通常和图的谱表达<code>spectral representation</code> 配合使用，并已成功应用于顶点分类。</p>
+<p>但是这些谱方法中，学习的<code>filter</code> 都依赖于拉普拉斯矩阵分解后的特征向量。这种分解依赖于具体的图结构，因此在一种图结构上训练的模型无法直接应用到具有不同结构的图上。</p>
+<p>另外，该方法无法应用于 <code>graph-level</code> 任务，因为不同图的结构通常不同，因此拉普拉斯矩阵也不同。</p>
+</li>
+<li><p>非谱方法可以直接在图上定义卷积，从而对空间相邻的邻域顶点进行运算。</p>
+<p>但是如何定义一种可以处理不同数量邻居顶点、且能保持 <code>CNN</code> 权重共享的卷积操作是一个挑战。<code>PATCHY-SAN</code> 通过归一化邻域得到固定大小的邻域。</p>
+</li>
+</ul>
+</li>
+<li><p><code>attention</code> 机制在很多基于序列的任务中已经称为标配。注意力机制的一个好处是可以处理变长输入，并聚焦于输入中最相关的部分来做决策。当注意力机制作用于单个序列的<code>representation</code> 时，通常称作<code>self-attention</code> 或者 <code>intra-attention</code> 。</p>
+<p>受此启发，论文 <code>《GRAPH ATTENTION NETWORKS》</code> 提出了一种基于注意力的架构 <code>Graph attention network:GAT</code> 来对图结构数据进行顶点分类。其基本思想是：通过<code>self-attention</code> 策略来“注意”邻居顶点，从而计算每个顶点的 <code>representation</code> 。</p>
+<p><code>GAT</code> 堆叠了一些 <code>masked self-attention layer</code> ，这些层中的顶点能够注意到邻居顶点的特征，并给邻域中不同的顶点赋予不同权重。在这个过程中不需要进行任何复杂的矩阵操作（如矩阵求逆或者矩阵分解），也不需要任何依赖于图结构的先验知识。</p>
+<p><code>GAT</code> 模型具有以下优势：</p>
+<ul>
+<li>计算高效，因为<code>GAT</code> 可以在顶点邻居<code>pair</code> 对之间并行执行。</li>
+<li>通过对邻居顶点赋予任意权重，它可以应用到任意<code>degree</code> 的顶点，对网络结构的普适性更强。</li>
+<li>该模型可以直接应用于归纳学习<code>inductive learning</code> 问题，包括将模型推广到从未见过的图。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><code>inductive learning</code> 和 <code>transductive learning</code>的区别：</p>
+<ul>
+<li><p><code>inductive learning</code> 是从具体样本中总结普适性规律，然后泛化到训练中从未见过的样本。</p>
+</li>
+<li><p><code>transductive learning</code> 是从具体样本中总结具体性规律，它用于预测训练集中已经出现过的<code>unlabelled</code> 样本，常用于半监督学习。</p>
+<blockquote>
+<p>半监督学习不一定是 <code>transductive</code>，它也可能是 <code>inductive</code> 。如：训练时仅考虑 <code>labelled</code> 样本，不使用任何 <code>unlabelled</code> 样本的信息。</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ol>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -2409,7 +2690,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">1222.3k</span>&nbsp;字
+                class="white-color">1262.8k</span>&nbsp;字
             
             
             
