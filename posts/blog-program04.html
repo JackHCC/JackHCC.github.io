@@ -459,7 +459,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-08-30
+                    2021-09-04
                 </div>
                 
 
@@ -561,8 +561,7 @@
 </ul>
 </li>
 </ul>
-<p>###I/O模型</p>
-<ul>
+<h3 id="I-O模型"><a href="#I-O模型" class="headerlink" title="I/O模型"></a>I/O模型</h3><ul>
 <li><p>blocking I/O：阻塞式</p>
 </li>
 <li><p>nonblocking I/O：非阻塞式</p>
@@ -741,18 +740,14 @@ listen port[default_server][ssl][http2|spdy]
 //ssl:用于限制只能通过ssl连接提供服务
 //spdy:SPDY protocol(speedy),在编译时spdy模块情况下，用于支持SPDY协议
 //http2:http version 2;</code></pre></li>
-<li><p>server_name NAME [……];<br>可跟一个或多个主机名，名称还可以使用通配符和正则表达式（~）；<br>```</p>
+<li><p>server_name NAME [……];<br>可跟一个或多个主机名，名称还可以使用通配符和正则表达式（~）；</p>
 </li>
-<li><p>首先做精准匹配：<a href="http://www.magedu.com" target="_blank" rel="noopener">www.magedu.com</a></p>
-</li>
-<li><p>左侧通配符：*.magedu.com</p>
-</li>
-<li><p>右侧通配符：<a href="http://www.magedu" target="_blank" rel="noopener">www.magedu</a>.*</p>
-</li>
-<li><p>正则表达式：~^.*\magedu.com$</p>
-</li>
-<li><p>default server</p>
-<pre><code></code></pre></li>
+</ol>
+<pre><code>1.首先做精准匹配：www.magedu.com
+2.左侧通配符：*.magedu.com
+3.右侧通配符：www.magedu.*
+4.正则表达式：~^.*\magedu\.com$
+5.default server</code></pre><ol start="4">
 <li><p>tcp_nodelay on|off<br>在keepalive模式下的连接是否使用TCP_NODELAY选项；</p>
 </li>
 <li><p>tcp_nopush on|off<br>是否启用TCP_NOPUSH(FREEBSE)或TCP_CORK(LINUX)选项；仅在sendfile为on时有用</p>
@@ -763,7 +758,7 @@ listen port[default_server][ssl][http2|spdy]
 <ul>
 <li>路径相关指令</li>
 </ul>
-<ol start="7">
+<ol>
 <li>root<br>设置web资源的路径映射，用于指明请求的URL所对应的文档目录的路径:<pre><code>server{
 ...
 root /data/www/vhost1;
@@ -787,7 +782,7 @@ location /image/ {
 <li>^~：url左半部分匹配，不区分字符大小写</li>
 </ul>
 <p><strong>匹配优先级</strong>：=，^<del>,</del>或~*，不带符号的url；</p>
-<ol start="9">
+<ol start="3">
 <li><p>alias<br>只能用于location匹配段，定义路径别名</p>
 <pre><code>location /image/{
 root /data/imgs/;
@@ -805,8 +800,10 @@ error_page 404=200 /404.html   //以指定状态码响应</code></pre></li>
 <li><p>try_files file…… url；<br>try_files file……=code；<br>尝试查找第一个至第N-1个文件，第一个返回给请求者的资源，若N-1文件都不存在，则跳转至最后一个url（必须不能匹配至当前location，而应该匹配至其他location，否则会导致死循环）；</p>
 </li>
 </ol>
-<p><strong>用户请求相关配置</strong><br>13. keepalive_timeout timeout [header_timeout]<br>设定keepalive连接的超时时长；0表示禁止长连接</p>
-<ol start="14">
+<p><strong>用户请求相关配置</strong></p>
+<ol>
+<li><p>keepalive_timeout timeout [header_timeout]<br>设定keepalive连接的超时时长；0表示禁止长连接</p>
+</li>
 <li><p>keepalive_requests number;<br>在keepalive链接上所允许请求的最大资源数量；默认100</p>
 </li>
 <li><p>keepalive_disable none|browser …;<br>指明禁止为何种浏览器使用keepalive功能；</p>
@@ -819,7 +816,7 @@ error_page 404=200 /404.html   //以指定状态码响应</code></pre></li>
 <pre><code>client_body_temp_path /var/tmp/client_body 2 2</code></pre></li>
 </ol>
 <p><strong>对客户端请求进行限制</strong></p>
-<ol start="19">
+<ol>
 <li><p>limit_except METHOD{…}<br>对指定范围外的其他方法进行访问控制；</p>
 <pre><code>limit_except GET{
 allow 172.16.0.0/16;
@@ -829,7 +826,7 @@ deny all;
 </li>
 </ol>
 <p><strong>文件操作优化相关配置</strong></p>
-<ol start="21">
+<ol>
 <li><p>aio on|off</p>
 </li>
 <li><p>directio size|off;</p>
@@ -845,7 +842,7 @@ deny all;
 </ol>
 <p>max=N 表示可缓存的最大条目上限，则会使用LUR算法中删除最近最少使用的缓存项；</p>
 <p>inactive=time:在此处指定的时长内没有被访问的缓存项视为非活动缓存项，因此直接删除；</p>
-<ol start="24">
+<ol start="4">
 <li><p>open_file_cache_errors on|off;<br>是否缓存找不到路径的文件，或没有权限访问的文件相关信息；</p>
 </li>
 <li><p>open_file_cache_valid time;<br>没隔多久检查一次缓存中缓存项的有效性，默认60s；</p>
@@ -853,14 +850,16 @@ deny all;
 <li><p>open_file_cache_min_uses number;<br>缓存项在非活动期限内最少应该被访问的次数；</p>
 </li>
 </ol>
-<p><strong>ngx_http_access_module模块(基于IP的访问控制)</strong><br>27. allow address|CIDR|unix|all;</p>
-<ol start="28">
+<p><strong>ngx_http_access_module模块(基于IP的访问控制)</strong></p>
+<ol>
+<li><p>allow address|CIDR|unix|all;</p>
+</li>
 <li><p>deny address|CIDR|unix|all;</p>
-<p>  应用上下文：http,server,location,limit_except</p>
+<p>   应用上下文：http,server,location,limit_except</p>
 </li>
 </ol>
 <p><strong>ngx_http_auth_basic_module模块(basic认证)</strong></p>
-<ol start="29">
+<ol>
 <li><p>auth_basic string|off;<br>使用http basic认证协议对用户进行认证</p>
 </li>
 <li><p>auth_basic_user_file file;<br>实现用户认证的账号文件；</p>
@@ -876,15 +875,21 @@ deny all;
 <pre><code>location /admin/ {
 auth_basic "admin"
 auth_basic_user_file /etc/nginx/.ngxhtpasswd;
-}</code></pre><p><strong>ngx_http_log_module模块(访问日志)</strong><br>31. log_format name string …;<br>定义日志格式及其名称，日志格式一般通过调用内置函数变量来定义</p>
-<ol start="32">
-<li>access_log path [format[buffer=size[flush=time]]];<br>access_log off;</li>
+}</code></pre><p><strong>ngx_http_log_module模块(访问日志)</strong></p>
+<ol>
+<li><p>log_format name string …;<br>定义日志格式及其名称，日志格式一般通过调用内置函数变量来定义</p>
+</li>
+<li><p>access_log path [format[buffer=size[flush=time]]];<br>access_log off;</p>
+</li>
 </ol>
 <p>访问日志路径，格式名称以及缓存大小的刷写时间间隔；建议定义缓冲以提升性能。</p>
-<ol start="33">
+<ol start="3">
 <li>open_log_file_cache max=N[inactive=time][min_user=N][valid=time];<br>open_log_file_cache off;</li>
 </ol>
-<p><strong>ngx_http_stub_status_module模块</strong><br>34. stub_status;<br>通过指定的url的stub_status</p>
+<p><strong>ngx_http_stub_status_module模块</strong></p>
+<ol>
+<li>stub_status;<br>通过指定的url的stub_status</li>
+</ol>
 <p>Active connections: 291<br>server accepts handled requests<br> 16630948 16630948 31070465<br>Reading: 6 Writing: 179 Waiting: 106 </p>
 <ul>
 <li>Active connections:当前活动客户端连接数，包括<code>Waiting</code>连接数。</li>
@@ -895,7 +900,10 @@ auth_basic_user_file /etc/nginx/.ngxhtpasswd;
 <li>Writing:nginx将响应写回客户端的当前连接数。</li>
 <li>Waiting:当前等待请求的空闲客户端连接数。</li>
 </ul>
-<p><strong>ngx_http_referer_module模块</strong><br>35. valid_referers none | blocked | server_names | string …;</p>
+<p><strong>ngx_http_referer_module模块</strong></p>
+<ol>
+<li>valid_referers none | blocked | server_names | string …;</li>
+</ol>
 <ul>
 <li>none 请求标头中不存在“Referer”字段;</li>
 <li>blocked：“Referer”字段出现在请求标头中，但其值已被防火墙或代理服务器删除; 这些值是不以“ http://”或“ https://” 开头的字符串;</li>
@@ -1420,7 +1428,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">1262.8k</span>&nbsp;字
+                class="white-color">1251.5k</span>&nbsp;字
             
             
             
@@ -1658,7 +1666,7 @@ $(function () {
     
     <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/instantpage/instantpage.js" type="module"></script>
     
-
+<script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script>
         <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
         <script>
         $('a').each(function() {
@@ -1677,7 +1685,7 @@ $(function () {
             }
           }
         });
-        </script><script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script></body>
+        </script></body>
 
 </html>
 

@@ -459,7 +459,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-08-30
+                    2021-09-04
                 </div>
                 
 
@@ -560,13 +560,13 @@
 <p>Service Ability</p>
 <p>和</p>
 <p>Data Ability</p>
-<p>：</p>
+</li>
+</ul>
 <ul>
 <li>Service模板：用于提供后台运行任务的能力。</li>
 </ul>
-</li>
-<li><p>Data模板：用于对外部提供统一的数据访问抽象。</p>
-</li>
+<ul>
+<li>Data模板：用于对外部提供统一的数据访问抽象。</li>
 </ul>
 <p>在<a href="https://developer.harmonyos.com/cn/docs/documentation/doc-guides/basic-config-file-overview-0000000000011951" target="_blank" rel="noopener">配置文件</a>（config.json）中注册Ability时，可以通过配置Ability元素中的“type”属性来指定Ability模板类型，示例如下。</p>
 <p>其中，“type”的取值可以为“page”、“service”或“data”，分别代表Page模板、Service模板、Data模板。为了便于表述，后文中我们将基于Page模板、Service模板、Data模板实现的Ability分别简称为Page、Service、Data。</p>
@@ -597,8 +597,7 @@
 </li>
 </ul>
 <h2 id="Page-Ability"><a href="#Page-Ability" class="headerlink" title="Page Ability"></a>Page Ability</h2><h3 id="Page与AbilitySlice"><a href="#Page与AbilitySlice" class="headerlink" title="Page与AbilitySlice"></a>Page与AbilitySlice</h3><p>Page模板（以下简称“Page”）是FA唯一支持的模板，用于提供与用户交互的能力。一个Page可以由一个或多个AbilitySlice构成，AbilitySlice是指应用的单个页面及其控制逻辑的总和。</p>
-<p>当一个Page由多个AbilitySlice共同构成时，这些AbilitySlice页面提供的业务能力应具有高度相关性。例如，新闻浏览功能可以通过一个Page来实现，其中包含了两个AbilitySlice：一个AbilitySlice用于展示新闻列表，另一个AbilitySlice用于展示新闻详情。Page和AbilitySlice的关系如<a href="https://developer.harmonyos.com/cn/docs/documentation/doc-guides/ability-page-concept-0000000000033573#ZH-CN_TOPIC_0000001083176865__fig1379095813590" target="_blank" rel="noopener">图1</a>所示。</p>
-<p><strong>图1</strong> Page与AbilitySlice</p>
+<p>当一个Page由多个AbilitySlice共同构成时，这些AbilitySlice页面提供的业务能力应具有高度相关性。例如，新闻浏览功能可以通过一个Page来实现，其中包含了两个AbilitySlice：一个AbilitySlice用于展示新闻列表，另一个AbilitySlice用于展示新闻详情。Page和AbilitySlice的关系如图所示。</p>
 <p><img src="/images/loading.gif" data-original="../images/harmonyos/-16273165182581902" alt=""></p>
 <p>相比于桌面场景，移动场景下应用之间的交互更为频繁。通常，单个应用专注于某个方面的能力开发，当它需要其他能力辅助时，会调用其他应用提供的能力。例如，外卖应用提供了联系商家的业务功能入口，当用户在使用该功能时，会跳转到通话应用的拨号页面。与此类似，HarmonyOS支持不同Page之间的跳转，并可以指定跳转到目标Page中某个具体的AbilitySlice。</p>
 <h3 id="AbilitySlice路由配置"><a href="#AbilitySlice路由配置" class="headerlink" title="AbilitySlice路由配置"></a>AbilitySlice路由配置</h3><p>虽然一个Page可以包含多个AbilitySlice，但是Page进入前台时界面默认只展示一个AbilitySlice。默认展示的AbilitySlice是通过<strong>setMainRoute()</strong>方法来指定的。如果需要更改默认展示的AbilitySlice，可以通过<strong>addActionRoute()</strong>方法为此AbilitySlice配置一条路由规则。此时，当其他Page实例期望导航到此AbilitySlice时，可以在<a href="https://developer.harmonyos.com/cn/docs/documentation/doc-guides/ability-intent-0000000000038799" target="_blank" rel="noopener">Intent</a>中指定Action，详见<a href="https://developer.harmonyos.com/cn/docs/documentation/doc-guides/ability-page-switching-0000000000037999#ZH-CN_TOPIC_0000001076963678__section1862412142519" target="_blank" rel="noopener">不同Page间导航</a>。</p>
@@ -634,8 +633,7 @@
     }
     ...
 }</code></pre><h2 id="Page-Ability生命周期"><a href="#Page-Ability生命周期" class="headerlink" title="Page Ability生命周期"></a>Page Ability生命周期</h2><p>系统管理或用户操作等行为均会引起Page实例在其生命周期的不同状态之间进行转换。Ability类提供的回调机制能够让Page及时感知外界变化，从而正确地应对状态变化（比如释放资源），这有助于提升应用的性能和稳健性。</p>
-<h3 id="Page生命周期回调"><a href="#Page生命周期回调" class="headerlink" title="Page生命周期回调"></a>Page生命周期回调</h3><p>Page生命周期的不同状态转换及其对应的回调，如<a href="https://developer.harmonyos.com/cn/docs/documentation/doc-guides/ability-page-lifecycle-0000000000029840#ZH-CN_TOPIC_0000001083455837__fig3655123011010" target="_blank" rel="noopener">图1</a>所示。</p>
-<p><strong>图1</strong> Page生命周期</p>
+<h3 id="Page生命周期回调"><a href="#Page生命周期回调" class="headerlink" title="Page生命周期回调"></a>Page生命周期回调</h3><p>Page生命周期的不同状态转换及其对应的回调，如图所示。</p>
 <p><img src="/images/loading.gif" data-original="../images/harmonyos/-16273165219781904" alt=""></p>
 <ul>
 <li><strong>onStart()</strong>当系统首次创建Page实例时，触发该回调。对于一个Page实例，该回调在其生命周期过程中仅触发一次，Page在该逻辑后将进入INACTIVE状态。开发者必须重写该方法，并在此配置默认展示的AbilitySlice。</li>
@@ -906,14 +904,13 @@ protected IRemoteObject onConnect(Intent intent) {
 <ul>
 <li><a href="https://gitee.com/openharmony/app_samples/tree/master/ability/ServiceAbility" target="_blank" rel="noopener">ServiceAbility</a>本示例演示了Service Ability的启动、停止、连接、断开连接等操作，支持对跨设备的Service Ability进行操作</li>
 </ul>
-<h3 id="Service-Ability生命周期"><a href="#Service-Ability生命周期" class="headerlink" title="Service Ability生命周期"></a>Service Ability生命周期</h3><p>与Page类似，Service也拥有生命周期，如<a href="https://developer.harmonyos.com/cn/docs/documentation/doc-guides/ability-service-lifecycle-0000000000044472#ZH-CN_TOPIC_0000001077123656__fig49671548164217" target="_blank" rel="noopener">图1</a>所示。根据调用方法的不同，其生命周期有以下两种路径：</p>
+<h3 id="Service-Ability生命周期"><a href="#Service-Ability生命周期" class="headerlink" title="Service Ability生命周期"></a>Service Ability生命周期</h3><p>与Page类似，Service也拥有生命周期，如图所示。根据调用方法的不同，其生命周期有以下两种路径：</p>
 <ul>
 <li><p>启动Service该Service在其他Ability调用startAbility()时创建，然后保持运行。其他Ability通过调用stopAbility()来停止Service，Service停止后，系统会将其销毁。</p>
 </li>
 <li><p>连接Service该Service在其他Ability调用connectAbility()时创建，客户端可通过调用disconnectAbility()断开连接。多个客户端可以绑定到相同Service，而且当所有绑定全部取消后，系统即会销毁该Service。</p>
 </li>
 </ul>
-<p><strong>图1</strong> Service生命周期</p>
 <p><img src="/images/loading.gif" data-original="../images/harmonyos/-16273165321791906" alt=""></p>
 <h3 id="前台Service"><a href="#前台Service" class="headerlink" title="前台Service"></a>前台Service</h3><p>一般情况下，Service都是在后台运行的，后台Service的优先级都是比较低的，当资源不足时，系统有可能回收正在运行的后台Service。</p>
 <p>在一些场景下（如播放音乐），用户希望应用能够一直保持运行，此时就需要使用前台Service。前台Service会始终保持正在运行的图标在系统状态栏显示。</p>
@@ -1295,7 +1292,7 @@ DataAbilityResult[] result = helper.executeBatch(insertUri, operations);</code><
 <ul>
 <li><a href="https://developer.huawei.com/consumer/cn/codelabsPortal/carddetails/HarmonyOS-Relational-Database" target="_blank" rel="noopener">关系型数据库</a>基于Data Ability的关系型数据库和数据管理能力，实现数据库相关应用服务的快速开发。</li>
 </ul>
-<h2 id="Intent"><a href="#Intent" class="headerlink" title="Intent"></a>Intent</h2><h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>Intent是对象之间传递信息的载体。例如，当一个Ability需要启动另一个Ability时，或者一个AbilitySlice需要导航到另一个AbilitySlice时，可以通过Intent指定启动的目标同时携带相关数据。Intent的构成元素包括Operation与Parameters，具体描述参见<a href="https://developer.harmonyos.com/cn/docs/documentation/doc-guides/ability-intent-0000000000038799#ZH-CN_TOPIC_0000001076675608__table610715348476" target="_blank" rel="noopener">表1</a>。</p>
+<h2 id="Intent"><a href="#Intent" class="headerlink" title="Intent"></a>Intent</h2><h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>Intent是对象之间传递信息的载体。例如，当一个Ability需要启动另一个Ability时，或者一个AbilitySlice需要导航到另一个AbilitySlice时，可以通过Intent指定启动的目标同时携带相关数据。Intent的构成元素包括Operation与Parameters，具体描述参见表。</p>
 <table>
 <thead>
 <tr>
@@ -2045,7 +2042,6 @@ private ClickedListener mContinueAbilityListener = new ClickedListener() {
 <p>使用IntentAgent启动Ability时，Intent必须指定Ability的包名和类名</p>
 <h3 id="场景介绍-1"><a href="#场景介绍-1" class="headerlink" title="场景介绍"></a>场景介绍</h3><p>每个应用都可以订阅自己感兴趣的公共事件，订阅成功后且公共事件发布后，系统会把其发送给应用。这些公共事件可能来自系统、其他应用和应用自身。HarmonyOS提供了一套完整的API，支持用户订阅、发布和接收公共事件。发布公共事件需要借助CommonEventData对象，接收公共事件需要继承CommonEventSubscriber类并实现onReceiveEvent回调函数。</p>
 <h3 id="接口说明-1"><a href="#接口说明-1" class="headerlink" title="接口说明"></a>接口说明</h3><p>公共事件相关基础类包含<a href="https://developer.harmonyos.com/cn/docs/documentation/doc-guides/ability-notification-fwk-common-event-0000000000029871#ZH-CN_TOPIC_0000001050988893__li14451163813234" target="_blank" rel="noopener">CommonEventData</a>、<a href="https://developer.harmonyos.com/cn/docs/documentation/doc-guides/ability-notification-fwk-common-event-0000000000029871#ZH-CN_TOPIC_0000001050988893__li29381475233" target="_blank" rel="noopener">CommonEventPublishInfo</a>、<a href="https://developer.harmonyos.com/cn/docs/documentation/doc-guides/ability-notification-fwk-common-event-0000000000029871#ZH-CN_TOPIC_0000001050988893__li1490625910238" target="_blank" rel="noopener">CommonEventSubscribeInfo</a>、<a href="https://developer.harmonyos.com/cn/docs/documentation/doc-guides/ability-notification-fwk-common-event-0000000000029871#ZH-CN_TOPIC_0000001050988893__li75811198246" target="_blank" rel="noopener">CommonEventSubscriber</a>和<a href="https://developer.harmonyos.com/cn/docs/documentation/doc-guides/ability-notification-fwk-common-event-0000000000029871#ZH-CN_TOPIC_0000001050988893__li18241142552416" target="_blank" rel="noopener">CommonEventManager</a>。基础类之间的关系如下图所示：</p>
-<p><strong>图1</strong> 公共事件基础类关系图</p>
 <p><img src="/images/loading.gif" data-original="../images/harmonyos/-16273165567261910" alt=""></p>
 <ul>
 <li><p>CommonEventData</p>
@@ -2470,7 +2466,6 @@ public void onReceiveEvent(CommonEventData commonEventData){
 </li>
 </ul>
 <h3 id="接口说明-2"><a href="#接口说明-2" class="headerlink" title="接口说明"></a>接口说明</h3><p>通知相关基础类包含<a href="https://developer.harmonyos.com/cn/docs/documentation/doc-guides/ability-notification-fwk-notification-0000000000038804#ZH-CN_TOPIC_0000001050988895__li1552717269392" target="_blank" rel="noopener">NotificationSlot</a>、<a href="https://developer.harmonyos.com/cn/docs/documentation/doc-guides/ability-notification-fwk-notification-0000000000038804#ZH-CN_TOPIC_0000001050988895__li10626853134015" target="_blank" rel="noopener">NotificationRequest</a>和<a href="https://developer.harmonyos.com/cn/docs/documentation/doc-guides/ability-notification-fwk-notification-0000000000038804#ZH-CN_TOPIC_0000001050988895__li8128174954415" target="_blank" rel="noopener">NotificationHelper</a>。基础类之间的关系如下所示：</p>
-<p><strong>图1</strong> 通知基础类关系图</p>
 <p><img src="/images/loading.gif" data-original="../images/harmonyos/-16273165641421912" alt=""></p>
 <ul>
 <li><strong>NotificationSlot</strong>NotificationSlot可以对提示音、振动、锁屏显示和重要级别等进行设置。一个应用可以创建一个或多个NotificationSlot，在发布通知时，通过绑定不同的NotificationSlot，实现不同用途。</li>
@@ -2789,7 +2784,7 @@ try {
 <li><a href="https://gitee.com/openharmony/app_samples/tree/master/ability/Notification" target="_blank" rel="noopener">Notification</a>通知功能，即在一个应用的UI界面之外显示的消息，主要用来提醒用户有来自该应用中的信息。本示例演示了如何发布通知和取消通知</li>
 </ul>
 <h2 id="IntentAgent开发指导"><a href="#IntentAgent开发指导" class="headerlink" title="IntentAgent开发指导"></a>IntentAgent开发指导</h2><h3 id="场景介绍-3"><a href="#场景介绍-3" class="headerlink" title="场景介绍"></a>场景介绍</h3><p>IntentAgent封装了一个指定行为的<a href="https://developer.harmonyos.com/cn/docs/documentation/doc-guides/ability-intent-0000000000038799" target="_blank" rel="noopener">Intent</a>，可以通过triggerIntentAgent接口主动触发，也可以与通知绑定被动触发。具体的行为包括：启动Ability和发布公共事件。例如：收到通知后，在点击通知后跳转到一个新的Ability，不点击则不会触发。</p>
-<h3 id="接口说明-3"><a href="#接口说明-3" class="headerlink" title="接口说明"></a>接口说明</h3><p>IntentAgent相关基础类包括<a href="https://developer.harmonyos.com/cn/docs/documentation/doc-guides/ability-notification-fwk-intentagent-0000001050764907#ZH-CN_TOPIC_0000001050764907__li1179174919115" target="_blank" rel="noopener">IntentAgentHelper</a>、<a href="https://developer.harmonyos.com/cn/docs/documentation/doc-guides/ability-notification-fwk-intentagent-0000001050764907#ZH-CN_TOPIC_0000001050764907__li1717915251523" target="_blank" rel="noopener">IntentAgentInfo</a>、<a href="https://developer.harmonyos.com/cn/docs/documentation/doc-guides/ability-notification-fwk-intentagent-0000001050764907#ZH-CN_TOPIC_0000001050764907__li48031552527" target="_blank" rel="noopener">IntentAgentConstant</a>和<a href="https://developer.harmonyos.com/cn/docs/documentation/doc-guides/ability-notification-fwk-intentagent-0000001050764907#ZH-CN_TOPIC_0000001050764907__li1637513341734" target="_blank" rel="noopener">TriggerInfo</a>，基础类之间的关系如下图所示：<strong>图1</strong> IntentAgent基础类关系图</p>
+<h3 id="接口说明-3"><a href="#接口说明-3" class="headerlink" title="接口说明"></a>接口说明</h3><p>IntentAgent相关基础类包括<a href="https://developer.harmonyos.com/cn/docs/documentation/doc-guides/ability-notification-fwk-intentagent-0000001050764907#ZH-CN_TOPIC_0000001050764907__li1179174919115" target="_blank" rel="noopener">IntentAgentHelper</a>、<a href="https://developer.harmonyos.com/cn/docs/documentation/doc-guides/ability-notification-fwk-intentagent-0000001050764907#ZH-CN_TOPIC_0000001050764907__li1717915251523" target="_blank" rel="noopener">IntentAgentInfo</a>、<a href="https://developer.harmonyos.com/cn/docs/documentation/doc-guides/ability-notification-fwk-intentagent-0000001050764907#ZH-CN_TOPIC_0000001050764907__li48031552527" target="_blank" rel="noopener">IntentAgentConstant</a>和<a href="https://developer.harmonyos.com/cn/docs/documentation/doc-guides/ability-notification-fwk-intentagent-0000001050764907#ZH-CN_TOPIC_0000001050764907__li1637513341734" target="_blank" rel="noopener">TriggerInfo</a>，基础类之间的关系如下图所示：</p>
 <p><img src="/images/loading.gif" data-original="../images/harmonyos/-16273165698611914" alt=""></p>
 <ul>
 <li><strong>IntentAgentHelper</strong>IntentAgentHelper封装了获取、激发、取消IntentAgent等静态方法。</li>
@@ -3087,7 +3082,7 @@ IntentAgentHelper.triggerIntentAgent(this, agent, null, null, new TriggerInfo(nu
 <h3 id="Java卡片开发指导"><a href="#Java卡片开发指导" class="headerlink" title="Java卡片开发指导"></a>Java卡片开发指导</h3><ol>
 <li>使用DevEco Studio创建卡片工程。卡片应用是一款特殊的元能力服务，其配置文件config.json中声明以下几项，系统能够识别该应用为一款卡片应用，并与系统进行绑定。</li>
 </ol>
-<p>config.json文件”abilities”配置forms模块细节如下，各属性详情可见<a href="https://developer.harmonyos.com/cn/docs/documentation/doc-guides/ability-service-widget-provider-java-0000001104082220#ZH-CN_TOPIC_0000001104082220__table163531914131311" target="_blank" rel="noopener">表1</a>。</p>
+<p>config.json文件”abilities”配置forms模块细节如下，各属性详情可见表。</p>
 <pre><code>"forms": [
   {
     "name": "Form_Java",
@@ -3522,7 +3517,6 @@ private IntentAgent startAbilityIntentAgent() {
 </li>
 </ul>
 <h3 id="场景介绍-5"><a href="#场景介绍-5" class="headerlink" title="场景介绍"></a>场景介绍</h3><p>同一设备的应用程序A、B之间可以借助系统剪贴板服务完成简单数据的传递，即应用程序A向剪贴板服务写入数据后，应用程序B可以从中读取出数据。</p>
-<p><strong>图1</strong> 剪贴板服务示意图</p>
 <p><img src="/images/loading.gif" data-original="../images/harmonyos/-16273165884161922" alt=""></p>
 <p>在使用剪贴板服务时，需要注意以下几点：</p>
 <ul>
@@ -4333,7 +4327,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">1262.8k</span>&nbsp;字
+                class="white-color">1251.5k</span>&nbsp;字
             
             
             
@@ -4571,7 +4565,7 @@ $(function () {
     
     <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/instantpage/instantpage.js" type="module"></script>
     
-
+<script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script>
         <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
         <script>
         $('a').each(function() {
@@ -4590,7 +4584,7 @@ $(function () {
             }
           }
         });
-        </script><script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script></body>
+        </script></body>
 
 </html>
 
