@@ -1,0 +1,1694 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="PyTorch Tricks, JackHCC">
+    <meta name="description" content="PyTorch基本使用技巧">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>PyTorch Tricks | JackHCC</title>
+    <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/my.css">
+    
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/jquery/jquery.min.js"></script>
+    
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper head-container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/me.jpg" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">JackHCC</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>留言板</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>友情链接</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/me.jpg" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">JackHCC</div>
+        <div class="logo-desc">
+            
+            Make the world betterrrr!!!
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			留言板
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			友情链接
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/JackHCC/JackHCC.github.io" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/JackHCC/JackHCC.github.io" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/11.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">PyTorch Tricks</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        height: calc(100vh - 250px);
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 30px;
+        bottom: 146px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/PyTorch/">
+                                <span class="chip bg-color">PyTorch</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/Deep-Learning/" class="post-category">
+                                Deep Learning
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2021-10-04
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2021-10-04
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    4.4k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    19 分
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h1 id="目录"><a href="#目录" class="headerlink" title="目录"></a><strong>目录</strong></h1><p>1、指定GPU编号</p>
+<p>2、查看模型每层输出详情</p>
+<p>3、梯度裁剪</p>
+<p>4、扩展单张图片维度</p>
+<p>5、one hot编码</p>
+<p>6、防止验证模型时爆显存</p>
+<p>7、学习率衰减</p>
+<p>8、冻结某些层的参数</p>
+<p>9、对不同层使用不同学习率</p>
+<p>10、模型相关操作</p>
+<p>11、Pytorch内置one hot函数</p>
+<p>12、网络参数初始化</p>
+<p>13、加载内置预训练模型</p>
+<h1 id="指定GPU编号"><a href="#指定GPU编号" class="headerlink" title="指定GPU编号"></a><strong>指定GPU编号</strong></h1><ul>
+<li>设置当前使用的GPU设备仅为0号设备，设备名称为 <code>/gpu:0</code>：<code>os.environ["CUDA_VISIBLE_DEVICES"] = "0"</code></li>
+<li>设置当前使用的GPU设备为0,1号两个设备，名称依次为 <code>/gpu:0</code>、<code>/gpu:1</code>：<code>os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"</code> ，根据顺序表示优先使用0号设备,然后使用1号设备。</li>
+</ul>
+<p>指定GPU的命令需要放在和神经网络相关的一系列操作的前面。</p>
+<h1 id="查看模型每层输出详情"><a href="#查看模型每层输出详情" class="headerlink" title="查看模型每层输出详情"></a><strong>查看模型每层输出详情</strong></h1><p>Keras有一个简洁的API来查看模型的每一层输出尺寸，这在调试网络时非常有用。现在在PyTorch中也可以实现这个功能。</p>
+<p>使用很简单，如下用法：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> torchsummary <span class="token keyword">import</span> summary
+summary<span class="token punctuation">(</span>your_model<span class="token punctuation">,</span> input_size<span class="token operator">=</span><span class="token punctuation">(</span>channels<span class="token punctuation">,</span> H<span class="token punctuation">,</span> W<span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p><code>input_size</code> 是根据你自己的网络模型的输入尺寸进行设置。</p>
+<h1 id="梯度裁剪（Gradient-Clipping）"><a href="#梯度裁剪（Gradient-Clipping）" class="headerlink" title="梯度裁剪（Gradient Clipping）"></a><strong>梯度裁剪（Gradient Clipping）</strong></h1><pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> torch<span class="token punctuation">.</span>nn <span class="token keyword">as</span> nn
+
+outputs <span class="token operator">=</span> model<span class="token punctuation">(</span>data<span class="token punctuation">)</span>
+loss<span class="token operator">=</span> loss_fn<span class="token punctuation">(</span>outputs<span class="token punctuation">,</span> target<span class="token punctuation">)</span>
+optimizer<span class="token punctuation">.</span>zero_grad<span class="token punctuation">(</span><span class="token punctuation">)</span>
+loss<span class="token punctuation">.</span>backward<span class="token punctuation">(</span><span class="token punctuation">)</span>
+nn<span class="token punctuation">.</span>utils<span class="token punctuation">.</span>clip_grad_norm_<span class="token punctuation">(</span>model<span class="token punctuation">.</span>parameters<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> max_norm<span class="token operator">=</span><span class="token number">20</span><span class="token punctuation">,</span> norm_type<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">)</span>
+optimizer<span class="token punctuation">.</span>step<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><code>nn.utils.clip_grad_norm_</code> 的参数：</p>
+<ul>
+<li><strong>parameters</strong> – 一个基于变量的迭代器，会进行梯度归一化</li>
+<li><strong>max_norm</strong> – 梯度的最大范数</li>
+<li><strong>norm_type</strong> – 规定范数的类型，默认为L2</li>
+</ul>
+<h1 id="扩展单张图片维度"><a href="#扩展单张图片维度" class="headerlink" title="扩展单张图片维度"></a><strong>扩展单张图片维度</strong></h1><p>因为在训练时的数据维度一般都是 (batch_size, c, h, w)，而在测试时只输入一张图片，所以需要扩展维度，扩展维度有多个方法：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> cv2
+<span class="token keyword">import</span> torch
+
+image <span class="token operator">=</span> cv2<span class="token punctuation">.</span>imread<span class="token punctuation">(</span>img_path<span class="token punctuation">)</span>
+image <span class="token operator">=</span> torch<span class="token punctuation">.</span>tensor<span class="token punctuation">(</span>image<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>image<span class="token punctuation">.</span>size<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+img <span class="token operator">=</span> image<span class="token punctuation">.</span>view<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token operator">*</span>image<span class="token punctuation">.</span>size<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>img<span class="token punctuation">.</span>size<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true"># output:</span>
+<span class="token comment" spellcheck="true"># torch.Size([h, w, c])</span>
+<span class="token comment" spellcheck="true"># torch.Size([1, h, w, c])</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>或</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> cv2
+<span class="token keyword">import</span> numpy <span class="token keyword">as</span> np
+image <span class="token operator">=</span> cv2<span class="token punctuation">.</span>imread<span class="token punctuation">(</span>img_path<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>image<span class="token punctuation">.</span>shape<span class="token punctuation">)</span>
+img <span class="token operator">=</span> image<span class="token punctuation">[</span>np<span class="token punctuation">.</span>newaxis<span class="token punctuation">,</span> <span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token punctuation">:</span><span class="token punctuation">]</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>img<span class="token punctuation">.</span>shape<span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true"># output:</span>
+<span class="token comment" spellcheck="true"># (h, w, c)</span>
+<span class="token comment" spellcheck="true"># (1, h, w, c)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>或</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> cv2
+<span class="token keyword">import</span> torch
+
+image <span class="token operator">=</span> cv2<span class="token punctuation">.</span>imread<span class="token punctuation">(</span>img_path<span class="token punctuation">)</span>
+image <span class="token operator">=</span> torch<span class="token punctuation">.</span>tensor<span class="token punctuation">(</span>image<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>image<span class="token punctuation">.</span>size<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+img <span class="token operator">=</span> image<span class="token punctuation">.</span>unsqueeze<span class="token punctuation">(</span>dim<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">)</span>  
+<span class="token keyword">print</span><span class="token punctuation">(</span>img<span class="token punctuation">.</span>size<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+img <span class="token operator">=</span> img<span class="token punctuation">.</span>squeeze<span class="token punctuation">(</span>dim<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>img<span class="token punctuation">.</span>size<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true"># output:</span>
+<span class="token comment" spellcheck="true"># torch.Size([(h, w, c)])</span>
+<span class="token comment" spellcheck="true"># torch.Size([1, h, w, c])</span>
+<span class="token comment" spellcheck="true"># torch.Size([h, w, c])</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><code>tensor.unsqueeze(dim)</code>：扩展维度，dim指定扩展哪个维度。</p>
+<p><code>tensor.squeeze(dim)</code>：去除dim指定的且size为1的维度，维度大于1时，squeeze()不起作用，不指定dim时，去除所有size为1的维度。</p>
+<h1 id="独热编码"><a href="#独热编码" class="headerlink" title="独热编码"></a><strong>独热编码</strong></h1><p>在PyTorch中使用交叉熵损失函数的时候会自动把label转化成onehot，所以不用手动转化，而使用MSE需要手动转化成onehot编码。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> torch
+class_num <span class="token operator">=</span> <span class="token number">8</span>
+batch_size <span class="token operator">=</span> <span class="token number">4</span>
+<span class="token keyword">def</span> <span class="token function">one_hot</span><span class="token punctuation">(</span>label<span class="token punctuation">)</span><span class="token punctuation">:</span>    
+    <span class="token triple-quoted-string string">"""    将一维列表转换为独热编码    """</span>    
+    label <span class="token operator">=</span> label<span class="token punctuation">.</span>resize_<span class="token punctuation">(</span>batch_size<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span>    
+    m_zeros <span class="token operator">=</span> torch<span class="token punctuation">.</span>zeros<span class="token punctuation">(</span>batch_size<span class="token punctuation">,</span> class_num<span class="token punctuation">)</span>    
+    <span class="token comment" spellcheck="true"># 从 value 中取值，然后根据 dim 和 index 给相应位置赋值    </span>
+    onehot <span class="token operator">=</span> m_zeros<span class="token punctuation">.</span>scatter_<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> label<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># (dim,index,value)</span>
+    <span class="token keyword">return</span> onehot<span class="token punctuation">.</span>numpy<span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># Tensor -> Numpy</span>
+
+label <span class="token operator">=</span> torch<span class="token punctuation">.</span>LongTensor<span class="token punctuation">(</span>batch_size<span class="token punctuation">)</span><span class="token punctuation">.</span>random_<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">%</span> class_num  <span class="token comment" spellcheck="true"># 对随机数取余print(one_hot(label))</span>
+<span class="token comment" spellcheck="true"># output:</span>
+<span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">.</span> <span class="token number">0</span><span class="token punctuation">.</span> <span class="token number">0</span><span class="token punctuation">.</span> <span class="token number">1</span><span class="token punctuation">.</span> <span class="token number">0</span><span class="token punctuation">.</span> <span class="token number">0</span><span class="token punctuation">.</span> <span class="token number">0</span><span class="token punctuation">.</span> <span class="token number">0</span><span class="token punctuation">.</span><span class="token punctuation">]</span> 
+ <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">.</span> <span class="token number">0</span><span class="token punctuation">.</span> <span class="token number">0</span><span class="token punctuation">.</span> <span class="token number">0</span><span class="token punctuation">.</span> <span class="token number">1</span><span class="token punctuation">.</span> <span class="token number">0</span><span class="token punctuation">.</span> <span class="token number">0</span><span class="token punctuation">.</span> <span class="token number">0</span><span class="token punctuation">.</span><span class="token punctuation">]</span> 
+ <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">.</span> <span class="token number">0</span><span class="token punctuation">.</span> <span class="token number">1</span><span class="token punctuation">.</span> <span class="token number">0</span><span class="token punctuation">.</span> <span class="token number">0</span><span class="token punctuation">.</span> <span class="token number">0</span><span class="token punctuation">.</span> <span class="token number">0</span><span class="token punctuation">.</span> <span class="token number">0</span><span class="token punctuation">.</span><span class="token punctuation">]</span> 
+ <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">.</span> <span class="token number">1</span><span class="token punctuation">.</span> <span class="token number">0</span><span class="token punctuation">.</span> <span class="token number">0</span><span class="token punctuation">.</span> <span class="token number">0</span><span class="token punctuation">.</span> <span class="token number">0</span><span class="token punctuation">.</span> <span class="token number">0</span><span class="token punctuation">.</span> <span class="token number">0</span><span class="token punctuation">.</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="防止验证模型时爆显存"><a href="#防止验证模型时爆显存" class="headerlink" title="防止验证模型时爆显存"></a><strong>防止验证模型时爆显存</strong></h1><p>验证模型时不需要求导，即不需要梯度计算，关闭autograd，可以提高速度，节约内存。如果不关闭可能会爆显存。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">with</span> torch<span class="token punctuation">.</span>no_grad<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>    
+    <span class="token comment" spellcheck="true"># 使用model进行预测的代码    </span>
+    <span class="token keyword">pass</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<blockquote>
+<p>Pytorch 训练时无用的临时变量可能会越来越多，导致 <code>out of memory</code> ，可以使用下面语句来清理这些不需要的变量。</p>
+</blockquote>
+<p>官网 上的解释为：</p>
+<blockquote>
+<p>Releases all unoccupied cached memory currently held by the caching allocator so that those can be used in other GPU application and visible innvidia-smi. <code>torch.cuda.empty_cache()</code></p>
+</blockquote>
+<p>意思就是PyTorch的缓存分配器会事先分配一些固定的显存，即使实际上tensors并没有使用完这些显存，这些显存也不能被其他应用使用。这个分配过程由第一次CUDA内存访问触发的。</p>
+<p>而 <code>torch.cuda.empty_cache()</code> 的作用就是释放缓存分配器当前持有的且未占用的缓存显存，以便这些显存可以被其他GPU应用程序中使用，并且通过 <code>nvidia-smi</code>命令可见。注意使用此命令不会释放tensors占用的显存。</p>
+<p>对于不用的数据变量，Pytorch 可以自动进行回收从而释放相应的显存。</p>
+<p>更详细的优化可以查看 优化显存使用 和 显存利用问题。</p>
+<h1 id="学习率衰减"><a href="#学习率衰减" class="headerlink" title="学习率衰减"></a><strong>学习率衰减</strong></h1><pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> torch<span class="token punctuation">.</span>optim <span class="token keyword">as</span> optim
+<span class="token keyword">from</span> torch<span class="token punctuation">.</span>optim <span class="token keyword">import</span> lr_scheduler
+
+<span class="token comment" spellcheck="true"># 训练前的初始化</span>
+optimizer <span class="token operator">=</span> optim<span class="token punctuation">.</span>Adam<span class="token punctuation">(</span>net<span class="token punctuation">.</span>parameters<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> lr<span class="token operator">=</span><span class="token number">0.001</span><span class="token punctuation">)</span>
+scheduler <span class="token operator">=</span> lr_scheduler<span class="token punctuation">.</span>StepLR<span class="token punctuation">(</span>optimizer<span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">,</span> <span class="token number">0.1</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># 每过10个epoch，学习率乘以0.1</span>
+<span class="token comment" spellcheck="true"># 训练过程中</span>
+<span class="token keyword">for</span> n <span class="token keyword">in</span> n_epoch<span class="token punctuation">:</span>    
+    scheduler<span class="token punctuation">.</span>step<span class="token punctuation">(</span><span class="token punctuation">)</span>    
+    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>可以随时查看学习率的值：<code>optimizer.param_groups[0]['lr']</code>。</p>
+<p>还有其他学习率更新的方式：</p>
+<p>1、自定义更新公式：</p>
+<pre class="line-numbers language-python"><code class="language-python">scheduler <span class="token operator">=</span> lr_scheduler<span class="token punctuation">.</span>LambdaLR<span class="token punctuation">(</span>optimizer<span class="token punctuation">,</span> lr_lambda<span class="token operator">=</span><span class="token keyword">lambda</span> epoch<span class="token punctuation">:</span><span class="token number">1</span><span class="token operator">/</span><span class="token punctuation">(</span>epoch<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>2、不依赖epoch更新学习率：</p>
+<p><code>lr_scheduler.ReduceLROnPlateau()</code>提供了基于训练中某些测量值使学习率动态下降的方法，它的参数说明到处都可以查到。<br>提醒一点就是参数 mode=’min’ 还是’max’，取决于优化的的损失还是准确率，即使用 <code>scheduler.step(loss)</code>还是<code>scheduler.step(acc)</code> 。</p>
+<h1 id="冻结某些层的参数"><a href="#冻结某些层的参数" class="headerlink" title="冻结某些层的参数"></a><strong>冻结某些层的参数</strong></h1><p>参考：<a href="https://www.zhihu.com/question/311095447/answer/589307812" target="_blank" rel="noopener">https://www.zhihu.com/question/311095447/answer/589307812</a></p>
+<p>在加载预训练模型的时候，我们有时想冻结前面几层，使其参数在训练过程中不发生变化。</p>
+<p>我们需要先知道每一层的名字，通过如下代码打印：</p>
+<pre class="line-numbers language-python"><code class="language-python">net <span class="token operator">=</span> Network<span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># 获取自定义网络结构</span>
+<span class="token keyword">for</span> name<span class="token punctuation">,</span> value <span class="token keyword">in</span> net<span class="token punctuation">.</span>named_parameters<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>    
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'name: {0},\t grad: {1}'</span><span class="token punctuation">.</span>format<span class="token punctuation">(</span>name<span class="token punctuation">,</span> value<span class="token punctuation">.</span>requires_grad<span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>假设前几层信息如下：</p>
+<pre><code>name: cnn.VGG_16.convolution1_1.weight, grad: True
+name: cnn.VGG_16.convolution1_1.bias, grad: True
+name: cnn.VGG_16.convolution1_2.weight, grad: True
+name: cnn.VGG_16.convolution1_2.bias, grad: True
+name: cnn.VGG_16.convolution2_1.weight, grad: True
+name: cnn.VGG_16.convolution2_1.bias, grad: True
+name: cnn.VGG_16.convolution2_2.weight, grad: True
+name: cnn.VGG_16.convolution2_2.bias, grad: True</code></pre><p>后面的True表示该层的参数可训练，然后我们定义一个要冻结的层的列表：</p>
+<pre><code>no_grad = [    
+    'cnn.VGG_16.convolution1_1.weight',    
+    'cnn.VGG_16.convolution1_1.bias',    
+    'cnn.VGG_16.convolution1_2.weight',    
+    'cnn.VGG_16.convolution1_2.bias']</code></pre><p>冻结方法如下：</p>
+<pre class="line-numbers language-python"><code class="language-python">net <span class="token operator">=</span> Net<span class="token punctuation">.</span>CTPN<span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># 获取网络结构</span>
+<span class="token keyword">for</span> name<span class="token punctuation">,</span> value <span class="token keyword">in</span> net<span class="token punctuation">.</span>named_parameters<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>    
+    <span class="token keyword">if</span> name <span class="token keyword">in</span> no_grad<span class="token punctuation">:</span>        
+        value<span class="token punctuation">.</span>requires_grad <span class="token operator">=</span> <span class="token boolean">False</span>    
+    <span class="token keyword">else</span><span class="token punctuation">:</span>        
+        value<span class="token punctuation">.</span>requires_grad <span class="token operator">=</span> <span class="token boolean">True</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>冻结后我们再打印每层的信息：</p>
+<pre><code>name: cnn.VGG_16.convolution1_1.weight, grad: False
+name: cnn.VGG_16.convolution1_1.bias, grad: False
+name: cnn.VGG_16.convolution1_2.weight, grad: False
+name: cnn.VGG_16.convolution1_2.bias, grad: False
+name: cnn.VGG_16.convolution2_1.weight, grad: True
+name: cnn.VGG_16.convolution2_1.bias, grad: True
+name: cnn.VGG_16.convolution2_2.weight, grad: True
+name: cnn.VGG_16.convolution2_2.bias, grad: True</code></pre><p>可以看到前两层的weight和bias的requires_grad都为False，表示它们不可训练。</p>
+<p>最后在定义优化器时，只对requires_grad为True的层的参数进行更新。</p>
+<pre class="line-numbers language-python"><code class="language-python">optimizer <span class="token operator">=</span> optim<span class="token punctuation">.</span>Adam<span class="token punctuation">(</span>filter<span class="token punctuation">(</span><span class="token keyword">lambda</span> p<span class="token punctuation">:</span> p<span class="token punctuation">.</span>requires_grad<span class="token punctuation">,</span> net<span class="token punctuation">.</span>parameters<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span> lr<span class="token operator">=</span><span class="token number">0.01</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h1 id="对不同层使用不同学习率"><a href="#对不同层使用不同学习率" class="headerlink" title="对不同层使用不同学习率"></a><strong>对不同层使用不同学习率</strong></h1><p>我们对模型的不同层使用不同的学习率。</p>
+<p>还是使用这个模型作为例子：</p>
+<pre><code>net = Network()  # 获取自定义网络结构
+for name, value in net.named_parameters():    
+    print('name: {}'.format(name))
+
+# 输出：
+# name: cnn.VGG_16.convolution1_1.weight
+# name: cnn.VGG_16.convolution1_1.bias
+# name: cnn.VGG_16.convolution1_2.weight
+# name: cnn.VGG_16.convolution1_2.bias
+# name: cnn.VGG_16.convolution2_1.weight
+# name: cnn.VGG_16.convolution2_1.bias
+# name: cnn.VGG_16.convolution2_2.weight
+# name: cnn.VGG_16.convolution2_2.bias</code></pre><p>对 convolution1 和 convolution2 设置不同的学习率，首先将它们分开，即放到不同的列表里：</p>
+<pre class="line-numbers language-python"><code class="language-python">conv1_params <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+conv2_params <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+
+<span class="token keyword">for</span> name<span class="token punctuation">,</span> parms <span class="token keyword">in</span> net<span class="token punctuation">.</span>named_parameters<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>    
+    <span class="token keyword">if</span> <span class="token string">"convolution1"</span> <span class="token keyword">in</span> name<span class="token punctuation">:</span>        
+        conv1_params <span class="token operator">+=</span> <span class="token punctuation">[</span>parms<span class="token punctuation">]</span>    
+    <span class="token keyword">else</span><span class="token punctuation">:</span>        
+        conv2_params <span class="token operator">+=</span> <span class="token punctuation">[</span>parms<span class="token punctuation">]</span>
+
+<span class="token comment" spellcheck="true"># 然后在优化器中进行如下操作：</span>
+optimizer <span class="token operator">=</span> optim<span class="token punctuation">.</span>Adam<span class="token punctuation">(</span>    
+    <span class="token punctuation">[</span>        
+        <span class="token punctuation">{</span><span class="token string">"params"</span><span class="token punctuation">:</span> conv1_params<span class="token punctuation">,</span> <span class="token string">'lr'</span><span class="token punctuation">:</span> <span class="token number">0.01</span><span class="token punctuation">}</span><span class="token punctuation">,</span>        
+        <span class="token punctuation">{</span><span class="token string">"params"</span><span class="token punctuation">:</span> conv2_params<span class="token punctuation">,</span> <span class="token string">'lr'</span><span class="token punctuation">:</span> <span class="token number">0.001</span><span class="token punctuation">}</span><span class="token punctuation">,</span>    
+    <span class="token punctuation">]</span><span class="token punctuation">,</span>    
+    weight_decay<span class="token operator">=</span><span class="token number">1e</span><span class="token operator">-</span><span class="token number">3</span><span class="token punctuation">,</span>
+<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>我们将模型划分为两部分，存放到一个列表里，每部分就对应上面的一个字典，在字典里设置不同的学习率。当这两部分有相同的其他参数时，就将该参数放到列表外面作为全局参数，如上面的<code>weight_decay</code>。</p>
+<p>也可以在列表外设置一个全局学习率，当各部分字典里设置了局部学习率时，就使用该学习率，否则就使用列表外的全局学习率。</p>
+<h1 id="模型相关操作"><a href="#模型相关操作" class="headerlink" title="模型相关操作"></a><strong>模型相关操作</strong></h1><h2 id="保存加载模型基本用法"><a href="#保存加载模型基本用法" class="headerlink" title="保存加载模型基本用法"></a>保存加载模型基本用法</h2><p><strong>1、保存加载整个模型</strong></p>
+<p>保存整个网络模型（网络结构+权重参数）。</p>
+<pre class="line-numbers language-python"><code class="language-python">torch<span class="token punctuation">.</span>save<span class="token punctuation">(</span>model<span class="token punctuation">,</span> <span class="token string">'net.pkl'</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>直接加载整个网络模型（可能比较耗时）。</p>
+<pre class="line-numbers language-python"><code class="language-python">model <span class="token operator">=</span> torch<span class="token punctuation">.</span>load<span class="token punctuation">(</span><span class="token string">'net.pkl'</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p><strong>2、只保存加载模型参数</strong></p>
+<p>只保存模型的权重参数（速度快，占内存少）。</p>
+<pre class="line-numbers language-python"><code class="language-python">torch<span class="token punctuation">.</span>save<span class="token punctuation">(</span>model<span class="token punctuation">.</span>state_dict<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">'net_params.pkl'</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>因为我们只保存了模型的参数，所以需要先定义一个网络对象，然后再加载模型参数。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 构建一个网络结构</span>
+model <span class="token operator">=</span> ClassNet<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true"># 将模型参数加载到新模型中</span>
+state_dict <span class="token operator">=</span> torch<span class="token punctuation">.</span>load<span class="token punctuation">(</span><span class="token string">'net_params.pkl'</span><span class="token punctuation">)</span>
+model<span class="token punctuation">.</span>load_state_dict<span class="token punctuation">(</span>state_dict<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>保存模型进行推理测试时，只需保存训练好的模型的权重参数，即推荐第二种方法。</p>
+<p>主要用法就是上面这些，接下来讲一下PyTorch中保存加载模型内部的一些原理，以及我们可能会遇到的一些特殊的需求。</p>
+<h2 id="保存加载自定义模型"><a href="#保存加载自定义模型" class="headerlink" title="保存加载自定义模型"></a><strong>保存加载自定义模型</strong></h2><p>上面保存加载的 <code>net.pkl</code> 其实一个字典，通常包含如下内容：</p>
+<ol>
+<li><strong>网络结构</strong>：输入尺寸、输出尺寸以及隐藏层信息，以便能够在加载时重建模型。</li>
+<li><strong>模型的权重参数</strong>：包含各网络层训练后的可学习参数，可以在模型实例上调用 <code>state_dict()</code> 方法来获取，比如前面介绍只保存模型权重参数时用到的 <code>model.state_dict()</code>。</li>
+<li><strong>优化器参数</strong>：有时保存模型的参数需要稍后接着训练，那么就必须保存优化器的状态和所其使用的超参数，也是在优化器实例上调用 <code>state_dict()</code> 方法来获取这些参数。</li>
+<li>其他信息：有时我们需要保存一些其他的信息，比如 <code>epoch</code>，<code>batch_size</code> 等超参数。</li>
+</ol>
+<p>知道了这些，那么我们就可以自定义需要保存的内容，比如：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># saving a checkpoint assuming the network class named ClassNet</span>
+checkpoint <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token string">'model'</span><span class="token punctuation">:</span> ClassNet<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+              <span class="token string">'model_state_dict'</span><span class="token punctuation">:</span> model<span class="token punctuation">.</span>state_dict<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+              <span class="token string">'optimizer_state_dict'</span><span class="token punctuation">:</span> optimizer<span class="token punctuation">.</span>state_dict<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+              <span class="token string">'epoch'</span><span class="token punctuation">:</span> epoch<span class="token punctuation">}</span>
+
+torch<span class="token punctuation">.</span>save<span class="token punctuation">(</span>checkpoint<span class="token punctuation">,</span> <span class="token string">'checkpoint.pkl'</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>上面的 checkpoint 是个字典，里面有4个键值对，分别表示网络模型的不同信息。</p>
+<p>然后我们要加载上面保存的自定义的模型：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">load_checkpoint</span><span class="token punctuation">(</span>filepath<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    checkpoint <span class="token operator">=</span> torch<span class="token punctuation">.</span>load<span class="token punctuation">(</span>filepath<span class="token punctuation">)</span>
+    model <span class="token operator">=</span> checkpoint<span class="token punctuation">[</span><span class="token string">'model'</span><span class="token punctuation">]</span>  <span class="token comment" spellcheck="true"># 提取网络结构</span>
+    model<span class="token punctuation">.</span>load_state_dict<span class="token punctuation">(</span>checkpoint<span class="token punctuation">[</span><span class="token string">'model_state_dict'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># 加载网络权重参数</span>
+    optimizer <span class="token operator">=</span> TheOptimizerClass<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    optimizer<span class="token punctuation">.</span>load_state_dict<span class="token punctuation">(</span>checkpoint<span class="token punctuation">[</span><span class="token string">'optimizer_state_dict'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># 加载优化器参数</span>
+
+    <span class="token keyword">for</span> parameter <span class="token keyword">in</span> model<span class="token punctuation">.</span>parameters<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        parameter<span class="token punctuation">.</span>requires_grad <span class="token operator">=</span> <span class="token boolean">False</span>
+    model<span class="token punctuation">.</span>eval<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    <span class="token keyword">return</span> model
+
+model <span class="token operator">=</span> load_checkpoint<span class="token punctuation">(</span><span class="token string">'checkpoint.pkl'</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>如果加载模型只是为了进行推理测试，则将每一层的 <code>requires_grad</code> 置为 <code>False</code>，即固定这些权重参数；还需要调用 <code>model.eval()</code> 将模型置为测试模式，主要是将 <code>dropout</code> 和 <code>batch normalization</code> 层进行固定，否则模型的预测结果每次都会不同。</p>
+<p>如果希望继续训练，则调用 <code>model.train()</code>，以确保网络模型处于训练模式。</p>
+<p><code>state_dict()</code> 也是一个Python字典对象，<code>model.state_dict()</code> 将每一层的可学习参数映射为参数矩阵，其中只包含具有可学习参数的层(卷积层、全连接层等)。</p>
+<p>比如下面这个例子：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># Define model</span>
+<span class="token keyword">class</span> <span class="token class-name">TheModelClass</span><span class="token punctuation">(</span>nn<span class="token punctuation">.</span>Module<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        super<span class="token punctuation">(</span>TheModelClass<span class="token punctuation">,</span> self<span class="token punctuation">)</span><span class="token punctuation">.</span>__init__<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        self<span class="token punctuation">.</span>conv1 <span class="token operator">=</span> nn<span class="token punctuation">.</span>Conv2d<span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">)</span>
+        self<span class="token punctuation">.</span>bn <span class="token operator">=</span> nn<span class="token punctuation">.</span>BatchNorm2d<span class="token punctuation">(</span><span class="token number">8</span><span class="token punctuation">)</span>
+        self<span class="token punctuation">.</span>conv2 <span class="token operator">=</span> nn<span class="token punctuation">.</span>Conv2d<span class="token punctuation">(</span><span class="token number">8</span><span class="token punctuation">,</span> <span class="token number">16</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">)</span>
+        self<span class="token punctuation">.</span>pool <span class="token operator">=</span> nn<span class="token punctuation">.</span>MaxPool2d<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span>
+        self<span class="token punctuation">.</span>fc1 <span class="token operator">=</span> nn<span class="token punctuation">.</span>Linear<span class="token punctuation">(</span><span class="token number">16</span> <span class="token operator">*</span> <span class="token number">5</span> <span class="token operator">*</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">120</span><span class="token punctuation">)</span>
+        self<span class="token punctuation">.</span>fc2 <span class="token operator">=</span> nn<span class="token punctuation">.</span>Linear<span class="token punctuation">(</span><span class="token number">120</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span>
+
+    <span class="token keyword">def</span> <span class="token function">forward</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> x<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        x <span class="token operator">=</span> self<span class="token punctuation">.</span>pool<span class="token punctuation">(</span>F<span class="token punctuation">.</span>relu<span class="token punctuation">(</span>self<span class="token punctuation">.</span>conv1<span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+        x <span class="token operator">=</span> self<span class="token punctuation">.</span>bn<span class="token punctuation">(</span>x<span class="token punctuation">)</span>
+        x <span class="token operator">=</span> self<span class="token punctuation">.</span>pool<span class="token punctuation">(</span>F<span class="token punctuation">.</span>relu<span class="token punctuation">(</span>self<span class="token punctuation">.</span>conv2<span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+        x <span class="token operator">=</span> x<span class="token punctuation">.</span>view<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">16</span> <span class="token operator">*</span> <span class="token number">5</span> <span class="token operator">*</span> <span class="token number">5</span><span class="token punctuation">)</span>
+        x <span class="token operator">=</span> F<span class="token punctuation">.</span>relu<span class="token punctuation">(</span>self<span class="token punctuation">.</span>fc1<span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">)</span>
+        x <span class="token operator">=</span> F<span class="token punctuation">.</span>relu<span class="token punctuation">(</span>self<span class="token punctuation">.</span>fc2<span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">)</span>
+        x <span class="token operator">=</span> self<span class="token punctuation">.</span>fc3<span class="token punctuation">(</span>x<span class="token punctuation">)</span>
+        <span class="token keyword">return</span> x
+
+    <span class="token comment" spellcheck="true"># Initialize model</span>
+    model <span class="token operator">=</span> TheModelClass<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true"># Initialize optimizer</span>
+    optimizer <span class="token operator">=</span> optim<span class="token punctuation">.</span>SGD<span class="token punctuation">(</span>model<span class="token punctuation">.</span>parameters<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> lr<span class="token operator">=</span><span class="token number">0.001</span><span class="token punctuation">,</span> momentum<span class="token operator">=</span><span class="token number">0.9</span><span class="token punctuation">)</span>
+
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Model's state_dict:"</span><span class="token punctuation">)</span>
+    <span class="token keyword">for</span> param_tensor <span class="token keyword">in</span> model<span class="token punctuation">.</span>state_dict<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span>param_tensor<span class="token punctuation">,</span> <span class="token string">"\t"</span><span class="token punctuation">,</span> model<span class="token punctuation">.</span>state_dict<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">[</span>param_tensor<span class="token punctuation">]</span><span class="token punctuation">.</span>size<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Optimizer's state_dict:"</span><span class="token punctuation">)</span>
+    <span class="token keyword">for</span> var_name <span class="token keyword">in</span> optimizer<span class="token punctuation">.</span>state_dict<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span>var_name<span class="token punctuation">,</span> <span class="token string">"\t"</span><span class="token punctuation">,</span> optimizer<span class="token punctuation">.</span>state_dict<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">[</span>var_name<span class="token punctuation">]</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>输出为：</p>
+<pre class="line-numbers language-python"><code class="language-python">Model's state_dict<span class="token punctuation">:</span>
+conv1<span class="token punctuation">.</span>weight            torch<span class="token punctuation">.</span>Size<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">8</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+conv1<span class="token punctuation">.</span>bias              torch<span class="token punctuation">.</span>Size<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">8</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+bn<span class="token punctuation">.</span>weight               torch<span class="token punctuation">.</span>Size<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">8</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+bn<span class="token punctuation">.</span>bias                 torch<span class="token punctuation">.</span>Size<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">8</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+bn<span class="token punctuation">.</span>running_mean         torch<span class="token punctuation">.</span>Size<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">8</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+bn<span class="token punctuation">.</span>running_var          torch<span class="token punctuation">.</span>Size<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">8</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+bn<span class="token punctuation">.</span>num_batches_tracked  torch<span class="token punctuation">.</span>Size<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+conv2<span class="token punctuation">.</span>weight            torch<span class="token punctuation">.</span>Size<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">16</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+conv2<span class="token punctuation">.</span>bias              torch<span class="token punctuation">.</span>Size<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">16</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+fc1<span class="token punctuation">.</span>weight              torch<span class="token punctuation">.</span>Size<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">120</span><span class="token punctuation">,</span> <span class="token number">400</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+fc1<span class="token punctuation">.</span>bias                torch<span class="token punctuation">.</span>Size<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">120</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+fc2<span class="token punctuation">.</span>weight              torch<span class="token punctuation">.</span>Size<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">10</span><span class="token punctuation">,</span> <span class="token number">120</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+fc2<span class="token punctuation">.</span>bias                torch<span class="token punctuation">.</span>Size<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">10</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+Optimizer's state_dict<span class="token punctuation">:</span>
+state            <span class="token punctuation">{</span><span class="token punctuation">}</span>
+param_groups     <span class="token punctuation">[</span><span class="token punctuation">{</span><span class="token string">'lr'</span><span class="token punctuation">:</span> <span class="token number">0.001</span><span class="token punctuation">,</span> <span class="token string">'momentum'</span><span class="token punctuation">:</span> <span class="token number">0.9</span><span class="token punctuation">,</span> <span class="token string">'dampening'</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token string">'weight_decay'</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token string">'nesterov'</span><span class="token punctuation">:</span> <span class="token boolean">False</span><span class="token punctuation">,</span> <span class="token string">'params'</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token number">139805696932024</span><span class="token punctuation">,</span> <span class="token number">139805483616008</span><span class="token punctuation">,</span> <span class="token number">139805483616080</span><span class="token punctuation">,</span> <span class="token number">139805483616152</span><span class="token punctuation">,</span> <span class="token number">139805483616440</span><span class="token punctuation">,</span> <span class="token number">139805483616512</span><span class="token punctuation">,</span> <span class="token number">139805483616584</span><span class="token punctuation">,</span> <span class="token number">139805483616656</span><span class="token punctuation">,</span> <span class="token number">139805483616728</span><span class="token punctuation">,</span> <span class="token number">139805483616800</span><span class="token punctuation">]</span><span class="token punctuation">}</span><span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>可以看到 <code>model.state_dict()</code> 保存了卷积层，BatchNorm层和最大池化层的信息；而 <code>optimizer.state_dict()</code> 则保存的优化器的状态和相关的超参数。</p>
+<h2 id="跨设备保存加载模型"><a href="#跨设备保存加载模型" class="headerlink" title="跨设备保存加载模型"></a>跨设备保存加载模型</h2><p>1、<strong>在 CPU 上加载在 GPU 上训练并保存的模型（Save on GPU, Load on CPU）：</strong></p>
+<pre class="line-numbers language-python"><code class="language-python">device <span class="token operator">=</span> torch<span class="token punctuation">.</span>device<span class="token punctuation">(</span><span class="token string">'cpu'</span><span class="token punctuation">)</span>
+model <span class="token operator">=</span> TheModelClass<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true"># Load all tensors onto the CPU device</span>
+model<span class="token punctuation">.</span>load_state_dict<span class="token punctuation">(</span>torch<span class="token punctuation">.</span>load<span class="token punctuation">(</span><span class="token string">'net_params.pkl'</span><span class="token punctuation">,</span> map_location<span class="token operator">=</span>device<span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p><code>map_location</code>：a function, torch.device, string or a dict specifying how to remap storage locations</p>
+<p>令 <code>torch.load()</code> 函数的 <code>map_location</code> 参数等于 <code>torch.device('cpu')</code> 即可。 这里令 <code>map_location</code> 参数等于 <code>'cpu'</code> 也同样可以。</p>
+<p><strong>2、在 GPU 上加载在 GPU 上训练并保存的模型（Save on GPU, Load on GPU）：</strong></p>
+<pre class="line-numbers language-python"><code class="language-python">device <span class="token operator">=</span> torch<span class="token punctuation">.</span>device<span class="token punctuation">(</span><span class="token string">"cuda"</span><span class="token punctuation">)</span>
+model <span class="token operator">=</span> TheModelClass<span class="token punctuation">(</span><span class="token punctuation">)</span>
+model<span class="token punctuation">.</span>load_state_dict<span class="token punctuation">(</span>torch<span class="token punctuation">.</span>load<span class="token punctuation">(</span><span class="token string">'net_params.pkl'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+model<span class="token punctuation">.</span>to<span class="token punctuation">(</span>device<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>在这里使用 <code>map_location</code> 参数不起作用，要使用 <code>model.to(torch.device("cuda"))</code> 将模型转换为CUDA优化的模型。</p>
+<p>还需要对将要输入模型的数据调用 <code>data = data.to(device)</code>，即将数据从CPU转移到GPU。请注意，调用 <code>my_tensor.to(device)</code> 会返回一个 <code>my_tensor</code> 在 GPU 上的副本，它不会覆盖 <code>my_tensor</code>。因此需要手动覆盖张量：<code>my_tensor = my_tensor.to(device)</code>。</p>
+<p><strong>3、在 GPU 上加载在 GPU 上训练并保存的模型（Save on CPU, Load on GPU）</strong></p>
+<pre class="line-numbers language-python"><code class="language-python">device <span class="token operator">=</span> torch<span class="token punctuation">.</span>device<span class="token punctuation">(</span><span class="token string">"cuda"</span><span class="token punctuation">)</span>
+model <span class="token operator">=</span> TheModelClass<span class="token punctuation">(</span><span class="token punctuation">)</span>
+model<span class="token punctuation">.</span>load_state_dict<span class="token punctuation">(</span>torch<span class="token punctuation">.</span>load<span class="token punctuation">(</span><span class="token string">'net_params.pkl'</span><span class="token punctuation">,</span> map_location<span class="token operator">=</span><span class="token string">"cuda:0"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+model<span class="token punctuation">.</span>to<span class="token punctuation">(</span>device<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>当加载包含GPU tensors的模型时，这些tensors 会被默认加载到GPU上，不过是同一个GPU设备。</p>
+<p>当有多个GPU设备时，可以通过将 <code>map_location</code> 设定为 <code>*cuda:device_id*</code> 来指定使用哪一个GPU设备，上面例子是指定编号为0的GPU设备。</p>
+<p>其实也可以将 <code>torch.device("cuda")</code> 改为 <code>torch.device("cuda:0")</code> 来指定编号为0的GPU设备。</p>
+<p>最后调用 <code>model.to(torch.device('cuda'))</code> 来将模型的tensors转换为 CUDA tensors。</p>
+<p>下面是PyTorch官方文档上的用法，可以进行参考：</p>
+<pre class="line-numbers language-python3"><code class="language-python3">>>> torch.load('tensors.pt')
+# Load all tensors onto the CPU
+>>> torch.load('tensors.pt', map_location=torch.device('cpu'))
+# Load all tensors onto the CPU, using a function
+>>> torch.load('tensors.pt', map_location=lambda storage, loc: storage)
+# Load all tensors onto GPU 1
+>>> torch.load('tensors.pt', map_location=lambda storage, loc: storage.cuda(1))
+# Map tensors from GPU 1 to GPU 0
+>>> torch.load('tensors.pt', map_location={'cuda:1':'cuda:0'})<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="CUDA-的用法"><a href="#CUDA-的用法" class="headerlink" title="CUDA 的用法"></a>CUDA 的用法</h2><p>在PyTorch中和GPU相关的几个函数：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> torch
+
+<span class="token comment" spellcheck="true"># 判断cuda是否可用；</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>torch<span class="token punctuation">.</span>cuda<span class="token punctuation">.</span>is_available<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># 获取gpu数量；</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>torch<span class="token punctuation">.</span>cuda<span class="token punctuation">.</span>device_count<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># 获取gpu名字；</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>torch<span class="token punctuation">.</span>cuda<span class="token punctuation">.</span>get_device_name<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># 返回当前gpu设备索引，默认从0开始；</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>torch<span class="token punctuation">.</span>cuda<span class="token punctuation">.</span>current_device<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># 查看tensor或者model在哪块GPU上</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>torch<span class="token punctuation">.</span>tensor<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">.</span>get_device<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>我的电脑输出为：</p>
+<pre class="line-numbers language-text"><code class="language-text">True
+1
+GeForce RTX 2080 Ti
+0<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>有时我们需要把数据和模型从cpu移到gpu中，有以下两种方法：</p>
+<pre class="line-numbers language-python"><code class="language-python">use_cuda <span class="token operator">=</span> torch<span class="token punctuation">.</span>cuda<span class="token punctuation">.</span>is_available<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># 方法一：</span>
+<span class="token keyword">if</span> use_cuda<span class="token punctuation">:</span>
+    data <span class="token operator">=</span> data<span class="token punctuation">.</span>cuda<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    model<span class="token punctuation">.</span>cuda<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># 方法二：</span>
+device <span class="token operator">=</span> torch<span class="token punctuation">.</span>device<span class="token punctuation">(</span><span class="token string">"cuda"</span> <span class="token keyword">if</span> use_cuda <span class="token keyword">else</span> <span class="token string">"cpu"</span><span class="token punctuation">)</span>
+data <span class="token operator">=</span> data<span class="token punctuation">.</span>to<span class="token punctuation">(</span>device<span class="token punctuation">)</span>
+model<span class="token punctuation">.</span>to<span class="token punctuation">(</span>device<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>个人比较习惯第二种方法，可以少一个 if 语句。而且该方法还可以通过设备号指定使用哪个GPU设备，比如使用0号设备：</p>
+<pre><code>device = torch.device("cuda:0" if use_cuda else "cpu")</code></pre><h1 id="Pytorch内置one-hot函数"><a href="#Pytorch内置one-hot函数" class="headerlink" title="Pytorch内置one_hot函数"></a><strong>Pytorch内置one_hot函数</strong></h1><p>感谢@yangyangyang 补充：Pytorch 1.1后，one_hot可以直接用<code>torch.nn.functional.one_hot</code>。</p>
+<p>然后我将Pytorch升级到1.2版本，试用了下 one_hot 函数，确实很方便。</p>
+<p>具体用法如下：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> torch<span class="token punctuation">.</span>nn<span class="token punctuation">.</span>functional <span class="token keyword">as</span> F
+<span class="token keyword">import</span> torch
+tensor <span class="token operator">=</span>  torch<span class="token punctuation">.</span>arange<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">)</span> <span class="token operator">%</span> <span class="token number">3</span>  <span class="token comment" spellcheck="true"># tensor([0, 1, 2, 0, 1])</span>
+one_hot <span class="token operator">=</span> F<span class="token punctuation">.</span>one_hot<span class="token punctuation">(</span>tensor<span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># 输出：</span>
+<span class="token comment" spellcheck="true"># tensor([[1, 0, 0],</span>
+<span class="token comment" spellcheck="true">#         [0, 1, 0],</span>
+<span class="token comment" spellcheck="true">#         [0, 0, 1],</span>
+<span class="token comment" spellcheck="true">#         [1, 0, 0],</span>
+<span class="token comment" spellcheck="true">#         [0, 1, 0]])</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><code>F.one_hot</code>会自己检测不同类别个数，生成对应独热编码。我们也可以自己指定类别数：</p>
+<pre class="line-numbers language-python"><code class="language-python">tensor <span class="token operator">=</span>  torch<span class="token punctuation">.</span>arange<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">)</span> <span class="token operator">%</span> <span class="token number">3</span>  <span class="token comment" spellcheck="true"># tensor([0, 1, 2, 0, 1])</span>
+one_hot <span class="token operator">=</span> F<span class="token punctuation">.</span>one_hot<span class="token punctuation">(</span>tensor<span class="token punctuation">,</span> num_classes<span class="token operator">=</span><span class="token number">5</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># 输出：</span>
+<span class="token comment" spellcheck="true"># tensor([[1, 0, 0, 0, 0],</span>
+<span class="token comment" spellcheck="true">#         [0, 1, 0, 0, 0],</span>
+<span class="token comment" spellcheck="true">#         [0, 0, 1, 0, 0],</span>
+<span class="token comment" spellcheck="true">#         [1, 0, 0, 0, 0],</span>
+<span class="token comment" spellcheck="true">#         [0, 1, 0, 0, 0]])</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>升级 Pytorch (cpu版本)的命令：<code>conda install pytorch torchvision \-c pytorch</code></p>
+<p>（希望Pytorch升级不会影响项目代码）</p>
+<h1 id="网络参数初始化"><a href="#网络参数初始化" class="headerlink" title="网络参数初始化"></a><strong>网络参数初始化</strong></h1><p>神经网络的初始化是训练流程的重要基础环节，会对模型的性能、收敛性、收敛速度等产生重要的影响。</p>
+<p>以下介绍两种常用的初始化操作。</p>
+<p>(1) 使用pytorch内置的torch.nn.init方法。</p>
+<p>常用的初始化操作，例如正态分布、均匀分布、xavier初始化、kaiming初始化等都已经实现，可以直接使用。具体详见PyTorch 中 torch.nn.init 中文文档。</p>
+<pre class="line-numbers language-python"><code class="language-python">init<span class="token punctuation">.</span>xavier_uniform<span class="token punctuation">(</span>net1<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>weight<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>(2) 对于一些更加灵活的初始化方法，可以借助numpy。</p>
+<p>对于自定义的初始化方法，有时tensor的功能不如numpy强大灵活，故可以借助numpy实现初始化方法，再转换到tensor上使用。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">for</span> layer <span class="token keyword">in</span> net1<span class="token punctuation">.</span>modules<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>    
+    <span class="token keyword">if</span> isinstance<span class="token punctuation">(</span>layer<span class="token punctuation">,</span> nn<span class="token punctuation">.</span>Linear<span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token comment" spellcheck="true"># 判断是否是线性层        </span>
+        param_shape <span class="token operator">=</span> layer<span class="token punctuation">.</span>weight<span class="token punctuation">.</span>shape        
+        layer<span class="token punctuation">.</span>weight<span class="token punctuation">.</span>data <span class="token operator">=</span> torch<span class="token punctuation">.</span>from_numpy<span class="token punctuation">(</span>np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>normal<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0.5</span><span class="token punctuation">,</span> size<span class="token operator">=</span>param_shape<span class="token punctuation">)</span><span class="token punctuation">)</span>         
+        <span class="token comment" spellcheck="true"># 定义为均值为 0，方差为 0.5 的正态分布</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="加载内置预训练模型"><a href="#加载内置预训练模型" class="headerlink" title="加载内置预训练模型"></a><strong>加载内置预训练模型</strong></h1><p><code>torchvision.models</code>模块的子模块中包含以下模型：</p>
+<ul>
+<li>AlexNet</li>
+<li>VGG</li>
+<li>ResNet</li>
+<li>SqueezeNet</li>
+<li>DenseNet</li>
+</ul>
+<p>导入这些模型的方法为：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> torchvision<span class="token punctuation">.</span>models <span class="token keyword">as</span> models
+resnet18 <span class="token operator">=</span> models<span class="token punctuation">.</span>resnet18<span class="token punctuation">(</span><span class="token punctuation">)</span>
+alexnet <span class="token operator">=</span> models<span class="token punctuation">.</span>alexnet<span class="token punctuation">(</span><span class="token punctuation">)</span>
+vgg16 <span class="token operator">=</span> models<span class="token punctuation">.</span>vgg16<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>有一个很重要的参数为<code>pretrained</code>，默认为<code>False</code>，表示只导入模型的结构，其中的权重是随机初始化的。</p>
+<p>如果<code>pretrained</code> 为 <code>True</code>，表示导入的是在<code>ImageNet</code>数据集上预训练的模型。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> torchvision<span class="token punctuation">.</span>models <span class="token keyword">as</span> models
+resnet18 <span class="token operator">=</span> models<span class="token punctuation">.</span>resnet18<span class="token punctuation">(</span>pretrained<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
+alexnet <span class="token operator">=</span> models<span class="token punctuation">.</span>alexnet<span class="token punctuation">(</span>pretrained<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
+vgg16 <span class="token operator">=</span> models<span class="token punctuation">.</span>vgg16<span class="token punctuation">(</span>pretrained<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<script>
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return; }
+            const img = document.createElement('img');
+            img.style = 'display:none !important;';
+            img.src = el.dataset.src;
+            img.addEventListener('error', () => {
+              img.remove();
+              el.style.color = 'inherit';
+              el.style.backgroundImage = 'none';
+              el.style.background = 'none';
+            });
+            img.addEventListener('load', () => {
+              img.remove();
+            });
+            document.body.appendChild(img);
+          });
+      </script>
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://jackhcc.github.io" rel="external nofollow noreferrer">杰克成</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://jackhcc.github.io/posts/pytorch-tricks.html">https://jackhcc.github.io/posts/pytorch-tricks.html</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="https://jackhcc.github.io" target="_blank">杰克成</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/PyTorch/">
+                                    <span class="chip bg-color">PyTorch</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/reward/aliqr.png" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/reward/wxqr.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+            
+        </div>
+    </div>
+
+    
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/gitalk/gitalk.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/my-gitalk.css">
+
+<div class="card gitalk-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="gitalk-container" class="card-content"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/gitalk/gitalk.min.js"></script>
+<script>
+    let gitalk = new Gitalk({
+        clientID: '3821a0bbb773038a51fc',
+        clientSecret: '4b30b507d67ec5497ec0e77f43f80cb3e0d7dd3a',
+        repo: 'JackHCC.github.io',
+        owner: 'JackHCC',
+        admin: "JackHCC",
+        id: '2021-10-04T20-04-00',
+        distractionFreeMode: false  // Facebook-like distraction free mode
+    });
+
+    gitalk.render('gitalk-container');
+</script>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
+            <div class="card">
+                <a href="/posts/pytorch-tricks.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/11.jpg" class="responsive-img" alt="PyTorch Tricks">
+                        
+                        <span class="card-title">PyTorch Tricks</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            PyTorch基本使用技巧
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-10-04
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Deep-Learning/" class="post-category">
+                                    Deep Learning
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/PyTorch/">
+                        <span class="chip bg-color">PyTorch</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/posts/git-easy.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/0.jpg" class="responsive-img" alt="Git 基本技巧大全">
+                        
+                        <span class="card-title">Git 基本技巧大全</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            玩转Git基本命令
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-10-03
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Basic/" class="post-category">
+                                    Basic
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Git/">
+                        <span class="chip bg-color">Git</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeShrink.js"></script>
+
+
+<!-- 代码块折行 -->
+
+<style type="text/css">
+code[class*="language-"], pre[class*="language-"] { white-space: pre !important; }
+</style>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('4'),
+            headingSelector: 'h1, h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h1, h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+    <footer class="page-footer bg-color">
+    <div class="container row center-align" style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            <span id="year">2020</span>
+            <a href="https://jackhcc.github.io" target="_blank">杰克成</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                class="white-color">1701.9k</span>&nbsp;字
+            
+            
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;人
+            </span>
+            
+            <br>
+            
+            <span id="sitetime">载入运行时间...</span>
+            <script>
+                function siteTime() {
+                    var seconds = 1000;
+                    var minutes = seconds * 60;
+                    var hours = minutes * 60;
+                    var days = hours * 24;
+                    var years = days * 365;
+                    var today = new Date();
+                    var startYear = "2020";
+                    var startMonth = "2";
+                    var startDate = "27";
+                    var startHour = "6";
+                    var startMinute = "30";
+                    var startSecond = "0";
+                    var todayYear = today.getFullYear();
+                    var todayMonth = today.getMonth() + 1;
+                    var todayDate = today.getDate();
+                    var todayHour = today.getHours();
+                    var todayMinute = today.getMinutes();
+                    var todaySecond = today.getSeconds();
+                    var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                    var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                    var diff = t2 - t1;
+                    var diffYears = Math.floor(diff / years);
+                    var diffDays = Math.floor((diff / days) - diffYears * 365);
+                    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+                    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) /
+                        minutes);
+                    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours -
+                        diffMinutes * minutes) / seconds);
+                    if (startYear == todayYear) {
+                        document.getElementById("year").innerHTML = todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffDays + " 天 " + diffHours +
+                            " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    } else {
+                        document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffYears + " 年 " + diffDays +
+                            " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    }
+                }
+                setInterval(siteTime, 1000);
+            </script>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/JackHCC" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:jackcc0701@163.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+    <a href="https://www.facebook.com/profile.php?id=100046343443643" class="tooltipped" target="_blank" data-tooltip="关注我的Facebook: https://www.facebook.com/profile.php?id=100046343443643" data-position="top" data-delay="50">
+        <i class="fab fa-facebook-f"></i>
+    </a>
+
+
+
+    <a href="https://twitter.com/JackChe66021834" class="tooltipped" target="_blank" data-tooltip="关注我的Twitter: https://twitter.com/JackChe66021834" data-position="top" data-delay="50">
+        <i class="fab fa-twitter"></i>
+    </a>
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=2508074836" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 2508074836" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+    <a href="https://weibo.com/u/6885584679" class="tooltipped" target="_blank" data-tooltip="关注我的微博: https://weibo.com/u/6885584679" data-position="top" data-delay="50">
+        <i class="fab fa-weibo"></i>
+    </a>
+
+
+
+    <a href="https://www.zhihu.com/people/8f8482f01f0d6a04e844efe32e0f0710" class="tooltipped" target="_blank" data-tooltip="关注我的知乎: https://www.zhihu.com/people/8f8482f01f0d6a04e844efe32e0f0710" data-position="top" data-delay="50">
+        <i class="fab fa-zhihu1">知</i>
+    </a>
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/materialize/materialize.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/aos/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/js/matery.js"></script>
+
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+    <script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script type="text/javascript" src="/js/fireworks.js"></script>
+
+    <script type="text/javascript">
+        //只在桌面版网页启用特效
+        var windowWidth = $(window).width();
+        if (windowWidth > 768) {
+            document.write('<script type="text/javascript" src="/js/sakura.js"><\/script>'); }
+    </script>
+
+    <!-- weather -->
+	<script type="text/javascript">
+	WIDGET = {FID: 'TToslpmkVO'}
+	</script>
+	<script type="text/javascript" src="https://apip.weatherdt.com/float/static/js/r.js?v=1111"></script>
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <!-- Baidu Analytics -->
+
+<script>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+    <!-- Baidu Push -->
+
+    
+    
+    <script async src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+        <script src="//code.tidio.co/kqhlkxviiccyoa0czpfpu4ijuey9hfre.js"></script>
+        <script> 
+            $(document).ready(function () {
+                setInterval(change_Tidio, 50);  
+                function change_Tidio() { 
+                    var tidio=$("#tidio-chat iframe");
+                    if(tidio.css("display")=="block"&& $(window).width()>977 ){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" &&$(window).width()>977)>0? "-40px" : ($("div.toc-title").length&&$(window).width()>977)>0?"85px":"20px";   
+                        document.getElementById("tidio-chat-iframe").style.right="-15px";   
+                        document.getElementById("tidio-chat-iframe").style.height=parseInt(tidio.css("height"))>=520?"520px":tidio.css("height");
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    } 
+                    else if(tidio.css("display")=="block"&&$(window).width()>601 &&$(window).width()<992 ){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" && 601< $(window).width()<992)>0? "-40px":"20px" ;   
+                        document.getElementById("tidio-chat-iframe").style.right="-15px"; 
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    }
+                    else if(tidio.css("display")=="block"&&$(window).width()<601 && parseInt(tidio.css("height"))<230){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" && $(window).width()<601)>0? "-10px":"45px" ;   
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    }
+                    if( tidio.css("display")=="block"&&$(window).width()<601 && parseInt(tidio.css("height"))>=230){
+                        document.getElementById("tidio-chat-iframe").style.zIndex="998";
+                    }
+                } 
+            }); 
+        </script>
+    
+
+    
+
+    
+    <script type="text/javascript" color="0,0,255"
+        pointColor="0,0,255" opacity='0.7'
+        zIndex="-1" count="99"
+        src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/background/canvas-nest.js"></script>
+    
+
+    
+
+    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/background/ribbon-dynamic.js" async="async"></script>
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/instantpage/instantpage.js" type="module"></script>
+    
+<script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script>
+        <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
+        <script>
+        $('a').each(function() {
+          const $this = $(this);
+          const href = $this.attr('href');
+          if (href && href.match('^((http|https|thunder|qqdl|ed2k|Flashget|qbrowser|ftp|rtsp|mms)://)')) {
+            const strs = href.split('/');
+            if (strs.length >= 3) {
+                const host = strs[2];
+                if (host !== 'your_domain' || window.location.host) {
+                    $this.attr('href', '/go.html?u='+Base64.encode(href)+'').attr('rel', 'external nofollow noopener noreferrer');
+                    if (true) {
+                        $this.attr('target', '_blank');
+                    }
+                }
+            }
+          }
+        });
+        </script></body>
+
+</html>
+

@@ -459,21 +459,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-09-13
+                    2021-10-04
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    40.6k
+                    11.9k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    145 分
+                    41 分
                 </div>
                 
 
@@ -609,7 +609,7 @@
 </li>
 </ul>
 <h3 id="时序图-1"><a href="#时序图-1" class="headerlink" title="时序图"></a>时序图</h3><p><img src="/images/loading.gif" data-original="../images/development/4255c245fa79bb76b6daaaffca3db053.jpeg" alt=""></p>
-<h3 id="代码分析"><a href="#代码分析" class="headerlink" title="代码分析"></a>代码分析</h3><pre><code>///////////////////////////////////////////////////////////
+<h3 id="代码分析"><a href="#代码分析" class="headerlink" title="代码分析"></a>代码分析</h3><pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  Factory.cpp
 //  Implementation of the Class Factory
 //  Created on:      01-十月-2014 18:41:33
@@ -629,7 +629,8 @@ Product* Factory::createProduct(string proname){
         return new ConcreteProductB();
     }
     return  NULL;
-}</code></pre><h3 id="模式分析"><a href="#模式分析" class="headerlink" title="模式分析"></a>模式分析</h3><ul>
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="模式分析"><a href="#模式分析" class="headerlink" title="模式分析"></a>模式分析</h3><ul>
 <li>将对象的创建和对象本身业务处理分离可以降低系统的耦合度，使得两者修改起来都相对容易。</li>
 <li>在调用工厂类的工厂方法时，由于工厂方法是静态方法，使用起来很方便，可通过类名直接调用，而且只需要传入一个简单的参数即可，在实际开发中，还可以在调用时将所传入的参数保存在XML等格式的配置文件中，修改参数时无须修改任何源代码。</li>
 <li>简单工厂模式最大的问题在于工厂类的职责相对过重，增加新的产品需要修改工厂类的判断逻辑，这一点与开闭原则是相违背的。</li>
@@ -654,10 +655,11 @@ Product* Factory::createProduct(string proname){
 <h3 id="模式应用"><a href="#模式应用" class="headerlink" title="模式应用"></a>模式应用</h3><ul>
 <li>JDK类库中广泛使用了简单工厂模式，如工具类java.text.DateFormat，它用于格式化一个本地日期或者时间。</li>
 </ul>
-<pre><code>public final static DateFormat getDateInstance();
+<pre class="line-numbers language-c++"><code class="language-c++">public final static DateFormat getDateInstance();
 public final static DateFormat getDateInstance(int style);
 public final static DateFormat getDateInstance(int style,Locale
-locale);</code></pre><ul>
+locale);<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
 <li>Java加密技术 获取不同加密算法的密钥生成器:</li>
 </ul>
 <pre><code>KeyGenerator keyGen=KeyGenerator.getInstance("DESede");</code></pre><p>创建密码器:</p>
@@ -684,7 +686,7 @@ locale);</code></pre><ul>
 </li>
 </ul>
 <h3 id="时序图-2"><a href="#时序图-2" class="headerlink" title="时序图"></a>时序图</h3><p><img src="/images/loading.gif" data-original="../images/development/86b91838538c553053c2bb7830b3f73e.jpeg" alt=""></p>
-<h3 id="代码分析-1"><a href="#代码分析-1" class="headerlink" title="代码分析"></a>代码分析</h3><pre><code>///////////////////////////////////////////////////////////
+<h3 id="代码分析-1"><a href="#代码分析-1" class="headerlink" title="代码分析"></a>代码分析</h3><pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  ConcreteFactory.cpp
 //  Implementation of the Class ConcreteFactory
 //  Created on:      02-十月-2014 10:18:58
@@ -698,23 +700,25 @@ Product* ConcreteFactory::factoryMethod(){
 
     return  new ConcreteProduct();
 }
-</code></pre><pre><code>#include "Factory.h"
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">#include "Factory.h"
 #include "ConcreteFactory.h"
 #include "Product.h"
-#include &lt;iostream&gt;
+#include <iostream>
 using namespace std;
 
 int main(int argc, char *argv[])
 {
     Factory * fc = new ConcreteFactory();
-    Product * prod = fc-&gt;factoryMethod();
-    prod-&gt;use();
+    Product * prod = fc->factoryMethod();
+    prod->use();
 
     delete fc;
     delete prod;
 
     return 0;
-}</code></pre><h3 id="模式分析-1"><a href="#模式分析-1" class="headerlink" title="模式分析"></a>模式分析</h3><p>工厂方法模式是简单工厂模式的进一步抽象和推广。由于使用了面向对象的多态性，工厂方法模式保持了简单工厂模式的优点，而且克服了它的缺点。在工厂方法模式中，核心的工厂类不再负责所有产品的创建，而是将具体创建工作交给子类去做。这个核心类仅仅负责给出具体工厂必须实现的接口，而不负责哪一个产品类被实例化这种细节，这使得工厂方法模式可以允许系统在不修改工厂角色的情况下引进新产品。</p>
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="模式分析-1"><a href="#模式分析-1" class="headerlink" title="模式分析"></a>模式分析</h3><p>工厂方法模式是简单工厂模式的进一步抽象和推广。由于使用了面向对象的多态性，工厂方法模式保持了简单工厂模式的优点，而且克服了它的缺点。在工厂方法模式中，核心的工厂类不再负责所有产品的创建，而是将具体创建工作交给子类去做。这个核心类仅仅负责给出具体工厂必须实现的接口，而不负责哪一个产品类被实例化这种细节，这使得工厂方法模式可以允许系统在不修改工厂角色的情况下引进新产品。</p>
 <h3 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h3><p>日志记录器</p>
 <p>某系统日志记录器要求支持多种日志记录方式，如文件记录、数据库记录等，且用户可以根据要求动态选择日志记录方式，现使用工厂方法模式设计该系统。</p>
 <p>结构图：</p>
@@ -777,7 +781,7 @@ ResultSet rs=statement.executeQuery("select * from UserInfo");</code></pre><h3 i
 <li><img src="/images/loading.gif" data-original="../images/development/c2cea6d12c1ac4fed17e9176bcf0e351.jpeg" alt=""></li>
 </ul>
 <h3 id="时序图-3"><a href="#时序图-3" class="headerlink" title="时序图"></a>时序图</h3><p><img src="/images/loading.gif" data-original="../images/development/6551fe20fc103e264c7435e29c4e0c22.jpeg" alt=""></p>
-<h3 id="代码分析-2"><a href="#代码分析-2" class="headerlink" title="代码分析"></a>代码分析</h3><pre><code>#include &lt;iostream&gt;
+<h3 id="代码分析-2"><a href="#代码分析-2" class="headerlink" title="代码分析"></a>代码分析</h3><pre class="line-numbers language-c++"><code class="language-c++">#include <iostream>
 #include "AbstractFactory.h"
 #include "AbstractProductA.h"
 #include "AbstractProductB.h"
@@ -788,16 +792,17 @@ using namespace std;
 int main(int argc, char *argv[])
 {
     AbstractFactory * fc = new ConcreteFactory1();
-    AbstractProductA * pa =  fc-&gt;createProductA();
-    AbstractProductB * pb = fc-&gt;createProductB();
-    pa-&gt;use();
-    pb-&gt;eat();
+    AbstractProductA * pa =  fc->createProductA();
+    AbstractProductB * pb = fc->createProductB();
+    pa->use();
+    pb->eat();
 
     AbstractFactory * fc2 = new ConcreteFactory2();
-    AbstractProductA * pa2 =  fc2-&gt;createProductA();
-    AbstractProductB * pb2 = fc2-&gt;createProductB();
-    pa2-&gt;use();
-    pb2-&gt;eat();</code></pre><pre><code>///////////////////////////////////////////////////////////
+    AbstractProductA * pa2 =  fc2->createProductA();
+    AbstractProductB * pb2 = fc2->createProductB();
+    pa2->use();
+    pb2->eat();<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  ConcreteFactory1.cpp
 //  Implementation of the Class ConcreteFactory1
 //  Created on:      02-十月-2014 15:04:11
@@ -814,7 +819,8 @@ AbstractProductA * ConcreteFactory1::createProductA(){
 
 AbstractProductB * ConcreteFactory1::createProductB(){
     return new ProductB1();
-}</code></pre><pre><code>///////////////////////////////////////////////////////////
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  ProductA1.cpp
 //  Implementation of the Class ProductA1
 //  Created on:      02-十月-2014 15:04:17
@@ -822,11 +828,12 @@ AbstractProductB * ConcreteFactory1::createProductB(){
 ///////////////////////////////////////////////////////////
 
 #include "ProductA1.h"
-#include &lt;iostream&gt;
+#include <iostream>
 using namespace std;
 void ProductA1::use(){
-    cout &lt;&lt; "use Product A1" &lt;&lt; endl;
-}</code></pre><p>运行结果：</p>
+    cout << "use Product A1" << endl;
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>运行结果：</p>
 <p> <img src="/images/loading.gif" data-original="../images/development/1180b686d73e78c4dcc2de035cf03dca.jpeg" alt=""></p>
 <h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
 <li>抽象工厂模式隔离了具体类的生成，使得客户并不需要知道什么被创建。由于这种隔离，更换一个具体工厂就变得相对容易。所有的具体工厂都实现了抽象工厂中定义的那些公共接口，因此只需改变具体工厂的实例，就可以在某种程度上改变整个软件系统的行为。另外，应用抽象工厂模式可以实现高内聚低耦合的设计目的，因此抽象工厂模式得到了广泛的应用。</li>
@@ -885,7 +892,7 @@ void ProductA1::use(){
 </li>
 </ul>
 <h3 id="时序图-4"><a href="#时序图-4" class="headerlink" title="时序图"></a>时序图</h3><p><img src="/images/loading.gif" data-original="../images/development/4a43a4935592d921be20caaf65a9487a.jpeg" alt=""></p>
-<h3 id="代码分析-3"><a href="#代码分析-3" class="headerlink" title="代码分析"></a>代码分析</h3><pre><code>#include &lt;iostream&gt;
+<h3 id="代码分析-3"><a href="#代码分析-3" class="headerlink" title="代码分析"></a>代码分析</h3><pre class="line-numbers language-c++"><code class="language-c++">#include <iostream>
 #include "ConcreteBuilder.h"
 #include "Director.h"
 #include "Builder.h"
@@ -899,12 +906,13 @@ int main(int argc, char *argv[])
     Director  director;
     director.setBuilder(builder);
     Product * pd =  director.constuct();
-    pd-&gt;show();
+    pd->show();
 
     delete builder;
     delete pd;
     return 0;
-}</code></pre><pre><code>///////////////////////////////////////////////////////////
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  ConcreteBuilder.cpp
 //  Implementation of the Class ConcreteBuilder
 //  Created on:      02-十月-2014 15:57:03
@@ -925,18 +933,19 @@ ConcreteBuilder::~ConcreteBuilder(){
 }
 
 void ConcreteBuilder::buildPartA(){
-    m_prod-&gt;setA("A Style "); //不同的建造者，可以实现不同产品的建造  
+    m_prod->setA("A Style "); //不同的建造者，可以实现不同产品的建造  
 }
 
 
 void ConcreteBuilder::buildPartB(){
-    m_prod-&gt;setB("B Style ");
+    m_prod->setB("B Style ");
 }
 
 
 void ConcreteBuilder::buildPartC(){
-    m_prod-&gt;setC("C style ");
-}</code></pre><pre><code>///////////////////////////////////////////////////////////
+    m_prod->setC("C style ");
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  Director.cpp
 //  Implementation of the Class Director
 //  Created on:      02-十月-2014 15:57:01
@@ -952,17 +961,18 @@ Director::~Director(){
 }
 
 Product* Director::constuct(){
-    m_pbuilder-&gt;buildPartA();
-    m_pbuilder-&gt;buildPartB();
-    m_pbuilder-&gt;buildPartC();
+    m_pbuilder->buildPartA();
+    m_pbuilder->buildPartB();
+    m_pbuilder->buildPartC();
 
-    return m_pbuilder-&gt;getResult();
+    return m_pbuilder->getResult();
 }
 
 
 void Director::setBuilder(Builder* buider){
     m_pbuilder = buider;
-}</code></pre><p>运行结果：</p>
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>运行结果：</p>
 <p> <img src="/images/loading.gif" data-original="../images/development/2e67d7c542bef83075ba079b53435f54.jpeg" alt=""></p>
 <h3 id="模式分析-2"><a href="#模式分析-2" class="headerlink" title="模式分析"></a>模式分析</h3><p>抽象建造者类中定义了产品的创建方法和返回方法;</p>
 <p>建造者模式的结构中还引入了一个指挥者类Director，该类的作用主要有两个：一方面它隔离了客户与生产过程；另一方面它负责控制产品的生成过程。指挥者针对抽象建造者编程，客户端只需要知道具体建造者的类型，即可通过指挥者类调用建造者的相关方法，返回一个完整的产品对象</p>
@@ -1018,17 +1028,18 @@ void Director::setBuilder(Builder* buider){
 </li>
 </ul>
 <h3 id="时序图-5"><a href="#时序图-5" class="headerlink" title="时序图"></a>时序图</h3><p><img src="/images/loading.gif" data-original="../images/development/e609a85a0616c35cd9abaeaff3e882b7.jpeg" alt=""></p>
-<h3 id="代码分析-4"><a href="#代码分析-4" class="headerlink" title="代码分析"></a>代码分析</h3><pre><code>#include &lt;iostream&gt;
+<h3 id="代码分析-4"><a href="#代码分析-4" class="headerlink" title="代码分析"></a>代码分析</h3><pre class="line-numbers language-c++"><code class="language-c++">#include <iostream>
 #include "Singleton.h"
 using namespace std;
 
 int main(int argc, char *argv[])
 {
     Singleton * sg = Singleton::getInstance();
-    sg-&gt;singletonOperation();
+    sg->singletonOperation();
 
     return 0;
-}</code></pre><pre><code>///////////////////////////////////////////////////////////
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  Singleton.cpp
 //  Implementation of the Class Singleton
 //  Created on:      02-十月-2014 17:24:46
@@ -1036,7 +1047,7 @@ int main(int argc, char *argv[])
 ///////////////////////////////////////////////////////////
 
 #include "Singleton.h"
-#include &lt;iostream&gt;
+#include <iostream>
 using namespace std;
 
 Singleton * Singleton::instance = NULL;
@@ -1059,8 +1070,9 @@ Singleton* Singleton::getInstance(){
 
 
 void Singleton::singletonOperation(){
-    cout &lt;&lt; "singletonOperation" &lt;&lt; endl;
-}</code></pre><p>运行结果：</p>
+    cout << "singletonOperation" << endl;
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>运行结果：</p>
 <p> <img src="/images/loading.gif" data-original="../images/development/788c9b7dc0b29a9f505a4fcfc4af80b7.jpeg" alt=""></p>
 <h3 id="模式分析-3"><a href="#模式分析-3" class="headerlink" title="模式分析"></a>模式分析</h3><p>单例模式的目的是保证一个类仅有一个实例，并提供一个访问它的全局访问点。单例模式包含的角色只有一个，就是单例类——Singleton。单例类拥有一个私有构造函数，确保用户无法通过new关键字直接实例化它。除此之外，该模式中包含一个静态私有成员变量与静态公有的工厂方法，该工厂方法负责检验实例的存在性并实例化自己，然后存储在静态成员变量中，以确保只有一个实例被创建。</p>
 <p>在单例模式的实现过程中，需要注意如下三点：</p>
@@ -1157,7 +1169,7 @@ void Singleton::singletonOperation(){
 <p>类适配器：</p>
 <p> <img src="/images/loading.gif" data-original="../images/development/083ba523ecbd26a09236d5e61db00594.jpeg" alt=""></p>
 <h3 id="时序图-6"><a href="#时序图-6" class="headerlink" title="时序图"></a>时序图</h3><p><img src="/images/loading.gif" data-original="../images/development/1568983fa6f2d8a8bb2b0e5cccb9277e.jpeg" alt=""></p>
-<h3 id="代码分析-5"><a href="#代码分析-5" class="headerlink" title="代码分析"></a>代码分析</h3><pre><code>#include &lt;iostream&gt;
+<h3 id="代码分析-5"><a href="#代码分析-5" class="headerlink" title="代码分析"></a>代码分析</h3><pre class="line-numbers language-c++"><code class="language-c++">#include <iostream>
 #include "Adapter.h"
 #include "Adaptee.h"
 #include "Target.h"
@@ -1168,10 +1180,11 @@ int main(int argc, char *argv[])
 {
     Adaptee * adaptee  = new Adaptee();
     Target * tar = new Adapter(adaptee);
-    tar-&gt;request();
+    tar->request();
 
     return 0;
-}</code></pre><pre><code>///////////////////////////////////////////////////////////
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  Adapter.h
 //  Implementation of the Class Adapter
 //  Created on:      03-十月-2014 17:32:00
@@ -1197,7 +1210,8 @@ private:
     Adaptee* m_pAdaptee;
 
 };
-#endif // !defined(EA_BD766D47_0C69_4131_B7B9_21DF78B1E80D__INCLUDED_)</code></pre><pre><code>///////////////////////////////////////////////////////////
+#endif // !defined(EA_BD766D47_0C69_4131_B7B9_21DF78B1E80D__INCLUDED_)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  Adapter.cpp
 //  Implementation of the Class Adapter
 //  Created on:      03-十月-2014 17:32:00
@@ -1215,8 +1229,9 @@ Adapter::~Adapter(){
 }
 
 void Adapter::request(){
-    m_pAdaptee-&gt;specificRequest();
-}</code></pre><p>运行结果：</p>
+    m_pAdaptee->specificRequest();
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>运行结果：</p>
 <p> <img src="/images/loading.gif" data-original="../images/development/fa4d7ee2f52e6d62f66847cabc2c0b35.jpeg" alt=""></p>
 <h3 id="优点-3"><a href="#优点-3" class="headerlink" title="优点"></a>优点</h3><ul>
 <li>将目标类和适配者类解耦，通过引入一个适配器类来重用现有的适配者类，而无须修改原有代码。</li>
@@ -1271,7 +1286,7 @@ void Adapter::request(){
 </li>
 </ul>
 <h3 id="时序图-7"><a href="#时序图-7" class="headerlink" title="时序图"></a>时序图</h3><p><img src="/images/loading.gif" data-original="../images/development/de4e51552c3a77cc3dcb3ac260ed9a76.jpeg" alt=""></p>
-<h3 id="代码分析-6"><a href="#代码分析-6" class="headerlink" title="代码分析"></a>代码分析</h3><pre><code>#include &lt;iostream&gt;
+<h3 id="代码分析-6"><a href="#代码分析-6" class="headerlink" title="代码分析"></a>代码分析</h3><pre class="line-numbers language-c++"><code class="language-c++">#include <iostream>
 #include "ConcreteImplementorA.h"
 #include "ConcreteImplementorB.h"
 #include "RefinedAbstraction.h"
@@ -1284,16 +1299,17 @@ int main(int argc, char *argv[])
 
     Implementor * pImp = new ConcreteImplementorA();
     Abstraction * pa = new RefinedAbstraction(pImp);
-    pa-&gt;operation();
+    pa->operation();
 
     Abstraction * pb = new RefinedAbstraction(new ConcreteImplementorB());
-    pb-&gt;operation();        
+    pb->operation();        
 
     delete pa;
     delete pb;
 
     return 0;
-}</code></pre><pre><code>///////////////////////////////////////////////////////////
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  RefinedAbstraction.h
 //  Implementation of the Class RefinedAbstraction
 //  Created on:      03-十月-2014 18:12:43
@@ -1316,7 +1332,8 @@ public:
     virtual void operation();
 
 };
-#endif // !defined(EA_4BA5BE7C_DED5_4236_8362_F2988921CFA7__INCLUDED_)</code></pre><pre><code>///////////////////////////////////////////////////////////
+#endif // !defined(EA_4BA5BE7C_DED5_4236_8362_F2988921CFA7__INCLUDED_)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  RefinedAbstraction.cpp
 //  Implementation of the Class RefinedAbstraction
 //  Created on:      03-十月-2014 18:12:43
@@ -1324,7 +1341,7 @@ public:
 ///////////////////////////////////////////////////////////
 
 #include "RefinedAbstraction.h"
-#include &lt;iostream&gt;
+#include <iostream>
 using namespace std;
 
 
@@ -1342,9 +1359,10 @@ RefinedAbstraction::~RefinedAbstraction(){
 }
 
 void RefinedAbstraction::operation(){
-    cout &lt;&lt; "do something else ,and then " &lt;&lt; endl;
-    m_pImp-&gt;operationImp();
-}</code></pre><p>运行结果： </p>
+    cout << "do something else ,and then " << endl;
+    m_pImp->operationImp();
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>运行结果： </p>
 <p><img src="/images/loading.gif" data-original="../images/development/241ebaa08771aab8bb971de83afe3ce9.jpeg" alt=""></p>
 <h3 id="2-6-模式分析"><a href="#2-6-模式分析" class="headerlink" title="2.6. 模式分析"></a>2.6. 模式分析</h3><p>理解桥接模式，重点需要理解如何将抽象化(Abstraction)与实现化(Implementation)脱耦，使得二者可以独立地变化。</p>
 <ul>
@@ -1404,7 +1422,7 @@ void RefinedAbstraction::operation(){
 </li>
 </ul>
 <h3 id="时序图-8"><a href="#时序图-8" class="headerlink" title="时序图"></a>时序图</h3><p><img src="/images/loading.gif" data-original="../images/development/24fcf8d11a96b1c2a80db388ce844157.jpeg" alt=""></p>
-<h3 id="代码分析-7"><a href="#代码分析-7" class="headerlink" title="代码分析"></a>代码分析</h3><pre><code>///////////////////////////////////////////////////////////
+<h3 id="代码分析-7"><a href="#代码分析-7" class="headerlink" title="代码分析"></a>代码分析</h3><pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  ConcreteComponent.cpp
 //  Implementation of the Class ConcreteComponent
 //  Created on:      03-十月-2014 18:53:00
@@ -1412,7 +1430,7 @@ void RefinedAbstraction::operation(){
 ///////////////////////////////////////////////////////////
 
 #include "ConcreteComponent.h"
-#include &lt;iostream&gt;
+#include <iostream>
 using namespace std;
 
 
@@ -1425,8 +1443,9 @@ ConcreteComponent::~ConcreteComponent(){
 }
 
 void ConcreteComponent::operation(){
-    cout &lt;&lt; "ConcreteComponent's normal operation!" &lt;&lt; endl;
-}</code></pre><pre><code>///////////////////////////////////////////////////////////
+    cout << "ConcreteComponent's normal operation!" << endl;
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  ConcreteDecoratorA.h
 //  Implementation of the Class ConcreteDecoratorA
 //  Created on:      03-十月-2014 18:53:00
@@ -1450,7 +1469,8 @@ public:
     virtual void operation();
 
 };
-#endif // !defined(EA_6786B68E_DCE4_44c4_B26D_812F0B3C0382__INCLUDED_)</code></pre><pre><code>///////////////////////////////////////////////////////////
+#endif // !defined(EA_6786B68E_DCE4_44c4_B26D_812F0B3C0382__INCLUDED_)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  ConcreteDecoratorA.cpp
 //  Implementation of the Class ConcreteDecoratorA
 //  Created on:      03-十月-2014 18:53:00
@@ -1458,7 +1478,7 @@ public:
 ///////////////////////////////////////////////////////////
 
 #include "ConcreteDecoratorA.h"
-#include &lt;iostream&gt;
+#include <iostream>
 using namespace std;
 
 ConcreteDecoratorA::ConcreteDecoratorA(Component* pcmp)
@@ -1472,14 +1492,15 @@ ConcreteDecoratorA::~ConcreteDecoratorA(){
 }
 
 void ConcreteDecoratorA::addBehavior(){
-    cout &lt;&lt; "addBehavior AAAA" &lt;&lt; endl;
+    cout << "addBehavior AAAA" << endl;
 }
 
 
 void ConcreteDecoratorA::operation(){
     Decorator::operation();
     addBehavior();
-}</code></pre><p>运行结果：</p>
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>运行结果：</p>
 <p> <img src="/images/loading.gif" data-original="../images/development/161c98890ff01e533ccfc2b07e46dad5.jpeg" alt=""></p>
 <h3 id="模式分析-4"><a href="#模式分析-4" class="headerlink" title="模式分析"></a>模式分析</h3><ul>
 <li>与继承关系相比，关联关系的主要优势在于不会破坏类的封装性，而且继承是一种耦合度较大的静态关系，无法在程序运行时动态扩展。在软件开发阶段，关联关系虽然不会比继承关系减少编码量，但是到了软件维护阶段，由于关联关系使系统具有较好的松耦合性，因此使得系统更加容易维护。当然，关联关系的缺点是比继承关系要创建更多的对象。</li>
@@ -1531,7 +1552,7 @@ void ConcreteDecoratorA::operation(){
 </li>
 </ul>
 <h3 id="时序图-9"><a href="#时序图-9" class="headerlink" title="时序图"></a>时序图</h3><p><img src="/images/loading.gif" data-original="../images/development/c72638066fbbc2d5651da9b84cc01f29.jpeg" alt=""></p>
-<h3 id="代码分析-8"><a href="#代码分析-8" class="headerlink" title="代码分析"></a>代码分析</h3><pre><code>#include &lt;iostream&gt;
+<h3 id="代码分析-8"><a href="#代码分析-8" class="headerlink" title="代码分析"></a>代码分析</h3><pre class="line-numbers language-c++"><code class="language-c++">#include <iostream>
 #include "Facade.h"
 using namespace std;
 
@@ -1541,7 +1562,8 @@ int main(int argc, char *argv[])
     fa.wrapOpration();
 
     return 0;
-}</code></pre><pre><code>///////////////////////////////////////////////////////////
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  Facade.h
 //  Implementation of the Class Facade
 //  Created on:      06-十月-2014 19:10:44
@@ -1569,7 +1591,8 @@ private:
     SystemA *m_SystemA;
     SystemB *m_SystemB;
 };
-#endif // !defined(EA_FD130A87_92A9_4168_9B33_7A925C47AFD5__INCLUDED_)</code></pre><pre><code>///////////////////////////////////////////////////////////
+#endif // !defined(EA_FD130A87_92A9_4168_9B33_7A925C47AFD5__INCLUDED_)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  Facade.cpp
 //  Implementation of the Class Facade
 //  Created on:      06-十月-2014 19:10:44
@@ -1594,10 +1617,11 @@ Facade::~Facade(){
 }
 
 void Facade::wrapOpration(){
-    m_SystemA-&gt;operationA();
-    m_SystemB-&gt;operationB();
-    m_SystemC-&gt;opeartionC();
-}</code></pre><p>运行结果：</p>
+    m_SystemA->operationA();
+    m_SystemB->operationB();
+    m_SystemC->opeartionC();
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>运行结果：</p>
 <p> <img src="/images/loading.gif" data-original="../images/development/b7570be7686330faf1ab02bfa82f37d2.jpeg" alt=""></p>
 <h3 id="模式分析-5"><a href="#模式分析-5" class="headerlink" title="模式分析"></a>模式分析</h3><p>根据“单一职责原则”，在软件中将一个系统划分为若干个子系统有利于降低整个系统的复杂性，一个常见的设计目标是使子系统间的通信和相互依赖关系达到最小，而达到该目标的途径之一就是引入一个外观对象，它为子系统的访问提供了一个简单而单一的入口。-外观模式也是“迪米特法则”的体现，通过引入一个新的外观类可以降低原有系统的复杂度，同时降低客户类与子系统类的耦合度。- 外观模式要求一个子系统的外部与其内部的通信通过一个统一的外观对象进行，外观类将客户端与子系统的内部复杂性分隔开，使得客户端只需要与外观对象打交道，而不需要与子系统内部的很多对象打交道。-外观模式的目的在于降低系统的复杂程度。-外观模式从很大程度上提高了客户端使用的便捷性，使得客户端无须关心子系统的工作细节，通过外观角色即可调用相关功能。</p>
 <h3 id="优点-6"><a href="#优点-6" class="headerlink" title="优点"></a>优点</h3><p>外观模式的优点</p>
@@ -1656,7 +1680,7 @@ void Facade::wrapOpration(){
 </li>
 </ul>
 <h3 id="时序图-10"><a href="#时序图-10" class="headerlink" title="时序图"></a>时序图</h3><p><img src="/images/loading.gif" data-original="../images/development/127eb8aa4da5e1c1729eb709f0ab17ef.jpeg" alt=""></p>
-<h3 id="代码分析-9"><a href="#代码分析-9" class="headerlink" title="代码分析"></a>代码分析</h3><pre><code>#include &lt;iostream&gt;
+<h3 id="代码分析-9"><a href="#代码分析-9" class="headerlink" title="代码分析"></a>代码分析</h3><pre class="line-numbers language-c++"><code class="language-c++">#include <iostream>
 #include "ConcreteFlyweight.h"
 #include "FlyweightFactory.h"
 #include "Flyweight.h"
@@ -1666,15 +1690,16 @@ int main(int argc, char *argv[])
 {
     FlyweightFactory factory;
     Flyweight * fw = factory.getFlyweight("one");
-    fw-&gt;operation();
+    fw->operation();
 
     Flyweight * fw2 = factory.getFlyweight("two");
-    fw2-&gt;operation();
+    fw2->operation();
     //aready exist in pool
     Flyweight * fw3 = factory.getFlyweight("one");
-    fw3-&gt;operation();
+    fw3->operation();
     return 0;
-}</code></pre><pre><code>///////////////////////////////////////////////////////////
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  FlyweightFactory.cpp
 //  Implementation of the Class FlyweightFactory
 //  Created on:      06-十月-2014 20:10:42
@@ -1683,7 +1708,7 @@ int main(int argc, char *argv[])
 
 #include "FlyweightFactory.h"
 #include "ConcreteFlyweight.h"
-#include &lt;iostream&gt;
+#include <iostream>
 using namespace std;
 
 FlyweightFactory::FlyweightFactory(){
@@ -1697,7 +1722,7 @@ FlyweightFactory::~FlyweightFactory(){
 }
 
 Flyweight* FlyweightFactory::getFlyweight(string str){
-    map&lt;string,Flyweight*&gt;::iterator itr = m_mpFlyweight.find(str);
+    map<string,Flyweight*>::iterator itr = m_mpFlyweight.find(str);
     if(itr == m_mpFlyweight.end())
     {
         Flyweight * fw = new ConcreteFlyweight(str);
@@ -1706,10 +1731,11 @@ Flyweight* FlyweightFactory::getFlyweight(string str){
     }
     else
     {
-        cout &lt;&lt; "aready in the pool,use the exist one:" &lt;&lt; endl;
-        return itr-&gt;second;
+        cout << "aready in the pool,use the exist one:" << endl;
+        return itr->second;
     }        
-}</code></pre><pre><code>///////////////////////////////////////////////////////////
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  ConcreteFlyweight.h
 //  Implementation of the Class ConcreteFlyweight
 //  Created on:      06-十月-2014 20:10:42
@@ -1720,7 +1746,7 @@ Flyweight* FlyweightFactory::getFlyweight(string str){
 #define EA_C0AF438E_96E4_46f1_ADEC_308EF16E11D1__INCLUDED_
 
 #include "Flyweight.h"
-#include &lt;string&gt;
+#include <string>
 using namespace std;
 
 class ConcreteFlyweight : public Flyweight
@@ -1736,7 +1762,8 @@ private:
     string intrinsicState;
 
 };
-#endif // !defined(EA_C0AF438E_96E4_46f1_ADEC_308EF16E11D1__INCLUDED_)</code></pre><pre><code>///////////////////////////////////////////////////////////
+#endif // !defined(EA_C0AF438E_96E4_46f1_ADEC_308EF16E11D1__INCLUDED_)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  ConcreteFlyweight.cpp
 //  Implementation of the Class ConcreteFlyweight
 //  Created on:      06-十月-2014 20:10:42
@@ -1744,7 +1771,7 @@ private:
 ///////////////////////////////////////////////////////////
 
 #include "ConcreteFlyweight.h"
-#include &lt;iostream&gt;
+#include <iostream>
 using namespace std;
 
 
@@ -1757,8 +1784,9 @@ ConcreteFlyweight::~ConcreteFlyweight(){
 }
 
 void ConcreteFlyweight::operation(){
-    cout &lt;&lt; "Flyweight[" &lt;&lt; intrinsicState &lt;&lt; "] do operation." &lt;&lt; endl; 
-}</code></pre><p>运行结果： </p>
+    cout << "Flyweight[" << intrinsicState << "] do operation." << endl; 
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>运行结果： </p>
 <p><img src="/images/loading.gif" data-original="../images/development/5ffbbc7da8a0bc5999120ed65bc4ee1d.jpeg" alt=""></p>
 <h3 id="模式分析-6"><a href="#模式分析-6" class="headerlink" title="模式分析"></a>模式分析</h3><p>享元模式是一个考虑系统性能的设计模式，通过使用享元模式可以节约内存空间，提高系统的性能。</p>
 <p>享元模式的核心在于享元工厂类，享元工厂类的作用在于提供一个用于存储享元对象的享元池，用户需要对象时，首先从享元池中获取，如果享元池中不存在，则创建一个新的享元对象返回给用户，并在享元池中保存该新增对象。</p>
@@ -1813,7 +1841,7 @@ void ConcreteFlyweight::operation(){
 </li>
 </ul>
 <h3 id="时序图-11"><a href="#时序图-11" class="headerlink" title="时序图"></a>时序图</h3><p><img src="/images/loading.gif" data-original="../images/development/5caa850fbee25211b399651e2d6ba26e.jpeg" alt=""></p>
-<h3 id="代码分析-10"><a href="#代码分析-10" class="headerlink" title="代码分析"></a>代码分析</h3><pre><code>#include &lt;iostream&gt;
+<h3 id="代码分析-10"><a href="#代码分析-10" class="headerlink" title="代码分析"></a>代码分析</h3><pre class="line-numbers language-c++"><code class="language-c++">#include <iostream>
 #include "RealSubject.h"
 #include "Proxy.h"
 
@@ -1825,7 +1853,8 @@ int main(int argc, char *argv[])
     proxy.request();
 
     return 0;
-}</code></pre><pre><code>///////////////////////////////////////////////////////////
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  Proxy.h
 //  Implementation of the Class Proxy
 //  Created on:      07-十月-2014 16:57:54
@@ -1853,7 +1882,8 @@ private:
     RealSubject *m_pRealSubject;
 
 };
-#endif // !defined(EA_56011290_0413_40c6_9132_63EE89B023FD__INCLUDED_)</code></pre><pre><code>///////////////////////////////////////////////////////////
+#endif // !defined(EA_56011290_0413_40c6_9132_63EE89B023FD__INCLUDED_)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  Proxy.cpp
 //  Implementation of the Class Proxy
 //  Created on:      07-十月-2014 16:57:54
@@ -1861,7 +1891,7 @@ private:
 ///////////////////////////////////////////////////////////
 
 #include "Proxy.h"
-#include &lt;iostream&gt;
+#include <iostream>
 using namespace std;
 
 
@@ -1876,20 +1906,21 @@ Proxy::~Proxy(){
 }
 
 void Proxy::afterRequest(){
-    cout &lt;&lt; "Proxy::afterRequest" &lt;&lt; endl;
+    cout << "Proxy::afterRequest" << endl;
 }
 
 
 void Proxy::preRequest(){
-    cout &lt;&lt; "Proxy::preRequest" &lt;&lt; endl;
+    cout << "Proxy::preRequest" << endl;
 }
 
 
 void Proxy::request(){
     preRequest();
-    m_pRealSubject-&gt;request();
+    m_pRealSubject->request();
     afterRequest();
-}</code></pre><p>运行结果：</p>
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>运行结果：</p>
 <p> <img src="/images/loading.gif" data-original="../images/development/a8f02cecbd65e12bfdbf6455ca6603ab.jpeg" alt=""></p>
 <h3 id="优点-8"><a href="#优点-8" class="headerlink" title="优点"></a>优点</h3><p>代理模式的优点</p>
 <ul>
@@ -2010,7 +2041,7 @@ void Proxy::request(){
 </li>
 </ul>
 <h3 id="时序图-12"><a href="#时序图-12" class="headerlink" title="时序图"></a>时序图</h3><p><img src="/images/loading.gif" data-original="../images/development/996f8eeb179342ea52b00a26d7de5b37.jpeg" alt=""></p>
-<h3 id="代码分析-11"><a href="#代码分析-11" class="headerlink" title="代码分析"></a>代码分析</h3><pre><code>#include &lt;iostream&gt;
+<h3 id="代码分析-11"><a href="#代码分析-11" class="headerlink" title="代码分析"></a>代码分析</h3><pre class="line-numbers language-c++"><code class="language-c++">#include <iostream>
 #include "ConcreteCommand.h"
 #include "Invoker.h"
 #include "Receiver.h"
@@ -2022,13 +2053,14 @@ int main(int argc, char *argv[])
     Receiver * pReceiver = new Receiver();
     ConcreteCommand * pCommand = new ConcreteCommand(pReceiver);
     Invoker * pInvoker = new Invoker(pCommand);
-    pInvoker-&gt;call();
+    pInvoker->call();
 
     delete pReceiver;
     delete pCommand;
     delete pInvoker;
     return 0;
-}</code></pre><pre><code>///////////////////////////////////////////////////////////
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  Receiver.h
 //  Implementation of the Class Receiver
 //  Created on:      07-十月-2014 17:44:02
@@ -2048,7 +2080,8 @@ public:
     void action();
 
 };
-#endif // !defined(EA_8E5430BB_0904_4a7d_9A3B_7169586237C8__INCLUDED_)</code></pre><pre><code>///////////////////////////////////////////////////////////
+#endif // !defined(EA_8E5430BB_0904_4a7d_9A3B_7169586237C8__INCLUDED_)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  Receiver.cpp
 //  Implementation of the Class Receiver
 //  Created on:      07-十月-2014 17:44:02
@@ -2056,7 +2089,7 @@ public:
 ///////////////////////////////////////////////////////////
 
 #include "Receiver.h"
-#include &lt;iostream&gt;
+#include <iostream>
 using namespace std;
 
 Receiver::Receiver(){
@@ -2068,8 +2101,9 @@ Receiver::~Receiver(){
 }
 
 void Receiver::action(){
-    cout &lt;&lt; "receiver action." &lt;&lt; endl;
-}</code></pre><pre><code>///////////////////////////////////////////////////////////
+    cout << "receiver action." << endl;
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  ConcreteCommand.h
 //  Implementation of the Class ConcreteCommand
 //  Created on:      07-十月-2014 17:44:01
@@ -2095,7 +2129,8 @@ private:
 
 
 };
-#endif // !defined(EA_1AE70D53_4868_4e81_A1B8_1088DA355C23__INCLUDED_)</code></pre><pre><code>///////////////////////////////////////////////////////////
+#endif // !defined(EA_1AE70D53_4868_4e81_A1B8_1088DA355C23__INCLUDED_)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  ConcreteCommand.cpp
 //  Implementation of the Class ConcreteCommand
 //  Created on:      07-十月-2014 17:44:02
@@ -2103,7 +2138,7 @@ private:
 ///////////////////////////////////////////////////////////
 
 #include "ConcreteCommand.h"
-#include &lt;iostream&gt;
+#include <iostream>
 using namespace std;
 
 
@@ -2118,9 +2153,10 @@ ConcreteCommand::~ConcreteCommand(){
 }
 
 void ConcreteCommand::execute(){
-    cout &lt;&lt; "ConcreteCommand::execute"  &lt;&lt; endl;
-    m_pReceiver-&gt;action();
-}</code></pre><pre><code>///////////////////////////////////////////////////////////
+    cout << "ConcreteCommand::execute"  << endl;
+    m_pReceiver->action();
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  Invoker.h
 //  Implementation of the Class Invoker
 //  Created on:      07-十月-2014 17:44:02
@@ -2145,7 +2181,8 @@ private:
 
 
 };
-#endif // !defined(EA_3DACB62A_0813_4d11_8A82_10BF1FB00D9A__INCLUDED_)</code></pre><pre><code>///////////////////////////////////////////////////////////
+#endif // !defined(EA_3DACB62A_0813_4d11_8A82_10BF1FB00D9A__INCLUDED_)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  Invoker.cpp
 //  Implementation of the Class Invoker
 //  Created on:      07-十月-2014 17:44:02
@@ -2153,7 +2190,7 @@ private:
 ///////////////////////////////////////////////////////////
 
 #include "Invoker.h"
-#include &lt;iostream&gt;
+#include <iostream>
 using namespace std;
 
 Invoker::Invoker(Command * pCommand){
@@ -2165,9 +2202,10 @@ Invoker::~Invoker(){
 }
 
 void Invoker::call(){
-    cout &lt;&lt; "invoker calling" &lt;&lt; endl;
-    m_pCommand-&gt;execute();
-}</code></pre><p>运行结果：</p>
+    cout << "invoker calling" << endl;
+    m_pCommand->execute();
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>运行结果：</p>
 <p> <img src="/images/loading.gif" data-original="../images/development/95b033654cb8cadd62e5b49c50b05cd3.jpeg" alt=""></p>
 <h3 id="模式分析-7"><a href="#模式分析-7" class="headerlink" title="模式分析"></a>模式分析</h3><p>命令模式的本质是对命令进行封装，将发出命令的责任和执行命令的责任分割开。</p>
 <ul>
@@ -2234,7 +2272,7 @@ void Invoker::call(){
 </li>
 </ul>
 <h3 id="时序图-13"><a href="#时序图-13" class="headerlink" title="时序图"></a>时序图</h3><p><img src="/images/loading.gif" data-original="../images/development/655431111da20abd56ac2245958402aa.jpeg" alt=""></p>
-<h3 id="代码分析-12"><a href="#代码分析-12" class="headerlink" title="代码分析"></a>代码分析</h3><pre><code>#include &lt;iostream&gt;
+<h3 id="代码分析-12"><a href="#代码分析-12" class="headerlink" title="代码分析"></a>代码分析</h3><pre class="line-numbers language-c++"><code class="language-c++">#include <iostream>
 #include "ConcreteColleagueA.h"
 #include "ConcreteMediator.h"
 #include "ConcreteColleagueB.h"
@@ -2246,17 +2284,18 @@ int main(int argc, char *argv[])
     ConcreteColleagueA * pa = new ConcreteColleagueA();
     ConcreteColleagueB * pb = new ConcreteColleagueB();
     ConcreteMediator * pm = new ConcreteMediator();
-    pm-&gt;registered(1,pa);
-    pm-&gt;registered(2,pb);
+    pm->registered(1,pa);
+    pm->registered(2,pb);
 
     // sendmsg from a to b
-    pa-&gt;sendmsg(2,"hello,i am a");
+    pa->sendmsg(2,"hello,i am a");
     // sendmsg from b to a
-    pb-&gt;sendmsg(1,"hello,i am b");
+    pb->sendmsg(1,"hello,i am b");
 
     delete pa,pb,pm;
     return 0;
-}</code></pre><pre><code>///////////////////////////////////////////////////////////
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  ConcreteMediator.h
 //  Implementation of the Class ConcreteMediator
 //  Created on:      07-十月-2014 21:30:47
@@ -2269,7 +2308,7 @@ int main(int argc, char *argv[])
 #include "ConcreteColleagueB.h"
 #include "Mediator.h"
 #include "ConcreteColleagueA.h"
-#include &lt;map&gt;
+#include <map>
 using namespace std;
 class ConcreteMediator : public Mediator
 {
@@ -2281,9 +2320,10 @@ public:
     virtual void operation(int nWho,string str);
     virtual void registered(int nWho, Colleague * aColleague);
 private:
-    map&lt;int,Colleague*&gt; m_mpColleague;
+    map<int,Colleague*> m_mpColleague;
 };
-#endif // !defined(EA_8CECE546_61DD_456f_A3E7_D98BC078D8E8__INCLUDED_)</code></pre><pre><code>///////////////////////////////////////////////////////////
+#endif // !defined(EA_8CECE546_61DD_456f_A3E7_D98BC078D8E8__INCLUDED_)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  ConcreteMediator.cpp
 //  Implementation of the Class ConcreteMediator
 //  Created on:      07-十月-2014 21:30:48
@@ -2291,8 +2331,8 @@ private:
 ///////////////////////////////////////////////////////////
 
 #include "ConcreteMediator.h"
-#include &lt;map&gt;
-#include &lt;iostream&gt;
+#include <map>
+#include <iostream>
 using namespace std;
 
 ConcreteMediator::ConcreteMediator(){
@@ -2304,27 +2344,28 @@ ConcreteMediator::~ConcreteMediator(){
 }
 
 void ConcreteMediator::operation(int nWho,string str){
-    map&lt;int,Colleague*&gt;::const_iterator itr = m_mpColleague.find(nWho);
+    map<int,Colleague*>::const_iterator itr = m_mpColleague.find(nWho);
     if(itr == m_mpColleague.end())
     {
-        cout &lt;&lt; "not found this colleague!" &lt;&lt; endl;
+        cout << "not found this colleague!" << endl;
         return;
     }
 
-    Colleague* pc = itr-&gt;second;
-    pc-&gt;receivemsg(str);
+    Colleague* pc = itr->second;
+    pc->receivemsg(str);
 }
 
 
 void ConcreteMediator::registered(int nWho,Colleague * aColleague){
-    map&lt;int,Colleague*&gt;::const_iterator itr = m_mpColleague.find(nWho);
+    map<int,Colleague*>::const_iterator itr = m_mpColleague.find(nWho);
     if(itr == m_mpColleague.end())
     {
         m_mpColleague.insert(make_pair(nWho,aColleague));
         //同时将中介类暴露给colleague 
-        aColleague-&gt;setMediator(this);
+        aColleague->setMediator(this);
     }
-}</code></pre><pre><code>///////////////////////////////////////////////////////////
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  ConcreteColleagueA.h
 //  Implementation of the Class ConcreteColleagueA
 //  Created on:      07-十月-2014 21:30:47
@@ -2347,7 +2388,8 @@ public:
     virtual void receivemsg(string str);
 
 };
-#endif // !defined(EA_79979DD4_1E73_46db_A635_E3F516ACCE0A__INCLUDED_)</code></pre><pre><code>///////////////////////////////////////////////////////////
+#endif // !defined(EA_79979DD4_1E73_46db_A635_E3F516ACCE0A__INCLUDED_)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  ConcreteColleagueA.cpp
 //  Implementation of the Class ConcreteColleagueA
 //  Created on:      07-十月-2014 21:30:47
@@ -2355,7 +2397,7 @@ public:
 ///////////////////////////////////////////////////////////
 
 #include "ConcreteColleagueA.h"
-#include &lt;iostream&gt;
+#include <iostream>
 using namespace std;
 
 ConcreteColleagueA::ConcreteColleagueA(){
@@ -2365,13 +2407,14 @@ ConcreteColleagueA::~ConcreteColleagueA(){
 }
 
 void ConcreteColleagueA::sendmsg(int toWho,string str){
-    cout &lt;&lt; "send msg from colleagueA,to:" &lt;&lt; toWho &lt;&lt; endl;
-    m_pMediator-&gt;operation(toWho,str);
+    cout << "send msg from colleagueA,to:" << toWho << endl;
+    m_pMediator->operation(toWho,str);
 }
 
 void ConcreteColleagueA::receivemsg(string str){
-    cout &lt;&lt; "ConcreteColleagueA reveivemsg:" &lt;&lt; str &lt;&lt;endl;
-}</code></pre><p>运行结果： </p>
+    cout << "ConcreteColleagueA reveivemsg:" << str <<endl;
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>运行结果： </p>
 <p><img src="/images/loading.gif" data-original="../images/development/3f47e71606ddeeb75f7fe17d86c7b61c.jpeg" alt=""></p>
 <h3 id="模式分析-8"><a href="#模式分析-8" class="headerlink" title="模式分析"></a>模式分析</h3><p>中介者模式可以使对象之间的关系数量急剧减少。</p>
 <p>中介者承担两方面的职责：</p>
@@ -2435,7 +2478,7 @@ void ConcreteColleagueA::receivemsg(string str){
 </li>
 </ul>
 <h3 id="时序图-14"><a href="#时序图-14" class="headerlink" title="时序图"></a>时序图</h3><p><img src="/images/loading.gif" data-original="../images/development/7fe58910ab2d3a4868670f880ebd6569.jpeg" alt=""></p>
-<h3 id="代码分析-13"><a href="#代码分析-13" class="headerlink" title="代码分析"></a>代码分析</h3><pre><code>#include &lt;iostream&gt;
+<h3 id="代码分析-13"><a href="#代码分析-13" class="headerlink" title="代码分析"></a>代码分析</h3><pre class="line-numbers language-c++"><code class="language-c++">#include <iostream>
 #include "Subject.h"
 #include "Obeserver.h"
 #include "ConcreteObeserver.h"
@@ -2448,23 +2491,24 @@ int main(int argc, char *argv[])
     Subject * subject = new ConcreteSubject();
     Obeserver * objA = new ConcreteObeserver("A");
     Obeserver * objB = new ConcreteObeserver("B");
-    subject-&gt;attach(objA);
-    subject-&gt;attach(objB);
+    subject->attach(objA);
+    subject->attach(objB);
 
-    subject-&gt;setState(1);
-    subject-&gt;notify();
+    subject->setState(1);
+    subject->notify();
 
-    cout &lt;&lt; "--------------------" &lt;&lt; endl;
-    subject-&gt;detach(objB);
-    subject-&gt;setState(2);
-    subject-&gt;notify();
+    cout << "--------------------" << endl;
+    subject->detach(objB);
+    subject->setState(2);
+    subject->notify();
 
     delete subject;
     delete objA;
     delete objB;
 
     return 0;
-}</code></pre><pre><code>///////////////////////////////////////////////////////////
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  Subject.h
 //  Implementation of the Class Subject
 //  Created on:      07-十月-2014 23:00:10
@@ -2475,7 +2519,7 @@ int main(int argc, char *argv[])
 #define EA_61998456_1B61_49f4_B3EA_9D28EEBC9649__INCLUDED_
 
 #include "Obeserver.h"
-#include &lt;vector&gt;
+#include <vector>
 using namespace std;
 
 class Subject
@@ -2494,10 +2538,11 @@ public:
     virtual void setState(int i)= 0;
 
 private:
-    vector&lt;Obeserver*&gt; m_vtObj;
+    vector<Obeserver*> m_vtObj;
 
 };
-#endif // !defined(EA_61998456_1B61_49f4_B3EA_9D28EEBC9649__INCLUDED_)</code></pre><pre><code>///////////////////////////////////////////////////////////
+#endif // !defined(EA_61998456_1B61_49f4_B3EA_9D28EEBC9649__INCLUDED_)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  Subject.cpp
 //  Implementation of the Class Subject
 //  Created on:      07-十月-2014 23:00:10
@@ -2519,7 +2564,7 @@ void Subject::attach(Obeserver * pObeserver){
 }
 
 void Subject::detach(Obeserver * pObeserver){
-    for(vector&lt;Obeserver*&gt;::iterator itr = m_vtObj.begin();
+    for(vector<Obeserver*>::iterator itr = m_vtObj.begin();
         itr != m_vtObj.end(); itr++)
     {
         if(*itr == pObeserver)
@@ -2531,13 +2576,14 @@ void Subject::detach(Obeserver * pObeserver){
 }
 
 void Subject::notify(){
-    for(vector&lt;Obeserver*&gt;::iterator itr = m_vtObj.begin();
+    for(vector<Obeserver*>::iterator itr = m_vtObj.begin();
         itr != m_vtObj.end();
          itr++)
     {    
-        (*itr)-&gt;update(this);        
+        (*itr)->update(this);        
     }
-}</code></pre><pre><code>///////////////////////////////////////////////////////////
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  Obeserver.h
 //  Implementation of the Class Obeserver
 //  Created on:      07-十月-2014 23:00:10
@@ -2557,7 +2603,8 @@ public:
     virtual ~Obeserver();
     virtual void update(Subject * sub) = 0;
 };
-#endif // !defined(EA_2C7362B2_0B22_4168_8690_F9C7B76C343F__INCLUDED_)</code></pre><pre><code>///////////////////////////////////////////////////////////
+#endif // !defined(EA_2C7362B2_0B22_4168_8690_F9C7B76C343F__INCLUDED_)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  ConcreteObeserver.h
 //  Implementation of the Class ConcreteObeserver
 //  Created on:      07-十月-2014 23:00:09
@@ -2567,7 +2614,7 @@ public:
 #if !defined(EA_7B020534_BFEA_4c9e_8E4C_34DCE001E9B1__INCLUDED_)
 #define EA_7B020534_BFEA_4c9e_8E4C_34DCE001E9B1__INCLUDED_
 #include "Obeserver.h"
-#include &lt;string&gt;
+#include <string>
 using namespace std;
 
 class ConcreteObeserver : public Obeserver
@@ -2582,7 +2629,8 @@ private:
     string m_objName;
     int m_obeserverState;
 };
-#endif // !defined(EA_7B020534_BFEA_4c9e_8E4C_34DCE001E9B1__INCLUDED_)</code></pre><pre><code>///////////////////////////////////////////////////////////
+#endif // !defined(EA_7B020534_BFEA_4c9e_8E4C_34DCE001E9B1__INCLUDED_)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  ConcreteObeserver.cpp
 //  Implementation of the Class ConcreteObeserver
 //  Created on:      07-十月-2014 23:00:09
@@ -2590,8 +2638,8 @@ private:
 ///////////////////////////////////////////////////////////
 
 #include "ConcreteObeserver.h"
-#include &lt;iostream&gt;
-#include &lt;vector&gt;
+#include <iostream>
+#include <vector>
 #include "Subject.h"
 using namespace std;
 
@@ -2604,9 +2652,10 @@ ConcreteObeserver::~ConcreteObeserver(){
 }
 
 void ConcreteObeserver::update(Subject * sub){
-    m_obeserverState = sub-&gt;getState();
-    cout &lt;&lt; "update oberserver[" &lt;&lt; m_objName &lt;&lt; "] state:" &lt;&lt; m_obeserverState &lt;&lt; endl;
-}</code></pre><p>运行结果：</p>
+    m_obeserverState = sub->getState();
+    cout << "update oberserver[" << m_objName << "] state:" << m_obeserverState << endl;
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>运行结果：</p>
 <p> <img src="/images/loading.gif" data-original="../images/development/2e7e6dad84b555e5193d04788c3a659a.jpeg" alt=""></p>
 <h3 id="模式分析-9"><a href="#模式分析-9" class="headerlink" title="模式分析"></a>模式分析</h3><ul>
 <li>观察者模式描述了如何建立对象与对象之间的依赖关系，如何构造满足这种需求的系统。</li>
@@ -2663,7 +2712,7 @@ void ConcreteObeserver::update(Subject * sub){
 </ul>
 <h3 id="时序图-15"><a href="#时序图-15" class="headerlink" title="时序图"></a>时序图</h3><p><img src="/images/loading.gif" data-original="../images/development/67edc6f409db1dfe22bed3153f651137.jpeg" alt=""> </p>
 <p>既然是状态模式，加上状态图，对状态转换间的理解会清晰很多</p>
-<h3 id="代码分析-14"><a href="#代码分析-14" class="headerlink" title="代码分析"></a>代码分析</h3><pre><code>#include &lt;iostream&gt;
+<h3 id="代码分析-14"><a href="#代码分析-14" class="headerlink" title="代码分析"></a>代码分析</h3><pre class="line-numbers language-c++"><code class="language-c++">#include <iostream>
 #include "Context.h"
 #include "ConcreteStateA.h"
 #include "ConcreteStateB.h"
@@ -2674,18 +2723,19 @@ int main(int argc, char *argv[])
 {
     char a = '0';
     if('0' == a)
-        cout &lt;&lt; "yes" &lt;&lt; endl;
+        cout << "yes" << endl;
     else
-        cout &lt;&lt; "no" &lt;&lt; endl;
+        cout << "no" << endl;
 
     Context * c = new Context();
-    c-&gt;request();
-    c-&gt;request();
-    c-&gt;request();
+    c->request();
+    c->request();
+    c->request();
 
     delete c;
     return 0;
-}</code></pre><pre><code>///////////////////////////////////////////////////////////
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  Context.h
 //  Implementation of the Class Context
 //  Created on:      09-十月-2014 17:20:59
@@ -2710,7 +2760,8 @@ public:
 private:
     State *m_pState;
 };
-#endif // !defined(EA_F245CF81_2A68_4461_B039_2B901BD5A126__INCLUDED_)</code></pre><pre><code>///////////////////////////////////////////////////////////
+#endif // !defined(EA_F245CF81_2A68_4461_B039_2B901BD5A126__INCLUDED_)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  Context.cpp
 //  Implementation of the Class Context
 //  Created on:      09-十月-2014 17:20:59
@@ -2733,8 +2784,9 @@ void Context::changeState(State * st){
 }
 
 void Context::request(){
-    m_pState-&gt;handle(this);
-}</code></pre><pre><code>///////////////////////////////////////////////////////////
+    m_pState->handle(this);
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  ConcreteStateA.h
 //  Implementation of the Class ConcreteStateA
 //  Created on:      09-十月-2014 17:20:58
@@ -2760,7 +2812,8 @@ private:
     ConcreteStateA();
     static State * m_pState;
 };
-#endif // !defined(EA_84158F08_E96A_4bdb_89A1_4BE2E633C3EE__INCLUDED_)</code></pre><pre><code>///////////////////////////////////////////////////////////
+#endif // !defined(EA_84158F08_E96A_4bdb_89A1_4BE2E633C3EE__INCLUDED_)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  ConcreteStateA.cpp
 //  Implementation of the Class ConcreteStateA
 //  Created on:      09-十月-2014 17:20:58
@@ -2770,7 +2823,7 @@ private:
 #include "ConcreteStateA.h"
 #include "ConcreteStateB.h"
 #include "Context.h"
-#include &lt;iostream&gt;
+#include <iostream>
 using namespace std;
 
 State * ConcreteStateA::m_pState = NULL;
@@ -2790,9 +2843,10 @@ State * ConcreteStateA::Instance()
 }
 
 void ConcreteStateA::handle(Context * c){
-    cout &lt;&lt; "doing something in State A.\n done,change state to B" &lt;&lt; endl;
-    c-&gt;changeState(ConcreteStateB::Instance());
-}</code></pre><p>运行结果：</p>
+    cout << "doing something in State A.\n done,change state to B" << endl;
+    c->changeState(ConcreteStateB::Instance());
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>运行结果：</p>
 <p> <img src="/images/loading.gif" data-original="../images/development/f08b719fd170c1608704fef0646f88b0.jpeg" alt=""></p>
 <h3 id="模式分析-10"><a href="#模式分析-10" class="headerlink" title="模式分析"></a>模式分析</h3><ul>
 <li>状态模式描述了对象状态的变化以及对象如何在每一种状态下表现出不同的行为。</li>
@@ -2863,24 +2917,24 @@ void ConcreteStateA::handle(Context * c){
 </li>
 </ul>
 <h3 id="时序图-16"><a href="#时序图-16" class="headerlink" title="时序图"></a>时序图</h3><p><img src="/images/loading.gif" data-original="../images/development/7e9239d9435ea27904cc9b7d40ff0156.jpeg" alt=""></p>
-<h3 id="代码分析-15"><a href="#代码分析-15" class="headerlink" title="代码分析"></a>代码分析</h3><pre><code>#include &lt;iostream&gt;
+<h3 id="代码分析-15"><a href="#代码分析-15" class="headerlink" title="代码分析"></a>代码分析</h3><pre class="line-numbers language-c++"><code class="language-c++">#include <iostream>
 #include "Context.h"
 #include "ConcreteStrategyA.h"
 #include "ConcreteStrategyB.h"
 #include "Strategy.h"
-#include &lt;vector&gt;
+#include <vector>
 using namespace std;
 
 int main(int argc, char *argv[])
 {
     Strategy * s1 = new ConcreteStrategyA();
     Context * cxt = new Context();
-    cxt-&gt;setStrategy(s1);
-    cxt-&gt;algorithm();
+    cxt->setStrategy(s1);
+    cxt->algorithm();
 
     Strategy *s2 = new ConcreteStrategyB();
-    cxt-&gt;setStrategy(s2);
-    cxt-&gt;algorithm();
+    cxt->setStrategy(s2);
+    cxt->algorithm();
 
     delete s1;
     delete s2;
@@ -2893,15 +2947,16 @@ int main(int argc, char *argv[])
     int i = 0xe;
     int j = 0x5;
 
-    int r1 = i &amp; rac1;
-    int r2 = i &amp; rac2;
-    int r3 = i &amp; rac3;
-    int r4 = i &amp; rac4;
+    int r1 = i & rac1;
+    int r2 = i & rac2;
+    int r3 = i & rac3;
+    int r4 = i & rac4;
 
-    cout &lt;&lt;"res:" &lt;&lt; r1 &lt;&lt; "/" &lt;&lt; r2 &lt;&lt; "/" &lt;&lt; r3 &lt;&lt; "/" &lt;&lt; r4 &lt;&lt; endl;
+    cout <<"res:" << r1 << "/" << r2 << "/" << r3 << "/" << r4 << endl;
 
     return 0;
-}</code></pre><pre><code>///////////////////////////////////////////////////////////
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  Context.h
 //  Implementation of the Class Context
 //  Created on:      09-十月-2014 22:21:07
@@ -2928,7 +2983,8 @@ private:
     Strategy *m_pStrategy;
 
 };
-#endif // !defined(EA_0DA87730_4DEE_4392_9BAF_4AC64A8A07A4__INCLUDED_)</code></pre><pre><code>///////////////////////////////////////////////////////////
+#endif // !defined(EA_0DA87730_4DEE_4392_9BAF_4AC64A8A07A4__INCLUDED_)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  Context.cpp
 //  Implementation of the Class Context
 //  Created on:      09-十月-2014 22:21:07
@@ -2944,12 +3000,13 @@ Context::~Context(){
 }
 
 void Context::algorithm(){
-    m_pStrategy-&gt;algorithm();
+    m_pStrategy->algorithm();
 }
 
 void Context::setStrategy(Strategy* st){
     m_pStrategy = st;
-}</code></pre><pre><code>///////////////////////////////////////////////////////////
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  ConcreteStrategyA.h
 //  Implementation of the Class ConcreteStrategyA
 //  Created on:      09-十月-2014 22:21:06
@@ -2971,7 +3028,8 @@ public:
     virtual void algorithm();
 
 };
-#endif // !defined(EA_9B180F12_677B_4e9b_A243_1F5DAD93FE1D__INCLUDED_)</code></pre><pre><code>///////////////////////////////////////////////////////////
+#endif // !defined(EA_9B180F12_677B_4e9b_A243_1F5DAD93FE1D__INCLUDED_)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">///////////////////////////////////////////////////////////
 //  ConcreteStrategyA.cpp
 //  Implementation of the Class ConcreteStrategyA
 //  Created on:      09-十月-2014 22:21:07
@@ -2979,7 +3037,7 @@ public:
 ///////////////////////////////////////////////////////////
 
 #include "ConcreteStrategyA.h"
-#include &lt;iostream&gt;
+#include <iostream>
 using namespace std;
 
 ConcreteStrategyA::ConcreteStrategyA(){
@@ -2991,8 +3049,9 @@ ConcreteStrategyA::~ConcreteStrategyA(){
 }
 
 void ConcreteStrategyA::algorithm(){
-    cout &lt;&lt; "use algorithm A" &lt;&lt; endl;
-}</code></pre><p>运行结果：</p>
+    cout << "use algorithm A" << endl;
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>运行结果：</p>
 <p> <img src="/images/loading.gif" data-original="../images/development/67ec2a0f1e7c7e54b5631b327f9e1ac6.jpeg" alt=""></p>
 <h3 id="模式分析-11"><a href="#模式分析-11" class="headerlink" title="模式分析"></a>模式分析</h3><ul>
 <li>策略模式是一个比较容易理解和使用的设计模式，策略模式是对算法的封装，它把算法的责任和算法本身分割开，委派给不同的对象管理。策略模式通常把一个系列的算法封装到一系列的策略类里面，作为一个抽象策略类的子类。用一句话来说，就是“准备一组算法，并将每一个算法封装起来，使得它们可以互换”。</li>
@@ -3032,6 +3091,7 @@ void ConcreteStrategyA::algorithm(){
 <li>策略模式主要优点在于对“开闭原则”的完美支持，在不修改原有系统的基础上可以更换算法或者增加新的算法，它很好地管理算法族，提高了代码的复用性，是一种替换继承，避免多重条件转移语句的实现方式；其缺点在于客户端必须知道所有的策略类，并理解其区别，同时在一定程度上增加了系统中类的个数，可能会存在很多策略类。</li>
 <li>策略模式适用情况包括：在一个系统里面有许多类，它们之间的区别仅在于它们的行为，使用策略模式可以动态地让一个对象在许多行为中选择一种行为；一个系统需要动态地在几种算法中选择一种；避免使用难以维护的多重条件选择语句；希望在具体策略类中封装算法和与相关的数据结构。</li>
 </ul>
+<h1 id="资料"><a href="#资料" class="headerlink" title="资料"></a>资料</h1><p><a href="https://github.com/guanguans/design-patterns-for-humans-cn" target="_blank" rel="noopener">guanguans/design-patterns-for-humans-cn: Design patterns for humans 中文版 - 对设计模式的超简单解释 (github.com)</a></p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -3545,7 +3605,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">1726.3k</span>&nbsp;字
+                class="white-color">1701.9k</span>&nbsp;字
             
             
             
@@ -3783,7 +3843,7 @@ $(function () {
     
     <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/instantpage/instantpage.js" type="module"></script>
     
-
+<script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script>
         <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
         <script>
         $('a').each(function() {
@@ -3802,7 +3862,7 @@ $(function () {
             }
           }
         });
-        </script><script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script></body>
+        </script></body>
 
 </html>
 
