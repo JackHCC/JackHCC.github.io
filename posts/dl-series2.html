@@ -4,8 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="Linux调试之崩溃, JackHCC">
-    <meta name="description" content="Linux内核dump调试">
+    <meta name="keywords" content="DL专栏2&gt;Activate Function, JackHCC">
+    <meta name="description" content="常见的激活函数汇总">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -13,7 +13,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Linux调试之崩溃 | JackHCC</title>
+    <title>DL专栏2&gt;Activate Function | JackHCC</title>
     <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/awesome/css/all.css">
@@ -305,12 +305,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/9.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/11.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Linux调试之崩溃</h1>
+                    <h1 class="description center-align post-title">DL专栏2&gt;Activate Function</h1>
                 </div>
             </div>
         </div>
@@ -427,8 +427,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/Linux-Kernel/">
-                                <span class="chip bg-color">Linux Kernel</span>
+                            <a href="/tags/Activate-Function/">
+                                <span class="chip bg-color">Activate Function</span>
                             </a>
                         
                     </div>
@@ -439,8 +439,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/Linux-Kernel/" class="post-category">
-                                Linux Kernel
+                            <a href="/categories/Deep-Learning/" class="post-category">
+                                Deep Learning
                             </a>
                         
                     </div>
@@ -452,28 +452,28 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-07-17
+                    2021-10-05
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-08-30
+                    2021-10-06
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    3.4k
+                    2.2k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    12 分
+                    8 分
                 </div>
                 
 
@@ -489,135 +489,128 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="Linux内核panic后查看dmesg"><a href="#Linux内核panic后查看dmesg" class="headerlink" title="Linux内核panic后查看dmesg"></a>Linux内核panic后查看dmesg</h2><p>由于panic后内核不能再将dmesg写入到存储介质中去，所以重启之后dmesg就丢失了。但是kdump可以在内核panic后启用一个小内核来将dmesg和一些内存信息写进存储介质。使用kdump配合crash查看崩溃信息的。</p>
-<h3 id="Kdump简介"><a href="#Kdump简介" class="headerlink" title="Kdump简介"></a>Kdump简介</h3><p>kdump是一种基于kexec的内核崩溃转储技术。kdump需要两个内核，分别是生产内核和捕获内核，生产内核是捕获内核服务的对象，且保留了内存的一部分给捕获内核启动使用。当系统崩溃时，kdump使用kexec启动捕获内核，以相应的ramdisk一起组建一个微环境，用于对生产内核下的内存进行收集和转存。</p>
-<h3 id="安装kdump"><a href="#安装kdump" class="headerlink" title="安装kdump"></a>安装kdump</h3><h4 id="ubuntu上kdump安装配置："><a href="#ubuntu上kdump安装配置：" class="headerlink" title="ubuntu上kdump安装配置："></a>ubuntu上kdump安装配置：</h4><p>参考；<a href="https://www.cnblogs.com/zhangmingda/p/12566534.html" target="_blank" rel="noopener">https://www.cnblogs.com/zhangmingda/p/12566534.html</a></p>
-<h4 id="centos下安装配置："><a href="#centos下安装配置：" class="headerlink" title="centos下安装配置："></a>centos下安装配置：</h4><h5 id="安装kexec-tools"><a href="#安装kexec-tools" class="headerlink" title="安装kexec-tools"></a>安装kexec-tools</h5><p>  使用kdump服务，必须要用到kexec-tools工具包。</p>
-<pre><code>sudo yum update
-sudo yum install kexec-tools</code></pre><p>  安装完成之后可以通过kexec -version查看kexec的版本。</p>
-<h5 id="配置kdump-kernel"><a href="#配置kdump-kernel" class="headerlink" title="配置kdump kernel"></a>配置kdump kernel</h5><p>  需要为kdump kernel配置内存区域，kdump要求系统正常使用时，不能使用kdump kernel所占用的内存。</p>
-<p> <strong>1.修改grub文件</strong></p>
-<pre><code>vim /etc/default/grub</code></pre><p>  需要将GRUB_CMDLINE_LINUX=”crashkernel=auto…”中的auto修改为128M。一般设为128M或256M。</p>
-<p> <strong>2.更新grub配置</strong></p>
-<p> 只要更改了grub文件，都需要更改grub配置。</p>
-<pre><code>sudo grub2-mkconfig -o /boot/grub2/grub.cfg</code></pre><p>  <strong>3.重启系统</strong></p>
-<pre><code>reboot</code></pre><h5 id="修改kdump默认配置"><a href="#修改kdump默认配置" class="headerlink" title="修改kdump默认配置"></a>修改kdump默认配置</h5><pre><code>vim /etc/kdump.conf</code></pre><p>  其中，需要注意的三行内容是</p>
-<pre><code>path /var/crash            #指定coredump文件放在/var/crash文件夹中
-core_collector makedumpfile -c -l --message-level 1 -d 31   #加上-c表示压缩，原文件中没有
-default reboot         #生成coredump后，重启系统</code></pre><p>开启kdump服务</p>
-<pre><code>systemctl start kdump.service     //启动kdump
-systemctl enable kdump.service    //设置开机启动</code></pre><h5 id="测试kdump是否开启"><a href="#测试kdump是否开启" class="headerlink" title="测试kdump是否开启"></a>测试kdump是否开启</h5><p>  <strong>1.检查kdump开启成功</strong></p>
-<pre><code>service kdump status</code></pre><p>  如下所示，表示开启成功    </p>
-<p><img src="/images/loading.gif" data-original="../images/basic/-16272333107071018" alt=""></p>
-<p>关闭kdump服务</p>
-<pre><code>service kdump stop</code></pre><p>禁止开机启动</p>
-<pre><code>chkconfig kdump off</code></pre><p> <strong>2.手动触发crash</strong></p>
-<pre><code>#echo 1 &gt; /proc/sys/kernel/sysrq
-#echo c &gt; /proc/sysrq-trigger</code></pre><p>  如果配置成功，系统将自动重启，重新进入系统，可以看到/var/crash文件夹下生成了相应文件，是一个以生成coredump日期为文件名的文件,如图所示：</p>
-<p><img src="/images/loading.gif" data-original="../images/basic/-16272333208761020" alt=""></p>
-<h3 id="减少dump文件的大小"><a href="#减少dump文件的大小" class="headerlink" title="减少dump文件的大小"></a>减少dump文件的大小</h3><pre><code>man makedumpfile</code></pre><p><img src="/images/loading.gif" data-original="../images/basic/-16272333285581022" alt=""></p>
-<p>可以看到默认的消息等级（打星星的7）会打印common message，生成的dump文件很大。所以我们把它改成1，只打印process indicator：编辑/etc/default/kdump-tools，在里面加上</p>
-<pre><code>MAKEDUMP_ARGS="-c --message-level 1 -d 31"</code></pre><p><img src="/images/loading.gif" data-original="../images/basic/-16272333372051024" alt=""></p>
-<p>现在dump文件只有17MB了。</p>
-<h3 id="禁止生成vmcore"><a href="#禁止生成vmcore" class="headerlink" title="禁止生成vmcore"></a>禁止生成vmcore</h3><p>vmcore文件很大，生成要花费大量时间。我们这里只需要dmesg，所以可以禁止生成vmcore。</p>
-<p>编辑/etc/default/kdump-tools</p>
-<pre><code>MAKEDUMP_ARGS="-c -d 31 --message-level 0 --dump-dmesg"</code></pre><p>其中–dump-dmesg表示直接把dmesg抽出来，而不生成vmcore。</p>
-<p><img src="/images/loading.gif" data-original="../images/basic/-16272333465791026" alt=""></p>
-<p>现在生成的文件都很小了，重启也非常快。</p>
-<h2 id="Linux运行C程序crash掉的分析"><a href="#Linux运行C程序crash掉的分析" class="headerlink" title="Linux运行C程序crash掉的分析"></a>Linux运行C程序crash掉的分析</h2><h3 id="一、程序运行崩溃的原因"><a href="#一、程序运行崩溃的原因" class="headerlink" title="一、程序运行崩溃的原因"></a><strong>一、程序运行崩溃的原因</strong></h3><p>Linux下c/c++开发程序崩溃(Segment fault)通常都是指针错误引起的.</p>
-<p>比如：</p>
-<p>(1)访问了不存在的内存地址</p>
-<p>(2)访问了只读的内存地址</p>
-<p>(3)访问了系统保护的内存地址int <em>p=0;</em>p=100;</p>
-<p>(4)栈溢出，无限递归</p>
-<p>(5)内存溢出</p>
-<h3 id="二、内核转储文件作用"><a href="#二、内核转储文件作用" class="headerlink" title="二、内核转储文件作用"></a><strong>二、内核转储文件作用</strong></h3><p>发生Segment fault时，内核转储文件(core dump)作用</p>
-<p>(1) 内核转储的最大好处是能够保存问题发生时的状态。</p>
-<p>(2) 只要有可执行文件和内核转储，就可以知道进程当时的状态。</p>
-<p>(3) 只要获取内核转储，那么即使没有复现环境，也能调试。</p>
-<h3 id="三、配置操作系统的内核转储功能"><a href="#三、配置操作系统的内核转储功能" class="headerlink" title="三、配置操作系统的内核转储功能"></a><strong>三、配置操作系统的内核转储功能</strong></h3><p>可以参考《高并发服务器开发与配置》中，用户能打开的最大文件数的设置方法。</p>
-<p>启动系统的内核转储功能，需要做如下配置:</p>
-<p>(1)查看当前转储文件大小</p>
-<p>&gt;&gt; ulimit -c</p>
-<p>0  为0，表示当前转储文件大小为0，没有启动内核转储</p>
-<p>&gt;&gt;ulimit -c unlimited      #设置coredump 大小为无限大</p>
-<p>这些需要有root权限, 在ubuntu下每次重新打开中断都需要重新输入上面的第一条命令, 来设置core大小为无限.</p>
-<h3 id="四、gdb使用内核转储文件再现崩溃时的状态"><a href="#四、gdb使用内核转储文件再现崩溃时的状态" class="headerlink" title="四、gdb使用内核转储文件再现崩溃时的状态"></a><strong>四、gdb使用内核转储文件再现崩溃时的状态</strong></h3><p>&gt;&gt;./test  -&gt;运行test崩溃，在当前目录下将产生一个core文件</p>
-<p>&gt;&gt;gdb -c ./corefile ./test  使用gdb再现崩溃状态</p>
-<p>在进入gdb后, 用bt命令查看backtrace以检查发生程序运行到哪里, 来定位core dump的文件-&gt;行.</p>
-<h3 id="五、System-Dump和Core-Dump的区别"><a href="#五、System-Dump和Core-Dump的区别" class="headerlink" title="五、System Dump和Core Dump的区别"></a><strong>五、System Dump和Core Dump的区别</strong></h3><p>\1) 系统Dump（System Dump）</p>
-<p>所有开放式操作系统，都存在系统DUMP问题。</p>
-<p>产生原因：</p>
-<p>由于系统关键/核心进程，产生严重的无法恢复的错误，为了避免系统相关资源受到更大损害，操作系统都会强行停止运行，并将当前内存中的各种结构,核心进程出错位置及其代码状态，保存下来，以便以后分析。最常见的原因是指令走飞，或者缓冲区溢出，或者内存访问越界。走飞就是说代码流有问题，导致执行到某一步指令混乱，跳转到一些不属于它的指令位置去执行一些莫名其妙的东西（没人知道那些地方本来是代码还是数据，而且是不是正确的代码开始位置），或者调用到不属于此进程的内存空间。写过C程序及汇编程序的人士，对这些现象应当是很清楚的。</p>
-<p>系统DUMP生成过程的特点：</p>
-<p>在生成DUMP过程中，为了避免过多的操作结构，导致问题所在位置正好也在生成DUMP过程所涉及的资源中，造成DUMP不能正常生成，操作系统都用尽量简单的代码来完成，所以避开了一切复杂的管理结构，如文件系统）LVM等等，所以这就是为什么几乎所有开放系统，都要求DUMP设备空间是物理连续的——不用定位一个个数据块，从DUMP设备开头一直写直到完成，这个过程可以只用BIOS级别的操作就可以。这也是为什么在企业级UNIX普遍使用LVM的现状下，DUMP设备只可能是裸设备而不可能是文件系统文件，而且[b]只[/b]用作DUMP的设备，做 LVM镜像是无用的——系统此时根本没有LVM操作，它不会管什么镜像不镜像，就用第一份连续写下去。</p>
-<p>所以UNIX系统也不例外，它会将DUMP写到一个裸设或磁带设备。在重启的时候，如果设置的DUMP转存目录（文件系统中的目录）有足够空间，它将会转存成一个文件系统文件，缺省情况下，对于AIX</p>
-<p>来说是/var/adm/ras/下的vmcore*这样的文件，对于HPUX来说是 /var/adm/crash下的目录及文件。当然，也可以选择将其转存到磁带设备。会造成系统DUMP的原因主要是：系统补丁级别不一致或缺少）系统内核扩展有BUG（例如Oracle就会安装系统内核扩展））驱动程序有 BUG（因为设备驱动程序一般是工作在内核级别的），等等。所以一旦经常发生类似的系统DUMP，可以考虑将系统补丁包打到最新并一致化）升级微码）升级设备驱动程序（包括FC多路冗余软件））升级安装了内核扩展的软件的补丁包等等。</p>
-<p>\2) 进程Core Dump</p>
-<p>进程Core Dump产生的技术原因，基本等同于系统DUMP，就是说从程序原理上来说是基本一致的。但进程是运行在低一级的优先级上（此优先级不同于系统中对进程定义的优先级，而是指CPU代码指令的优先级），被操作系统所控制，所以操作系统可以在一个进程出问题时，不影响其他进程的情况下，中止此进程的运行，并将相关环境保存下来，这就是core dump文件，可供分析。</p>
-<p>如果进程是用高级语言编写并编译的，且用户有源程序，那么可以通过在编译时带上诊断用符号表（所有高级语言编译程序都有这种功能），通过系统提供的分析工具，加上core文件，能够分析到哪一个源程序语句造成的问题，进而比较容易地修正问题，当然，要做到这样，除非一开始就带上了符号表进行编译，否则只能重新编译程序，并重新运行程序，重现错误，才能显示出源程序出错位置。</p>
-<p>如果用户没有源程序，那么只能分析到汇编指令的级别，难于查找问题所在并作出修正，所以这种情况下就不必多费心了，找到出问题的地方也没有办法。</p>
-<p>进程Core Dump的时候，操作系统会将进程异常终止掉并释放其占用的资源，不可能对系统本身的运行造成危害。这是与系统DUMP根本区别的一点，系统DUMP产生时，一定伴随着系统崩溃和停机，进程</p>
-<p>Core Dump时，只会造成相应的进程被终止，系统本身不可能崩溃。当然如果此进程与其他进程有关联，其他进程也会受到影响，至于后果是什么，就看相关进程对这种异常情况（与自己相关的进程突然</p>
-<p>终止）的处理机制是什么了，没有一概的定论。</p>
-<h3 id="六、内核转储文件-core-dump-永久生效的办法"><a href="#六、内核转储文件-core-dump-永久生效的办法" class="headerlink" title="六、内核转储文件(core dump)永久生效的办法"></a><strong>六、内核转储文件(core dump)永久生效的办法</strong></h3><p>在终端中输入以下命令，查看内核转储是否有效。</p>
-<pre><code>#ulimit -c
-0</code></pre><p>-c 表示内核转储文件的大小限制，现在显示为0，表示不能用。</p>
-<p>永久生效的办法是：</p>
-<pre><code>#vi /etc/profile 然后，在profile中添加：
-ulimit -c 1073741824     --1G大小</code></pre><p>(但是，若将产生的转储文件大小大于该数字时，将不会产生转储文件)或者</p>
-<pre><code>ulimit -c unlimited</code></pre><p>这样重启机器后生效了。 或者， 使用source命令使之马上生效。</p>
-<pre><code>#source /etc/profile</code></pre><h3 id="七、指定内核转储的文件名和目录"><a href="#七、指定内核转储的文件名和目录" class="headerlink" title="七、指定内核转储的文件名和目录"></a><strong>七、指定内核转储的文件名和目录</strong></h3><p>缺省情况下，内核在coredump时所产生的core文件放在与该程序相同的目录中，并且文件名固定为core。很显然，如果有多个程序产生core文件，或者同一个程序多次崩溃，就会重复覆盖同一个core文</p>
-<p>件。可以通过修改kernel的参数，指定内核转储所生成的core文件的路径和文件名。</p>
-<p>可以通过在/etc/sysctl.conf文件中，对sysctl变量kernel.core_pattern的设置。</p>
-<pre><code>&gt;&gt;vi /etc/sysctl.conf</code></pre><p>然后，在sysctl.conf文件中添加下面两句话：</p>
-<pre><code>kernel.core_pattern = /var/core/core_%e_%p
-kernel.core_uses_pid = 0</code></pre><p>需要说明的是， /proc/sys/kernel/core_uses_pid。如果这个文件的内容被配置成1，即使core_pattern中没有设置%p，最后生成的core dump文件名仍会加上进程ID。</p>
-<p>这里%e, %p分别表示：</p>
-<p>%c 转储文件的大小上限</p>
-<p>%e 所dump的文件名</p>
-<p>%g 所dump的进程的实际组ID</p>
-<p>%h 主机名</p>
-<p>%p 所dump的进程PID</p>
-<p>%s 导致本次coredump的信号</p>
-<p>%t 转储时刻(由1970年1月1日起计的秒数)</p>
-<p>%u 所dump进程的实际用户ID</p>
-<p>可以使用以下命令，使修改结果马上生效。</p>
-<pre><code>&gt;&gt;sysctl –p /etc/sysctl.conf</code></pre><p>请在/var目录下先建立core文件夹，然后执行a.out程序，就会在/var/core/下产生以指定格式命名的内核转储文件。查看转储文件的情况：</p>
-<pre><code>#ls /var/core
-core_a.out_2834</code></pre><p><strong>八、例子</strong></p>
-<p>Linux下c/c++开发之程序崩溃(Segment fault)时内核转储文件(coredump)生成举例说明</p>
-<p>例子的源代码：</p>
-<pre><code>#include &lt;stdio.h&gt;
-int main(void)
-{
-int *a = NULL;
-*a = 0x1;
-return 0;
-}</code></pre><p>把以上源代码，写成一个a.c文件后，编译a.c文件产生一个a.out的可执行文件：</p>
-<pre><code>#gcc -g a.c -o a.out</code></pre><p>修改a.out文件的权限后，执行它：</p>
-<pre><code>#./a.out</code></pre><p>就会显示：</p>
-<pre><code>Segmentation fault(core dump)</code></pre><p>这表示在当前目录下, 已经生成了a.out对应的内核转储文件。</p>
-<p>注意：后面带有(core dump), 才说明转储文件成功生成了。</p>
-<pre><code>#file core*
-core:ELF 64-bit LSB core file x86-64, version 1(SYSV), SVR4-style, from './a.out'
-coreDump: UTF-8 Unicode C program text</code></pre><p>要用GDB调试内核转储文件，应该使用以下方式启动GDB:</p>
-<pre><code>#gdb -c ./core ./a.out
-GNU gdb (GDB) 7.1-Ubuntu
-...
-Core was generated by './a.out'.
-Program terminated with signal 11, Segmentation fault.
-#0 0x00000000004004dc in main() at a.c:6
-6 *a =0x1;</code></pre><p>a.c的第6行收到了11号信号。用GDB的list命令可以查看附近的源代码。</p>
-<pre><code>(gdb) l 5
-1           #include &lt;stdio.h&gt;
-2     
-3           int main(void)
-4           {
-5                  int *a = NULL;
-6                  *a = 0x1;
-7                  return 0;
-8           }</code></pre><p>这里默认都是当前目录，也可以给core 和a.out 指定路径。</p>
+                <h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><blockquote>
+<p>激活函数是神经网络模型重要的组成部分，本文详解了十种激活函数的优缺点。</p>
+</blockquote>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211005101011876.png" alt=""></p>
+<p>激活函数（Activation Function）是一种添加到人工神经网络中的函数，旨在帮助网络学习数据中的复杂模式。类似于人类大脑中基于神经元的模型，激活函数最终决定了要发射给下一个神经元的内容。</p>
+<p>在人工神经网络中，一个节点的激活函数定义了该节点在给定的输入或输入集合下的输出。标准的计算机芯片电路可以看作是根据输入得到开（1）或关（0）输出的数字电路激活函数。因此，激活函数是确定神经网络输出的数学方程式，本文概述了深度学习中常见的十种激活函数及其优缺点。</p>
+<p>首先我们来了解一下人工神经元的工作原理，大致如下：</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211005101032001.png" alt=""></p>
+<p>上述过程的数学可视化过程如下图所示：</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211005101047578.png" alt=""></p>
+<h3 id="Sigmoid-激活函数"><a href="#Sigmoid-激活函数" class="headerlink" title="Sigmoid 激活函数"></a><strong>Sigmoid 激活函数</strong></h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211005101113133.png" alt=""></p>
+<p>Sigmoid 函数的图像看起来像一个 S 形曲线。</p>
+<p>函数表达式如下：</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211005101133818.png" alt=""></p>
+<p>在什么情况下适合使用 Sigmoid 激活函数呢？</p>
+<ul>
+<li>Sigmoid 函数的输出范围是 0 到 1。由于输出值限定在 0 到 1，因此它对每个神经元的输出进行了归一化；</li>
+<li>用于将预测概率作为输出的模型。由于概率的取值范围是 0 到 1，因此 Sigmoid 函数非常合适；</li>
+<li>梯度平滑，避免「跳跃」的输出值；</li>
+<li>函数是可微的。这意味着可以找到任意两个点的 sigmoid 曲线的斜率；</li>
+<li>明确的预测，即非常接近 1 或 0。</li>
+</ul>
+<p>Sigmoid 激活函数有哪些缺点？</p>
+<ul>
+<li>倾向于梯度消失；</li>
+<li>函数输出不是以 0 为中心的，这会降低权重更新的效率；</li>
+<li>Sigmoid 函数执行指数运算，计算机运行得较慢。</li>
+</ul>
+<h3 id="Tanh-双曲正切激活函数"><a href="#Tanh-双曲正切激活函数" class="headerlink" title="Tanh / 双曲正切激活函数"></a><strong>Tanh / 双曲正切激活函数</strong></h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211005101211868.png" alt=""></p>
+<p>tanh 激活函数的图像也是 S 形，表达式如下：</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211005101227669.png" alt=""></p>
+<p>tanh 是一个双曲正切函数。tanh 函数和 sigmoid 函数的曲线相对相似。但是它比 sigmoid 函数更有一些优势。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211005101243283.png" alt=""></p>
+<ul>
+<li>首先，当输入较大或较小时，输出几乎是平滑的并且梯度较小，这不利于权重更新。二者的区别在于输出间隔，tanh 的输出间隔为 1，并且整个函数以 0 为中心，比 sigmoid 函数更好；</li>
+<li>在 tanh 图中，负输入将被强映射为负，而零输入被映射为接近零。</li>
+</ul>
+<p>注意：在一般的二元分类问题中，tanh 函数用于隐藏层，而 sigmoid 函数用于输出层，但这并不是固定的，需要根据特定问题进行调整。</p>
+<h3 id="ReLU-激活函数"><a href="#ReLU-激活函数" class="headerlink" title="ReLU 激活函数"></a><strong>ReLU 激活函数</strong></h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211005101321312.png" alt=""></p>
+<p>ReLU 激活函数图像如上图所示，函数表达式如下：</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211005101336687.png" alt=""></p>
+<p>ReLU 函数是深度学习中较为流行的一种激活函数，相比于 sigmoid 函数和 tanh 函数，它具有如下优点：</p>
+<ul>
+<li>当输入为正时，不存在梯度饱和问题。</li>
+<li>计算速度快得多。ReLU 函数中只存在线性关系，因此它的计算速度比 sigmoid 和 tanh 更快。</li>
+</ul>
+<p>当然，它也有缺点：</p>
+<ol>
+<li>Dead ReLU 问题。当输入为负时，ReLU 完全失效，在正向传播过程中，这不是问题。有些区域很敏感，有些则不敏感。但是在反向传播过程中，如果输入负数，则梯度将完全为零，sigmoid 函数和 tanh 函数也具有相同的问题；</li>
+<li>我们发现 ReLU 函数的输出为 0 或正数，这意味着 ReLU 函数不是以 0 为中心的函数。</li>
+</ol>
+<h3 id="Leaky-ReLU"><a href="#Leaky-ReLU" class="headerlink" title="Leaky ReLU"></a><strong>Leaky ReLU</strong></h3><p>它是一种专门设计用于解决 Dead ReLU 问题的激活函数：</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211005101440537.png" alt=""></p>
+<p>为什么 Leaky ReLU 比 ReLU 更好？</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211005101508257.png" alt=""></p>
+<ol>
+<li>Leaky ReLU 通过把 x 的非常小的线性分量给予负输入（0.01x）来调整负值的零梯度（zero gradients）问题；</li>
+<li>leak 有助于扩大 ReLU 函数的范围，通常 a 的值为 0.01 左右；</li>
+<li>Leaky ReLU 的函数范围是（负无穷到正无穷）。</li>
+</ol>
+<p><strong>注意：</strong>从理论上讲，Leaky ReLU 具有 ReLU 的所有优点，而且 Dead ReLU 不会有任何问题，但在实际操作中，尚未完全证明 Leaky ReLU 总是比 ReLU 更好。</p>
+<h3 id="ELU"><a href="#ELU" class="headerlink" title="ELU"></a><strong>ELU</strong></h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211005101544181.png" alt=""></p>
+<p>ELU 的提出也解决了 ReLU 的问题。与 ReLU 相比，ELU 有负值，这会使激活的平均值接近零。均值激活接近于零可以使学习更快，因为它们使梯度更接近自然梯度。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211005101609956.png" alt=""></p>
+<p>显然，ELU 具有 ReLU 的所有优点，并且：</p>
+<ul>
+<li>没有 Dead ReLU 问题，输出的平均值接近 0，以 0 为中心；</li>
+<li>ELU 通过减少偏置偏移的影响，使正常梯度更接近于单位自然梯度，从而使均值向零加速学习；</li>
+<li>ELU 在较小的输入下会饱和至负值，从而减少前向传播的变异和信息。</li>
+</ul>
+<p>一个小问题是它的计算强度更高。与 Leaky ReLU 类似，尽管理论上比 ReLU 要好，但目前在实践中没有充分的证据表明 ELU 总是比 ReLU 好。</p>
+<h3 id="PReLU（Parametric-ReLU）"><a href="#PReLU（Parametric-ReLU）" class="headerlink" title="PReLU（Parametric ReLU）"></a><strong>PReLU（Parametric ReLU）</strong></h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211005101709455.png" alt=""></p>
+<p>PReLU 也是 ReLU 的改进版本：</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211005101727167.png" alt=""></p>
+<p>看一下 PReLU 的公式：参数α通常为 0 到 1 之间的数字，并且通常相对较小。</p>
+<ul>
+<li>如果 a_i= 0，则 f 变为 ReLU</li>
+<li>如果 a_i&gt; 0，则 f 变为 leaky ReLU</li>
+<li>如果 a_i 是可学习的参数，则 f 变为 PReLU</li>
+</ul>
+<p>PReLU 的优点如下：</p>
+<ol>
+<li>在负值域，PReLU 的斜率较小，这也可以避免 Dead ReLU 问题。</li>
+<li>与 ELU 相比，PReLU 在负值域是线性运算。尽管斜率很小，但不会趋于 0。</li>
+</ol>
+<h3 id="Softmax"><a href="#Softmax" class="headerlink" title="Softmax"></a><strong>Softmax</strong></h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211005101755832.png" alt=""></p>
+<p>Softmax 是用于多类分类问题的激活函数，在多类分类问题中，超过两个类标签则需要类成员关系。对于长度为 K 的任意实向量，Softmax 可以将其压缩为长度为 K，值在（0，1）范围内，并且向量中元素的总和为 1 的实向量。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211005101812368.png" alt=""></p>
+<p>Softmax 与正常的 max 函数不同：max 函数仅输出最大值，但 Softmax 确保较小的值具有较小的概率，并且不会直接丢弃。我们可以认为它是 argmax 函数的概率版本或「soft」版本。</p>
+<p>Softmax 函数的分母结合了原始输出值的所有因子，这意味着 Softmax 函数获得的各种概率彼此相关。</p>
+<p>Softmax 激活函数的主要缺点是：</p>
+<ol>
+<li>在零点不可微；</li>
+<li>负输入的梯度为零，这意味着对于该区域的激活，权重不会在反向传播期间更新，因此会产生永不激活的死亡神经元。</li>
+</ol>
+<h3 id="Swish"><a href="#Swish" class="headerlink" title="Swish"></a><strong>Swish</strong></h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211005101843801.png" alt=""></p>
+<p>函数表达式：y = x * sigmoid (x)</p>
+<p>Swish 的设计受到了 LSTM 和高速网络中 gating 的 sigmoid 函数使用的启发。我们使用相同的 gating 值来简化 gating 机制，这称为 self-gating。</p>
+<p>self-gating 的优点在于它只需要简单的标量输入，而普通的 gating 则需要多个标量输入。这使得诸如 Swish 之类的 self-gated 激活函数能够轻松替换以单个标量为输入的激活函数（例如 ReLU），而无需更改隐藏容量或参数数量。</p>
+<p>Swish 激活函数的主要优点如下：</p>
+<ul>
+<li>「无界性」有助于防止慢速训练期间，梯度逐渐接近 0 并导致饱和；（同时，有界性也是有优势的，因为有界激活函数可以具有很强的正则化，并且较大的负输入问题也能解决）；</li>
+<li>导数恒 &gt; 0；</li>
+<li>平滑度在优化和泛化中起了重要作用。</li>
+</ul>
+<h3 id="Maxout"><a href="#Maxout" class="headerlink" title="Maxout"></a><strong>Maxout</strong></h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211005101919220.png" alt=""></p>
+<p>在 Maxout 层，激活函数是输入的最大值，因此只有 2 个 maxout 节点的多层感知机就可以拟合任意的凸函数。</p>
+<p>单个 Maxout 节点可以解释为对一个实值函数进行分段线性近似 (PWL) ，其中函数图上任意两点之间的线段位于图（凸函数）的上方。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211005101946827.png" alt=""></p>
+<p>Maxout 也可以对 d 维向量（V）实现：</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211005102003749.png" alt=""></p>
+<p>假设两个凸函数 h_1(x) 和 h_2(x)，由两个 Maxout 节点近似化，函数 g(x) 是连续的 PWL 函数。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211005102020492.png" alt=""></p>
+<p>因此，由两个 Maxout 节点组成的 Maxout 层可以很好地近似任何连续函数。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211005102038991.png" alt=""></p>
+<h3 id="Softplus"><a href="#Softplus" class="headerlink" title="Softplus"></a><strong>Softplus</strong></h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211005102055656.png" alt=""></p>
+<p>Softplus 函数：f（x）= ln（1 + exp x）</p>
+<p>Softplus 的导数为</p>
+<p>f ′(x)=exp(x) / ( 1+exp⁡ x )</p>
+<p>= 1/ (1 +exp(−x ))</p>
+<p>，也称为 logistic / sigmoid 函数。</p>
+<p>Softplus 函数类似于 ReLU 函数，但是相对较平滑，像 ReLU 一样是单侧抑制。它的接受范围很广：(0, + inf)。</p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -661,7 +654,7 @@ Program terminated with signal 11, Segmentation fault.
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://jackhcc.github.io/posts/linux-kernel-dump.html">https://jackhcc.github.io/posts/linux-kernel-dump.html</a>
+                    <a href="https://jackhcc.github.io/posts/dl-series2.html">https://jackhcc.github.io/posts/dl-series2.html</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -699,8 +692,8 @@ Program terminated with signal 11, Segmentation fault.
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/Linux-Kernel/">
-                                    <span class="chip bg-color">Linux Kernel</span>
+                                <a href="/tags/Activate-Function/">
+                                    <span class="chip bg-color">Activate Function</span>
                                 </a>
                             
                         </div>
@@ -871,7 +864,7 @@ Program terminated with signal 11, Segmentation fault.
         repo: 'JackHCC.github.io',
         owner: 'JackHCC',
         admin: "JackHCC",
-        id: '2021-07-17T01-49-01',
+        id: '2021-10-05T10-06-57',
         distractionFreeMode: false  // Facebook-like distraction free mode
     });
 
@@ -896,31 +889,31 @@ Program terminated with signal 11, Segmentation fault.
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/posts/gdb-easy.html">
+                <a href="/posts/dl-series3.html">
                     <div class="card-image">
                         
                         
-                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/8.jpg" class="responsive-img" alt="GDB简介">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/23.jpg" class="responsive-img" alt="DL专栏3>GPU并行训练">
                         
-                        <span class="card-title">GDB简介</span>
+                        <span class="card-title">DL专栏3>GPU并行训练</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            GDB基本指令使用
+                            深度学习GPU多卡并行训练概述
                         
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-07-18
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-10-06
                         </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/Linux-Kernel/" class="post-category">
-                                    Linux Kernel
+                            <a href="/categories/Deep-Learning/" class="post-category">
+                                    Deep Learning
                                 </a>
                             
                             
@@ -930,8 +923,8 @@ Program terminated with signal 11, Segmentation fault.
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/GDB/">
-                        <span class="chip bg-color">GDB</span>
+                    <a href="/tags/Cuda/">
+                        <span class="chip bg-color">Cuda</span>
                     </a>
                     
                 </div>
@@ -945,31 +938,31 @@ Program terminated with signal 11, Segmentation fault.
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/posts/linux-kernel-env.html">
+                <a href="/posts/dl-series1.html">
                     <div class="card-image">
                         
                         
-                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/21.jpg" class="responsive-img" alt="Linux内核开发环境配置">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/6.jpg" class="responsive-img" alt="DL专栏1>PyTorch Tricks">
                         
-                        <span class="card-title">Linux内核开发环境配置</span>
+                        <span class="card-title">DL专栏1>PyTorch Tricks</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            Linux内核开发环境配置
+                            PyTorch基本使用技巧
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-07-16
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-10-04
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/Linux-Kernel/" class="post-category">
-                                    Linux Kernel
+                            <a href="/categories/Deep-Learning/" class="post-category">
+                                    Deep Learning
                                 </a>
                             
                             
@@ -979,8 +972,8 @@ Program terminated with signal 11, Segmentation fault.
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/Linux-Kernel/">
-                        <span class="chip bg-color">Linux Kernel</span>
+                    <a href="/tags/PyTorch/">
+                        <span class="chip bg-color">PyTorch</span>
                     </a>
                     
                 </div>

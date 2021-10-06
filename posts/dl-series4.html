@@ -4,8 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="DL专栏&gt;Activate Function, JackHCC">
-    <meta name="description" content="常见的激活函数汇总">
+    <meta name="keywords" content="DL专栏4&gt;Feature Scaling, JackHCC">
+    <meta name="description" content="特征归一化/标准化">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -13,7 +13,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>DL专栏&gt;Activate Function | JackHCC</title>
+    <title>DL专栏4&gt;Feature Scaling | JackHCC</title>
     <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/awesome/css/all.css">
@@ -305,12 +305,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/3.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/1.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">DL专栏&gt;Activate Function</h1>
+                    <h1 class="description center-align post-title">DL专栏4&gt;Feature Scaling</h1>
                 </div>
             </div>
         </div>
@@ -427,8 +427,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/Activate-Function/">
-                                <span class="chip bg-color">Activate Function</span>
+                            <a href="/tags/Feature-Scaling/">
+                                <span class="chip bg-color">Feature Scaling</span>
                             </a>
                         
                     </div>
@@ -452,28 +452,28 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-10-05
+                    2021-10-07
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-10-05
+                    2021-10-06
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    2.2k
+                    6.1k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    8 分
+                    23 分
                 </div>
                 
 
@@ -489,128 +489,335 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><blockquote>
-<p>激活函数是神经网络模型重要的组成部分，本文详解了十种激活函数的优缺点。</p>
+                <h3 id="Feature-scaling"><a href="#Feature-scaling" class="headerlink" title="Feature scaling"></a><strong>Feature scaling</strong></h3><p>常见的提法有“特征归一化”、“标准化”，是数据预处理中的重要技术，有时甚至决定了算法能不能work以及work得好不好。谈到feature scaling的必要性，最常用的2个例子可能是：</p>
+<ul>
+<li><strong>特征间的单位（尺度）可能不同</strong>，比如身高和体重，比如摄氏度和华氏度，比如房屋面积和房间数，一个特征的变化范围可能是[1000, 10000]，另一个特征的变化范围可能是[−0.1,0.2]，在进行距离有关的计算时，单位的不同会导致计算结果的不同，尺度大的特征会起决定性作用，而尺度小的特征其作用可能会被忽略，<strong>为了消除特征间单位和尺度差异的影响，以对每维特征同等看待，需要对特征进行归一化</strong>。</li>
+<li>原始特征下，<strong>因尺度差异，其损失函数的等高线图可能是椭圆形</strong>，梯度方向垂直于等高线，下降会走zigzag路线，而不是指向local minimum。通过对特征进行zero-mean and unit-variance变换后，其损失函数的等高线图更接近圆形，梯度下降的方向震荡更小，收敛更快，如下图所示，图片来自Andrew Ng。</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211006195807606.png" alt=""></p>
+<p>对于feature scaling中最常使用的Standardization，似乎“无脑上”就行了，本文想多探究一些为什么，</p>
+<ul>
+<li>常用的feature scaling方法都有哪些？</li>
+<li>什么情况下该使用什么feature scaling方法？有没有一些指导思想？</li>
+<li>所有的机器学习算法都需要feature scaling吗？有没有例外？</li>
+<li>损失函数的等高线图都是椭圆或同心圆吗？能用椭圆和圆来简单解释feature scaling的作用吗？</li>
+<li>如果损失函数的等高线图很复杂，feature scaling还有其他直观解释吗？</li>
+</ul>
+<h3 id="常用feature-scaling方法"><a href="#常用feature-scaling方法" class="headerlink" title="常用feature scaling方法"></a><strong>常用feature scaling方法</strong></h3><p>在问为什么前，先看是什么。</p>
+<p>给定数据集，令特征向量为x，维数为D，样本数量为R，可构成D×R的矩阵，一列为一个样本，一行为一维特征，如下图所示，图片来自Hung-yi Lee pdf-Gradient Descent：</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211006195851603.png" alt=""></p>
+<p>feature scaling的方法可以分成2类，逐行进行和逐列进行。逐行是对每一维特征操作，逐列是对每个样本操作，上图为逐行操作中特征标准化的示例。</p>
+<p>具体地，常用feature scaling方法如下，来自wiki，</p>
+<ul>
+<li><strong>Rescaling (min-max normalization、range scaling)</strong>：</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211006195908739.png" alt=""></p>
+<p>将每一维特征线性映射到目标范围[a,b]，即将最小值映射为a，最大值映射为b，常用目标范围为[0,1]和[−1,1]，特别地，映射到[0,1]计算方式为：</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211006195922629.png" alt=""></p>
+<ul>
+<li><strong>Mean normalization</strong>：</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211006195936069.png" alt=""></p>
+<p>将<strong>均值映射为0</strong>，同时用最大值最小值的差对特征进行归一化，一种更常见的做法是用标准差进行归一化，如下。</p>
+<ul>
+<li><strong>Standardization (Z-score Normalization)</strong>：</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211006195949869.png" alt=""></p>
+<p>每维特征<strong>0均值1方差（zero-mean and unit-variance）</strong>。</p>
+<ul>
+<li><strong>Scaling to unit length</strong>：</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211006200008127.png" alt=""></p>
+<p>将每个样本的特征向量除以其长度，即对样本特征向量的长度进行归一化，长度的度量常使用的是L2 norm（欧氏距离），有时也会采用L1 norm，不同度量方式的一种对比可以参见论文“CVPR2005-Histograms of Oriented Gradients for Human Detection”。</p>
+<p>上述4种feature scaling方式，前3种为逐行操作，最后1种为逐列操作。</p>
+<p>容易让人困惑的一点是指代混淆，Standardization指代比较清晰，但是单说Normalization有时会指代min-max normalization，有时会指代Standardization，有时会指代Scaling to unit length。</p>
+<h3 id="计算方式上对比分析"><a href="#计算方式上对比分析" class="headerlink" title="计算方式上对比分析"></a><strong>计算方式上对比分析</strong></h3><p>前3种feature scaling的计算方式为<strong>减一个统计量再除以一个统计量</strong>，最后1种为<strong>除以向量自身的长度</strong>。</p>
+<ul>
+<li><strong>减一个统计量</strong>可以看成<strong>选哪个值作为原点，是最小值还是均值，并将整个数据集平移到这个新的原点位置</strong>。如果特征间偏置不同对后续过程有负面影响，则该操作是有益的，可以看成是某种<strong>偏置无关操作</strong>；如果原始特征值有特殊意义，比如稀疏性，该操作可能会破坏其稀疏性。</li>
+<li><strong>除以一个统计量</strong>可以看成在<strong>坐标轴方向上对特征进行缩放</strong>，用于<strong>降低特征尺度的影响，可以看成是某种尺度无关操作</strong>。缩放可以使用最大值最小值间的跨度，也可以使用标准差（到中心点的平均距离），前者对outliers敏感，outliers对后者影响与outliers数量和数据集大小有关，outliers越少数据集越大影响越小。</li>
+<li><strong>除以长度</strong>相当于把长度归一化，<strong>把所有样本映射到单位球上</strong>，可以看成是某种<strong>长度无关操作</strong>，比如，词频特征要移除文章长度的影响，图像处理中某些特征要移除光照强度的影响，以及方便计算余弦距离或内积相似度等。</li>
+</ul>
+<p>稀疏数据、outliers相关的更多数据预处理内容可以参见scikit learn-5.3. Preprocessing data。</p>
+<p>从几何上观察上述方法的作用，图片来自CS231n-Neural Networks Part 2: Setting up the Data and the Loss，zero-mean将数据集平移到原点，unit-variance使每维特征上的跨度相当，图中可以明显看出两维特征间存在线性相关性，Standardization操作并没有消除这种相关性。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211006200040422.png" alt=""></p>
+<p>可通过PCA方法移除线性相关性（decorrelation），即引入旋转，找到新的坐标轴方向，在新坐标轴方向上用“标准差”进行缩放，如下图所示，图片来自链接，图中同时描述了unit length的作用——将所有样本映射到单位球上。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211006200105202.png" alt=""></p>
+<p>当特征维数更多时，对比如下，图片来自youtube</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211006200123899.png" alt=""></p>
+<p>总的来说，<strong>归一化/标准化的目的是为了获得某种“无关性”——偏置无关、尺度无关、长度无关……当归一化/标准化方法背后的物理意义和几何含义与当前问题的需要相契合时，其对解决该问题就有正向作用，反之，就会起反作用。所以，“何时选择何种方法”取决于待解决的问题，即problem-dependent。</strong></p>
+<h3 id="feature-scaling-是否需要"><a href="#feature-scaling-是否需要" class="headerlink" title="feature scaling 是否需要"></a><strong>feature scaling 是否需要</strong></h3><p>下图来自data school-Comparing supervised learning algorithms，对比了几个监督学习算法，最右侧两列为是否需要feature scaling。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211006200201369.png" alt=""></p>
+<p>下面具体分析一下。</p>
+<h4 id="什么时候需要feature-scaling？"><a href="#什么时候需要feature-scaling？" class="headerlink" title="什么时候需要feature scaling？"></a>什么时候需要feature scaling？</h4><ul>
+<li>涉及或隐含<strong>距离计算</strong>的算法，比如K-means、KNN、PCA、SVM等，一般需要feature scaling，因为：</li>
+</ul>
+<p><strong>zero-mean一般可以增加样本间余弦距离或者内积结果的差异</strong>，区分力更强，假设数据集集中分布在第一象限遥远的右上角，将其平移到原点处，可以想象样本间余弦距离的差异被放大了。在模版匹配中，zero-mean可以明显提高响应结果的区分度。</p>
+<p>就欧式距离而言，<strong>增大某个特征的尺度，相当于增加了其在距离计算中的权重，如果有明确的先验知识表明某个特征很重要，那么适当增加其权重可能有正向效果，但如果没有这样的先验，或者目的就是想知道哪些特征更重要，那么就需要先feature scaling，对各维特征等而视之</strong>。</p>
+<p>增大尺度的同时也增大了该特征维度上的方差，PCA算法倾向于关注方差较大的特征所在的坐标轴方向，其他特征可能会被忽视，因此，在PCA前做Standardization效果可能更好，如下图所示，图片来自scikit learn-Importance of Feature Scaling</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211006200224677.png" alt=""></p>
+<ul>
+<li>损失函数中含有<strong>正则项</strong>时，一般需要feature scaling：对于线性模型y=wx+b而言，x的任何线性变换（平移、放缩），都可以被w和b“吸收”掉，理论上，不会影响模型的拟合能力。但是，如果损失函数中含有正则项，如λ∣∣w∣∣^2，λ为超参数，其对w的每一个参数施加同样的惩罚，但对于某一维特征xi而言，其scale越大，系数wi越小，其在正则项中的比重就会变小，相当于对wi惩罚变小，即损失函数会相对忽视那些scale增大的特征，这并不合理，所以需要feature scaling，使损失函数平等看待每一维特征。</li>
+<li><strong>梯度下降算法，需要feature scaling</strong>。梯度下降的参数更新公式如下，</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211006200242275.png" alt=""></p>
+<p>E(W)为损失函数，<strong>收敛速度取决于：参数的初始位置到local minima的距离，以及学习率η的大小</strong>。一维情况下，<strong>在local minima附近</strong>，不同学习率对梯度下降的影响如下图所示：</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211006200258733.png" alt=""></p>
+<p>多维情况下可以分解成多个上图，每个维度上分别下降，参数W为向量，但学习率只有1个，即所有参数维度共用同一个学习率（暂不考虑为每个维度都分配单独学习率的算法）。收敛意味着在每个参数维度上都取得极小值，每个参数维度上的偏导数都为0，但是每个参数维度上的下降速度是不同的，为了每个维度上都能收敛，学习率应取所有维度在当前位置合适步长中最小的那个。下面讨论feature scaling对gradient descent的作用，</p>
+<ul>
+<li><strong>zero center与参数初始化相配合，缩短初始参数位置与local minimum间的距离，加快收敛</strong>。模型的最终参数是未知的，所以一般随机初始化，比如从0均值的均匀分布或高斯分布中采样得到，对线性模型而言，其分界面初始位置大致在原点附近，bias经常初始化为0，则分界面直接通过原点。同时，为了收敛，学习率不会很大。而每个数据集的特征分布是不一样的，如果其分布集中且距离原点较远，比如位于第一象限遥远的右上角，分界面可能需要花费很多步骤才能“爬到”数据集所在的位置。所以，无论什么数据集，先平移到原点，再配合参数初始化，可以保证分界面一定会穿过数据集。此外，<strong>outliers常分布在数据集的外围</strong>，与分界面从外部向内挪动相比，从中心区域开始挪动可能受outliers的影响更小。</li>
+<li>对于采用均方误差损失LMS的线性模型，损失函数恰为二阶，如下图所示</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211006200320315.png" alt=""></p>
+<p><strong>不同方向上的下降速度变化不同（二阶导不同，曲率不同）</strong>，恰由输入的协方差矩阵决定，<strong>通过scaling改变了损失函数的形状，减小不同方向上的曲率差异</strong>。将每个维度上的下降分解来看，给定一个下降步长，如果不够小，有的维度下降的多，有的下降的少，有的还可能在上升，损失函数的整体表现可能是上升也可能是下降，就会不稳定。<strong>scaling后不同方向上的曲率相对更接近，更容易选择到合适的学习率，使下降过程相对更稳定。</strong></p>
+<ul>
+<li>另有从Hessian矩阵特征值以及condition number角度的理解，详见Lecun paper-Efficient BackProp中的Convergence of Gradient Descent一节，有清晰的数学描述，同时还介绍了白化的作用——解除特征间的线性相关性，使每个维度上的梯度下降可独立看待。</li>
+<li>文章开篇的椭圆形和圆形等高线图，仅在采用均方误差的线性模型上适用，其他损失函数或更复杂的模型，如深度神经网络，<strong>损失函数的error surface可能很复杂，并不能简单地用椭圆和圆来刻画</strong>，所以用它来解释feature scaling对所有损失函数的梯度下降的作用，似乎过于简化，见Hinton vedio-3.2 The error surface for a linear neuron。</li>
+<li>对于损失函数不是均方误差的情况，只要权重w与输入特征x间是相乘关系，损失函数对w的偏导必然含有因子x，w的梯度下降速度就会受到特征x尺度的影响。理论上为每个参数都设置上自适应的学习率，可以吸收掉x尺度的影响，但在实践中出于计算量的考虑，往往还是所有参数共用一个学习率，此时x尺度不同可能会导致不同方向上的下降速度悬殊较大，学习率不容易选择，下降过程也可能不稳定，通过scaling可对不同方向上的下降速度有所控制，使下降过程相对更稳定。</li>
+<li>对于传统的神经网络，对输入做feature scaling也很重要，因为采用sigmoid等有饱和区的激活函数，如果输入分布范围很广，参数初始化时没有适配好，很容易直接陷入饱和区，导致<strong>梯度消失</strong>，所以，需要对输入做Standardization或映射到[0,1]、[−1,1]，配合精心设计的参数初始化方法，对值域进行控制。但自从有了Batch Normalization，每次线性变换改变特征分布后，都会重新进行Normalization，似乎可以不太需要对网络的输入进行feature scaling了？但习惯上还是会做feature scaling。</li>
+</ul>
+<h4 id="什么时候不需要Feature-Scaling？"><a href="#什么时候不需要Feature-Scaling？" class="headerlink" title="什么时候不需要Feature Scaling？"></a>什么时候不需要Feature Scaling？</h4><p>与距离计算无关的概率模型，不需要feature scaling，比如Naive Bayes；</p>
+<p>与距离计算无关的基于树的模型，不需要feature scaling，比如决策树、随机森林等，树中节点的选择只关注当前特征在哪里切分对分类更好，即只在意特征内部的相对大小，而与特征间的相对大小无关。</p>
+<h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><blockquote>
+<p>[1] wiki-Feature scaling</p>
+<p>[2] wiki-Backpropagation</p>
+<p>[3] Hung-yi Lee pdf-Gradient Descent: <a href="http://speech.ee.ntu.edu.tw/~tlkagk/courses/ML_2016/Lecture/Gradient" target="_blank" rel="noopener">http://speech.ee.ntu.edu.tw/~tlkagk/courses/ML_2016/Lecture/Gradient</a> Descent (v2).pdf</p>
+<p>[4] quora-Why does mean normalization help in gradient descent?</p>
+<p>[5] scikit learn-Importance of Feature Scaling</p>
+<p>[6] scikit learn-5.3. Preprocessing data</p>
+<p>[7] scikit learn-Compare the effect of different scalers on data with outliers</p>
+<p>[8] data school-Comparing supervised learning algorithms</p>
+<p>[9] Lecun paper-Efficient BackProp</p>
+<p>[10] Hinton vedio-3.2 The error surface for a linear neuron</p>
+<p>[11] CS231n-Neural Networks Part 2: Setting up the Data and the Loss</p>
+<p>[12] ftp-Should I normalize/standardize/rescale the data?</p>
+<p>[13] medium-Understand Data Normalization in Machine Learning</p>
+<p>[14] Normalization and Standardization</p>
+<p>[15] How and why do normalization and feature scaling work?</p>
+<p>[16] Is it a good practice to always scale/normalize data for machine learning?</p>
+<p>[17] When conducting multiple regression, when should you center your predictor variables &amp; when should you standardize them?</p>
 </blockquote>
-<p><img src="/images/loading.gif" data-original="../images/ML/image-20211005101011876.png" alt=""></p>
-<p>激活函数（Activation Function）是一种添加到人工神经网络中的函数，旨在帮助网络学习数据中的复杂模式。类似于人类大脑中基于神经元的模型，激活函数最终决定了要发射给下一个神经元的内容。</p>
-<p>在人工神经网络中，一个节点的激活函数定义了该节点在给定的输入或输入集合下的输出。标准的计算机芯片电路可以看作是根据输入得到开（1）或关（0）输出的数字电路激活函数。因此，激活函数是确定神经网络输出的数学方程式，本文概述了深度学习中常见的十种激活函数及其优缺点。</p>
-<p>首先我们来了解一下人工神经元的工作原理，大致如下：</p>
-<p><img src="/images/loading.gif" data-original="../images/ML/image-20211005101032001.png" alt=""></p>
-<p>上述过程的数学可视化过程如下图所示：</p>
-<p><img src="/images/loading.gif" data-original="../images/ML/image-20211005101047578.png" alt=""></p>
-<h3 id="Sigmoid-激活函数"><a href="#Sigmoid-激活函数" class="headerlink" title="Sigmoid 激活函数"></a><strong>Sigmoid 激活函数</strong></h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211005101113133.png" alt=""></p>
-<p>Sigmoid 函数的图像看起来像一个 S 形曲线。</p>
-<p>函数表达式如下：</p>
-<p><img src="/images/loading.gif" data-original="../images/ML/image-20211005101133818.png" alt=""></p>
-<p>在什么情况下适合使用 Sigmoid 激活函数呢？</p>
+<h3 id="补充：如何优雅地展示机器学习项目"><a href="#补充：如何优雅地展示机器学习项目" class="headerlink" title="补充：如何优雅地展示机器学习项目"></a>补充：如何优雅地展示机器学习项目</h3><p>Streamlit是一个机器学习工程师专用的，专门针对机器学习和数据科学团队的应用开发框架，是目前开发自定义机器学习工具的最快的方法。可以认为它的目标是取代Flask在机器学习项目中的地位，可以帮助机器学习工程师快速开发用户交互工具。</p>
+<h4 id="Streamlit是什么？"><a href="#Streamlit是什么？" class="headerlink" title="Streamlit是什么？"></a><strong>Streamlit是什么？</strong></h4><p>Streamlit是一个强大的python开源工具包，可以用来快速搭建web app，以优雅地展示你的机器学习或数据科学项目。</p>
+<p>Streamlit的优势在于：</p>
 <ul>
-<li>Sigmoid 函数的输出范围是 0 到 1。由于输出值限定在 0 到 1，因此它对每个神经元的输出进行了归一化；</li>
-<li>用于将预测概率作为输出的模型。由于概率的取值范围是 0 到 1，因此 Sigmoid 函数非常合适；</li>
-<li>梯度平滑，避免「跳跃」的输出值；</li>
-<li>函数是可微的。这意味着可以找到任意两个点的 sigmoid 曲线的斜率；</li>
-<li>明确的预测，即非常接近 1 或 0。</li>
+<li>不需要任何网页前端设计基础即可轻松搭建web app</li>
+<li>由于web本身会随着代码块自动刷新，写程序时可以及时观察到每一步代码改动对于网页的显示效果影响，方便调试</li>
+<li>交互式界面可以优雅地展示数据科学项目</li>
+<li>streamlit的代码框架遵循从上到下的运行逻辑，极易理解，所见即所得</li>
 </ul>
-<p>Sigmoid 激活函数有哪些缺点？</p>
+<h4 id="如何开始一个Streamlit项目"><a href="#如何开始一个Streamlit项目" class="headerlink" title="如何开始一个Streamlit项目"></a><strong>如何开始一个Streamlit项目</strong></h4><p>在安装streamlit之前，需要注意python版本至少为3.6。使用pip安装streamlit库</p>
+<pre><code>$ pip install streamlit</code></pre><p>在python脚本中导入包</p>
+<pre><code>import streamlit as st</code></pre><p>启动一个streamlit app有两种方式（命令行）。</p>
+<p>1）直接运行本地的python文件</p>
+<pre><code>$ streamlit run myapp.py</code></pre><p>2）运行远程url，这个功能可以直接运行github中的链接</p>
+<pre><code>$ streamlit run https://raw.githubusercontent.com/streamlit/demo-uber-nyc-pickups/master/app.py</code></pre><p>可以尝试运行以下命令启动官网提供的demo项目</p>
+<pre><code>$ streamlit hello</code></pre><h4 id="Streamlit架构与设计初探"><a href="#Streamlit架构与设计初探" class="headerlink" title="Streamlit架构与设计初探"></a><strong>Streamlit架构与设计初探</strong></h4><p>在开始介绍streamlit提供的诸多小工具之前，需要简单介绍下streamlit的架构和布局设计思路。</p>
+<h5 id="APP模型"><a href="#APP模型" class="headerlink" title="APP模型"></a><strong>APP模型</strong></h5><p>下图为官网展示的app模型架构图，一个streamlit app是这样工作的：</p>
 <ul>
-<li>倾向于梯度消失；</li>
-<li>函数输出不是以 0 为中心的，这会降低权重更新的效率；</li>
-<li>Sigmoid 函数执行指数运算，计算机运行得较慢。</li>
+<li>streamlit会将python脚本按顺序从上往下运行</li>
+<li>每次用户打开指向该app服务的网页时，整个脚本会被重新执行</li>
+<li>在脚本运行的过程中，streamlit会将数据表，图像，控件等实时地显示在网页上</li>
+<li>在运行过程中，streamlit会优先调用缓存（需要用户在程序中设置）避免高昂计算过程</li>
+<li>每次用户和控件进行交互时，脚本会被重新执行，图像，控件等被重新显示为新的值</li>
 </ul>
-<h3 id="Tanh-双曲正切激活函数"><a href="#Tanh-双曲正切激活函数" class="headerlink" title="Tanh / 双曲正切激活函数"></a><strong>Tanh / 双曲正切激活函数</strong></h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211005101211868.png" alt=""></p>
-<p>tanh 激活函数的图像也是 S 形，表达式如下：</p>
-<p><img src="/images/loading.gif" data-original="../images/ML/image-20211005101227669.png" alt=""></p>
-<p>tanh 是一个双曲正切函数。tanh 函数和 sigmoid 函数的曲线相对相似。但是它比 sigmoid 函数更有一些优势。</p>
-<p><img src="/images/loading.gif" data-original="../images/ML/image-20211005101243283.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211006200807580.png" alt=""></p>
+<h5 id="网页布局"><a href="#网页布局" class="headerlink" title="网页布局"></a><strong>网页布局</strong></h5><p>Streamlit的布局结构十分简单（这既是它的优点，也是它的缺点）。和bootstrap等前端框架中的复杂栅格布局不同，Streamlit只支持左侧边栏和右侧正文栏的布局，事实上由于上一节提到Streamlit特殊的从上往下执行程序的结构，用户也无需考虑到布局问题，控件会按照程序中的顺序从上往下自然排列。</p>
+<p>这样的设计自然是极大程度上简化了用户在布局设计上所花的精力，可以将精力更多地用在项目展示上。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211006200832151.png" alt=""></p>
+<h4 id="常用工具总结"><a href="#常用工具总结" class="headerlink" title="常用工具总结"></a><strong>常用工具总结</strong></h4><p><img src="/images/loading.gif" data-original="../images/ML/image-20211006200858017.png" alt=""></p>
+<h5 id="显示文本"><a href="#显示文本" class="headerlink" title="显示文本"></a><strong>显示文本</strong></h5><ul>
+<li>st.title  </li>
+<li>st.header</li>
+<li>st.subheader  </li>
+<li>st.text    </li>
+<li>st.markdown</li>
+<li>st.code   </li>
+<li>st.write</li>
+</ul>
+<p>常用的显示文本命令包括大标题title, 正文标题header，正文副标题subheader，正文文本text，markdown格式（支持文字和emoji表情），代码code  </p>
+<pre><code>st.title('Streamlit introduction')
+st.header('Build your first app')
+st.subheader('Text widgets are shown as below')
+st.text('I am the tool to display text')
+st.markdown('I am the *tool* to **display markdown**')
+st.markdown(':sunglasses:')
+st.code('''
+def hello():    
+    print("Hello, Streamlit!")''', language='python')</code></pre><p><img src="/images/loading.gif" data-original="../images/ML/image-20211006201008826.png" alt=""></p>
+<p>在streamlit中还有一个万能显示工具st.write，该方法中可以接受多种格式的输入参数，如文本，markdown，数据框，图表，字典，函数，并且随着输入格式的不同，会以不同方式呈现。</p>
+<h5 id="显示数据"><a href="#显示数据" class="headerlink" title="显示数据"></a><strong>显示数据</strong></h5><ul>
+<li>st.table</li>
+<li>st.dataframe</li>
+<li>st.json</li>
+</ul>
+<p>streamlit支持数据框以及json的格式显示数据，其中table和dataframe的区别在于table为静态数据，dataframe为动态数据。</p>
+<pre><code>df = pd.DataFrame(    
+    np.random.randn(10, 5),   
+    columns=('col %d' % i for i in range(5)))
+
+st.table(df)st.dataframe(df)
+st.json({    
+    'foo': 'bar',    
+    'baz': 'boz',    
+    'stuff': [         
+        'stuff 1',        
+        'stuff 2',        
+        'stuff 3',         
+        'stuff 5',    
+    ], 
+})</code></pre><p><img src="/images/loading.gif" data-original="../images/ML/image-20211006201136423.png" alt=""></p>
+<h5 id="显示交互控件"><a href="#显示交互控件" class="headerlink" title="显示交互控件"></a><strong>显示交互控件</strong></h5><ul>
+<li>st.checkbox</li>
+<li>st.selectbox</li>
+<li>st.multiselect</li>
+<li>st.ratio</li>
+<li>st.slider</li>
+</ul>
+<p>这一组工具可以用于构建机器学习模型时用户参数的选择，如下拉单选，下拉多选，滑块选择等功能。</p>
+<pre><code>st.write('-----------------------------------------checkbox--------------------------------------------')
+agree = st.checkbox('I agree')
+if agree:    
+    st.write('Great! You agreed!')
+
+st.write('-----------------------------------------selectbox-------------------------------------------')
+option = st.selectbox(    
+    'Select your model',     
+    ('decision tree', 'logistic regression', 'SVM'))
+st.write('You selected:', option)
+
+st.write('-----------------------------------------multiselect-------------------------------------------')
+options = st.multiselect(
+    'What are your favorite colors',    
+    ['Green', 'Yellow', 'Red', 'Blue'],    
+    ['Yellow', 'Red'])
+st.write('You selected:', options)
+
+st.write('-----------------------------------------ratio-------------------------------------------')
+genre = st.radio(    
+    "What's your favorite model",    
+    ('linear regression', 'neural network'))
+if genre == 'linear regression':    
+    st.write('You like simple model')
+else:    
+    st.write("You like complex model")
+
+st.write('-----------------------------------------slider-------------------------------------------')
+st.slider('How old are you?', min_value=0, max_value=100, value=20, step=5)</code></pre><p><img src="/images/loading.gif" data-original="../images/ML/image-20211006201243242.png" alt=""></p>
 <ul>
-<li>首先，当输入较大或较小时，输出几乎是平滑的并且梯度较小，这不利于权重更新。二者的区别在于输出间隔，tanh 的输出间隔为 1，并且整个函数以 0 为中心，比 sigmoid 函数更好；</li>
-<li>在 tanh 图中，负输入将被强映射为负，而零输入被映射为接近零。</li>
+<li>st.text_input      </li>
+<li>st.number_input     </li>
+<li>st.text_area    </li>
+<li>st.date_input   </li>
+<li>st.file_uploader</li>
 </ul>
-<p>注意：在一般的二元分类问题中，tanh 函数用于隐藏层，而 sigmoid 函数用于输出层，但这并不是固定的，需要根据特定问题进行调整。</p>
-<h3 id="ReLU-激活函数"><a href="#ReLU-激活函数" class="headerlink" title="ReLU 激活函数"></a><strong>ReLU 激活函数</strong></h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211005101321312.png" alt=""></p>
-<p>ReLU 激活函数图像如上图所示，函数表达式如下：</p>
-<p><img src="/images/loading.gif" data-original="../images/ML/image-20211005101336687.png" alt=""></p>
-<p>ReLU 函数是深度学习中较为流行的一种激活函数，相比于 sigmoid 函数和 tanh 函数，它具有如下优点：</p>
+<p>这一组工具可用于构建机器学习模型时的不同格式的用户输入以及数据上传。其中file_uploader默认支持的文件上传大小上限为200MB。</p>
+<pre><code>st.write('-----------------------------------------text_input--------------------------------------------')
+st.text_input('Movie title', 'Life of Brian')
+
+st.write('-----------------------------------------number_input-------------------------------------------')
+st.number_input('Insert a number')
+
+st.write('-----------------------------------------text_area-------------------------------------------')
+txt = st.text_area('Text to analyze', '''It was the best of times, it was the worst of times, it wasthe age of wisdom, it was the age of foolishness, it wasthe epoch of belief, it was the epoch of incredulity, itwas the season of Light, it was the season of Darkness, itwas the spring of hope, it was the winter of despair, (...)
+''')
+
+st.write('-----------------------------------------date_input-------------------------------------------')
+st.date_input(    
+    "When's your birthday",    
+    datetime.date(2019, 7, 6))
+
+st.write('-----------------------------------------file_uploader-------------------------------------------')
+uploaded_file = st.file_uploader("Choose a CSV file", type="csv")</code></pre><p><img src="/images/loading.gif" data-original="../images/ML/image-20211006201759005.png" alt=""></p>
+<h5 id="显示图表"><a href="#显示图表" class="headerlink" title="显示图表"></a><strong>显示图表</strong></h5><ul>
+<li>st.line_chart</li>
+<li>st.bar_chart</li>
+<li>st.area_chart</li>
+</ul>
+<p>streamlit本身支持原生的三种图表形式，折线图，柱状图和面积图，不过一般不太会用到，因为streamlit还支持大量的第三方可视化图表接口。</p>
+<pre><code>chart_data = pd.DataFrame(     
+    np.random.randn(20, 3),     
+    columns=['a', 'b', 'c'])
+st.line_chart(chart_data)
+
+chart_data = pd.DataFrame(     
+    np.random.randn(50, 3),    
+    columns=["a", "b", "c"])
+st.bar_chart(chart_data)
+
+chart_data = pd.DataFrame(     
+    np.random.randn(20, 3),     
+    columns=['a', 'b', 'c'])
+st.area_chart(chart_data)</code></pre><p><img src="/images/loading.gif" data-original="../images/ML/image-20211006201920480.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211006201931927.png" alt=""></p>
 <ul>
-<li>当输入为正时，不存在梯度饱和问题。</li>
-<li>计算速度快得多。ReLU 函数中只存在线性关系，因此它的计算速度比 sigmoid 和 tanh 更快。</li>
+<li>st.pyplot</li>
+<li>st.altair_chart</li>
+<li>st.plotly_chart</li>
+<li>st.bokeh_chart</li>
+<li>st.pydeck_chart</li>
+<li>st.deck_gl_chart</li>
+<li>st.graphviz_chart</li>
 </ul>
-<p>当然，它也有缺点：</p>
-<ol>
-<li>Dead ReLU 问题。当输入为负时，ReLU 完全失效，在正向传播过程中，这不是问题。有些区域很敏感，有些则不敏感。但是在反向传播过程中，如果输入负数，则梯度将完全为零，sigmoid 函数和 tanh 函数也具有相同的问题；</li>
-<li>我们发现 ReLU 函数的输出为 0 或正数，这意味着 ReLU 函数不是以 0 为中心的函数。</li>
-</ol>
-<h3 id="Leaky-ReLU"><a href="#Leaky-ReLU" class="headerlink" title="Leaky ReLU"></a><strong>Leaky ReLU</strong></h3><p>它是一种专门设计用于解决 Dead ReLU 问题的激活函数：</p>
-<p><img src="/images/loading.gif" data-original="../images/ML/image-20211005101440537.png" alt=""></p>
-<p>为什么 Leaky ReLU 比 ReLU 更好？</p>
-<p><img src="/images/loading.gif" data-original="../images/ML/image-20211005101508257.png" alt=""></p>
-<ol>
-<li>Leaky ReLU 通过把 x 的非常小的线性分量给予负输入（0.01x）来调整负值的零梯度（zero gradients）问题；</li>
-<li>leak 有助于扩大 ReLU 函数的范围，通常 a 的值为 0.01 左右；</li>
-<li>Leaky ReLU 的函数范围是（负无穷到正无穷）。</li>
-</ol>
-<p><strong>注意：</strong>从理论上讲，Leaky ReLU 具有 ReLU 的所有优点，而且 Dead ReLU 不会有任何问题，但在实际操作中，尚未完全证明 Leaky ReLU 总是比 ReLU 更好。</p>
-<h3 id="ELU"><a href="#ELU" class="headerlink" title="ELU"></a><strong>ELU</strong></h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211005101544181.png" alt=""></p>
-<p>ELU 的提出也解决了 ReLU 的问题。与 ReLU 相比，ELU 有负值，这会使激活的平均值接近零。均值激活接近于零可以使学习更快，因为它们使梯度更接近自然梯度。</p>
-<p><img src="/images/loading.gif" data-original="../images/ML/image-20211005101609956.png" alt=""></p>
-<p>显然，ELU 具有 ReLU 的所有优点，并且：</p>
+<p>streamlit的强大之处在于提供了大量第三方可视化接口, 以最普遍的matplotlib为例，只需在常规的代码基础上加上一句st.pyplot()即可显示在网页上显示图表</p>
+<pre><code>arr = np.random.normal(1, 1, size=100)
+plt.hist(arr, bins=20)
+st.pyplot()</code></pre><p><img src="/images/loading.gif" data-original="../images/ML/image-20211006202001288.png" alt=""></p>
+<h5 id="其他工具"><a href="#其他工具" class="headerlink" title="其他工具"></a><strong>其他工具</strong></h5><ul>
+<li>st.image</li>
+<li>st.audio</li>
+<li>st.video</li>
+</ul>
+<p>这是一组用于展示图片，音频和视频的功能</p>
 <ul>
-<li>没有 Dead ReLU 问题，输出的平均值接近 0，以 0 为中心；</li>
-<li>ELU 通过减少偏置偏移的影响，使正常梯度更接近于单位自然梯度，从而使均值向零加速学习；</li>
-<li>ELU 在较小的输入下会饱和至负值，从而减少前向传播的变异和信息。</li>
+<li>st.progress</li>
+<li>st.spinner</li>
 </ul>
-<p>一个小问题是它的计算强度更高。与 Leaky ReLU 类似，尽管理论上比 ReLU 要好，但目前在实践中没有充分的证据表明 ELU 总是比 ReLU 好。</p>
-<h3 id="PReLU（Parametric-ReLU）"><a href="#PReLU（Parametric-ReLU）" class="headerlink" title="PReLU（Parametric ReLU）"></a><strong>PReLU（Parametric ReLU）</strong></h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211005101709455.png" alt=""></p>
-<p>PReLU 也是 ReLU 的改进版本：</p>
-<p><img src="/images/loading.gif" data-original="../images/ML/image-20211005101727167.png" alt=""></p>
-<p>看一下 PReLU 的公式：参数α通常为 0 到 1 之间的数字，并且通常相对较小。</p>
+<p>progress用于在循环中显示进度条，spinner用于提示代码正在运行</p>
 <ul>
-<li>如果 a_i= 0，则 f 变为 ReLU</li>
-<li>如果 a_i&gt; 0，则 f 变为 leaky ReLU</li>
-<li>如果 a_i 是可学习的参数，则 f 变为 PReLU</li>
+<li>st.error</li>
+<li>st.warning</li>
+<li>st.info</li>
+<li>st.success</li>
 </ul>
-<p>PReLU 的优点如下：</p>
-<ol>
-<li>在负值域，PReLU 的斜率较小，这也可以避免 Dead ReLU 问题。</li>
-<li>与 ELU 相比，PReLU 在负值域是线性运算。尽管斜率很小，但不会趋于 0。</li>
-</ol>
-<h3 id="Softmax"><a href="#Softmax" class="headerlink" title="Softmax"></a><strong>Softmax</strong></h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211005101755832.png" alt=""></p>
-<p>Softmax 是用于多类分类问题的激活函数，在多类分类问题中，超过两个类标签则需要类成员关系。对于长度为 K 的任意实向量，Softmax 可以将其压缩为长度为 K，值在（0，1）范围内，并且向量中元素的总和为 1 的实向量。</p>
-<p><img src="/images/loading.gif" data-original="../images/ML/image-20211005101812368.png" alt=""></p>
-<p>Softmax 与正常的 max 函数不同：max 函数仅输出最大值，但 Softmax 确保较小的值具有较小的概率，并且不会直接丢弃。我们可以认为它是 argmax 函数的概率版本或「soft」版本。</p>
-<p>Softmax 函数的分母结合了原始输出值的所有因子，这意味着 Softmax 函数获得的各种概率彼此相关。</p>
-<p>Softmax 激活函数的主要缺点是：</p>
-<ol>
-<li>在零点不可微；</li>
-<li>负输入的梯度为零，这意味着对于该区域的激活，权重不会在反向传播期间更新，因此会产生永不激活的死亡神经元。</li>
-</ol>
-<h3 id="Swish"><a href="#Swish" class="headerlink" title="Swish"></a><strong>Swish</strong></h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211005101843801.png" alt=""></p>
-<p>函数表达式：y = x * sigmoid (x)</p>
-<p>Swish 的设计受到了 LSTM 和高速网络中 gating 的 sigmoid 函数使用的启发。我们使用相同的 gating 值来简化 gating 机制，这称为 self-gating。</p>
-<p>self-gating 的优点在于它只需要简单的标量输入，而普通的 gating 则需要多个标量输入。这使得诸如 Swish 之类的 self-gated 激活函数能够轻松替换以单个标量为输入的激活函数（例如 ReLU），而无需更改隐藏容量或参数数量。</p>
-<p>Swish 激活函数的主要优点如下：</p>
+<p>这是一组用于显示不同状态的工具</p>
+<pre><code>st.error('This is an error')
+st.warning('This is a warning')
+st.info('This is a purely informational message')
+st.success('This is a success message!')</code></pre><h5 id="侧边栏"><a href="#侧边栏" class="headerlink" title="侧边栏"></a><strong>侧边栏</strong></h5><p>上述提到几乎所有工具均可放置在侧边栏，代码以st.sidebar.[element_name]的形式给出，以selectbox为例，st.sidebar.selectbox即表示该工具会出现在左侧。同样侧边栏的工具布局也是按照代码顺序从上往下显示。</p>
+<pre><code>add_selectbox = st.sidebar.selectbox(    
+    "How would you like to be contacted?",    
+    ("Email", "Home phone", "Mobile phone")
+)</code></pre><p><img src="/images/loading.gif" data-original="../images/ML/image-20211006202101697.png" alt=""></p>
+<h4 id="重要功能"><a href="#重要功能" class="headerlink" title="重要功能"></a><strong>重要功能</strong></h4><h5 id="缓存机制"><a href="#缓存机制" class="headerlink" title="缓存机制"></a><strong>缓存机制</strong></h5><p>缓存机制是streamlit的一大重要功能，缓存功能使得用户在加载或处理大型数据时可以直接读取缓存，避免昂贵的计算过程。</p>
+<p>streamlit的缓存机制是通过@st.cache的装饰器实现的。</p>
+<pre><code>@st.cache  
+def expensive_computation(a, b):    
+    time.sleep(10)    
+    return a * b
+
+a = 2
+b = 21
+res = expensive_computation(a, b)
+
+st.write("Result:", res)</code></pre><p>每当程序运行至被cache装饰的函数时，当第一次运行时，会正常执行并将结果存入缓存，当函数被再次运行，首先会判断函数的输入参数，函数主体内容是否发生变化，如果发生变化，则重新运行函数，否则将跳过函数，直接读取缓存结果。</p>
+<h5 id="录屏功能"><a href="#录屏功能" class="headerlink" title="录屏功能"></a><strong>录屏功能</strong></h5><p>streamlit还提供了一个非常有用的录屏功能，在网页右上角的菜单栏，有一个Record a screencast功能，可以支持录制屏幕互动操作，非常适合团队协作和效果展示。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211006202215163.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211006202254335.png" alt=""></p>
+<h4 id="近期重大更新"><a href="#近期重大更新" class="headerlink" title="近期重大更新"></a><strong>近期重大更新</strong></h4><p>streamlit虽然问世不久，已经拥有十分活跃的社区和用户群，并且官网也在不断丰富现有的功能中，以应对用户各种普遍的需求。</p>
+<p>根据官网发布的2020路线图，今天预计会有一些重大的新功能推出，包括：</p>
 <ul>
-<li>「无界性」有助于防止慢速训练期间，梯度逐渐接近 0 并导致饱和；（同时，有界性也是有优势的，因为有界激活函数可以具有很强的正则化，并且较大的负输入问题也能解决）；</li>
-<li>导数恒 &gt; 0；</li>
-<li>平滑度在优化和泛化中起了重要作用。</li>
+<li>定制化的组件（用户自定义Javascript/React)</li>
+<li>定制化布局结构（全新推出的网格和水平布局）</li>
+<li>更为丰富的缓存机制</li>
 </ul>
-<h3 id="Maxout"><a href="#Maxout" class="headerlink" title="Maxout"></a><strong>Maxout</strong></h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211005101919220.png" alt=""></p>
-<p>在 Maxout 层，激活函数是输入的最大值，因此只有 2 个 maxout 节点的多层感知机就可以拟合任意的凸函数。</p>
-<p>单个 Maxout 节点可以解释为对一个实值函数进行分段线性近似 (PWL) ，其中函数图上任意两点之间的线段位于图（凸函数）的上方。</p>
-<p><img src="/images/loading.gif" data-original="../images/ML/image-20211005101946827.png" alt=""></p>
-<p>Maxout 也可以对 d 维向量（V）实现：</p>
-<p><img src="/images/loading.gif" data-original="../images/ML/image-20211005102003749.png" alt=""></p>
-<p>假设两个凸函数 h_1(x) 和 h_2(x)，由两个 Maxout 节点近似化，函数 g(x) 是连续的 PWL 函数。</p>
-<p><img src="/images/loading.gif" data-original="../images/ML/image-20211005102020492.png" alt=""></p>
-<p>因此，由两个 Maxout 节点组成的 Maxout 层可以很好地近似任何连续函数。</p>
-<p><img src="/images/loading.gif" data-original="../images/ML/image-20211005102038991.png" alt=""></p>
-<h3 id="Softplus"><a href="#Softplus" class="headerlink" title="Softplus"></a><strong>Softplus</strong></h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211005102055656.png" alt=""></p>
-<p>Softplus 函数：f（x）= ln（1 + exp x）</p>
-<p>Softplus 的导数为</p>
-<p>f ′(x)=exp(x) / ( 1+exp⁡ x )</p>
-<p>= 1/ (1 +exp(−x ))</p>
-<p>，也称为 logistic / sigmoid 函数。</p>
-<p>Softplus 函数类似于 ReLU 函数，但是相对较平滑，像 ReLU 一样是单侧抑制。它的接受范围很广：(0, + inf)。</p>
+<h4 id="优秀demo"><a href="#优秀demo" class="headerlink" title="优秀demo"></a><strong>优秀demo</strong></h4><p>官网收录了许多优秀的demo作品，充分展示出streamlit的强大之处和应用前景。</p>
+<h5 id="自动驾驶目标检测"><a href="#自动驾驶目标检测" class="headerlink" title="自动驾驶目标检测"></a><strong>自动驾驶目标检测</strong></h5><p>这个项目使用不到300行代码，通过streamlit的交互界面展示了Udacity自动驾驶数据集和YOLO目标检测方法的应用。</p>
+<pre><code>$ streamlit run https://raw.githubusercontent.com/streamlit/demo-self-driving/master/app</code></pre><p><img src="/images/loading.gif" data-original="../images/ML/640.gif" alt=""></p>
+<h5 id="GAN面部生成项目"><a href="#GAN面部生成项目" class="headerlink" title="GAN面部生成项目"></a><strong>GAN面部生成项目</strong></h5><p>这个项目使用仅仅150行代码，展示了tensorflow和Nvidia的Progressive Growing of GANs以及Shaobo Guan的Transparent Latent-space GAN方法在面部特征生成中的应用。</p>
+<pre><code>$ git clone https://github.com/streamlit/demo-face-gan.git
+$ cd demo-face-gan
+$ pip install -r requirements.txt
+$ streamlit run app.py</code></pre><p><img src="/images/loading.gif" data-original="../images/ML/image-20211006202514857.png" alt=""></p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -654,7 +861,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://jackhcc.github.io/posts/activate-function.html">https://jackhcc.github.io/posts/activate-function.html</a>
+                    <a href="https://jackhcc.github.io/posts/dl-series4.html">https://jackhcc.github.io/posts/dl-series4.html</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -692,8 +899,8 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/Activate-Function/">
-                                    <span class="chip bg-color">Activate Function</span>
+                                <a href="/tags/Feature-Scaling/">
+                                    <span class="chip bg-color">Feature Scaling</span>
                                 </a>
                             
                         </div>
@@ -864,7 +1071,7 @@
         repo: 'JackHCC.github.io',
         owner: 'JackHCC',
         admin: "JackHCC",
-        id: '2021-10-05T10-06-57',
+        id: '2021-10-07T19-54-21',
         distractionFreeMode: false  // Facebook-like distraction free mode
     });
 
@@ -885,17 +1092,68 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/posts/dl-gpu.html">
+                <a href="/posts/dl-series4.html">
                     <div class="card-image">
                         
                         
-                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/10.jpg" class="responsive-img" alt="DL专栏>GPU并行训练">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/1.jpg" class="responsive-img" alt="DL专栏4>Feature Scaling">
                         
-                        <span class="card-title">DL专栏>GPU并行训练</span>
+                        <span class="card-title">DL专栏4>Feature Scaling</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            特征归一化/标准化
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-10-07
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Deep-Learning/" class="post-category">
+                                    Deep Learning
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Feature-Scaling/">
+                        <span class="chip bg-color">Feature Scaling</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/posts/dl-series3.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/23.jpg" class="responsive-img" alt="DL专栏3>GPU并行训练">
+                        
+                        <span class="card-title">DL专栏3>GPU并行训练</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -905,9 +1163,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-10-06
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-10-06
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -925,55 +1183,6 @@
                     
                     <a href="/tags/Cuda/">
                         <span class="chip bg-color">Cuda</span>
-                    </a>
-                    
-                </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
-            </div>
-            <div class="card">
-                <a href="/posts/pytorch-tricks.html">
-                    <div class="card-image">
-                        
-                        
-                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/9.jpg" class="responsive-img" alt="DL专栏>PyTorch Tricks">
-                        
-                        <span class="card-title">DL专栏>PyTorch Tricks</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            PyTorch基本使用技巧
-                        
-                    </div>
-                    <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-10-04
-                            </span>
-                        <span class="publish-author">
-                            
-                            <i class="fas fa-bookmark fa-fw icon-category"></i>
-                            
-                            <a href="/categories/Deep-Learning/" class="post-category">
-                                    Deep Learning
-                                </a>
-                            
-                            
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/tags/PyTorch/">
-                        <span class="chip bg-color">PyTorch</span>
                     </a>
                     
                 </div>
@@ -1362,7 +1571,7 @@ $(function () {
     
     <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/instantpage/instantpage.js" type="module"></script>
     
-<script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script>
+
         <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
         <script>
         $('a').each(function() {
@@ -1381,7 +1590,7 @@ $(function () {
             }
           }
         });
-        </script></body>
+        </script><script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script></body>
 
 </html>
 
