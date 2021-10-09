@@ -1,0 +1,1648 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="DL专栏7&gt;CNN调优方法, JackHCC">
+    <meta name="description" content="CNN调优方法总结">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>DL专栏7&gt;CNN调优方法 | JackHCC</title>
+    <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/my.css">
+    
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/jquery/jquery.min.js"></script>
+    
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper head-container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/me.jpg" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">JackHCC</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>留言板</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>友情链接</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/me.jpg" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">JackHCC</div>
+        <div class="logo-desc">
+            
+            Make the world betterrrr!!!
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			留言板
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			友情链接
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/JackHCC/JackHCC.github.io" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/JackHCC/JackHCC.github.io" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/9.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">DL专栏7&gt;CNN调优方法</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        height: calc(100vh - 250px);
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 30px;
+        bottom: 146px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/CNN/">
+                                <span class="chip bg-color">CNN</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/Deep-Learning/" class="post-category">
+                                Deep Learning
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2021-10-10
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2021-10-07
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    9.4k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    34 分
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h2 id="针对CNN优化的总结"><a href="#针对CNN优化的总结" class="headerlink" title="针对CNN优化的总结"></a>针对CNN优化的总结</h2><p>Systematic evaluation of CNN advances on the ImageNet</p>
+<ul>
+<li>使用没有 batchnorm 的 ELU 非线性或者有 batchnorm 的 ReLU。</li>
+<li>用类似1*1的网络结构预训练RGB数据，能得到更好的效果。</li>
+<li>使用线性学习率衰退策略。</li>
+<li>使用平均和最大池化层的和。</li>
+<li>使用大约 128（0.005） 到 256 （0.01）的 mini-batch 大小。如果这对你的 GPU 而言太大，将学习率按比例降到这个大小就行。</li>
+<li>使用卷积层代替之前的MLP中的线性层，并用平均池化层预测。</li>
+<li>当研究增加训练集大小的时候，需要确定数据集对性能提升的平衡点。</li>
+<li>数据的质量要比数据大小更重要。</li>
+<li>如果你不能增加输入图像的大小，在随后的层上减少步幅（stride），这样做有同样的效果。</li>
+<li>如果你的网络有复杂和高度优化的架构，像是 GoogLeNet，那修改一定要谨慎。</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007150205951.png" alt=""></p>
+<h2 id="有助于充分利用-DNN-的小技巧"><a href="#有助于充分利用-DNN-的小技巧" class="headerlink" title="有助于充分利用 DNN 的小技巧"></a>有助于充分利用 DNN 的小技巧</h2><ul>
+<li>记得要 shuffle。不要让你的网络通过完全相同的 minibatch，如果框架允许，在每个 epoch 都 shuffle 一次。</li>
+<li>扩展数据集。DNN 需要大量的数据，而且模型在小的数据集上很容易过拟合。我强烈建议你要扩展原始的数据集。如果你的是一个视觉任务，可以增加噪点、增白，减少像素，旋转或色移，模糊，等等可以扩展的一切。有一点不好的是，假如你扩展得太大，可能训练的数据大多数是相同的。我创建了一个应用随机变换的层来解决这个问题，这样就不会有相同的样本。若果你用的是语音数据，可以进行移位和失真处理。</li>
+<li>在整个数据集上训练之前，先在非常小的子数据集上训练进行过拟合，这样你会知道你的网络可以收敛。这个 tip 来自 Karpathy。</li>
+<li>始终使用 dropout 将过拟合的几率最小化。在大小 &gt; 256 （完全连接层或卷积层）之后就应该使用 dropout。关于这一点有一篇很好的论文：Dropout as a Bayesian Approximation: Representing Model Uncertainty in Deep Learning [Gal Yarin &amp; Zoubin Ghahramani，2015].</li>
+<li>避免 LRN 池化，MAX 池化会更快。</li>
+<li>避免 Sigmoid/TanH 的门，它们代价昂贵，容易饱和，而且可能会停止反向传播。实际上，你的网络越深，就越应该避免使用 Sigmoid 和 TanH。可以使用更便宜而且更有效的 ReLU 和 PreLU 的门，正如在 Yoshua Bengio 等人的论文 Deep Sparse Rectifier Neural Networks 中所提到的，这两者能够促进稀疏性，而且它们的反向传播更加鲁棒。</li>
+<li>在最大池化之前不要使用 ReLU 或 PreLU ，而是在保存计算之后使用它。</li>
+<li>不要使用 ReLU ，它们太旧了。虽然他们是非常有用的非线性函数，可以解决很多问题。但是，你可以试试用它微调一个新模型，由于 ReLU 阻碍反向传播，初始化不好，你没法得到任何微调效果。但是你应该用 PreLU 以及一个非常小的乘数，通常是0.1。使用 PreLU 的话收敛更快，而且不会像 ReLU 那样在初始阶段被卡住。ELU 也很好，但成本高。</li>
+<li>经常使用批标准化。参考论文：Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift [Sergey Ioffe &amp; Christian Szegedy,2015]。这会很有效。批标准化允许更快的收敛（非常快）以及更小的数据集。这样你能够节省时间和资源。</li>
+<li>虽然大多数人喜欢删除平均值，不过我不喜欢。我喜欢压缩输入数据为[-1，+1]。这可以说是训练和部署方面的技巧，而不是针对提升性能的技巧。</li>
+<li>要能适用更小的模型。假如你是像我这样部署深度学习模型，你很快就会体会到把千兆字节规模的模型推给用户或地球另一端的服务器的痛苦。哪怕要牺牲一些准确度，也应该小型化。</li>
+<li>假如你使用比较小的模型，可以试试 ensemble。通常 ensemble 5个网络能够提升准确度约3%。</li>
+<li>尽可能使用 xavier 初始化。你可以只在大的完全连接层上使用它，然后避免在 CNN 层上使用。有关这点的解释可以阅读这篇文章：An Explanation of Xavier Initialization（by Andy Jones）</li>
+<li>如果你的输入数据有空间参数，可以试试端到端的 CNN。可以阅读这篇论文：SqueezeNet: AlexNet-level accuracy with 50x fewer parameters and &lt;0.5MB model size [Forrest N. Iandola et. al. 2016]，它介绍了一种新的方法，而且性能非常好，你可以尝试应用上面提到的tips。</li>
+<li>修改你的模型，只要可能就使用 1x1 的 CNN 层，它的位置对提高性能很有帮助。</li>
+<li>假如没有高端的 GPU，就不要尝试训练任何东西了。</li>
+<li>假如你要利用模型或你自己的层来制作模板，记得把所有东西参数化，否则你得重建所有二进制文件。</li>
+<li>最后，要明白你在做什么。深度学习就像是机器学习里的中子弹，它不是任何任务、任何时候都有效的。了解你正在使用的结构以及你试图达成的目的，才不至于盲目地复制模型。</li>
+</ul>
+<h2 id="提升算法性能思路"><a href="#提升算法性能思路" class="headerlink" title="提升算法性能思路"></a>提升算法性能思路</h2><p>分为四个部分： </p>
+<ol>
+<li><p>通过数据提升性能 </p>
+</li>
+<li><p>通过算法提升性能 </p>
+</li>
+<li><p>通过算法调参提升性能 </p>
+</li>
+<li><p>通过嵌套模型提升性能</p>
+</li>
+</ol>
+<p>通常来讲，随着列表自上而下，性能的提升也将变小。例如，对问题进行新的架构或者获取更多的数据，通常比调整最优算法的参数能带来更好的效果。虽然并不总是这样，但是通常来讲是的。</p>
+<p>我已经把相应的链接加入了博客的教程中，相应网站的问题中，以及经典的Neural Net FAQ中。</p>
+<p>部分思路只适用于人工神经网络，但是大部分是通用的。通用到足够你用来配合其他技术来碰撞出提升模型性能的方法。</p>
+<h3 id="通过数据提升性能"><a href="#通过数据提升性能" class="headerlink" title="通过数据提升性能"></a><strong>通过数据提升性能</strong></h3><p>对你的训练数据和问题定义进行适当改变，你能得到很大的性能提升。或许是最大的性能提升。</p>
+<ol>
+<li>获取更多数据</li>
+<li>创造更多数据</li>
+<li>重放缩你的数据</li>
+<li>转换你的数据</li>
+<li>特征选取</li>
+<li>重架构你的问题</li>
+</ol>
+<h4 id="1-获取更多数据"><a href="#1-获取更多数据" class="headerlink" title="1) 获取更多数据"></a><strong>1) 获取更多数据</strong></h4><p>你能获取更多训练数据吗？ </p>
+<p>你的模型的质量通常受到你的训练数据质量的限制。为了得到最好的模型，你首先应该想办法获得最好的数据。你也想尽可能多的获得那些最好的数据。</p>
+<p>有更多的数据，深度学习和其他现代的非线性机器学习技术有更全的学习源，能学得更好，深度学习尤为如此。这也是机器学习对大家充满吸引力的很大一个原因（世界到处都是数据）。</p>
+<p>更多的数据并不是总是有用，但是确实有帮助。于我而言，如果可以，我会选择获取更多的数据。</p>
+<p>可以参见以下相关阅读： Datasets Over Algorithms（<a href="http://www.edge.org/response-detail/26587）" target="_blank" rel="noopener">www.edge.org/response-detail/26587）</a></p>
+<h4 id="2-创造更多数据"><a href="#2-创造更多数据" class="headerlink" title="2) 创造更多数据"></a><strong>2) 创造更多数据</strong></h4><p>上一小节说到了有了更多数据，深度学习算法通常会变的更好。有些时候你可能无法合理地获取更多数据，那你可以试试创造更多数据。</p>
+<ul>
+<li>如果你的数据是数值型向量，可以随机构造已有向量的修改版本。</li>
+<li>如果你的数据是图片，可以随机构造已有图片的修改版本(平移、截取、旋转等)。</li>
+<li>如果你的数据是文本，类似的操作……</li>
+</ul>
+<p>这通常被称作数据扩增（data augmentation）或者数据生成（data generation）。</p>
+<p>你可以利用一个生成模型。你也可以用一些简单的技巧。例如，针对图片数据，你可以通过随机地平移或旋转已有图片获取性能的提升。如果新数据中包含了这种转换，则提升了模型的泛化能力。</p>
+<p>这也与增加噪声是相关的，我们习惯称之为增加扰动。它起到了与正则化方法类似的作用，即抑制训练数据的过拟合。</p>
+<p>以下是相关阅读：</p>
+<ul>
+<li>Image Augmentation for Deep Learning With Keras（<a href="http://machinelearningmastery.com/image-augmentation-deep-learning-keras/）" target="_blank" rel="noopener">http://machinelearningmastery.com/image-augmentation-deep-learning-keras/）</a></li>
+<li>What is jitter? (Training with noise)（<a href="ftp://ftp.sas.com/pub/neural/FAQ3.html#A_jitter）" target="_blank" rel="noopener">ftp://ftp.sas.com/pub/neural/FAQ3.html#A_jitter）</a></li>
+</ul>
+<h4 id="3-重缩放-rescale-你的数据"><a href="#3-重缩放-rescale-你的数据" class="headerlink" title="3) 重缩放(rescale)你的数据"></a><strong>3) 重缩放(rescale)你的数据</strong></h4><p>这是一个快速获得性能提升的方法。<br>当应用神经网络时，一个传统的经验法则是：重缩放(rescale)你的数据至激活函数的边界。</p>
+<p>如果你在使用sigmoid激活函数，重缩放你的数据到0和1的区间里。如果你在使用双曲正切（tanh）激活函数，重缩放数据到－1和1的区间里。</p>
+<p>这种方法可以被应用到输入数据（x）和输出数据（y）。例如，如果你在输出层使用sigmoid函数去预测二元分类的结果，应当标准化y值，使之成为二元的。如果你在使用softmax函数，你依旧可以通过标准化y值来获益。</p>
+<p>这依旧是一个好的经验法则，但是我想更深入一点。我建议你可以参考下述方法来创造一些训练数据的不同的版本：</p>
+<ul>
+<li>归一化到0和1的区间。</li>
+<li>重放缩到－1和1的区间</li>
+<li>标准化（译者注：标准化数据使之成为零均值，单位标准差）</li>
+</ul>
+<p>然后对每一种方法，评估你的模型的性能，选取最好的进行使用。如果你改变了你的激活函数，重复这一过程。</p>
+<p>在神经网络中，大的数值累积效应(叠加叠乘)并不是好事，除上述方法之外，还有其他的方法来控制你的神经网络中数据的数值大小，譬如归一化激活函数和权重，我们会在以后讨论这些技术。</p>
+<p>以下为相关阅读：</p>
+<ul>
+<li>Should I standardize the input variables (column vectors)?（<a href="ftp://ftp.sas.com/pub/neural/FAQ2.html#A_std）" target="_blank" rel="noopener">ftp://ftp.sas.com/pub/neural/FAQ2.html#A_std）</a></li>
+<li>How To Prepare Your Data For Machine Learning in Python with Scikit-Learn（<a href="http://machinelearningmastery.com/prepare-data-machine-learning-python-scikit-learn/）" target="_blank" rel="noopener">http://machinelearningmastery.com/prepare-data-machine-learning-python-scikit-learn/）</a></li>
+</ul>
+<h4 id="4-数据变换"><a href="#4-数据变换" class="headerlink" title="4) 数据变换"></a><strong>4) 数据变换</strong></h4><p>这里的数据变换与上述的重缩放方法类似，但需要更多工作。<br>你必须非常熟悉你的数据。通过可视化来考察离群点。</p>
+<p>猜测每一列数据的单变量分布。</p>
+<ul>
+<li>列数据看起来像偏斜的高斯分布吗？考虑用Box-Cox变换调整偏态。</li>
+<li>列数据看起来像指数分布吗？考虑用对数变换。</li>
+<li>列数据看起来有一些特征，但是它们被一些明显的东西遮盖了，尝试取平方或者开平方根来转换数据</li>
+<li>你能离散化一个特征或者以某种方式组合特征，来更好地突出一些特征吗？</li>
+</ul>
+<p>依靠你的直觉，尝试以下方法。</p>
+<ul>
+<li>你能利用类似PCA的投影方法来预处理数据吗？</li>
+<li>你能综合多维特征至一个单一数值(特征)吗？</li>
+<li>你能用一个新的布尔标签去发现问题中存在一些有趣的方面吗？</li>
+<li>你能用其他方法探索出目前场景下的其他特殊结构吗？</li>
+</ul>
+<p>神经网层擅长特征学习(feature engineering)。它(自己)可以做到这件事。但是如果你能更好的发现问题到网络中的结构，神经网层会学习地更快。你可以对你的数据就不同的转换方式进行抽样调查，或者尝试特定的性质，来看哪些有用，哪些没用。</p>
+<p>以下是相关阅读：</p>
+<ul>
+<li>How to Define Your Machine Learning Problem（<a href="http://machinelearningmastery.com/how-to-define-your-machine-learning-problem/）" target="_blank" rel="noopener">http://machinelearningmastery.com/how-to-define-your-machine-learning-problem/）</a></li>
+<li>Discover Feature Engineering, How to Engineer Features and How to Get Good at It（<a href="http://machinelearningmastery.com/discover-feature-engineering-how-to-engineer-features-and-how-to-get-good-at-it/）" target="_blank" rel="noopener">http://machinelearningmastery.com/discover-feature-engineering-how-to-engineer-features-and-how-to-get-good-at-it/）</a></li>
+<li>How To Prepare Your Data For Machine Learning in Python with Scikit-Learn（<a href="http://machinelearningmastery.com/prepare-data-machine-learning-python-scikit-learn/）" target="_blank" rel="noopener">http://machinelearningmastery.com/prepare-data-machine-learning-python-scikit-learn/）</a></li>
+</ul>
+<h4 id="5-特征选择"><a href="#5-特征选择" class="headerlink" title="5) 特征选择"></a><strong>5) 特征选择</strong></h4><p>一般说来，神经网络对不相关的特征是具有鲁棒的(校对注：即不相关的特征不会很大影响神经网络的训练和效果)。它们会用近似于0的权重来弱化那些没有预测能力的特征的贡献。</p>
+<p>尽管如此，这些无关的数据特征，在训练周期依旧要耗费大量的资源。所以你能去除数据里的一些特征吗？</p>
+<p>有许多特征选择的方法和特征重要性的方法，这些方法能够给你提供思路，哪些特征该保留，哪些特征该剔除。最简单的方式就是对比所有特征和部分特征的效果。<br>同样的，如果你有时间，我建议在同一个网络中尝试选择不同的视角来看待你的问题，评估它们，来看看分别有怎样的性能。</p>
+<ul>
+<li>或许你利用更少的特征就能达到同等甚至更好的性能。而且，这将使模型变得更快！</li>
+<li>或许所有的特征选择方法都剔除了同样的特征子集。很好，这些方法在没用的特征上达成了一致。</li>
+<li>或许筛选过后的特征子集，能带给特征工程的新思路。</li>
+</ul>
+<p>以下是相关阅读：</p>
+<ul>
+<li>An Introduction to Feature Selection（<a href="http://machinelearningmastery.com/an-introduction-to-feature-selection/）" target="_blank" rel="noopener">http://machinelearningmastery.com/an-introduction-to-feature-selection/）</a></li>
+<li>Feature Selection For Machine Learning in Python（<a href="http://machinelearningmastery.com/feature-selection-machine-learning-python/）" target="_blank" rel="noopener">http://machinelearningmastery.com/feature-selection-machine-learning-python/）</a></li>
+</ul>
+<h4 id="6-重新架构你的问题"><a href="#6-重新架构你的问题" class="headerlink" title="6) 重新架构你的问题"></a><strong>6) 重新架构你的问题</strong></h4><p>有时候要试试从你当前定义的问题中跳出来，想想你所收集到的观察值是定义你问题的唯一方式吗？或许存在其他方法。或许其他构建问题的方式能够更好地揭示待学习问题的结构。</p>
+<p>我真的很喜欢这个尝试，因为它迫使你打开自己的思路。这确实很难，尤其是当你已经对当前的方法投入了大量的时间和金钱时。</p>
+<p>但是咱们这么想想，即使你列出了3-5个可供替代的建构方案，而且最终还是放弃了它们，但这至少说明你对当前的方案更加自信了。</p>
+<ul>
+<li>看看能够在一个时间窗（时间周期）内对已有的特征/数据做一个合并。</li>
+<li>或许你的分类问题可以成为一个回归问题(有时候是回归到分类)。</li>
+<li>或许你的二元输出可以变成softmax输出？</li>
+<li>或许你可以转而对子问题进行建模。</li>
+</ul>
+<p>仔细思考你的问题，最好在你选定工具之前就考虑用不同方法构建你的问题，因为此时你对解决方案并没有花费太多的投入。除此之外，如果你在某个问题上卡住了，这样一个简单的尝试能释放更多新的想法。</p>
+<p>而且，这并不代表你之前的工作白干了，关于这点你可以看看后续的模型嵌套部分。</p>
+<p>以下为相关阅读：</p>
+<ul>
+<li>How to Define Your Machine Learning Problem（<a href="http://machinelearningmastery.com/how-to-define-your-machine-learning-problem/）" target="_blank" rel="noopener">http://machinelearningmastery.com/how-to-define-your-machine-learning-problem/）</a></li>
+</ul>
+<h3 id="通过算法提升性能"><a href="#通过算法提升性能" class="headerlink" title="通过算法提升性能"></a>通过算法提升性能</h3><p>机器学习当然是用算法解决问题。</p>
+<p>所有的理论和数学都是描绘了应用不同的方法从数据中学习一个决策过程（如果我们这里只讨论预测模型）。</p>
+<ol>
+<li>对算法进行抽样调查</li>
+<li>借鉴已有文献</li>
+<li>重采样方法</li>
+</ol>
+<h4 id="1-对算法进行抽样调查"><a href="#1-对算法进行抽样调查" class="headerlink" title="1) 对算法进行抽样调查"></a><strong>1) 对算法进行抽样调查</strong></h4><p>其实你事先无法知道，针对你的问题哪个算法是最优的。如果你知道，你可能就不需要机器学习了。那有没有什么数据(办法)可以证明你选择的方法是正确的？</p>
+<p>让我们来解决这个难题。当从所有可能的问题中平均来看各算法的性能时，没有哪个算法能够永远胜过其他算法。所有的算法都是平等的，下面是在no free lunch theorem中的一个总结。</p>
+<p>或许你选择的算法不是针对你的问题最优的那个</p>
+<p>我们不是在尝试解决所有问题，算法世界中有很多新热的方法，可是它们可能并不是针对你数据集的最优算法。</p>
+<p>我的建议是收集(证据)数据指标。接受更好的算法或许存在这一观点，并且给予其他算法在解决你的问题上“公平竞争”的机会。</p>
+<p>抽样调查一系列可行的方法，来看看哪些还不错，哪些不理想。</p>
+<ul>
+<li>首先尝试评估一些线性方法，例如逻辑回归（logistic regression）和线性判别分析（linear discriminate analysis）。</li>
+<li>评估一些树类模型，例如CART， 随机森林（Random Forest）和Gradient Boosting。</li>
+<li>评估一些实例方法，例如支持向量机（SVM）和K-近邻（kNN）。</li>
+<li>评估一些其他的神经网络方法，例如LVQ, MLP, CNN, LSTM, hybrids等</li>
+</ul>
+<p>选取性能最好的算法，然后通过进一步的调参和数据准备来提升。尤其注意对比一下深度学习和其他常规机器学习方法，对上述结果进行排名，比较他们的优劣。</p>
+<p>很多时候你会发现在你的问题上可以不用深度学习，而是使用一些更简单，训练速度更快，甚至是更容易理解的算法。</p>
+<p>以下为相关阅读：</p>
+<ul>
+<li>A Data-Driven Approach to Machine Learning（<a href="http://machinelearningmastery.com/a-data-driven-approach-to-machine-learning/）" target="_blank" rel="noopener">http://machinelearningmastery.com/a-data-driven-approach-to-machine-learning/）</a></li>
+<li>Why you should be Spot-Checking Algorithms on your Machine Learning Problems（<a href="http://machinelearningmastery.com/why-you-should-be-spot-checking-algorithms-on-your-machine-learning-problems/）" target="_blank" rel="noopener">http://machinelearningmastery.com/why-you-should-be-spot-checking-algorithms-on-your-machine-learning-problems/）</a></li>
+<li>Spot-Check Classification Machine Learning Algorithms in Python with scikit-learn（<a href="http://machinelearningmastery.com/spot-check-classification-machine-learning-algorithms-python-scikit-learn/）" target="_blank" rel="noopener">http://machinelearningmastery.com/spot-check-classification-machine-learning-algorithms-python-scikit-learn/）</a></li>
+</ul>
+<h4 id="2-借鉴已有文献"><a href="#2-借鉴已有文献" class="headerlink" title="2) 借鉴已有文献"></a><strong>2) 借鉴已有文献</strong></h4><p>方法选择的一个捷径是借鉴已有的文献资料。可能有人已经研究过与你的问题相关的问题，你可以看看他们用的什么方法。</p>
+<p>你可以阅读论文，书籍，博客，问答网站，教程，以及任何能在谷歌搜索到的东西。</p>
+<p>写下所有的想法，然后用你的方式把他们研究一遍。</p>
+<p>这不是复制别人的研究，而是启发你想出新的想法，一些你从没想到但是却有可能带来性能提升的想法。</p>
+<p>发表的研究通常都是非常赞的。世界上有非常多聪明的人，写了很多有趣的东西。你应当好好挖掘这个“图书馆”，找到你想要的东西。</p>
+<p>以下为相关阅读：</p>
+<ul>
+<li>How to Research a Machine Learning Algorithm（<a href="http://machinelearningmastery.com/how-to-research-a-machine-learning-algorithm/）" target="_blank" rel="noopener">http://machinelearningmastery.com/how-to-research-a-machine-learning-algorithm/）</a></li>
+<li>Google Scholar（<a href="http://scholar.google.com/）" target="_blank" rel="noopener">http://scholar.google.com/）</a></li>
+</ul>
+<h4 id="3-重采样方法"><a href="#3-重采样方法" class="headerlink" title="3) 重采样方法"></a><strong>3) 重采样方法</strong></h4><p>你必须知道你的模型效果如何。你对模型性能的估计可靠吗？</p>
+<p>深度学习模型在训练阶段非常缓慢。这通常意味着，我们无法用一些常用的方法，例如k层交叉验证，去估计模型的性能。</p>
+<ul>
+<li>或许你在使用一个简单的训练集／测试集分割，这是常规套路。如果是这样，你需要确保这种分割针对你的问题具有代表性。单变量统计和可视化是一个好的开始。</li>
+<li>或许你能利用硬件来加速估计的过程。例如，如果你有集群或者AWS云端服务（Amazon Web Services）账号，你可以并行地训练n个模型，然后获取结果的均值和标准差来得到更鲁棒的估计。</li>
+<li>或许你可以利用hold-out验证方法来了解模型在训练后的性能（这在早停法（early stopping）中很有用，后面会讲到）。</li>
+<li>或许你可以先隐藏一个完全没用过的验证集，等到你已经完成模型选择之后再使用它。</li>
+</ul>
+<p>而有时候另外的方式，或许你能够让数据集变得更小，以及使用更强的重采样方法。</p>
+<ul>
+<li>有些情况下你会发现在训练集的一部分样本上训练得到的模型的性能，和在整个数据集上训练得到的模型的性能有很强的相关性。也许你可以先在小数据集上完成模型选择和参数调优，然后再将最终的方法扩展到全部数据集上。</li>
+<li>或许你可以用某些方式限制数据集，只取一部分样本，然后用它进行全部的建模过程。</li>
+</ul>
+<p>以下为相关阅读：</p>
+<ul>
+<li>Evaluate the Performance Of Deep Learning Models in Keras（<a href="http://machinelearningmastery.com/evaluate-performance-deep-learning-models-keras/）" target="_blank" rel="noopener">http://machinelearningmastery.com/evaluate-performance-deep-learning-models-keras/）</a></li>
+<li>Evaluate the Performance of Machine Learning Algorithms in Python using Resampling（<a href="http://machinelearningmastery.com/evaluate-performance-machine-learning-algorithms-python-using-resampling/）" target="_blank" rel="noopener">http://machinelearningmastery.com/evaluate-performance-machine-learning-algorithms-python-using-resampling/）</a></li>
+</ul>
+<h3 id="通过算法调参提升性能"><a href="#通过算法调参提升性能" class="headerlink" title="通过算法调参提升性能"></a>通过算法调参提升性能</h3><p>这通常是工作的关键所在。你经常可以通过抽样调查快速地发现一个或两个性能优秀的算法。但是如果想得到最优的算法可能需要几天，几周，甚至几个月。</p>
+<p>为了获得更优的模型，以下是对神经网络算法进行参数调优的几点思路：</p>
+<ol>
+<li>诊断（Diagnostics）</li>
+<li>权重初始化（Weight Initialization）</li>
+<li>学习速率（Learning Rate）</li>
+<li>激活函数</li>
+<li>网络拓扑（Network Topology）</li>
+<li>批次和周期（Batches and Epochs）</li>
+<li>正则化</li>
+<li>优化和损失</li>
+<li>早停法</li>
+</ol>
+<p>你可能需要训练一个给定“参数配置”的神经网络模型很多次（3-10次甚至更多），才能得到一个估计性能不错的参数配置。这一点几乎适用于这一节中你能够调参的所有方面。</p>
+<p>关于超参数优化请参阅博文：</p>
+<ul>
+<li>How to Grid Search Hyperparameters for Deep Learning Models in Python With Keras（<a href="http://machinelearningmastery.com/grid-search-hyperparameters-deep-learning-models-python-keras/）" target="_blank" rel="noopener">http://machinelearningmastery.com/grid-search-hyperparameters-deep-learning-models-python-keras/）</a></li>
+</ul>
+<h4 id="1-诊断"><a href="#1-诊断" class="headerlink" title="1) 诊断"></a><strong>1) 诊断</strong></h4><p>如果你能知道为什么你的模型性能不再提高了，你就能获得拥有更好性能的模型。</p>
+<p>你的模型是过拟合还是欠拟合？永远牢记这个问题。永远。</p>
+<p>模型总是会遇到过拟合或者欠拟合，只是程度不同罢了。一个快速了解模型学习行为的方法是，在每个周期，评估模型在训练集和验证集上的表现，并作出图表。</p>
+<ul>
+<li>如果训练集上的模型总是优于验证集上的模型，你可能遇到了过拟合，你可以使用诸如正则化的方法。</li>
+<li>如果训练集和验证集上的模型都很差，你可能遇到了欠拟合，你可以提升网络的容量，以及训练更多或者更久。</li>
+<li>如果有一个拐点存在，在那之后训练集上的模型开始优于验证集上的模型，你可能需要使用早停法。</li>
+</ul>
+<p>经常画一画这些图表，学习它们来了解不同的方法，你能够提升模型的性能。这些图表可能是你能创造的最有价值的（模型状态）诊断信息。</p>
+<p>另一个有用的诊断是网络模型判定对和判定错的观察值。</p>
+<ul>
+<li>对于难以训练的样本，或许你需要更多的数据。</li>
+<li>或许你应该剔除训练集中易于建模的多余的样本。</li>
+<li>也许可以尝试对训练集划分不同的区域，在特定区域中用更专长的模型。</li>
+</ul>
+<p>以下为相关阅读：</p>
+<ul>
+<li>Display Deep Learning Model Training History in Keras（<a href="http://machinelearningmastery.com/display-deep-learning-model-training-history-in-keras/）" target="_blank" rel="noopener">http://machinelearningmastery.com/display-deep-learning-model-training-history-in-keras/）</a></li>
+<li>Overfitting and Underfitting With Machine Learning Algorithms（<a href="http://machinelearningmastery.com/overfitting-and-underfitting-with-machine-learning-algorithms/）" target="_blank" rel="noopener">http://machinelearningmastery.com/overfitting-and-underfitting-with-machine-learning-algorithms/）</a></li>
+</ul>
+<h4 id="2-权重初始化"><a href="#2-权重初始化" class="headerlink" title="2) 权重初始化"></a><strong>2) 权重初始化</strong></h4><p>经验法则通常是：用小的随机数进行初始化。</p>
+<p>在实践中，这可能依旧效果不错，但是对于你的网络来说是最佳的吗？对于不同的激活函数也有一些启发式的初始化方法，但是在实践应用中并没有太多不同。</p>
+<p>固定你的网络，然后尝试多种初始化方式。</p>
+<p>记住，权重是你的模型真正的参数，你需要找到他们。有很多组权重都能有不错的性能表现，但我们要尽量找到最好的。</p>
+<ul>
+<li>尝试所有不同的初始化方法，考察是否有一种方法在其他情况不变的情况下(效果)更优。</li>
+<li>尝试用无监督的方法，例如自动编码（autoencoder），来进行预先学习。</li>
+<li>尝试使用一个已经存在的模型，只是针对你的问题重新训练输入层和输出层（迁移学习（transfer learning））</li>
+</ul>
+<p>需要提醒的一点是，改变权重初始化方法和激活函数，甚至优化函数/损失函数紧密相关。</p>
+<p>以下为相关阅读：</p>
+<ul>
+<li>Initialization of deep networks（<a href="http://deepdish.io/2015/02/24/network-initialization/）" target="_blank" rel="noopener">http://deepdish.io/2015/02/24/network-initialization/）</a></li>
+</ul>
+<h4 id="3-学习率"><a href="#3-学习率" class="headerlink" title="3) 学习率"></a>3) 学习率</h4><p>调整学习率很多时候也是行之有效的时段。</p>
+<p>以下是可供探索的一些想法：</p>
+<ul>
+<li>实验很大和很小的学习率</li>
+<li>格点搜索文献里常见的学习速率值，考察你能学习多深的网络。</li>
+<li>尝试随周期递减的学习率</li>
+<li>尝试经过固定周期数后按比例减小的学习率。</li>
+<li>尝试增加一个动量项（momentum term），然后对学习速率和动量同时进行格点搜索。</li>
+</ul>
+<p>越大的网络需要越多的训练，反之亦然。如果你添加了太多的神经元和层数，适当提升你的学习速率。同时学习率需要和训练周期，batch size大小以及优化方法联系在一起考虑。</p>
+<p>以下为相关阅读：</p>
+<ul>
+<li>Using Learning Rate Schedules for Deep Learning Models in Python with Keras（<a href="http://machinelearningmastery.com/using-learning-rate-schedules-deep-learning-models-python-keras/）" target="_blank" rel="noopener">http://machinelearningmastery.com/using-learning-rate-schedules-deep-learning-models-python-keras/）</a></li>
+<li>What learning rate should be used for backprop?（<a href="ftp://ftp.sas.com/pub/neural/FAQ2.html#A_learn_rate）" target="_blank" rel="noopener">ftp://ftp.sas.com/pub/neural/FAQ2.html#A_learn_rate）</a></li>
+</ul>
+<h4 id="4-激活函数"><a href="#4-激活函数" class="headerlink" title="4) 激活函数"></a><strong>4) 激活函数</strong></h4><p>你或许应该使用修正激活函数（rectifier activation functions）。他们也许能提供更好的性能。</p>
+<p>在这之前，最早的激活函数是sigmoid和tanh，之后是softmax, 线性激活函数，或者输出层上的sigmoid函数。我不建议尝试更多的激活函数，除非你知道你自己在干什么。</p>
+<p>尝试全部三种激活函数，并且重缩放你的数据以满足激活函数的边界。</p>
+<p>显然，你想要为输出的形式选择正确的传递函数，但是可以考虑一下探索不同表示。例如，把在二元分类问题上使用的sigmoid函数切换到回归问题上使用的线性函数，然后后置处理你的输出。这可能需要改变损失函数使之更合适。详情参阅数据转换那一节。</p>
+<p>以下为相关阅读：</p>
+<ul>
+<li>Why use activation functions?（<a href="ftp://ftp.sas.com/pub/neural/FAQ2.html#A_act）" target="_blank" rel="noopener">ftp://ftp.sas.com/pub/neural/FAQ2.html#A_act）</a></li>
+</ul>
+<h4 id="5-网络拓扑"><a href="#5-网络拓扑" class="headerlink" title="5) 网络拓扑"></a><strong>5) 网络拓扑</strong></h4><p>网络结构的改变能带来好处。</p>
+<p>你需要多少层以及多少个神经元？抱歉没有人知道。不要问这种问题…</p>
+<p>那怎么找到适用你的问题的配置呢？去实验吧。</p>
+<ul>
+<li>尝试一个隐藏层和许多神经元（广度模型）。</li>
+<li>尝试一个深的网络，但是每层只有很少的神经元（深度模型）。</li>
+<li>尝试上述两种方法的组合。</li>
+<li>借鉴研究问题与你的类似的论文里面的结构。</li>
+<li>尝试拓扑模式（扇出（fan out）然后扇入（fan in））和书籍论文里的经验法则（下有链接）</li>
+</ul>
+<p>选择总是很困难的。通常说来越大的网络有越强的代表能力，或许你需要它。越多的层数可以提供更强的从数据中学到的抽象特征的能力。或许需要它。</p>
+<p>深层的神经网络需要更多的训练，无论是训练周期还是学习率，都应该相应地进行调整。</p>
+<p>以下为相关阅读：<br>这些链接会给你很多启发该尝试哪些事情，至少对我来说是的。</p>
+<ul>
+<li>How many hidden layers should I use?（<a href="ftp://ftp.sas.com/pub/neural/FAQ3.html#A_hl）" target="_blank" rel="noopener">ftp://ftp.sas.com/pub/neural/FAQ3.html#A_hl）</a></li>
+<li>How many hidden units should I use?（<a href="ftp://ftp.sas.com/pub/neural/FAQ3.html#A_hu）" target="_blank" rel="noopener">ftp://ftp.sas.com/pub/neural/FAQ3.html#A_hu）</a></li>
+</ul>
+<h4 id="6-Batches和周期"><a href="#6-Batches和周期" class="headerlink" title="6) Batches和周期"></a><strong>6) Batches和周期</strong></h4><p>batch size大小会决定最后的梯度，以及更新权重的频度。一个周期(epoch)指的是神经网络看一遍全部训练数据的过程。</p>
+<p>你是否已经试验了不同的批次batch size和周期数？<br>之前，我们已经讨论了学习率，网络大小和周期之间的关系。</p>
+<p>在很深的网络结构里你会经常看到：小的batch size配以大的训练周期。</p>
+<p>下面这些或许能有助于你的问题，也或许不能。你要在自己的数据上尝试和观察。</p>
+<ul>
+<li>尝试选取与训练数据同大小的batch size，但注意一下内存（批次学习（batch learning））</li>
+<li>尝试选取1作为batch size（在线学习（online learning））</li>
+<li>尝试用格点搜索不同的小的batch size（8，16，32，…）</li>
+<li>分别尝试训练少量周期和大量周期。</li>
+</ul>
+<p>考虑一个接近无穷的周期值(持续训练)，去记录到目前为止能得到的最佳的模型。</p>
+<p>一些网络结构对batch size更敏感。我知道多层感知器（Multilayer Perceptrons）通常对batch size是鲁棒的，而LSTM和CNNs比较敏感，但是这只是一个说法（仅供参考）。</p>
+<p>以下为相关阅读：</p>
+<ul>
+<li>What are batch, incremental, on-line … learning?（<a href="ftp://ftp.sas.com/pub/neural/FAQ2.html#A_styles）" target="_blank" rel="noopener">ftp://ftp.sas.com/pub/neural/FAQ2.html#A_styles）</a></li>
+<li>Intuitively, how does mini-batch size affect the performance of (stochastic) gradient descent?（<a href="https://www.quora.com/Intuitively-how-does-mini-batch-size-affect-the-performance-of-stochastic-gradient-descent）" target="_blank" rel="noopener">https://www.quora.com/Intuitively-how-does-mini-batch-size-affect-the-performance-of-stochastic-gradient-descent）</a></li>
+</ul>
+<h4 id="7-正则化"><a href="#7-正则化" class="headerlink" title="7) 正则化"></a><strong>7) 正则化</strong></h4><p>正则化是一个避免模型在训练集上过拟合的好方法。</p>
+<p>神经网络里最新最热的正则化技术是dropout方法，你是否试过？dropout方法在训练阶段随机地跳过一些神经元，驱动这一层其他的神经元去捕捉松弛。简单而有效。你可以从dropout方法开始。</p>
+<ul>
+<li>格点搜索不同的丢失比例。</li>
+<li>分别在输入，隐藏层和输出层中试验dropout方法</li>
+<li>dropout方法也有一些拓展，比如你也可以尝试drop connect方法。</li>
+</ul>
+<p>也可以尝试其他更传统的神经网络正则化方法，例如：</p>
+<ul>
+<li>权重衰减（Weight decay）去惩罚大的权重</li>
+<li>激活约束（Activation constraint）去惩罚大的激活值</li>
+</ul>
+<p>你也可以试验惩罚不同的方面，或者使用不同种类的惩罚/正则化（L1, L2, 或者二者同时）</p>
+<p>以下是相关阅读：</p>
+<ul>
+<li>Dropout Regularization in Deep Learning Models With Keras（<a href="http://machinelearningmastery.com/dropout-regularization-deep-learning-models-keras/）" target="_blank" rel="noopener">http://machinelearningmastery.com/dropout-regularization-deep-learning-models-keras/）</a></li>
+<li>What is Weight Decay?（<a href="ftp://ftp.sas.com/pub/neural/FAQ3.html#A_decay）" target="_blank" rel="noopener">ftp://ftp.sas.com/pub/neural/FAQ3.html#A_decay）</a></li>
+</ul>
+<h4 id="8-优化和损失"><a href="#8-优化和损失" class="headerlink" title="8) 优化和损失"></a><strong>8) 优化和损失</strong></h4><p>最常见是应用随机梯度下降法（stochastic gradient descent），但是现在有非常多的优化器。你试验过不同的优化(方法)过程吗？<br>随机梯度下降法是默认的选择。先好好利用它，配以不同的学习率和动量。</p>
+<p>许多更高级的优化方法有更多的参数，更复杂，也有更快的收敛速度。好与坏，是不是需要用，取决于你的问题。</p>
+<p>为了更好的利用好一个给定的(优化)方法，你真的需要弄明白每个参数的意义，然后针对你的问题通过格点搜索不同的的取值。困难，消耗时间，但是值得。</p>
+<p>我发现了一些更新更流行的方法，它们可以收敛的更快，并且针对一个给定网络的容量提供了一个快速了解的方式，例如：</p>
+<ul>
+<li>ADAM</li>
+<li>RMSprop</li>
+</ul>
+<p>你还可以探索其他优化算法，例如，更传统的（Levenberg-Marquardt）和不那么传统的（genetic algorithms）。其他方法能够为随机梯度下降法和其他类似方法提供好的出发点去改进。</p>
+<p>要被优化的损失函数与你要解决的问题高度相关。然而，你通常还是有一些余地（可以做一些微调，例如回归问题中的均方误（MSE）和平均绝对误差（MAE）等），有时候变换损失函数还有可能获得小的性能提升，这取决于你输出数据的规模和使用的激活函数。</p>
+<p>以下是相关阅读：</p>
+<ul>
+<li>An overview of gradient descent optimization algorithms（<a href="http://sebastianruder.com/optimizing-gradient-descent/）" target="_blank" rel="noopener">http://sebastianruder.com/optimizing-gradient-descent/）</a></li>
+<li>What are conjugate gradients, Levenberg-Marquardt, etc.?（<a href="ftp://ftp.sas.com/pub/neural/FAQ2.html#A_numanal）" target="_blank" rel="noopener">ftp://ftp.sas.com/pub/neural/FAQ2.html#A_numanal）</a></li>
+<li>On Optimization Methods for Deep Learning, 2011 PDF（<a href="http://ai.stanford.edu/~ang/papers/icml11-OptimizationForDeepLearning.pdf）" target="_blank" rel="noopener">http://ai.stanford.edu/~ang/papers/icml11-OptimizationForDeepLearning.pdf）</a></li>
+</ul>
+<h4 id="9-Early-Stopping-早停法"><a href="#9-Early-Stopping-早停法" class="headerlink" title="9) Early Stopping/早停法"></a><strong>9) Early Stopping/早停法</strong></h4><p>一旦训练过程中出现(验证集)性能开始下降，你可以停止训练与学习。这可以节省很多时间，而且甚至可以让你使用更详尽的重采样方法来评估你的模型的性能。</p>
+<p>早停法是一种用来避免模型在训练数据上的过拟合的正则化方式，它需要你监测模型在训练集以及验证集上每一轮的效果。一旦验证集上的模型性能开始下降，训练就可以停止。</p>
+<p>如果某个条件满足（衡量准确率的损失），你还可以设置检查点(Checkpointing)来储存模型，使得模型能够继续学习。检查点使你能够早停而非真正的停止训练，因此在最后，你将有一些模型可供选择。</p>
+<p>以下是相关阅读：</p>
+<ul>
+<li>How to Check-Point Deep Learning Models in Keras（<a href="http://machinelearningmastery.com/check-point-deep-learning-models-keras/）" target="_blank" rel="noopener">http://machinelearningmastery.com/check-point-deep-learning-models-keras/）</a></li>
+<li>What is early stopping?（<a href="ftp://ftp.sas.com/pub/neural/FAQ3.html#A_stop）" target="_blank" rel="noopener">ftp://ftp.sas.com/pub/neural/FAQ3.html#A_stop）</a></li>
+</ul>
+<h3 id="通过嵌套模型提升性能"><a href="#通过嵌套模型提升性能" class="headerlink" title="通过嵌套模型提升性能"></a>通过嵌套模型提升性能</h3><p>你可以组合多个模型的预测能力。刚才提到了算法调参可以提高最后的性能，调参之后这是下一个可以提升的大领域。</p>
+<p>事实上，你可以经常通过组合多个“足够好的”模型来得到优秀的预测能力，而不是通过组合多个高度调参的（脆弱的）模型。</p>
+<p>你可以考虑以下三个方面的嵌套方式：</p>
+<ol>
+<li>组合模型</li>
+<li>组合视角</li>
+<li>堆叠（Stacking）</li>
+</ol>
+<h4 id="1-组合模型"><a href="#1-组合模型" class="headerlink" title="1) 组合模型"></a><strong>1) 组合模型</strong></h4><p>有时候我们干脆不做模型选择，而是直接组合它们。</p>
+<p>如果你有多个不同的深度学习模型，在你的研究问题上每一个都表现的还不错，你可以通过取它们预测的平均值来进行组合。</p>
+<p>模型差异越大，最终效果越好。例如，你可以应用非常不同的网络拓扑或者不同的技术。</p>
+<p>如果每个模型都效果不错但是不同的方法/方式，嵌套后的预测能力将更加鲁棒。</p>
+<p>每一次你训练网络，你初始化不同的权重，然后它会收敛到不同的最终权重。你可以多次重复这一过程去得到很多网络，然后把这些网络的预测值组合在一起。</p>
+<p>它们的预测将会高度相关，但是在那些难以预测的特征上，它会给你一个意外的小提升。</p>
+<p>以下是相关阅读：</p>
+<ul>
+<li>Ensemble Machine Learning Algorithms in Python with scikit-learn（<a href="http://machinelearningmastery.com/ensemble-machine-learning-algorithms-python-scikit-learn/）" target="_blank" rel="noopener">http://machinelearningmastery.com/ensemble-machine-learning-algorithms-python-scikit-learn/）</a></li>
+<li>How to Improve Machine Learning Results（<a href="http://machinelearningmastery.com/how-to-improve-machine-learning-results/）" target="_blank" rel="noopener">http://machinelearningmastery.com/how-to-improve-machine-learning-results/）</a></li>
+</ul>
+<h4 id="2-组合视角"><a href="#2-组合视角" class="headerlink" title="2) 组合视角"></a><strong>2) 组合视角</strong></h4><p>同上述类似，但是从不同视角重构你的问题，训练你的模型。</p>
+<p>同样，目标得到的是效果不错但是不同的模型（例如，不相关的预测）。得到不同的模型的方法，你可以依赖我们在数据那一小节中罗列的那些非常不同的放缩和转换方法。</p>
+<p>你用来训练模型的转换方法越不同，你构建问题的方式越不同，你的结果被提升的程度就越高。</p>
+<p>简单使用预测的均值将会是一个好的开始。</p>
+<h4 id="3-stacking-堆叠"><a href="#3-stacking-堆叠" class="headerlink" title="3) stacking/堆叠"></a><strong>3) stacking/堆叠</strong></h4><p>你还可以学习如何最佳地组合多个模型的预测。这称作堆叠泛化（stacked generalization），或者简短来说就叫堆叠。</p>
+<p>通常上，你使用简单线性回归方法就可以得到比取预测平均更好的结果，像正则化的回归（regularized regression），就会学习如何给不同的预测模型赋权重。基线模型是通过取子模型的预测均值得到的，但是应用学习了权重的模型会提升性能。</p>
+<ul>
+<li>Stacked Generalization (Stacking)（<a href="http://machine-learning.martinsewell.com/ensembles/stacking/）" target="_blank" rel="noopener">http://machine-learning.martinsewell.com/ensembles/stacking/）</a></li>
+</ul>
+<h3 id="其余的可参考资源"><a href="#其余的可参考资源" class="headerlink" title="其余的可参考资源"></a>其余的可参考资源</h3><p>别的地方有很多很好的资源，但是几乎没有能将所有想法串联在一起的。如果你想深入研究，我列出了如下资源和相应的博客，你能发现很多有趣的东西。</p>
+<ul>
+<li>Neural Network FAQ（<a href="ftp://ftp.sas.com/pub/neural/FAQ.html）" target="_blank" rel="noopener">ftp://ftp.sas.com/pub/neural/FAQ.html）</a></li>
+<li>How to Grid Search Hyperparameters for Deep Learning Models in Python With Keras（<a href="http://machinelearningmastery.com/grid-search-hyperparameters-deep-learning-models-python-keras/）" target="_blank" rel="noopener">http://machinelearningmastery.com/grid-search-hyperparameters-deep-learning-models-python-keras/）</a></li>
+<li>Must Know Tips/Tricks in Deep Neural Networks（<a href="http://lamda.nju.edu.cn/weixs/project/CNNTricks/CNNTricks.html）" target="_blank" rel="noopener">http://lamda.nju.edu.cn/weixs/project/CNNTricks/CNNTricks.html）</a></li>
+<li>How to increase validation accuracy with deep neural net?（<a href="http://stackoverflow.com/questions/37020754/how-to-increase-validation-accuracy-with-deep-neural-net）" target="_blank" rel="noopener">http://stackoverflow.com/questions/37020754/how-to-increase-validation-accuracy-with-deep-neural-net）</a></li>
+</ul>
+<script>
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return; }
+            const img = document.createElement('img');
+            img.style = 'display:none !important;';
+            img.src = el.dataset.src;
+            img.addEventListener('error', () => {
+              img.remove();
+              el.style.color = 'inherit';
+              el.style.backgroundImage = 'none';
+              el.style.background = 'none';
+            });
+            img.addEventListener('load', () => {
+              img.remove();
+            });
+            document.body.appendChild(img);
+          });
+      </script>
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://jackhcc.github.io" rel="external nofollow noreferrer">杰克成</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://jackhcc.github.io/posts/dl-series7.html">https://jackhcc.github.io/posts/dl-series7.html</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="https://jackhcc.github.io" target="_blank">杰克成</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/CNN/">
+                                    <span class="chip bg-color">CNN</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/reward/aliqr.png" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/reward/wxqr.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+            
+        </div>
+    </div>
+
+    
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/gitalk/gitalk.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/my-gitalk.css">
+
+<div class="card gitalk-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="gitalk-container" class="card-content"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/gitalk/gitalk.min.js"></script>
+<script>
+    let gitalk = new Gitalk({
+        clientID: '3821a0bbb773038a51fc',
+        clientSecret: '4b30b507d67ec5497ec0e77f43f80cb3e0d7dd3a',
+        repo: 'JackHCC.github.io',
+        owner: 'JackHCC',
+        admin: "JackHCC",
+        id: '2021-10-10T14-57-01',
+        distractionFreeMode: false  // Facebook-like distraction free mode
+    });
+
+    gitalk.render('gitalk-container');
+</script>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/posts/dl-series8.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/7.jpg" class="responsive-img" alt="DL专栏8>TensorFlow Tricks">
+                        
+                        <span class="card-title">DL专栏8>TensorFlow Tricks</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            TensorFlow基本使用技巧
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-10-11
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Deep-Learning/" class="post-category">
+                                    Deep Learning
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/TensorFlow/">
+                        <span class="chip bg-color">TensorFlow</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/posts/dl-series6.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/16.jpg" class="responsive-img" alt="DL专栏6>Probability Distributions">
+                        
+                        <span class="card-title">DL专栏6>Probability Distributions</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            深度学习基本概率分布与实现
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-10-09
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Deep-Learning/" class="post-category">
+                                    Deep Learning
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Distributions/">
+                        <span class="chip bg-color">Distributions</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeShrink.js"></script>
+
+
+<!-- 代码块折行 -->
+
+<style type="text/css">
+code[class*="language-"], pre[class*="language-"] { white-space: pre !important; }
+</style>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('4'),
+            headingSelector: 'h1, h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h1, h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+    <footer class="page-footer bg-color">
+    <div class="container row center-align" style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            <span id="year">2020</span>
+            <a href="https://jackhcc.github.io" target="_blank">杰克成</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                class="white-color">1786.4k</span>&nbsp;字
+            
+            
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;人
+            </span>
+            
+            <br>
+            
+            <span id="sitetime">载入运行时间...</span>
+            <script>
+                function siteTime() {
+                    var seconds = 1000;
+                    var minutes = seconds * 60;
+                    var hours = minutes * 60;
+                    var days = hours * 24;
+                    var years = days * 365;
+                    var today = new Date();
+                    var startYear = "2020";
+                    var startMonth = "2";
+                    var startDate = "27";
+                    var startHour = "6";
+                    var startMinute = "30";
+                    var startSecond = "0";
+                    var todayYear = today.getFullYear();
+                    var todayMonth = today.getMonth() + 1;
+                    var todayDate = today.getDate();
+                    var todayHour = today.getHours();
+                    var todayMinute = today.getMinutes();
+                    var todaySecond = today.getSeconds();
+                    var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                    var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                    var diff = t2 - t1;
+                    var diffYears = Math.floor(diff / years);
+                    var diffDays = Math.floor((diff / days) - diffYears * 365);
+                    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+                    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) /
+                        minutes);
+                    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours -
+                        diffMinutes * minutes) / seconds);
+                    if (startYear == todayYear) {
+                        document.getElementById("year").innerHTML = todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffDays + " 天 " + diffHours +
+                            " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    } else {
+                        document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffYears + " 年 " + diffDays +
+                            " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    }
+                }
+                setInterval(siteTime, 1000);
+            </script>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/JackHCC" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:jackcc0701@163.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+    <a href="https://www.facebook.com/profile.php?id=100046343443643" class="tooltipped" target="_blank" data-tooltip="关注我的Facebook: https://www.facebook.com/profile.php?id=100046343443643" data-position="top" data-delay="50">
+        <i class="fab fa-facebook-f"></i>
+    </a>
+
+
+
+    <a href="https://twitter.com/JackChe66021834" class="tooltipped" target="_blank" data-tooltip="关注我的Twitter: https://twitter.com/JackChe66021834" data-position="top" data-delay="50">
+        <i class="fab fa-twitter"></i>
+    </a>
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=2508074836" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 2508074836" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+    <a href="https://weibo.com/u/6885584679" class="tooltipped" target="_blank" data-tooltip="关注我的微博: https://weibo.com/u/6885584679" data-position="top" data-delay="50">
+        <i class="fab fa-weibo"></i>
+    </a>
+
+
+
+    <a href="https://www.zhihu.com/people/8f8482f01f0d6a04e844efe32e0f0710" class="tooltipped" target="_blank" data-tooltip="关注我的知乎: https://www.zhihu.com/people/8f8482f01f0d6a04e844efe32e0f0710" data-position="top" data-delay="50">
+        <i class="fab fa-zhihu1">知</i>
+    </a>
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/materialize/materialize.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/aos/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/js/matery.js"></script>
+
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+    <script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script type="text/javascript" src="/js/fireworks.js"></script>
+
+    <script type="text/javascript">
+        //只在桌面版网页启用特效
+        var windowWidth = $(window).width();
+        if (windowWidth > 768) {
+            document.write('<script type="text/javascript" src="/js/sakura.js"><\/script>'); }
+    </script>
+
+    <!-- weather -->
+	<script type="text/javascript">
+	WIDGET = {FID: 'TToslpmkVO'}
+	</script>
+	<script type="text/javascript" src="https://apip.weatherdt.com/float/static/js/r.js?v=1111"></script>
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <!-- Baidu Analytics -->
+
+<script>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+    <!-- Baidu Push -->
+
+    
+    
+    <script async src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+        <script src="//code.tidio.co/kqhlkxviiccyoa0czpfpu4ijuey9hfre.js"></script>
+        <script> 
+            $(document).ready(function () {
+                setInterval(change_Tidio, 50);  
+                function change_Tidio() { 
+                    var tidio=$("#tidio-chat iframe");
+                    if(tidio.css("display")=="block"&& $(window).width()>977 ){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" &&$(window).width()>977)>0? "-40px" : ($("div.toc-title").length&&$(window).width()>977)>0?"85px":"20px";   
+                        document.getElementById("tidio-chat-iframe").style.right="-15px";   
+                        document.getElementById("tidio-chat-iframe").style.height=parseInt(tidio.css("height"))>=520?"520px":tidio.css("height");
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    } 
+                    else if(tidio.css("display")=="block"&&$(window).width()>601 &&$(window).width()<992 ){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" && 601< $(window).width()<992)>0? "-40px":"20px" ;   
+                        document.getElementById("tidio-chat-iframe").style.right="-15px"; 
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    }
+                    else if(tidio.css("display")=="block"&&$(window).width()<601 && parseInt(tidio.css("height"))<230){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" && $(window).width()<601)>0? "-10px":"45px" ;   
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    }
+                    if( tidio.css("display")=="block"&&$(window).width()<601 && parseInt(tidio.css("height"))>=230){
+                        document.getElementById("tidio-chat-iframe").style.zIndex="998";
+                    }
+                } 
+            }); 
+        </script>
+    
+
+    
+
+    
+    <script type="text/javascript" color="0,0,255"
+        pointColor="0,0,255" opacity='0.7'
+        zIndex="-1" count="99"
+        src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/background/canvas-nest.js"></script>
+    
+
+    
+
+    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/background/ribbon-dynamic.js" async="async"></script>
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+        <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
+        <script>
+        $('a').each(function() {
+          const $this = $(this);
+          const href = $this.attr('href');
+          if (href && href.match('^((http|https|thunder|qqdl|ed2k|Flashget|qbrowser|ftp|rtsp|mms)://)')) {
+            const strs = href.split('/');
+            if (strs.length >= 3) {
+                const host = strs[2];
+                if (host !== 'your_domain' || window.location.host) {
+                    $this.attr('href', '/go.html?u='+Base64.encode(href)+'').attr('rel', 'external nofollow noopener noreferrer');
+                    if (true) {
+                        $this.attr('target', '_blank');
+                    }
+                }
+            }
+          }
+        });
+        </script><script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script></body>
+
+</html>
+

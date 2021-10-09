@@ -459,21 +459,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-10-06
+                    2021-10-07
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    4.4k
+                    4.8k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    19 分
+                    20 分
                 </div>
                 
 
@@ -502,6 +502,7 @@
 <p>11、Pytorch内置one hot函数</p>
 <p>12、网络参数初始化</p>
 <p>13、加载内置预训练模型</p>
+<p>14、Pytorch编写代码基本步骤思想</p>
 <h1 id="指定GPU编号"><a href="#指定GPU编号" class="headerlink" title="指定GPU编号"></a><strong>指定GPU编号</strong></h1><ul>
 <li>设置当前使用的GPU设备仅为0号设备，设备名称为 <code>/gpu:0</code>：<code>os.environ["CUDA_VISIBLE_DEVICES"] = "0"</code></li>
 <li>设置当前使用的GPU设备为0,1号两个设备，名称依次为 <code>/gpu:0</code>、<code>/gpu:1</code>：<code>os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"</code> ，根据顺序表示优先使用0号设备,然后使用1号设备。</li>
@@ -916,6 +917,32 @@ vgg16 <span class="token operator">=</span> models<span class="token punctuation
 resnet18 <span class="token operator">=</span> models<span class="token punctuation">.</span>resnet18<span class="token punctuation">(</span>pretrained<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
 alexnet <span class="token operator">=</span> models<span class="token punctuation">.</span>alexnet<span class="token punctuation">(</span>pretrained<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
 vgg16 <span class="token operator">=</span> models<span class="token punctuation">.</span>vgg16<span class="token punctuation">(</span>pretrained<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="Pytorch编写代码基本步骤思想"><a href="#Pytorch编写代码基本步骤思想" class="headerlink" title="Pytorch编写代码基本步骤思想"></a>Pytorch编写代码基本步骤思想</h1><p>分为四大步骤：</p>
+<p><strong>1、输入处理模块</strong> (X 输入数据，变成网络能够处理的Tensor类型)</p>
+<p><strong>2、模型构建模块</strong> (主要负责从输入的数据，得到预测的y^, 这就是我们经常说的前向过程)</p>
+<p><strong>3、定义代价函数和优化器模块</strong> (注意，前向过程只会得到模型预测的结果，并不会自动求导和更新，是由这个模块进行处理)</p>
+<p><strong>4、构建训练过程</strong> （迭代训练过程，就是上图表情包的训练迭代过程）</p>
+<p>这几个模块分别与上图的数字标号1，2，3，4进行一一对应！</p>
+<p>知道了上面的宏观思想之后，后面给出每个模块稍微具体一点的解释和具体一个例子，再帮助大家熟悉对应的代码！</p>
+<p><strong>1.数据处理</strong></p>
+<p>对于数据处理，最为简单的⽅式就是将数据组织成为⼀个 。但许多训练需要⽤到mini-batch，直 接组织成Tensor不便于我们操作。pytorch为我们提供了Dataset和Dataloader两个类来方便的构建。</p>
+<p>torch.utils.data.Dataset</p>
+<p>继承Dataset 类需要override 以下⽅法：</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007140654126.png" alt=""></p>
+<p><strong>torch.utils.data.DataLoader</strong></p>
+<pre><code>torch.utils.data.DataLoader(dataset, batch_size=1, shuffle=False)</code></pre><p>DataLoader Batch。如果选择shuffle = True，每⼀个epoch 后，mini-Batch batch_size 常⻅的使⽤⽅法如下：</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007140714730.png" alt=""></p>
+<p><strong>2. 模型构建</strong></p>
+<p>所有的模型都需要继承torch.nn.Module ， 需要实现以下⽅法：</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007140738054.png" alt=""></p>
+<p>其中forward() ⽅法是前向传播的过程。在实现模型时，我们不需要考虑反向传播。</p>
+<p><strong>3. 定义代价函数和优化器</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007140756578.png" alt=""></p>
+<p><strong>4、构建训练过程</strong></p>
+<p>pytorch的训练循环⼤致如下：</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007140812602.png" alt=""></p>
+<p><strong>5、总结</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007140900845.png" alt=""></p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -1429,7 +1456,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">1726.6k</span>&nbsp;字
+                class="white-color">1786.4k</span>&nbsp;字
             
             
             
