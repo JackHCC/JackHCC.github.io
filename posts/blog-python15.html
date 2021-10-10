@@ -459,21 +459,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-08-30
+                    2021-10-10
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    3.7k
+                    10.8k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    17 分
+                    48 分
                 </div>
                 
 
@@ -1141,6 +1141,1134 @@ chart<span class="token punctuation">.</span>y_axis<span class="token punctuatio
 <pre class="line-numbers language-python"><code class="language-python">sheet<span class="token punctuation">.</span>add_chart<span class="token punctuation">(</span>chart<span class="token punctuation">,</span> <span class="token string">"A8"</span><span class="token punctuation">)</span>   <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>使用<code>add_chart()</code>方法将创建的图表添加到工作表中。</p>
 <p><img src="/images/loading.gif" data-original="../images/language/image-20210828104328442.png" alt=""></p>
+<h2 id="附录一：Python-xlrd-读取-操作Excel"><a href="#附录一：Python-xlrd-读取-操作Excel" class="headerlink" title="附录一：Python xlrd 读取 操作Excel"></a>附录一：Python xlrd 读取 操作Excel</h2><h3 id="xlrd模块介绍"><a href="#xlrd模块介绍" class="headerlink" title="xlrd模块介绍"></a><strong>xlrd模块介绍</strong></h3><p>（1）什么是xlrd模块？</p>
+<ul>
+<li>python操作excel主要用到xlrd和xlwt这两个库，即xlrd是读excel，xlwt是写excel的库。</li>
+</ul>
+<p>（2）为什么使用xlrd模块？</p>
+<ul>
+<li>在UI自动化或者接口自动化中数据维护是一个核心，所以此模块非常实用。</li>
+</ul>
+<p>xlrd模块可以用于读取Excel的数据，速度非常快，推荐使用！</p>
+<p><strong>官方文档：</strong><a href="https://xlrd.readthedocs.io/en/latest/" target="_blank" rel="noopener">https://xlrd.readthedocs.io/en/latest/</a></p>
+<h3 id="安装xlrd模块"><a href="#安装xlrd模块" class="headerlink" title="安装xlrd模块"></a><strong>安装xlrd模块</strong></h3><ul>
+<li>到python官网下载<a href="http://pypi.python.org/pypi/xlrd模块安装，前提是已经安装了python" target="_blank" rel="noopener">http://pypi.python.org/pypi/xlrd模块安装，前提是已经安装了python</a> 环境。</li>
+<li>或者在cmd窗口 pip install xlrd</li>
+</ul>
+<pre><code>pip install xlrd</code></pre><p>我这里是anaconda自带有xlrd，所以提示已经安装：</p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211010125018154.png" alt=""></p>
+<h3 id="使用介绍"><a href="#使用介绍" class="headerlink" title="使用介绍"></a><strong>使用介绍</strong></h3><ol>
+<li>常用单元格的数据类型</li>
+</ol>
+<ul>
+<li>empty（空的）</li>
+<li>string（text）</li>
+<li>number</li>
+<li>date</li>
+<li>boolean</li>
+<li>error</li>
+<li>blank（空白表格）</li>
+</ul>
+<ol start="2">
+<li>导入模块</li>
+</ol>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> xlrd<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ol start="3">
+<li>打开Excel文件读取数据</li>
+</ol>
+<pre class="line-numbers language-python"><code class="language-python">data <span class="token operator">=</span> xlrd<span class="token punctuation">.</span>open_workbook<span class="token punctuation">(</span>filename<span class="token punctuation">)</span><span class="token comment" spellcheck="true">#文件名以及路径，如果路径或者文件名有中文给前面加一个 r</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ol start="4">
+<li>常用的函数</li>
+</ol>
+<ul>
+<li>excel中最重要的方法就是book和sheet的操作</li>
+</ul>
+<p>（1）获取book（excel文件）中一个工作表</p>
+<pre class="line-numbers language-python"><code class="language-python">table <span class="token operator">=</span> data<span class="token punctuation">.</span>sheets<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>             <span class="token comment" spellcheck="true">#通过索引顺序获取</span>
+table <span class="token operator">=</span> data<span class="token punctuation">.</span>sheet_by_index<span class="token punctuation">(</span>sheet_indx<span class="token punctuation">)</span>  <span class="token comment" spellcheck="true">#通过索引顺序获取</span>
+table <span class="token operator">=</span> data<span class="token punctuation">.</span>sheet_by_name<span class="token punctuation">(</span>sheet_name<span class="token punctuation">)</span>  <span class="token comment" spellcheck="true">#通过名称获取</span>
+
+<span class="token comment" spellcheck="true"># 以上三个函数都会返回一个xlrd.sheet.Sheet()对象</span>
+
+names <span class="token operator">=</span> data<span class="token punctuation">.</span>sheet_names<span class="token punctuation">(</span><span class="token punctuation">)</span>        <span class="token comment" spellcheck="true">#返回book中所有工作表的名字</span>
+data<span class="token punctuation">.</span>sheet_loaded<span class="token punctuation">(</span>sheet_name <span class="token operator">or</span> indx<span class="token punctuation">)</span>    <span class="token comment" spellcheck="true"># 检查某个sheet是否导入完毕</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>（2） 行的操作</p>
+<pre class="line-numbers language-python"><code class="language-python">nrows <span class="token operator">=</span> table<span class="token punctuation">.</span>nrows
+    <span class="token comment" spellcheck="true"># 获取该sheet中的行数，注，这里table.nrows后面不带().</span>
+
+table<span class="token punctuation">.</span>row<span class="token punctuation">(</span>rowx<span class="token punctuation">)</span>
+    <span class="token comment" spellcheck="true"># 返回由该行中所有的单元格对象组成的列表,这与tabel.raw()方法并没有区别。</span>
+
+table<span class="token punctuation">.</span>row_slice<span class="token punctuation">(</span>rowx<span class="token punctuation">)</span>
+    <span class="token comment" spellcheck="true"># 返回由该行中所有的单元格对象组成的列表</span>
+
+table<span class="token punctuation">.</span>row_types<span class="token punctuation">(</span>rowx<span class="token punctuation">,</span> start_colx<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">,</span> end_colx<span class="token operator">=</span>None<span class="token punctuation">)</span>
+    <span class="token comment" spellcheck="true"># 返回由该行中所有单元格的数据类型组成的列表；    </span>
+    <span class="token comment" spellcheck="true"># 返回值为逻辑值列表，若类型为empy则为0，否则为1</span>
+
+table<span class="token punctuation">.</span>row_values<span class="token punctuation">(</span>rowx<span class="token punctuation">,</span> start_colx<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">,</span> end_colx<span class="token operator">=</span>None<span class="token punctuation">)</span>
+    <span class="token comment" spellcheck="true"># 返回由该行中所有单元格的数据组成的列表</span>
+
+table<span class="token punctuation">.</span>row_len<span class="token punctuation">(</span>rowx<span class="token punctuation">)</span>
+    <span class="token comment" spellcheck="true"># 返回该行的有效单元格长度，即这一行有多少个数据</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211010125118239.png" alt=""></p>
+<p>（3）列（colnum）的操作</p>
+<pre class="line-numbers language-python"><code class="language-python">ncols <span class="token operator">=</span> table<span class="token punctuation">.</span>ncols
+    <span class="token comment" spellcheck="true"># 获取列表的有效列数</span>
+
+table<span class="token punctuation">.</span>col<span class="token punctuation">(</span>colx<span class="token punctuation">,</span> start_rowx<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">,</span> end_rowx<span class="token operator">=</span>None<span class="token punctuation">)</span>
+    <span class="token comment" spellcheck="true"># 返回由该列中所有的单元格对象组成的列表</span>
+
+table<span class="token punctuation">.</span>col_slice<span class="token punctuation">(</span>colx<span class="token punctuation">,</span> start_rowx<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">,</span> end_rowx<span class="token operator">=</span>None<span class="token punctuation">)</span>
+    <span class="token comment" spellcheck="true"># 返回由该列中所有的单元格对象组成的列表</span>
+
+table<span class="token punctuation">.</span>col_types<span class="token punctuation">(</span>colx<span class="token punctuation">,</span> start_rowx<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">,</span> end_rowx<span class="token operator">=</span>None<span class="token punctuation">)</span>
+    <span class="token comment" spellcheck="true"># 返回由该列中所有单元格的数据类型组成的列表</span>
+
+table<span class="token punctuation">.</span>col_values<span class="token punctuation">(</span>colx<span class="token punctuation">,</span> start_rowx<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">,</span> end_rowx<span class="token operator">=</span>None<span class="token punctuation">)</span>
+    <span class="token comment" spellcheck="true"># 返回由该列中所有单元格的数据组成的列表</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211010125258346.png" alt=""></p>
+<p>（4）单元格的操作</p>
+<pre class="line-numbers language-python"><code class="language-python">table<span class="token punctuation">.</span>cell<span class="token punctuation">(</span>rowx<span class="token punctuation">,</span>colx<span class="token punctuation">)</span>
+    <span class="token comment" spellcheck="true"># 返回单元格对象</span>
+
+table<span class="token punctuation">.</span>cell_type<span class="token punctuation">(</span>rowx<span class="token punctuation">,</span>colx<span class="token punctuation">)</span>
+    <span class="token comment" spellcheck="true"># 返回对应位置单元格中的数据类型</span>
+
+table<span class="token punctuation">.</span>cell_value<span class="token punctuation">(</span>rowx<span class="token punctuation">,</span>colx<span class="token punctuation">)</span>
+    <span class="token comment" spellcheck="true"># 返回对应位置单元格中的数据</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="实战训练"><a href="#实战训练" class="headerlink" title="实战训练"></a><strong>实战训练</strong></h3><p>我们先在表格放入以下数据，点击保存：</p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211010125331672.png" alt=""></p>
+<p>使用xlrd模块进行读取：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> xlrd
+
+xlsx <span class="token operator">=</span> xlrd<span class="token punctuation">.</span>open_workbook<span class="token punctuation">(</span><span class="token string">'./3_1 xlrd 读取 操作练习.xlsx'</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># 通过sheet名查找：xlsx.sheet_by_name("sheet1")</span>
+<span class="token comment" spellcheck="true"># 通过索引查找：xlsx.sheet_by_index(3)</span>
+table <span class="token operator">=</span> xlsx<span class="token punctuation">.</span>sheet_by_index<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># 获取单个表格值 (2,1)表示获取第3行第2列单元格的值</span>
+value <span class="token operator">=</span> table<span class="token punctuation">.</span>cell_value<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"第3行2列值为"</span><span class="token punctuation">,</span>value<span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># 获取表格行数</span>
+nrows <span class="token operator">=</span> table<span class="token punctuation">.</span>nrows
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"表格一共有"</span><span class="token punctuation">,</span>nrows<span class="token punctuation">,</span><span class="token string">"行"</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># 获取第4列所有值（列表生成式）</span>
+name_list <span class="token operator">=</span> <span class="token punctuation">[</span>str<span class="token punctuation">(</span>table<span class="token punctuation">.</span>cell_value<span class="token punctuation">(</span>i<span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> nrows<span class="token punctuation">)</span><span class="token punctuation">]</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"第4列所有的值："</span><span class="token punctuation">,</span>name_list<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>打印结果：</p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211010125349480.png" alt=""></p>
+<p>列表生成式介绍：</p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211010125407882.png" alt=""></p>
+<h2 id="附录二：Python-xlwt-写入-操作Excel（仅限xls格式！）"><a href="#附录二：Python-xlwt-写入-操作Excel（仅限xls格式！）" class="headerlink" title="附录二：Python xlwt 写入 操作Excel（仅限xls格式！）"></a>附录二：Python xlwt 写入 操作Excel（仅限xls格式！）</h2><p>xlwt可以用于写入新的Excel表格或者在原表格基础上进行修改，速度也很快，推荐使用！</p>
+<p>官方文档：<a href="https://xlwt.readthedocs.io/en/latest/" target="_blank" rel="noopener">https://xlwt.readthedocs.io/en/latest/</a></p>
+<h3 id="pip安装xlwt"><a href="#pip安装xlwt" class="headerlink" title="pip安装xlwt"></a><strong>pip安装xlwt</strong></h3><pre class="line-numbers language-python"><code class="language-python">pip install xlwt<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h3 id="使用xlwt创建新表格并写入"><a href="#使用xlwt创建新表格并写入" class="headerlink" title="使用xlwt创建新表格并写入"></a><strong>使用xlwt创建新表格并写入</strong></h3><p>编写xlwt新表格写入程序:</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 3.2.2 使用xlwt创建新表格并写入</span>
+<span class="token keyword">def</span> <span class="token function">fun3_2_2</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment" spellcheck="true"># 创建新的workbook（其实就是创建新的excel）</span>
+    workbook <span class="token operator">=</span> xlwt<span class="token punctuation">.</span>Workbook<span class="token punctuation">(</span>encoding<span class="token operator">=</span> <span class="token string">'ascii'</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true"># 创建新的sheet表</span>
+    worksheet <span class="token operator">=</span> workbook<span class="token punctuation">.</span>add_sheet<span class="token punctuation">(</span><span class="token string">"My new Sheet"</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true"># 往表格写入内容</span>
+    worksheet<span class="token punctuation">.</span>write<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token string">"内容1"</span><span class="token punctuation">)</span>
+    worksheet<span class="token punctuation">.</span>write<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">"内容2"</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true"># 保存</span>
+    workbook<span class="token punctuation">.</span>save<span class="token punctuation">(</span><span class="token string">"新创建的表格.xls"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211010125531167.png" alt=""></p>
+<p>生成的表格内容如下：</p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211010125544214.png" alt=""></p>
+<h3 id="xlwt-设置字体格式"><a href="#xlwt-设置字体格式" class="headerlink" title="xlwt 设置字体格式"></a><strong>xlwt 设置字体格式</strong></h3><p><strong>程序示例：</strong></p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 3.2.3 xlwt设置字体格式</span>
+<span class="token keyword">def</span> <span class="token function">fun3_2_3</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment" spellcheck="true"># 创建新的workbook（其实就是创建新的excel）</span>
+    workbook <span class="token operator">=</span> xlwt<span class="token punctuation">.</span>Workbook<span class="token punctuation">(</span>encoding<span class="token operator">=</span> <span class="token string">'ascii'</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true"># 创建新的sheet表</span>
+    worksheet <span class="token operator">=</span> workbook<span class="token punctuation">.</span>add_sheet<span class="token punctuation">(</span><span class="token string">"My new Sheet"</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true"># 初始化样式</span>
+    style <span class="token operator">=</span> xlwt<span class="token punctuation">.</span>XFStyle<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true"># 为样式创建字体</span>
+    font <span class="token operator">=</span> xlwt<span class="token punctuation">.</span>Font<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    font<span class="token punctuation">.</span>name <span class="token operator">=</span> <span class="token string">'Times New Roman'</span>   <span class="token comment" spellcheck="true">#字体</span>
+    font<span class="token punctuation">.</span>bold <span class="token operator">=</span> <span class="token boolean">True</span>                <span class="token comment" spellcheck="true">#加粗</span>
+    font<span class="token punctuation">.</span>underline <span class="token operator">=</span> <span class="token boolean">True</span>           <span class="token comment" spellcheck="true">#下划线</span>
+    font<span class="token punctuation">.</span>italic <span class="token operator">=</span> <span class="token boolean">True</span>              <span class="token comment" spellcheck="true">#斜体</span>
+
+    <span class="token comment" spellcheck="true"># 设置样式</span>
+    style<span class="token punctuation">.</span>font <span class="token operator">=</span> font
+
+    <span class="token comment" spellcheck="true"># 往表格写入内容</span>
+    worksheet<span class="token punctuation">.</span>write<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token string">"内容1"</span><span class="token punctuation">)</span>
+    worksheet<span class="token punctuation">.</span>write<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">"内容2"</span><span class="token punctuation">,</span>style<span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true"># 保存</span>
+    workbook<span class="token punctuation">.</span>save<span class="token punctuation">(</span><span class="token string">"新创建的表格.xls"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211010125604729.png" alt=""></p>
+<h3 id="xlwt-设置列宽"><a href="#xlwt-设置列宽" class="headerlink" title="xlwt 设置列宽"></a><strong>xlwt 设置列宽</strong></h3><p>xlwt中列宽的值表示方法：默认字体0的1/256为衡量单位。</p>
+<p>xlwt创建时使用的默认宽度为2960，既11个字符0的宽度</p>
+<p>所以我们在设置列宽时可以用如下方法：</p>
+<p>width = 256 * 20 256为衡量单位，20表示20个字符宽度</p>
+<p><strong>程序示例：</strong></p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 3.2.4 设置列宽</span>
+<span class="token keyword">def</span> <span class="token function">fun3_2_4</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment" spellcheck="true"># 创建新的workbook（其实就是创建新的excel）</span>
+    workbook <span class="token operator">=</span> xlwt<span class="token punctuation">.</span>Workbook<span class="token punctuation">(</span>encoding<span class="token operator">=</span> <span class="token string">'ascii'</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true"># 创建新的sheet表</span>
+    worksheet <span class="token operator">=</span> workbook<span class="token punctuation">.</span>add_sheet<span class="token punctuation">(</span><span class="token string">"My new Sheet"</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true"># 往表格写入内容</span>
+    worksheet<span class="token punctuation">.</span>write<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token string">"内容1"</span><span class="token punctuation">)</span>
+    worksheet<span class="token punctuation">.</span>write<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">"内容2"</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true"># 设置列宽</span>
+    worksheet<span class="token punctuation">.</span>col<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">.</span>width <span class="token operator">=</span> <span class="token number">256</span><span class="token operator">*</span><span class="token number">20</span>
+
+    <span class="token comment" spellcheck="true"># 保存</span>
+    workbook<span class="token punctuation">.</span>save<span class="token punctuation">(</span><span class="token string">"新创建的表格.xls"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211010125628612.png" alt=""></p>
+<h3 id="xlwt-设置行高"><a href="#xlwt-设置行高" class="headerlink" title="xlwt 设置行高"></a><strong>xlwt 设置行高</strong></h3><p>在xlwt中没有特定的函数来设置默认的列宽及行高</p>
+<p>行高是在单元格的样式中设置的，你可以通过自动换行通过输入文字的多少来确定行高</p>
+<p><strong>程序示例：</strong></p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 3.2.5 设置行高</span>
+<span class="token keyword">def</span> <span class="token function">fun3_2_5</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment" spellcheck="true"># 创建新的workbook（其实就是创建新的excel）</span>
+    workbook <span class="token operator">=</span> xlwt<span class="token punctuation">.</span>Workbook<span class="token punctuation">(</span>encoding<span class="token operator">=</span> <span class="token string">'ascii'</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true"># 创建新的sheet表</span>
+    worksheet <span class="token operator">=</span> workbook<span class="token punctuation">.</span>add_sheet<span class="token punctuation">(</span><span class="token string">"My new Sheet"</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true"># 往表格写入内容</span>
+    worksheet<span class="token punctuation">.</span>write<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token string">"内容1"</span><span class="token punctuation">)</span>
+    worksheet<span class="token punctuation">.</span>write<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">"内容2"</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true"># 设置行高</span>
+    style <span class="token operator">=</span> xlwt<span class="token punctuation">.</span>easyxf<span class="token punctuation">(</span><span class="token string">'font:height 360;'</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># 18pt,类型小初的字号</span>
+    row <span class="token operator">=</span> worksheet<span class="token punctuation">.</span>row<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
+    row<span class="token punctuation">.</span>set_style<span class="token punctuation">(</span>style<span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true"># 保存</span>
+    workbook<span class="token punctuation">.</span>save<span class="token punctuation">(</span><span class="token string">"新创建的表格.xls"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211010125648135.png" alt=""></p>
+<h3 id="xlwt-合并列和行"><a href="#xlwt-合并列和行" class="headerlink" title="xlwt 合并列和行"></a><strong>xlwt 合并列和行</strong></h3><p><strong>程序示例：</strong></p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 3.2.6 合并列和行</span>
+<span class="token keyword">def</span> <span class="token function">fun3_2_6</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment" spellcheck="true"># 创建新的workbook（其实就是创建新的excel）</span>
+    workbook <span class="token operator">=</span> xlwt<span class="token punctuation">.</span>Workbook<span class="token punctuation">(</span>encoding<span class="token operator">=</span> <span class="token string">'ascii'</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true"># 创建新的sheet表</span>
+    worksheet <span class="token operator">=</span> workbook<span class="token punctuation">.</span>add_sheet<span class="token punctuation">(</span><span class="token string">"My new Sheet"</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true"># 往表格写入内容</span>
+    worksheet<span class="token punctuation">.</span>write<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token string">"内容1"</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true"># 合并 第1行到第2行 的 第0列到第3列</span>
+    worksheet<span class="token punctuation">.</span>write_merge<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token string">'Merge Test'</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true"># 保存</span>
+    workbook<span class="token punctuation">.</span>save<span class="token punctuation">(</span><span class="token string">"新创建的表格.xls"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211010125703974.png" alt=""></p>
+<h3 id="xlwt-添加边框"><a href="#xlwt-添加边框" class="headerlink" title="xlwt 添加边框"></a><strong>xlwt 添加边框</strong></h3><p><strong>程序示例：</strong></p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 3.2.7 添加边框</span>
+<span class="token keyword">def</span> <span class="token function">fun3_2_7</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment" spellcheck="true"># 创建新的workbook（其实就是创建新的excel）</span>
+    workbook <span class="token operator">=</span> xlwt<span class="token punctuation">.</span>Workbook<span class="token punctuation">(</span>encoding<span class="token operator">=</span> <span class="token string">'ascii'</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true"># 创建新的sheet表</span>
+    worksheet <span class="token operator">=</span> workbook<span class="token punctuation">.</span>add_sheet<span class="token punctuation">(</span><span class="token string">"My new Sheet"</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true"># 往表格写入内容</span>
+    worksheet<span class="token punctuation">.</span>write<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token string">"内容1"</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true"># 设置边框样式</span>
+    borders <span class="token operator">=</span> xlwt<span class="token punctuation">.</span>Borders<span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># Create Borders</span>
+
+    <span class="token comment" spellcheck="true"># May be:   NO_LINE, THIN, MEDIUM, DASHED, DOTTED, THICK, DOUBLE, HAIR,</span>
+    <span class="token comment" spellcheck="true">#           MEDIUM_DASHED, THIN_DASH_DOTTED, MEDIUM_DASH_DOTTED, THIN_DASH_DOT_DOTTED,</span>
+    <span class="token comment" spellcheck="true">#           MEDIUM_DASH_DOT_DOTTED, SLANTED_MEDIUM_DASH_DOTTED, or 0x00 through 0x0D.</span>
+    <span class="token comment" spellcheck="true"># DASHED虚线</span>
+    <span class="token comment" spellcheck="true"># NO_LINE没有</span>
+    <span class="token comment" spellcheck="true"># THIN实线</span>
+
+    borders<span class="token punctuation">.</span>left <span class="token operator">=</span> xlwt<span class="token punctuation">.</span>Borders<span class="token punctuation">.</span>DASHED
+    borders<span class="token punctuation">.</span>right <span class="token operator">=</span> xlwt<span class="token punctuation">.</span>Borders<span class="token punctuation">.</span>DASHED
+    borders<span class="token punctuation">.</span>top <span class="token operator">=</span> xlwt<span class="token punctuation">.</span>Borders<span class="token punctuation">.</span>DASHED
+    borders<span class="token punctuation">.</span>bottom <span class="token operator">=</span> xlwt<span class="token punctuation">.</span>Borders<span class="token punctuation">.</span>DASHED
+    borders<span class="token punctuation">.</span>left_colour <span class="token operator">=</span> <span class="token number">0x40</span>
+    borders<span class="token punctuation">.</span>right_colour <span class="token operator">=</span> <span class="token number">0x40</span>
+    borders<span class="token punctuation">.</span>top_colour <span class="token operator">=</span> <span class="token number">0x40</span>
+    borders<span class="token punctuation">.</span>bottom_colour <span class="token operator">=</span> <span class="token number">0x40</span>
+
+    style <span class="token operator">=</span> xlwt<span class="token punctuation">.</span>XFStyle<span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># Create Style</span>
+    style<span class="token punctuation">.</span>borders <span class="token operator">=</span> borders  <span class="token comment" spellcheck="true"># Add Borders to Style</span>
+
+    worksheet<span class="token punctuation">.</span>write<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token string">'内容1'</span><span class="token punctuation">,</span> style<span class="token punctuation">)</span>
+
+    worksheet<span class="token punctuation">.</span>write<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">"内容2"</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true"># 保存</span>
+    workbook<span class="token punctuation">.</span>save<span class="token punctuation">(</span><span class="token string">"新创建的表格.xls"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211010125720675.png" alt=""></p>
+<h3 id="xlwt为单元格设置背景色"><a href="#xlwt为单元格设置背景色" class="headerlink" title="xlwt为单元格设置背景色"></a><strong>xlwt为单元格设置背景色</strong></h3><p><strong>程序示例：</strong></p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 设置单元格背景色</span>
+<span class="token keyword">def</span> <span class="token function">fun3_2_8</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment" spellcheck="true"># 创建新的workbook（其实就是创建新的excel）</span>
+    workbook <span class="token operator">=</span> xlwt<span class="token punctuation">.</span>Workbook<span class="token punctuation">(</span>encoding<span class="token operator">=</span> <span class="token string">'ascii'</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true"># 创建新的sheet表</span>
+    worksheet <span class="token operator">=</span> workbook<span class="token punctuation">.</span>add_sheet<span class="token punctuation">(</span><span class="token string">"My new Sheet"</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true"># 往表格写入内容</span>
+    worksheet<span class="token punctuation">.</span>write<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token string">"内容1"</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true"># 创建样式</span>
+    pattern <span class="token operator">=</span> xlwt<span class="token punctuation">.</span>Pattern<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true"># May be: NO_PATTERN, SOLID_PATTERN, or 0x00 through 0x12</span>
+    pattern<span class="token punctuation">.</span>pattern <span class="token operator">=</span> xlwt<span class="token punctuation">.</span>Pattern<span class="token punctuation">.</span>SOLID_PATTERN
+
+    <span class="token comment" spellcheck="true"># May be: 8 through 63. 0 = Black, 1 = White, 2 = Red, 3 = Green, 4 = Blue, 5 = Yellow,</span>
+    <span class="token comment" spellcheck="true"># 6 = Magenta, 7 = Cyan, 16 = Maroon, 17 = Dark Green, 18 = Dark Blue, 19 = Dark Yellow ,</span>
+    <span class="token comment" spellcheck="true"># almost brown), 20 = Dark Magenta, 21 = Teal, 22 = Light Gray, 23 = Dark Gray, the list goes on...</span>
+    pattern<span class="token punctuation">.</span>pattern_fore_colour <span class="token operator">=</span> <span class="token number">5</span>
+    style <span class="token operator">=</span> xlwt<span class="token punctuation">.</span>XFStyle<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    style<span class="token punctuation">.</span>pattern <span class="token operator">=</span> pattern
+
+    <span class="token comment" spellcheck="true"># 使用样式</span>
+    worksheet<span class="token punctuation">.</span>write<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">"内容2"</span><span class="token punctuation">,</span>style<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211010125736633.png" alt=""></p>
+<h3 id="xlwt设置单元格对齐"><a href="#xlwt设置单元格对齐" class="headerlink" title="xlwt设置单元格对齐"></a><strong>xlwt设置单元格对齐</strong></h3><p>使用xlwt中的Alignment来设置单元格的对齐方式，其中horz代表水平对齐方式，vert代表垂直对齐方式。</p>
+<ul>
+<li>VERT_TOP = 0x00 上端对齐</li>
+<li>VERT_CENTER = 0x01 居中对齐（垂直方向上）</li>
+<li>VERT_BOTTOM = 0x02 低端对齐</li>
+<li>HORZ_LEFT = 0x01 左端对齐</li>
+<li>HORZ_CENTER = 0x02 居中对齐（水平方向上）</li>
+<li>HORZ_RIGHT = 0x03 右端对齐</li>
+</ul>
+<p><strong>程序示例：</strong></p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 设置单元格对齐</span>
+<span class="token keyword">def</span> <span class="token function">fun3_2_9</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment" spellcheck="true"># 创建新的workbook（其实就是创建新的excel）</span>
+    workbook <span class="token operator">=</span> xlwt<span class="token punctuation">.</span>Workbook<span class="token punctuation">(</span>encoding<span class="token operator">=</span> <span class="token string">'ascii'</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true"># 创建新的sheet表</span>
+    worksheet <span class="token operator">=</span> workbook<span class="token punctuation">.</span>add_sheet<span class="token punctuation">(</span><span class="token string">"My new Sheet"</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true"># 往表格写入内容</span>
+    worksheet<span class="token punctuation">.</span>write<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token string">"内容1"</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true"># 设置样式</span>
+    style <span class="token operator">=</span> xlwt<span class="token punctuation">.</span>XFStyle<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    al <span class="token operator">=</span> xlwt<span class="token punctuation">.</span>Alignment<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token comment" spellcheck="true"># VERT_TOP = 0x00       上端对齐</span>
+    <span class="token comment" spellcheck="true"># VERT_CENTER = 0x01    居中对齐（垂直方向上）</span>
+    <span class="token comment" spellcheck="true"># VERT_BOTTOM = 0x02    低端对齐</span>
+    <span class="token comment" spellcheck="true"># HORZ_LEFT = 0x01      左端对齐</span>
+    <span class="token comment" spellcheck="true"># HORZ_CENTER = 0x02    居中对齐（水平方向上）</span>
+    <span class="token comment" spellcheck="true"># HORZ_RIGHT = 0x03     右端对齐</span>
+    al<span class="token punctuation">.</span>horz <span class="token operator">=</span> <span class="token number">0x02</span>  <span class="token comment" spellcheck="true"># 设置水平居中</span>
+    al<span class="token punctuation">.</span>vert <span class="token operator">=</span> <span class="token number">0x01</span>  <span class="token comment" spellcheck="true"># 设置垂直居中</span>
+    style<span class="token punctuation">.</span>alignment <span class="token operator">=</span> al
+
+    <span class="token comment" spellcheck="true"># 对齐写入</span>
+    worksheet<span class="token punctuation">.</span>write<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">"内容2"</span><span class="token punctuation">,</span>style<span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true"># 保存</span>
+    workbook<span class="token punctuation">.</span>save<span class="token punctuation">(</span><span class="token string">"新创建的表格.xls"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211010125820739.png" alt=""></p>
+<h2 id="附录三：Python-xlutils-修改-操作Excel"><a href="#附录三：Python-xlutils-修改-操作Excel" class="headerlink" title="附录三：Python xlutils 修改 操作Excel"></a>附录三：Python xlutils 修改 操作Excel</h2><p>xlutils可用于拷贝原excel或者在原excel基础上进行修改，并保存；</p>
+<p>官方文档：<a href="https://xlutils.readthedocs.io/en/latest/" target="_blank" rel="noopener">https://xlutils.readthedocs.io/en/latest/</a></p>
+<h3 id="pip安装xlutils"><a href="#pip安装xlutils" class="headerlink" title="pip安装xlutils"></a><strong>pip安装xlutils</strong></h3><pre class="line-numbers language-python"><code class="language-python">pip install xlutils<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h3 id="xlutils拷贝源文件（需配合xlrd使用）"><a href="#xlutils拷贝源文件（需配合xlrd使用）" class="headerlink" title="xlutils拷贝源文件（需配合xlrd使用）"></a><strong>xlutils拷贝源文件（需配合xlrd使用）</strong></h3><p><strong>表格内容如下：</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211010125921082.png" alt=""></p>
+<p><strong>程序示例：</strong></p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 3.3.2 拷贝源文件</span>
+<span class="token keyword">def</span> <span class="token function">fun3_3_2</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    workbook <span class="token operator">=</span> xlrd<span class="token punctuation">.</span>open_workbook<span class="token punctuation">(</span><span class="token string">'3_3 xlutils 修改操作练习.xlsx'</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># 打开工作簿</span>
+    new_workbook <span class="token operator">=</span> copy<span class="token punctuation">(</span>workbook<span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># 将xlrd对象拷贝转化为xlwt对象</span>
+    new_workbook<span class="token punctuation">.</span>save<span class="token punctuation">(</span><span class="token string">"new_test.xls"</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># 保存工作簿</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>效果如下：</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211010125941965.png" alt=""></p>
+<p>内容为：</p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211010125958399.png" alt=""></p>
+<p>不过表格的样式全部消失了。</p>
+<h3 id="xlutils-读取-写入-（也就是修改）Excel-表格信息"><a href="#xlutils-读取-写入-（也就是修改）Excel-表格信息" class="headerlink" title="xlutils 读取 写入 （也就是修改）Excel 表格信息"></a><strong>xlutils 读取 写入 （也就是修改）Excel 表格信息</strong></h3><p><strong>程序示例：</strong></p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 3.3.3 xlutils读取 写入 Excel 表格信息</span>
+<span class="token keyword">def</span> <span class="token function">fun3_3_3</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment" spellcheck="true"># file_path：文件路径，包含文件的全名称</span>
+    <span class="token comment" spellcheck="true"># formatting_info=True：保留Excel的原格式（使用与xlsx文件）</span>
+    workbook <span class="token operator">=</span> xlrd<span class="token punctuation">.</span>open_workbook<span class="token punctuation">(</span><span class="token string">'3_3 xlutils 修改操作练习.xlsx'</span><span class="token punctuation">)</span>
+
+    new_workbook <span class="token operator">=</span> copy<span class="token punctuation">(</span>workbook<span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># 将xlrd对象拷贝转化为xlwt对象</span>
+
+    <span class="token comment" spellcheck="true"># 读取表格信息</span>
+    sheet <span class="token operator">=</span> workbook<span class="token punctuation">.</span>sheet_by_index<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
+    col2 <span class="token operator">=</span> sheet<span class="token punctuation">.</span>col_values<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># 取出第二列</span>
+    cel_value <span class="token operator">=</span> sheet<span class="token punctuation">.</span>cell_value<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>col2<span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>cel_value<span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true"># 写入表格信息</span>
+    write_save <span class="token operator">=</span> new_workbook<span class="token punctuation">.</span>get_sheet<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
+    write_save<span class="token punctuation">.</span>write<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token string">"xlutils写入！"</span><span class="token punctuation">)</span>
+
+    new_workbook<span class="token punctuation">.</span>save<span class="token punctuation">(</span><span class="token string">"new_test.xls"</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># 保存工作簿</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211010130020710.png" alt=""></p>
+<p>复制了源文件信息，并进行了追加：</p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211010130035572.png" alt=""></p>
+<h2 id="附录四：Python-xlwings-读取-写入-修改-操作Excel"><a href="#附录四：Python-xlwings-读取-写入-修改-操作Excel" class="headerlink" title="附录四：Python xlwings 读取 写入 修改 操作Excel"></a>附录四：Python xlwings 读取 写入 修改 操作Excel</h2><p><strong>xlwings比起xlrd、xlwt和xlutils，xlwings可豪华多了，它具备以下特点：</strong></p>
+<ul>
+<li>xlwings能够非常方便的读写Excel文件中的数据，并且能够进行单元格格式的修改</li>
+<li>可以和matplotlib以及pandas无缝连接，支持读写numpy、pandas数据类型，将matplotlib可视化图表导入到excel中。</li>
+<li>可以调用Excel文件中VBA写好的程序，也可以让VBA调用用Python写的程序。</li>
+<li>开源免费，一直在更新</li>
+</ul>
+<p>官网地址：<a href="https://www.xlwings.org/" target="_blank" rel="noopener">https://www.xlwings.org/</a></p>
+<p>官方文档：<a href="https://docs.xlwings.org/en/stable/api.html" target="_blank" rel="noopener">https://docs.xlwings.org/en/stable/api.html</a></p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211010130126625.png" alt=""></p>
+<h3 id="pip安装xlwings"><a href="#pip安装xlwings" class="headerlink" title="pip安装xlwings"></a><strong>pip安装xlwings</strong></h3><pre><code>pip install xlwings</code></pre><h3 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a><strong>基本操作</strong></h3><p>引入库</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> xlwings <span class="token keyword">as</span> xw <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>打开Excel程序，默认设置：程序可见，只打开不新建工作薄</p>
+<pre class="line-numbers language-python"><code class="language-python">app <span class="token operator">=</span> xw<span class="token punctuation">.</span>App<span class="token punctuation">(</span>visible<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span>add_book<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">#新建工作簿 (如果不接下一条代码的话，Excel只会一闪而过，卖个萌就走了）</span>
+wb <span class="token operator">=</span> app<span class="token punctuation">.</span>books<span class="token punctuation">.</span>add<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>打开已有工作簿（支持绝对路径和相对路径）</p>
+<pre class="line-numbers language-python"><code class="language-python">wb <span class="token operator">=</span> app<span class="token punctuation">.</span>books<span class="token punctuation">.</span>open<span class="token punctuation">(</span><span class="token string">'example.xlsx'</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">#练习的时候建议直接用下面这条</span>
+<span class="token comment" spellcheck="true">#wb = xw.Book('example.xlsx')</span>
+<span class="token comment" spellcheck="true">#这样的话就不会频繁打开新的Excel</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>保存工作簿</p>
+<pre class="line-numbers language-python"><code class="language-python">wb<span class="token punctuation">.</span>save<span class="token punctuation">(</span><span class="token string">'example.xlsx'</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>退出工作簿（可省略）</p>
+<pre class="line-numbers language-python"><code class="language-python">wb<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>退出Excel</p>
+<pre class="line-numbers language-python"><code class="language-python">app<span class="token punctuation">.</span>quit<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p><strong>三个例子：</strong></p>
+<p>（1）打开已存在的Excel文档</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 导入xlwings模块</span>
+<span class="token keyword">import</span> xlwings <span class="token keyword">as</span> xw
+
+<span class="token comment" spellcheck="true"># 打开Excel程序，默认设置：程序可见，只打开不新建工作薄，屏幕更新关闭</span>
+app<span class="token operator">=</span>xw<span class="token punctuation">.</span>App<span class="token punctuation">(</span>visible<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span>add_book<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">)</span>
+app<span class="token punctuation">.</span>display_alerts<span class="token operator">=</span><span class="token boolean">False</span>
+app<span class="token punctuation">.</span>screen_updating<span class="token operator">=</span><span class="token boolean">False</span>
+
+<span class="token comment" spellcheck="true"># 文件位置：filepath，打开test文档，然后保存，关闭，结束程序</span>
+filepath<span class="token operator">=</span>r<span class="token string">'g:\Python Scripts\test.xlsx'</span>
+wb<span class="token operator">=</span>app<span class="token punctuation">.</span>books<span class="token punctuation">.</span>open<span class="token punctuation">(</span>filepath<span class="token punctuation">)</span>
+wb<span class="token punctuation">.</span>save<span class="token punctuation">(</span><span class="token punctuation">)</span>
+wb<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span>
+app<span class="token punctuation">.</span>quit<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>（2）新建Excel文档，命名为test.xlsx，并保存在D盘</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> xlwings <span class="token keyword">as</span> xw
+
+app<span class="token operator">=</span>xw<span class="token punctuation">.</span>App<span class="token punctuation">(</span>visible<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span>add_book<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">)</span>
+wb<span class="token operator">=</span>app<span class="token punctuation">.</span>books<span class="token punctuation">.</span>add<span class="token punctuation">(</span><span class="token punctuation">)</span>
+wb<span class="token punctuation">.</span>save<span class="token punctuation">(</span>r<span class="token string">'d:\test.xlsx'</span><span class="token punctuation">)</span>
+wb<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span>
+app<span class="token punctuation">.</span>quit<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>（3）在单元格输入值</p>
+<p>新建test.xlsx，在sheet1的第一个单元格输入 “人生” ，然后保存关闭，退出Excel程序。</p>
+<pre class="line-numbers language-python"><code class="language-python"> <span class="token keyword">import</span> xlwings <span class="token keyword">as</span> xw
+
+ app<span class="token operator">=</span>xw<span class="token punctuation">.</span>App<span class="token punctuation">(</span>visible<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span>add_book<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">)</span>
+ wb<span class="token operator">=</span>app<span class="token punctuation">.</span>books<span class="token punctuation">.</span>add<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+ <span class="token comment" spellcheck="true"># wb就是新建的工作簿(workbook)，下面则对wb的sheet1的A1单元格赋值</span>
+ wb<span class="token punctuation">.</span>sheets<span class="token punctuation">[</span><span class="token string">'sheet1'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>range<span class="token punctuation">(</span><span class="token string">'A1'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>value<span class="token operator">=</span><span class="token string">'人生'</span>
+ wb<span class="token punctuation">.</span>save<span class="token punctuation">(</span>r<span class="token string">'d:\test.xlsx'</span><span class="token punctuation">)</span>
+ wb<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span>
+ app<span class="token punctuation">.</span>quit<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>打开已保存的test.xlsx，在sheet2的第二个单元格输入“苦短”，然后保存关闭，退出Excel程序</p>
+<pre class="line-numbers language-python"><code class="language-python"> <span class="token keyword">import</span> xlwings <span class="token keyword">as</span> xw
+
+ app<span class="token operator">=</span>xw<span class="token punctuation">.</span>App<span class="token punctuation">(</span>visible<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span>add_book<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">)</span>
+ wb<span class="token operator">=</span>app<span class="token punctuation">.</span>books<span class="token punctuation">.</span>open<span class="token punctuation">(</span>r<span class="token string">'d:\test.xlsx'</span><span class="token punctuation">)</span>
+
+ <span class="token comment" spellcheck="true"># wb就是新建的工作簿(workbook)，下面则对wb的sheet1的A1单元格赋值</span>
+ wb<span class="token punctuation">.</span>sheets<span class="token punctuation">[</span><span class="token string">'sheet1'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>range<span class="token punctuation">(</span><span class="token string">'A1'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>value<span class="token operator">=</span><span class="token string">'苦短'</span>
+ wb<span class="token punctuation">.</span>save<span class="token punctuation">(</span><span class="token punctuation">)</span>
+ wb<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span>
+ app<span class="token punctuation">.</span>quit<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>掌握以上代码，已经完全可以把Excel当作一个txt文本进行数据储存了，也可以读取Excel文件的数据，进行计算后，并将结果保存在Excel中。</p>
+<h3 id="引用工作薄、工作表和单元格"><a href="#引用工作薄、工作表和单元格" class="headerlink" title="引用工作薄、工作表和单元格"></a><strong>引用工作薄、工作表和单元格</strong></h3><p>（1）按名字引用工作簿，注意工作簿应该首先被打开</p>
+<pre class="line-numbers language-python"><code class="language-python">wb<span class="token operator">=</span>xw<span class="token punctuation">.</span>books<span class="token punctuation">[</span>'工作簿的名字‘<span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>（2）引用活动的工作薄</p>
+<pre class="line-numbers language-python"><code class="language-python">wb<span class="token operator">=</span>xw<span class="token punctuation">.</span>books<span class="token punctuation">.</span>active<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>（3）引用工作簿中的sheet</p>
+<pre class="line-numbers language-python"><code class="language-python">sht<span class="token operator">=</span>xw<span class="token punctuation">.</span>books<span class="token punctuation">[</span><span class="token string">'工作簿的名字‘].sheets['</span>sheet的名字'<span class="token punctuation">]</span>
+<span class="token comment" spellcheck="true"># 或者</span>
+wb<span class="token operator">=</span>xw<span class="token punctuation">.</span>books<span class="token punctuation">[</span><span class="token string">'工作簿的名字'</span><span class="token punctuation">]</span>
+sht<span class="token operator">=</span>wb<span class="token punctuation">.</span>sheets<span class="token punctuation">[</span>sheet的名字<span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>（4）引用活动sheet</p>
+<pre class="line-numbers language-python"><code class="language-python">sht<span class="token operator">=</span>xw<span class="token punctuation">.</span>sheets<span class="token punctuation">.</span>active<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>（5）引用A1单元格</p>
+<pre class="line-numbers language-python"><code class="language-python">rng<span class="token operator">=</span>xw<span class="token punctuation">.</span>books<span class="token punctuation">[</span><span class="token string">'工作簿的名字‘].sheets['</span>sheet的名字'<span class="token punctuation">]</span>
+<span class="token comment" spellcheck="true"># 或者</span>
+sht<span class="token operator">=</span>xw<span class="token punctuation">.</span>books<span class="token punctuation">[</span><span class="token string">'工作簿的名字‘].sheets['</span>sheet的名字'<span class="token punctuation">]</span>
+rng<span class="token operator">=</span>sht<span class="token punctuation">.</span>range<span class="token punctuation">(</span><span class="token string">'A1'</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>（6）引用活动sheet上的单元格</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 注意Range首字母大写</span>
+rng<span class="token operator">=</span>xw<span class="token punctuation">.</span>Range<span class="token punctuation">(</span><span class="token string">'A1'</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true">#其中需要注意的是单元格的完全引用路径是：</span>
+<span class="token comment" spellcheck="true"># 第一个Excel程序的第一个工作薄的第一张sheet的第一个单元格</span>
+xw<span class="token punctuation">.</span>apps<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>books<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>sheets<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>range<span class="token punctuation">(</span><span class="token string">'A1'</span><span class="token punctuation">)</span>
+迅速引用单元格的方式是
+sht<span class="token operator">=</span>xw<span class="token punctuation">.</span>books<span class="token punctuation">[</span><span class="token string">'名字'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>sheets<span class="token punctuation">[</span><span class="token string">'名字'</span><span class="token punctuation">]</span>
+
+<span class="token comment" spellcheck="true"># A1单元格</span>
+rng<span class="token operator">=</span>sht<span class="token punctuation">[</span>’A1'<span class="token punctuation">]</span>
+
+<span class="token comment" spellcheck="true"># A1:B5单元格</span>
+rng<span class="token operator">=</span>sht<span class="token punctuation">[</span><span class="token string">'A1:B5'</span><span class="token punctuation">]</span>
+
+<span class="token comment" spellcheck="true"># 在第i+1行，第j+1列的单元格</span>
+<span class="token comment" spellcheck="true"># B1单元格</span>
+rng<span class="token operator">=</span>sht<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">]</span>
+
+<span class="token comment" spellcheck="true"># A1:J10</span>
+rng<span class="token operator">=</span>sht<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token number">10</span><span class="token punctuation">,</span><span class="token punctuation">:</span><span class="token number">10</span><span class="token punctuation">]</span>
+
+<span class="token comment" spellcheck="true">#PS： 对于单元格也可以用表示行列的tuple进行引用</span>
+<span class="token comment" spellcheck="true"># A1单元格的引用</span>
+xw<span class="token punctuation">.</span>Range<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true">#A1:C3单元格的引用</span>
+xw<span class="token punctuation">.</span>Range<span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>引用单元格：</p>
+<pre class="line-numbers language-python"><code class="language-python">rng <span class="token operator">=</span> sht<span class="token punctuation">.</span>range<span class="token punctuation">(</span><span class="token string">'a1'</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">#rng = sht['a1']</span>
+<span class="token comment" spellcheck="true">#rng = sht[0,0] 第一行的第一列即a1,相当于pandas的切片</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>引用区域：</p>
+<pre class="line-numbers language-python"><code class="language-python">rng <span class="token operator">=</span> sht<span class="token punctuation">.</span>range<span class="token punctuation">(</span><span class="token string">'a1:a5'</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">#rng = sht['a1:a5']</span>
+<span class="token comment" spellcheck="true">#rng = sht[:5,0]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<h3 id="写入-amp-读取数据"><a href="#写入-amp-读取数据" class="headerlink" title="写入&amp;读取数据"></a><strong>写入&amp;读取数据</strong></h3><p><strong>1.写入数据</strong></p>
+<p><strong>（1）选择起始单元格A1,写入字符串‘Hello’</strong></p>
+<pre class="line-numbers language-python"><code class="language-python">sht<span class="token punctuation">.</span>range<span class="token punctuation">(</span><span class="token string">'a1'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>value <span class="token operator">=</span> <span class="token string">'Hello'</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p><strong>（2）写入列表</strong></p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 行存储：将列表[1,2,3]储存在A1：C1中</span>
+sht<span class="token punctuation">.</span>range<span class="token punctuation">(</span><span class="token string">'A1'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>value<span class="token operator">=</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">]</span>
+<span class="token comment" spellcheck="true"># 列存储：将列表[1,2,3]储存在A1:A3中</span>
+sht<span class="token punctuation">.</span>range<span class="token punctuation">(</span><span class="token string">'A1'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>options<span class="token punctuation">(</span>transpose<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span><span class="token punctuation">.</span>value<span class="token operator">=</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">]</span>
+<span class="token comment" spellcheck="true"># 将2x2表格，即二维数组，储存在A1:B2中，如第一行1，2，第二行3，4</span>
+sht<span class="token punctuation">.</span>range<span class="token punctuation">(</span><span class="token string">'A1'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>options<span class="token punctuation">(</span>expand<span class="token operator">=</span><span class="token string">'table'</span><span class="token punctuation">)</span><span class="token operator">=</span><span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li><strong>默认按行插入：A1:D1分别写入1,2,3,4</strong></li>
+</ul>
+<pre class="line-numbers language-python"><code class="language-python">sht<span class="token punctuation">.</span>range<span class="token punctuation">(</span><span class="token string">'a1'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>value <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">4</span><span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>等同于</p>
+<pre><code>sht.range('a1:d1').value = [1,2,3,4]</code></pre><ul>
+<li><strong>按列插入：A2:A5分别写入5,6,7,8</strong></li>
+</ul>
+<p>你可能会想：</p>
+<pre class="line-numbers language-python"><code class="language-python">sht<span class="token punctuation">.</span>range<span class="token punctuation">(</span><span class="token string">'a2:a5'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>value <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">5</span><span class="token punctuation">,</span><span class="token number">6</span><span class="token punctuation">,</span><span class="token number">7</span><span class="token punctuation">,</span><span class="token number">8</span><span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>但是你会发现xlwings还是会按行处理的，上面一行等同于：</p>
+<pre class="line-numbers language-python"><code class="language-python">sht<span class="token punctuation">.</span>range<span class="token punctuation">(</span><span class="token string">'a2'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>value <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">5</span><span class="token punctuation">,</span><span class="token number">6</span><span class="token punctuation">,</span><span class="token number">7</span><span class="token punctuation">,</span><span class="token number">8</span><span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>正确语法:</p>
+<pre class="line-numbers language-python"><code class="language-python">sht<span class="token punctuation">.</span>range<span class="token punctuation">(</span><span class="token string">'a2'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>options<span class="token punctuation">(</span>transpose<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span><span class="token punctuation">.</span>value <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">5</span><span class="token punctuation">,</span><span class="token number">6</span><span class="token punctuation">,</span><span class="token number">7</span><span class="token punctuation">,</span><span class="token number">8</span><span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>既然默认的是按行写入，我们就把它倒过来嘛（transpose），单词要打对，如果你打错单词，它不会报错，而会按默认的行来写入（别问我怎么知道的）</p>
+<ul>
+<li><strong>多行输入就要用二维列表了：</strong></li>
+</ul>
+<pre class="line-numbers language-python"><code class="language-python">sht<span class="token punctuation">.</span>range<span class="token punctuation">(</span><span class="token string">'a6'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>expand<span class="token punctuation">(</span><span class="token string">'table'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>value <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token string">'a'</span><span class="token punctuation">,</span><span class="token string">'b'</span><span class="token punctuation">,</span><span class="token string">'c'</span><span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token punctuation">[</span><span class="token string">'d'</span><span class="token punctuation">,</span><span class="token string">'e'</span><span class="token punctuation">,</span><span class="token string">'f'</span><span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token punctuation">[</span><span class="token string">'g'</span><span class="token punctuation">,</span><span class="token string">'h'</span><span class="token punctuation">,</span><span class="token string">'i'</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p><strong>2.读取数据</strong></p>
+<p><strong>（1）读取单个值</strong></p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 将A1的值，读取到a变量中</span>
+a<span class="token operator">=</span>sht<span class="token punctuation">.</span>range<span class="token punctuation">(</span><span class="token string">'A1'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>value<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p><strong>（2）将值读取到列表中</strong></p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#将A1到A2的值，读取到a列表中</span>
+a<span class="token operator">=</span>sht<span class="token punctuation">.</span>range<span class="token punctuation">(</span><span class="token string">'A1:A2'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>value
+<span class="token comment" spellcheck="true"># 将第一行和第二行的数据按二维数组的方式读取</span>
+a<span class="token operator">=</span>sht<span class="token punctuation">.</span>range<span class="token punctuation">(</span><span class="token string">'A1:B2'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>value<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li><strong>选取一列的数据</strong></li>
+</ul>
+<p>先计算单元格的行数(前提是连续的单元格)</p>
+<pre class="line-numbers language-python"><code class="language-python">rng <span class="token operator">=</span> sht<span class="token punctuation">.</span>range<span class="token punctuation">(</span><span class="token string">'a1'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>expand<span class="token punctuation">(</span><span class="token string">'table'</span><span class="token punctuation">)</span>
+nrows <span class="token operator">=</span> rng<span class="token punctuation">.</span>rows<span class="token punctuation">.</span>count<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>接着就可以按准确范围读取了</p>
+<pre class="line-numbers language-python"><code class="language-python">a <span class="token operator">=</span> sht<span class="token punctuation">.</span>range<span class="token punctuation">(</span>f<span class="token string">'a1:a{nrows}'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>value<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ul>
+<li><strong>选取一行的数据</strong></li>
+</ul>
+<pre class="line-numbers language-python"><code class="language-python">ncols <span class="token operator">=</span> rng<span class="token punctuation">.</span>columns<span class="token punctuation">.</span>count
+<span class="token comment" spellcheck="true">#用切片</span>
+fst_col <span class="token operator">=</span> sht<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token punctuation">:</span>ncols<span class="token punctuation">]</span><span class="token punctuation">.</span>value<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<h3 id="常用函数和方法"><a href="#常用函数和方法" class="headerlink" title="常用函数和方法"></a><strong>常用函数和方法</strong></h3><p><strong>1.Book工作薄常用的api</strong></p>
+<pre class="line-numbers language-python"><code class="language-python">wb<span class="token operator">=</span>xw<span class="token punctuation">.</span>books<span class="token punctuation">[</span>‘工作簿名称'<span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ul>
+<li>wb.activate() 激活为当前工作簿</li>
+<li>wb.fullname 返回工作簿的绝对路径</li>
+<li>wb.name 返回工作簿的名称</li>
+<li>wb.save(path=None) 保存工作簿，默认路径为工作簿原路径，若未保存则为脚本所在的路径</li>
+<li>wb. close() 关闭工作簿</li>
+</ul>
+<p>代码示例：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 引用Excel程序中，当前的工作簿</span>
+wb<span class="token operator">=</span>xw<span class="token punctuation">.</span>books<span class="token punctuation">.</span>acitve
+<span class="token comment" spellcheck="true"># 返回工作簿的绝对路径</span>
+x<span class="token operator">=</span>wb<span class="token punctuation">.</span>fullname
+<span class="token comment" spellcheck="true"># 返回工作簿的名称</span>
+x<span class="token operator">=</span>wb<span class="token punctuation">.</span>name
+<span class="token comment" spellcheck="true"># 保存工作簿，默认路径为工作簿原路径，若未保存则为脚本所在的路径</span>
+x<span class="token operator">=</span>wb<span class="token punctuation">.</span>save<span class="token punctuation">(</span>path<span class="token operator">=</span>None<span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true"># 关闭工作簿</span>
+x<span class="token operator">=</span>wb<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>2.sheet常用的api</strong></p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 引用某指定sheet</span>
+sht<span class="token operator">=</span>xw<span class="token punctuation">.</span>books<span class="token punctuation">[</span><span class="token string">'工作簿名称'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>sheets<span class="token punctuation">[</span><span class="token string">'sheet的名称'</span><span class="token punctuation">]</span>
+<span class="token comment" spellcheck="true"># 激活sheet为活动工作表</span>
+sht<span class="token punctuation">.</span>activate<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true"># 清除sheet的内容和格式</span>
+sht<span class="token punctuation">.</span>clear<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true"># 清除sheet的内容</span>
+sht<span class="token punctuation">.</span>contents<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true"># 获取sheet的名称</span>
+sht<span class="token punctuation">.</span>name
+<span class="token comment" spellcheck="true"># 删除sheet</span>
+sht<span class="token punctuation">.</span>delete<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>3.range常用的api</strong></p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 引用当前活动工作表的单元格</span>
+rng<span class="token operator">=</span>xw<span class="token punctuation">.</span>Range<span class="token punctuation">(</span><span class="token string">'A1'</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true"># 加入超链接</span>
+<span class="token comment" spellcheck="true"># rng.add_hyperlink(r'www.baidu.com','百度',‘提示：点击即链接到百度')</span>
+<span class="token comment" spellcheck="true"># 取得当前range的地址</span>
+rng<span class="token punctuation">.</span>address
+rng<span class="token punctuation">.</span>get_address<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true"># 清除range的内容</span>
+rng<span class="token punctuation">.</span>clear_contents<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true"># 清除格式和内容</span>
+rng<span class="token punctuation">.</span>clear<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true"># 取得range的背景色,以元组形式返回RGB值</span>
+rng<span class="token punctuation">.</span>color
+<span class="token comment" spellcheck="true"># 设置range的颜色</span>
+rng<span class="token punctuation">.</span>color<span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">255</span><span class="token punctuation">,</span><span class="token number">255</span><span class="token punctuation">,</span><span class="token number">255</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true"># 清除range的背景色</span>
+rng<span class="token punctuation">.</span>color<span class="token operator">=</span>None
+<span class="token comment" spellcheck="true"># 获得range的第一列列标</span>
+rng<span class="token punctuation">.</span>column
+<span class="token comment" spellcheck="true"># 返回range中单元格的数据</span>
+rng<span class="token punctuation">.</span>count
+<span class="token comment" spellcheck="true"># 返回current_region</span>
+rng<span class="token punctuation">.</span>current_region
+<span class="token comment" spellcheck="true"># 返回ctrl + 方向</span>
+rng<span class="token punctuation">.</span>end<span class="token punctuation">(</span><span class="token string">'down'</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true"># 获取公式或者输入公式</span>
+rng<span class="token punctuation">.</span>formula<span class="token operator">=</span><span class="token string">'=SUM(B1:B5)'</span>
+<span class="token comment" spellcheck="true"># 数组公式</span>
+rng<span class="token punctuation">.</span>formula_array
+<span class="token comment" spellcheck="true"># 获得单元格的绝对地址</span>
+rng<span class="token punctuation">.</span>get_address<span class="token punctuation">(</span>row_absolute<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span> column_absolute<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span>include_sheetname<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">,</span> external<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true"># 获得列宽</span>
+rng<span class="token punctuation">.</span>column_width
+<span class="token comment" spellcheck="true"># 返回range的总宽度</span>
+rng<span class="token punctuation">.</span>width
+<span class="token comment" spellcheck="true"># 获得range的超链接</span>
+rng<span class="token punctuation">.</span>hyperlink
+<span class="token comment" spellcheck="true"># 获得range中右下角最后一个单元格</span>
+rng<span class="token punctuation">.</span>last_cell
+<span class="token comment" spellcheck="true"># range平移</span>
+rng<span class="token punctuation">.</span>offset<span class="token punctuation">(</span>row_offset<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">,</span>column_offset<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">#range进行resize改变range的大小</span>
+rng<span class="token punctuation">.</span>resize<span class="token punctuation">(</span>row_size<span class="token operator">=</span>None<span class="token punctuation">,</span>column_size<span class="token operator">=</span>None<span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true"># range的第一行行标</span>
+rng<span class="token punctuation">.</span>row
+<span class="token comment" spellcheck="true"># 行的高度，所有行一样高返回行高，不一样返回None</span>
+rng<span class="token punctuation">.</span>row_height
+<span class="token comment" spellcheck="true"># 返回range的总高度</span>
+rng<span class="token punctuation">.</span>height
+<span class="token comment" spellcheck="true"># 返回range的行数和列数</span>
+rng<span class="token punctuation">.</span>shape
+<span class="token comment" spellcheck="true"># 返回range所在的sheet</span>
+rng<span class="token punctuation">.</span>sheet
+<span class="token comment" spellcheck="true">#返回range的所有行</span>
+rng<span class="token punctuation">.</span>rows
+<span class="token comment" spellcheck="true"># range的第一行</span>
+rng<span class="token punctuation">.</span>rows<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>
+<span class="token comment" spellcheck="true"># range的总行数</span>
+rng<span class="token punctuation">.</span>rows<span class="token punctuation">.</span>count
+<span class="token comment" spellcheck="true"># 返回range的所有列</span>
+rng<span class="token punctuation">.</span>columns
+<span class="token comment" spellcheck="true"># 返回range的第一列</span>
+rng<span class="token punctuation">.</span>columns<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>
+<span class="token comment" spellcheck="true"># 返回range的列数</span>
+rng<span class="token punctuation">.</span>columns<span class="token punctuation">.</span>count
+<span class="token comment" spellcheck="true"># 所有range的大小自适应</span>
+rng<span class="token punctuation">.</span>autofit<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true"># 所有列宽度自适应</span>
+rng<span class="token punctuation">.</span>columns<span class="token punctuation">.</span>autofit<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true"># 所有行宽度自适应</span>
+rng<span class="token punctuation">.</span>rows<span class="token punctuation">.</span>autofit<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>4.books 工作簿集合的api</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 新建工作簿</span>
+xw<span class="token punctuation">.</span>books<span class="token punctuation">.</span>add<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true"># 引用当前活动工作簿</span>
+xw<span class="token punctuation">.</span>books<span class="token punctuation">.</span>active<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>4.sheets 工作表的集合</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 新建工作表</span>
+xw<span class="token punctuation">.</span>sheets<span class="token punctuation">.</span>add<span class="token punctuation">(</span>name<span class="token operator">=</span>None<span class="token punctuation">,</span>before<span class="token operator">=</span>None<span class="token punctuation">,</span>after<span class="token operator">=</span>None<span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true"># 引用当前活动sheet</span>
+xw<span class="token punctuation">.</span>sheets<span class="token punctuation">.</span>active<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a><strong>数据结构</strong></h3><p><strong>1.一维数据</strong></p>
+<p>python的列表，可以和Excel中的行列进行数据交换，python中的一维列表，在Excel中默认为一行数据。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> xlwings <span class="token keyword">as</span> xw
+
+sht<span class="token operator">=</span>xw<span class="token punctuation">.</span>sheets<span class="token punctuation">.</span>active
+
+<span class="token comment" spellcheck="true"># 将1，2，3分别写入了A1，B1，C1单元格中</span>
+sht<span class="token punctuation">.</span>range<span class="token punctuation">(</span><span class="token string">'A1'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>value<span class="token operator">=</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">]</span>
+
+<span class="token comment" spellcheck="true"># 将A1，B1，C1单元格的值存入list1列表中</span>
+list1<span class="token operator">=</span>sht<span class="token punctuation">.</span>range<span class="token punctuation">(</span><span class="token string">'A1:C1'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>value
+
+<span class="token comment" spellcheck="true"># 将1，2，3分别写入了A1，A2，A3单元格中</span>
+sht<span class="token punctuation">.</span>range<span class="token punctuation">(</span><span class="token string">'A1'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>options<span class="token punctuation">(</span>transpose<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span><span class="token punctuation">.</span>value<span class="token operator">=</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">]</span>
+
+<span class="token comment" spellcheck="true"># 将A1，A2，A3单元格中值存入list1列表中</span>
+list1<span class="token operator">=</span>sht<span class="token punctuation">.</span>range<span class="token punctuation">(</span><span class="token string">'A1:A3'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>value<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>2.二维数据</strong></p>
+<p>python的二维列表，可以转换为Excel中的行列。二维列表，即列表中的元素还是列表。在Excel中，二维列表中的列表元素，代表Excel表格中的一列。例如：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 将a1,a2,a3输入第一列，b1,b2,b3输入第二列</span>
+list1<span class="token operator">=</span><span class="token punctuation">[</span><span class="token punctuation">[</span>‘a1’<span class="token punctuation">,</span><span class="token string">'a2'</span><span class="token punctuation">,</span><span class="token string">'a3'</span><span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token punctuation">[</span><span class="token string">'b1'</span><span class="token punctuation">,</span><span class="token string">'b2'</span><span class="token punctuation">,</span><span class="token string">'b3'</span><span class="token punctuation">]</span><span class="token punctuation">]</span>
+sht<span class="token punctuation">.</span>range<span class="token punctuation">(</span><span class="token string">'A1'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>value<span class="token operator">=</span>list1<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<img src="/images/loading.gif" data-original="../images/language/image-20211010130259703.png" style="zoom:50%;">
+
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 将A1：B3的值赋给二维列表list1</span>
+list1<span class="token operator">=</span>sht<span class="token punctuation">.</span>range<span class="token punctuation">(</span><span class="token string">'A1:B3'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>value<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p><strong>3.Excel中区域的选取表格</strong></p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 选取第一列</span>
+rng<span class="token operator">=</span>sht<span class="token punctuation">.</span> range<span class="token punctuation">(</span><span class="token string">'A1'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>expand<span class="token punctuation">(</span><span class="token string">'down'</span><span class="token punctuation">)</span>
+rng<span class="token punctuation">.</span>value<span class="token operator">=</span><span class="token punctuation">[</span><span class="token string">'a1'</span><span class="token punctuation">,</span><span class="token string">'a2'</span><span class="token punctuation">,</span><span class="token string">'a3'</span><span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<img src="/images/loading.gif" data-original="../images/language/image-20211010130319686.png" style="zoom:50%;">
+
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 选取第一行</span>
+rng<span class="token operator">=</span>sht<span class="token punctuation">.</span>range<span class="token punctuation">(</span><span class="token string">'A1'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>expand<span class="token punctuation">(</span><span class="token string">'right'</span><span class="token punctuation">)</span>
+rng<span class="token operator">=</span><span class="token punctuation">[</span><span class="token string">'a1'</span><span class="token punctuation">,</span><span class="token string">'b1'</span><span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<img src="/images/loading.gif" data-original="../images/language/image-20211010130407843.png" style="zoom:50%;">
+
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 选取表格</span>
+rng<span class="token punctuation">.</span>sht<span class="token punctuation">.</span>range<span class="token punctuation">(</span><span class="token string">'A1'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>expand<span class="token punctuation">(</span><span class="token string">'table'</span><span class="token punctuation">)</span>
+rng<span class="token punctuation">.</span>value<span class="token operator">=</span><span class="token punctuation">[</span><span class="token punctuation">[</span>‘a1’<span class="token punctuation">,</span><span class="token string">'a2'</span><span class="token punctuation">,</span><span class="token string">'a3'</span><span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token punctuation">[</span><span class="token string">'b1'</span><span class="token punctuation">,</span><span class="token string">'b2'</span><span class="token punctuation">,</span><span class="token string">'b3'</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<img src="/images/loading.gif" data-original="../images/language/image-20211010130426876.png" style="zoom:50%;">
+
+<h3 id="xlwings生成图表"><a href="#xlwings生成图表" class="headerlink" title="xlwings生成图表"></a><strong>xlwings生成图表</strong></h3><pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> xlwings <span class="token keyword">as</span> xw
+app <span class="token operator">=</span> xw<span class="token punctuation">.</span>App<span class="token punctuation">(</span><span class="token punctuation">)</span>
+wb <span class="token operator">=</span> app<span class="token punctuation">.</span>books<span class="token punctuation">.</span>active
+sht <span class="token operator">=</span> wb<span class="token punctuation">.</span>sheets<span class="token punctuation">.</span>active
+
+chart <span class="token operator">=</span> sht<span class="token punctuation">.</span>charts<span class="token punctuation">.</span>add<span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># 100, 10 为图表放置的位置坐标。以像素为单位。</span>
+chart<span class="token punctuation">.</span>set_source_data<span class="token punctuation">(</span>sht<span class="token punctuation">.</span>range<span class="token punctuation">(</span><span class="token string">'A1'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>expand<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># 参数为表格中的数据区域。</span>
+<span class="token comment" spellcheck="true"># chart.chart_type = i               # 用来设置图表类型，具体参数件下面详细说明。</span>
+chart<span class="token punctuation">.</span>api<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">.</span>ChartTitle<span class="token punctuation">.</span>Text <span class="token operator">=</span> i          <span class="token comment" spellcheck="true"># 用来设置图表的标题。</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>示例代码：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> xlwings <span class="token keyword">as</span> xw
+app <span class="token operator">=</span> xw<span class="token punctuation">.</span>App<span class="token punctuation">(</span><span class="token punctuation">)</span>
+wb <span class="token operator">=</span> app<span class="token punctuation">.</span>books<span class="token punctuation">.</span>active
+sht <span class="token operator">=</span> wb<span class="token punctuation">.</span>sheets<span class="token punctuation">.</span>active
+<span class="token comment" spellcheck="true"># 生成图表的数据</span>
+sht<span class="token punctuation">.</span>range<span class="token punctuation">(</span><span class="token string">'A1'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>value <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token string">'时间'</span><span class="token punctuation">,</span> <span class="token string">'数量'</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token string">'1日'</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token string">'2日'</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token string">'3日'</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">]</span>
+             <span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token string">'4日'</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token string">'5日'</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token string">'6日'</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">]</span><span class="token punctuation">]</span>
+<span class="token triple-quoted-string string">"""图表类型参数，被注释的那几个，无法生成对应的图表"""</span>
+dic <span class="token operator">=</span> <span class="token punctuation">{</span>
+  <span class="token string">'3d_area'</span><span class="token punctuation">:</span> <span class="token operator">-</span><span class="token number">4098</span><span class="token punctuation">,</span>
+  <span class="token string">'3d_area_stacked'</span><span class="token punctuation">:</span> <span class="token number">78</span><span class="token punctuation">,</span>
+  <span class="token string">'3d_area_stacked_100'</span><span class="token punctuation">:</span> <span class="token number">79</span><span class="token punctuation">,</span>
+  <span class="token string">'3d_bar_clustered'</span><span class="token punctuation">:</span> <span class="token number">60</span><span class="token punctuation">,</span>
+  <span class="token string">'3d_bar_stacked'</span><span class="token punctuation">:</span> <span class="token number">61</span><span class="token punctuation">,</span>
+  <span class="token string">'3d_bar_stacked_100'</span><span class="token punctuation">:</span> <span class="token number">62</span><span class="token punctuation">,</span>
+  <span class="token string">'3d_column'</span><span class="token punctuation">:</span> <span class="token operator">-</span><span class="token number">4100</span><span class="token punctuation">,</span>
+  <span class="token string">'3d_column_clustered'</span><span class="token punctuation">:</span> <span class="token number">54</span><span class="token punctuation">,</span>
+  <span class="token string">'3d_column_stacked'</span><span class="token punctuation">:</span> <span class="token number">55</span><span class="token punctuation">,</span>
+  <span class="token string">'3d_column_stacked_100'</span><span class="token punctuation">:</span> <span class="token number">56</span><span class="token punctuation">,</span>
+  <span class="token string">'3d_line'</span><span class="token punctuation">:</span> <span class="token operator">-</span><span class="token number">4101</span><span class="token punctuation">,</span>
+  <span class="token string">'3d_pie'</span><span class="token punctuation">:</span> <span class="token operator">-</span><span class="token number">4102</span><span class="token punctuation">,</span>
+  <span class="token string">'3d_pie_exploded'</span><span class="token punctuation">:</span> <span class="token number">70</span><span class="token punctuation">,</span>
+  <span class="token string">'area'</span><span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
+  <span class="token string">'area_stacked'</span><span class="token punctuation">:</span> <span class="token number">76</span><span class="token punctuation">,</span>
+  <span class="token string">'area_stacked_100'</span><span class="token punctuation">:</span> <span class="token number">77</span><span class="token punctuation">,</span>
+  <span class="token string">'bar_clustered'</span><span class="token punctuation">:</span> <span class="token number">57</span><span class="token punctuation">,</span>
+  <span class="token string">'bar_of_pie'</span><span class="token punctuation">:</span> <span class="token number">71</span><span class="token punctuation">,</span>
+  <span class="token string">'bar_stacked'</span><span class="token punctuation">:</span> <span class="token number">58</span><span class="token punctuation">,</span>
+  <span class="token string">'bar_stacked_100'</span><span class="token punctuation">:</span> <span class="token number">59</span><span class="token punctuation">,</span>
+  <span class="token string">'bubble'</span><span class="token punctuation">:</span> <span class="token number">15</span><span class="token punctuation">,</span>
+  <span class="token string">'bubble_3d_effect'</span><span class="token punctuation">:</span> <span class="token number">87</span><span class="token punctuation">,</span>
+  <span class="token string">'column_clustered'</span><span class="token punctuation">:</span> <span class="token number">51</span><span class="token punctuation">,</span>
+  <span class="token string">'column_stacked'</span><span class="token punctuation">:</span> <span class="token number">52</span><span class="token punctuation">,</span>
+  <span class="token string">'column_stacked_100'</span><span class="token punctuation">:</span> <span class="token number">53</span><span class="token punctuation">,</span>
+  <span class="token string">'cone_bar_clustered'</span><span class="token punctuation">:</span> <span class="token number">102</span><span class="token punctuation">,</span>
+  <span class="token string">'cone_bar_stacked'</span><span class="token punctuation">:</span> <span class="token number">103</span><span class="token punctuation">,</span>
+  <span class="token string">'cone_bar_stacked_100'</span><span class="token punctuation">:</span> <span class="token number">104</span><span class="token punctuation">,</span>
+  <span class="token string">'cone_col'</span><span class="token punctuation">:</span> <span class="token number">105</span><span class="token punctuation">,</span>
+  <span class="token string">'cone_col_clustered'</span><span class="token punctuation">:</span> <span class="token number">99</span><span class="token punctuation">,</span>
+  <span class="token string">'cone_col_stacked'</span><span class="token punctuation">:</span> <span class="token number">100</span><span class="token punctuation">,</span>
+  <span class="token string">'cone_col_stacked_100'</span><span class="token punctuation">:</span> <span class="token number">101</span><span class="token punctuation">,</span>
+  <span class="token string">'cylinder_bar_clustered'</span><span class="token punctuation">:</span> <span class="token number">95</span><span class="token punctuation">,</span>
+  <span class="token string">'cylinder_bar_stacked'</span><span class="token punctuation">:</span> <span class="token number">96</span><span class="token punctuation">,</span>
+  <span class="token string">'cylinder_bar_stacked_100'</span><span class="token punctuation">:</span> <span class="token number">97</span><span class="token punctuation">,</span>
+  <span class="token string">'cylinder_col'</span><span class="token punctuation">:</span> <span class="token number">98</span><span class="token punctuation">,</span>
+  <span class="token string">'cylinder_col_clustered'</span><span class="token punctuation">:</span> <span class="token number">92</span><span class="token punctuation">,</span>
+  <span class="token string">'cylinder_col_stacked'</span><span class="token punctuation">:</span> <span class="token number">93</span><span class="token punctuation">,</span>
+  <span class="token string">'cylinder_col_stacked_100'</span><span class="token punctuation">:</span> <span class="token number">94</span><span class="token punctuation">,</span>
+  <span class="token string">'doughnut'</span><span class="token punctuation">:</span> <span class="token operator">-</span><span class="token number">4120</span><span class="token punctuation">,</span>
+  <span class="token string">'doughnut_exploded'</span><span class="token punctuation">:</span> <span class="token number">80</span><span class="token punctuation">,</span>
+  <span class="token string">'line'</span><span class="token punctuation">:</span> <span class="token number">4</span><span class="token punctuation">,</span>
+  <span class="token string">'line_markers'</span><span class="token punctuation">:</span> <span class="token number">65</span><span class="token punctuation">,</span>
+  <span class="token string">'line_markers_stacked'</span><span class="token punctuation">:</span> <span class="token number">66</span><span class="token punctuation">,</span>
+  <span class="token string">'line_markers_stacked_100'</span><span class="token punctuation">:</span> <span class="token number">67</span><span class="token punctuation">,</span>
+  <span class="token string">'line_stacked'</span><span class="token punctuation">:</span> <span class="token number">63</span><span class="token punctuation">,</span>
+  <span class="token string">'line_stacked_100'</span><span class="token punctuation">:</span> <span class="token number">64</span><span class="token punctuation">,</span>
+  <span class="token string">'pie'</span><span class="token punctuation">:</span> <span class="token number">5</span><span class="token punctuation">,</span>
+  <span class="token string">'pie_exploded'</span><span class="token punctuation">:</span> <span class="token number">69</span><span class="token punctuation">,</span>
+  <span class="token string">'pie_of_pie'</span><span class="token punctuation">:</span> <span class="token number">68</span><span class="token punctuation">,</span>
+  <span class="token string">'pyramid_bar_clustered'</span><span class="token punctuation">:</span> <span class="token number">109</span><span class="token punctuation">,</span>
+  <span class="token string">'pyramid_bar_stacked'</span><span class="token punctuation">:</span> <span class="token number">110</span><span class="token punctuation">,</span>
+  <span class="token string">'pyramid_bar_stacked_100'</span><span class="token punctuation">:</span> <span class="token number">111</span><span class="token punctuation">,</span>
+  <span class="token string">'pyramid_col'</span><span class="token punctuation">:</span> <span class="token number">112</span><span class="token punctuation">,</span>
+  <span class="token string">'pyramid_col_clustered'</span><span class="token punctuation">:</span> <span class="token number">106</span><span class="token punctuation">,</span>
+  <span class="token string">'pyramid_col_stacked'</span><span class="token punctuation">:</span> <span class="token number">107</span><span class="token punctuation">,</span>
+  <span class="token string">'pyramid_col_stacked_100'</span><span class="token punctuation">:</span> <span class="token number">108</span><span class="token punctuation">,</span>
+  <span class="token string">'radar'</span><span class="token punctuation">:</span> <span class="token operator">-</span><span class="token number">4151</span><span class="token punctuation">,</span>
+  <span class="token string">'radar_filled'</span><span class="token punctuation">:</span> <span class="token number">82</span><span class="token punctuation">,</span>
+  <span class="token string">'radar_markers'</span><span class="token punctuation">:</span> <span class="token number">81</span><span class="token punctuation">,</span>
+  <span class="token comment" spellcheck="true"># 'stock_hlc': 88,</span>
+  <span class="token comment" spellcheck="true"># 'stock_ohlc': 89,</span>
+  <span class="token comment" spellcheck="true"># 'stock_vhlc': 90,</span>
+  <span class="token comment" spellcheck="true"># 'stock_vohlc': 91,</span>
+  <span class="token comment" spellcheck="true"># 'surface': 83,</span>
+  <span class="token comment" spellcheck="true"># 'surface_top_view': 85,</span>
+  <span class="token comment" spellcheck="true"># 'surface_top_view_wireframe': 86,</span>
+  <span class="token comment" spellcheck="true"># 'surface_wireframe': 84,</span>
+  <span class="token string">'xy_scatter'</span><span class="token punctuation">:</span> <span class="token operator">-</span><span class="token number">4169</span><span class="token punctuation">,</span>
+  <span class="token string">'xy_scatter_lines'</span><span class="token punctuation">:</span> <span class="token number">74</span><span class="token punctuation">,</span>
+  <span class="token string">'xy_scatter_lines_no_markers'</span><span class="token punctuation">:</span> <span class="token number">75</span><span class="token punctuation">,</span>
+  <span class="token string">'xy_scatter_smooth'</span><span class="token punctuation">:</span> <span class="token number">72</span><span class="token punctuation">,</span>
+  <span class="token string">'xy_scatter_smooth_no_markers'</span><span class="token punctuation">:</span> <span class="token number">73</span>
+<span class="token punctuation">}</span>
+w <span class="token operator">=</span> <span class="token number">385</span>
+h <span class="token operator">=</span> <span class="token number">241</span>
+n <span class="token operator">=</span> <span class="token number">0</span>
+x <span class="token operator">=</span> <span class="token number">100</span>
+y <span class="token operator">=</span> <span class="token number">10</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> dic<span class="token punctuation">.</span>keys<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+  xx <span class="token operator">=</span> x <span class="token operator">+</span> n <span class="token operator">%</span> <span class="token number">3</span><span class="token operator">*</span>w  <span class="token comment" spellcheck="true"># 用来生成图表放置的x坐标。</span>
+  yy <span class="token operator">=</span> y <span class="token operator">+</span> n<span class="token operator">//</span><span class="token number">3</span><span class="token operator">*</span>h   <span class="token comment" spellcheck="true"># 用来生成图表放置的y坐标。</span>
+  chart <span class="token operator">=</span> sht<span class="token punctuation">.</span>charts<span class="token punctuation">.</span>add<span class="token punctuation">(</span>xx<span class="token punctuation">,</span> yy<span class="token punctuation">)</span>
+  chart<span class="token punctuation">.</span>set_source_data<span class="token punctuation">(</span>sht<span class="token punctuation">.</span>range<span class="token punctuation">(</span><span class="token string">'A1'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>expand<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+  chart<span class="token punctuation">.</span>chart_type <span class="token operator">=</span> i
+  chart<span class="token punctuation">.</span>api<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">.</span>ChartTitle<span class="token punctuation">.</span>Text <span class="token operator">=</span> i
+  n <span class="token operator">+=</span> <span class="token number">1</span>
+wb<span class="token punctuation">.</span>save<span class="token punctuation">(</span><span class="token string">'chart_图表'</span><span class="token punctuation">)</span>
+wb<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span>
+app<span class="token punctuation">.</span>quit<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>效果如下：</p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211010130530312.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211010130540439.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211010130551504.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211010130603457.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211010130615106.png" alt=""></p>
+<h2 id="附录五：Python-xlswriter-写入-操作Excel"><a href="#附录五：Python-xlswriter-写入-操作Excel" class="headerlink" title="附录五：Python xlswriter 写入 操作Excel"></a>附录五：Python xlswriter 写入 操作Excel</h2><ul>
+<li>XlsxWriter是一个用来写Excel2007和xlsx文件格式的python模块。它可以用来写文本、数字、公式并支持单元格格式化、图片、图表、文档配置、自动过滤等特性</li>
+<li>优点：功能更多、文档高保真、扩展格式类型、更快并可配置 缺点：不能用来读取和修改excel文件</li>
+</ul>
+<p>官方文档：<a href="https://xlsxwriter.readthedocs.io/" target="_blank" rel="noopener">https://xlsxwriter.readthedocs.io/</a></p>
+<h3 id="xlswriter基本操作"><a href="#xlswriter基本操作" class="headerlink" title="xlswriter基本操作"></a><strong>xlswriter基本操作</strong></h3><p><strong>1.安装 xlswriter 模块</strong></p>
+<pre><code>pip install XlsxWriter</code></pre><p><strong>2.创建excel文件</strong></p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 创建文件</span>
+workbook <span class="token operator">=</span> xlsxwriter<span class="token punctuation">.</span>Workbook<span class="token punctuation">(</span><span class="token string">"new_excel.xlsx"</span><span class="token punctuation">)</span> <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p><strong>3.创建sheet</strong></p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 创建sheet</span>
+worksheet <span class="token operator">=</span> workbook<span class="token punctuation">.</span>add_worksheet<span class="token punctuation">(</span><span class="token string">"first_sheet"</span><span class="token punctuation">)</span> <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p><strong>4.写入数据</strong></p>
+<p>（1）写入文本</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 法一：</span>
+worksheet<span class="token punctuation">.</span>write<span class="token punctuation">(</span><span class="token string">'A1'</span><span class="token punctuation">,</span> <span class="token string">'write something'</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true"># 法二：</span>
+worksheet<span class="token punctuation">.</span>write<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token string">'hello world'</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>（2）写入数字</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 写入数字</span>
+worksheet<span class="token punctuation">.</span>write<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">32</span><span class="token punctuation">)</span>
+worksheet<span class="token punctuation">.</span>write<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">32.3</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>（3）写入函数</p>
+<pre class="line-numbers language-python"><code class="language-python">worksheet<span class="token punctuation">.</span>write<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">'=sum(B1:B2)'</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>（4）写入图片</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 插入图片</span>
+worksheet<span class="token punctuation">.</span>insert_image<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token string">'test.png'</span><span class="token punctuation">)</span>
+worksheet<span class="token punctuation">.</span>insert_image<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token string">'test.png'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token string">'url'</span><span class="token punctuation">:</span> <span class="token string">'http://httpbin.org/'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>（5）写入日期</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 写入日期</span>
+d <span class="token operator">=</span> workbook<span class="token punctuation">.</span>add_format<span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token string">'num_format'</span><span class="token punctuation">:</span> <span class="token string">'yyyy-mm-dd'</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+worksheet<span class="token punctuation">.</span>write<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> datetime<span class="token punctuation">.</span>datetime<span class="token punctuation">.</span>strptime<span class="token punctuation">(</span><span class="token string">'2017-09-13'</span><span class="token punctuation">,</span> <span class="token string">'%Y-%m-%d'</span><span class="token punctuation">)</span><span class="token punctuation">,</span> d<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>（6）设置行、列属性</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 设置行属性，行高设置为40</span>
+worksheet<span class="token punctuation">.</span>set_row<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">40</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># 设置列属性，把A到B列宽设置为20</span>
+worksheet<span class="token punctuation">.</span>set_column<span class="token punctuation">(</span><span class="token string">'A:B'</span><span class="token punctuation">,</span> <span class="token number">20</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>5.自定义格式</strong></p>
+<p>常用格式：</p>
+<ul>
+<li>字体颜色：color</li>
+<li>字体加粗：bold</li>
+<li>字体大小：font_site</li>
+<li>日期格式：num_format</li>
+<li>超链接：url</li>
+<li>下划线设置：underline</li>
+<li>单元格颜色：bg_color</li>
+<li>边框：border</li>
+<li>对齐方式：align</li>
+</ul>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 自定义格式</span>
+f <span class="token operator">=</span> workbook<span class="token punctuation">.</span>add_format<span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token string">'border'</span><span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">'font_size'</span><span class="token punctuation">:</span> <span class="token number">13</span><span class="token punctuation">,</span> <span class="token string">'bold'</span><span class="token punctuation">:</span> <span class="token boolean">True</span><span class="token punctuation">,</span> <span class="token string">'align'</span><span class="token punctuation">:</span> <span class="token string">'center'</span><span class="token punctuation">,</span><span class="token string">'bg_color'</span><span class="token punctuation">:</span> <span class="token string">'cccccc'</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+worksheet<span class="token punctuation">.</span>write<span class="token punctuation">(</span><span class="token string">'A3'</span><span class="token punctuation">,</span> <span class="token string">"python excel"</span><span class="token punctuation">,</span> f<span class="token punctuation">)</span>
+worksheet<span class="token punctuation">.</span>set_row<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">40</span><span class="token punctuation">,</span> f<span class="token punctuation">)</span>
+worksheet<span class="token punctuation">.</span>set_column<span class="token punctuation">(</span><span class="token string">'A:E'</span><span class="token punctuation">,</span> <span class="token number">20</span><span class="token punctuation">,</span> f<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>6.批量往单元格写入数据</strong></p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 批量往单元格写入数据</span>
+worksheet<span class="token punctuation">.</span>write_column<span class="token punctuation">(</span><span class="token string">'A15'</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">]</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># 列写入，从A15开始</span>
+worksheet<span class="token punctuation">.</span>write_row<span class="token punctuation">(</span><span class="token string">'A12'</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">]</span><span class="token punctuation">)</span>        <span class="token comment" spellcheck="true"># 行写入，从A12开始</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p><strong>7.合并单元格写入</strong></p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 合并单元格写入</span>
+worksheet<span class="token punctuation">.</span>merge_range<span class="token punctuation">(</span><span class="token number">7</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">11</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">,</span> <span class="token string">'merge_range'</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p><strong>8.关闭文件</strong></p>
+<pre class="line-numbers language-python"><code class="language-python">workbook<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h3 id="xlswriter-生成折线图"><a href="#xlswriter-生成折线图" class="headerlink" title="xlswriter 生成折线图"></a><strong>xlswriter 生成折线图</strong></h3><p>示例代码：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># -*- coding:utf-8 -*-</span>
+
+<span class="token keyword">import</span> xlsxwriter
+
+<span class="token comment" spellcheck="true"># 创建一个excel</span>
+workbook <span class="token operator">=</span> xlsxwriter<span class="token punctuation">.</span>Workbook<span class="token punctuation">(</span><span class="token string">"chart_line.xlsx"</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true"># 创建一个sheet</span>
+worksheet <span class="token operator">=</span> workbook<span class="token punctuation">.</span>add_worksheet<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true"># worksheet = workbook.add_worksheet("bug_analysis")</span>
+
+<span class="token comment" spellcheck="true"># 自定义样式，加粗</span>
+bold <span class="token operator">=</span> workbook<span class="token punctuation">.</span>add_format<span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token string">'bold'</span><span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># --------1、准备数据并写入excel---------------</span>
+<span class="token comment" spellcheck="true"># 向excel中写入数据，建立图标时要用到</span>
+headings <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">'Number'</span><span class="token punctuation">,</span> <span class="token string">'testA'</span><span class="token punctuation">,</span> <span class="token string">'testB'</span><span class="token punctuation">]</span>
+data <span class="token operator">=</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">[</span><span class="token string">'2017-9-1'</span><span class="token punctuation">,</span> <span class="token string">'2017-9-2'</span><span class="token punctuation">,</span> <span class="token string">'2017-9-3'</span><span class="token punctuation">,</span> <span class="token string">'2017-9-4'</span><span class="token punctuation">,</span> <span class="token string">'2017-9-5'</span><span class="token punctuation">,</span> <span class="token string">'2017-9-6'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token punctuation">[</span><span class="token number">10</span><span class="token punctuation">,</span> <span class="token number">40</span><span class="token punctuation">,</span> <span class="token number">50</span><span class="token punctuation">,</span> <span class="token number">20</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">,</span> <span class="token number">50</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token punctuation">[</span><span class="token number">30</span><span class="token punctuation">,</span> <span class="token number">60</span><span class="token punctuation">,</span> <span class="token number">70</span><span class="token punctuation">,</span> <span class="token number">50</span><span class="token punctuation">,</span> <span class="token number">40</span><span class="token punctuation">,</span> <span class="token number">30</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+<span class="token punctuation">]</span>
+
+<span class="token comment" spellcheck="true"># 写入表头</span>
+worksheet<span class="token punctuation">.</span>write_row<span class="token punctuation">(</span><span class="token string">'A1'</span><span class="token punctuation">,</span> headings<span class="token punctuation">,</span> bold<span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># 写入数据</span>
+worksheet<span class="token punctuation">.</span>write_column<span class="token punctuation">(</span><span class="token string">'A2'</span><span class="token punctuation">,</span> data<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+worksheet<span class="token punctuation">.</span>write_column<span class="token punctuation">(</span><span class="token string">'B2'</span><span class="token punctuation">,</span> data<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+worksheet<span class="token punctuation">.</span>write_column<span class="token punctuation">(</span><span class="token string">'C2'</span><span class="token punctuation">,</span> data<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># --------2、生成图表并插入到excel---------------</span>
+<span class="token comment" spellcheck="true"># 创建一个柱状图(line chart)</span>
+chart_col <span class="token operator">=</span> workbook<span class="token punctuation">.</span>add_chart<span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token string">'type'</span><span class="token punctuation">:</span> <span class="token string">'line'</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># 配置第一个系列数据</span>
+chart_col<span class="token punctuation">.</span>add_series<span class="token punctuation">(</span><span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true"># 这里的sheet1是默认的值，因为我们在新建sheet时没有指定sheet名</span>
+    <span class="token comment" spellcheck="true"># 如果我们新建sheet时设置了sheet名，这里就要设置成相应的值</span>
+    <span class="token string">'name'</span><span class="token punctuation">:</span> <span class="token string">'=Sheet1!$B$1'</span><span class="token punctuation">,</span>
+    <span class="token string">'categories'</span><span class="token punctuation">:</span> <span class="token string">'=Sheet1!$A$2:$A$7'</span><span class="token punctuation">,</span>
+    <span class="token string">'values'</span><span class="token punctuation">:</span>   <span class="token string">'=Sheet1!$B$2:$B$7'</span><span class="token punctuation">,</span>
+    <span class="token string">'line'</span><span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token string">'color'</span><span class="token punctuation">:</span> <span class="token string">'red'</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># 配置第二个系列数据</span>
+chart_col<span class="token punctuation">.</span>add_series<span class="token punctuation">(</span><span class="token punctuation">{</span>
+    <span class="token string">'name'</span><span class="token punctuation">:</span> <span class="token string">'=Sheet1!$C$1'</span><span class="token punctuation">,</span>
+    <span class="token string">'categories'</span><span class="token punctuation">:</span>  <span class="token string">'=Sheet1!$A$2:$A$7'</span><span class="token punctuation">,</span>
+    <span class="token string">'values'</span><span class="token punctuation">:</span>   <span class="token string">'=Sheet1!$C$2:$C$7'</span><span class="token punctuation">,</span>
+    <span class="token string">'line'</span><span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token string">'color'</span><span class="token punctuation">:</span> <span class="token string">'yellow'</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># 配置第二个系列数据(用了另一种语法)</span>
+<span class="token comment" spellcheck="true"># chart_col.add_series({</span>
+<span class="token comment" spellcheck="true">#     'name': ['Sheet1', 0, 2],</span>
+<span class="token comment" spellcheck="true">#     'categories': ['Sheet1', 1, 0, 6, 0],</span>
+<span class="token comment" spellcheck="true">#     'values': ['Sheet1', 1, 2, 6, 2],</span>
+<span class="token comment" spellcheck="true">#     'line': {'color': 'yellow'},</span>
+<span class="token comment" spellcheck="true"># })</span>
+
+<span class="token comment" spellcheck="true"># 设置图表的title 和 x，y轴信息</span>
+chart_col<span class="token punctuation">.</span>set_title<span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token string">'name'</span><span class="token punctuation">:</span> <span class="token string">'The xxx site Bug Analysis'</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+chart_col<span class="token punctuation">.</span>set_x_axis<span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token string">'name'</span><span class="token punctuation">:</span> <span class="token string">'Test number'</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+chart_col<span class="token punctuation">.</span>set_y_axis<span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token string">'name'</span><span class="token punctuation">:</span>  <span class="token string">'Sample length (mm)'</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># 设置图表的风格</span>
+chart_col<span class="token punctuation">.</span>set_style<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># 把图表插入到worksheet并设置偏移</span>
+worksheet<span class="token punctuation">.</span>insert_chart<span class="token punctuation">(</span><span class="token string">'A10'</span><span class="token punctuation">,</span> chart_col<span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token string">'x_offset'</span><span class="token punctuation">:</span> <span class="token number">25</span><span class="token punctuation">,</span> <span class="token string">'y_offset'</span><span class="token punctuation">:</span> <span class="token number">10</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+workbook<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>效果如下：</p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211010130755455.png" alt=""></p>
+<h3 id="xlswriter-生成柱状图"><a href="#xlswriter-生成柱状图" class="headerlink" title="xlswriter 生成柱状图"></a><strong>xlswriter 生成柱状图</strong></h3><p>示例代码：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># -*- coding:utf-8 -*-</span>
+
+<span class="token keyword">import</span> xlsxwriter
+
+<span class="token comment" spellcheck="true"># 创建一个excel</span>
+workbook <span class="token operator">=</span> xlsxwriter<span class="token punctuation">.</span>Workbook<span class="token punctuation">(</span><span class="token string">"chart_column.xlsx"</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true"># 创建一个sheet</span>
+worksheet <span class="token operator">=</span> workbook<span class="token punctuation">.</span>add_worksheet<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true"># worksheet = workbook.add_worksheet("bug_analysis")</span>
+
+<span class="token comment" spellcheck="true"># 自定义样式，加粗</span>
+bold <span class="token operator">=</span> workbook<span class="token punctuation">.</span>add_format<span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token string">'bold'</span><span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># --------1、准备数据并写入excel---------------</span>
+<span class="token comment" spellcheck="true"># 向excel中写入数据，建立图标时要用到</span>
+headings <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">'Number'</span><span class="token punctuation">,</span> <span class="token string">'testA'</span><span class="token punctuation">,</span> <span class="token string">'testB'</span><span class="token punctuation">]</span>
+data <span class="token operator">=</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">[</span><span class="token string">'2017-9-1'</span><span class="token punctuation">,</span> <span class="token string">'2017-9-2'</span><span class="token punctuation">,</span> <span class="token string">'2017-9-3'</span><span class="token punctuation">,</span> <span class="token string">'2017-9-4'</span><span class="token punctuation">,</span> <span class="token string">'2017-9-5'</span><span class="token punctuation">,</span> <span class="token string">'2017-9-6'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token punctuation">[</span><span class="token number">10</span><span class="token punctuation">,</span> <span class="token number">40</span><span class="token punctuation">,</span> <span class="token number">50</span><span class="token punctuation">,</span> <span class="token number">20</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">,</span> <span class="token number">50</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token punctuation">[</span><span class="token number">30</span><span class="token punctuation">,</span> <span class="token number">60</span><span class="token punctuation">,</span> <span class="token number">70</span><span class="token punctuation">,</span> <span class="token number">50</span><span class="token punctuation">,</span> <span class="token number">40</span><span class="token punctuation">,</span> <span class="token number">30</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+<span class="token punctuation">]</span>
+
+<span class="token comment" spellcheck="true"># 写入表头</span>
+worksheet<span class="token punctuation">.</span>write_row<span class="token punctuation">(</span><span class="token string">'A1'</span><span class="token punctuation">,</span> headings<span class="token punctuation">,</span> bold<span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># 写入数据</span>
+worksheet<span class="token punctuation">.</span>write_column<span class="token punctuation">(</span><span class="token string">'A2'</span><span class="token punctuation">,</span> data<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+worksheet<span class="token punctuation">.</span>write_column<span class="token punctuation">(</span><span class="token string">'B2'</span><span class="token punctuation">,</span> data<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+worksheet<span class="token punctuation">.</span>write_column<span class="token punctuation">(</span><span class="token string">'C2'</span><span class="token punctuation">,</span> data<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># --------2、生成图表并插入到excel---------------</span>
+<span class="token comment" spellcheck="true"># 创建一个柱状图(column chart)</span>
+chart_col <span class="token operator">=</span> workbook<span class="token punctuation">.</span>add_chart<span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token string">'type'</span><span class="token punctuation">:</span> <span class="token string">'column'</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># 配置第一个系列数据</span>
+chart_col<span class="token punctuation">.</span>add_series<span class="token punctuation">(</span><span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true"># 这里的sheet1是默认的值，因为我们在新建sheet时没有指定sheet名</span>
+    <span class="token comment" spellcheck="true"># 如果我们新建sheet时设置了sheet名，这里就要设置成相应的值</span>
+    <span class="token string">'name'</span><span class="token punctuation">:</span> <span class="token string">'=Sheet1!$B$1'</span><span class="token punctuation">,</span>
+    <span class="token string">'categories'</span><span class="token punctuation">:</span> <span class="token string">'=Sheet1!$A$2:$A$7'</span><span class="token punctuation">,</span>
+    <span class="token string">'values'</span><span class="token punctuation">:</span>   <span class="token string">'=Sheet1!$B$2:$B$7'</span><span class="token punctuation">,</span>
+    <span class="token string">'line'</span><span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token string">'color'</span><span class="token punctuation">:</span> <span class="token string">'red'</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># 配置第二个系列数据(用了另一种语法)</span>
+chart_col<span class="token punctuation">.</span>add_series<span class="token punctuation">(</span><span class="token punctuation">{</span>
+    <span class="token string">'name'</span><span class="token punctuation">:</span> <span class="token string">'=Sheet1!$C$1'</span><span class="token punctuation">,</span>
+    <span class="token string">'categories'</span><span class="token punctuation">:</span>  <span class="token string">'=Sheet1!$A$2:$A$7'</span><span class="token punctuation">,</span>
+    <span class="token string">'values'</span><span class="token punctuation">:</span>   <span class="token string">'=Sheet1!$C$2:$C$7'</span><span class="token punctuation">,</span>
+    <span class="token string">'line'</span><span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token string">'color'</span><span class="token punctuation">:</span> <span class="token string">'yellow'</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># 配置第二个系列数据(用了另一种语法)</span>
+<span class="token comment" spellcheck="true"># chart_col.add_series({</span>
+<span class="token comment" spellcheck="true">#     'name': ['Sheet1', 0, 2],</span>
+<span class="token comment" spellcheck="true">#     'categories': ['Sheet1', 1, 0, 6, 0],</span>
+<span class="token comment" spellcheck="true">#     'values': ['Sheet1', 1, 2, 6, 2],</span>
+<span class="token comment" spellcheck="true">#     'line': {'color': 'yellow'},</span>
+<span class="token comment" spellcheck="true"># })</span>
+
+<span class="token comment" spellcheck="true"># 设置图表的title 和 x，y轴信息</span>
+chart_col<span class="token punctuation">.</span>set_title<span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token string">'name'</span><span class="token punctuation">:</span> <span class="token string">'The xxx site Bug Analysis'</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+chart_col<span class="token punctuation">.</span>set_x_axis<span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token string">'name'</span><span class="token punctuation">:</span> <span class="token string">'Test number'</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+chart_col<span class="token punctuation">.</span>set_y_axis<span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token string">'name'</span><span class="token punctuation">:</span>  <span class="token string">'Sample length (mm)'</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># 设置图表的风格</span>
+chart_col<span class="token punctuation">.</span>set_style<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># 把图表插入到worksheet以及偏移</span>
+worksheet<span class="token punctuation">.</span>insert_chart<span class="token punctuation">(</span><span class="token string">'A10'</span><span class="token punctuation">,</span> chart_col<span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token string">'x_offset'</span><span class="token punctuation">:</span> <span class="token number">25</span><span class="token punctuation">,</span> <span class="token string">'y_offset'</span><span class="token punctuation">:</span> <span class="token number">10</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+workbook<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>效果如下：</p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211010130819341.png" alt=""></p>
+<h2 id="附录六：Python-win32com-读取-写入-修改-操作Excel"><a href="#附录六：Python-win32com-读取-写入-修改-操作Excel" class="headerlink" title="附录六：Python win32com 读取 写入 修改 操作Excel"></a>附录六：Python win32com 读取 写入 修改 操作Excel</h2><p>python可以使用一个第三方库叫做win32com达到操作com的目的，win32com功能强大，可以操作word、调用宏等等等。</p>
+<h3 id="pip安装win32com"><a href="#pip安装win32com" class="headerlink" title="pip安装win32com"></a><strong>pip安装win32com</strong></h3><pre><code>pip install pypiwin32</code></pre><h3 id="Python使用win32com读写Excel"><a href="#Python使用win32com读写Excel" class="headerlink" title="Python使用win32com读写Excel"></a><strong>Python使用win32com读写Excel</strong></h3><p><strong>程序示例：</strong></p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> win32com
+<span class="token keyword">from</span> win32com<span class="token punctuation">.</span>client <span class="token keyword">import</span> Dispatch<span class="token punctuation">,</span> constants
+<span class="token keyword">import</span> os
+
+<span class="token comment" spellcheck="true"># 获取当前脚本路径</span>
+<span class="token keyword">def</span> <span class="token function">getScriptPath</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    nowpath <span class="token operator">=</span> os<span class="token punctuation">.</span>path<span class="token punctuation">.</span>split<span class="token punctuation">(</span>os<span class="token punctuation">.</span>path<span class="token punctuation">.</span>realpath<span class="token punctuation">(</span>__file__<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>nowpath<span class="token punctuation">)</span>
+    <span class="token keyword">return</span> nowpath
+
+<span class="token comment" spellcheck="true"># 3.7.2 Python使用win32com读写Excel</span>
+<span class="token keyword">def</span> <span class="token function">fun3_7_2</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    app <span class="token operator">=</span> win32com<span class="token punctuation">.</span>client<span class="token punctuation">.</span>Dispatch<span class="token punctuation">(</span><span class="token string">'Excel.Application'</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true"># 后台运行，不显示，不警告</span>
+    app<span class="token punctuation">.</span>Visible <span class="token operator">=</span> <span class="token number">0</span>
+    app<span class="token punctuation">.</span>DisplayAlerts <span class="token operator">=</span> <span class="token number">0</span>
+
+    <span class="token comment" spellcheck="true"># 创建新的Excel</span>
+    <span class="token comment" spellcheck="true"># WorkBook = app.Workbooks.Add()</span>
+    <span class="token comment" spellcheck="true"># 新建sheet</span>
+    <span class="token comment" spellcheck="true"># sheet = WorkBook.Worksheets.Add()</span>
+
+    <span class="token comment" spellcheck="true"># 打开已存在表格，注意这里要用绝对路径</span>
+    WorkBook <span class="token operator">=</span> app<span class="token punctuation">.</span>Workbooks<span class="token punctuation">.</span>Open<span class="token punctuation">(</span>getScriptPath<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">"\\3_7 win32com 修改操作练习.xlsx"</span><span class="token punctuation">)</span>
+    sheet <span class="token operator">=</span> WorkBook<span class="token punctuation">.</span>Worksheets<span class="token punctuation">(</span><span class="token string">'Sheet1'</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true"># 获取单元格信息 第n行n列，不用-1</span>
+    cell01_value <span class="token operator">=</span> sheet<span class="token punctuation">.</span>Cells<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">.</span>Value
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"cell01的内容为："</span><span class="token punctuation">,</span>cell01_value<span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true"># 写入表格信息</span>
+    sheet<span class="token punctuation">.</span>Cells<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">.</span>Value <span class="token operator">=</span> <span class="token string">"win32com"</span>
+
+    <span class="token comment" spellcheck="true"># 保存表格</span>
+    <span class="token comment" spellcheck="true">#WorkBook.Save()</span>
+
+    <span class="token comment" spellcheck="true"># 另存为实现拷贝</span>
+    WorkBook<span class="token punctuation">.</span>SaveAs<span class="token punctuation">(</span>getScriptPath<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">"\\new.xlsx"</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true"># 关闭表格</span>
+    WorkBook<span class="token punctuation">.</span>Close<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    app<span class="token punctuation">.</span>Quit<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+
+<span class="token keyword">if</span> __name__ <span class="token operator">==</span> <span class="token string">'__main__'</span><span class="token punctuation">:</span>
+    fun3_7_2<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211010130918247.png" alt=""></p>
+<h2 id="附录七：Python-pandas-读取-写入-操作Excel"><a href="#附录七：Python-pandas-读取-写入-操作Excel" class="headerlink" title="附录七：Python pandas 读取 写入 操作Excel"></a>附录七：Python pandas 读取 写入 操作Excel</h2><p><strong>简介：</strong></p>
+<p>pandas 是基于NumPy 的一种工具，该工具是为了解决数据分析任务而创建的。Pandas 纳入了大量库和一些标准的数据模型，提供了高效地操作大型数据集所需的工具。pandas提供了大量能使我们快速便捷地处理数据的函数和方法。你很快就会发现，它是使Python成为强大而高效的数据分析环境的重要因素之一。</p>
+<p>官方网站：<a href="https://pandas.pydata.org/" target="_blank" rel="noopener">https://pandas.pydata.org/</a></p>
+<p>官方文档：<a href="https://pandas.pydata.org/pandas-docs/stable/" target="_blank" rel="noopener">https://pandas.pydata.org/pandas-docs/stable/</a></p>
+<p><strong>程序示例：</strong></p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
+<span class="token keyword">from</span> pandas <span class="token keyword">import</span> DataFrame
+
+<span class="token comment" spellcheck="true"># 3.8.2 pandas读写Excel</span>
+<span class="token keyword">def</span> <span class="token function">fun3_8_2</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    data <span class="token operator">=</span> pd<span class="token punctuation">.</span>read_excel<span class="token punctuation">(</span><span class="token string">'3_8 pandas 修改操作练习.xlsx'</span><span class="token punctuation">,</span> sheet_name<span class="token operator">=</span><span class="token string">'Sheet1'</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true"># 增加行数据，在第5行新增</span>
+    data<span class="token punctuation">.</span>loc<span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">'4'</span><span class="token punctuation">,</span> <span class="token string">'john'</span><span class="token punctuation">,</span> <span class="token string">'pandas'</span><span class="token punctuation">]</span>
+
+    <span class="token comment" spellcheck="true"># 增加列数据，给定默认值None</span>
+    data<span class="token punctuation">[</span><span class="token string">'new_col'</span><span class="token punctuation">]</span> <span class="token operator">=</span> None
+
+    <span class="token comment" spellcheck="true"># 保存数据</span>
+    DataFrame<span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">.</span>to_excel<span class="token punctuation">(</span><span class="token string">'new.xlsx'</span><span class="token punctuation">,</span> sheet_name<span class="token operator">=</span><span class="token string">'Sheet1'</span><span class="token punctuation">,</span> index<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">,</span> header<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
+
+
+<span class="token keyword">if</span> __name__ <span class="token operator">==</span> <span class="token string">'__main__'</span><span class="token punctuation">:</span>
+    fun3_8_2<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211010131014408.png" alt=""></p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -1654,7 +2782,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">1786.5k</span>&nbsp;字
+                class="white-color">1817.7k</span>&nbsp;字
             
             
             
