@@ -459,21 +459,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-10-10
+                    2021-10-14
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    2.1k
+                    2.7k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    8 分
+                    10 分
                 </div>
                 
 
@@ -928,7 +928,226 @@
 <p><img src="/images/loading.gif" data-original="../images/development/image-20210926210538959.png" alt=""></p>
 <h2 id="存储系统"><a href="#存储系统" class="headerlink" title="存储系统"></a>存储系统</h2><h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a><strong>结构</strong></h3><p>按字节编址！</p>
 <p><img src="/images/loading.gif" data-original="../images/development/image-20210926210617538.png" alt=""></p>
-<h2 id="ARM发展历程"><a href="#ARM发展历程" class="headerlink" title="ARM发展历程"></a>ARM发展历程</h2><h2 id="S3C2410A"><a href="#S3C2410A" class="headerlink" title="S3C2410A"></a>S3C2410A</h2><h2 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h2><script>
+<p>TCM与Cache 的区别？</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211014221932255.png" alt=""></p>
+<h3 id="Cache"><a href="#Cache" class="headerlink" title="Cache"></a>Cache</h3><p><img src="/images/loading.gif" data-original="../images/development/image-20211014222042315.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/development/image-20211014222052356.png" alt=""></p>
+<h3 id="存储管理"><a href="#存储管理" class="headerlink" title="存储管理"></a>存储管理</h3><p><strong>ARM9的三类地址</strong>：</p>
+<ul>
+<li><p>虚拟地址（VA），是程序中的逻辑地址，0x00000000~0xFFFFFFFF。</p>
+</li>
+<li><p>改进的虚拟地址（MVA），由于多个进程执行，逻辑地址会重合。所以，跟据进程号将逻辑地址分布到整个内存中。MVA = (PID &lt;&lt; 25) | VA。PID占7位，所以最多只能有 128 个进程，每个进程只能分到 32MB 的逻辑地址空间。</p>
+</li>
+<li><p>物理地址（PA），MVA通过MMU转换后的地址。</p>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/development/image-20211014222149466.png" alt=""></p>
+<p><strong>协处理器CP15</strong> </p>
+<ul>
+<li><p>内存管理单元(Memory Manage Unit，MMU)</p>
+<ul>
+<li>控制虚拟地址（VA）映射到物理地址（PA）</li>
+<li>控制内存的访问权限</li>
+<li>控制可缓存性和缓冲性</li>
+</ul>
+</li>
+<li><p>内存保护单元(Protection Unit，PU)</p>
+<ul>
+<li>无MMU的简单内存保护</li>
+</ul>
+</li>
+<li><p>使能Cache and Write Buffer</p>
+</li>
+<li><p>快速上下文(进程之间)切换扩展(Fast Context Switch Extension，FCSE)</p>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/development/image-20211014222312479.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/development/image-20211014222335760.png" alt=""></p>
+<p><strong>段（section, 1MB）地址转换</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/development/image-20211014222420960.png" alt=""></p>
+<p><strong>内核扩展协处理器</strong></p>
+<ul>
+<li><p>协处理器接口，允许扩展16个协处理器</p>
+</li>
+<li><p>协处理器扩展（FFA10）</p>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/development/image-20211014222456230.png" alt=""></p>
+<p>处理器如何访问协处理器？</p>
+<h2 id="ARM发展历程"><a href="#ARM发展历程" class="headerlink" title="ARM发展历程"></a>ARM发展历程</h2><h3 id="ARM-Advanced-RISC-Machine"><a href="#ARM-Advanced-RISC-Machine" class="headerlink" title="ARM- Advanced RISC Machine"></a>ARM- Advanced RISC Machine</h3><ul>
+<li><p>ARM的版本</p>
+<ul>
+<li>V1, V2, V3,</li>
+<li>V4 (ARM 7，8，9),</li>
+<li>V5 (ARM 10),</li>
+<li>V6 (ARM 11)</li>
+<li>V7(ARM-Cortex A8,9,15,17)</li>
+<li>V8(Cortex-A/R/M/, 64/32bit)</li>
+<li>V9</li>
+</ul>
+</li>
+<li><p>扩展字母含义</p>
+<ul>
+<li>T:内含16位压缩指令集 Thumb</li>
+<li>D:支持片内Debug调试</li>
+<li>M:采用增强型乘法器（Multiplier)</li>
+<li>I: 内含嵌入式ICE宏单元</li>
+<li>E: 具有DSP功能</li>
+<li>S:可综合的软核Software</li>
+<li>J: Jazeller,允许直接执行Java字节码</li>
+</ul>
+</li>
+</ul>
+<h3 id="产品线"><a href="#产品线" class="headerlink" title="产品线"></a>产品线</h3><p><img src="/images/loading.gif" data-original="../images/development/image-20211014222644267.png" alt=""></p>
+<h3 id="架构"><a href="#架构" class="headerlink" title="架构"></a><strong>架构</strong></h3><p><img src="/images/loading.gif" data-original="../images/development/image-20211014222702025.png" alt=""></p>
+<ul>
+<li>指令</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>处理器</strong></th>
+<th><strong>流水线</strong></th>
+<th><strong>指令集</strong></th>
+<th><strong>存储管理</strong></th>
+<th><strong>协处理器</strong></th>
+<th><strong>多核</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>ARM7</strong></td>
+<td><strong>3</strong></td>
+<td><strong>ARM/T</strong></td>
+<td><strong>N</strong></td>
+<td><strong>N</strong></td>
+<td><strong>N</strong></td>
+</tr>
+<tr>
+<td><strong>ARM9</strong></td>
+<td><strong>5</strong></td>
+<td><strong>ARM/T</strong></td>
+<td><strong>Y</strong></td>
+<td><strong>Y</strong></td>
+<td><strong>N</strong></td>
+</tr>
+<tr>
+<td><strong>ARM10</strong></td>
+<td><strong>6</strong></td>
+<td><strong>ARM/T</strong></td>
+<td><strong>Y</strong></td>
+<td><strong>Y</strong></td>
+<td><strong>N</strong></td>
+</tr>
+<tr>
+<td><strong>ARM11</strong></td>
+<td><strong>8</strong></td>
+<td><strong>Thumb-2</strong></td>
+<td><strong>Y</strong></td>
+<td><strong>Y</strong></td>
+<td><strong>N</strong></td>
+</tr>
+<tr>
+<td><strong>Cortex-A8</strong></td>
+<td><strong>NEON</strong></td>
+<td><strong>V7-A</strong></td>
+<td><strong>Y</strong></td>
+<td><strong>Y</strong></td>
+<td><strong>N</strong></td>
+</tr>
+<tr>
+<td><strong>Cortex-A9,1X</strong></td>
+<td><strong>NEON</strong></td>
+<td><strong>V7-A</strong></td>
+<td><strong>Y</strong></td>
+<td><strong>Y</strong></td>
+<td><strong>Y</strong></td>
+</tr>
+<tr>
+<td><strong>Cortex-A5X</strong></td>
+<td><strong>NEON</strong></td>
+<td><strong>V8-A</strong></td>
+<td><strong>Y</strong></td>
+<td><strong>Y</strong></td>
+<td><strong>Y</strong></td>
+</tr>
+</tbody></table>
+<ul>
+<li>总线</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>版本</strong></th>
+<th><strong>处理器</strong></th>
+<th><strong>发布时间</strong></th>
+<th><strong>总线(bit)</strong></th>
+<th><strong>总线结构</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>V1</strong>，<strong>V2</strong></td>
+<td><strong>ARM1</strong></td>
+<td><strong>未商业授权</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>V3</strong></td>
+<td><strong>……</strong></td>
+<td><strong>未商业授权</strong></td>
+<td><strong>32</strong></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>V4</strong></td>
+<td><strong>ARM7/9</strong></td>
+<td><strong>1996</strong></td>
+<td><strong>32</strong></td>
+<td><strong>7-Von  Neumann</strong>  <strong>9-Harvard</strong></td>
+</tr>
+<tr>
+<td><strong>V5</strong></td>
+<td><strong>ARM10</strong></td>
+<td><strong>2000</strong></td>
+<td><strong>32</strong></td>
+<td><strong>Harvard</strong></td>
+</tr>
+<tr>
+<td><strong>V6</strong></td>
+<td><strong>ARM11</strong></td>
+<td><strong>2002</strong></td>
+<td><strong>32</strong></td>
+<td><strong>Harvard</strong></td>
+</tr>
+<tr>
+<td><strong>V7</strong></td>
+<td><strong>Ax,  1X</strong></td>
+<td><strong>2004</strong></td>
+<td><strong>32</strong></td>
+<td><strong>Harvard</strong></td>
+</tr>
+<tr>
+<td><strong>V8</strong></td>
+<td><strong>A53/57</strong></td>
+<td><strong>2013</strong></td>
+<td><strong>64</strong></td>
+<td><strong>Harvard</strong></td>
+</tr>
+</tbody></table>
+<h3 id="Cortex-A75-Core（Snapdragon-845）"><a href="#Cortex-A75-Core（Snapdragon-845）" class="headerlink" title="Cortex-A75-Core（Snapdragon 845）"></a>Cortex-A75-Core（Snapdragon 845）</h3><p><img src="/images/loading.gif" data-original="../images/development/image-20211014222824903.png" alt=""></p>
+<h2 id="S3C2410A"><a href="#S3C2410A" class="headerlink" title="S3C2410A"></a>S3C2410A</h2><p>硬件工程师在设计包含处理器的电路板时需要掌握处理器的哪些信息？</p>
+<p>数据手册（datasheet）</p>
+<h3 id="datasheet"><a href="#datasheet" class="headerlink" title="datasheet"></a><strong>datasheet</strong></h3><p><img src="/images/loading.gif" data-original="../images/development/image-20211014222911825.png" alt=""></p>
+<p>软件工程师在为处理器开发程序时需要掌握处理器的哪些信息？</p>
+<p>使用手册（manual）</p>
+<p><img src="/images/loading.gif" data-original="../images/development/image-20211014222945183.png" alt=""></p>
+<h3 id="S3C2410"><a href="#S3C2410" class="headerlink" title="S3C2410"></a><strong>S3C2410</strong></h3><p><img src="/images/loading.gif" data-original="../images/development/image-20211014223007273.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/development/image-20211014223016282.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/development/image-20211014223032659.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/development/image-20211014223045895.png" alt=""></p>
+<p>Peripheral Registers</p>
+<p><img src="/images/loading.gif" data-original="../images/development/image-20211014223102590.png" alt=""></p>
+<h1 id="ARM汇编程序"><a href="#ARM汇编程序" class="headerlink" title="ARM汇编程序"></a>ARM汇编程序</h1><h2 id="汇编程序格式"><a href="#汇编程序格式" class="headerlink" title="汇编程序格式"></a>汇编程序格式</h2><h2 id="汇编指令"><a href="#汇编指令" class="headerlink" title="汇编指令"></a>汇编指令</h2><h2 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h2><script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
             if (!el.dataset.src) { return; }
@@ -1441,7 +1660,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">1852.5k</span>&nbsp;字
+                class="white-color">1853.2k</span>&nbsp;字
             
             
             
