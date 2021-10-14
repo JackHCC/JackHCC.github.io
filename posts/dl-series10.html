@@ -459,7 +459,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-10-13
+                    2021-10-14
                 </div>
                 
 
@@ -473,7 +473,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    6 分
+                    5 分
                 </div>
                 
 
@@ -519,7 +519,7 @@
 ['问', '君', '能', '有', '几', '多', '愁', '，', '恰', '似', '一', '江', '春', '水', '向', '东', '流', '。']</code></pre><h4 id="建立词表"><a href="#建立词表" class="headerlink" title="建立词表"></a>建立词表</h4><p>在介绍完tokenize的实现方法后，我们就可以正式通过<code>torchtext.vocab</code>中的<code>Vocab</code>方法来构建词典了，代码如下：</p>
 <pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">build_vocab</span><span class="token punctuation">(</span>tokenizer<span class="token punctuation">,</span> filepath<span class="token punctuation">,</span> word<span class="token punctuation">,</span> min_freq<span class="token punctuation">,</span> specials<span class="token operator">=</span>None<span class="token punctuation">)</span><span class="token punctuation">:</span>
     <span class="token keyword">if</span> specials <span class="token keyword">is</span> None<span class="token punctuation">:</span>
-        specials <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">'&lt;unk&gt;'</span><span class="token punctuation">,</span> <span class="token string">'&lt;pad&gt;'</span><span class="token punctuation">,</span> <span class="token string">'&lt;bos&gt;'</span><span class="token punctuation">,</span> <span class="token string">'&lt;eos&gt;'</span><span class="token punctuation">]</span>
+        specials <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">'&lt;unk>'</span><span class="token punctuation">,</span> <span class="token string">'&lt;pad>'</span><span class="token punctuation">,</span> <span class="token string">'&lt;bos>'</span><span class="token punctuation">,</span> <span class="token string">'&lt;eos>'</span><span class="token punctuation">]</span>
     counter <span class="token operator">=</span> Counter<span class="token punctuation">(</span><span class="token punctuation">)</span>
     <span class="token keyword">with</span> open<span class="token punctuation">(</span>filepath<span class="token punctuation">,</span> encoding<span class="token operator">=</span><span class="token string">'utf8'</span><span class="token punctuation">)</span> <span class="token keyword">as</span> f<span class="token punctuation">:</span>
         <span class="token keyword">for</span> string_ <span class="token keyword">in</span> f<span class="token punctuation">:</span>
@@ -533,15 +533,15 @@
 <pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">if</span> __name__ <span class="token operator">==</span> <span class="token string">'__main__'</span><span class="token punctuation">:</span>
     filepath <span class="token operator">=</span> <span class="token string">'./data.txt'</span>
     vocab <span class="token operator">=</span> build_vocab<span class="token punctuation">(</span>tokenizer<span class="token punctuation">,</span> filepath<span class="token punctuation">,</span> word<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span> min_freq<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span>
-                        specials<span class="token operator">=</span><span class="token punctuation">[</span><span class="token string">'&lt;unk&gt;'</span><span class="token punctuation">,</span> <span class="token string">'&lt;pad&gt;'</span><span class="token punctuation">,</span> <span class="token string">'&lt;bos&gt;'</span><span class="token punctuation">,</span> <span class="token string">'&lt;eos&gt;'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+                        specials<span class="token operator">=</span><span class="token punctuation">[</span><span class="token string">'&lt;unk>'</span><span class="token punctuation">,</span> <span class="token string">'&lt;pad>'</span><span class="token punctuation">,</span> <span class="token string">'&lt;bos>'</span><span class="token punctuation">,</span> <span class="token string">'&lt;eos>'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
     <span class="token keyword">print</span><span class="token punctuation">(</span>vocab<span class="token punctuation">.</span>freqs<span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># 得到一个字典，返回语料中每个单词所出现的频率；</span>
     <span class="token comment" spellcheck="true"># Counter({'年': 4, '岁': 4, '，': 3, '。': 3, '似': 2, '春': 2, '花': 2,...})</span>
     <span class="token keyword">print</span><span class="token punctuation">(</span>vocab<span class="token punctuation">.</span>itos<span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># 得到一个列表，返回词表中的每一个词；</span>
-    <span class="token comment" spellcheck="true"># ['&lt;unk&gt;', '&lt;pad&gt;', '&lt;bos&gt;', '&lt;eos&gt;', '岁', '年', '。', '，', '不', '人',...]</span>
+    <span class="token comment" spellcheck="true"># ['&lt;unk>', '&lt;pad>', '&lt;bos>', '&lt;eos>', '岁', '年', '。', '，', '不', '人',...]</span>
     <span class="token keyword">print</span><span class="token punctuation">(</span>vocab<span class="token punctuation">.</span>itos<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># 通过索引返回得到词表中对应的词；</span>
-    <span class="token comment" spellcheck="true"># &lt;bos&gt;</span>
+    <span class="token comment" spellcheck="true"># &lt;bos></span>
     <span class="token keyword">print</span><span class="token punctuation">(</span>vocab<span class="token punctuation">.</span>stoi<span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># 得到一个字典，返回词表中每个词的索引；</span>
-    <span class="token comment" spellcheck="true"># {'&lt;unk&gt;': 0, '&lt;pad&gt;': 1, '&lt;bos&gt;': 2, '&lt;eos&gt;': 3, '岁': 4, '年': 5,...}</span>
+    <span class="token comment" spellcheck="true"># {'&lt;unk>': 0, '&lt;pad>': 1, '&lt;bos>': 2, '&lt;eos>': 3, '岁': 4, '年': 5,...}</span>
     <span class="token keyword">print</span><span class="token punctuation">(</span>vocab<span class="token punctuation">.</span>stoi<span class="token punctuation">[</span><span class="token string">'岁'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># 通过单词返回得到词表中对应的索引</span>
     <span class="token keyword">print</span><span class="token punctuation">(</span>vocab<span class="token punctuation">[</span><span class="token string">'岁'</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true"># 同上</span>
     <span class="token comment" spellcheck="true"># 4</span>
@@ -1087,7 +1087,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">1851.1k</span>&nbsp;字
+                class="white-color">1852.5k</span>&nbsp;字
             
             
             
@@ -1325,7 +1325,7 @@ $(function () {
     
     <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/instantpage/instantpage.js" type="module"></script>
     
-<script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script>
+
         <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
         <script>
         $('a').each(function() {
@@ -1344,7 +1344,7 @@ $(function () {
             }
           }
         });
-        </script></body>
+        </script><script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script></body>
 
 </html>
 
