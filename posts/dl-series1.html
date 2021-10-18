@@ -459,21 +459,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-10-14
+                    2021-10-18
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    10.9k
+                    11.7k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    52 分
+                    54 分
                 </div>
                 
 
@@ -548,7 +548,7 @@ args<span class="token punctuation">.</span>device<span class="token punctuation
         <span class="token keyword">elif</span> score <span class="token operator">&lt;</span> self<span class="token punctuation">.</span>best_score<span class="token operator">+</span>self<span class="token punctuation">.</span>delta<span class="token punctuation">:</span>
             self<span class="token punctuation">.</span>counter<span class="token operator">+=</span><span class="token number">1</span>
             <span class="token keyword">print</span><span class="token punctuation">(</span>f<span class="token string">'EarlyStopping counter: {self.counter} out of {self.patience}'</span><span class="token punctuation">)</span>
-            <span class="token keyword">if</span> self<span class="token punctuation">.</span>counter<span class="token operator">&gt;=</span>self<span class="token punctuation">.</span>patience<span class="token punctuation">:</span>
+            <span class="token keyword">if</span> self<span class="token punctuation">.</span>counter<span class="token operator">>=</span>self<span class="token punctuation">.</span>patience<span class="token punctuation">:</span>
                 self<span class="token punctuation">.</span>early_stop <span class="token operator">=</span> <span class="token boolean">True</span>
         <span class="token keyword">else</span><span class="token punctuation">:</span>
             self<span class="token punctuation">.</span>best_score <span class="token operator">=</span> score
@@ -557,7 +557,7 @@ args<span class="token punctuation">.</span>device<span class="token punctuation
     <span class="token keyword">def</span> <span class="token function">save_checkpoint</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span>val_loss<span class="token punctuation">,</span>model<span class="token punctuation">,</span>path<span class="token punctuation">)</span><span class="token punctuation">:</span>
         <span class="token keyword">if</span> self<span class="token punctuation">.</span>verbose<span class="token punctuation">:</span>
             <span class="token keyword">print</span><span class="token punctuation">(</span>
-                f<span class="token string">'Validation loss decreased ({self.val_loss_min:.6f} --&gt; {val_loss:.6f}).  Saving model ...'</span><span class="token punctuation">)</span>
+                f<span class="token string">'Validation loss decreased ({self.val_loss_min:.6f} --> {val_loss:.6f}).  Saving model ...'</span><span class="token punctuation">)</span>
         torch<span class="token punctuation">.</span>save<span class="token punctuation">(</span>model<span class="token punctuation">.</span>state_dict<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> path<span class="token operator">+</span><span class="token string">'/'</span><span class="token operator">+</span><span class="token string">'model_checkpoint.pth'</span><span class="token punctuation">)</span>
         self<span class="token punctuation">.</span>val_loss_min <span class="token operator">=</span> val_loss<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h2 id="五、定义自己的数据集Dataset-DataLoader"><a href="#五、定义自己的数据集Dataset-DataLoader" class="headerlink" title="五、定义自己的数据集Dataset,DataLoader"></a>五、定义自己的数据集Dataset,DataLoader</h2><pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">class</span> <span class="token class-name">Dataset_name</span><span class="token punctuation">(</span>Dataset<span class="token punctuation">)</span><span class="token punctuation">:</span>
@@ -820,11 +820,11 @@ tensor <span class="token operator">=</span> tensor<span class="token punctuatio
 tensor <span class="token operator">=</span> torch<span class="token punctuation">.</span>from_numpy<span class="token punctuation">(</span>ndarray<span class="token punctuation">)</span><span class="token punctuation">.</span>float<span class="token punctuation">(</span><span class="token punctuation">)</span>
 tensor <span class="token operator">=</span> torch<span class="token punctuation">.</span>from_numpy<span class="token punctuation">(</span>ndarray<span class="token punctuation">.</span>copy<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>float<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true"># If ndarray has negative stride.</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 <h3 id="Torch-tensor与PIL-Image转换"><a href="#Torch-tensor与PIL-Image转换" class="headerlink" title="Torch.tensor与PIL.Image转换"></a><strong>Torch.tensor与PIL.Image转换</strong></h3><pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># pytorch中的张量默认采用[N, C, H, W]的顺序，并且数据范围在[0,1]，需要进行转置和规范化</span>
-<span class="token comment" spellcheck="true"># torch.Tensor -&gt; PIL.Image</span>
+<span class="token comment" spellcheck="true"># torch.Tensor -> PIL.Image</span>
 image <span class="token operator">=</span> PIL<span class="token punctuation">.</span>Image<span class="token punctuation">.</span>fromarray<span class="token punctuation">(</span>torch<span class="token punctuation">.</span>clamp<span class="token punctuation">(</span>tensor<span class="token operator">*</span><span class="token number">255</span><span class="token punctuation">,</span> min<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">,</span> max<span class="token operator">=</span><span class="token number">255</span><span class="token punctuation">)</span><span class="token punctuation">.</span>byte<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>permute<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">.</span>cpu<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>numpy<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
 image <span class="token operator">=</span> torchvision<span class="token punctuation">.</span>transforms<span class="token punctuation">.</span>functional<span class="token punctuation">.</span>to_pil_image<span class="token punctuation">(</span>tensor<span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># Equivalently way</span>
 
-<span class="token comment" spellcheck="true"># PIL.Image -&gt; torch.Tensor</span>
+<span class="token comment" spellcheck="true"># PIL.Image -> torch.Tensor</span>
 path <span class="token operator">=</span> r<span class="token string">'./figure.jpg'</span>
 tensor <span class="token operator">=</span> torch<span class="token punctuation">.</span>from_numpy<span class="token punctuation">(</span>np<span class="token punctuation">.</span>asarray<span class="token punctuation">(</span>PIL<span class="token punctuation">.</span>Image<span class="token punctuation">.</span>open<span class="token punctuation">(</span>path<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>permute<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">.</span>float<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">255</span>
 tensor <span class="token operator">=</span> torchvision<span class="token punctuation">.</span>transforms<span class="token punctuation">.</span>functional<span class="token punctuation">.</span>to_tensor<span class="token punctuation">(</span>PIL<span class="token punctuation">.</span>Image<span class="token punctuation">.</span>open<span class="token punctuation">(</span>path<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true"># Equivalently way</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
@@ -867,10 +867,10 @@ torch<span class="token punctuation">.</span>equal<span class="token punctuation
 <h3 id="张量扩展"><a href="#张量扩展" class="headerlink" title="张量扩展"></a><strong>张量扩展</strong></h3><pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># Expand tensor of shape 64*512 to shape 64*512*7*7.</span>
 tensor <span class="token operator">=</span> torch<span class="token punctuation">.</span>rand<span class="token punctuation">(</span><span class="token number">64</span><span class="token punctuation">,</span><span class="token number">512</span><span class="token punctuation">)</span>
 torch<span class="token punctuation">.</span>reshape<span class="token punctuation">(</span>tensor<span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token number">64</span><span class="token punctuation">,</span> <span class="token number">512</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>expand<span class="token punctuation">(</span><span class="token number">64</span><span class="token punctuation">,</span> <span class="token number">512</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
-<h3 id="矩阵乘法"><a href="#矩阵乘法" class="headerlink" title="矩阵乘法"></a><strong>矩阵乘法</strong></h3><pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># Matrix multiplcation: (m*n) * (n*p) * -&gt; (m*p).</span>
+<h3 id="矩阵乘法"><a href="#矩阵乘法" class="headerlink" title="矩阵乘法"></a><strong>矩阵乘法</strong></h3><pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># Matrix multiplcation: (m*n) * (n*p) * -> (m*p).</span>
 result <span class="token operator">=</span> torch<span class="token punctuation">.</span>mm<span class="token punctuation">(</span>tensor1<span class="token punctuation">,</span> tensor2<span class="token punctuation">)</span>
 
-<span class="token comment" spellcheck="true"># Batch matrix multiplication: (b*m*n) * (b*n*p) -&gt; (b*m*p)</span>
+<span class="token comment" spellcheck="true"># Batch matrix multiplication: (b*m*n) * (b*n*p) -> (b*m*p)</span>
 result <span class="token operator">=</span> torch<span class="token punctuation">.</span>bmm<span class="token punctuation">(</span>tensor1<span class="token punctuation">,</span> tensor2<span class="token punctuation">)</span>
 
 <span class="token comment" spellcheck="true"># Element-wise multiplication.</span>
@@ -1037,7 +1037,7 @@ fps <span class="token operator">=</span> int<span class="token punctuation">(</
 video<span class="token punctuation">.</span>release<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h3 id="TSN-每段（segment）采样一帧视频"><a href="#TSN-每段（segment）采样一帧视频" class="headerlink" title="TSN 每段（segment）采样一帧视频"></a><strong>TSN 每段（segment）采样一帧视频</strong></h3><pre class="line-numbers language-python"><code class="language-python">K <span class="token operator">=</span> self<span class="token punctuation">.</span>_num_segments
 <span class="token keyword">if</span> is_train<span class="token punctuation">:</span>
-    <span class="token keyword">if</span> num_frames <span class="token operator">&gt;</span> K<span class="token punctuation">:</span>
+    <span class="token keyword">if</span> num_frames <span class="token operator">></span> K<span class="token punctuation">:</span>
         <span class="token comment" spellcheck="true"># Random index for each segment.</span>
         frame_indices <span class="token operator">=</span> torch<span class="token punctuation">.</span>randint<span class="token punctuation">(</span>
             high<span class="token operator">=</span>num_frames <span class="token operator">//</span> K<span class="token punctuation">,</span> size<span class="token operator">=</span><span class="token punctuation">(</span>K<span class="token punctuation">,</span><span class="token punctuation">)</span><span class="token punctuation">,</span> dtype<span class="token operator">=</span>torch<span class="token punctuation">.</span>long<span class="token punctuation">)</span>
@@ -1048,7 +1048,7 @@ video<span class="token punctuation">.</span>release<span class="token punctuati
         frame_indices <span class="token operator">=</span> torch<span class="token punctuation">.</span>sort<span class="token punctuation">(</span>torch<span class="token punctuation">.</span>cat<span class="token punctuation">(</span><span class="token punctuation">(</span>
             torch<span class="token punctuation">.</span>arange<span class="token punctuation">(</span>num_frames<span class="token punctuation">)</span><span class="token punctuation">,</span> frame_indices<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>
 <span class="token keyword">else</span><span class="token punctuation">:</span>
-    <span class="token keyword">if</span> num_frames <span class="token operator">&gt;</span> K<span class="token punctuation">:</span>
+    <span class="token keyword">if</span> num_frames <span class="token operator">></span> K<span class="token punctuation">:</span>
         <span class="token comment" spellcheck="true"># Middle index for each segment.</span>
         frame_indices <span class="token operator">=</span> num_frames <span class="token operator">/</span> K <span class="token operator">//</span> <span class="token number">2</span>
         frame_indices <span class="token operator">+=</span> num_frames <span class="token operator">//</span> K <span class="token operator">*</span> torch<span class="token punctuation">.</span>arange<span class="token punctuation">(</span>K<span class="token punctuation">)</span>
@@ -1327,7 +1327,7 @@ writer <span class="token operator">=</span> SummaryWriter<span class="token pun
     <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
 
     <span class="token comment" spellcheck="true"># save checkpoint</span>
-    is_best <span class="token operator">=</span> current_acc <span class="token operator">&gt;</span> best_acc
+    is_best <span class="token operator">=</span> current_acc <span class="token operator">></span> best_acc
     best_acc <span class="token operator">=</span> max<span class="token punctuation">(</span>current_acc<span class="token punctuation">,</span> best_acc<span class="token punctuation">)</span>
     checkpoint <span class="token operator">=</span> <span class="token punctuation">{</span>
         <span class="token string">'best_acc'</span><span class="token punctuation">:</span> best_acc<span class="token punctuation">,</span>
@@ -1361,13 +1361,13 @@ model <span class="token operator">=</span> torch<span class="token punctuation"
 
     Attributes:
         _model, torch.nn.Module.
-        _layers_to_extract, list&lt;str&gt; or set&lt;str&gt;
+        _layers_to_extract, list&lt;str> or set&lt;str>
 
     Example:
-        &gt;&gt;&gt; model = torchvision.models.resnet152(pretrained=True)
-        &gt;&gt;&gt; model = torch.nn.Sequential(collections.OrderedDict(
+        >>> model = torchvision.models.resnet152(pretrained=True)
+        >>> model = torch.nn.Sequential(collections.OrderedDict(
                 list(model.named_children())[:-1]))
-        &gt;&gt;&gt; conv_representation = FeatureExtractor(
+        >>> conv_representation = FeatureExtractor(
                 pretrained_model=model,
                 layers_to_extract={'layer1', 'layer2', 'layer3', 'layer4'})(image)
     """</span>
@@ -1526,7 +1526,7 @@ batch_size <span class="token operator">=</span> <span class="token number">4</s
     m_zeros <span class="token operator">=</span> torch<span class="token punctuation">.</span>zeros<span class="token punctuation">(</span>batch_size<span class="token punctuation">,</span> class_num<span class="token punctuation">)</span>    
     <span class="token comment" spellcheck="true"># 从 value 中取值，然后根据 dim 和 index 给相应位置赋值    </span>
     onehot <span class="token operator">=</span> m_zeros<span class="token punctuation">.</span>scatter_<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> label<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># (dim,index,value)</span>
-    <span class="token keyword">return</span> onehot<span class="token punctuation">.</span>numpy<span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># Tensor -&gt; Numpy</span>
+    <span class="token keyword">return</span> onehot<span class="token punctuation">.</span>numpy<span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># Tensor -> Numpy</span>
 
 label <span class="token operator">=</span> torch<span class="token punctuation">.</span>LongTensor<span class="token punctuation">(</span>batch_size<span class="token punctuation">)</span><span class="token punctuation">.</span>random_<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">%</span> class_num  <span class="token comment" spellcheck="true"># 对随机数取余print(one_hot(label))</span>
 <span class="token comment" spellcheck="true"># output:</span>
@@ -1764,15 +1764,15 @@ model<span class="token punctuation">.</span>to<span class="token punctuation">(
 <p>其实也可以将 <code>torch.device("cuda")</code> 改为 <code>torch.device("cuda:0")</code> 来指定编号为0的GPU设备。</p>
 <p>最后调用 <code>model.to(torch.device('cuda'))</code> 来将模型的tensors转换为 CUDA tensors。</p>
 <p>下面是PyTorch官方文档上的用法，可以进行参考：</p>
-<pre class="line-numbers language-python3"><code class="language-python3">&gt;&gt;&gt; torch.load('tensors.pt')
+<pre class="line-numbers language-python3"><code class="language-python3">>>> torch.load('tensors.pt')
 # Load all tensors onto the CPU
-&gt;&gt;&gt; torch.load('tensors.pt', map_location=torch.device('cpu'))
+>>> torch.load('tensors.pt', map_location=torch.device('cpu'))
 # Load all tensors onto the CPU, using a function
-&gt;&gt;&gt; torch.load('tensors.pt', map_location=lambda storage, loc: storage)
+>>> torch.load('tensors.pt', map_location=lambda storage, loc: storage)
 # Load all tensors onto GPU 1
-&gt;&gt;&gt; torch.load('tensors.pt', map_location=lambda storage, loc: storage.cuda(1))
+>>> torch.load('tensors.pt', map_location=lambda storage, loc: storage.cuda(1))
 # Map tensors from GPU 1 to GPU 0
-&gt;&gt;&gt; torch.load('tensors.pt', map_location={'cuda:1':'cuda:0'})<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+>>> torch.load('tensors.pt', map_location={'cuda:1':'cuda:0'})<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h3 id="CUDA-的用法"><a href="#CUDA-的用法" class="headerlink" title="CUDA 的用法"></a>CUDA 的用法</h3><p>在PyTorch中和GPU相关的几个函数：</p>
 <pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> torch
 
@@ -1891,6 +1891,27 @@ vgg16 <span class="token operator">=</span> models<span class="token punctuation
 <p><img src="/images/loading.gif" data-original="../images/ML/image-20211007140812602.png" alt=""></p>
 <p><strong>5、总结</strong></p>
 <p><img src="/images/loading.gif" data-original="../images/ML/image-20211007140900845.png" alt=""></p>
+<h1 id="深度学习调参技巧"><a href="#深度学习调参技巧" class="headerlink" title="深度学习调参技巧"></a>深度学习调参技巧</h1><ol>
+<li>不管什么模型，先在一个较小的训练集上train和test，看看它能不能过拟合。如果不能过拟合，可能是学习率太大，或者代码写错了。先调小学习率试一下，如果还不行就去检查代码，先看dataloader输出的数据对不对，再看模型每一步的size是否符合自己期待。</li>
+<li>看train/eval的loss曲线，正常的情况应该是train loss呈log状一直下降最后趋于稳定，eval loss开始时一直下降到某一个epoch之后开始趋于稳定或开始上升，这时候可以用early stopping保存eval loss最低的那个模型。如果loss曲线非常不正常，很有可能是数据处理出了问题，比如label对应错了，回去检查代码。</li>
+<li>不要一开始就用大数据集，先在一个大概2w训练集，2k测试集的小数据集上调参。</li>
+<li>尽量不要自己从头搭架子（新手和半新手）。找一个已经明确没有bug能跑通的其它任务的架子，在它的基础上修改。否则debug过程非常艰难，因为有时候是版本迭代产生的问题，修改起来很麻烦。</li>
+<li>优化器优先用adam，学习率设1e-3或1e-4，再试Radam（LiyuanLucasLiu/RAdam）。不推荐sgdm，因为很慢。</li>
+<li>lrscheduler用torch.optim.lr_scheduler.CosineAnnealingLR，T_max设32或64，几个任务上试效果都不错。（用这个lr_scheduler加上adam系的optimizer基本就不用怎么调学习率了）</li>
+<li>有一些任务（尤其是有RNN的）要做梯度裁剪，torch.nn.utils.clip_grad_norm。</li>
+<li>参数初始化，lstm的h用orthogonal，其它用he或xavier。</li>
+<li>激活函数用relu一般就够了，也可以试试leaky relu。</li>
+<li>batchnorm和dropout可以试，放的位置很重要。优先尝试放在最后输出层之前，以及embedding层之后。RNN可以试layer_norm。有些任务上加了这些层可能会有负作用。</li>
+<li>metric learning中先试标label的分类方法。然后可以用triplet loss，margin这个参数的设置很重要。</li>
+<li>batchsize设置小一点通常会有一些提升，某些任务batchsize设成1有奇效。</li>
+<li>embedding层的embedsize可以小一些（64 or 128），之后LSTM或CNN的hiddensize要稍微大一些（256 or 512）。（ALBERT论文里面大概也是这个意思）</li>
+<li>模型方面，可以先用2或3层LSTM试一下，通常效果都不错。</li>
+<li>weight decay可以试一下，我一般用1e-4。</li>
+<li>有CNN的地方就用shortcut。CNN层数加到某一个值之后对结果影响就不大了，这个值作为参数可以调一下。</li>
+<li>GRU和LSTM在大部分任务上效果差不多。</li>
+<li>看论文时候不要全信，能复现的尽量复现一下，许多论文都会做低baseline，但实际使用时很多baseline效果很不错。</li>
+<li>对于大多数任务，数据比模型重要。面对新任务时先分析数据，再根据数据设计模型，并决定各个参数。例如nlp有些任务中的padding长度，通常需要达到数据集的90%以上，可用pandas的describe函数进行分析。</li>
+</ol>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -2404,7 +2425,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">1864.6k</span>&nbsp;字
+                class="white-color">1876.9k</span>&nbsp;字
             
             
             
