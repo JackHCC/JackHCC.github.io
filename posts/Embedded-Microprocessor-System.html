@@ -459,21 +459,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-10-18
+                    2021-10-19
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    2.7k
+                    4.4k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    10 分
+                    19 分
                 </div>
                 
 
@@ -1147,7 +1147,432 @@
 <p><img src="/images/loading.gif" data-original="../images/development/image-20211014223045895.png" alt=""></p>
 <p>Peripheral Registers</p>
 <p><img src="/images/loading.gif" data-original="../images/development/image-20211014223102590.png" alt=""></p>
-<h1 id="ARM汇编程序"><a href="#ARM汇编程序" class="headerlink" title="ARM汇编程序"></a>ARM汇编程序</h1><h2 id="汇编程序格式"><a href="#汇编程序格式" class="headerlink" title="汇编程序格式"></a>汇编程序格式</h2><h2 id="汇编指令"><a href="#汇编指令" class="headerlink" title="汇编指令"></a>汇编指令</h2><h2 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h2><script>
+<h1 id="ARM汇编程序"><a href="#ARM汇编程序" class="headerlink" title="ARM汇编程序"></a>ARM汇编程序</h1><ol>
+<li>Keil作为半主机模式如何导入导出数据？</li>
+</ol>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211019205214860.png" alt=""></p>
+<ol start="2">
+<li><p>如何测试处理器性能？</p>
+</li>
+<li><p>Keil工程中startup.s/S3c2410.s的作用？</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211019205422881.png" alt=""></p>
+</li>
+</ol>
+<ul>
+<li><p>Heap_size：动态分配空间</p>
+</li>
+<li><p>Heap_mem：需指定位置与大小</p>
+</li>
+<li><p>全局空间是link时自动分配的空间</p>
+</li>
+</ul>
+<h2 id="汇编程序格式"><a href="#汇编程序格式" class="headerlink" title="汇编程序格式"></a>汇编程序格式</h2><h3 id="ARM汇编"><a href="#ARM汇编" class="headerlink" title="ARM汇编"></a><strong>ARM汇编</strong></h3><p><strong>Keiln(ARM ASM)</strong></p>
+<pre><code>AREA    ARMex, CODE, READONLY                                    
+        ENTRY
+start
+        MOV      r0, #10 
+        MOV      r1, #3
+        ADD      r0, r0, r1      
+
+        END 
+</code></pre><p><strong>Segger (gnu asm )</strong></p>
+<pre><code>.weak _start
+            .global __start
+            .section .init, “ax”
+            .type _start, function
+            .code 32
+            .balign 4
+_start:
+__start:
+        //
+        // Setup Stacks
+        //for asm testing
+        mov r0, #0x1000     
+        mov r1, #0x300
+        mov r2, #0x400
+        add r1,r1,r2
+        strb r1,[r0]
+       //testing end
+    ……
+</code></pre><ul>
+<li><p>ax （allocation execute）</p>
+</li>
+<li><p>.weak _start  有外部调用则调用外部，没有调用内部</p>
+</li>
+<li><p>.code 32 表示32位</p>
+</li>
+<li><p>.balign 4  对齐</p>
+<ul>
+<li>有b，表示四个字节对齐；</li>
+<li>没有b，表示2的多少次方对齐。</li>
+</ul>
+</li>
+<li><p>_start:缺省入口</p>
+</li>
+<li><p>__start:系统启动定义的</p>
+</li>
+</ul>
+<h3 id="指令级程序"><a href="#指令级程序" class="headerlink" title="指令级程序"></a><strong>指令级程序</strong></h3><h4 id="格式"><a href="#格式" class="headerlink" title="格式"></a><strong>格式</strong></h4><p><strong>ASM Directive</strong></p>
+<ul>
+<li><p>AREA</p>
+<ul>
+<li>Mark the start of a section</li>
+<li>Names the section and sets its attributes. </li>
+<li>The attributes are placed after the name, separated by commas</li>
+</ul>
+</li>
+<li><p>ENTRY</p>
+</li>
+<li><p>Marks the first instruction to be executed</p>
+</li>
+<li><p>Initialization code and exception handlers also contain entry points.</p>
+</li>
+<li><p>END</p>
+<ul>
+<li>Instructs the assembler to stop processing this source file </li>
+<li>On a line by itself.</li>
+</ul>
+</li>
+</ul>
+<p><strong>指令格式</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211019210000605.png" alt=""></p>
+<p><strong>助记符</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211019210028217.png" alt=""></p>
+<ul>
+<li><p>GE：Cond，条件判断</p>
+</li>
+<li><p>S：状态位</p>
+</li>
+</ul>
+<p><strong>语句格式</strong></p>
+<ul>
+<li>Lines in an ARM assembly language module is:</li>
+</ul>
+<p>{symbol} {instruction|directive|pseudo-instruction} {;commen}</p>
+<ul>
+<li><p>Examples</p>
+<p>lable1 ADD r1，r2，r3 ;”+</p>
+</li>
+</ul>
+<pre><code>AREA     ARMex, CODE, READONLY
+
+        ENTRY     ; Mark first instruction to execute
+
+start
+        MOV      r0, #10        ; Set up parameters
+        MOV      r1, #3
+        ADD      r0, r0, r1      ; r0 = r0 + r1
+
+        END                      ; Mark end of file
+</code></pre><ul>
+<li>标签最左边对齐</li>
+<li>语句最左边需要空格</li>
+</ul>
+<h4 id="用汇编语言实现把下列C程序功能？"><a href="#用汇编语言实现把下列C程序功能？" class="headerlink" title="用汇编语言实现把下列C程序功能？"></a>用汇编语言实现把下列C程序功能？</h4><pre><code>int main(void)
+{      int i, j;
+    unsigned char Inimage[480][640];
+    unsigned char Tmpimg[120][160];
+    for(i=0;i&lt;120;i++)
+         for(j=0;j&lt;160;j++)                
+               Tmpimg[i][j]=Inimage[i*4+2][j*4+2];  
+    memcpy(Inimage,Tmpimg,160*120);
+    return 1;
+}</code></pre><h2 id="汇编指令"><a href="#汇编指令" class="headerlink" title="汇编指令"></a>汇编指令</h2><p><img src="/images/loading.gif" data-original="../images/basic/image-20211019210553192.png" alt=""></p>
+<ul>
+<li>R0-R15和r0-r15</li>
+<li>a1-a4(参数,结果或者临时寄存器,与r0-r3同意)</li>
+<li>v1-v8(变量寄存器,与r4-r11同意)</li>
+<li>sb和SB(静态基址寄存器,与r9同意)</li>
+<li>sl和SL(堆栈限制寄存器,与r10同意)</li>
+<li>fp和FP(帧指针,与r11同意)</li>
+<li>ip和IP(过程调用中间临时寄存器,与r12同意)</li>
+<li>sp和SP(堆栈指针,与r13同意)</li>
+<li>lr和LR(连接寄存器,与r14同意)</li>
+<li>pc和PC(程序计数器,与r15同意)</li>
+<li>cpsr和CPSR(程序状态寄存器)</li>
+<li>spsr和SPSR(程序状态寄存器)</li>
+<li>f0-f7和F0-F7(FPA寄存器)</li>
+<li>s0-s31和S0-S31(VFP单精度寄存器)</li>
+<li>d0-d15和D0-D15(VFP双精度寄存器)</li>
+<li>p0-p15(协处理器0-15)</li>
+<li>c0-c15(协处理器寄存器0-15)</li>
+</ul>
+<h3 id="变量与数据"><a href="#变量与数据" class="headerlink" title="变量与数据"></a><strong>变量与数据</strong></h3><p>数据类型？ Byte，Halfword，Word，Doubleword，QuadWord ( Signed or unsigned？) – Only unsigned (except for MUL)</p>
+<p>变量位置？ Memory (Stack，static), Register</p>
+<p>变量赋值？ Address (immediate，memory，Register)</p>
+<p>常量定义？ EQU</p>
+<p>指令和寄存器大小写有区别？</p>
+<p>MOV 立即数寻址可以装载任意数据？</p>
+<ul>
+<li><p>MOV 是ALU单元的操作，改变状态</p>
+</li>
+<li><p>MVN 按位取反再装载</p>
+</li>
+</ul>
+<h4 id="Loading-immediate"><a href="#Loading-immediate" class="headerlink" title="Loading immediate"></a><strong>Loading immediate</strong></h4><ul>
+<li>MOV<ul>
+<li>8-bit ,0x0 to 0xFF (0-255).</li>
+<li>Rotate by any even number.</li>
+<li>MVN load “NOT” Value</li>
+<li>Thumb： only 0x00-0xff </li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>理解8位或者偶数移位（<strong>Rotate by any</strong> <strong>even</strong> <strong>number</strong>）</p>
+<p>例如260的二进制是100000100 可以由1000001循环右移30位或左移2位，位数位偶数，可以作为立即数</p>
+<p>在比如258二进制是100000010 可以由10000001循环右移31位或左移1位，位数是奇数，不可以作为立即数</p>
+</blockquote>
+<p><strong>实际理解为为了将12位的数字映射到32位上，用8位作为基：0~255；4位作为rotate，循环右移2*rotate</strong></p>
+<p>下列指令是否正确？</p>
+<pre><code>MOV  rn ,#1025 错
+MOV  rn ,#4096 对
+MVN  rn ,#0x111 错
+MVN  rn ,#0xffffffff 对</code></pre><h4 id="装载任意大小数值"><a href="#装载任意大小数值" class="headerlink" title="装载任意大小数值"></a><strong>装载任意大小数值</strong></h4><ul>
+<li>LDR Rd, =const</li>
+</ul>
+<p>伪指令？</p>
+<p>这里两条指令的执行过程与立即数寻址过程的查差别？</p>
+<ul>
+<li><p>LDR</p>
+<ul>
+<li><p>LDR -&gt; Appropriate instruction (by assember)</p>
+</li>
+<li><p>Constant is in the range of MOV or MVN</p>
+<p>   LDR -&gt; MOV (MVN) </p>
+<p><strong>MOV or MVN” depend on what?</strong></p>
+</li>
+<li><p>Constant is over the range of MOV or MVN</p>
+<ul>
+<li>Places the value in a literal pool</li>
+<li>LDR instruction with a program-relative address that reads the constant from the literal pool.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<pre><code>LDR r0, =0x23
+LDR r0, =0xffffff        ;MVN r0，#ff000000
+LDR r0, =0x5555        ;？
+;LDR   rn, [pc, #offset to literal pool]</code></pre><p>LDR对于不符合的立即数如何转换？</p>
+<p>利用pc和literal pool读取</p>
+<ul>
+<li><p>How to put the “literal pool” in memory?</p>
+<ul>
+<li>Marking with “LTORG”<ul>
+<li>After unconditional branch instructions</li>
+<li>after the return instruction</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>By assembler</p>
+<ul>
+<li>After the end of “AREA”</li>
+</ul>
+</li>
+<li><p>The offset from the pc to the constant</p>
+<ul>
+<li>ARM state<ul>
+<li>Less than 4KB</li>
+<li>Either direction</li>
+</ul>
+</li>
+<li>Thumb state<ul>
+<li>Less than 1KB</li>
+<li>Forward </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>为什么 “LTORG” 要放在跳转后或返回后？不会当作指令取进去.</p>
+<p><strong>下列程序中 LDR 指令能否正确转换？</strong></p>
+<pre><code>AREA   Loadcon, CODE, READONLY
+        ENTRY
+
+        LDR      r0, =42          ; =&gt; MOV R0, #42
+       LDR      r1, =0x55555555 ; =&gt; LDR R1, [PC, #offset to Literal Pool 1]
+       LDR      r2, =0xFFFFFFFF           ; =&gt; MVN R2, #0
+        LTORG                           ; Literal Pool 1 contains
+                                              ; literal Ox55555555
+       LDR      r3, =0x55555555  ; =&gt; LDR R3, [PC, #offset                
+                                             ；Literal Pool 1
+       LDR      r4, =0x666 
+       END                      
+                   ; Literal Pool 2 contains 0x666
+</code></pre><h4 id="寄存器常数装载方式"><a href="#寄存器常数装载方式" class="headerlink" title="寄存器常数装载方式"></a>寄存器常数装载方式</h4><table>
+<thead>
+<tr>
+<th>指令</th>
+<th>功能</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MOV(MVN)</td>
+<td>装载立即数</td>
+<td>8bit</td>
+</tr>
+<tr>
+<td>LDR</td>
+<td>装载常数(伪)</td>
+<td>32bit位常量</td>
+</tr>
+<tr>
+<td>ADR（L）</td>
+<td>装载地址(伪)</td>
+<td>32bit  相对地址</td>
+</tr>
+</tbody></table>
+<pre><code>MOV{&lt;cond&gt;}{S}   Rd, #const
+LDR Rd, =const
+ADR Rd, label</code></pre><ul>
+<li><p>Load address</p>
+<ul>
+<li>ADR and ADRL<ul>
+<li>Generate an address, within a certain range<ul>
+<li>program-relative expression<ul>
+<li>Label with an optional offset</li>
+<li>Be relative to the current pc.</li>
+</ul>
+</li>
+<li>Register-relative expression<ul>
+<li>Label with an optional offset</li>
+<li>Be relative to an address held in a specified general-purpose register.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>ADR</strong></p>
+<ul>
+<li>Converts ADR rn,label into a Single ADD or SUB instruction that loads the address, if it is in range</li>
+<li>The offset range of ADR<ul>
+<li>±255 bytes for an offset to a non word-aligned address.</li>
+<li>±1 020 bytes (255 words) for an offset to a word-aligned address.</li>
+</ul>
+</li>
+<li>An error message if the address cannot be reached in a single instruction</li>
+</ul>
+</li>
+</ul>
+<p><strong>分析下列两条ADR指令的转换结果</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211019214813141.png" alt=""></p>
+<ul>
+<li><strong>ADRL</strong><ul>
+<li>Converts an ADRL rn,label into two data-processing instructions that load the address, if it is in range </li>
+<li>The range of an ADRL<ul>
+<li>± 64KB for a non word-aligned address </li>
+<li>± 256KB for a word-aligned address.</li>
+</ul>
+</li>
+<li>An error message if the address cannot be constructed in two instructions.</li>
+<li>There is no ADRL pseudo-instruction for Thumb.</li>
+</ul>
+</li>
+</ul>
+<p><strong>分析下列两条ADRL指令的转换结果</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211019214953889.png" alt=""></p>
+<h3 id="运算"><a href="#运算" class="headerlink" title="运算"></a><strong>运算</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211019215044449.png" alt=""></p>
+<p><strong>运算符的操作数一定是寄存器或者立即数</strong></p>
+<ul>
+<li><p>ASR 算数右移</p>
+</li>
+<li><p>LSL 逻辑左移</p>
+</li>
+<li><p>LSR 逻辑右移</p>
+</li>
+<li><p>ROR 循环右移</p>
+</li>
+<li><p>RRX 带扩展的循环右移</p>
+<ul>
+<li><shifter_imm> <strong>L: 0-31; R: 1-32</strong>。</shifter_imm></li>
+<li>RRX 只能移动一位</li>
+</ul>
+</li>
+</ul>
+<p><strong>分析下指令</strong></p>
+<pre><code>ADD      r0, r1, #10
+ADD   r11,r12,r3, ASR #5 
+ADD   r11,r12,r3,LSL R4 
+ADD     r5,r4, r3, RRX </code></pre><h4 id="算术指令"><a href="#算术指令" class="headerlink" title="算术指令"></a><strong>算术指令</strong></h4><ul>
+<li><p>语法</p>
+<p>Op{cond}{s} Rd, Rn, Operand2</p>
+</li>
+<li><p>标志位</p>
+<p> N, Z, C,V</p>
+</li>
+<li><p>指令</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>指令</strong></th>
+<th><strong>操作</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ADC</td>
+<td>Rd=Rn  + Operand2+C</td>
+</tr>
+<tr>
+<td>ADD</td>
+<td>Rd=Rn  + Operand2</td>
+</tr>
+<tr>
+<td>RSB</td>
+<td>Rd=Operand2-Rn</td>
+</tr>
+<tr>
+<td>RSC</td>
+<td>Rd=Operand2-Rn-!C</td>
+</tr>
+<tr>
+<td>SBC</td>
+<td>Rd=Rn-Operand2-!C</td>
+</tr>
+<tr>
+<td>SUB</td>
+<td>Rd=Rn-Operand2</td>
+</tr>
+</tbody></table>
+<p>当看溢出时，要把数据看成是有符号数，就是最高位的数字代表是符号，0正1负。如果次高位计算改变符号位则溢出。</p>
+<p>当看进位时是将数据看成无符号数，全部是数据没有符号位，如果运算超出数的范围向前进位了，则进位标志置位。</p>
+<p><strong>下列指令哪些时错误的？</strong></p>
+<pre><code>ADC         r1, r1, #5    对
+SUB         r11,r12,r3,ASR #5    对 
+RSB         r5,r3,r4, LSR #32        对    
+ADD            r3,r7,#1023       错             
+SUB         r11,r12,r3,LSL #32    错 最多31
+SBC         r5,r4, r4, RRX #3        错 最多1</code></pre><p><strong>给出指令的执行结果</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211019215615913.png" alt=""></p>
+<ul>
+<li>cpsr=nzcvqiFt_USER；指定当前个标志位状态，并且工作在用户模式</li>
+</ul>
+<h4 id="乘法指令"><a href="#乘法指令" class="headerlink" title="乘法指令"></a>乘法指令</h4><ul>
+<li><p>MUL和MLA (32bit *32bit -&gt; least 32bit)</p>
+<ul>
+<li><p>语法</p>
+<p>MUL<em>{<strong>cond</strong>}{S} Rd, Rm, Rs</em></p>
+<p>MLA<em>{<strong>cond</strong>}{S} Rd, Rm, Rs, Rn</em></p>
+</li>
+<li><p>执行</p>
+<p> MUL: Rs*Rm -&gt;Rd (least)</p>
+<p> MLA: Rs*Rm+Rn -&gt; Rd (least)</p>
+</li>
+<li><p>标志位</p>
+<p> N, Z</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>d!=m</p>
+<h2 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h2><script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
             if (!el.dataset.src) { return; }
@@ -1660,7 +2085,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">1890.3k</span>&nbsp;字
+                class="white-color">1904.1k</span>&nbsp;字
             
             
             
@@ -1898,7 +2323,7 @@ $(function () {
     
     <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/instantpage/instantpage.js" type="module"></script>
     
-
+<script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script>
         <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
         <script>
         $('a').each(function() {
@@ -1917,7 +2342,7 @@ $(function () {
             }
           }
         });
-        </script><script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script></body>
+        </script></body>
 
 </html>
 
