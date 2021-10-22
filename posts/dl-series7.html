@@ -459,21 +459,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-10-14
+                    2021-10-22
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    11.7k
+                    14.1k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    44 分
+                    54 分
                 </div>
                 
 
@@ -1115,6 +1115,230 @@ predict_image<span class="token punctuation">(</span>img<span class="token punct
 <li>Must Know Tips/Tricks in Deep Neural Networks（<a href="http://lamda.nju.edu.cn/weixs/project/CNNTricks/CNNTricks.html）" target="_blank" rel="noopener">http://lamda.nju.edu.cn/weixs/project/CNNTricks/CNNTricks.html）</a></li>
 <li>How to increase validation accuracy with deep neural net?（<a href="http://stackoverflow.com/questions/37020754/how-to-increase-validation-accuracy-with-deep-neural-net）" target="_blank" rel="noopener">http://stackoverflow.com/questions/37020754/how-to-increase-validation-accuracy-with-deep-neural-net）</a></li>
 </ul>
+<h2 id="提高计算机视觉任务的图像质量"><a href="#提高计算机视觉任务的图像质量" class="headerlink" title="提高计算机视觉任务的图像质量"></a>提高计算机视觉任务的图像质量</h2><p>当我们开始从事任何基于计算机视觉的任务时，我们所有人都面临的几个问题是，要么是缺乏数据，要么是数据质量的问题。</p>
+<p>数据量较少仍然只有两种可能的解决方案，一种是尝试获取更多数据或继续使用不同的增强技术，但是当我们谈论数据质量时，数据质量差异很大，因为在某些限制性的指导原则下，你不会点击所有的图像。用户可以在不同的光照条件、不同的角度和 DPI 下单击图像，因此提出一种适用于所有这些的理想图像增强技术是一种 NP 难题。</p>
+<p>因此，有一组方法主要用于增强计算机视觉任务的图像质量，例如对象检测、图像分类、OCR 等。我们将通过示例图像并应用各种增强技术来一一讨论它们.</p>
+<ol>
+<li>二值化/阈值化</li>
+<li>降噪</li>
+<li>纠偏</li>
+<li>重新缩放</li>
+<li>形态学操作</li>
+<li>为了尝试这些操作，我们将使用<strong>Python3</strong>语言及其两个库， <strong>Pillow</strong> 和<strong>OpenCV</strong>。</li>
+</ol>
+<h3 id="二值化"><a href="#二值化" class="headerlink" title="二值化"></a>二值化</h3><p>此技术用于将图像从 RGB 转换为单色（黑白），通常称为<strong>阈值处理。</strong>该技术主要用于需要白底黑字的 OCR 任务。</p>
+<p>OCR 模型在白底黑字的图像上进行训练，以提高准确性，因此对图像进行二值化有助于提高 OCR 模型的质量。二值化图像还有助于节省空间并加快处理速度，因为与其他多通道图像格式相比，它只有一个颜色通道。</p>
+<p>OpenCV 库提供了多种类型的二值化技术。</p>
+<p><strong>1. 二进制阈值：</strong>这是最简单的一个，我们必须定义一个阈值，低于该阈值，所有像素值都被转换为黑色，其余的像素值会转换为白色，从而得到二值化图像，你可以使用以下代码片段来对图像进行二进制阈值处理。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">## import dependencies</span>
+<span class="token keyword">import</span> cv2
+<span class="token keyword">from</span> PIL <span class="token keyword">import</span> Image
+<span class="token keyword">import</span> matplotlib<span class="token punctuation">.</span>pyplot <span class="token keyword">as</span> plt
+<span class="token comment" spellcheck="true">## reading image</span>
+img <span class="token operator">=</span> cv2<span class="token punctuation">.</span>imread<span class="token punctuation">(</span><span class="token string">'text_document.jpg'</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">## apply binary thresholding</span>
+ret<span class="token punctuation">,</span>thresh1 <span class="token operator">=</span> cv2<span class="token punctuation">.</span>threshold<span class="token punctuation">(</span>img<span class="token punctuation">,</span><span class="token number">170</span><span class="token punctuation">,</span><span class="token number">255</span><span class="token punctuation">,</span>cv2<span class="token punctuation">.</span>THRESH_BINARY<span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">## plot original and binarised image </span>
+titles <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">'Original Image'</span><span class="token punctuation">,</span> <span class="token string">'Binary Thresholding'</span><span class="token punctuation">]</span>
+images <span class="token operator">=</span> <span class="token punctuation">[</span>img<span class="token punctuation">,</span> thresh1<span class="token punctuation">]</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    plt<span class="token punctuation">.</span>figure<span class="token punctuation">(</span>figsize<span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">,</span><span class="token number">20</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    plt<span class="token punctuation">.</span>subplot<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">,</span>i<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span>plt<span class="token punctuation">.</span>imshow<span class="token punctuation">(</span>images<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token string">'gray'</span><span class="token punctuation">,</span>vmin<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">,</span>vmax<span class="token operator">=</span><span class="token number">255</span><span class="token punctuation">)</span>
+    plt<span class="token punctuation">.</span>title<span class="token punctuation">(</span>titles<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span>
+    plt<span class="token punctuation">.</span>xticks<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">,</span>plt<span class="token punctuation">.</span>yticks<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>上面的代码将产生以下图像：</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211022093706873.png" alt=""></p>
+<p><strong>2. 自适应阈值：</strong>与二元阈值法不同，该方法根据像素值的小周围区域来确定其阈值。这种方法也有两种类型：</p>
+<ul>
+<li><strong>自适应阈值均值：阈值是平均值附近区域减去固定的Ç</strong>。</li>
+<li><strong>自适应高斯阈值：阈值是邻域值减去常数C</strong>的高斯加权总和。</li>
+</ul>
+<p>该方法主要用于去除图像中的不同光照条件，因为我们根据其周围区域获得像素值。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">## import dependencies</span>
+
+<span class="token keyword">import</span> cv2
+
+<span class="token keyword">from</span> PIL <span class="token keyword">import</span> Image
+
+<span class="token keyword">import</span> matplotlib<span class="token punctuation">.</span>pyplot <span class="token keyword">as</span> plt
+
+<span class="token comment" spellcheck="true">## reading image</span>
+
+img <span class="token operator">=</span> cv2<span class="token punctuation">.</span>imread<span class="token punctuation">(</span><span class="token string">'lighting_conditions.jpg'</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true">## apply adaptive thresholding </span>
+
+<span class="token comment" spellcheck="true">## adaptive mean thresholding </span>
+
+th1 <span class="token operator">=</span> cv2<span class="token punctuation">.</span>adaptiveThreshold<span class="token punctuation">(</span>img<span class="token punctuation">,</span><span class="token number">255</span><span class="token punctuation">,</span>cv2<span class="token punctuation">.</span>ADAPTIVE_THRESH_MEAN_C<span class="token punctuation">,</span>
+
+            cv2<span class="token punctuation">.</span>THRESH_BINARY<span class="token punctuation">,</span><span class="token number">11</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true">## adaptive gaussian thresholding</span>
+
+th2 <span class="token operator">=</span> cv2<span class="token punctuation">.</span>adaptiveThreshold<span class="token punctuation">(</span>img<span class="token punctuation">,</span><span class="token number">255</span><span class="token punctuation">,</span>cv2<span class="token punctuation">.</span>ADAPTIVE_THRESH_GAUSSIAN_C<span class="token punctuation">,</span>
+
+            cv2<span class="token punctuation">.</span>THRESH_BINARY<span class="token punctuation">,</span><span class="token number">11</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true">## plot original and binarised image </span>
+
+titles <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">'Original Image'</span><span class="token punctuation">,</span> <span class="token string">'Adaptive Mean Thresholding'</span><span class="token punctuation">,</span> <span class="token string">'Adaptive Gaussian Thresholding'</span><span class="token punctuation">]</span>
+
+images <span class="token operator">=</span> <span class="token punctuation">[</span>img<span class="token punctuation">,</span> th1<span class="token punctuation">,</span> th2<span class="token punctuation">]</span>
+
+plt<span class="token punctuation">.</span>figure<span class="token punctuation">(</span>figsize<span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">,</span><span class="token number">20</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+
+    plt<span class="token punctuation">.</span>subplot<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">,</span>i<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span>plt<span class="token punctuation">.</span>imshow<span class="token punctuation">(</span>images<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token string">'gray'</span><span class="token punctuation">,</span>vmin<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">,</span>vmax<span class="token operator">=</span><span class="token number">255</span><span class="token punctuation">)</span>
+
+    plt<span class="token punctuation">.</span>title<span class="token punctuation">(</span>titles<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+    plt<span class="token punctuation">.</span>xticks<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">,</span>plt<span class="token punctuation">.</span>yticks<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>上述代码的输出如下：</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211022093807121.png" alt=""></p>
+<p><strong>3. Otsu’s Binrisation：</strong>该方法不需要任何阈值参数，因为它会自动确定。此方法通过创建所有像素值的直方图，然后从中计算平均值来确定阈值。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">## import dependencies</span>
+
+<span class="token keyword">import</span> cv2
+
+<span class="token keyword">from</span> PIL <span class="token keyword">import</span> Image
+
+<span class="token keyword">import</span> matplotlib<span class="token punctuation">.</span>pyplot <span class="token keyword">as</span> plt
+
+<span class="token comment" spellcheck="true">## reading image</span>
+
+img <span class="token operator">=</span> cv2<span class="token punctuation">.</span>imread<span class="token punctuation">(</span><span class="token string">'lighting_conditions.jpg'</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true">## apply Otru's thresholding</span>
+
+ret3<span class="token punctuation">,</span>th1 <span class="token operator">=</span> cv2<span class="token punctuation">.</span>threshold<span class="token punctuation">(</span>img<span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">255</span><span class="token punctuation">,</span>cv2<span class="token punctuation">.</span>THRESH_BINARY<span class="token operator">+</span>cv2<span class="token punctuation">.</span>THRESH_OTSU<span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true">## plot original and binarised image </span>
+
+titles <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"Original Image"</span><span class="token punctuation">,</span> <span class="token string">"Binary Otsu's Thresholding"</span><span class="token punctuation">]</span>
+
+images <span class="token operator">=</span> <span class="token punctuation">[</span>img<span class="token punctuation">,</span> th1<span class="token punctuation">]</span>
+
+plt<span class="token punctuation">.</span>figure<span class="token punctuation">(</span>figsize<span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">,</span><span class="token number">20</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+
+    plt<span class="token punctuation">.</span>subplot<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">,</span>i<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span>plt<span class="token punctuation">.</span>imshow<span class="token punctuation">(</span>images<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token string">'gray'</span><span class="token punctuation">,</span>vmin<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">,</span>vmax<span class="token operator">=</span><span class="token number">255</span><span class="token punctuation">)</span>
+
+    plt<span class="token punctuation">.</span>title<span class="token punctuation">(</span>titles<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+    plt<span class="token punctuation">.</span>xticks<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">,</span>plt<span class="token punctuation">.</span>yticks<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>上述代码的输出如下：</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211022093925542.png" alt=""></p>
+<h3 id="降噪"><a href="#降噪" class="headerlink" title="降噪"></a>降噪</h3><p>大多数计算机视觉任务失败的最重要因素是<strong>噪声</strong>。噪声可以是<strong>高斯噪声</strong>（由于不同的光照条件而产生）和<strong>椒盐噪声</strong>（稀疏的明暗干扰）。</p>
+<p>有时图像对人眼看起来更好，但是当我们将这些图像传递给任何基于计算机视觉的模型时，例如分类和对象检测，结果都不理想，因为我们想要找到的噪声对象失真，并且可能与模型训练的对象不匹配，因此图像中的噪声会降低模型的准确性。</p>
+<p>OpenCV 提供了一个名为 fastNIMeansDenoising() 的函数，它可以平滑图像以减少图像噪声。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">## import dependencies</span>
+
+<span class="token keyword">import</span> cv2
+
+<span class="token keyword">from</span> PIL <span class="token keyword">import</span> Image
+
+<span class="token keyword">import</span> matplotlib<span class="token punctuation">.</span>pyplot <span class="token keyword">as</span> plt
+
+<span class="token comment" spellcheck="true">## reading image</span>
+
+img <span class="token operator">=</span> cv2<span class="token punctuation">.</span>imread<span class="token punctuation">(</span><span class="token string">'noisy_image.jpg'</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true">## apply image denoising</span>
+
+dst <span class="token operator">=</span> cv2<span class="token punctuation">.</span>fastNlMeansDenoisingColored<span class="token punctuation">(</span>img<span class="token punctuation">,</span>None<span class="token punctuation">,</span><span class="token number">10</span><span class="token punctuation">,</span><span class="token number">10</span><span class="token punctuation">,</span><span class="token number">7</span><span class="token punctuation">,</span><span class="token number">21</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true">## plot original and denoised image </span>
+
+titles <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"Original Image"</span><span class="token punctuation">,</span> <span class="token string">"Denoised Image"</span><span class="token punctuation">]</span>
+
+images <span class="token operator">=</span> <span class="token punctuation">[</span>img<span class="token punctuation">,</span> dst<span class="token punctuation">]</span>
+
+plt<span class="token punctuation">.</span>figure<span class="token punctuation">(</span>figsize<span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">,</span><span class="token number">20</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+
+    plt<span class="token punctuation">.</span>subplot<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">,</span>i<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span>plt<span class="token punctuation">.</span>imshow<span class="token punctuation">(</span>images<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token string">'gray'</span><span class="token punctuation">,</span>vmin<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">,</span>vmax<span class="token operator">=</span><span class="token number">255</span><span class="token punctuation">)</span>
+
+    plt<span class="token punctuation">.</span>title<span class="token punctuation">(</span>titles<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+    plt<span class="token punctuation">.</span>xticks<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">,</span>plt<span class="token punctuation">.</span>yticks<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>上面的代码将产生以下图像：</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211022094315799.png" alt=""></p>
+<h3 id="纠偏"><a href="#纠偏" class="headerlink" title="纠偏"></a>纠偏</h3><p>纠偏是从图像中去除偏斜（角度不同于 0）的过程。这个问题没有具体的解决方案。你可能会在网络上找到多种解决方案，但是当你在图像上尝试这些解决方案时，这可能对你没有意义。</p>
+<p>所以我建议你训练你自己的基于计算机视觉的模型，创建一个对多角度图像进行分类的分类模型是最好的选择。</p>
+<h3 id="重新缩放"><a href="#重新缩放" class="headerlink" title="重新缩放"></a>重新缩放</h3><p>重新缩放是放大或缩小图像以改变图像分辨率的过程。当你重新缩放图像时，该图像中的不同像素值将被复制以使其更加像素化，并删除像素值以使其缩小。</p>
+<p>此方法主要用于图像分类和对象检测，因为你需要将图像重新缩放到模型输入大小。</p>
+<p>假设你正在为猫和狗的类型创建 VGG 分类器，你有一些可能大小不同的图像，因此你无法将这些图像按原样传递给模型，因为模型需要固定的图像大小. 在这种情况下，你需要根据模型的输入尺寸缩小或放大图像尺寸。</p>
+<p>重新缩放图像的简单方法如下：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">## import dependencies</span>
+<span class="token keyword">import</span> cv2
+<span class="token keyword">from</span> PIL <span class="token keyword">import</span> Image
+<span class="token keyword">import</span> numpy <span class="token keyword">as</span> np
+<span class="token keyword">import</span> matplotlib<span class="token punctuation">.</span>pyplot <span class="token keyword">as</span> plt
+<span class="token comment" spellcheck="true">## reading image</span>
+img <span class="token operator">=</span> Image<span class="token punctuation">.</span>open<span class="token punctuation">(</span><span class="token string">'noisy_image.jpg'</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">## apply image rescaling and making image 300x300 (downscaling)</span>
+dst <span class="token operator">=</span> img<span class="token punctuation">.</span>resize<span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token number">50</span><span class="token punctuation">,</span><span class="token number">50</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">## plot original and downscaled image</span>
+titles <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"Original Image"</span><span class="token punctuation">,</span> <span class="token string">"Rescaled Image"</span><span class="token punctuation">]</span>
+images <span class="token operator">=</span> <span class="token punctuation">[</span>np<span class="token punctuation">.</span>asarray<span class="token punctuation">(</span>img<span class="token punctuation">)</span><span class="token punctuation">,</span> np<span class="token punctuation">.</span>asarray<span class="token punctuation">(</span>dst<span class="token punctuation">)</span><span class="token punctuation">]</span>
+plt<span class="token punctuation">.</span>figure<span class="token punctuation">(</span>figsize<span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">,</span><span class="token number">20</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    plt<span class="token punctuation">.</span>subplot<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">,</span>i<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span>plt<span class="token punctuation">.</span>imshow<span class="token punctuation">(</span>images<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token string">'gray'</span><span class="token punctuation">,</span>vmin<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">,</span>vmax<span class="token operator">=</span><span class="token number">255</span><span class="token punctuation">)</span>
+    plt<span class="token punctuation">.</span>title<span class="token punctuation">(</span>titles<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span>
+    plt<span class="token punctuation">.</span>xticks<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">,</span>plt<span class="token punctuation">.</span>yticks<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>上面的代码将产生以下图像：</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211022094359700.png" alt=""></p>
+<h3 id="形态学操作"><a href="#形态学操作" class="headerlink" title="形态学操作"></a>形态学操作</h3><p>形态学操作是一些用于图像变换的简单操作形式。对于图像变换，输入图像数组与决定操作性质的核相乘。</p>
+<p>当你有一些物体的边界看不清楚时，你可以使用形态学操作来扩大它的边界，这将有助于轻松找到物体，同样，如果边界很大，你可以用同样的方法缩小它。这些技术主要用于 ICR，因为它们的文本边界较小，需要放大以便 ICR 模型识别它们。</p>
+<p>两种主要的形态学操作如下：</p>
+<p><strong>1. 腐蚀：</strong>此操作试图腐蚀图像的前景，从而使图像中的白色像素值最小化。腐蚀的程度完全取决于内核的大小以及你应用该内核的迭代次数。内核是一个正方形大小的矩阵，只有 1 和 0 值来生成腐蚀图像。</p>
+<p>使用 5×5 矩阵应用于一次迭代的腐蚀如下所示：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">## import dependencies</span>
+<span class="token keyword">import</span> cv2
+<span class="token keyword">from</span> PIL <span class="token keyword">import</span> Image
+<span class="token keyword">import</span> matplotlib<span class="token punctuation">.</span>pyplot <span class="token keyword">as</span> plt
+<span class="token comment" spellcheck="true">## reading image</span>
+img <span class="token operator">=</span> cv2<span class="token punctuation">.</span>imread<span class="token punctuation">(</span><span class="token string">'text_document.jpg'</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">## apply erosion</span>
+kernel <span class="token operator">=</span> np<span class="token punctuation">.</span>ones<span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">,</span>np<span class="token punctuation">.</span>uint8<span class="token punctuation">)</span>
+erosion <span class="token operator">=</span> cv2<span class="token punctuation">.</span>erode<span class="token punctuation">(</span>img<span class="token punctuation">,</span>kernel<span class="token punctuation">,</span>iterations <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">## plot original and eroded image</span>
+titles <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"Original Image"</span><span class="token punctuation">,</span> <span class="token string">"Eroded Image"</span><span class="token punctuation">]</span>
+images <span class="token operator">=</span> <span class="token punctuation">[</span>img<span class="token punctuation">,</span> erosion<span class="token punctuation">]</span>
+plt<span class="token punctuation">.</span>figure<span class="token punctuation">(</span>figsize<span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">,</span><span class="token number">20</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    plt<span class="token punctuation">.</span>subplot<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">,</span>i<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span>plt<span class="token punctuation">.</span>imshow<span class="token punctuation">(</span>images<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token string">'gray'</span><span class="token punctuation">,</span>vmin<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">,</span>vmax<span class="token operator">=</span><span class="token number">255</span><span class="token punctuation">)</span>
+    plt<span class="token punctuation">.</span>title<span class="token punctuation">(</span>titles<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span>
+    plt<span class="token punctuation">.</span>xticks<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">,</span>plt<span class="token punctuation">.</span>yticks<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>结果图像如下：</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211022094454504.png" alt=""></p>
+<p><strong>2.膨胀：</strong>这个操作与腐蚀相反，它试图最大化图像中的白色区域。这也取决于内核大小和迭代次数。</p>
+<p>使用 5×5 内核大小进行 1 次迭代的膨胀如下所示：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">## import dependencies</span>
+<span class="token keyword">import</span> cv2
+<span class="token keyword">from</span> PIL <span class="token keyword">import</span> Image
+<span class="token keyword">import</span> matplotlib<span class="token punctuation">.</span>pyplot <span class="token keyword">as</span> plt
+<span class="token comment" spellcheck="true">## reading image</span>
+img <span class="token operator">=</span> cv2<span class="token punctuation">.</span>imread<span class="token punctuation">(</span><span class="token string">'text_document.jpg'</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">## apply dilation</span>
+kernel <span class="token operator">=</span> np<span class="token punctuation">.</span>ones<span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">,</span>np<span class="token punctuation">.</span>uint8<span class="token punctuation">)</span>
+dilation <span class="token operator">=</span> cv2<span class="token punctuation">.</span>dilate<span class="token punctuation">(</span>img<span class="token punctuation">,</span>kernel<span class="token punctuation">,</span>iterations <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">## plot original and dilated image</span>
+titles <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"Original Image"</span><span class="token punctuation">,</span> <span class="token string">"Dilated Image"</span><span class="token punctuation">]</span>
+images <span class="token operator">=</span> <span class="token punctuation">[</span>img<span class="token punctuation">,</span> dilation<span class="token punctuation">]</span>
+plt<span class="token punctuation">.</span>figure<span class="token punctuation">(</span>figsize<span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">,</span><span class="token number">20</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    plt<span class="token punctuation">.</span>subplot<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">,</span>i<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span>plt<span class="token punctuation">.</span>imshow<span class="token punctuation">(</span>images<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token string">'gray'</span><span class="token punctuation">,</span>vmin<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">,</span>vmax<span class="token operator">=</span><span class="token number">255</span><span class="token punctuation">)</span>
+    plt<span class="token punctuation">.</span>title<span class="token punctuation">(</span>titles<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span>
+    plt<span class="token punctuation">.</span>xticks<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">,</span>plt<span class="token punctuation">.</span>yticks<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211022094544210.png" alt=""></p>
+<p>这些操作取决于内核大小和值，主要用于为 OCR 模型准备图像。</p>
+<h3 id="结论-1"><a href="#结论-1" class="headerlink" title="结论"></a><strong>结论</strong></h3><p>这些是一些最重要的技术，你可以使用它们来提高图像质量，从而提高基于计算机视觉的模型的准确性。没有选择算法的正确方法，它完全是基于尝试最适合你的数据的方法。</p>
+<p>有时，选择可以是单独的，有时你必须使用这些算法的组合，以使你的数据更适合你的算法。总之，如果你的图像质量太差，并且你希望这些算法在这些图像上工作，你会有些不满，因为这些技术可以改善噪声和杂质较少的图像，但对于非常糟糕的图像，它可能不起作用。</p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -1628,7 +1852,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">1921.1k</span>&nbsp;字
+                class="white-color">1930.1k</span>&nbsp;字
             
             
             

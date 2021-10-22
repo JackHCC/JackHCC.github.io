@@ -459,21 +459,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-10-19
+                    2021-10-22
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    11.7k
+                    12.4k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    47 分
+                    50 分
                 </div>
                 
 
@@ -2178,6 +2178,10 @@ c = a | b; // a零扩展为 8'b00001011</code></pre><pre class="line-numbers lan
       <span class="token number">#10</span>  num1 <span class="token operator">=</span> num <span class="token operator">>></span> <span class="token number">2</span><span class="token punctuation">;</span><span class="token comment" spellcheck="true">//num1= ?</span>
 <span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211018202925689.png" alt=""></p>
+<ul>
+<li>算术右移必须等式左右两边的变量都是有符号数，如果都是无符号数相当于逻辑右移，尽量不要在无符号数使用算术右移</li>
+<li>移位的电路实现</li>
+</ul>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211018202940459.png" alt=""></p>
 <pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> shift <span class="token punctuation">(</span>
       <span class="token keyword">input</span>  <span class="token keyword">wire</span>   <span class="token punctuation">[</span><span class="token number">7</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> rega    <span class="token punctuation">,</span> 
@@ -2194,8 +2198,19 @@ c = a | b; // a零扩展为 8'b00001011</code></pre><pre class="line-numbers lan
 <span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h3 id="循环右移"><a href="#循环右移" class="headerlink" title="循环右移"></a><strong>循环右移</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211018203016115.png" alt=""></p>
 <h3 id="BS的实现（全译码）"><a href="#BS的实现（全译码）" class="headerlink" title="BS的实现（全译码）"></a>BS的实现（全译码）</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211018203138183.png" alt=""></p>
+<ul>
+<li><p>1位：8选1</p>
+</li>
+<li><p>8位：8个8选1</p>
+</li>
+<li><p>用管逻辑电路实现</p>
+</li>
+</ul>
 <p><strong>循环右移</strong></p>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211018203157330.png" alt=""></p>
+<ul>
+<li>CMOS电路本质是对电容充放电的过程</li>
+</ul>
 <p><strong>逻辑右移</strong></p>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211018203222931.png" alt=""></p>
 <p><strong>算术右移</strong> </p>
@@ -2211,8 +2226,104 @@ c = a | b; // a零扩展为 8'b00001011</code></pre><pre class="line-numbers lan
 </li>
 </ul>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211018203355014.png" alt=""></p>
+<ul>
+<li>桶形移位寄存器，开关阵列规则，电路最规则，最慢</li>
+</ul>
 <h3 id="BS的实现（全编码）"><a href="#BS的实现（全编码）" class="headerlink" title="BS的实现（全编码）"></a>BS的实现（全编码）</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211018203428382.png" alt=""></p>
+<ul>
+<li>5个叠加就是要移位位数，电路最不规则，最快</li>
+</ul>
 <h3 id="BS的实现（部分译码）"><a href="#BS的实现（部分译码）" class="headerlink" title="BS的实现（部分译码）"></a>BS的实现（部分译码）</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211018203455409.png" alt=""></p>
+<ul>
+<li>折衷：4×32和8×32的开关阵列组成，快位移每次固定移动四位</li>
+</ul>
+<h3 id="数据通路"><a href="#数据通路" class="headerlink" title="数据通路"></a><strong>数据通路</strong></h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211022104423535.png" alt=""></p>
+<h3 id="桶式移位器BS-Barrel-Shifter"><a href="#桶式移位器BS-Barrel-Shifter" class="headerlink" title="桶式移位器BS(Barrel Shifter)"></a>桶式移位器BS(Barrel Shifter)</h3><ul>
+<li><p>是高速微处理器中的常用部件</p>
+</li>
+<li><p>能在单周期内完成多种方式、各种位数的移位操作。</p>
+</li>
+<li><p>用于实现移位指令、浮点计算中的小数点对齐等。</p>
+</li>
+</ul>
+<h2 id="关系操作符"><a href="#关系操作符" class="headerlink" title="关系操作符"></a>关系操作符</h2><pre><code>&gt;    大于
+&lt;    小于
+&gt;=    大于等于
+&lt;=    小于等于</code></pre><p><img src="/images/loading.gif" data-original="../images/ML/image-20211022104641922.png" alt=""></p>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> relationals <span class="token punctuation">(</span>
+      <span class="token keyword">input</span> <span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> rega <span class="token punctuation">,</span> 
+                                   regb <span class="token punctuation">,</span>
+      <span class="token keyword">output</span> <span class="token keyword">reg</span>           val
+      <span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+   <span class="token important">always @</span><span class="token punctuation">(</span>rega<span class="token punctuation">,</span> regb<span class="token punctuation">)</span> <span class="token keyword">begin</span>
+        val <span class="token operator">=</span> rega <span class="token operator">></span>    regb <span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//符号位0，且不是全零</span>
+        val <span class="token operator">=</span> rega <span class="token operator">&lt;</span>    regb <span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//符号位1</span>
+        val <span class="token operator">=</span> rega <span class="token operator">=</span> <span class="token operator">=</span> regb <span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//全0</span>
+        val <span class="token operator">=</span> rega <span class="token operator">></span> <span class="token operator">=</span> regb <span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//符号位0</span>
+        val <span class="token operator">=</span> rega <span class="token operator">&lt;=</span> regb <span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//符号位1，或全零</span>
+   <span class="token keyword">end</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li><p>判断大小的电路是减法器来实现</p>
+</li>
+<li><p>上述代码的实现电路需要5位来实现，增加一位符号位</p>
+</li>
+</ul>
+<h2 id="相等操作符"><a href="#相等操作符" class="headerlink" title="相等操作符"></a>相等操作符</h2><p><img src="/images/loading.gif" data-original="../images/ML/image-20211022104800590.png" alt=""></p>
+<ul>
+<li>== 的电路规模小</li>
+</ul>
+<h2 id="相同操作符"><a href="#相同操作符" class="headerlink" title="相同操作符"></a>相同操作符</h2><p><img src="/images/loading.gif" data-original="../images/ML/image-20211022104832479.png" alt=""></p>
+<ul>
+<li>=== 字母比较</li>
+<li>=== 唯一一个不能综合的操作符</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211022104855978.png" alt=""></p>
+<h2 id="条件操作符"><a href="#条件操作符" class="headerlink" title="条件操作符"></a>条件操作符</h2><p><img src="/images/loading.gif" data-original="../images/ML/image-20211022105028002.png" alt=""></p>
+<ul>
+<li><p>三态门实现</p>
+</li>
+<li><p>数据总线上后来用二选一电路替代三态门</p>
+</li>
+<li><p>三态门给双向数据端口建模</p>
+</li>
+</ul>
+<p><strong>条件操作符的语法为：</strong></p>
+<pre><code>   &lt;LHS&gt; = &lt;condition&gt; ? &lt;true_expression&gt; : &lt;false_expression&gt;</code></pre><p>其意思是：if condition为真, 则 LHS=true_expression, 否则 LHS = false_expression</p>
+<p><strong>每个条件操作符必须有三个参数，缺少任何一个都会产生错误。</strong></p>
+<pre><code>registger = condition ? true_value : false_value；</code></pre><p>上式中，若condition为真则register等于true_value；若condition为假则register等于false_value。一个很有意思的地方是，如果条件值不确定，且true_value和false_value不相等，则</p>
+<pre><code>例如：assign out = (sel == 0) ? a : b;</code></pre><p>若sel为0则out =a；若sel为1则out = b。如果sel为x或z，若a = b =0，则out = 0；若a≠b，则out值不确定。</p>
+<h2 id="级联操作符"><a href="#级联操作符" class="headerlink" title="级联操作符"></a>级联操作符</h2><p><img src="/images/loading.gif" data-original="../images/ML/image-20211022105409462.png" alt=""></p>
+<ul>
+<li>必须指定位数，不能缺省！如‘b0</li>
+</ul>
+<h2 id="复制操作符"><a href="#复制操作符" class="headerlink" title="复制操作符"></a>复制操作符</h2><p><img src="/images/loading.gif" data-original="../images/ML/image-20211022105517516.png" alt=""></p>
+<h3 id="拼接与复制"><a href="#拼接与复制" class="headerlink" title="拼接与复制"></a>拼接与复制</h3><pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> replicate <span class="token punctuation">(</span>
+      <span class="token keyword">input</span> <span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">1</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> rega <span class="token punctuation">,</span>
+                                   regb <span class="token punctuation">,</span>
+      <span class="token keyword">output</span> <span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">3</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> out   <span class="token punctuation">,</span> 
+                                    bus
+      <span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+   <span class="token important">always @</span><span class="token punctuation">(</span>rega<span class="token punctuation">,</span> regb<span class="token punctuation">)</span> <span class="token keyword">begin</span>
+        bus <span class="token operator">=</span> <span class="token operator">{</span><span class="token number">2</span><span class="token operator">{</span> regb<span class="token operator">}}</span><span class="token punctuation">;</span> 
+
+        out <span class="token operator">=</span>  <span class="token operator">{</span>rega<span class="token punctuation">,</span>  regb<span class="token operator">}</span><span class="token punctuation">;</span>
+   <span class="token keyword">end</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211022105618380.png" alt=""></p>
+<h2 id="作业1"><a href="#作业1" class="headerlink" title="作业1"></a>作业1</h2><p>请使用verilog描述一个16位CSA加法器adder_16，如下图所示。其中：</p>
+<p>a_in和b_in是输入数据，sum_o是和输出信号，</p>
+<p>c_in是进位输入，c_o是进位输出信号。</p>
+<p>要求：4位一组，组内使用CLA进位链。</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211022105657124.png" alt=""></p>
+<p>仿真工具：</p>
+<ul>
+<li>Modesim</li>
+<li>ActiveHDL</li>
+<li>iverilog</li>
+</ul>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -2726,7 +2837,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">1921.1k</span>&nbsp;字
+                class="white-color">1930.1k</span>&nbsp;字
             
             
             
