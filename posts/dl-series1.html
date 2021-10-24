@@ -26,9 +26,9 @@
     
     <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/jquery/jquery.min.js"></script>
     
-<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
-<link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
-<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+<meta name="generator" content="Hexo 4.2.0"><link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
+</head>
 
 
 <body>
@@ -459,21 +459,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-10-22
+                    2021-10-24
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    14.8k
+                    17.6k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    69 分
+                    81 分
                 </div>
                 
 
@@ -2163,6 +2163,212 @@ to_pil_image<span class="token punctuation">(</span>
 <li>看论文时候不要全信，能复现的尽量复现一下，许多论文都会做低baseline，但实际使用时很多baseline效果很不错。</li>
 <li>对于大多数任务，数据比模型重要。面对新任务时先分析数据，再根据数据设计模型，并决定各个参数。例如nlp有些任务中的padding长度，通常需要达到数据集的90%以上，可用pandas的describe函数进行分析。</li>
 </ol>
+<h1 id="PyTorch模型训练提速的技巧"><a href="#PyTorch模型训练提速的技巧" class="headerlink" title="PyTorch模型训练提速的技巧"></a>PyTorch模型训练提速的技巧</h1><h2 id="Pytorch-Lightning"><a href="#Pytorch-Lightning" class="headerlink" title="Pytorch-Lightning"></a>Pytorch-Lightning</h2><p>你可以在Pytorch的库Pytorch- lightning中找到我在这里讨论的每一个优化。Lightning是在Pytorch之上的一个封装，它可以自动训练，同时让研究人员完全控制关键的模型组件。Lightning 使用最新的最佳实践，并将你可能出错的地方最小化。</p>
+<p>我们为MNIST定义LightningModel并使用Trainer来训练模型。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> pytorch_lightning <span class="token keyword">import</span> Trainer
+model <span class="token operator">=</span> LightningModule<span class="token punctuation">(</span>…<span class="token punctuation">)</span>
+trainer <span class="token operator">=</span> Trainer<span class="token punctuation">(</span><span class="token punctuation">)</span>
+trainer<span class="token punctuation">.</span>fit<span class="token punctuation">(</span>model<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="1-DataLoaders"><a href="#1-DataLoaders" class="headerlink" title="1. DataLoaders"></a><strong>1. DataLoaders</strong></h2><p>这可能是最容易获得速度增益的地方。保存h5py或numpy文件以加速数据加载的时代已经一去不复返了，使用Pytorch dataloader加载图像数据很简单(对于NLP数据，请查看TorchText)。</p>
+<p>在lightning中，你不需要指定训练循环，只需要定义dataLoaders和Trainer就会在需要的时候调用它们。</p>
+<pre class="line-numbers language-python"><code class="language-python">dataset <span class="token operator">=</span> MNIST<span class="token punctuation">(</span>root<span class="token operator">=</span>self<span class="token punctuation">.</span>hparams<span class="token punctuation">.</span>data_root<span class="token punctuation">,</span> train<span class="token operator">=</span>train<span class="token punctuation">,</span> download<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
+loader <span class="token operator">=</span> DataLoader<span class="token punctuation">(</span>dataset<span class="token punctuation">,</span> batch_size<span class="token operator">=</span><span class="token number">32</span><span class="token punctuation">,</span> shuffle<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
+<span class="token keyword">for</span> batch <span class="token keyword">in</span> loader<span class="token punctuation">:</span>
+  x<span class="token punctuation">,</span> y <span class="token operator">=</span> batch
+  model<span class="token punctuation">.</span>training_step<span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="2-DataLoaders-中的-workers-的数量"><a href="#2-DataLoaders-中的-workers-的数量" class="headerlink" title="2. DataLoaders 中的 workers 的数量"></a><strong>2. DataLoaders 中的 workers 的数量</strong></h2><p>另一个加速的神奇之处是允许批量并行加载。因此，您可以一次装载nb_workers个batch，而不是一次装载一个batch。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># slow</span>
+loader <span class="token operator">=</span> DataLoader<span class="token punctuation">(</span>dataset<span class="token punctuation">,</span> batch_size<span class="token operator">=</span><span class="token number">32</span><span class="token punctuation">,</span> shuffle<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true"># fast (use 10 workers)</span>
+loader <span class="token operator">=</span> DataLoader<span class="token punctuation">(</span>dataset<span class="token punctuation">,</span> batch_size<span class="token operator">=</span><span class="token number">32</span><span class="token punctuation">,</span> shuffle<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span> num_workers<span class="token operator">=</span><span class="token number">10</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="3-Batch-size"><a href="#3-Batch-size" class="headerlink" title="3. Batch size"></a><strong>3. Batch size</strong></h2><p>在开始下一个优化步骤之前，将batch size增大到CPU-RAM或GPU-RAM所允许的最大范围。</p>
+<p>下一节将重点介绍如何帮助减少内存占用，以便你可以继续增加batch size。</p>
+<p>记住，你可能需要再次更新你的学习率。一个好的经验法则是，如果batch size加倍，那么学习率就加倍。</p>
+<h2 id="4-梯度累加"><a href="#4-梯度累加" class="headerlink" title="4. 梯度累加"></a><strong>4. 梯度累加</strong></h2><p>在你已经达到计算资源上限的情况下，你的batch size仍然太小(比如8)，然后我们需要模拟一个更大的batch size来进行梯度下降，以提供一个良好的估计。</p>
+<p>假设我们想要达到128的batch size大小。我们需要以batch size为8执行16个前向传播和向后传播，然后再执行一次优化步骤。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># clear last step</span>
+optimizer<span class="token punctuation">.</span>zero_grad<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># 16 accumulated gradient steps</span>
+scaled_loss <span class="token operator">=</span> <span class="token number">0</span>
+<span class="token keyword">for</span> accumulated_step_i <span class="token keyword">in</span> range<span class="token punctuation">(</span><span class="token number">16</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+     out <span class="token operator">=</span> model<span class="token punctuation">.</span>forward<span class="token punctuation">(</span><span class="token punctuation">)</span>
+     loss <span class="token operator">=</span> some_loss<span class="token punctuation">(</span>out<span class="token punctuation">,</span>y<span class="token punctuation">)</span>    
+     loss<span class="token punctuation">.</span>backward<span class="token punctuation">(</span><span class="token punctuation">)</span>
+      scaled_loss <span class="token operator">+=</span> loss<span class="token punctuation">.</span>item<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># update weights after 8 steps. effective batch = 8*16</span>
+optimizer<span class="token punctuation">.</span>step<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># loss is now scaled up by the number of accumulated batches</span>
+actual_loss <span class="token operator">=</span> scaled_loss <span class="token operator">/</span> <span class="token number">16</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>在lightning中，全部都给你做好了，只需要设置<code>accumulate_grad_batches=16</code>：</p>
+<pre class="line-numbers language-python"><code class="language-python">trainer <span class="token operator">=</span> Trainer<span class="token punctuation">(</span>accumulate_grad_batches<span class="token operator">=</span><span class="token number">16</span><span class="token punctuation">)</span>
+trainer<span class="token punctuation">.</span>fit<span class="token punctuation">(</span>model<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h2 id="5-保留的计算图"><a href="#5-保留的计算图" class="headerlink" title="5. 保留的计算图"></a><strong>5. 保留的计算图</strong></h2><p>一个最简单撑爆你的内存的方法是为了记录日志存储你的loss。</p>
+<pre class="line-numbers language-python"><code class="language-python">losses <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+losses<span class="token punctuation">.</span>append<span class="token punctuation">(</span>loss<span class="token punctuation">)</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span>f<span class="token string">'current loss: {torch.mean(losses)'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>上面的问题是，<strong>loss</strong>仍然包含有整个图的副本。在这种情况下，调用.item()来释放它。</p>
+<pre class="line-numbers language-python"><code class="language-python">!<span class="token punctuation">[</span>1_CER3v8cok2UOBNsmnBrzPQ<span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token number">9</span> Tips For Training Lightning<span class="token operator">-</span>Fast Neural Networks In Pytorch<span class="token punctuation">.</span>assets<span class="token operator">/</span>1_CER3v8cok2UOBNsmnBrzPQ<span class="token punctuation">.</span>gif<span class="token punctuation">)</span><span class="token comment" spellcheck="true"># bad</span>
+losses<span class="token punctuation">.</span>append<span class="token punctuation">(</span>loss<span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># good</span>
+losses<span class="token punctuation">.</span>append<span class="token punctuation">(</span>loss<span class="token punctuation">.</span>item<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>Lightning会非常小心，确保不会保留计算图的副本。</p>
+<h2 id="6-单个GPU训练"><a href="#6-单个GPU训练" class="headerlink" title="6. 单个GPU训练"></a><strong>6. 单个GPU训练</strong></h2><p>一旦你已经完成了前面的步骤，是时候进入GPU训练了。在GPU上的训练将使多个GPU cores之间的数学计算并行化。你得到的加速取决于你所使用的GPU类型。我推荐个人用2080Ti，公司用V100。</p>
+<p>乍一看，这可能会让你不知所措，但你真的只需要做两件事:1)移动你的模型到GPU, 2)每当你运行数据通过它，把数据放到GPU上。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># put model on GPU</span>
+model<span class="token punctuation">.</span>cuda<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># put data on gpu (cuda on a variable returns a cuda copy)</span>
+x <span class="token operator">=</span> x<span class="token punctuation">.</span>cuda<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># runs on GPU now</span>
+model<span class="token punctuation">(</span>x<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>如果你使用Lightning，你什么都不用做，只需要设置<code>Trainer(gpus=1)</code>。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># ask lightning to use gpu 0 for training</span>
+trainer <span class="token operator">=</span> Trainer<span class="token punctuation">(</span>gpus<span class="token operator">=</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+trainer<span class="token punctuation">.</span>fit<span class="token punctuation">(</span>model<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>在GPU上进行训练时，要注意的主要事情是限制CPU和GPU之间的传输次数。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># expensive</span>
+x <span class="token operator">=</span> x<span class="token punctuation">.</span>cuda<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token comment" spellcheck="true"># very expensive</span>
+x <span class="token operator">=</span> x<span class="token punctuation">.</span>cpu<span class="token punctuation">(</span><span class="token punctuation">)</span>
+x <span class="token operator">=</span> x<span class="token punctuation">.</span>cuda<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>如果内存耗尽，不要将数据移回CPU以节省内存。在求助于GPU之前，尝试以其他方式优化你的代码或GPU之间的内存分布。</p>
+<p>另一件需要注意的事情是调用强制GPU同步的操作。清除内存缓存就是一个例子。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># really bad idea. Stops all the GPUs until they all catch up</span>
+torch<span class="token punctuation">.</span>cuda<span class="token punctuation">.</span>empty_cache<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>但是，如果使用Lightning，惟一可能出现问题的地方是在定义Lightning Module时。Lightning会特别注意不去犯这类错误。</p>
+<h2 id="7-16-bit-精度"><a href="#7-16-bit-精度" class="headerlink" title="7. 16-bit 精度"></a><strong>7. 16-bit 精度</strong></h2><p>16bit精度是将内存占用减半的惊人技术。大多数模型使用32bit精度数字进行训练。然而，最近的研究发现，16bit模型也可以工作得很好。混合精度意味着对某些内容使用16bit，但将权重等内容保持在32bit。</p>
+<p>要在Pytorch中使用16bit精度，请安装NVIDIA的apex库，并对你的模型进行这些更改。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># enable 16-bit on the model and the optimizer</span>
+model<span class="token punctuation">,</span> optimizers <span class="token operator">=</span> amp<span class="token punctuation">.</span>initialize<span class="token punctuation">(</span>model<span class="token punctuation">,</span> optimizers<span class="token punctuation">,</span> opt_level<span class="token operator">=</span><span class="token string">'O2'</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># when doing .backward, let amp do it so it can scale the loss</span>
+<span class="token keyword">with</span> amp<span class="token punctuation">.</span>scale_loss<span class="token punctuation">(</span>loss<span class="token punctuation">,</span> optimizer<span class="token punctuation">)</span> <span class="token keyword">as</span> scaled_loss<span class="token punctuation">:</span>                      
+    scaled_loss<span class="token punctuation">.</span>backward<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><em>amp</em>包会处理好大部分事情。如果梯度爆炸或趋向于0，它甚至会缩放loss。</p>
+<p>在lightning中，启用16bit并不需要修改模型中的任何内容，也不需要执行我上面所写的操作。设置<code>Trainer(precision=16)</code>就可以了。</p>
+<pre class="line-numbers language-python"><code class="language-python">trainer <span class="token operator">=</span> Trainer<span class="token punctuation">(</span>amp_level<span class="token operator">=</span><span class="token string">'O2'</span><span class="token punctuation">,</span> use_amp<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">)</span>
+trainer<span class="token punctuation">.</span>fit<span class="token punctuation">(</span>model<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h2 id="8-移动到多个GPUs中"><a href="#8-移动到多个GPUs中" class="headerlink" title="8. 移动到多个GPUs中"></a><strong>8. 移动到多个GPUs中</strong></h2><p>现在，事情变得非常有趣了。有3种(也许更多？)方法来进行多GPU训练。</p>
+<h3 id="分batch训练"><a href="#分batch训练" class="headerlink" title="分batch训练"></a><strong>分batch训练</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211024153912407.png" alt=""></p>
+<p>第一种方法被称为“分batch训练”。该策略将模型复制到每个GPU上，每个GPU获得batch的一部分。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># copy model on each GPU and give a fourth of the batch to each</span>
+model <span class="token operator">=</span> DataParallel<span class="token punctuation">(</span>model<span class="token punctuation">,</span> devices<span class="token operator">=</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span> <span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># out has 4 outputs (one for each gpu)</span>
+out <span class="token operator">=</span> model<span class="token punctuation">(</span>x<span class="token punctuation">.</span>cuda<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>在lightning中，你只需要增加GPUs的数量，然后告诉trainer，其他什么都不用做。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># ask lightning to use 4 GPUs for training</span>
+trainer <span class="token operator">=</span> Trainer<span class="token punctuation">(</span>gpus<span class="token operator">=</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+trainer<span class="token punctuation">.</span>fit<span class="token punctuation">(</span>model<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<h3 id="模型分布训练"><a href="#模型分布训练" class="headerlink" title="模型分布训练"></a><strong>模型分布训练</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211024153929011.png" alt=""></p>
+<p>有时你的模型可能太大不能完全放到内存中。例如，带有编码器和解码器的序列到序列模型在生成输出时可能会占用20GB RAM。在本例中，我们希望将编码器和解码器放在独立的GPU上。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># each model is sooo big we can't fit both in memory</span>
+encoder_rnn<span class="token punctuation">.</span>cuda<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
+decoder_rnn<span class="token punctuation">.</span>cuda<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># run input through encoder on GPU 0</span>
+encoder_out <span class="token operator">=</span> encoder_rnn<span class="token punctuation">(</span>x<span class="token punctuation">.</span>cuda<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># run output through decoder on the next GPU</span>
+out <span class="token operator">=</span> decoder_rnn<span class="token punctuation">(</span>encoder_out<span class="token punctuation">.</span>cuda<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># normally we want to bring all outputs back to GPU 0</span>
+out <span class="token operator">=</span> out<span class="token punctuation">.</span>cuda<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>对于这种类型的训练，在Lightning中不需要指定任何GPU，你应该把LightningModule中的模块放到正确的GPU上。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">class</span> <span class="token class-name">MyModule</span><span class="token punctuation">(</span>LightningModule<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        self<span class="token punctuation">.</span>encoder <span class="token operator">=</span> RNN<span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span>
+        self<span class="token punctuation">.</span>decoder <span class="token operator">=</span> RNN<span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span>
+    <span class="token keyword">def</span> <span class="token function">forward</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token comment" spellcheck="true"># models won't be moved after the first forward because </span>
+        <span class="token comment" spellcheck="true"># they are already on the correct GPUs</span>
+        self<span class="token punctuation">.</span>encoder<span class="token punctuation">.</span>cuda<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
+        self<span class="token punctuation">.</span>decoder<span class="token punctuation">.</span>cuda<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
+        out <span class="token operator">=</span> self<span class="token punctuation">.</span>encoder<span class="token punctuation">(</span>x<span class="token punctuation">)</span>
+        out <span class="token operator">=</span> self<span class="token punctuation">.</span>decoder<span class="token punctuation">(</span>out<span class="token punctuation">.</span>cuda<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># don't pass GPUs to trainer</span>
+model <span class="token operator">=</span> MyModule<span class="token punctuation">(</span><span class="token punctuation">)</span>
+trainer <span class="token operator">=</span> Trainer<span class="token punctuation">(</span><span class="token punctuation">)</span>
+trainer<span class="token punctuation">.</span>fit<span class="token punctuation">(</span>model<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="两者混合"><a href="#两者混合" class="headerlink" title="两者混合"></a><strong>两者混合</strong></h3><p>在上面的情况下，编码器和解码器仍然可以从并行化操作中获益。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># change these lines</span>
+self<span class="token punctuation">.</span>encoder <span class="token operator">=</span> RNN<span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span>
+self<span class="token punctuation">.</span>decoder <span class="token operator">=</span> RNN<span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># to these</span>
+<span class="token comment" spellcheck="true"># now each RNN is based on a different gpu set</span>
+self<span class="token punctuation">.</span>encoder <span class="token operator">=</span> DataParallel<span class="token punctuation">(</span>self<span class="token punctuation">.</span>encoder<span class="token punctuation">,</span> devices<span class="token operator">=</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+self<span class="token punctuation">.</span>decoder <span class="token operator">=</span> DataParallel<span class="token punctuation">(</span>self<span class="token punctuation">.</span>encoder<span class="token punctuation">,</span> devices<span class="token operator">=</span><span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># in forward...</span>
+out <span class="token operator">=</span> self<span class="token punctuation">.</span>encoder<span class="token punctuation">(</span>x<span class="token punctuation">.</span>cuda<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># notice inputs on first gpu in device</span>
+sout <span class="token operator">=</span> self<span class="token punctuation">.</span>decoder<span class="token punctuation">(</span>out<span class="token punctuation">.</span>cuda<span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># &lt;--- the 4 here</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>使用多个GPU时要考虑的注意事项：</p>
+<ul>
+<li>如果模型已经在GPU上了，model.cuda()不会做任何事情。</li>
+<li>总是把输入放在设备列表中的第一个设备上。</li>
+<li>在设备之间传输数据是昂贵的，把它作为最后的手段。</li>
+<li>优化器和梯度会被保存在GPU 0上，因此，GPU 0上使用的内存可能会比其他GPU大得多。</li>
+</ul>
+<h2 id="9-多节点GPU训练"><a href="#9-多节点GPU训练" class="headerlink" title="9. 多节点GPU训练"></a><strong>9. 多节点GPU训练</strong></h2><p><img src="/images/loading.gif" data-original="../images/basic/image-20211024153952915.png" alt=""></p>
+<p>每台机器上的每个GPU都有一个模型的副本。每台机器获得数据的一部分，并且只在那部分上训练。每台机器都能同步梯度。</p>
+<p>如果你已经做到了这一步，那么你现在可以在几分钟内训练Imagenet了！这并没有你想象的那么难，但是它可能需要你对计算集群的更多知识。这些说明假设你正在集群上使用SLURM。</p>
+<p>Pytorch允许多节点训练，通过在每个节点上复制每个GPU上的模型并同步梯度。所以，每个模型都是在每个GPU上独立初始化的，本质上独立地在数据的一个分区上训练，除了它们都从所有模型接收梯度更新。</p>
+<p>在高层次上：</p>
+<ol>
+<li>在每个GPU上初始化一个模型的副本(确保设置种子，让每个模型初始化到相同的权重，否则它会失败)。</li>
+<li>将数据集分割成子集(使用DistributedSampler)。每个GPU只在它自己的小子集上训练。</li>
+<li>在.backward()上，所有副本都接收到所有模型的梯度副本。这是模型之间唯一一次的通信。</li>
+</ol>
+<p>Pytorch有一个很好的抽象，叫做DistributedDataParallel，它可以帮你实现这个功能。要使用DDP，你需要做<strong>4</strong>的事情：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">tng_dataloader</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+     d <span class="token operator">=</span> MNIST<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+     <span class="token comment" spellcheck="true"># 4: Add distributed sampler</span>
+     <span class="token comment" spellcheck="true"># sampler sends a portion of tng data to each machine</span>
+     dist_sampler <span class="token operator">=</span> DistributedSampler<span class="token punctuation">(</span>dataset<span class="token punctuation">)</span>
+     dataloader <span class="token operator">=</span> DataLoader<span class="token punctuation">(</span>d<span class="token punctuation">,</span> shuffle<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">,</span> sampler<span class="token operator">=</span>dist_sampler<span class="token punctuation">)</span>
+
+<span class="token keyword">def</span> <span class="token function">main_process_entrypoint</span><span class="token punctuation">(</span>gpu_nb<span class="token punctuation">)</span><span class="token punctuation">:</span>
+     <span class="token comment" spellcheck="true"># 2: set up connections  between all gpus across all machines</span>
+     <span class="token comment" spellcheck="true"># all gpus connect to a single GPU "root"</span>
+     <span class="token comment" spellcheck="true"># the default uses env://</span>
+     world <span class="token operator">=</span> nb_gpus <span class="token operator">*</span> nb_nodes
+     dist<span class="token punctuation">.</span>init_process_group<span class="token punctuation">(</span><span class="token string">"nccl"</span><span class="token punctuation">,</span> rank<span class="token operator">=</span>gpu_nb<span class="token punctuation">,</span> world_size<span class="token operator">=</span>world<span class="token punctuation">)</span>
+
+     <span class="token comment" spellcheck="true"># 3: wrap model in DPP</span>
+     torch<span class="token punctuation">.</span>cuda<span class="token punctuation">.</span>set_device<span class="token punctuation">(</span>gpu_nb<span class="token punctuation">)</span>
+     model<span class="token punctuation">.</span>cuda<span class="token punctuation">(</span>gpu_nb<span class="token punctuation">)</span>
+     model <span class="token operator">=</span> DistributedDataParallel<span class="token punctuation">(</span>model<span class="token punctuation">,</span> device_ids<span class="token operator">=</span><span class="token punctuation">[</span>gpu_nb<span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+     <span class="token comment" spellcheck="true"># train your model now...</span>
+
+<span class="token keyword">if</span>  __name__ <span class="token operator">==</span> <span class="token string">'__main__'</span><span class="token punctuation">:</span>
+     <span class="token comment" spellcheck="true"># 1: spawn number of processes</span>
+     <span class="token comment" spellcheck="true"># your cluster will call main for each machine</span>
+     mp<span class="token punctuation">.</span>spawn<span class="token punctuation">(</span>main_process_entrypoint<span class="token punctuation">,</span> nprocs<span class="token operator">=</span><span class="token number">8</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>然而，在Lightning中，只需设置节点数量，它就会为你处理其余的事情。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># train on 1024 gpus across 128 nodes</span>
+trainer <span class="token operator">=</span> Trainer<span class="token punctuation">(</span>nb_gpu_nodes<span class="token operator">=</span><span class="token number">128</span><span class="token punctuation">,</span> gpus<span class="token operator">=</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>Lightning还附带了一个SlurmCluster管理器，可以方便地帮助你提交SLURM作业的正确详细信息。</p>
+<h2 id="10-在单个节点上多GPU更快的训练"><a href="#10-在单个节点上多GPU更快的训练" class="headerlink" title="10. 在单个节点上多GPU更快的训练"></a><strong>10. 在单个节点上多GPU更快的训练</strong></h2><p>事实证明，distributedDataParallel比DataParallel快得多，因为它只执行梯度同步的通信。所以，一个好的hack是使用distributedDataParallel替换DataParallel，即使是在单机上进行训练。</p>
+<p>在Lightning中，这很容易通过将distributed_backend设置为<strong>ddp</strong>和设置GPUs的数量来实现。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># train on 4 gpus on the same machine MUCH faster than DataParallel</span>
+trainer <span class="token operator">=</span> Trainer<span class="token punctuation">(</span>distributed_backend<span class="token operator">=</span><span class="token string">'ddp'</span><span class="token punctuation">,</span> gpus<span class="token operator">=</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h2 id="对模型加速的思考"><a href="#对模型加速的思考" class="headerlink" title="对模型加速的思考"></a>对模型加速的思考</h2><p>首先，我要确保在数据加载中没有瓶颈。为此，我使用了我所描述的现有数据加载解决方案，但是如果没有一种解决方案满足你的需要，请考虑离线处理和缓存到高性能数据存储中，比如h5py。</p>
+<p>接下来看看你在训练步骤中要做什么。确保你的前向传播速度快，避免过多的计算以及最小化CPU和GPU之间的数据传输。最后，避免做一些会降低GPU速度的事情(本指南中有介绍)。</p>
+<p>接下来，我试图最大化我的batch size，这通常是受GPU内存大小的限制。现在，需要关注在使用大的batch size的时候如何在多个GPUs上分布并最小化延迟（比如，我可能会尝试着在多个gpu上使用8000 +的有效batch size）。</p>
+<p>然而，你需要小心大的batch size。针对你的具体问题，请查阅相关文献，看看人们都忽略了什么！</p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -2676,7 +2882,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">1930.1k</span>&nbsp;字
+                class="white-color">1938.2k</span>&nbsp;字
             
             
             
@@ -2914,7 +3120,7 @@ $(function () {
     
     <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/instantpage/instantpage.js" type="module"></script>
     
-
+<script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script>
         <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
         <script>
         $('a').each(function() {
@@ -2933,7 +3139,7 @@ $(function () {
             }
           }
         });
-        </script><script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script></body>
+        </script></body>
 
 </html>
 
