@@ -459,21 +459,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-10-19
+                    2021-10-28
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    4.4k
+                    6.2k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    19 分
+                    28 分
                 </div>
                 
 
@@ -1572,7 +1572,538 @@ SBC         r5,r4, r4, RRX #3        错 最多1</code></pre><p><strong>给出�
 </li>
 </ul>
 <p>d!=m</p>
-<h2 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h2><script>
+<blockquote>
+<p>32位乘32位低32位！</p>
+</blockquote>
+<p><strong>分析下列指令</strong></p>
+<pre><code>MUL     r10,r2,r5
+MLA     r10,r2,r1,r5
+MULS    r0,r2,r2
+
+MUL     r15,r0,r3        ;错
+MLA     r1,r1,r3, r6    ;错</code></pre><ul>
+<li><p>U（S）MULL, U（S）MLAL(32bit *32bit -&gt; 64bit)</p>
+<ul>
+<li><p>语法</p>
+<p>Op{<em>cond**}{S}</em> <em>RdLo**,</em> <em>RdHi**, Rm,</em> <em>Rs</em></p>
+</li>
+<li><p>执行</p>
+<p> U（S）MULL: Rs*Rm -&gt;RdLo, RdHi</p>
+<p> U（S）MLAL: Rs*Rm+(RdLo,RdHi) -&gt; RdLo , RdHi</p>
+</li>
+<li><p>标志位 </p>
+<p> N, Z</p>
+</li>
+<li><p>例:</p>
+<pre><code>UMULL       r0,r4,r5,r6
+UMLALS     r4,r5,r3,r8
+UMULL       r1,r15,r10,r2</code></pre><blockquote>
+<p>目的寄存器需要用两个32位来存储一个64位</p>
+</blockquote>
+<p><strong>UMLAL</strong> <strong>与</strong> <strong>MLA</strong> <strong>操作的差别？</strong></p>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>给出下列指令的执行结果</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211028135420129.png" alt=""></p>
+<h4 id="逻辑指令"><a href="#逻辑指令" class="headerlink" title="逻辑指令"></a><strong>逻辑指令</strong></h4><ul>
+<li><p><strong>语法</strong></p>
+<p>Op{cond}{s} Rd, Rn, Operand2</p>
+</li>
+<li><p>指令</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>指令</strong></th>
+<th><strong>操作</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>AND</td>
+<td>Rd=Rn  &amp; Operand2;  shift_operand</td>
+</tr>
+<tr>
+<td>ORR</td>
+<td>Rd=Rn  | Operand2</td>
+</tr>
+<tr>
+<td>EOR</td>
+<td>Rd=Rn  ^ Operand2</td>
+</tr>
+<tr>
+<td>BIC</td>
+<td>Rd=Rn  &amp; (~Operand2)</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p>例</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211028135715652.png" alt=""></p>
+</li>
+</ul>
+<h4 id="MOV"><a href="#MOV" class="headerlink" title="MOV"></a><strong>MOV</strong></h4><p><strong>寄存器间数据复制</strong></p>
+<pre><code>PRE
+    R0=0x80
+    R1=0x50
+    MOV  R0, R1
+
+POST
+    R0=? 0x50
+    R1=? 0x50</code></pre><p><strong>使用桶形移位寄存器</strong></p>
+<pre><code>PRE
+    R0=0x80
+    R1=0x50
+
+    MOV  R0, R1, LSL #4
+
+POST
+    R0=? 0x500
+    R1=? 0x50</code></pre><p><img src="/images/loading.gif" data-original="../images/basic/image-20211028135854829.png" alt=""></p>
+<table>
+<thead>
+<tr>
+<th><strong>移位操作</strong></th>
+<th><strong>结果</strong></th>
+<th><strong>Y**</strong>值范围**</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>x  LSL y</td>
+<td>x  &lt;&lt; y</td>
+<td>#0-31  or Rs</td>
+</tr>
+<tr>
+<td>x  LSR y</td>
+<td>(unsigned)  x &gt;&gt; y</td>
+<td>#1-32  or Rs</td>
+</tr>
+<tr>
+<td>x  ASR y</td>
+<td>(signed)  x &gt;&gt; y</td>
+<td>#1-32  or Rs</td>
+</tr>
+<tr>
+<td>x  ROR y</td>
+<td>((unsigned)x  &gt;&gt;y)|(x&lt;&lt;(32-y))</td>
+<td>#1-32  or Rx</td>
+</tr>
+<tr>
+<td>x  RRX</td>
+<td>(c  flag &lt;&lt;31)|((unsigned)x&gt;&gt;1)</td>
+<td>none</td>
+</tr>
+</tbody></table>
+<p><strong>移位对C标志的影响</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211028135953614.png" alt=""></p>
+<blockquote>
+<p>状态寄存器小写0，大写1</p>
+</blockquote>
+<h4 id="比较"><a href="#比较" class="headerlink" title="比较"></a>比较</h4><pre><code>比较判断    r6&lt; Imageheight? ;  r5&lt;Imagewidth ?
+    cmp r6, #Imageheight
+    cmp r5, #Imagewidth</code></pre><ul>
+<li><p>语法</p>
+<p> CMP{cond} Rn, Operand2</p>
+</li>
+<li><p>第二操作数（Operand2）</p>
+</li>
+</ul>
+<pre><code>#&lt;immediate&gt;
+&lt;Rm&gt; </code></pre><blockquote>
+<p>ALU_out[31]àN; alu_out=0, Z=1 else Z=0;</p>
+<p>Not borrow from “Rn-Operand2 “ : C=1 else C=0;</p>
+<p>Overflow from “ Rn-Operand2”: V=1 else V=0;</p>
+</blockquote>
+<blockquote>
+<p>自动改变状态寄存器</p>
+</blockquote>
+<ul>
+<li><p>语法</p>
+<p>Op{cond} Rn, Operand2</p>
+</li>
+<li><p>指令</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>指令</strong></th>
+<th><strong>操作</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CMN</td>
+<td>flag of Rn + Operand2;&lt;Rm&gt;</td>
+</tr>
+<tr>
+<td>CMP</td>
+<td>flag of Rn - Operand2; &lt;Rm&gt;, <imm_8></imm_8></td>
+</tr>
+<tr>
+<td>TEQ</td>
+<td>flag of Rn ^ Operand2;&lt;shift_operand&gt;</td>
+</tr>
+<tr>
+<td>TST</td>
+<td>flag of Rn &amp; Operand2;&lt;Rm&gt;</td>
+</tr>
+</tbody></table>
+<ul>
+<li>例</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211028140522389.png" alt=""></p>
+<blockquote>
+<p>不改变通用寄存器数值，自动改变状态寄存器状态</p>
+</blockquote>
+<h4 id="跳转"><a href="#跳转" class="headerlink" title="跳转"></a>跳转</h4><pre><code>跳转     for (;;)  
+行内循环              cmp     r5, #Imagewidth
+        bmi     Linecircle
+行间循环
+                  cmp     r6, #Imageheight
+                            bmi     Framecircle</code></pre><ul>
+<li>语法</li>
+</ul>
+<pre><code> B{&lt;cond&gt;} label</code></pre><ul>
+<li><p>如果Imagewidth 或 Imageheight 大于0xff，如何处理？</p>
+</li>
+<li><p>label ？ 有什么要求？</p>
+</li>
+<li><p>支持哪些 cond？ 如何表达？ </p>
+</li>
+<li><p>语法</p>
+</li>
+</ul>
+<pre><code>B{&lt;cond&gt;} label
+BL{&lt;cond&gt;} label
+BX{&lt;cond&gt;} Rm
+BLX{&lt;cond&gt;} label|Rm</code></pre><ul>
+<li>指令</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>指令</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>B(跳转)</td>
+<td>pc=label</td>
+</tr>
+<tr>
+<td>BL(带返回跳转)</td>
+<td>pc=label,  lr=BL 后面第一条指令地址</td>
+</tr>
+<tr>
+<td>BX(切换状态跳转)</td>
+<td>pc=Rm  &amp; 0xfffffffe, T=Rm &amp; 1</td>
+</tr>
+<tr>
+<td>BLX</td>
+<td>pc=  label, T=1  pc=Rm  &amp; 0xfffffffe, T=Rm &amp; 1  lr=BLX 后面的第一条指令地址</td>
+</tr>
+</tbody></table>
+<ul>
+<li><strong>B</strong></li>
+</ul>
+<pre><code>B     forward
+backward
+    ADD     r1, r2, #4
+    ADD    r0, r6, #2
+    ADD     r3, r7, #5
+forward
+    SUB    r1, r2, #4
+    ADD    r1, r2, #4
+    SUB    r1, r2, #4
+    ADD    r4, r6, r7
+    B     backward</code></pre><p>B 可以在4G空间任意范围内跳转吗？</p>
+<p>±32MB</p>
+<ul>
+<li><strong>BX</strong></li>
+</ul>
+<pre><code>CODE32 
+header
+    MOV r0, #0                         
+      ADR     r0, start + 1               
+        BX      r0  
+
+    CODE16                  
+start
+            ADD r1, r2
+    SUB r2, #0x55
+            CMP r0, r1                  
+       ……</code></pre><ul>
+<li><p>如何添加指令，从CODE16段跳到header</p>
+</li>
+<li><p>Thumb指令特点：</p>
+<ul>
+<li>使用ARM的r0-r7 8个通用寄存器</li>
+<li>Thumb指令没有条件执行</li>
+<li>指令自动更新标志，不需加（s）</li>
+<li>仅有LDMIA（STMIA）<ul>
+<li>只有IA一种形式</li>
+<li>必须加“！”</li>
+</ul>
+</li>
+<li>在数据运算指令中，不支持第二操作数移位</li>
+</ul>
+<blockquote>
+<p>Thumb指令是16位的Arm指令集，可以理解为Arm的阉割版</p>
+<p><a href="https://blog.csdn.net/qq_20880415/article/details/101037010" target="_blank" rel="noopener">https://blog.csdn.net/qq_20880415/article/details/101037010</a></p>
+<p>指令操作16位</p>
+<p>操作依然是32位</p>
+</blockquote>
+</li>
+<li><p><strong>BL</strong></p>
+</li>
+</ul>
+<pre><code>BL     subroutine
+    CMP     r1, #5
+    MOV     r1, #0
+    ADD     r1, r2, #4
+    ……
+subroutine 
+    ADD    r1, r2, #4
+    SUB    r1, r2, #4
+    MOV    pc, lr</code></pre><p>函数的返回方式？</p>
+<blockquote>
+<p>Lr是跳转前下一条指令的地址</p>
+</blockquote>
+<ul>
+<li>条件类型</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211028141148231.png" alt=""></p>
+<ul>
+<li>比较下列指令</li>
+</ul>
+<pre><code>ADD     r0, r1, r2    ; r0 = r1 + r2, don't update flags
+ADDS    r0, r1, r2    ; r0 = r1 + r2, and update flags
+ADDCSS  r0, r1, r2    ; If C flag set then r0 = r1 + r2,                 
+                                   ;    and update flags
+CMP     r0, r1        ; update flags based on r0-r1.</code></pre><ul>
+<li><strong>下列程序中哪些指令不执行</strong></li>
+</ul>
+<pre><code>    MOV r0, #1
+    MOV r1, #2
+    CMP r0, r1    ;N=1
+    SUBGT r0,r0,r1    ;不执行
+    SUBLT r1,r1,r0    ;r1=1
+    CMP r0,r1        ;z=1
+    SUBGT r0,r0,r1    ;不执行
+    SUBLT r1,r1,r0    ;不执行</code></pre><ul>
+<li><p><strong>不同跳转方法的对比</strong></p>
+<ul>
+<li>实现方法</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211028141314709.png" alt=""></p>
+<ul>
+<li>执行时间分析（condition branch)</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211028141432965.png" alt=""></p>
+<p>​        不执行的指令也占时间？</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211028141503386.png" alt=""></p>
+</li>
+</ul>
+<h2 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h2><pre><code>//c/c++    
+for(i=0;i&lt;120;i++)
+{ 
+    for(j=0;j&lt;160;j++){……}
+} </code></pre><pre><code>Imageheight    equ    120
+Imagewidth    equ    160
+
+         area    ImScale , code , readonly                               
+         entry        
+        mov    r6, #0
+Framcircle 
+    mov    r5, #0
+Linecircle
+    ……    
+        add r5, r5,#1
+        cmp r5, #Imagewidth
+      bmi  Linecircle
+        add r6, r6, #1
+        cmp r6, #Imageheight
+        bmi Framecircle
+        end</code></pre><h1 id="ARM汇编-1"><a href="#ARM汇编-1" class="headerlink" title="ARM汇编"></a>ARM汇编</h1><p>把下列C程序改成汇编程序 ：</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>      <span class="token keyword">int</span> i<span class="token punctuation">,</span> j<span class="token punctuation">;</span>
+    <span class="token keyword">unsigned</span> <span class="token keyword">char</span> Inimage<span class="token punctuation">[</span><span class="token number">480</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">640</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">unsigned</span> <span class="token keyword">char</span> Tmpimg<span class="token punctuation">[</span><span class="token number">120</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">160</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">for</span><span class="token punctuation">(</span>i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>i<span class="token operator">&lt;</span><span class="token number">120</span><span class="token punctuation">;</span>i<span class="token operator">++</span><span class="token punctuation">)</span>
+         <span class="token keyword">for</span><span class="token punctuation">(</span>j<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>j<span class="token operator">&lt;</span><span class="token number">160</span><span class="token punctuation">;</span>j<span class="token operator">++</span><span class="token punctuation">)</span>                
+               Tmpimg<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token operator">=</span>Inimage<span class="token punctuation">[</span>i<span class="token operator">*</span><span class="token number">4</span><span class="token operator">+</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token operator">*</span><span class="token number">4</span><span class="token operator">+</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">;</span>  
+    <span class="token function">memcpy</span><span class="token punctuation">(</span>Inimage<span class="token punctuation">,</span>Tmpimg<span class="token punctuation">,</span><span class="token number">160</span><span class="token operator">*</span><span class="token number">120</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="存储访问"><a href="#存储访问" class="headerlink" title="存储访问"></a><strong>存储访问</strong></h2><h3 id="内存分配"><a href="#内存分配" class="headerlink" title="内存分配"></a><strong>内存分配</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211028142708487.png" alt=""></p>
+<pre><code>//c/c++    
+Tmpimg[120][160]；
+Inimage[480][640];
+
+//分配
+Tmpimg    space        160*120    ;单位字节
+Inimage    space        640*480
+
+//语法
+[label]        SPACE        expression
+可用 %代替 SPACE</code></pre><p>“160×120”和“640×480”中的“×”运算在程序运行时完成吗？</p>
+<h4 id="内存区域分配"><a href="#内存区域分配" class="headerlink" title="内存区域分配"></a><strong>内存区域分配</strong></h4><ul>
+<li><p>DCX{U-对齐选项}</p>
+<ul>
+<li><p>种类</p>
+<ul>
+<li>DCB-(1byte)</li>
+<li>DCD and DCDU-(4 bytes)</li>
+<li>DCFD and DCFDU-(double-precision float point)</li>
+<li>DCFS and DCFSU-(single-precision float point)</li>
+<li>DCI-(like DCD and DCDU)</li>
+<li>DCQ and DCQU-(8 bytes)</li>
+<li>DCW and DCWU-(2 bytes)</li>
+</ul>
+</li>
+<li><p>用法</p>
+<p><em>{label}</em>   DCX{U}  <em>expression，{expression,<strong>……</strong>}</em></p>
+</li>
+<li><p>Example</p>
+</li>
+</ul>
+</li>
+</ul>
+<pre><code>data        DCW     -225,2*number
+              DCWU    number+4    ;number must be     defined
+    DCQ     -225, 2_101
+DCFD    1E308, -4E-100
+DCFDU   10000, -.1, 3.1E26 </code></pre><pre><code>加“U” 不需要对齐
+不同命令对其格式不一样
+DCD-4Bytes
+DCW-2Bytes</code></pre><h4 id="分析内存中数据存储状况"><a href="#分析内存中数据存储状况" class="headerlink" title="分析内存中数据存储状况"></a>分析内存中数据存储状况</h4><pre><code>    DCB     1，2，3
+    DCDU 0x11223344
+    DCW     0x2233，0x4455
+    DCWU 0x677
+    DCD 0x06070809</code></pre><ul>
+<li><p>Endian 模式对存储状况的影响？大端小端</p>
+</li>
+<li><p>SPACE与 DCX使用上的区别？ DCX分配空间与写入值</p>
+</li>
+<li><p>程序中如何找到分配区域的起始地址？自定义标签</p>
+</li>
+</ul>
+<blockquote>
+<p>练习，画出内存中存储位置</p>
+</blockquote>
+<h4 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a><strong>数据结构</strong></h4><pre class="line-numbers language-c"><code class="language-c"><span class="token comment" spellcheck="true">//Declare </span>
+<span class="token keyword">typedef</span> <span class="token keyword">struct</span> Point
+<span class="token punctuation">{</span>
+        <span class="token keyword">float</span> x<span class="token punctuation">;</span>
+      <span class="token keyword">float</span> y<span class="token punctuation">;</span>
+    <span class="token keyword">float</span> z<span class="token punctuation">;</span>
+<span class="token punctuation">}</span> Point<span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">//Allocate space</span>
+Point origin<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre><code>//Declare 
+PointBase   RN      r11
+                 MAP     0,PointBase    ;r11地址作为初始地址
+Point_x     FIELD   4    
+Point_y     FIELD   4
+Point_z     FIELD   4
+
+//Allocate space
+origin      SPACE   12</code></pre><h3 id="内存访问"><a href="#内存访问" class="headerlink" title="内存访问"></a><strong>内存访问</strong></h3><pre class="line-numbers language-assembly"><code class="language-assembly">//c/c++    
+    Tmpimg[i][j]; Inimage[i*4+2][j*4+2];
+
+//i->r5; j->r6; Tmpimg-> r8; Inimage->r9;
+    ldr    r8,    =Tmping
+    ldr    r9,    =Inimage
+//Tmpimg[i][j]->r10;
+    mov    r0,    #Imagewidth
+    mul    r10, r5, r0   ;i*Imagewidth
+    add    r10, r10, r6   ;i*Imagewidth+j
+//Inimage[i*4+2][j*4+2]-> r11
+    mov    r1, r5, asl #2 ; i*4
+    add    r1, r1, #2    ;i*4+2
+    mul    r11, r1, r0    ;(i*4+2)*Imagewidth
+    mov    r1, r6, asl #2 ;j*4
+    add    r1, r1, #2    ;j*4+2
+    add    r11, r11, r1; (i*4+2)*Imagewidth+4*j+2
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre><code>//c/c++    
+    Tmpimg[i][j]=Inimage[i*4+2][j*4+2];
+
+//实现    
+    ldrb    r0, [r11]    读取方式
+    strb    r0, [r10]    存储数据
+
+//语法    
+LDR {&lt;cond&gt;}{B} Rd, addressing1
+STR{&lt;cond&gt;}{B}  Rd, addressing1</code></pre><h4 id="读（Memory-gt-Register）"><a href="#读（Memory-gt-Register）" class="headerlink" title="读（Memory->Register）"></a>读（Memory-&gt;Register）</h4><table>
+<thead>
+<tr>
+<th>指令</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>LDR</td>
+<td>Rd&lt;-mem32[add]</td>
+</tr>
+<tr>
+<td>LDRB</td>
+<td>Rd&lt;-mem8[add]</td>
+</tr>
+<tr>
+<td>LDRH</td>
+<td>Rd&lt;-mem16[add]</td>
+</tr>
+<tr>
+<td>LDRSB</td>
+<td>Rd&lt;-SignExtend(mem8[add])</td>
+</tr>
+<tr>
+<td>LDRSH</td>
+<td>Rd&lt;-SignExtend(mem16[add])</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p>指令形式</p>
+<pre><code>LDR {&lt;cond&gt;}{B} Rd, address1
+LDR {&lt;cond&gt;}SB|H|SH Rd, address2</code></pre></li>
+<li><p>address</p>
+<ul>
+<li>基于寄存器的寻址</li>
+<li>地址对齐要求？</li>
+</ul>
+</li>
+</ul>
+<p>LDR 可能改变状态寄存器状态位？</p>
+<ul>
+<li>Address1<ul>
+<li>[Rn]</li>
+<li>[Rn, # +/- offset_12] </li>
+<li>[Rn, +/-Rm]</li>
+<li>[Rn,+/-Rm, shift_imm]</li>
+<li>[Rn,#+/-offset_12]!  </li>
+<li>[Rn,+/-Rm]!</li>
+<li>[Rn,+/-Rm, shift_imm]!</li>
+<li>[Rn], # +/- offset_12  </li>
+<li>[Rn], +/-Rm</li>
+<li>[Rn],+/-Rm, shift_imm</li>
+</ul>
+</li>
+</ul>
+<p>不同表示方式的区别？</p>
+<p>前偏移，Rn不变；前偏移，Rn更新；后偏移，Rn更新</p>
+<p><strong>解释下列指令</strong></p>
+<pre><code>ldr r0, [r1, #0x04]!
+ldr r0, [r1, r2]!
+ldr r2,[r1, -r0, LSR #0x04]!
+ldr r0, [r1], #0x04
+ldr r0,[r1],r2
+rdr r0,[r1], -r0, LSL #0x04   
+ldr r0, [r1, #0x04]
+ldr r0, [r1, r2]
+ldr r2,[r1, -r0, LSR #0x04]</code></pre><h2 id="标签命名"><a href="#标签命名" class="headerlink" title="标签命名"></a><strong>标签命名</strong></h2><h2 id="预计算"><a href="#预计算" class="headerlink" title="预计算"></a><strong>预计算</strong></h2><h2 id="宏定义"><a href="#宏定义" class="headerlink" title="宏定义"></a><strong>宏定义</strong></h2><h2 id="数值计算"><a href="#数值计算" class="headerlink" title="数值计算"></a><strong>数值计算</strong></h2><h2 id="小结-2"><a href="#小结-2" class="headerlink" title="小结"></a><strong>小结</strong></h2><script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
             if (!el.dataset.src) { return; }
@@ -2085,7 +2616,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">1943.5k</span>&nbsp;字
+                class="white-color">1959.8k</span>&nbsp;字
             
             
             
