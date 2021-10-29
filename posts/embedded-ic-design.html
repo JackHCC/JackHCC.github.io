@@ -459,21 +459,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-10-28
+                    2021-10-29
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    12.4k
+                    15.7k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    50 分
+                    63 分
                 </div>
                 
 
@@ -2324,6 +2324,452 @@ c = a | b; // a零扩展为 8'b00001011</code></pre><pre class="line-numbers lan
 <li>ActiveHDL</li>
 <li>iverilog</li>
 </ul>
+<h1 id="Verilog语言的结构级描述"><a href="#Verilog语言的结构级描述" class="headerlink" title="Verilog语言的结构级描述"></a>Verilog语言的结构级描述</h1><h2 id="术语及定义-terms-and-definations"><a href="#术语及定义-terms-and-definations" class="headerlink" title="术语及定义 (terms and definations)"></a>术语及定义 (terms and definations)</h2><ul>
+<li><p>结构描述 : 用门及门的连接描述器件的功能</p>
+</li>
+<li><p>primitives(基本单元) : Verilog语言已定义的具有简单逻辑功能的功能模型(models)</p>
+</li>
+</ul>
+<h3 id="结构描述"><a href="#结构描述" class="headerlink" title="结构描述"></a>结构描述</h3><ul>
+<li>Verilog结构描述表示一个逻辑图</li>
+<li>结构描述用已有的元件构造。</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211029091205981.png" alt=""></p>
+<ul>
+<li>结构描述等价于逻辑图。它们都是连接简单元件来构成更为复杂的元件。Verilog使用其连接特性完成简单元件的连接。</li>
+<li>在描述中使用元件时，通过建立这些元件的实例来完成。</li>
+<li>上面的例子中MUX是没有反馈的组合电路，使用中间或内部信号将门连接起来。描述中忽略了门的实例名，并且同一种门的所有实例可以在一个语句中实例化。</li>
+<li>上面的锁存器(latch)是一个时序元件，其输出反馈到输入上。它没有使用任何内部信号。它使用了实例名并且对两个<em>nor</em>门使用了分开的实例化语句。</li>
+</ul>
+<h3 id="Verilog基本单元（primitives"><a href="#Verilog基本单元（primitives" class="headerlink" title="Verilog基本单元（primitives)"></a>Verilog基本单元（primitives)</h3><ul>
+<li><p>Verilog基本单元提供基本的逻辑功能，这些基本单元是预定义的，不需要用户定义。</p>
+</li>
+<li><p>大多数ASIC和FPGA元件库是用这些基本单元开发的。基本单元库是自下而上的设计方法的一部分。</p>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211029091342809.png" alt=""></p>
+<h4 id="用于底层建模的基本单元"><a href="#用于底层建模的基本单元" class="headerlink" title="用于底层建模的基本单元"></a><strong>用于底层建模的基本单元</strong></h4><ul>
+<li><p>上拉、下拉电阻：</p>
+<p>–pullup pulldown</p>
+</li>
+<li><p>MOS管单元：</p>
+<p>–cmos rcmos  //r是带电阻的</p>
+<p>–pmos rpmos</p>
+<p>–nmos rnmos</p>
+</li>
+<li><p>传输线单元：</p>
+<p>–tran rtran</p>
+<p>–tranif0  rtranif0  //带三态门</p>
+<p>–tranif1 rtranif1</p>
+</li>
+</ul>
+<h4 id="基本单元的引脚-pin-的可扩展性"><a href="#基本单元的引脚-pin-的可扩展性" class="headerlink" title="基本单元的引脚 (pin)的可扩展性"></a><strong>基本单元的引脚 (pin)的可扩展性</strong></h4><ul>
+<li>基本单元引脚数目由连接到门上的net的数量决定。因此当基本单元输入或输出的数量变化时用户不需要重定义一个新的逻辑功能。</li>
+<li>所有门（除了not和buf）可以有多个输入，但只能有一个输出。</li>
+<li>not和buf门可以有多个输出，但只能有一个输入。</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211029092206287.png" alt=""></p>
+<h4 id="带条件的基本单元"><a href="#带条件的基本单元" class="headerlink" title="带条件的基本单元"></a>带条件的基本单元</h4><ul>
+<li><p>Verilog有四种不同类型的条件基本单元</p>
+</li>
+<li><p>这四种基本单元只能有三个引脚：output, input, enable</p>
+</li>
+<li><p>这些单元由enable引脚使能。</p>
+<p>当条件基本单元使能信号无效时，输出高阻态Z。</p>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211029092316033.png" alt=""></p>
+<ul>
+<li>条件基本单元有三个端口：输出、数据输入、使能输入</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211029092335425.png" alt=""></p>
+<h4 id="基本单元实例化"><a href="#基本单元实例化" class="headerlink" title="基本单元实例化"></a>基本单元实例化</h4><ul>
+<li><p>在端口列表中，先说明输出端口，然后是输入端口</p>
+</li>
+<li><p>实例化时实例的名字是可选项</p>
+<p>​    and    (out, in1, in2, in3, in4); // unnamed instance</p>
+<p>​    buf b1 (out1, out2, in);       // named instance</p>
+</li>
+<li><p>延时说明是可选项。所说明的延时是固有延时。输出信号经过所说明的延时才变化。没有说明时延时为0。</p>
+<p>​       notif0 #3.1 n1 (out, in, cntrl); // delay specified</p>
+</li>
+<li><p>信号强度说明是可选项</p>
+<p>​      not (strong1, weak0) n1 (inv, bit); // strength specified</p>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211029092558145.png" alt=""></p>
+<blockquote>
+<p>Intrinsic 反相器 Y=~A</p>
+<p>惯性，小于#10不取反，起到过滤作用（惯性延迟）</p>
+</blockquote>
+<h4 id="Module实例化-module-instantiation"><a href="#Module实例化-module-instantiation" class="headerlink" title="Module实例化(module instantiation)"></a>Module实例化(module instantiation)</h4><ul>
+<li>模块实例化时实例必须有一个名字。</li>
+<li>使用<strong>位置映射</strong>时，端口次序与模块的说明相同。</li>
+<li>使用<strong>名称映射</strong>时，端口次序与位置无关</li>
+<li>没有连接的输入端口初始化值为<strong>x</strong>。</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211029092844235.png" alt=""></p>
+<h4 id="实例数组-Array-of-Instances"><a href="#实例数组-Array-of-Instances" class="headerlink" title="实例数组(Array of Instances)"></a>实例数组(Array of Instances)</h4><ul>
+<li><p>实例名字后有范围说明时会创建一个实例数组。在说明实例数组时，实例必须有一个名字 (包括基本单元实例)。其说明语法为：</p>
+<p>​     &lt;模块名字&gt; &lt;实例名字&gt; &lt;范围&gt; (&lt;端口&gt;);</p>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211029092937456.png" alt=""></p>
+<ul>
+<li>如果范围中MSB与LSB相同，则只产生一个实例。</li>
+<li>一个实例名字只能有一个范围。</li>
+<li>下面以模块comp为例说明这些情况</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211029093016770.png" alt=""></p>
+<p><strong>generate</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211029093055161.png" alt=""></p>
+<h4 id="逻辑强度-strength-模型"><a href="#逻辑强度-strength-模型" class="headerlink" title="逻辑强度(strength)模型"></a>逻辑强度(strength)模型</h4><ul>
+<li><p>Verilog提供多级逻辑强度。</p>
+</li>
+<li><p>逻辑强度模型决定信号组合值是可知还是未知的，以更精确的描述硬件的行为。</p>
+</li>
+<li><p>下面这些情况是常见的需要信号强度才能精确建模的例子。</p>
+<p>–开极输出(Open collector output)(需要上拉）</p>
+<p>–多个三态驱动器驱动一个信号</p>
+<p>–MOS充电存储</p>
+<p>–ECL门（emitter dotting)</p>
+</li>
+<li><p>逻辑强度是Verilog模型的一个重要部分。通常用于元件建模，如ASIC和FPGA库开发工程师才使用这么详细的强度级。但电路设计工程师使用这些精细的模型仿真也应该对此了解。</p>
+</li>
+</ul>
+<h4 id="信号强度值系统"><a href="#信号强度值系统" class="headerlink" title="信号强度值系统"></a>信号强度值系统</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211029093233484.png" alt=""></p>
+<ul>
+<li><p>用户可以给基本单元实例或net定义强度。</p>
+</li>
+<li><p>基本单元强度说明语法：</p>
+<p>​    &lt;基本单元名&gt; &lt;强度&gt; &lt;延时&gt; &lt;实例名&gt; （&lt;端口&gt;）；</p>
+<p>   例：nand (strong1, pull0) #( 2: 3: 4) n1 (o, a, b); // strength and delay</p>
+<p>​           or (supply0, highz1) (out, in1, in2, in3); // no instance name</p>
+</li>
+<li><p>用户可以用%v格式符显示net的强度值</p>
+<p>​     <code>$monitor ($time,, " output = %v", f);</code></p>
+</li>
+<li><p>电容强度(large, medium, small)只能用于net类型trireg和基本单元tran</p>
+<p>​     例如：trireg (small) tl;</p>
+</li>
+</ul>
+<h4 id="Verilog多种强度决断"><a href="#Verilog多种强度决断" class="headerlink" title="Verilog多种强度决断"></a>Verilog多种强度决断</h4><ul>
+<li>在Verilog中，级别高的强度覆盖级别低的强度</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211029093400923.png" alt=""></p>
+<h2 id="仿真工具及testbench编写"><a href="#仿真工具及testbench编写" class="headerlink" title="仿真工具及testbench编写"></a>仿真工具及testbench编写</h2><ul>
+<li>主要有三种仿真算法<ul>
+<li>基于时间的(SPICE仿真器)</li>
+<li>基于事件的(Verilog-XL和NC Verilog仿真器)</li>
+<li>基于周期的(cycle)</li>
+</ul>
+</li>
+</ul>
+<h3 id="仿真算法"><a href="#仿真算法" class="headerlink" title="仿真算法"></a>仿真算法</h3><ul>
+<li><p>基于时间的算法用于处理连续的时间及变量</p>
+<ul>
+<li>在每一个时间点对所有电路元件进行计算</li>
+<li>效率低。在一个时间点只有约2~10%的电路活动</li>
+</ul>
+</li>
+<li><p>基于事件的算法处理离散的时间、状态和变量</p>
+<ul>
+<li>只有电路状态发生变化时才进行处理，只模拟哪些可能引起电路状态改变的元件。仿真器响应输入引脚上的事件，并将值在电路中向前传播。</li>
+<li>是应用最为广泛的仿真算法</li>
+<li>效率高。“evaluate when necessary”</li>
+</ul>
+</li>
+<li><p>基于周期的仿真以时钟周期为处理单位(与时间无关)</p>
+<ul>
+<li>只在时钟边沿进行计算，不管时钟周期内的时序</li>
+<li>使用两值逻辑 (1, 0) </li>
+<li>只关心电路功能而不关心时序，对于大型设计，效率高</li>
+<li>仅适用于同步电路。</li>
+</ul>
+</li>
+</ul>
+<h3 id="基于事件仿真的时轮-time-wheel"><a href="#基于事件仿真的时轮-time-wheel" class="headerlink" title="基于事件仿真的时轮(time wheel)"></a>基于事件仿真的时轮(time wheel)</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211029100303235.png" alt=""></p>
+<ul>
+<li>仿真器在编译数据结构时建立一个事件队列。</li>
+<li>只有当前时间片中所有事件都处理完成后，时间才能向前。</li>
+<li>仿真从时间0开始，而且时轮只能向前推进。只有时间0的事件处理完后才能进入下一时片。</li>
+<li>在同一个时间片内发生的事件在硬件上是并行的。</li>
+<li>理论上时间片可以无限。但实际上受硬件及软件的限制。</li>
+</ul>
+<h3 id="一个完整的简单例子-test-fixture"><a href="#一个完整的简单例子-test-fixture" class="headerlink" title="一个完整的简单例子 test fixture"></a>一个完整的简单例子 <strong>test fixture</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211029100347975.png" alt=""></p>
+<ul>
+<li><p>被测试器件DUT是一个二选一多路器。测试程序(test fixture)提供测试激励及验证机制。</p>
+</li>
+<li><p>Test fixture使用行为级描述，DUT采用门级描述。下面将给出Test fixture的描述、DUT的描述及如何进行混合仿真。</p>
+</li>
+</ul>
+<h4 id="DUT-被测器件-device-under-test"><a href="#DUT-被测器件-device-under-test" class="headerlink" title="DUT 被测器件 (device under test)"></a>DUT 被测器件 (device under test)</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211029100428139.png" alt=""></p>
+<ul>
+<li><p>a, b, sel是输入端口，out是输出端口。所有信号通过这些端口从模块输入/输出。</p>
+</li>
+<li><p>另一个模块可以通过模块名及端口说明使用多路器。实例化多路器时不需要知道其实现细节。这正是自上而下设计方法的一个重要特点。模块的实现可以是行为级也可以是门级，但并不影响高层次模块对它的使用。</p>
+</li>
+</ul>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> MUX2_1 <span class="token punctuation">(</span>
+<span class="token comment" spellcheck="true">// Port declarations</span>
+    <span class="token keyword">output</span> <span class="token keyword">wire</span> out<span class="token punctuation">,</span>
+    <span class="token keyword">input</span>    <span class="token keyword">wire</span>    a<span class="token punctuation">,</span> 
+                             b<span class="token punctuation">,</span> 
+                             sel
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+       <span class="token keyword">wire</span> sel_<span class="token punctuation">,</span> a1<span class="token punctuation">,</span> b1<span class="token punctuation">;</span>
+
+        <span class="token keyword">not</span>  <span class="token punctuation">(</span>sel_<span class="token punctuation">,</span> sel<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">and</span> <span class="token punctuation">(</span>a1<span class="token punctuation">,</span> a<span class="token punctuation">,</span> sel_<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">and</span> <span class="token punctuation">(</span>b1<span class="token punctuation">,</span> b<span class="token punctuation">,</span> sel<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">or</span>    <span class="token punctuation">(</span>out<span class="token punctuation">,</span> a1<span class="token punctuation">,</span> b1<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="Test-Fixture-—-如何说明实例"><a href="#Test-Fixture-—-如何说明实例" class="headerlink" title="Test Fixture — 如何说明实例"></a>Test Fixture — 如何说明实例</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211029100504595.png" alt=""></p>
+<h4 id="Test-fixture-激励描述"><a href="#Test-fixture-激励描述" class="headerlink" title="Test fixture 激励描述"></a>Test fixture <strong>激励描述</strong></h4><pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> testfixture<span class="token punctuation">;</span>
+ <span class="token comment" spellcheck="true">// Data type declaration</span>
+    <span class="token keyword">reg</span>   a<span class="token punctuation">,</span> d<span class="token punctuation">,</span> s<span class="token punctuation">;</span>
+    <span class="token keyword">wire</span> o<span class="token punctuation">;</span>
+ <span class="token comment" spellcheck="true">// MUX instance</span>
+    MUX2_1 mux <span class="token punctuation">(</span>o<span class="token punctuation">,</span> a<span class="token punctuation">,</span> d<span class="token punctuation">,</span> s<span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token comment" spellcheck="true">// Apply stimulus</span>
+    <span class="token keyword">initial</span>
+    <span class="token keyword">begin</span>
+               a <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> d <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span> s <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+          <span class="token number">#5</span> d <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+          <span class="token number">#5</span> d <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span> s <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+          <span class="token number">#5</span> a <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+          <span class="token number">#5</span> <span class="token property">$finish</span><span class="token punctuation">;</span>
+      <span class="token keyword">end</span>
+ <span class="token comment" spellcheck="true">// Display results</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211029100626236.png" alt=""></p>
+<ul>
+<li>例子中，a, d, s说明为reg类数据。reg类数据是寄存器类数据信号，在重新赋值前一直保持当前数据。</li>
+<li>#5 用于指示等待5个时间单位。</li>
+<li>$<em>finish</em>是结束仿真的系统任务。</li>
+</ul>
+<h4 id="Test-Fixture-响应产生"><a href="#Test-Fixture-响应产生" class="headerlink" title="Test Fixture 响应产生"></a>Test Fixture 响应产生</h4><p>Verilog提供了一些系统任务和系统函数，包括：</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211029100836622.png" alt=""></p>
+<h4 id="语言专用标记-tokens"><a href="#语言专用标记-tokens" class="headerlink" title="语言专用标记( tokens)"></a>语言专用标记( tokens)</h4><p>系统任务及函数</p>
+<p><code>$&lt;identifier&gt;</code></p>
+<ul>
+<li><p>$符号指示这是系统任务和函数</p>
+</li>
+<li><p>系统函数有很多，如：</p>
+<ul>
+<li><p>返回当前仿真时间$time</p>
+</li>
+<li><p>显示/监视信号值($display, $monitor)</p>
+</li>
+<li><p>停止仿真$stop</p>
+</li>
+<li><p>结束仿真$finish</p>
+<p> $monitor($time, “a = %b, b = %h”, a, b);</p>
+</li>
+</ul>
+</li>
+</ul>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> DFF <span class="token punctuation">(</span>q<span class="token punctuation">,</span> qb<span class="token punctuation">,</span> d<span class="token punctuation">,</span> clk<span class="token punctuation">,</span> clr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment" spellcheck="true">// 端口说明</span>
+    <span class="token keyword">output</span> q<span class="token punctuation">,</span> qb<span class="token punctuation">;</span>
+    <span class="token keyword">input</span> d<span class="token punctuation">,</span>  <span class="token comment" spellcheck="true">// input data</span>
+              clk<span class="token punctuation">,</span> <span class="token comment" spellcheck="true">/*input clock */</span> clr<span class="token punctuation">;</span>
+    <span class="token keyword">reg</span> q<span class="token punctuation">;</span>
+    <span class="token keyword">wire</span> qb<span class="token punctuation">,</span> d<span class="token punctuation">,</span> clk<span class="token punctuation">,</span> clr<span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">/*
+  clk is posedge and 
+  clr is active low 
+*/</span>
+    <span class="token keyword">assign</span> qb <span class="token operator">=</span> <span class="token operator">!</span>q<span class="token punctuation">;</span>
+    <span class="token important">always @</span><span class="token punctuation">(</span><span class="token keyword">posedge</span> clk <span class="token keyword">or</span> <span class="token keyword">negedge</span> clr<span class="token punctuation">)</span>
+        <span class="token function">if</span><span class="token punctuation">(</span><span class="token operator">!</span>clr<span class="token punctuation">)</span>
+    q <span class="token operator">&lt;=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        <span class="token keyword">else</span>
+    q <span class="token operator">&lt;=</span> d<span class="token punctuation">;</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="完整的Test-Fixture"><a href="#完整的Test-Fixture" class="headerlink" title="完整的Test Fixture"></a>完整的Test Fixture</h4><pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> testfixture<span class="token punctuation">;</span>
+  <span class="token comment" spellcheck="true">// 数据类型说明</span>
+    <span class="token keyword">reg</span> a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> s<span class="token punctuation">;</span>
+    <span class="token keyword">wire</span> o<span class="token punctuation">;</span>
+  <span class="token comment" spellcheck="true">// MUX实例化</span>
+    MUX2_1 mux <span class="token punctuation">(</span>o<span class="token punctuation">,</span> a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> s<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment" spellcheck="true">// 施加激励</span>
+   <span class="token keyword">initial</span> <span class="token keyword">begin</span>
+            a <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> b <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span> s <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        <span class="token number">#5</span> b <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>  
+        <span class="token number">#5</span> b <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span> s <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+        <span class="token number">#5</span> a <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+        <span class="token number">#5</span> <span class="token property">$finish</span><span class="token punctuation">;</span>
+   <span class="token keyword">end</span>
+<span class="token comment" spellcheck="true">// 显示结果</span>
+  <span class="token keyword">initial</span>
+    <span class="token property">$monitor</span><span class="token punctuation">(</span><span class="token property">$time</span><span class="token punctuation">,</span><span class="token punctuation">,</span><span class="token string">" o=%b a=%b b=%b s=%b"</span><span class="token punctuation">,</span> o<span class="token punctuation">,</span> a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> s<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211029101214991.png" alt=""></p>
+<h3 id="启动Verilog-XL"><a href="#启动Verilog-XL" class="headerlink" title="启动Verilog-XL"></a>启动Verilog-XL</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211029101640746.png" alt=""></p>
+<h4 id="其它常用选项"><a href="#其它常用选项" class="headerlink" title="其它常用选项"></a>其它常用选项</h4><ul>
+<li><p>verilog</p>
+<p>​    显示其帮助（所有可用选项）</p>
+</li>
+<li><p>verilog +gui </p>
+<p>​    启动图形界面</p>
+</li>
+<li><p>verilog –v –y: </p>
+<p>​    定义仿真库</p>
+</li>
+<li><p>verilog +define+&lt;macro&gt;</p>
+<p>​    重新定义宏变量</p>
+</li>
+<li><p>verilog +sdf_file</p>
+<p>​    重新指定sdf文件</p>
+</li>
+</ul>
+<h3 id="波形显示工具—simvision"><a href="#波形显示工具—simvision" class="headerlink" title="波形显示工具—simvision"></a>波形显示工具—simvision</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211029101818499.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211029101831848.png" alt=""></p>
+<h4 id="SHM：波形数据库"><a href="#SHM：波形数据库" class="headerlink" title="SHM：波形数据库"></a>SHM：波形数据库</h4><p>波形显示工具从数据库，如SHM数据库中读取数据。使用下面的系统任务可以对SHM数据库进行操作：</p>
+<table>
+<thead>
+<tr>
+<th>系统任务</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>$shm_open(“waves.shm”);</td>
+<td>打开一个仿真数据库。同时只能打开一个库写入。</td>
+</tr>
+<tr>
+<td>$shm_probe();</td>
+<td>选择信号，当它们的值变化时写入仿真库</td>
+</tr>
+<tr>
+<td>$shm_close;  $shm_save;</td>
+<td>关闭仿真库  将仿真数据库写到磁盘</td>
+</tr>
+</tbody></table>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">initial</span>
+<span class="token keyword">begin</span>
+    <span class="token property">$shm_open</span><span class="token punctuation">(</span>“<span class="token punctuation">.</span><span class="token operator">/</span>data<span class="token operator">/</span>lab<span class="token punctuation">.</span>shm”<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token property">$shm_probe</span><span class="token punctuation">(</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">end</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="用-shm-probe设置信号探针"><a href="#用-shm-probe设置信号探针" class="headerlink" title="用$shm_probe设置信号探针"></a>用$shm_probe设置信号探针</h4><ul>
+<li><p>$shm_probe的语法：</p>
+<p>$shm_probe(scope0, node0, scope1, node1, …);</p>
+<ul>
+<li><p>每个node都是基于前面scope的说明(层次化的）</p>
+</li>
+<li><p>scope参数缺省值为当前范围(scope)。node参数缺省值为指定范围的所有输入、输出及输入输出。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211029102130759.png" alt=""></p>
+<h4 id="模块实例化"><a href="#模块实例化" class="headerlink" title="模块实例化"></a>模块实例化</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211029102223946.png" alt=""></p>
+<p>在$shm_probe中使用scope/node对作为参数。参数可以使用缺省值或两个参数都设置。例如：</p>
+<ul>
+<li><p>$shm_probe( ); 观测当前范围(scope)所有端口</p>
+</li>
+<li><p>$shm_probe(“A”); 观测当前范围所有节点</p>
+</li>
+<li><p>$shm_probe(alu, adder); 观测实例alu和adder的所有端口</p>
+</li>
+<li><p>$shm_probe(“S”, top.alu, “AC”); 观测：</p>
+<p>   (1): 当前范围及其以下所有端口，除库单元</p>
+<p>   (2):top.alu模块及其以下所有节点，包括库单元</p>
+</li>
+</ul>
+<h4 id="VCD数据库"><a href="#VCD数据库" class="headerlink" title="VCD数据库"></a>VCD数据库</h4><p>Verilog提供一系列系统任务用于记录信号值变化保存到标准的VCD(Value Change Dump)格式数据库中。大多数波形显示工具支持VCD格式。</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211029103006136.png" alt=""></p>
+<p>VCD数据库是仿真过程中数据信号变化的记录。它只记录用户指定的信号。</p>
+<ul>
+<li>用户可以用<em>$dump<em>系统任务打开一个数据库，保存信号并控制信号的保存。除</em>$dumpvars<em>外，其它任务的作用都比较直观。 *$dumpvars</em>将在后面详细描述*。</em></li>
+<li>必须首先使用<em>$dumpfile</em>系统任务，并且在一次仿真中只能打开一个VCD数据库。</li>
+<li>在仿真前(时间0前)必须先指定要观测的信号，这样才能看到信号完整的变化过程。</li>
+<li>仿真时定期的将数据保存到磁盘是一个好的习惯，万一系统出现问题数据也不会全部丢失。</li>
+<li>VCD数据库不记录仿真结束时的数据。因此如果希望看到最后一次数据变化后的波形，必须在结束仿真前使用<em>$dumpall</em>。</li>
+</ul>
+<p>要给$dumpvars提供层次(levels)及范围(scope)参数，例如</p>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token property">$dumpvars</span><span class="token punctuation">;</span>   <span class="token comment" spellcheck="true">// Dump所有层次的信号</span>
+<span class="token property">$dumpvars</span> <span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> top<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// Dump top模块中的所有信号</span>
+<span class="token property">$dumpvars</span> <span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> top<span class="token punctuation">.</span>u1<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// Dump实例top. u1及其下一层的信号</span>
+<span class="token property">$dumpvars</span> <span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> top<span class="token punctuation">.</span>u2<span class="token punctuation">,</span> top<span class="token punctuation">.</span>u1<span class="token punctuation">.</span>u13<span class="token punctuation">.</span>q<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// Dump top.u2及其以下所有信号，以及信号top.u1.u13.q。</span>
+<span class="token property">$dumpvars</span> <span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> top<span class="token punctuation">.</span>u2<span class="token punctuation">,</span> top<span class="token punctuation">.</span>u1<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// Dump top.u1和top.u2及其下两层中的所有信号。</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>用下面的代码可以代替前面test fixture的<em>$monitor</em>命令:</p>
+<pre><code>initial
+        begin
+            $dumpfile (“verilog.dump”);
+            $dumpvars (0, testfixture);
+    end</code></pre><h4 id="dumpvars语法"><a href="#dumpvars语法" class="headerlink" title="$dumpvars语法"></a>$dumpvars语法</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211029103336034.png" alt=""></p>
+<h3 id="练习"><a href="#练习" class="headerlink" title="练习"></a>练习</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211029103710257.png" alt=""></p>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> <span class="token function">adder_rpl</span><span class="token punctuation">(</span>
+    <span class="token keyword">input</span> <span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">3</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span>   a<span class="token punctuation">,</span> 
+              b<span class="token punctuation">,</span>
+    <span class="token keyword">input</span> <span class="token keyword">wire</span>              ci<span class="token punctuation">,</span>
+    <span class="token keyword">output</span> <span class="token keyword">wire</span>            co<span class="token punctuation">,</span>
+    <span class="token keyword">output</span> <span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">3</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span>   s
+    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">3</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span>  g<span class="token punctuation">,</span> 
+                      p<span class="token punctuation">;</span>
+    <span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">4</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span>  c<span class="token punctuation">;</span>
+
+    <span class="token keyword">assign</span> co <span class="token operator">=</span> c<span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token important">always @</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> ci<span class="token punctuation">)</span> <span class="token keyword">begin</span>
+        c<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> ci<span class="token punctuation">;</span>
+        g     <span class="token operator">=</span> a <span class="token operator">&amp;</span> b<span class="token punctuation">;</span>
+        p     <span class="token operator">=</span> a <span class="token operator">^</span> b<span class="token punctuation">;</span>
+        c<span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">:</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> g <span class="token operator">|</span> <span class="token punctuation">(</span>p <span class="token operator">&amp;</span> c<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        s        <span class="token operator">=</span> p <span class="token operator">^</span> c<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">end</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> <span class="token function">adder_rpl</span><span class="token punctuation">(</span>
+    <span class="token keyword">input</span> <span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">3</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span>   a<span class="token punctuation">,</span> 
+              b<span class="token punctuation">,</span>
+    <span class="token keyword">input</span> <span class="token keyword">wire</span>              ci<span class="token punctuation">,</span>
+    <span class="token keyword">output</span> <span class="token keyword">wire</span>            co<span class="token punctuation">,</span>
+    <span class="token keyword">output</span> <span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">3</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span>   s
+    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">3</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span>  g<span class="token punctuation">,</span> 
+                      p<span class="token punctuation">;</span>
+    <span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">4</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span>  c<span class="token punctuation">;</span>
+    <span class="token keyword">integer</span>  i<span class="token punctuation">;</span>
+    <span class="token keyword">assign</span> co <span class="token operator">=</span> c<span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token important">always @</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> ci<span class="token punctuation">)</span> <span class="token keyword">begin</span>
+        c<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> ci<span class="token punctuation">;</span>
+        <span class="token function">for</span><span class="token punctuation">(</span>i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> n<span class="token punctuation">;</span> i <span class="token operator">=</span> i<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token keyword">begin</span>
+            g<span class="token punctuation">[</span>i<span class="token punctuation">]</span>     <span class="token operator">=</span> a<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token operator">&amp;</span>b<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+            p<span class="token punctuation">[</span>i<span class="token punctuation">]</span>     <span class="token operator">=</span> a<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token operator">^</span>b<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+            c<span class="token punctuation">[</span>i<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">]</span>   <span class="token operator">=</span> g<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">|</span> <span class="token punctuation">(</span>p<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token operator">&amp;</span>c<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            s<span class="token punctuation">[</span>i<span class="token punctuation">]</span>     <span class="token operator">=</span> p<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token operator">^</span>c<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+         <span class="token keyword">end</span>
+<span class="token keyword">endmodule</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>请分别给出下面电路的结构级和行为级模型</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211029115135938.png" alt=""></p>
+<h2 id="ALU的功能"><a href="#ALU的功能" class="headerlink" title="ALU的功能"></a><strong>ALU的功能</strong></h2><ul>
+<li><p>算术运算</p>
+<ul>
+<li>加、减法运算</li>
+</ul>
+</li>
+<li><p>逻辑运算</p>
+<ul>
+<li>按位逻辑计算</li>
+<li>and nand or nor xor xnor buf not</li>
+<li>输出全0，全1</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211029115246064.png" alt=""></p>
+<h3 id="逻辑运算"><a href="#逻辑运算" class="headerlink" title="逻辑运算"></a><strong>逻辑运算</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211029115323515.png" alt=""></p>
+<p><strong>如何实现逻辑运算？</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211029115411324.png" alt=""></p>
+<h3 id="算术运算"><a href="#算术运算" class="headerlink" title="算术运算"></a><strong>算术运算</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211029115501176.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211029115521756.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211029115535765.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211029115552383.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211029115610133.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211029115632454.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211029115651552.png" alt=""></p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -2837,7 +3283,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">1959.8k</span>&nbsp;字
+                class="white-color">1963.1k</span>&nbsp;字
             
             
             
