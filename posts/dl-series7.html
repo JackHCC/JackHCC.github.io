@@ -26,9 +26,9 @@
     
     <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/jquery/jquery.min.js"></script>
     
-<meta name="generator" content="Hexo 4.2.0"><link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
-<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
-</head>
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
 
 
 <body>
@@ -459,21 +459,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-10-22
+                    2021-11-01
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    14.1k
+                    15.7k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    54 分
+                    60 分
                 </div>
                 
 
@@ -747,24 +747,74 @@ predict_image<span class="token punctuation">(</span>img<span class="token punct
 </ul>
 <p><img src="/images/loading.gif" data-original="../images/ML/image-20211007150205951.png" alt=""></p>
 <h2 id="有助于充分利用-DNN-的小技巧"><a href="#有助于充分利用-DNN-的小技巧" class="headerlink" title="有助于充分利用 DNN 的小技巧"></a>有助于充分利用 DNN 的小技巧</h2><ul>
-<li>记得要 shuffle。不要让你的网络通过完全相同的 minibatch，如果框架允许，在每个 epoch 都 shuffle 一次。</li>
-<li>扩展数据集。DNN 需要大量的数据，而且模型在小的数据集上很容易过拟合。我强烈建议你要扩展原始的数据集。如果你的是一个视觉任务，可以增加噪点、增白，减少像素，旋转或色移，模糊，等等可以扩展的一切。有一点不好的是，假如你扩展得太大，可能训练的数据大多数是相同的。我创建了一个应用随机变换的层来解决这个问题，这样就不会有相同的样本。若果你用的是语音数据，可以进行移位和失真处理。</li>
-<li>在整个数据集上训练之前，先在非常小的子数据集上训练进行过拟合，这样你会知道你的网络可以收敛。这个 tip 来自 Karpathy。</li>
-<li>始终使用 dropout 将过拟合的几率最小化。在大小 &gt; 256 （完全连接层或卷积层）之后就应该使用 dropout。关于这一点有一篇很好的论文：Dropout as a Bayesian Approximation: Representing Model Uncertainty in Deep Learning [Gal Yarin &amp; Zoubin Ghahramani，2015].</li>
-<li>避免 LRN 池化，MAX 池化会更快。</li>
-<li>避免 Sigmoid/TanH 的门，它们代价昂贵，容易饱和，而且可能会停止反向传播。实际上，你的网络越深，就越应该避免使用 Sigmoid 和 TanH。可以使用更便宜而且更有效的 ReLU 和 PreLU 的门，正如在 Yoshua Bengio 等人的论文 Deep Sparse Rectifier Neural Networks 中所提到的，这两者能够促进稀疏性，而且它们的反向传播更加鲁棒。</li>
-<li>在最大池化之前不要使用 ReLU 或 PreLU ，而是在保存计算之后使用它。</li>
-<li>不要使用 ReLU ，它们太旧了。虽然他们是非常有用的非线性函数，可以解决很多问题。但是，你可以试试用它微调一个新模型，由于 ReLU 阻碍反向传播，初始化不好，你没法得到任何微调效果。但是你应该用 PreLU 以及一个非常小的乘数，通常是0.1。使用 PreLU 的话收敛更快，而且不会像 ReLU 那样在初始阶段被卡住。ELU 也很好，但成本高。</li>
-<li>经常使用批标准化。参考论文：Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift [Sergey Ioffe &amp; Christian Szegedy,2015]。这会很有效。批标准化允许更快的收敛（非常快）以及更小的数据集。这样你能够节省时间和资源。</li>
-<li>虽然大多数人喜欢删除平均值，不过我不喜欢。我喜欢压缩输入数据为[-1，+1]。这可以说是训练和部署方面的技巧，而不是针对提升性能的技巧。</li>
-<li>要能适用更小的模型。假如你是像我这样部署深度学习模型，你很快就会体会到把千兆字节规模的模型推给用户或地球另一端的服务器的痛苦。哪怕要牺牲一些准确度，也应该小型化。</li>
-<li>假如你使用比较小的模型，可以试试 ensemble。通常 ensemble 5个网络能够提升准确度约3%。</li>
-<li>尽可能使用 xavier 初始化。你可以只在大的完全连接层上使用它，然后避免在 CNN 层上使用。有关这点的解释可以阅读这篇文章：An Explanation of Xavier Initialization（by Andy Jones）</li>
-<li>如果你的输入数据有空间参数，可以试试端到端的 CNN。可以阅读这篇论文：SqueezeNet: AlexNet-level accuracy with 50x fewer parameters and &lt;0.5MB model size [Forrest N. Iandola et. al. 2016]，它介绍了一种新的方法，而且性能非常好，你可以尝试应用上面提到的tips。</li>
-<li>修改你的模型，只要可能就使用 1x1 的 CNN 层，它的位置对提高性能很有帮助。</li>
-<li>假如没有高端的 GPU，就不要尝试训练任何东西了。</li>
-<li>假如你要利用模型或你自己的层来制作模板，记得把所有东西参数化，否则你得重建所有二进制文件。</li>
-<li>最后，要明白你在做什么。深度学习就像是机器学习里的中子弹，它不是任何任务、任何时候都有效的。了解你正在使用的结构以及你试图达成的目的，才不至于盲目地复制模型。</li>
+<li><p>记得要 shuffle。不要让你的网络通过完全相同的 minibatch，如果框架允许，在每个 epoch 都 shuffle 一次。</p>
+</li>
+<li><p>扩展数据集。DNN 需要大量的数据，而且模型在小的数据集上很容易过拟合。我强烈建议你要扩展原始的数据集。如果你的是一个视觉任务，可以增加噪点、增白，减少像素，旋转或色移，模糊，等等可以扩展的一切。有一点不好的是，假如你扩展得太大，可能训练的数据大多数是相同的。我创建了一个应用随机变换的层来解决这个问题，这样就不会有相同的样本。若果你用的是语音数据，可以进行移位和失真处理。</p>
+</li>
+<li><p>在整个数据集上训练之前，先在非常小的子数据集上训练进行过拟合，这样你会知道你的网络可以收敛。这个 tip 来自 Karpathy。</p>
+</li>
+<li><p>始终使用 dropout 将过拟合的几率最小化。在大小 &gt; 256 （完全连接层或卷积层）之后就应该使用 dropout。关于这一点有一篇很好的论文：Dropout as a Bayesian Approximation: Representing Model Uncertainty in Deep Learning [Gal Yarin &amp; Zoubin Ghahramani，2015].</p>
+</li>
+<li><p>避免 LRN 池化，MAX 池化会更快。</p>
+</li>
+<li><p>避免 Sigmoid/TanH 的门，它们代价昂贵，容易饱和，而且可能会停止反向传播。实际上，你的网络越深，就越应该避免使用 Sigmoid 和 TanH。可以使用更便宜而且更有效的 ReLU 和 PreLU 的门，正如在 Yoshua Bengio 等人的论文 Deep Sparse Rectifier Neural Networks 中所提到的，这两者能够促进稀疏性，而且它们的反向传播更加鲁棒。</p>
+</li>
+<li><p>在最大池化之前不要使用 ReLU 或 PreLU ，而是在保存计算之后使用它。</p>
+</li>
+<li><p>不要使用 ReLU ，它们太旧了。虽然他们是非常有用的非线性函数，可以解决很多问题。但是，你可以试试用它微调一个新模型，由于 ReLU 阻碍反向传播，初始化不好，你没法得到任何微调效果。但是你应该用 PreLU 以及一个非常小的乘数，通常是0.1。使用 PreLU 的话收敛更快，而且不会像 ReLU 那样在初始阶段被卡住。ELU 也很好，但成本高。</p>
+</li>
+<li><p>经常使用批标准化。参考论文：Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift [Sergey Ioffe &amp; Christian Szegedy,2015]。这会很有效。批标准化允许更快的收敛（非常快）以及更小的数据集。这样你能够节省时间和资源。</p>
+</li>
+<li><p>虽然大多数人喜欢删除平均值，不过我不喜欢。我喜欢压缩输入数据为[-1，+1]。这可以说是训练和部署方面的技巧，而不是针对提升性能的技巧。</p>
+</li>
+<li><p>要能适用更小的模型。假如你是像我这样部署深度学习模型，你很快就会体会到把千兆字节规模的模型推给用户或地球另一端的服务器的痛苦。哪怕要牺牲一些准确度，也应该小型化。</p>
+</li>
+<li><p>假如你使用比较小的模型，可以试试 ensemble。通常 ensemble 5个网络能够提升准确度约3%。</p>
+</li>
+<li><p>尽可能使用 xavier 初始化。你可以只在大的完全连接层上使用它，然后避免在 CNN 层上使用。有关这点的解释可以阅读这篇文章：An Explanation of Xavier Initialization（by Andy Jones）</p>
+</li>
+<li><p>如果你的输入数据有空间参数，可以试试端到端的 CNN。可以阅读这篇论文：SqueezeNet: AlexNet-level accuracy with 50x fewer parameters and &lt;0.5MB model size [Forrest N. Iandola et. al. 2016]，它介绍了一种新的方法，而且性能非常好，你可以尝试应用上面提到的tips。</p>
+</li>
+<li><p>修改你的模型，只要可能就使用 1x1 的 CNN 层，它的位置对提高性能很有帮助。</p>
+</li>
+<li><p>假如没有高端的 GPU，就不要尝试训练任何东西了。</p>
+</li>
+<li><p>假如你要利用模型或你自己的层来制作模板，记得把所有东西参数化，否则你得重建所有二进制文件。</p>
+</li>
+<li><p>最后，要明白你在做什么。深度学习就像是机器学习里的中子弹，它不是任何任务、任何时候都有效的。了解你正在使用的结构以及你试图达成的目的，才不至于盲目地复制模型。</p>
+</li>
+<li><p>初始化十分关键，用对了超参都不用调；没用对，跑出来的结果就跟模型有bug一样不忍直视。卷积核权重初始化方式。对于weight的初始化我一般都是使用xavier初始化。当然也可以可以尝试何凯明大神的He初始化。对于bias的初始化全置于0。</p>
+</li>
+<li><p>Batch Normalization可以很大程度的加快收敛速度。建议搭建自己网络的时候尽量加上BN，如果有BN了全连接层就没必要加Dropout了。</p>
+</li>
+<li><p>目标检测不能盲目去掉fpn结构。在针对自己的数据调检测任务如yolov3的时候不能盲目砍掉fpn结构，尽管你分析出某个分支的Anchor基本不可能会对你预测的目标起作用，但如果你直接去掉分支很可能会带来漏检。</p>
+</li>
+<li><p>优化器的选择。我基本都是带动量的SGD。如果优化不动可以试试Adam。激活函数。可以先用ReLU做一版，如果想再提升精度可以将ReLU改成PReLU试试。我更倾向于直接使用ReLU。</p>
+</li>
+<li><p>初始学习率。一般我是从0.01开始设置，我个人认为这个学习率和学习率衰减策略是相关的，但不宜设置的过大过小，0.01和0.1应该是比较常用的。学习率衰减策略我一般使用multistep方式，step_size的设置要看视你的的max_iter而定。</p>
+</li>
+<li><p>残差结构和密集连接。resnet的残差结构和dense net密集连接结构，做工程的时候考虑到速度近乎不可能说完全使用完整版本的resnet和densenet的完整结构，但我们可以自己动手将我们网络的某些模块替换为残差结构和密集连接，替换的时候可以适当降低这俩结构的复杂度，类似于通道数减半，密集连接中只保留一半连接等等。这里需要做一些消融实验来验证改进后的精度。</p>
+</li>
+<li><p>找到模型调参时的可靠评价指标。在调整参数训练模型时一定要找到正确的评价指标，没调整一个参数就要记录一下模型的评价指标如准确率，map值，miou值等。并且在调参时建议将调整的参数和在测试集上的精度组合成一个字符串给模型重命令，方便之后快速review。</p>
+</li>
+<li><p>使用了带backbone的网络，如训练VGG16-SSD建议选择finetune的方式，从头训练不仅费时费力，甚至难以收敛。</p>
+</li>
+<li><p>在做分割实验的时候我发现用upsamling 加1*1卷积代替反卷积做上采样得到的结果更平滑，并且miou差距不大，所以我认为这两者都是都可以使用的。</p>
+</li>
+<li><p>一些Anchor-based目标检测算法为了提高精度，都是疯狂给框，ap值确实上去了，但也导致了fp会很多，并且这部分fp没有回归，在nms阶段也滤不掉。相比于ap提升而言，工程上减少fp更加重要。Gaussian yolov3的fp相比于yolov3会减少40％，Anchor-free算法暂时接触得不多，就不太了解了。</p>
+</li>
+<li><p>刚开始, 先上小规模数据, 模型往大了放, 只要不爆显存, 能用256个filter你就别用128个. 直接奔着过拟合去. 没错, 就是训练过拟合网络, 连测试集验证集这些都可以不用。（1） 你要验证自己的训练脚本的流程对不对. 这一步小数据量, 生成速度快, 但是所有的脚本都是和未来大规模训练一致的(除了少跑点循环)（2）如果小数据量下, 你这么粗暴的大网络奔着过拟合去都没效果. 那么, 你要开始反思自己了, 模型的输入输出是不是有问题? 要不要检查自己的代码(永远不要怀疑工具库, 除非你动过代码)? 模型解决的问题定义是不是有问题? 你对应用场景的理解是不是有错? 不要怀疑NN的能力, 不要怀疑NN的能力, 不要怀疑NN的能力. 就我们调参狗能遇到的问题, NN没法拟合的, 这概率是有多小?（3）你可以不这么做, 但是等你数据准备了两天, 结果发现有问题要重新生成的时候, 你这周时间就酱油了.</p>
+</li>
+<li><p>观察loss胜于观察准确率，记得”shuffle, shuffle, shuffle“.Dropout, Dropout, Dropout(不仅仅可以防止过拟合, 其实这相当于做人力成本最低的Ensemble, 当然, 训练起来会比没有Dropout的要慢一点, 同时网络参数你最好相应加一点, 对, 这会再慢一点).</p>
+</li>
+<li><p>网络原理的理解最重要, CNN的conv这块, 你得明白sobel算子的边界检测.</p>
+</li>
+<li><p>无脑用ReLU(CV领域). 无脑用3x3. 无脑用xavier. filter数量2^n. 第一层的filter, 数量不要太少. 否则根本学不出来(底层特征很重要).<br>sgd adam 这些选择上, 看你个人选择. 一般对网络不是决定性的. 反正我无脑用sgd + momentum.</p>
+</li>
+<li><p>新手刚上来调参的时候没什么经验，所以一定要低调！啥叫低调？低调就是一开始调的时候千万别考虑太远，在能承受的范围内，尽可能先把滤波器搞得多多的，把数据搞得少少的，<strong>直奔过拟合去！</strong>所谓<strong>小步试错，快速迭代</strong>，互联网公司都是这么干的。虽然过拟合也不好搞，但总归是有不少套路的，比起过拟合，欠拟合的问题远远可怕的多。毕竟结果都训练不出来还扯什么远方？</p>
+</li>
+<li><p>有很多无脑的配置确实可以尝试，比如3x3的卷积核，relu激活函数，加shuffle，加数据增强，加BN，加Dropout等。dropout可以从0. 5往上加，optimizer可以用Adam或者SGD+0.8/0.9的Momentum。大部分时候这些经验比你自己辛苦挑出来的奇技淫巧要有价值的多，但不是绝对的。</p>
+</li>
 </ul>
 <h2 id="提升算法性能思路"><a href="#提升算法性能思路" class="headerlink" title="提升算法性能思路"></a>提升算法性能思路</h2><p>分为四个部分： </p>
 <ol>
@@ -1852,7 +1902,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">1968.9k</span>&nbsp;字
+                class="white-color">1983k</span>&nbsp;字
             
             
             
@@ -2090,7 +2140,7 @@ $(function () {
     
     <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/instantpage/instantpage.js" type="module"></script>
     
-<script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script>
+
         <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
         <script>
         $('a').each(function() {
@@ -2109,7 +2159,7 @@ $(function () {
             }
           }
         });
-        </script></body>
+        </script><script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script></body>
 
 </html>
 

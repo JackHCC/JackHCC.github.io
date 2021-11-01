@@ -26,9 +26,9 @@
     
     <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/jquery/jquery.min.js"></script>
     
-<meta name="generator" content="Hexo 4.2.0"><link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
-<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
-</head>
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
 
 
 <body>
@@ -459,21 +459,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-10-22
+                    2021-11-01
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    3.4k
+                    4.9k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    14 分
+                    21 分
                 </div>
                 
 
@@ -759,6 +759,162 @@ value <span class="token operator">=</span> multiplication<span class="token pun
 <span class="token punctuation">[</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>None<span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>None<span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
 <span class="token operator">>></span><span class="token operator">></span> <span class="token keyword">print</span><span class="token punctuation">(</span>list<span class="token punctuation">(</span>y<span class="token punctuation">)</span><span class="token punctuation">)</span>
 <span class="token punctuation">[</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="Asyncio-异步-IO"><a href="#Asyncio-异步-IO" class="headerlink" title="Asyncio - 异步 IO"></a>Asyncio - 异步 IO</h1><p>所谓「异步 IO」，就是你发起一个 IO 操作，却不用等它结束，你可以继续做其他事情，当它结束时，你会得到通知。</p>
+<p>Asyncio 是并发（concurrency）的一种方式。对 Python 来说，并发还可以通过线程（threading）和多进程（multiprocessing）来实现。</p>
+<p>Asyncio 并不能带来真正的并行（parallelism）。当然，因为 GIL（全局解释器锁）的存在，Python 的多线程也不能带来真正的并行。</p>
+<p>可交给 asyncio 执行的任务，称为协程（coroutine）。一个协程可以放弃执行，把机会让给其它协程（即 <code>yield from</code> 或 <code>await</code>）。</p>
+<h2 id="1-定义协程"><a href="#1-定义协程" class="headerlink" title="1. 定义协程"></a>1. 定义协程</h2><p>协程的定义，需要使用 <code>async def</code> 语句。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">async</span> <span class="token keyword">def</span> <span class="token function">do_some_work</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword">pass</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p><code>do_some_work</code> 便是一个协程。<br>准确来说，<code>do_some_work</code> 是一个协程函数，可以通过 <code>asyncio.iscoroutinefunction</code> 来验证：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">print</span><span class="token punctuation">(</span>asyncio<span class="token punctuation">.</span>iscoroutinefunction<span class="token punctuation">(</span>do_some_work<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true"># True</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>这个协程什么都没做，我们让它睡眠几秒，以模拟实际的工作量 ：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">async</span> <span class="token keyword">def</span> <span class="token function">do_some_work</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Waiting "</span> <span class="token operator">+</span> str<span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">await</span> asyncio<span class="token punctuation">.</span>sleep<span class="token punctuation">(</span>x<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>在解释 <code>await</code> 之前，有必要说明一下协程可以做哪些事。协程可以：</p>
+<ul>
+<li>等待一个 future 结束</li>
+<li>等待另一个协程（产生一个结果，或引发一个异常）</li>
+<li>产生一个结果给正在等它的协程</li>
+<li>引发一个异常给正在等它的协程</li>
+</ul>
+<p><code>asyncio.sleep</code> 也是一个协程，所以 <code>await asyncio.sleep(x)</code> 就是等待另一个协程。可参见 <code>asyncio.sleep</code> 的文档：</p>
+<pre class="line-numbers language-python"><code class="language-python">sleep<span class="token punctuation">(</span>delay<span class="token punctuation">,</span> result<span class="token operator">=</span>None<span class="token punctuation">,</span> <span class="token operator">*</span><span class="token punctuation">,</span> loop<span class="token operator">=</span>None<span class="token punctuation">)</span>
+Coroutine that completes after a given time <span class="token punctuation">(</span><span class="token keyword">in</span> seconds<span class="token punctuation">)</span><span class="token punctuation">.</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h2 id="2-运行协程"><a href="#2-运行协程" class="headerlink" title="2. 运行协程"></a>2. 运行协程</h2><p>调用协程函数，协程并不会开始运行，只是返回一个协程对象，可以通过 <code>asyncio.iscoroutine</code> 来验证：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">print</span><span class="token punctuation">(</span>asyncio<span class="token punctuation">.</span>iscoroutine<span class="token punctuation">(</span>do_some_work<span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true"># True</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>此处还会引发一条警告：</p>
+<pre><code>async1.py:16: RuntimeWarning: coroutine 'do_some_work' was never awaited
+  print(asyncio.iscoroutine(do_some_work(3)))</code></pre><p>要让这个协程对象运行的话，有两种方式：</p>
+<ul>
+<li>在另一个已经运行的协程中用 <code>await</code> 等待它</li>
+<li>通过 <code>ensure_future</code> 函数计划它的执行</li>
+</ul>
+<p>简单来说，只有 loop 运行了，协程才可能运行。<br>下面先拿到当前线程缺省的 loop ，然后把协程对象交给 <code>loop.run_until_complete</code>，协程对象随后会在 loop 里得到运行。</p>
+<pre class="line-numbers language-python"><code class="language-python">loop <span class="token operator">=</span> asyncio<span class="token punctuation">.</span>get_event_loop<span class="token punctuation">(</span><span class="token punctuation">)</span>
+loop<span class="token punctuation">.</span>run_until_complete<span class="token punctuation">(</span>do_some_work<span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p><code>run_until_complete</code> 是一个阻塞（blocking）调用，直到协程运行结束，它才返回。这一点从函数名不难看出。<br><code>run_until_complete</code> 的参数是一个 future，但是我们这里传给它的却是协程对象，之所以能这样，是因为它在内部做了检查，通过 <code>ensure_future</code> 函数把协程对象包装（wrap）成了 future。所以，我们可以写得更明显一些：</p>
+<pre class="line-numbers language-python"><code class="language-python">loop<span class="token punctuation">.</span>run_until_complete<span class="token punctuation">(</span>asyncio<span class="token punctuation">.</span>ensure_future<span class="token punctuation">(</span>do_some_work<span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>完整代码：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> asyncio
+
+<span class="token keyword">async</span> <span class="token keyword">def</span> <span class="token function">do_some_work</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Waiting "</span> <span class="token operator">+</span> str<span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">await</span> asyncio<span class="token punctuation">.</span>sleep<span class="token punctuation">(</span>x<span class="token punctuation">)</span>
+
+loop <span class="token operator">=</span> asyncio<span class="token punctuation">.</span>get_event_loop<span class="token punctuation">(</span><span class="token punctuation">)</span>
+loop<span class="token punctuation">.</span>run_until_complete<span class="token punctuation">(</span>do_some_work<span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>运行结果：</p>
+<pre><code>Waiting 3
+&lt;三秒钟后程序结束&gt;</code></pre><h2 id="3-回调函数"><a href="#3-回调函数" class="headerlink" title="3. 回调函数"></a>3. 回调函数</h2><p>假如协程是一个 IO 的读操作，等它读完数据后，我们希望得到通知，以便下一步数据的处理。这一需求可以通过往 future 添加回调来实现。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">done_callback</span><span class="token punctuation">(</span>futu<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'Done'</span><span class="token punctuation">)</span>
+
+futu <span class="token operator">=</span> asyncio<span class="token punctuation">.</span>ensure_future<span class="token punctuation">(</span>do_some_work<span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+futu<span class="token punctuation">.</span>add_done_callback<span class="token punctuation">(</span>done_callback<span class="token punctuation">)</span>
+
+loop<span class="token punctuation">.</span>run_until_complete<span class="token punctuation">(</span>futu<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="4-多个协程"><a href="#4-多个协程" class="headerlink" title="4. 多个协程"></a>4. 多个协程</h2><p>实际项目中，往往有多个协程，同时在一个 loop 里运行。为了把多个协程交给 loop，需要借助 <code>asyncio.gather</code> 函数。</p>
+<pre class="line-numbers language-python"><code class="language-python">loop<span class="token punctuation">.</span>run_until_complete<span class="token punctuation">(</span>asyncio<span class="token punctuation">.</span>gather<span class="token punctuation">(</span>do_some_work<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> do_some_work<span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>或者先把协程存在列表里：</p>
+<pre class="line-numbers language-python"><code class="language-python">coros <span class="token operator">=</span> <span class="token punctuation">[</span>do_some_work<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> do_some_work<span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+loop<span class="token punctuation">.</span>run_until_complete<span class="token punctuation">(</span>asyncio<span class="token punctuation">.</span>gather<span class="token punctuation">(</span><span class="token operator">*</span>coros<span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>运行结果：</p>
+<pre><code>Waiting 3
+Waiting 1
+&lt;等待三秒钟&gt;
+Done</code></pre><p>这两个协程是并发运行的，所以等待的时间不是 1 + 3 = 4 秒，而是以耗时较长的那个协程为准。</p>
+<p>参考函数 <code>gather</code> 的文档：</p>
+<blockquote>
+<p>gather(*coros_or_futures, loop=None, return_exceptions=False)<br>Return a future aggregating results from the given coroutines or futures.</p>
+</blockquote>
+<p>发现也可以传 futures 给它：</p>
+<pre class="line-numbers language-python"><code class="language-python">futus <span class="token operator">=</span> <span class="token punctuation">[</span>asyncio<span class="token punctuation">.</span>ensure_future<span class="token punctuation">(</span>do_some_work<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+             asyncio<span class="token punctuation">.</span>ensure_future<span class="token punctuation">(</span>do_some_work<span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+
+loop<span class="token punctuation">.</span>run_until_complete<span class="token punctuation">(</span>asyncio<span class="token punctuation">.</span>gather<span class="token punctuation">(</span><span class="token operator">*</span>futus<span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p><code>gather</code> 起聚合的作用，把多个 futures 包装成单个 future，因为 <code>loop.run_until_complete</code> 只接受单个 future。</p>
+<h2 id="5-run-until-complete和run-forever"><a href="#5-run-until-complete和run-forever" class="headerlink" title="5. run_until_complete和run_forever"></a>5. run_until_complete和run_forever</h2><p>我们一直通过 <code>run_until_complete</code> 来运行 loop ，等到 future 完成，<code>run_until_complete</code> 也就返回了。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">async</span> <span class="token keyword">def</span> <span class="token function">do_some_work</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'Waiting '</span> <span class="token operator">+</span> str<span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">await</span> asyncio<span class="token punctuation">.</span>sleep<span class="token punctuation">(</span>x<span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'Done'</span><span class="token punctuation">)</span>
+
+loop <span class="token operator">=</span> asyncio<span class="token punctuation">.</span>get_event_loop<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+coro <span class="token operator">=</span> do_some_work<span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span>
+loop<span class="token punctuation">.</span>run_until_complete<span class="token punctuation">(</span>coro<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>输出：</p>
+<pre><code>Waiting 3
+&lt;等待三秒钟&gt;
+Done
+&lt;程序退出&gt;</code></pre><p>现在改用 <code>run_forever</code>：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">async</span> <span class="token keyword">def</span> <span class="token function">do_some_work</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'Waiting '</span> <span class="token operator">+</span> str<span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">await</span> asyncio<span class="token punctuation">.</span>sleep<span class="token punctuation">(</span>x<span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'Done'</span><span class="token punctuation">)</span>
+
+loop <span class="token operator">=</span> asyncio<span class="token punctuation">.</span>get_event_loop<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+coro <span class="token operator">=</span> do_some_work<span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span>
+asyncio<span class="token punctuation">.</span>ensure_future<span class="token punctuation">(</span>coro<span class="token punctuation">)</span>
+
+loop<span class="token punctuation">.</span>run_forever<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>输出：</p>
+<pre><code>Waiting 3
+&lt;等待三秒钟&gt;
+Done
+&lt;程序没有退出&gt;</code></pre><p>三秒钟过后，future 结束，但是程序并不会退出。<code>run_forever</code> 会一直运行，直到 <code>stop</code> 被调用，但是你不能像下面这样调 <code>stop</code>：</p>
+<pre class="line-numbers language-python"><code class="language-python">loop<span class="token punctuation">.</span>run_forever<span class="token punctuation">(</span><span class="token punctuation">)</span>
+loop<span class="token punctuation">.</span>stop<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p><code>run_forever</code> 不返回，<code>stop</code> 永远也不会被调用。所以，只能在协程中调 <code>stop</code>：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">async</span> <span class="token keyword">def</span> <span class="token function">do_some_work</span><span class="token punctuation">(</span>loop<span class="token punctuation">,</span> x<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'Waiting '</span> <span class="token operator">+</span> str<span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">await</span> asyncio<span class="token punctuation">.</span>sleep<span class="token punctuation">(</span>x<span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'Done'</span><span class="token punctuation">)</span>
+    loop<span class="token punctuation">.</span>stop<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这样并非没有问题，假如有多个协程在 loop 里运行：</p>
+<pre class="line-numbers language-python"><code class="language-python">asyncio<span class="token punctuation">.</span>ensure_future<span class="token punctuation">(</span>do_some_work<span class="token punctuation">(</span>loop<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+asyncio<span class="token punctuation">.</span>ensure_future<span class="token punctuation">(</span>do_some_work<span class="token punctuation">(</span>loop<span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+loop<span class="token punctuation">.</span>run_forever<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>第二个协程没结束，loop 就停止了——被先结束的那个协程给停掉的。<br>要解决这个问题，可以用 <code>gather</code> 把多个协程合并成一个 future，并添加回调，然后在回调里再去停止 loop。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">async</span> <span class="token keyword">def</span> <span class="token function">do_some_work</span><span class="token punctuation">(</span>loop<span class="token punctuation">,</span> x<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'Waiting '</span> <span class="token operator">+</span> str<span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">await</span> asyncio<span class="token punctuation">.</span>sleep<span class="token punctuation">(</span>x<span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'Done'</span><span class="token punctuation">)</span>
+
+<span class="token keyword">def</span> <span class="token function">done_callback</span><span class="token punctuation">(</span>loop<span class="token punctuation">,</span> futu<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    loop<span class="token punctuation">.</span>stop<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+loop <span class="token operator">=</span> asyncio<span class="token punctuation">.</span>get_event_loop<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+futus <span class="token operator">=</span> asyncio<span class="token punctuation">.</span>gather<span class="token punctuation">(</span>do_some_work<span class="token punctuation">(</span>loop<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> do_some_work<span class="token punctuation">(</span>loop<span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+futus<span class="token punctuation">.</span>add_done_callback<span class="token punctuation">(</span>functools<span class="token punctuation">.</span>partial<span class="token punctuation">(</span>done_callback<span class="token punctuation">,</span> loop<span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+loop<span class="token punctuation">.</span>run_forever<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>其实这基本上就是 <code>run_until_complete</code> 的实现了，<code>run_until_complete</code> 在内部也是调用 <code>run_forever</code>。</p>
+<h2 id="6-Close-Loop"><a href="#6-Close-Loop" class="headerlink" title="6. Close Loop?"></a>6. Close Loop?</h2><p>以上示例都没有调用 <code>loop.close</code>，好像也没有什么问题。所以到底要不要调 <code>loop.close</code> 呢？<br>简单来说，loop 只要不关闭，就还可以再运行。：</p>
+<pre class="line-numbers language-python"><code class="language-python">loop<span class="token punctuation">.</span>run_until_complete<span class="token punctuation">(</span>do_some_work<span class="token punctuation">(</span>loop<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+loop<span class="token punctuation">.</span>run_until_complete<span class="token punctuation">(</span>do_some_work<span class="token punctuation">(</span>loop<span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+loop<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>但是如果关闭了，就不能再运行了：</p>
+<pre class="line-numbers language-python"><code class="language-python">loop<span class="token punctuation">.</span>run_until_complete<span class="token punctuation">(</span>do_some_work<span class="token punctuation">(</span>loop<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+loop<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span>
+loop<span class="token punctuation">.</span>run_until_complete<span class="token punctuation">(</span>do_some_work<span class="token punctuation">(</span>loop<span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># 此处异常</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>建议调用 <code>loop.close</code>，以彻底清理 loop 对象防止误用。</p>
+<h2 id="7-gather-和-wait"><a href="#7-gather-和-wait" class="headerlink" title="7. gather 和 wait"></a>7. gather 和 wait</h2><p><code>asyncio.gather</code> 和 <code>asyncio.wait</code> 功能相似。</p>
+<pre class="line-numbers language-python"><code class="language-python">coros <span class="token operator">=</span> <span class="token punctuation">[</span>do_some_work<span class="token punctuation">(</span>loop<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> do_some_work<span class="token punctuation">(</span>loop<span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+loop<span class="token punctuation">.</span>run_until_complete<span class="token punctuation">(</span>asyncio<span class="token punctuation">.</span>wait<span class="token punctuation">(</span>coros<span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>具体差别可请参见 StackOverflow 的讨论：Asyncio.gather vs asyncio.wait。</p>
+<h2 id="8-Timer"><a href="#8-Timer" class="headerlink" title="8. Timer"></a>8. Timer</h2><p>C++ Boost.Asio 提供了 IO 对象 timer，但是 Python 并没有原生支持 timer，不过可以用 <code>asyncio.sleep</code> 模拟。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">async</span> <span class="token keyword">def</span> <span class="token function">timer</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> cb<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    futu <span class="token operator">=</span> asyncio<span class="token punctuation">.</span>ensure_future<span class="token punctuation">(</span>asyncio<span class="token punctuation">.</span>sleep<span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    futu<span class="token punctuation">.</span>add_done_callback<span class="token punctuation">(</span>cb<span class="token punctuation">)</span>
+    <span class="token keyword">await</span> futu
+
+t <span class="token operator">=</span> timer<span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token keyword">lambda</span> futu<span class="token punctuation">:</span> <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'Done'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+loop<span class="token punctuation">.</span>run_until_complete<span class="token punctuation">(</span>t<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -1272,7 +1428,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">1968.9k</span>&nbsp;字
+                class="white-color">1983k</span>&nbsp;字
             
             
             
@@ -1510,7 +1666,7 @@ $(function () {
     
     <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/instantpage/instantpage.js" type="module"></script>
     
-<script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script>
+
         <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
         <script>
         $('a').each(function() {
@@ -1529,7 +1685,7 @@ $(function () {
             }
           }
         });
-        </script></body>
+        </script><script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script></body>
 
 </html>
 

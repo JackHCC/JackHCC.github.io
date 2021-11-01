@@ -26,9 +26,9 @@
     
     <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/jquery/jquery.min.js"></script>
     
-<meta name="generator" content="Hexo 4.2.0"><link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
-<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
-</head>
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
 
 
 <body>
@@ -459,7 +459,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-10-31
+                    2021-11-01
                 </div>
                 
 
@@ -550,7 +550,7 @@ d_k <span class="token operator">=</span> d_v <span class="token operator">=</sp
 n_layers <span class="token operator">=</span> <span class="token number">6</span>    <span class="token comment" spellcheck="true"># 有多少个encoder和decoder</span>
 n_heads <span class="token operator">=</span> <span class="token number">8</span>     <span class="token comment" spellcheck="true"># Multi-Head Attention设置为8  d_k * n_heads = d_model</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>sentences 里一共有三个训练数据，中文-&gt;英文。把Encoder_input、Decoder_input、Decoder_output转换成字典索引，例如”学”-&gt;3、”student”-&gt;6。再把数据转换成batch大小为2的分组数据，3句话一共可以分成两组，一组2句话、一组1句话。src_len表示中文句子固定最大长度，tgt_len 表示英文句子固定最大长度。</p>
-<h2 id="2-定义位置信息"><a href="#2-定义位置信息" class="headerlink" title="*2. *定义位置信息"></a>*<em>2. *</em>定义位置信息</h2><pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># Positional Embedding</span>
+<h2 id="2-定义位置信息"><a href="#2-定义位置信息" class="headerlink" title="2. 定义位置信息"></a>2. 定义位置信息</h2><pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># Positional Embedding</span>
 <span class="token keyword">class</span> <span class="token class-name">PositionalEncoding</span><span class="token punctuation">(</span>nn<span class="token punctuation">.</span>Module<span class="token punctuation">)</span><span class="token punctuation">:</span>
     <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> d_model<span class="token punctuation">,</span> dropout<span class="token operator">=</span><span class="token number">0.1</span><span class="token punctuation">,</span> max_len<span class="token operator">=</span><span class="token number">5000</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
         super<span class="token punctuation">(</span>PositionalEncoding<span class="token punctuation">,</span> self<span class="token punctuation">)</span><span class="token punctuation">.</span>__init__<span class="token punctuation">(</span><span class="token punctuation">)</span>
@@ -721,8 +721,8 @@ n_heads <span class="token operator">=</span> <span class="token number">8</span
         dec_outputs <span class="token operator">=</span> self<span class="token punctuation">.</span>pos_emb<span class="token punctuation">(</span>dec_outputs<span class="token punctuation">)</span><span class="token punctuation">.</span>cuda<span class="token punctuation">(</span><span class="token punctuation">)</span>                                    <span class="token comment" spellcheck="true"># [batch_size, tgt_len, d_model]</span>
         dec_self_attn_pad_mask <span class="token operator">=</span> get_attn_pad_mask<span class="token punctuation">(</span>dec_inputs<span class="token punctuation">,</span> dec_inputs<span class="token punctuation">)</span><span class="token punctuation">.</span>cuda<span class="token punctuation">(</span><span class="token punctuation">)</span>         <span class="token comment" spellcheck="true"># [batch_size, tgt_len, tgt_len]</span>
         dec_self_attn_subsequence_mask <span class="token operator">=</span> get_attn_subsequence_mask<span class="token punctuation">(</span>dec_inputs<span class="token punctuation">)</span><span class="token punctuation">.</span>cuda<span class="token punctuation">(</span><span class="token punctuation">)</span>     <span class="token comment" spellcheck="true"># [batch_size, tgt_len, tgt_len]</span>
-        <span class="token comment" spellcheck="true"># gt(a, b) a&gt;b , return true</span>
-        <span class="token comment" spellcheck="true"># &gt;&gt;&gt; torch.gt(torch.tensor([[1, 2], [3, 4]]), torch.tensor([[1, 1], [4, 4]]))</span>
+        <span class="token comment" spellcheck="true"># gt(a, b) a>b , return true</span>
+        <span class="token comment" spellcheck="true"># >>> torch.gt(torch.tensor([[1, 2], [3, 4]]), torch.tensor([[1, 1], [4, 4]]))</span>
         <span class="token comment" spellcheck="true"># tensor([[False, True], [False, False]])</span>
         dec_self_attn_mask <span class="token operator">=</span> torch<span class="token punctuation">.</span>gt<span class="token punctuation">(</span><span class="token punctuation">(</span>dec_self_attn_pad_mask <span class="token operator">+</span>
                                        dec_self_attn_subsequence_mask<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">.</span>cuda<span class="token punctuation">(</span><span class="token punctuation">)</span>         <span class="token comment" spellcheck="true"># [batch_size, tgt_len, tgt_len]</span>
@@ -797,7 +797,7 @@ predict_dec_input <span class="token operator">=</span> test<span class="token p
 predict<span class="token punctuation">,</span> _<span class="token punctuation">,</span> _<span class="token punctuation">,</span> _ <span class="token operator">=</span> model<span class="token punctuation">(</span>enc_inputs<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>view<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">.</span>cuda<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> predict_dec_input<span class="token punctuation">)</span>
 predict <span class="token operator">=</span> predict<span class="token punctuation">.</span>data<span class="token punctuation">.</span>max<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> keepdim<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span>
 
-<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token punctuation">[</span>src_idx2word<span class="token punctuation">[</span>int<span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token keyword">for</span> i <span class="token keyword">in</span> enc_inputs<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token string">'-&gt;'</span><span class="token punctuation">,</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token punctuation">[</span>src_idx2word<span class="token punctuation">[</span>int<span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token keyword">for</span> i <span class="token keyword">in</span> enc_inputs<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token string">'->'</span><span class="token punctuation">,</span>
 <span class="token punctuation">[</span>idx2word<span class="token punctuation">[</span>n<span class="token punctuation">.</span>item<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token keyword">for</span> n <span class="token keyword">in</span> predict<span class="token punctuation">.</span>squeeze<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h2 id="9-一些细节"><a href="#9-一些细节" class="headerlink" title="9. 一些细节"></a>9. 一些细节</h2><ul>
 <li>positional embedding在Transformer和bert中方式不一样，positional embbeding的设计是一个课题</li>
@@ -812,7 +812,7 @@ predict <span class="token operator">=</span> predict<span class="token punctuat
 <li><a href="https://colab.research.google.com/drive/1avycotLAFcgXUP1qTk0bSX_jVGhjtZaV?usp=sharing" target="_blank" rel="noopener">Colab</a></li>
 </ul>
 <h1 id="其他实现"><a href="#其他实现" class="headerlink" title="其他实现"></a>其他实现</h1><h2 id="1-模型总览"><a href="#1-模型总览" class="headerlink" title="1. 模型总览"></a>1. 模型总览</h2><p>首先，看一下Transformer模型架构图：</p>
-<p><img src="/images/loading.gif" data-original="../images/basic/2019040813401989.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../../../../../Projects/Awesome-DL-Models/Images/Transformer/base_transformer_001.png" alt=""></p>
 <ol>
 <li>Embedding，对于输入进行Token Embedding并加上Positional Embedding</li>
 <li>Encoder：由四个部分组成，包括Multi-Head Attention，Feed Forward，Residual Connection，Layer Normalization</li>
@@ -1527,30 +1527,29 @@ config <span class="token operator">=</span> Config<span class="token punctuatio
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="far fa-dot-circle"></i>&nbsp;本篇
-            </div>
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/posts/reproduction-series1.html">
+                <a href="/posts/dl-series16.html">
                     <div class="card-image">
                         
                         
-                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/16.jpg" class="responsive-img" alt="复现专栏1>Transformer复现">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/1.jpg" class="responsive-img" alt="DL专栏16>计算机视觉技巧">
                         
-                        <span class="card-title">复现专栏1>Transformer复现</span>
+                        <span class="card-title">DL专栏16>计算机视觉技巧</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            手撸Transformer
+                            一些计算机视觉的方法汇总
                         
                     </div>
                     <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-10-28
-                            </span>
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-10-29
+                        </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -1563,12 +1562,11 @@ config <span class="token operator">=</span> Config<span class="token punctuatio
                         </span>
                     </div>
                 </div>
-
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/Transformer/">
-                        <span class="chip bg-color">Transformer</span>
+                    <a href="/tags/CV/">
+                        <span class="chip bg-color">CV</span>
                     </a>
                     
                 </div>
@@ -1768,7 +1766,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">1968.9k</span>&nbsp;字
+                class="white-color">1983k</span>&nbsp;字
             
             
             
@@ -2006,7 +2004,7 @@ $(function () {
     
     <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/instantpage/instantpage.js" type="module"></script>
     
-<script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script>
+
         <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
         <script>
         $('a').each(function() {
@@ -2025,7 +2023,7 @@ $(function () {
             }
           }
         });
-        </script></body>
+        </script><script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script></body>
 
 </html>
 
