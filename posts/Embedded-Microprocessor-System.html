@@ -26,9 +26,9 @@
     
     <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/jquery/jquery.min.js"></script>
     
-<meta name="generator" content="Hexo 4.2.0"><link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
-<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
-</head>
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
 
 
 <body>
@@ -459,21 +459,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-10-28
+                    2021-11-04
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    6.2k
+                    9.1k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    28 分
+                    43 分
                 </div>
                 
 
@@ -2013,14 +2013,14 @@ Point_z     FIELD   4
 origin      SPACE   12</code></pre><h3 id="内存访问"><a href="#内存访问" class="headerlink" title="内存访问"></a><strong>内存访问</strong></h3><pre class="line-numbers language-assembly"><code class="language-assembly">//c/c++    
     Tmpimg[i][j]; Inimage[i*4+2][j*4+2];
 
-//i->r5; j->r6; Tmpimg-> r8; Inimage->r9;
+//i-&gt;r5; j-&gt;r6; Tmpimg-&gt; r8; Inimage-&gt;r9;
     ldr    r8,    =Tmping
     ldr    r9,    =Inimage
-//Tmpimg[i][j]->r10;
+//Tmpimg[i][j]-&gt;r10;
     mov    r0,    #Imagewidth
     mul    r10, r5, r0   ;i*Imagewidth
     add    r10, r10, r6   ;i*Imagewidth+j
-//Inimage[i*4+2][j*4+2]-> r11
+//Inimage[i*4+2][j*4+2]-&gt; r11
     mov    r1, r5, asl #2 ; i*4
     add    r1, r1, #2    ;i*4+2
     mul    r11, r1, r0    ;(i*4+2)*Imagewidth
@@ -2078,32 +2078,807 @@ LDR {&lt;cond&gt;}SB|H|SH Rd, address2</code></pre></li>
 </ul>
 <p>LDR 可能改变状态寄存器状态位？</p>
 <ul>
-<li>Address1<ul>
+<li><p>Address1</p>
+<ul>
 <li>[Rn]</li>
+<li>前偏移，Rn不变<ul>
 <li>[Rn, # +/- offset_12] </li>
 <li>[Rn, +/-Rm]</li>
 <li>[Rn,+/-Rm, shift_imm]</li>
+</ul>
+</li>
+<li>前偏移，Rn更新<ul>
 <li>[Rn,#+/-offset_12]!  </li>
 <li>[Rn,+/-Rm]!</li>
 <li>[Rn,+/-Rm, shift_imm]!</li>
+</ul>
+</li>
+<li>后偏移，Rn更新<ul>
 <li>[Rn], # +/- offset_12  </li>
 <li>[Rn], +/-Rm</li>
 <li>[Rn],+/-Rm, shift_imm</li>
 </ul>
 </li>
 </ul>
-<p>不同表示方式的区别？</p>
-<p>前偏移，Rn不变；前偏移，Rn更新；后偏移，Rn更新</p>
+</li>
+<li><p><strong>带“！”表示需要更新Rn内寄存器的值</strong></p>
+</li>
+</ul>
 <p><strong>解释下列指令</strong></p>
 <pre><code>ldr r0, [r1, #0x04]!
-ldr r0, [r1, r2]!
-ldr r2,[r1, -r0, LSR #0x04]!
-ldr r0, [r1], #0x04
+ldr r0, [r1, r2]!                ;R1+r2-&gt;r0，更新r1
+ldr r2,[r1, -r0, LSR #0x04]!    ;R0&lt;&lt;4 +r1-&gt;r2, 更新r1
+ldr r0, [r1], #0x04                ;r1-&gt;r0，r0-&gt;r0+4
 ldr r0,[r1],r2
 rdr r0,[r1], -r0, LSL #0x04   
 ldr r0, [r1, #0x04]
 ldr r0, [r1, r2]
-ldr r2,[r1, -r0, LSR #0x04]</code></pre><h2 id="标签命名"><a href="#标签命名" class="headerlink" title="标签命名"></a><strong>标签命名</strong></h2><h2 id="预计算"><a href="#预计算" class="headerlink" title="预计算"></a><strong>预计算</strong></h2><h2 id="宏定义"><a href="#宏定义" class="headerlink" title="宏定义"></a><strong>宏定义</strong></h2><h2 id="数值计算"><a href="#数值计算" class="headerlink" title="数值计算"></a><strong>数值计算</strong></h2><h2 id="小结-2"><a href="#小结-2" class="headerlink" title="小结"></a><strong>小结</strong></h2><script>
+ldr r2,[r1, -r0, LSR #0x04]
+</code></pre><p><strong>比较五条指令的执行结果</strong></p>
+<pre><code>LDR r0, [r1, #4]    r0=0x3030303,r1=0x104
+LDR r0, [r1, #4]!    R0=0x3030303,r1=0x108
+LDR r0, [r1], #4    r0=0x80808080,r1=0x108
+LDRB r0, [r1]        r0=0x00000080
+LDRSB r0, [r1]        r0=0xFFFFFF80</code></pre><p><img src="/images/loading.gif" data-original="../images/basic/image-20211104181456533.png" alt=""></p>
+<ul>
+<li>address2(针对LDR(S)B)<ul>
+<li>[Rn, #+/-offset_8]</li>
+<li>[Rn,+/-Rm]</li>
+<li>[Rn, #+/-offset_8]!</li>
+<li>[Rn,+/-Rm]!</li>
+<li>[Rn], #+/-offset_8</li>
+<li>[Rn],+/-Rm</li>
+</ul>
+</li>
+</ul>
+<p><strong>下列指令，哪些是正确的？</strong></p>
+<pre><code>LDR r1, r2, r3            错，r2加[]
+LDR r1,[r2, #0x111]        对，符合12位
+LDR r1,[r2], +#0x11111    错，超出12位
+LDRSB r1,[r2], -#0x111    错，SB只支持8位
+LDRH [r1],r2            对
+LDRSH r1,[r2,r3]        对
+LDRB r1,[r2,-r3]        对
+</code></pre><h4 id="写（Register-gt-Memory）"><a href="#写（Register-gt-Memory）" class="headerlink" title="写（Register->Memory）"></a>写（Register-&gt;Memory）</h4><table>
+<thead>
+<tr>
+<th>指令</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>STR</td>
+<td>Rd-&gt;mem32[add]</td>
+</tr>
+<tr>
+<td>STRB</td>
+<td>Rd-&gt;mem8[add]</td>
+</tr>
+<tr>
+<td>STRH</td>
+<td>Rd-&gt;mem16[add]</td>
+</tr>
+</tbody></table>
+<pre><code>STR{&lt;cond&gt;}{B} rd, addressing1
+STR{&lt;cond&gt;}{H} rd, addressing2</code></pre><blockquote>
+<p><strong>ldr  vs  str ?</strong> </p>
+<p><strong>为什么没有strsb和strsh?</strong></p>
+</blockquote>
+<p><strong>双字访问</strong></p>
+<p>语法</p>
+<pre><code>LDR|STR{cond}D Rd, [Rn]
+LDR|STR{cond}D Rd, [Rn, Offset]{!}
+LDR|STR{cond}D Rd, label
+LDR|STR{cond}D Rd, [Rn], Offset</code></pre><p>例：</p>
+<pre><code>LDRD    r6,[r11]        ;隐含r7,r7 = r11+4
+STRD    r4,[r9,#24]
+STRD    r0,abcd
+LDRD    r1,[r6]        ; Rd 必须为偶数
+STRD    r14,[r9,#36]   ; Rd 不能是R14.读可以写不可以
+STRD    r2,[r3],r6     ; Rn 不能是 Rd 或 R(d+1).</code></pre><blockquote>
+<p>D表示读两个32位，两个字，第一个寄存器是偶数，一个字32位，半字16位</p>
+<p>注：32位CPU的话，一个字是32位，正常16位CPU一个字16位</p>
+<p>两个数字同时读取到寄存器中嘛？为什么？</p>
+<p>一般一条总线或同一区间时，分先后</p>
+</blockquote>
+<p><strong>交换数据</strong></p>
+<p>指令</p>
+<table>
+<thead>
+<tr>
+<th>指令</th>
+<th>Operation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SWP</td>
+<td>tmp=mem32[Rn]  Mem32[Rn]=Rm  Rd=tmp</td>
+</tr>
+<tr>
+<td>SWPB</td>
+<td>tmp=mem8[Rn]  Mem8[Rn]=Rm  Rd=tmp</td>
+</tr>
+</tbody></table>
+<p>格式</p>
+<pre><code>SWP {B} {&lt;cond&gt;} Rd, Rm, [Rn]</code></pre><p><strong>分析下列指令的执行结果</strong></p>
+<pre><code>mem32[0x8000]=0x12345678
+R0=0x00000000
+R1=0x22223333
+R2=0x8000
+
+SWP r0, r1, [r2]
+
+mem32[0x8000]=?    0x22223333
+R0=?            0x12345678
+R1=?            0x22223333
+R2=?            0x8000</code></pre><p><strong>结构访问</strong></p>
+<pre><code>//C
+origin.x = 0;
+origin.y = 2;
+origin.z = 3;
+
+//asm
+        LDR     PointBase,=origin
+        MOV    r0,#0
+        STR     r0,Point_x
+        MOV    r0,#2
+        STR     r0,Point_y
+        MOV    r0,#3
+        STR     r0,Point_z</code></pre><p><strong>如何实现数据在内存中的移动？</strong></p>
+<h3 id="批量读写"><a href="#批量读写" class="headerlink" title="批量读写"></a><strong>批量读写</strong></h3><pre><code>//c/c++    
+    memcpy(Inimage,Tmpimg,160*120);
+
+//asm    
+    ldr     r10,     =160*120
+memcpy    
+    ldmia    r8! ,    {r0-r7}    ;r8!地址寄存器
+    stmia    r9! ,    {r0-r7}
+    subs    r10,r10, #8*4
+    bgt    memcpy
+</code></pre><h4 id="多存储器数据传送"><a href="#多存储器数据传送" class="headerlink" title="多存储器数据传送"></a><strong>多存储器数据传送</strong></h4><p>指令</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211104193015915.png" alt=""></p>
+<p>格式</p>
+<ul>
+<li>LDM|STM{cond}address-mode Rn{!},reg-list{^}<ul>
+<li>Cond: condition code. </li>
+<li>address-mode: the mode of change address.</li>
+<li>Rn: base register for the load operation. </li>
+<li>^ : includes lr and spsr ；注意，cpsr切换异常模式</li>
+</ul>
+</li>
+</ul>
+<p><strong>地址变化方式</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>符号</strong></th>
+<th><strong>变化方式</strong></th>
+<th><strong>数据起始地址</strong></th>
+<th><strong>数据结束地址</strong></th>
+<th><strong>Rn!</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>IA</strong></td>
+<td><strong>后增加</strong></td>
+<td><strong>Rn</strong></td>
+<td><strong>Rn+4N-4</strong></td>
+<td><strong>Rn+4N</strong></td>
+</tr>
+<tr>
+<td><strong>IB</strong></td>
+<td><strong>先增加</strong></td>
+<td><strong>Rn+4</strong></td>
+<td><strong>Rn+4N</strong></td>
+<td><strong>Rn+4N</strong></td>
+</tr>
+<tr>
+<td><strong>DA</strong></td>
+<td><strong>后减少</strong></td>
+<td><strong>Rn-4N+4</strong></td>
+<td><strong>Rn</strong></td>
+<td><strong>Rn-4N</strong></td>
+</tr>
+<tr>
+<td><strong>DB</strong></td>
+<td><strong>先减少</strong></td>
+<td><strong>Rn-4N</strong></td>
+<td><strong>Rn-4</strong></td>
+<td><strong>Rn-4N</strong></td>
+</tr>
+</tbody></table>
+<p><strong>解释下列指令</strong></p>
+<pre><code>LDMIA r1, {r0, r2-r7}    ;共7个
+STMIA r1!, {r2,r3}
+LDMDA r3, {r4-r7}
+STMDA r3!, {r4-r7}
+LDMIB r1, {r2, r3}
+STMIB r1!, {r2,r3,r7, r10}
+LDMDB r3, {r4-r7}
+STMDB r3!, {r4-r7}</code></pre><blockquote>
+<p><strong>！表示寄存器读写完最后地址写入</strong></p>
+</blockquote>
+<p><strong>这两条指令的执行结果相同吗？</strong></p>
+<pre><code>LDMIA r0, {r1, r2, r3, r4} 
+LDMIA r0, {r4, r3, r1, r2}</code></pre><p>运行下列程序，看结果</p>
+<pre><code>    area datarw , code , readonly, align=3
+    entry    
+    ldr r0,=dmem    
+    LDMIA r0, {r1, r2, r3, r4}
+    nop
+    LDMIA r0, {r4, r3, r1, r2}
+stop
+        b stop
+dmem     dcd 0x1234,0x2345,0x3456,0x5678
+    end</code></pre><p><strong>内存中的地址顺序与寄存器序号对应，与列表中的次序无关！</strong></p>
+<p><strong>根据图中内存和寄存器的初始值，分析下列指令的执行结果</strong></p>
+<pre><code>R0=0x80020
+R1=0x1111
+R2=0x2222
+R3=0x3333</code></pre><table>
+<thead>
+<tr>
+<th><strong>Mem  add</strong></th>
+<th><strong>data</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>0x80030</strong></td>
+<td><strong>0x009</strong></td>
+</tr>
+<tr>
+<td><strong>0x8002c</strong></td>
+<td><strong>0x008</strong></td>
+</tr>
+<tr>
+<td><strong>0x80028</strong></td>
+<td><strong>0x007</strong></td>
+</tr>
+<tr>
+<td><strong>0x80024</strong></td>
+<td><strong>0x006</strong></td>
+</tr>
+<tr>
+<td><strong>0x80020</strong></td>
+<td><strong>0x005</strong></td>
+</tr>
+<tr>
+<td><strong>0x8001c</strong></td>
+<td><strong>0x004</strong></td>
+</tr>
+<tr>
+<td><strong>0x80018</strong></td>
+<td><strong>0x003</strong></td>
+</tr>
+<tr>
+<td><strong>0x80014</strong></td>
+<td><strong>0x002</strong></td>
+</tr>
+<tr>
+<td><strong>0x8000c</strong></td>
+<td><strong>0x001</strong></td>
+</tr>
+<tr>
+<td><strong>0x80008</strong></td>
+<td><strong>0x000</strong></td>
+</tr>
+</tbody></table>
+<pre><code>LDMIA r0!,{r1-r3} r0=0x8002c,r1=0x005,r2=0x006
+LDMDA r0, {r3,r2} 
+LDMIB r0!,{r1-r3} r0=0x80030,r1=0x006,r2=0x007
+LDMDB r0, {r3,r2}
+STMIA r0!,{r1-r3}
+STMDA r0, {r3,r2}
+STMIB r0!,{r1-r3}
+STMDB r0, {r3,r2}</code></pre><h4 id="堆栈操作"><a href="#堆栈操作" class="headerlink" title="堆栈操作"></a><strong>堆栈操作</strong></h4><ul>
+<li><p>堆栈的物理位置？</p>
+</li>
+<li><p>sp?</p>
+</li>
+<li><p>属性 ：基址，指针和限制</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>符号</th>
+<th>功能</th>
+<th>pop</th>
+<th>=LDM</th>
+<th>push</th>
+<th>=STM</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>FA</td>
+<td>Full  In</td>
+<td>LDMFA</td>
+<td>LDMDA</td>
+<td>STMFA</td>
+<td>STMIB</td>
+</tr>
+<tr>
+<td>FD</td>
+<td>Full de</td>
+<td>LDMFD</td>
+<td>LDMIA</td>
+<td>STMFD</td>
+<td>STMDB</td>
+</tr>
+<tr>
+<td>EA</td>
+<td>Empty  In</td>
+<td>LDMEA</td>
+<td>LDMDB</td>
+<td>STMEA</td>
+<td>STMIA</td>
+</tr>
+<tr>
+<td>ED</td>
+<td>Empty de</td>
+<td>LDMED</td>
+<td>LDMIB</td>
+<td>STMED</td>
+<td>STMDA</td>
+</tr>
+</tbody></table>
+<pre><code>R1=0x005
+R3=0x004
+SP=0x80014
+
+STMFD sp!,{r1, r3}</code></pre><p><img src="/images/loading.gif" data-original="../images/basic/image-20211104193640268.png" alt=""></p>
+<p><strong>设定sp时如何确定初始值？</strong></p>
+<p><strong>R13,必须有效内存空间</strong></p>
+<h2 id="标签命名"><a href="#标签命名" class="headerlink" title="标签命名"></a>标签命名</h2><p>标签ARM 汇编程序中自定义符号（label, variables, constant等）有限制吗?</p>
+<h3 id="规则"><a href="#规则" class="headerlink" title="规则"></a><strong>规则</strong></h3><ul>
+<li>Can use uppercase letters, lowercase letters, numeric characters, or the underscore character in symbol names.</li>
+<li>Do not use numeric characters for the first character of symbol names, except in local labels (see Local labels).</li>
+<li>Symbol names are case-sensitive.</li>
+<li>All characters in the symbol name are significant.</li>
+<li>Symbol names must be unique within their scope.</li>
+<li>Symbols must not use built-in variable names or predefined symbol names </li>
+</ul>
+<p><strong>保留的（predefined）字</strong></p>
+<ul>
+<li><p>register names</p>
+</li>
+<li><p>r0-r15 and R0-R15</p>
+</li>
+<li><p>a1-a4 (argument, result, or scratch registers, synonyms for r0 to r3)</p>
+</li>
+<li><p>v1-v8 (variable registers, r4 to r11)</p>
+</li>
+<li><p>sb and SB (static base, r9)</p>
+</li>
+<li><p>sl and SL (stack limit, r10)</p>
+</li>
+<li><p>fp and FP (frame pointer, r11)</p>
+</li>
+<li><p>ip and IP (intra-procedure-call scratch register, r12)</p>
+</li>
+<li><p>sp and SP (stack pointer, r13)</p>
+</li>
+<li><p>lr and LR (link register, r14)</p>
+</li>
+<li><p>pc and PC (program counter, r15).</p>
+</li>
+<li><p>program status register names</p>
+<ul>
+<li>cpsr and CPSR (current program status register)</li>
+<li>spsr and SPSR (saved program status register).</li>
+</ul>
+</li>
+<li><p>floating-point register names</p>
+<ul>
+<li>f0-f7 and F0-F7 (FPA registers)</li>
+<li>s0-s31 and S0-S31 (VFP single-precision registers)</li>
+<li>d0-d15 and D0-D15 (VFP double-precision registers).</li>
+</ul>
+</li>
+<li><p>coprocessor names</p>
+<ul>
+<li>p0-p15 (coprocessors 0-15)</li>
+<li>c0-c15 (coprocessor registers 0-15).</li>
+</ul>
+</li>
+</ul>
+<p><strong>下列自定义符号哪些是正确的？</strong></p>
+<pre><code>SPSR        错
+Cpsr        对    
+MOV
+Add
+Codesize
+moV
+||ASSERT||    对    ?
+8_123d        错
+102srd        错
+</code></pre><h2 id="预计算"><a href="#预计算" class="headerlink" title="预计算"></a>预计算</h2><p><strong>指令 “ subs  r10, r10, #8<em>4”中，“ 8</em>4” 在什么时候计算？</strong></p>
+<p><strong>汇编器中计算，非处理器计算</strong></p>
+<h3 id="双目计算"><a href="#双目计算" class="headerlink" title="双目计算"></a><strong>双目计算</strong></h3><ul>
+<li><p>算术运算：+，-，*，/，MOD</p>
+<p> MOV r0, #(5*4)</p>
+<p> LDR R0, =start+3*n</p>
+</li>
+<li><p>移位运算：ROL, ROR, SHL, SHR</p>
+<p> A:ROL:B </p>
+<p> (3: ROR:4)</p>
+</li>
+<li><p>逻辑运算：AND, OR, EOR</p>
+<p> A: AND:B</p>
+<p> (0xcc55:OR:0x55cc)</p>
+</li>
+<li><p>关系运算：=，&lt;, &gt;, &gt;=, &lt;=, &lt;&gt;, /=</p>
+<p> A&lt;&gt;B</p>
+<p> (7&lt;&gt;7)</p>
+</li>
+</ul>
+<h3 id="单目运算"><a href="#单目运算" class="headerlink" title="单目运算"></a><strong>单目运算</strong></h3><table>
+<thead>
+<tr>
+<th>运算符</th>
+<th>用法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>？</td>
+<td>？A</td>
+<td>A所在行的代码长度</td>
+</tr>
+<tr>
+<td>BASE</td>
+<td>:BASE:A</td>
+<td>（寄存器或程序相对表示）A的基地址寄存器</td>
+</tr>
+<tr>
+<td>INDEX</td>
+<td>:INDEX:A</td>
+<td>（寄存器相对表示）A的偏移地址</td>
+</tr>
+<tr>
+<td>+/-</td>
+<td>+A, -A</td>
+<td>正负号</td>
+</tr>
+<tr>
+<td>NOT</td>
+<td>:NOT:A</td>
+<td>按位取反</td>
+</tr>
+<tr>
+<td>LNOT</td>
+<td>:LNOT:A</td>
+<td>逻辑取反</td>
+</tr>
+<tr>
+<td>DEF</td>
+<td>:DEF:A</td>
+<td>A是否定义，{TRUE/FALSE}</td>
+</tr>
+<tr>
+<td>SB_OFFSET_19_12</td>
+<td>:SB_OFFSET_19_12:label</td>
+<td>label-sb的bits[19:12]</td>
+</tr>
+<tr>
+<td>SB_OFFSET_11_0</td>
+<td>:SB_OFFSET_11_0: label</td>
+<td>label-sb的bits[11:0]</td>
+</tr>
+</tbody></table>
+<p>确定运行时寄存器中的数据（汇编后的结果）</p>
+<p>Example1</p>
+<pre><code>     LDR r0, =? Mydata         ;10*4=40；
+     (LDR r0, =mydata)?         ;没有？则读取的是label地址
+     LDR r1, =? Mydata1         ;1*4=4
+
+ mydata    DCD 1,2,3,4,5,6,7,8,9,0
+ Mydata1   DCB ‘a’, ‘b’, ‘c’, ‘d’</code></pre><p>Example 2</p>
+<pre><code>datastruc         SPACE   280    
+                MAP        0,r8 ; (MAP datastruc) ?
+       consta               FIELD   4
+       constb             FIELD   4
+         x                        FIELD   8
+         y              FIELD   8
+      string                 FIELD   256
+              ……
+                            LDR r3,=:BASE:y
+                              LDR r4,=:INDEX:y
+</code></pre><h3 id="逻辑变量"><a href="#逻辑变量" class="headerlink" title="逻辑变量"></a><strong>逻辑变量</strong></h3><ul>
+<li>LAND  (处理器指令？）</li>
+<li>LOR</li>
+<li>LEOR</li>
+</ul>
+<p><strong>字符串变量</strong></p>
+<p><strong>双目运算运算符</strong></p>
+<table>
+<thead>
+<tr>
+<th>运算符</th>
+<th>用法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>LEFT</td>
+<td>A:LEFT:B</td>
+<td>返回字符串A中左起的B个字符</td>
+</tr>
+<tr>
+<td>RIGHT</td>
+<td>A:RIGHT:B</td>
+<td>返回字符串A中右起的B个字符</td>
+</tr>
+<tr>
+<td>CC</td>
+<td>A:CC:B</td>
+<td>A和B字符串相连接，A在左边</td>
+</tr>
+</tbody></table>
+<p><strong>单目运算运算符</strong></p>
+<table>
+<thead>
+<tr>
+<th>运算符</th>
+<th>用法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>LEN</td>
+<td>:LEN:A</td>
+<td>返回字符串A的长度</td>
+</tr>
+<tr>
+<td>CHR</td>
+<td>:CHR:A</td>
+<td>反回字符A的ASCII码值，A是单个字符</td>
+</tr>
+<tr>
+<td>STR</td>
+<td>:STR:A</td>
+<td>返回数值或逻辑A的字符串</td>
+</tr>
+</tbody></table>
+<p><strong>Example</strong></p>
+<ul>
+<li>：LEN：”I am an excellent student!”</li>
+<li>: CHR: ‘A’</li>
+<li>What is the returned result?</li>
+</ul>
+<h2 id="宏定义"><a href="#宏定义" class="headerlink" title="宏定义"></a><strong>宏定义</strong></h2><p><strong>封装汇编指令模块，作为用户定义的功能单元</strong></p>
+<p>ARM格式</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211104195426365.png" alt=""></p>
+<p>GNU格式</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211104195451041.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211104195635651.png" alt=""></p>
+<blockquote>
+<p><strong>不建议在宏内使用固定寄存器，例如v8。</strong></p>
+<p><strong>一般定义变量使用</strong></p>
+</blockquote>
+<h2 id="数值计算"><a href="#数值计算" class="headerlink" title="数值计算"></a><strong>数值计算</strong></h2><h3 id="64位整数加（减）法"><a href="#64位整数加（减）法" class="headerlink" title="64位整数加（减）法"></a>64位整数加（减）法</h3><ul>
+<li><p>实现64位数0x2200330044和0x9876543210的加（减）法，相加后的结果保存在起始地址为0x20000000的存储空间里。设数据存储采用小端格式。</p>
+</li>
+<li><p>如何用32位加法器实现64位加法运算？</p>
+</li>
+</ul>
+<pre class="line-numbers language-assembly"><code class="language-assembly">LDR R0, =0x00000022 ；加载第一个数的高32位放到R0中
+LDR R1, =0x00330044  ；加载第一个数的低32位放到R1中
+LDR R2, =0x00000098 
+LDR R3, =0x76543210 
+LDR R6, =0x20000000  ；把存储结果的内存地址放到R6中
+ADDS R4, R1, R3（ SUBS R4, R1, R3 ） ;低32位加（减），R4存储低32位
+ADC R5, R0, R2 （ SUBC R5, R0, R2 ） ;高32位加（减），R5存储高32位
+STMIA R6!,{R4,R5}  ；将R4，R5的数据存储到R6指向的地址上，
+                   ；R6值更新<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li>一般寄存器大的放高位，这里反了</li>
+<li>两数相减大于0，借位为1</li>
+<li>借位：A-B-！C</li>
+</ul>
+<h3 id="64位乘法"><a href="#64位乘法" class="headerlink" title="64位乘法"></a>64位乘法</h3><p><strong>2个无符号64位数a 和 b相乘，得到64位结果</strong></p>
+<ul>
+<li><p>函数参数的传递方式</p>
+<ul>
+<li>寄存器 r0-r3 （数目&lt;=4）</li>
+<li>堆栈 （&gt;4）</li>
+</ul>
+</li>
+<li><p>返回</p>
+<p>​    r0, r1</p>
+</li>
+<li><p>算法:</p>
+<p> <code>H1L1 *H2L2=L1*L2 +(L1*H2)&lt;&lt;32+ (H1*L2)&lt;&lt;32+(H1*H2)&lt;&lt;64</code></p>
+</li>
+</ul>
+<pre class="line-numbers language-assembly"><code class="language-assembly">a_0     RN    0       ;a low
+a_1    RN     1    ;a high
+b_0     RN    2    ;b low
+b_1    RN     3    ;b high
+c_0     RN    4    ;c low low
+c_1    RN     5    ;c low high
+c_2     RN    12    ;c high low
+c_3    RN     14    ;c high high
+Mul_64 to 64
+        stmfd    sp!, {r4,r5,lr}
+        umull    c_0,c_1, a_0, b_0     ;low *low 
+        mla    c_1, a_0,b_1,c_1    ;low *high
+        mla     c_1, a_1, b_0, c_1    ;high* low
+
+        mov     r0, c_0
+        mov    r1, c_1            ;return<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>2个有符号64位数a 和 b相乘，得到128位结果</strong></p>
+<ul>
+<li>算法:</li>
+</ul>
+<p><code>(S)H1L1 *(S)H2L2=L1*L2 +(L1*(S)H2)&lt;&lt;32+((S)H1*L2)&lt;&lt;32+((S)H1*(S)H2)&lt;&lt;64</code></p>
+<ul>
+<li><p>无符号乘法: UMULL, UMLAL</p>
+</li>
+<li><p>有符号乘法: SMULL, SMLAL</p>
+</li>
+<li><p>有符号* 无符号？</p>
+</li>
+</ul>
+<p><strong>64位乘法</strong></p>
+<p>设 A为无符号数， B为有符号数，用SMULL或SMLAL计算，则结果如何？</p>
+<p>（1）如果A[31]=0，则<code>(S)A * (S)B= A*(S)B</code></p>
+<p>（2）如果A[31]=1, 则<code>(S)A * (S)B= (A-232)*(S)B</code></p>
+<pre><code>                                  `A*(S)B = (S)A * (S)B+(1&lt;&lt;32) *(S)B`</code></pre><p>宏定义 USMLAL（无符号*有符号）</p>
+<pre class="line-numbers language-assembly"><code class="language-assembly">MACRO
+    USMLAL    $cl, $ch, $a, $b    
+    ;signed $ch, $cl +=unsigned $a *signed $b
+    SMULL        $cl, $ch, $a, $b
+    ;c= (signed)a *(signed)b
+    TST        $a, #1&lt;&lt;31
+    ;if(signed)a&lt;0
+    ADDNE          $ch, $ch, $b
+    ;c+=(b&lt;&lt;32)
+    MEND    <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-assembly"><code class="language-assembly">    smul_64_to_128
+    stmfd    sp!, {r4, r5, lr}
+    umull     c_0, c_1, a_0, b_0     ;low*low
+    mov     c_2, #0
+    usmlal    c_1, c_2, a_0, b_1    ;low*high
+    mov    c_3, #0
+    usmlal    c_1, c_3, b_0, a_1    ;high*low
+    mov    a_0, c_2, ASR #31
+    adds     c_2, c_2, c_3
+    adc    c_3, a_0, c_3, ASR #31
+    smlal    c_2, c_3, a_1, b_1    ;high*high
+    mov    r0, c_0
+    mov    r1, c_1
+    mov    r2, c_2
+    mov    r3, c_3
+    ldmfd    sp!,{r4, r5, pc}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>宏定义 USMLAL（无符号*有符号）</p>
+<pre class="line-numbers language-assembly"><code class="language-assembly">    MACRO
+    USMLAL    $cl, $ch, $a, $b    
+    ;signed $ch, $cl +=unsigned $a *signed $b
+    SMULL        $cl, $ch, $a, $b
+    ;c= (signed)a *(signed)b
+    TST        $a, #1&lt;&lt;31
+    ;if(signed)a&lt;0
+    ADDNE          $ch, $ch, $b
+    ;c+=(b&lt;&lt;32)
+    MEND    <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="浮点计算"><a href="#浮点计算" class="headerlink" title="浮点计算"></a>浮点计算</h3><ul>
+<li>IEEE754浮点格式</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211104201237806.png" alt=""></p>
+<ul>
+<li>浮点数与实数的转换<ul>
+<li>单精度转换公式</li>
+<li><code>V=(-1)^S*2^(E（值）-127)*(1+M)  (指数位!=0)</code></li>
+<li><code>V=(-1)^S*2^(1-127)*M (指数位=0)</code></li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211104201344272.png" alt=""></p>
+<h3 id="浮点加法"><a href="#浮点加法" class="headerlink" title="浮点加法"></a><strong>浮点加法</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211104201406193.png" alt=""></p>
+<h2 id="小结-2"><a href="#小结-2" class="headerlink" title="小结"></a><strong>小结</strong></h2><p><img src="/images/loading.gif" data-original="../images/basic/image-20211104201417404.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211104201426223.png" alt=""></p>
+<p><strong>分析下列程序的功能</strong></p>
+<pre class="line-numbers language-assembly"><code class="language-assembly">    AREA    Block, CODE, READONLY    ; name this block of code
+num       EQU     20                       ; set number of words to be copied
+    ENTRY                            ; mark the first instruction to call
+start
+    LDR     r0, =src                 ; r0 = pointer to source block
+    LDR     r1, =dst                 ; r1 = pointer to destination block
+    MOV     r2, #num                 ; r2 = number of words to copy
+    MOV     sp, #0x400               ; Set up stack pointer (r13)
+blockcopy   
+    MOVS    r3,r2, LSR #3     ; Number of eight word multiples
+    BEQ     copywords                ; Less than eight words to move?
+    STMFD   sp!, {r4-r11}            ; Save some working registers
+
+octcopy  LDMIA   r0!, {r4-r11}            ; Load 8 words from the source
+     STMIA   r1!, {r4-r11}            ; and put them at the destination
+     SUBS    r3, r3, #1               ; Decrement the counter
+     BNE     octcopy                  ; ... copy more
+     LDMFD   sp!, {r4-r11}      ; Don't need these now - restore
+                                                     ; originals
+copywords   
+    ANDS    r2, r2, #7               ; Number of odd words to copy
+     BEQ     stop                     ; No words left to copy?
+
+wordcopy    LDR     r3, [r0], #4     ; Load a word from the source  and
+       STR     r3, [r1], #4             ; store it to the destination
+       SUBS    r2, r2, #1               ; Decrement the counter
+       BNE     wordcopy                 ; ... copy more
+stop             MOV     r0, #0x18                ; 
+       LDR     r1, =0x20026          ; ADP_Stopped_ApplicationExit
+       SWI     0x123456                 ; ARM semihosting SWI
+
+      AREA    BlockData, DATA, READWRITE
+src               DCD     1,2,3,4,5,6,7,8,1,2,3,4,5,6,7,8,1,2,3,4
+dst               DCD     0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+                END<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>C程序</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>      <span class="token keyword">int</span> i<span class="token punctuation">,</span> j<span class="token punctuation">;</span>
+    <span class="token keyword">unsigned</span> <span class="token keyword">char</span> Inimage<span class="token punctuation">[</span><span class="token number">480</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">640</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">unsigned</span> <span class="token keyword">char</span> Tmpimg<span class="token punctuation">[</span><span class="token number">120</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">160</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">for</span><span class="token punctuation">(</span>i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>i<span class="token operator">&lt;</span><span class="token number">120</span><span class="token punctuation">;</span>i<span class="token operator">++</span><span class="token punctuation">)</span>
+         <span class="token keyword">for</span><span class="token punctuation">(</span>j<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>j<span class="token operator">&lt;</span><span class="token number">160</span><span class="token punctuation">;</span>j<span class="token operator">++</span><span class="token punctuation">)</span>                
+               Tmpimg<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token operator">=</span>Inimage<span class="token punctuation">[</span>i<span class="token operator">*</span><span class="token number">4</span><span class="token operator">+</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token operator">*</span><span class="token number">4</span><span class="token operator">+</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">;</span>  
+    <span class="token function">memcpy</span><span class="token punctuation">(</span>Inimage<span class="token punctuation">,</span>Tmpimg<span class="token punctuation">,</span><span class="token number">160</span><span class="token operator">*</span><span class="token number">120</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>汇编</p>
+<pre class="line-numbers language-assembly"><code class="language-assembly">Imageheight    equ    120
+Imagewidth    equ    160
+InImagewidth     equ        640
+         area    reset , code , readonly                               
+         entry        
+        mov    r6, #0
+Framecircle 
+    mov    r5, #0
+Linecircle
+;i-&gt;r5; j-&gt;r6; Tmpimg-&gt; r8; Inimage-&gt;r9;
+    ldr    r8,    =Tmpimg
+    ldr    r9,    =Inimage
+;Tmpimg[i][j]-&gt;r10;
+    mov    r0,    #Imagewidth
+    mul    r10, r6, r0   ;i*Imagewidth
+    add    r10, r10, r5   ;i*Imagewidth+j
+    add    r10,r8
+
+;Inimage[i*4+2][j*4+2]-&gt; r11
+    mov r0, #InImagewidth
+    mov    r1, r6, lsl #2 ; i*4
+    add    r1, r1, #2    ;i*4+2
+    mul    r11, r1, r0    ;(i*4+2)*InImagewidth
+    mov    r1, r5, lsl #2 ;j*4
+    add    r1, r1, #2    ;j*4+2
+    add    r11, r11, r1; (i*4+2)*InImagewidth+4*j+2
+    add    r11, r9
+    ldrb    r0, [r11] ;read Inimage
+    strb    r0, [r10] ;write Tmpimg
+;circle control
+        add r5, r5,#1
+        cmp r5, #Imagewidth
+      bmi  Linecircle
+        add r6, r6, #1
+        cmp r6, #Imageheight
+        bmi Framecircle
+
+; memcpy    
+    ldr     r10,     =160*120
+memcpy    
+    ldmia    r8! ,    {r0-r7}
+    stmia    r9! ,    {r0-r7}
+    subs    r10,r10, #8*4
+    bgt    memcpy
+    ;end
+
+    area  imscale，data, readwrite
+
+Tmpimg    space        160*120
+Inimage    space        640*480
+
+    end<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
             if (!el.dataset.src) { return; }
@@ -2616,7 +3391,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">2016.3k</span>&nbsp;字
+                class="white-color">2019.3k</span>&nbsp;字
             
             
             
