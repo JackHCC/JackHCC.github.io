@@ -459,21 +459,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-10-29
+                    2021-11-05
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    15.7k
+                    19.2k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    63 分
+                    77 分
                 </div>
                 
 
@@ -2765,11 +2765,457 @@ c = a | b; // a零扩展为 8'b00001011</code></pre><pre class="line-numbers lan
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211029115411324.png" alt=""></p>
 <h3 id="算术运算"><a href="#算术运算" class="headerlink" title="算术运算"></a><strong>算术运算</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211029115501176.png" alt=""></p>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211029115521756.png" alt=""></p>
+<p>注：<strong>异或取反是同或，同或取反是异或</strong></p>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211029115535765.png" alt=""></p>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211029115552383.png" alt=""></p>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211029115610133.png" alt=""></p>
+<p>注：<strong>M是控制是逻辑运算还是算术运算，对于第一种方式：0：逻辑运算，1：算术运算</strong></p>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211029115632454.png" alt=""></p>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211029115651552.png" alt=""></p>
+<h3 id="作业3"><a href="#作业3" class="headerlink" title="作业3"></a>作业3</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211105093531628.png" alt=""></p>
+<h3 id="ALU计算益出的判断方法"><a href="#ALU计算益出的判断方法" class="headerlink" title="ALU计算益出的判断方法"></a><strong>ALU计算益出的判断方法</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211105093608928.png" alt=""></p>
+<h1 id="Verilog的可综合描述风格"><a href="#Verilog的可综合描述风格" class="headerlink" title="Verilog的可综合描述风格"></a>Verilog的可综合描述风格</h1><h2 id="描述风格简介"><a href="#描述风格简介" class="headerlink" title="描述风格简介"></a>描述风格简介</h2><ul>
+<li><p>如果逻辑输出在任何时候都直接由当前输入组合决定，则为组合逻辑。</p>
+</li>
+<li><p>如果输出在任何给定时刻不能由输入的状态决定，则为时序逻辑。</p>
+</li>
+</ul>
+<p>通常综合输出不会只是一个纯组合或纯时序逻辑。</p>
+<blockquote>
+<pre><code>   一定要清楚</code></pre><p>​       所写的源代码会综合出什么类型逻辑，至少要知道其拓朴结构</p>
+<p>​       要得到指定的逻辑结构，需要如何描述</p>
+<p>这是非常重要的。 </p>
+</blockquote>
+<h2 id="不支持的Verilog结构"><a href="#不支持的Verilog结构" class="headerlink" title="不支持的Verilog结构"></a>不支持的Verilog结构</h2><p><img src="/images/loading.gif" data-original="../images/basic/image-20211105095746216.png" alt=""></p>
+<h3 id="持续赋值"><a href="#持续赋值" class="headerlink" title="持续赋值"></a>持续赋值</h3><p>持续赋值驱动值到net上。因为驱动是持续的，所以输出将随任意输入的改变而随时更新，因此将产生组合逻辑。</p>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> orand <span class="token punctuation">(</span>out<span class="token punctuation">,</span> a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">,</span> d<span class="token punctuation">,</span> e<span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token keyword">input</span> a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">,</span> d<span class="token punctuation">,</span> e<span class="token punctuation">;</span>
+     <span class="token keyword">output</span> out<span class="token punctuation">;</span>
+     <span class="token keyword">assign</span> out <span class="token operator">=</span> e <span class="token operator">&amp;</span> <span class="token punctuation">(</span>a <span class="token operator">|</span> b<span class="token punctuation">)</span> <span class="token operator">&amp;</span> <span class="token punctuation">(</span>c <span class="token operator">|</span> d<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> orand <span class="token punctuation">(</span> <span class="token comment" spellcheck="true">//另类的assign</span>
+    <span class="token keyword">input</span> <span class="token keyword">wire</span>     a<span class="token punctuation">,</span> 
+                en<span class="token punctuation">,</span> 
+    <span class="token keyword">output</span> <span class="token keyword">wire</span> out<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">assign</span> out <span class="token operator">=</span> en <span class="token operator">?</span> a <span class="token punctuation">:</span> out<span class="token punctuation">;</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211105100459175.png" alt=""></p>
+<h3 id="延迟赋值语句"><a href="#延迟赋值语句" class="headerlink" title="延迟赋值语句"></a>延迟赋值语句</h3><p>语法： LHS = <timing_ control=""> RHS;</timing_></p>
+<ul>
+<li><p>时序控制延迟的是赋值而不是右边表达式的计算。</p>
+</li>
+<li><p>在延迟赋值语句中RHS表达式的值都有一个隐含的临时存储。</p>
+</li>
+<li><p>可以用来简单精确地模拟寄存器交换和移位。 </p>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211105100537090.png" alt=""></p>
+<h3 id="非阻塞过程赋值语句"><a href="#非阻塞过程赋值语句" class="headerlink" title="非阻塞过程赋值语句"></a>非阻塞过程赋值语句</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211105100804305.png" alt=""></p>
+<p>阻塞过程赋值执行完成后再执行在顺序块内下一条语句。</p>
+<p>非阻塞赋值不阻塞过程流，仿真器读入一条赋值语句并对它进行调度之后，就可以处理下一条赋值语句。</p>
+<p>若过程块中的所有赋值都是非阻塞的，赋值按两步进行：</p>
+<ol>
+<li>仿真器计算所有RHS表达式的值，保存结果，并进行调度在时序控制指定时间的赋值。</li>
+<li>在经过相应的延迟后，仿真器通过将保存的值赋给LHS表达式完成赋值。</li>
+</ol>
+<p><strong>阻塞与非阻塞赋值语句行为差别举例</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211105100919800.png" alt=""></p>
+<h3 id="过程块语句-1"><a href="#过程块语句-1" class="headerlink" title="过程块语句"></a>过程块语句</h3><ul>
+<li><p><strong>任意边沿</strong></p>
+<ul>
+<li>在所有输入信号的任意边沿进入的过程块称为<strong>组合块</strong>。 </li>
+</ul>
+<p>​      <code>always @( a or b) // 与门</code></p>
+<p>​       <code>y = a &amp; b;</code></p>
+</li>
+<li><p><strong>单个边沿</strong></p>
+<ul>
+<li>在一个控制信号的单个边沿上进入的过程块产生同步逻辑。这种过程块称为同步块。</li>
+</ul>
+<p>​        <code>always @( posedge clk) // D flip-flop</code></p>
+<p>​       <code>q &lt;= d;</code></p>
+<ul>
+<li>同步块也可以对异步复位信号的变化产生敏感</li>
+</ul>
+</li>
+</ul>
+<pre><code>always @( posedge clk or negedge rst_)
+     if (! rst_)   
+         q &lt;= 0;
+     else
+         q &lt;= d;</code></pre><h4 id="组合块描述风格"><a href="#组合块描述风格" class="headerlink" title="组合块描述风格"></a>组合块描述风格</h4><pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> DFF <span class="token punctuation">(</span>q<span class="token punctuation">,</span> qb<span class="token punctuation">,</span> d<span class="token punctuation">,</span> clk<span class="token punctuation">,</span> clr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">output</span> q<span class="token punctuation">,</span> qb<span class="token punctuation">;</span>
+    <span class="token keyword">input</span> d<span class="token punctuation">,</span>  <span class="token comment" spellcheck="true">// input data</span>
+              clk<span class="token punctuation">,</span> <span class="token comment" spellcheck="true">/*input clock */</span> clr<span class="token punctuation">;</span>
+    <span class="token keyword">reg</span> q<span class="token punctuation">;</span>
+    <span class="token keyword">wire</span> qb<span class="token punctuation">,</span> d<span class="token punctuation">,</span> clk<span class="token punctuation">,</span> clr<span class="token punctuation">;</span>
+
+    <span class="token keyword">assign</span> qb <span class="token operator">=</span> <span class="token operator">!</span>q<span class="token punctuation">;</span>
+
+    <span class="token important">always @</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c…）    <span class="token keyword">begin</span>
+        过程赋值语句；
+        高级描述语句
+            <span class="token keyword">if</span>语句；
+            <span class="token keyword">case</span>语句；
+            循环语句；
+    <span class="token keyword">end</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li><p>任意边沿</p>
+<ul>
+<li>在所有输入信号的任意边沿进入的过程块称为组合块。 </li>
+</ul>
+<p>​           always @( a or b) </p>
+<p>​            y = a &amp; b;</p>
+<ul>
+<li><strong>敏感列表</strong>要完全</li>
+<li>采用<strong>阻塞赋值</strong>语句</li>
+<li>可能产生<strong>组合逻辑或锁存器</strong></li>
+<li>过程赋值语句产生组合逻辑</li>
+<li>IF或CASE语句可能产生<strong>锁存器</strong></li>
+<li>循环语句？</li>
+</ul>
+</li>
+</ul>
+<h4 id="组合块：敏感列表要完全"><a href="#组合块：敏感列表要完全" class="headerlink" title="组合块：敏感列表要完全"></a>组合块：敏感列表要完全</h4><p>在下面的例子，a, b, sl是块的输入</p>
+<ul>
+<li>sl用作条件， a、b用在过程赋值语句的右边</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211105101931330.png" alt=""></p>
+<p>将块的所有输入都列入敏感表是很好的描述习惯。不同的综合工具对不完全敏感表的处理有所不同。有的将不完全敏感表当作非法。其他的则产生一个警告并假设敏感表是完全的。在这种情况下，综合输出和RTL描述的仿真结果可能不一致。</p>
+<h4 id="2001标准对敏感列表的简化"><a href="#2001标准对敏感列表的简化" class="headerlink" title="2001标准对敏感列表的简化"></a>2001标准对敏感列表的简化</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211105102004404.png" alt=""></p>
+<h3 id="条件语句"><a href="#条件语句" class="headerlink" title="条件语句"></a>条件语句</h3><p><em>if</em> 和 <em>if-else</em> 语句：</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211105102327596.png" alt=""></p>
+<ul>
+<li><p>可以多层嵌套。在嵌套<em>if</em>序列中，<em>else</em>和前面最近的if相关。</p>
+</li>
+<li><p>为提高可读性及确保正确关联，使用begin…end块语句指定其作用域。</p>
+</li>
+</ul>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> compute <span class="token punctuation">(</span>result<span class="token punctuation">,</span> rega<span class="token punctuation">,</span> regb<span class="token punctuation">,</span> opcode<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">input</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> rega<span class="token punctuation">,</span> regb<span class="token punctuation">;</span>
+<span class="token keyword">input</span> <span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> opcode<span class="token punctuation">;</span>
+<span class="token keyword">output</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> result<span class="token punctuation">;</span>
+<span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> result<span class="token punctuation">;</span>
+<span class="token important">always @</span><span class="token punctuation">(</span> rega <span class="token keyword">or</span> regb <span class="token keyword">or</span> opcode<span class="token punctuation">)</span>
+      <span class="token keyword">case</span> <span class="token punctuation">(</span>opcode<span class="token punctuation">)</span>
+            <span class="token number">3'b000</span> <span class="token punctuation">:</span>   result <span class="token operator">=</span> rega <span class="token operator">+</span> regb<span class="token punctuation">;</span>
+            <span class="token number">3'b001</span> <span class="token punctuation">:</span>   result <span class="token operator">=</span> rega <span class="token operator">-</span> regb<span class="token punctuation">;</span>
+            <span class="token number">3'b001</span> <span class="token punctuation">,</span>   <span class="token comment" spellcheck="true">// 多个case有同一个结果</span>
+            <span class="token number">3'b010</span> <span class="token punctuation">:</span>   result <span class="token operator">=</span> rega <span class="token operator">/</span> regb<span class="token punctuation">;</span>
+            <span class="token keyword">default</span> <span class="token punctuation">:</span>  <span class="token keyword">begin</span>
+                 result <span class="token operator">=</span> <span class="token number">'bx</span><span class="token punctuation">;</span>
+                 <span class="token property">$display</span> <span class="token punctuation">(</span><span class="token string">" no match"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+             <span class="token keyword">end</span>
+       <span class="token keyword">endcase</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>在Verilog中重复说明case项是合法的，因为Verilog的case语句只执行第一个符合项。</p>
+<h4 id="case、if语句可互相代替"><a href="#case、if语句可互相代替" class="headerlink" title="case、if语句可互相代替"></a>case、if语句可互相代替</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211105103613643.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211105103624249.png" alt=""></p>
+<h4 id="会产生锁存器（latch）"><a href="#会产生锁存器（latch）" class="headerlink" title="会产生锁存器（latch）"></a>会产生锁存器（latch）</h4><p>在always块中，条件语句如果没有说明所有条件，即条件不完全，将产生latch。</p>
+<p>在下面的例子中，由于没有定义enable为低电平时data的状态，因此enable为低电平时data的值必须保持，综合时将产生一个锁存器</p>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> latch <span class="token punctuation">(</span>
+     <span class="token keyword">input</span>  <span class="token keyword">wire</span>     data<span class="token punctuation">,</span> 
+        enable<span class="token punctuation">,</span>
+     <span class="token keyword">output</span> <span class="token keyword">reg</span>      q
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+     <span class="token important">always @</span><span class="token punctuation">(</span> enable<span class="token punctuation">,</span> data<span class="token punctuation">)</span>
+          <span class="token keyword">if</span> <span class="token punctuation">(</span>enable<span class="token punctuation">)</span>
+               q <span class="token operator">=</span> data<span class="token punctuation">;</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>注：assign q = en？in，q     //FPGA：锁存器;     ASIC：反馈震荡电路</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211105215446816.png" alt=""></p>
+<h4 id="自然完全的条件语句"><a href="#自然完全的条件语句" class="headerlink" title="自然完全的条件语句"></a><strong>自然完全的条件语句</strong></h4><pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> comcase <span class="token punctuation">(</span>
+    <span class="token keyword">input</span> <span class="token keyword">wire</span> a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">,</span> d<span class="token punctuation">,</span>
+    <span class="token keyword">output</span> <span class="token keyword">reg</span> e
+    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token important">always @</span><span class="token punctuation">(</span> a <span class="token keyword">or</span> b <span class="token keyword">or</span> c <span class="token keyword">or</span> d<span class="token punctuation">)</span>
+        <span class="token keyword">case</span> <span class="token punctuation">(</span><span class="token operator">{</span> a<span class="token punctuation">,</span> b<span class="token operator">}</span><span class="token punctuation">)</span>
+            <span class="token number">2'b11</span><span class="token punctuation">:</span> e <span class="token operator">=</span> d<span class="token punctuation">;</span>
+            <span class="token number">2'b10</span><span class="token punctuation">:</span> e <span class="token operator">=</span> <span class="token operator">~</span>c<span class="token punctuation">;</span>
+            <span class="token number">2'b01</span><span class="token punctuation">:</span> e <span class="token operator">=</span> <span class="token number">1'b0</span><span class="token punctuation">;</span>
+            <span class="token number">2'b00</span><span class="token punctuation">:</span> e <span class="token operator">=</span> <span class="token number">1'b1</span><span class="token punctuation">;</span>
+        <span class="token keyword">endcase</span>
+<span class="token keyword">endmodule</span>
+
+<span class="token keyword">module</span> compif <span class="token punctuation">(</span>
+    <span class="token keyword">input</span>  <span class="token keyword">wire</span> a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">,</span> d<span class="token punctuation">,</span>
+    <span class="token keyword">output</span> <span class="token keyword">reg</span> e
+    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token important">always @</span><span class="token punctuation">(</span> a <span class="token keyword">or</span> b <span class="token keyword">or</span> c <span class="token keyword">or</span> d<span class="token punctuation">)</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>a <span class="token operator">&amp;</span> b<span class="token punctuation">)</span>
+            e <span class="token operator">=</span> d<span class="token punctuation">;</span>
+        <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>a <span class="token operator">&amp;</span> <span class="token operator">~</span>b<span class="token punctuation">)</span>
+            e <span class="token operator">=</span> <span class="token operator">~</span>c<span class="token punctuation">;</span>
+        <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">~</span> a <span class="token operator">&amp;</span> b<span class="token punctuation">)</span>
+            e <span class="token operator">=</span> <span class="token number">1'b0</span><span class="token punctuation">;</span>
+        <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">~</span> a <span class="token operator">&amp;</span> <span class="token operator">~</span>b<span class="token punctuation">)</span>
+            e <span class="token operator">=</span> <span class="token number">1'b1</span><span class="token punctuation">;</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>   例中定义了所有可能的选项，综合结果是纯组合逻辑，没有不期望的锁存器产生。</p>
+<h4 id="不完全条件语句"><a href="#不完全条件语句" class="headerlink" title="不完全条件语句"></a>不完全条件语句</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211105103917069.png" alt=""></p>
+<p>在上面的例子中，当a变为零时，不对e赋新值。因此e保存其值直到a变为1。这是锁存器的特性。</p>
+<h4 id="default完全条件语句"><a href="#default完全条件语句" class="headerlink" title="default完全条件语句"></a>default完全条件语句</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211105104000708.png" alt=""></p>
+<p>​    综合工具将 ‘bx作为无关值，因此if语句类似于“ full case”，可以进行更好的优化。 </p>
+<p>​    例中没有定义所有选项，但对没有定义的项给出了缺省行为。同样，其综合结果为纯组合逻辑——没有不期望的锁存器产生。</p>
+<h4 id="指示完全条件语句"><a href="#指示完全条件语句" class="headerlink" title="指示完全条件语句"></a>指示完全条件语句</h4><pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> dircase <span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">,</span> d<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">input</span> b<span class="token punctuation">,</span> c<span class="token punctuation">;</span>
+    <span class="token keyword">input</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> a<span class="token punctuation">;</span>
+    <span class="token keyword">output</span> <span class="token keyword">reg</span> d<span class="token punctuation">;</span>
+
+    <span class="token important">always @</span><span class="token punctuation">(</span> a <span class="token keyword">or</span> b <span class="token keyword">or</span> c<span class="token punctuation">)</span>
+        <span class="token keyword">case</span> <span class="token punctuation">(</span>a<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">// synopsys synthesis case = full    synopsys：公司的名字,综合指令指示完全，最好不要用，产生了工具依赖</span>
+
+            <span class="token number">2'b00</span><span class="token punctuation">:</span> d <span class="token operator">=</span> b<span class="token punctuation">;</span>
+            <span class="token number">2'b01</span><span class="token punctuation">:</span> d <span class="token operator">=</span> c<span class="token punctuation">;</span>
+        <span class="token keyword">endcase</span>
+<span class="token keyword">endmodule</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>和前例一样，没有定义所有case项，但综合指令通知优化器缺少的case项不会发生。结果也为纯组合逻辑，没有不期望锁存器产生。注意如果缺少的case项发生，而其结果未定义，综合结果和RTL的描述的行为可能不同。</p>
+<h4 id="综合指令"><a href="#综合指令" class="headerlink" title="综合指令"></a>综合指令</h4><ul>
+<li><p>大多数综合工具都能处理综合指令。</p>
+</li>
+<li><p>综合指令可以嵌在Verilog注释中，因此他们在Verilog仿真时忽略，只在综合工具解析时有意义。</p>
+</li>
+<li><p>不同工具使用的综合指令在语法上不同。但其目的相同，都是在RTL代码内部进行最优化。</p>
+</li>
+<li><p>通常综合指令中包含工具或公司的名称。例如，下面介绍的Envisia synopsys synthesis工具的编译指示都以synopsys synthesis开头。</p>
+</li>
+</ul>
+<p><strong>综合指令举例</strong></p>
+<ul>
+<li><p>这里列出部分Cadence综合工具中综合指令。这些与其他工具，如Synopsys Design Compiler，中的指令很相似。</p>
+<p>  // synopsys synthesis on</p>
+<p>  // synopsys synthesis off</p>
+<p>  // synopsys synthesis case = full, parallel, mux</p>
+</li>
+<li><p>结构指令</p>
+<p>  // synopsys synthesis architecture = cla or rpl</p>
+</li>
+<li><p>FSM指令</p>
+<p>  // synopsys synthesis enum xyz</p>
+<p>  // synopsys synthesis state_vector sig state_vector_ flag</p>
+</li>
+</ul>
+<p><strong>综合指令 — case指示</strong></p>
+<ul>
+<li><p>case语句通常综合为一个优先级编码器，列表中每个case项都比后面的case项的优先级高。</p>
+</li>
+<li><p>case指令按下面所示指示优化器：</p>
+<ul>
+<li><p>//synopsys synthesis case = parallel</p>
+<p>建立并行的编码逻辑，彼此无优先级。</p>
+</li>
+<li><p>//synopsys synthesis case = mux</p>
+<p>若库中有多路器，使用多路器建立编码逻辑。</p>
+</li>
+<li><p>//synopsys synthesis case = full</p>
+<p>假定所有缺少的case项都是“无关”项，使逻辑更为优化并避免产生锁存器。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="条件完全的例外"><a href="#条件完全的例外" class="headerlink" title="条件完全的例外"></a>条件完全的例外</h4><p>有时使用了case full指示，case语句也可能综合出latch。</p>
+<p>下面的描述综合时产生了一个latch。</p>
+<p>要求：条件语句中各分支的赋值对象一致。</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211105105243657.png" alt=""></p>
+<p>注：条件完全语句指的是同一组信号</p>
+<h4 id="带复位、置位的锁存器latch的描述示例"><a href="#带复位、置位的锁存器latch的描述示例" class="headerlink" title="带复位、置位的锁存器latch的描述示例"></a>带复位、置位的锁存器latch的描述示例</h4><p>下面的例子给出了一个复杂一些的复位分支。由于是一个latch，因此敏感表是完全的。</p>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> latch <span class="token punctuation">(</span>
+    <span class="token keyword">input</span> <span class="token keyword">wire</span> enable<span class="token punctuation">,</span> d<span class="token punctuation">,</span> set<span class="token punctuation">,</span> clr<span class="token punctuation">,</span>
+    <span class="token keyword">output</span> <span class="token keyword">reg</span> q
+    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+   <span class="token important">always @</span><span class="token punctuation">(</span> <span class="token operator">*</span><span class="token punctuation">)</span>     <span class="token keyword">begin</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>set<span class="token punctuation">)</span>
+            q <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+        <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>clr<span class="token punctuation">)</span>
+            q <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>enable<span class="token punctuation">)</span>
+            q <span class="token operator">=</span> d<span class="token punctuation">;</span>
+    <span class="token keyword">end</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="异端"><a href="#异端" class="headerlink" title="异端"></a>异端</h4><pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> latch <span class="token punctuation">(</span>
+    <span class="token keyword">input</span> <span class="token keyword">wire</span>     enable <span class="token punctuation">,</span> 
+                d <span class="token punctuation">,</span> 
+    <span class="token keyword">output</span> <span class="token keyword">reg</span> q
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token important">always @</span><span class="token punctuation">(</span> <span class="token operator">*</span><span class="token punctuation">)</span>
+    q <span class="token operator">=</span> enable <span class="token operator">?</span> d <span class="token punctuation">:</span> q<span class="token punctuation">;</span> 
+<span class="token keyword">endmodule</span>
+
+
+<span class="token keyword">module</span> latch <span class="token punctuation">(</span>
+    <span class="token keyword">input</span> <span class="token keyword">wire</span>     enable <span class="token punctuation">,</span> 
+                d <span class="token punctuation">,</span> 
+    <span class="token keyword">output</span> <span class="token keyword">wire</span> q
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">assign</span> q <span class="token operator">=</span> enable <span class="token operator">?</span> d <span class="token punctuation">:</span> q<span class="token punctuation">;</span> 
+<span class="token keyword">endmodule</span>
+
+<span class="token keyword">module</span> latch <span class="token punctuation">(</span>
+    <span class="token keyword">input</span> <span class="token keyword">wire</span>     enable <span class="token punctuation">,</span> 
+                d <span class="token punctuation">,</span> 
+    <span class="token keyword">output</span> <span class="token keyword">reg</span> q
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token important">always @</span><span class="token punctuation">(</span> <span class="token operator">*</span><span class="token punctuation">)</span>
+    <span class="token function">if</span><span class="token punctuation">(</span> enable <span class="token punctuation">)</span>
+        q <span class="token operator">=</span> d <span class="token punctuation">;</span>
+    <span class="token keyword">else</span>
+        q <span class="token operator">=</span> q<span class="token punctuation">;</span> 
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="条件互斥与条件非互斥"><a href="#条件互斥与条件非互斥" class="headerlink" title="条件互斥与条件非互斥"></a>条件互斥与条件非互斥</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211105110022237.png" alt=""></p>
+<p>注：条件互斥产生并行电路，条件不互斥产生带优先级的串行电路</p>
+<h4 id="条件非互斥的if语句"><a href="#条件非互斥的if语句" class="headerlink" title="条件非互斥的if语句"></a>条件非互斥的if语句</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211105110211954.png" alt=""></p>
+<p><strong>电路结构</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211105110323236.png" alt=""></p>
+<p><strong>互斥的非互斥表达：</strong></p>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> <span class="token function">single_if</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">,</span> d<span class="token punctuation">,</span> sl<span class="token punctuation">,</span> z<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">input</span> a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">,</span> d<span class="token punctuation">;</span>
+    <span class="token keyword">input</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> sl<span class="token punctuation">;</span>
+    <span class="token keyword">output</span> <span class="token keyword">reg</span> z<span class="token punctuation">;</span>
+    <span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> sel <span class="token operator">=</span> sl <span class="token operator">==</span> <span class="token number">2</span>’b11 ？ <span class="token number">4</span>’b1000：
+                              sl <span class="token operator">==</span> <span class="token number">2</span>’b10 ？ <span class="token number">4</span>’b0100：
+                              sl <span class="token operator">==</span> <span class="token number">2</span>’b01 ？ <span class="token number">4</span>’b0010：
+                                                       <span class="token number">4</span>’b0001<span class="token punctuation">;</span>
+    <span class="token important">always @</span><span class="token punctuation">(</span>＊<span class="token punctuation">)</span>  <span class="token keyword">begin</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>sel<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">)</span>            z <span class="token operator">=</span> d<span class="token punctuation">;</span>
+            <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>sel<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span>     z <span class="token operator">=</span> c<span class="token punctuation">;</span>
+            <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>sel<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span>     z <span class="token operator">=</span> b<span class="token punctuation">;</span>
+            <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>sel<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span>     z <span class="token operator">=</span> a<span class="token punctuation">;</span>
+            <span class="token keyword">else</span>                     z <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+     <span class="token keyword">end</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211105215916306.png" alt=""></p>
+<p>总结：If语句条件完全：逻辑组合电路，不完全：锁存器；如果完全，互斥，并行电路；完全但是不互斥，串行带优先级电路</p>
+<h3 id="for-循环语句"><a href="#for-循环语句" class="headerlink" title="for 循环语句"></a>for 循环语句</h3><pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> <span class="token function">adder_rpl</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> ci<span class="token punctuation">,</span> co<span class="token punctuation">,</span> s<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">parameter</span> n <span class="token operator">=</span> <span class="token number">4</span><span class="token punctuation">;</span>
+    <span class="token keyword">input</span> <span class="token keyword">wire</span> <span class="token punctuation">[</span>n<span class="token operator">-</span><span class="token number">1</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> a<span class="token punctuation">,</span> b<span class="token punctuation">;</span>
+    <span class="token keyword">input</span> <span class="token keyword">wire</span> ci<span class="token punctuation">;</span>
+    <span class="token keyword">output</span> <span class="token keyword">wire</span> co<span class="token punctuation">;</span>
+    <span class="token keyword">output</span> <span class="token keyword">reg</span> <span class="token punctuation">[</span>n<span class="token operator">-</span><span class="token number">1</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> s<span class="token punctuation">;</span>
+    <span class="token keyword">reg</span> <span class="token punctuation">[</span>n<span class="token operator">-</span><span class="token number">1</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> g<span class="token punctuation">,</span> p<span class="token punctuation">;</span>
+    <span class="token keyword">reg</span> <span class="token punctuation">[</span>n <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span>  c<span class="token punctuation">;</span>
+    <span class="token keyword">integer</span>  I<span class="token punctuation">;</span>
+    <span class="token keyword">assign</span> co <span class="token operator">=</span> c<span class="token punctuation">[</span>n<span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token important">always @</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token keyword">begin</span>
+        c<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> ci<span class="token punctuation">;</span>
+        <span class="token function">for</span><span class="token punctuation">(</span>i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> n<span class="token punctuation">;</span> i <span class="token operator">=</span> i<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token keyword">begin</span>
+            g<span class="token punctuation">[</span>i<span class="token punctuation">]</span>     <span class="token operator">=</span> a<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">&amp;</span> b<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+            p<span class="token punctuation">[</span>i<span class="token punctuation">]</span>     <span class="token operator">=</span> a<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">^</span> b<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+            c<span class="token punctuation">[</span>i<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> g<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">|</span> <span class="token punctuation">(</span>p<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">&amp;</span> c<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            s<span class="token punctuation">[</span>i<span class="token punctuation">]</span>     <span class="token operator">=</span> p<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">^</span> c<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+         <span class="token keyword">end</span>
+      <span class="token keyword">end</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211105111023472.png" alt=""></p>
+<h4 id="非结构化的for循环"><a href="#非结构化的for循环" class="headerlink" title="非结构化的for循环"></a>非结构化的for循环</h4><p>综合工具处理循环的方法是将循环内的结构重复。在循环中包含不变化的表达式会使综合工具花很多时间优化这些冗余逻辑。</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211105111103182.png" alt=""></p>
+<h3 id="同步块描述风格"><a href="#同步块描述风格" class="headerlink" title="同步块描述风格"></a>同步块描述风格</h3><pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> DFF <span class="token punctuation">(</span>q<span class="token punctuation">,</span> qb<span class="token punctuation">,</span> d<span class="token punctuation">,</span> clk<span class="token punctuation">,</span> clr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">output</span> q<span class="token punctuation">,</span> qb<span class="token punctuation">;</span>
+    <span class="token keyword">input</span> d<span class="token punctuation">,</span>  <span class="token comment" spellcheck="true">// input data</span>
+              clk<span class="token punctuation">,</span> <span class="token comment" spellcheck="true">/*input clock */</span> clr<span class="token punctuation">;</span>
+    <span class="token keyword">reg</span> q<span class="token punctuation">;</span>
+    <span class="token keyword">wire</span> qb<span class="token punctuation">,</span> d<span class="token punctuation">,</span> clk<span class="token punctuation">,</span> clr<span class="token punctuation">;</span>
+
+    <span class="token keyword">assign</span> qb <span class="token operator">=</span> <span class="token operator">!</span>q<span class="token punctuation">;</span>
+
+    <span class="token important">always @</span><span class="token punctuation">(</span><span class="token keyword">posedge</span> clk）<span class="token punctuation">;</span>
+    <span class="token keyword">begin</span>
+        过程赋值语句；
+        高级描述语句
+            <span class="token keyword">if</span>语句；
+            <span class="token keyword">case</span>语句；
+            循环语句；
+    <span class="token keyword">end</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li>在一个控制信号的单个边沿上进入的过程块产生同步逻辑。这种过程块称为<strong>同步块</strong>。</li>
+</ul>
+<p>​        always @( posedge clk)</p>
+<p>​              q &lt;= d;</p>
+<ul>
+<li><strong>同步块会产生D触发器</strong>：并不是所有在同步块中赋值的信号都会产生D触发器，这依赖于描述风格</li>
+<li>同步块RTL代码中使用<strong>非阻塞赋值</strong></li>
+<li>组合块的RTL代码中使用<strong>阻塞赋值</strong></li>
+</ul>
+<h4 id="阻塞、非阻塞语句区别"><a href="#阻塞、非阻塞语句区别" class="headerlink" title="阻塞、非阻塞语句区别"></a>阻塞、非阻塞语句区别</h4><p>非阻塞赋值语句并行执行，因此临时变量不可避免地在一个周期中被赋值，在下一个周期中被采样。</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211105111346474.png" alt=""></p>
+<h4 id="非阻塞过程赋值区别"><a href="#非阻塞过程赋值区别" class="headerlink" title="非阻塞过程赋值区别"></a>非阻塞过程赋值区别</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211105111451668.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211105111711563.png" alt=""></p>
+<h4 id="阻塞与非阻塞语句：不要混合使用"><a href="#阻塞与非阻塞语句：不要混合使用" class="headerlink" title="阻塞与非阻塞语句：不要混合使用"></a>阻塞与非阻塞语句：不要混合使用</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211105112127002.png" alt=""></p>
+<h4 id="同步块中的条件语句-带使能的寄存器"><a href="#同步块中的条件语句-带使能的寄存器" class="headerlink" title="同步块中的条件语句-带使能的寄存器"></a>同步块中的条件语句-带使能的寄存器</h4><ul>
+<li><p><strong>条件不完全</strong>的条件语句产生带<strong>使能端的D触发器</strong>；<strong>条件完全</strong>的条件语句在<strong>D触发器前产生选择逻辑</strong>。</p>
+</li>
+<li><p>在寄存器的描述中，<strong>敏感列表是不完全</strong>的。综合时会产生warning</p>
+</li>
+</ul>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> dffn <span class="token punctuation">(</span>
+    <span class="token keyword">input</span>   <span class="token keyword">wire</span>  d   <span class="token punctuation">,</span>  
+               clk <span class="token punctuation">,</span> 
+               en  ，
+    <span class="token keyword">output</span> <span class="token keyword">reg</span>    q<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token important">always @</span><span class="token punctuation">(</span> <span class="token keyword">posedge</span> clk<span class="token punctuation">)</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>en<span class="token punctuation">)</span>
+            q <span class="token operator">&lt;=</span> d<span class="token punctuation">;</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211105112326763.png" alt=""></p>
+<h3 id="复位"><a href="#复位" class="headerlink" title="复位"></a>复位</h3><p><strong>复位是可综合编码风格的重要环节。状态机中一般都有复位。</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211105112828606.png" alt=""></p>
+<ul>
+<li><p>同步复位描述：在同步块内，当复位信号有效时，进行复位操作；当复位信号无效时，执行该块的同步行为。如果将复位信号作为条件语句的条件，且在第一个分支中进行复位，综合工具可以更容易的识别复位信号。</p>
+</li>
+<li><p>异步复位：在同步块的敏感表中包含复位信号的激活边沿。在块内，复位描述方式与同步方式相同。</p>
+</li>
+</ul>
+<pre><code>`timescale 1ns / 1ns
+module reset_tb;
+    reg clk, d, rst ;
+    wire q, qa;
+    sync u0 ( clk, d, rst , q );
+    async u1 ( clk, d, rst , qa );
+    always #5 clk = !clk;
+    initial begin
+        clk = 0; d = 1;
+        rst = 1;
+    @(posedge clk);
+    @(negedge clk);
+        rst = 0;
+    @(posedge clk);
+    @(negedge clk);
+        rst = 1;
+        d = 1;
+    @(negedge clk);
+        rst = 0;
+        d = 1; 
+    @(negedge clk);
+        #10 $finish;
+end
+endmodule</code></pre><p><img src="/images/loading.gif" data-original="../images/basic/image-20211105220557193.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211105220644825.png" alt=""></p>
+<h4 id="不好的复位描述方式"><a href="#不好的复位描述方式" class="headerlink" title="不好的复位描述方式"></a>不好的复位描述方式</h4><p>下面的异步复位描述（异步复位和同步块分开）是一种很不好的描述风格，并且有的综合工具不支持。在仿真中，如果r和ck在同一时刻改变，则结果不可确定。</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211105112928916.png" alt=""></p>
+<h2 id="综合工具不能胜任的工作"><a href="#综合工具不能胜任的工作" class="headerlink" title="综合工具不能胜任的工作"></a>综合工具不能胜任的工作</h2><ul>
+<li>时钟树</li>
+<li>复杂的时钟方案</li>
+<li>组合逻辑反馈循环和脉冲发生器</li>
+<li>存储器，IO</li>
+<li>专用宏单元</li>
+<li>做的和人工做的一样好 </li>
+</ul>
+<p>综合工具善于优化组合逻辑。但设计中有很大一部分不是组合逻辑。</p>
+<ul>
+<li>例如，时钟树。时钟树是全局的、芯片范围的问题。在没有版图布局信息的情况下，要给出较优的结果，综合工具对块的大小有一定的限制。</li>
+<li>综合工具不能很好地处理复杂时钟。通常，只允许要综合的块含有一个时钟。但设计中经常使用两相时钟或在双沿时钟。</li>
+<li>综合工具不易实现脉冲产生逻辑，如单个脉冲，或结果依赖于反馈路径延迟的组合反馈逻辑。对这种情况，插入延迟元件使一个信号推迟到达的效果并不好。</li>
+<li>不能用综合产生大块存储器，因为综合工具会用flip-flop实现。</li>
+<li>不是所有的综合工具都能很好地从工艺库里挑选择大的单元或宏单元，这需要用户人工实例化。一些宏单元，例如大的结构规则的数据通路元件，最好使用生产商提供的硅编译器产生。</li>
+<li>综合工具不保证产生最小结果。通常综合结果不如人工结果，只要你有足够的时间。</li>
+</ul>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -3283,7 +3729,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">2019.3k</span>&nbsp;字
+                class="white-color">2025.3k</span>&nbsp;字
             
             
             
