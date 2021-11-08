@@ -459,21 +459,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-11-06
+                    2021-11-08
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    8.8k
+                    10.7k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    36 分
+                    44 分
                 </div>
                 
 
@@ -1285,6 +1285,154 @@ doc<span class="token punctuation">.</span>add_picture<span class="token punctua
 doc<span class="token punctuation">.</span>add_paragraph<span class="token punctuation">(</span><span class="token string">'这是第二个段落'</span><span class="token punctuation">)</span>
 doc<span class="token punctuation">.</span>save<span class="token punctuation">(</span><span class="token string">'图片.docx'</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p><img src="/images/loading.gif" data-original="../images/language/image-20211106181406775.png" alt=""></p>
+<h1 id="Scrapy-爬虫框架"><a href="#Scrapy-爬虫框架" class="headerlink" title="Scrapy - 爬虫框架"></a>Scrapy - 爬虫框架</h1><p><a href="https://www.osgeo.cn/scrapy/" target="_blank" rel="noopener">Scrapy API</a></p>
+<h2 id="1-安装"><a href="#1-安装" class="headerlink" title="1. 安装"></a>1. 安装</h2><p>使用pip对Scrapy进行安装，代码如下：</p>
+<pre><code>pip install scrapy</code></pre><h2 id="2-创建项目"><a href="#2-创建项目" class="headerlink" title="2. 创建项目"></a>2. 创建项目</h2><p>安装好Scrapy框架之后，我们需要通过终端，来创建一个Scrapy项目，命令如下：</p>
+<pre><code>scrapy startproject weibo</code></pre><p>创建好后的项目结构，如下图：</p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211108115848430.png" alt=""></p>
+<blockquote>
+<p>spiders是存放爬虫程序的文件夹，将写好的爬虫程序放到该文件夹中。items用来定义数据，类似于字典的功能。settings是设置文件，包含爬虫项目的设置信息。pipelines用来对items中的数据进行进一步处理，如：清洗、存储等。</p>
+</blockquote>
+<h2 id="3-数据采集"><a href="#3-数据采集" class="headerlink" title="3. 数据采集"></a>3. 数据采集</h2><p>经过上面的简单介绍，我们现在对Scrapy框架有了简单的了解，下面我们开始写数据采集部分的代码。</p>
+<h3 id="定义数据"><a href="#定义数据" class="headerlink" title="定义数据"></a>定义数据</h3><p>首先，我们对数据存储的网页进行观察，方便我们对获取数据进行定义</p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211108115954219.png" alt=""></p>
+<p>通过对网页中数据存储的形式进行观察后，items.py中对数据的定义方式为：</p>
+<pre class="line-numbers language-python"><code class="language-python">data <span class="token operator">=</span> scrapy<span class="token punctuation">.</span>Field<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h3 id="编辑爬虫"><a href="#编辑爬虫" class="headerlink" title="编辑爬虫"></a>编辑爬虫</h3><p>接下来我们在spiders文件夹里面创建一个weibo.py爬虫程序用以书写请求的爬虫代码</p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211108120034735.png" alt=""></p>
+<p>代码如下：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> scrapy
+<span class="token keyword">class</span> <span class="token class-name">WeiboSpider</span><span class="token punctuation">(</span>scrapy<span class="token punctuation">.</span>Spider<span class="token punctuation">)</span><span class="token punctuation">:</span>
+   name <span class="token operator">=</span> <span class="token string">'weibo'</span><span class="token comment" spellcheck="true">#用于启动微博程序</span>
+   allowed_domains <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">'m.weibo.cn'</span><span class="token punctuation">]</span>  <span class="token comment" spellcheck="true">#定义爬虫爬取网站的域名</span>
+   start_urls <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">'https://m.weibo.cn/comments/hotflow?id=4700480024348767&amp;mid=4700480024348767&amp;max_id_type=0'</span><span class="token punctuation">]</span>  <span class="token comment" spellcheck="true">#定义起始网页的网址</span>
+  <span class="token keyword">for</span> i <span class="token keyword">in</span> res<span class="token punctuation">[</span><span class="token string">'data'</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">'data'</span><span class="token punctuation">]</span><span class="token punctuation">:</span>
+     weibo_item <span class="token operator">=</span> WeiboItem<span class="token punctuation">(</span><span class="token punctuation">)</span>
+     weibo_item<span class="token punctuation">[</span><span class="token string">'data'</span><span class="token punctuation">]</span> <span class="token operator">=</span> re<span class="token punctuation">.</span>sub<span class="token punctuation">(</span>r<span class="token string">'&lt;[^>]*>'</span><span class="token punctuation">,</span> <span class="token string">''</span><span class="token punctuation">,</span> i<span class="token punctuation">[</span><span class="token string">'text'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+     <span class="token comment" spellcheck="true"># start_url = ['https://m.weibo.cn/comments/hotflow?id=4700480024348767&amp;mid=4700480024348767&amp;'+str(max_id)+'&amp;max_id_type=0']</span>
+     <span class="token keyword">yield</span> weibo_item  <span class="token comment" spellcheck="true">#将数据回传给items</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="遍历爬取"><a href="#遍历爬取" class="headerlink" title="遍历爬取"></a>遍历爬取</h3><p>构造代码：</p>
+<pre class="line-numbers language-python"><code class="language-python">max_id_type <span class="token operator">=</span> res<span class="token punctuation">[</span><span class="token string">'data'</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">'max_id_type'</span><span class="token punctuation">]</span>
+<span class="token keyword">if</span> int<span class="token punctuation">(</span>max_id_type<span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">:</span>
+   new_url <span class="token operator">=</span> <span class="token string">'https://m.weibo.cn/comments/hotflow?id=4700480024348767&amp;mid=4700480024348767&amp;max_id='</span> <span class="token operator">+</span> str<span class="token punctuation">(</span>
+       max_id<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">'&amp;max_id_type=1'</span>
+<span class="token keyword">else</span><span class="token punctuation">:</span>
+   new_url <span class="token operator">=</span> <span class="token string">'https://m.weibo.cn/comments/hotflow?id=4700480024348767&amp;mid=4700480024348767&amp;max_id='</span> <span class="token operator">+</span> str<span class="token punctuation">(</span>
+       max_id<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">'&amp;max_id_type=0'</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="4-数据存储"><a href="#4-数据存储" class="headerlink" title="4. 数据存储"></a>4. 数据存储</h2><p>光爬取下来数据是不行的，我们还需要对数据进行存储，这里采用的是csv文件，来对评论数据进行存储，代码如下：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">class</span> <span class="token class-name">CsvItemExporterPipeline</span><span class="token punctuation">(</span>object<span class="token punctuation">)</span><span class="token punctuation">:</span>
+   <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+       <span class="token comment" spellcheck="true"># 创建接收文件,初始化exporter属性</span>
+       self<span class="token punctuation">.</span>file <span class="token operator">=</span> open<span class="token punctuation">(</span><span class="token string">'text.csv'</span><span class="token punctuation">,</span><span class="token string">'ab'</span><span class="token punctuation">)</span>
+       self<span class="token punctuation">.</span>exporter <span class="token operator">=</span> CsvItemExporter<span class="token punctuation">(</span>self<span class="token punctuation">.</span>file<span class="token punctuation">,</span>fields_to_export<span class="token operator">=</span><span class="token punctuation">[</span><span class="token string">'data'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+       self<span class="token punctuation">.</span>exporter<span class="token punctuation">.</span>start_exporting<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="5-程序配置"><a href="#5-程序配置" class="headerlink" title="5. 程序配置"></a>5. 程序配置</h2><p>光写上面的代码是无法爬取到评论的，因为我们还没有对整个程序进行有效的配置，下面我们就在settings.py里面进行配置。</p>
+<h3 id="不遵循robots协议"><a href="#不遵循robots协议" class="headerlink" title="不遵循robots协议"></a>不遵循robots协议</h3><p>需要对robts协议的遵守进行修改，如果我们遵循网页的robots协议的话，那无法进行爬取，代码如下：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># Obey robots.txt rules</span>
+ROBOTSTXT_OBEY <span class="token operator">=</span> <span class="token boolean">False</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h3 id="使用自定义cookie"><a href="#使用自定义cookie" class="headerlink" title="使用自定义cookie"></a>使用自定义cookie</h3><p>我们知道，想要爬取微博评论，需要带上自己的cookie用以信息校验，因为我们的cookie是在headers中包裹着的，所以我们需要将COOKIES_ENABLED改为False，代码如下：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># Disable cookies (enabled by default)</span>
+COOKIES_ENABLED <span class="token operator">=</span> <span class="token boolean">False</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h3 id="打开管道"><a href="#打开管道" class="headerlink" title="打开管道"></a>打开管道</h3><p>想要进行数据存储，还需要在配置中，打开通道，用以数据传输，代码如下：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># Configure item pipelines</span>
+<span class="token comment" spellcheck="true"># See https://docs.scrapy.org/en/latest/topics/item-pipeline.html</span>
+ITEM_PIPELINES <span class="token operator">=</span> <span class="token punctuation">{</span>
+  <span class="token string">'weibo.pipelines.CsvItemExporterPipeline'</span><span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
+  <span class="token string">'weibo.pipelines.WeiboPipeline'</span><span class="token punctuation">:</span> <span class="token number">300</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="启动程序"><a href="#启动程序" class="headerlink" title="启动程序"></a>启动程序</h3><p>我们在spiders同级的的目录下创建一个wb_main.py文件，便于我们在编辑器中启动程序，代码如下：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> scrapy <span class="token keyword">import</span> cmdline
+<span class="token comment" spellcheck="true">#导入cmdline模块,可以实现控制终端命令行。</span>
+cmdline<span class="token punctuation">.</span>execute<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'scrapy'</span><span class="token punctuation">,</span><span class="token string">'crawl'</span><span class="token punctuation">,</span><span class="token string">'weibo'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">#用execute（）方法，输入运行scrapy的命令。</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="Shodan-互联网上最可怕的搜索引擎"><a href="#Shodan-互联网上最可怕的搜索引擎" class="headerlink" title="Shodan - 互联网上最可怕的搜索引擎"></a>Shodan - 互联网上最可怕的搜索引擎</h1><p><a href="https://developer.shodan.io/api" target="_blank" rel="noopener">Shodan API</a></p>
+<p>Shodan 在百度百科里被给出了这么一句话介绍：Shodan是互联网上最可怕的搜索引擎。</p>
+<p>为什么呢？与谷歌、百度等搜索引擎爬取网页信息不同，Shodan爬取的是互联网上所有设备的IP地址及其端口号。</p>
+<p>而随着智能家电的普及，家家户户都有许多电器连接到互联网，这些设备存在被入侵的可能性，这是十分危险的。打开 shodan.io，在搜索框输入 <strong><code>Hikvision-Webs</code></strong> :</p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211108121013282.png" alt=""></p>
+<p>你会搜素到这个品牌的摄像头设备遍及全球的IP及其暴露的端口号：</p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211108121045875.png" alt=""></p>
+<p>可以看到，这台机器暴露了17、80、111、995、3128、5000、6000、20547端口，黑客可以根据这些端口进行针对性的攻击。</p>
+<p>不过也不需要过于担心，如果你的服务不存在漏洞，一般是无法攻入的。但有些端口号会暴露摄像头的web管理端，如下：</p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211108121110619.png" alt=""></p>
+<p>那么黑客可能可以用暴力破解的方式，强行进入摄像头后台管理端，获取到实时的录像。</p>
+<p>谨记这会侵犯别人的隐私权，是违法的行为，我们是遵纪守法的好公民所以知道它的原理和危害就足够。我们的目的是运用技术保护好个人隐私，如非必要不将摄像头接入互联网，一定要接入的话，不能使用容易被破解的弱口令。</p>
+<p>Shodan Web端非常好用，但如果我们有从 Python 搜索的需求怎么办？</p>
+<p>没关系，Shodan 官方也提供了 Python SDK 包，下面就来讲讲这个 SDK 包的使用。</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p><strong>请选择以下任一种方式输入命令安装依赖</strong>：</p>
+<ol>
+<li>Windows 环境 打开 Cmd (开始-运行-CMD)。</li>
+<li>MacOS 环境 打开 Terminal (command+空格输入Terminal)。</li>
+<li>如果你用的是 VSCode编辑器 或 Pycharm，可以直接使用界面下方的Terminal.</li>
+</ol>
+<pre><code>pip install shodan</code></pre><h2 id="注册账号获取API"><a href="#注册账号获取API" class="headerlink" title="注册账号获取API"></a>注册账号获取API</h2><p>使用 Shodan 必须注册账号，注册网址：<a href="https://account.shodan.io/register" target="_blank" rel="noopener">https://account.shodan.io/register</a></p>
+<p>输入完相关信息，点击 CREATE 会跳转到个人账户页：</p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211108121250133.png" alt=""></p>
+<p>此时 API Key 会显示你的API秘钥，请记录这个秘钥，后续会使用到这个秘钥去请求接口。</p>
+<h2 id="Shodan-基本调用"><a href="#Shodan-基本调用" class="headerlink" title="Shodan 基本调用"></a>Shodan 基本调用</h2><p>Shodan 本质上就是一个搜索引擎，你只需要输入搜索的关键词：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> shodan <span class="token keyword">import</span> Shodan
+
+api <span class="token operator">=</span> Shodan<span class="token punctuation">(</span><span class="token string">'你的API KEY'</span><span class="token punctuation">)</span>
+
+<span class="token keyword">def</span> <span class="token function">search_shodan</span><span class="token punctuation">(</span>keyword<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment" spellcheck="true"># 调用搜索接口</span>
+    result <span class="token operator">=</span> api<span class="token punctuation">.</span>search<span class="token punctuation">(</span>keyword<span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true"># 显示所有IP</span>
+    <span class="token keyword">for</span> service <span class="token keyword">in</span> result<span class="token punctuation">[</span><span class="token string">'matches'</span><span class="token punctuation">]</span><span class="token punctuation">:</span>
+            <span class="token keyword">print</span><span class="token punctuation">(</span>service<span class="token punctuation">[</span><span class="token string">'ip_str'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+search_shodan<span class="token punctuation">(</span><span class="token string">"Hikvision-Webs"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>结果如下：</p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211108121351150.png" alt=""></p>
+<p>可惜的是，普通API只能像这样搜索关键字，无法使用过滤条件如： <strong><code>Hikvision-Webs country:"US"</code></strong> 搜索美国境内的所有 Hikvision 网站管理端。</p>
+<p>如果你想要使用过滤条件，Shodan 需要你升级API权限：</p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211108121418728.png" alt=""></p>
+<h2 id="Shodan-高级使用"><a href="#Shodan-高级使用" class="headerlink" title="Shodan 高级使用"></a>Shodan 高级使用</h2><p>Shodan 的用处当然不仅仅是在黑客攻防中，它还能用于统计。如果你想要了解哪些国家的使用这款摄像头的数量最多，可以使用 Facets 特性。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> shodan <span class="token keyword">import</span> Shodan
+
+api <span class="token operator">=</span> Shodan<span class="token punctuation">(</span><span class="token string">'你的API KEY'</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">try_facets</span><span class="token punctuation">(</span>query<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    FACETS <span class="token operator">=</span> <span class="token punctuation">[</span>
+        <span class="token string">'org'</span><span class="token punctuation">,</span>
+        <span class="token string">'domain'</span><span class="token punctuation">,</span>
+        <span class="token string">'port'</span><span class="token punctuation">,</span>
+        <span class="token string">'asn'</span><span class="token punctuation">,</span>
+        <span class="token punctuation">(</span><span class="token string">'country'</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token punctuation">]</span>
+
+    FACET_TITLES <span class="token operator">=</span> <span class="token punctuation">{</span>
+        <span class="token string">'org'</span><span class="token punctuation">:</span> <span class="token string">'Top 5 Organizations'</span><span class="token punctuation">,</span>
+        <span class="token string">'domain'</span><span class="token punctuation">:</span> <span class="token string">'Top 5 Domains'</span><span class="token punctuation">,</span>
+        <span class="token string">'port'</span><span class="token punctuation">:</span> <span class="token string">'Top 5 Ports'</span><span class="token punctuation">,</span>
+        <span class="token string">'asn'</span><span class="token punctuation">:</span> <span class="token string">'Top 5 Autonomous Systems'</span><span class="token punctuation">,</span>
+        <span class="token string">'country'</span><span class="token punctuation">:</span> <span class="token string">'Top 3 Countries'</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">try</span><span class="token punctuation">:</span>
+        <span class="token comment" spellcheck="true"># 使用 count() 方法可以不需要升级API，且比 search 方法更快。</span>
+        result <span class="token operator">=</span> api<span class="token punctuation">.</span>count<span class="token punctuation">(</span>query<span class="token punctuation">,</span> facets<span class="token operator">=</span>FACETS<span class="token punctuation">)</span>
+
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'Shodan Summary Information'</span><span class="token punctuation">)</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'Query: %s'</span> <span class="token operator">%</span> query<span class="token punctuation">)</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'Total Results: %s\n'</span> <span class="token operator">%</span> result<span class="token punctuation">[</span><span class="token string">'total'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+        <span class="token comment" spellcheck="true"># 显示每个要素的摘要</span>
+        <span class="token keyword">for</span> facet <span class="token keyword">in</span> result<span class="token punctuation">[</span><span class="token string">'facets'</span><span class="token punctuation">]</span><span class="token punctuation">:</span>
+            <span class="token keyword">print</span><span class="token punctuation">(</span>FACET_TITLES<span class="token punctuation">[</span>facet<span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+            <span class="token keyword">for</span> term <span class="token keyword">in</span> result<span class="token punctuation">[</span><span class="token string">'facets'</span><span class="token punctuation">]</span><span class="token punctuation">[</span>facet<span class="token punctuation">]</span><span class="token punctuation">:</span>
+                <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'%s: %s'</span> <span class="token operator">%</span> <span class="token punctuation">(</span>term<span class="token punctuation">[</span><span class="token string">'value'</span><span class="token punctuation">]</span><span class="token punctuation">,</span> term<span class="token punctuation">[</span><span class="token string">'count'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+    <span class="token keyword">except</span> Exception <span class="token keyword">as</span> e<span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'Error: %s'</span> <span class="token operator">%</span> e<span class="token punctuation">)</span>
+
+try_facets<span class="token punctuation">(</span><span class="token string">"Hikvision-Webs"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>得到结果如下：</p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211108121508542.png" alt=""></p>
+<p>从 Top 3 Countries 中可以看到，这款摄像头使用数量排名前三的国家分别是：美国、日本和德国。</p>
+<p>没想到吧，Shodan 居然还能用于产品分析。同样地原理，如果你把关键词改为 <strong><code>apache</code></strong> ，你可以知道目前哪些国家使用apache服务器数量最多，最普遍被使用的版本号是什么。</p>
+<p>为了避免受到不必要的攻击，请大家及时检查所有联网设备的管理端的密码，如果有使用默认密码及弱口令，立即进行密码的更改，以保证服务的安全。</p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -1798,7 +1946,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">2043k</span>&nbsp;字
+                class="white-color">2049k</span>&nbsp;字
             
             
             
