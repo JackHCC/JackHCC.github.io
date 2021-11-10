@@ -459,21 +459,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-11-01
+                    2021-11-10
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    5.8k
+                    7.2k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    29 分
+                    34 分
                 </div>
                 
 
@@ -1253,6 +1253,31 @@ config <span class="token operator">=</span> Config<span class="token punctuatio
 <ul>
 <li><a href="http://nlp.seas.harvard.edu/2018/04/03/attention.html" target="_blank" rel="noopener">http://nlp.seas.harvard.edu/2018/04/03/attention.html</a></li>
 </ul>
+<h1 id="Transformer-Q-amp-A"><a href="#Transformer-Q-amp-A" class="headerlink" title="Transformer Q&amp;A"></a>Transformer Q&amp;A</h1><h3 id="Transformer如何解决梯度消失问题？"><a href="#Transformer如何解决梯度消失问题？" class="headerlink" title="Transformer如何解决梯度消失问题？"></a>Transformer如何解决梯度消失问题？</h3><p>残差</p>
+<h3 id="为何Transformer中使用LN而不用BN"><a href="#为何Transformer中使用LN而不用BN" class="headerlink" title="为何Transformer中使用LN而不用BN?"></a>为何Transformer中使用LN而不用BN?</h3><p>BatchNorm是对一个batch-size样本内的每个特征做归一化，LayerNorm是对每个样本的所有特征做归一化。</p>
+<p>形象点来说，假设有一个二维矩阵。行为batch-size，列为样本特征。那么BN就是竖着归一化，LN就是横着归一化。</p>
+<p>它们的出发点都是让该层参数稳定下来，避免梯度消失或者梯度爆炸，方便后续的学习。但是也有侧重点。</p>
+<p>一般来说，如果你的特征依赖于不同样本间的统计参数，那BN更有效。因为它抹杀了不同特征之间的大小关系，但是保留了不同样本间的大小关系。（CV领域）</p>
+<p>而在NLP领域，LN就更加合适。因为它抹杀了不同样本间的大小关系，但是保留了一个样本内不同特征之间的大小关系。对于NLP或者序列任务来说，一条样本的不同特征，其实就是时序上字符取值的变化，样本内的特征关系是非常紧密的。</p>
+<h3 id="LN的作用是什么？"><a href="#LN的作用是什么？" class="headerlink" title="LN的作用是什么？"></a>LN的作用是什么？</h3><p>允许使用更大的学习率，加速训练。有一定的抗过拟合作用，使训练过程更加平稳</p>
+<h3 id="多头自注意力层中的“多头”如何理解，有什么作用？"><a href="#多头自注意力层中的“多头”如何理解，有什么作用？" class="headerlink" title="多头自注意力层中的“多头”如何理解，有什么作用？"></a>多头自注意力层中的“多头”如何理解，有什么作用？</h3><p>有点类似于CNN的多个卷积核。通过三个线性层的映射，不同头中的Q、K、V是不一样的，而这三个线性层的权重是先初始化后续通过学习得到的。不同的权重可以捕捉到序列中不同的相关性。</p>
+<h3 id="Transformer是自回归模型还是自编码模型？"><a href="#Transformer是自回归模型还是自编码模型？" class="headerlink" title="Transformer是自回归模型还是自编码模型？"></a>Transformer是自回归模型还是自编码模型？</h3><p>自回归模型。</p>
+<p>所谓自回归，即使用当前自己预测的字符再去预测接下来的信息。Transformer在预测阶段（机器翻译任务）会先预测第一个字，然后在第一个预测的字的基础上接下来再去预测后面的字，是典型的自回归模型。Bert中的Mask任务是典型的自编码模型，即根据上下文字符来预测当前信息。</p>
+<h3 id="原论文中Q、K矩阵相乘为什么最后要除以√d-k"><a href="#原论文中Q、K矩阵相乘为什么最后要除以√d-k" class="headerlink" title="原论文中Q、K矩阵相乘为什么最后要除以√d_k"></a>原论文中Q、K矩阵相乘为什么最后要除以√d_k</h3><p>当√d_k特别小的时候，其实除不除无所谓。无论编码器还是解码器Q、K矩阵其实本质是一个相同的矩阵。Q、K相乘其实相等于Q乘以Q的转置，这样造成结果会很大或者很小。小了还好说，大的话会使得后续做softmax继续被放大造成梯度消失，不利于梯度反向传播。</p>
+<h3 id="原论中编码器与解码器的Embedding层的权重为什么要乘以√d-model"><a href="#原论中编码器与解码器的Embedding层的权重为什么要乘以√d-model" class="headerlink" title="原论中编码器与解码器的Embedding层的权重为什么要乘以√d_model"></a>原论中编码器与解码器的Embedding层的权重为什么要乘以√d_model</h3><p>为了让embedding层的权重值不至于过小，乘以√d_model 后与位置编码的值差不多，可以保护原有向量空间不被破坏。</p>
+<h3 id="Transformer在训练与验证的时候有什么不同"><a href="#Transformer在训练与验证的时候有什么不同" class="headerlink" title="Transformer在训练与验证的时候有什么不同"></a>Transformer在训练与验证的时候有什么不同</h3><p>Transformer在训练的时候是并行的，在验证的时候是串行的。这个问题与Transformer是否是自回归模型考察的是同一个知识点。</p>
+<h3 id="Transformer模型的计算复杂度是多少？"><a href="#Transformer模型的计算复杂度是多少？" class="headerlink" title="Transformer模型的计算复杂度是多少？"></a>Transformer模型的计算复杂度是多少？</h3><p>n是序列长度，d是embedding的长度。Transformer中最大的计算量就是多头自注意力层，这里的计算量主要就是QK相乘再乘上V，即两次矩阵相乘。QK相乘是矩阵【n d】乘以【d n】，这个复杂度就是d*n^2</p>
+<h3 id="Transformer中三个多头自注意力层分别有什么意义与作用？"><a href="#Transformer中三个多头自注意力层分别有什么意义与作用？" class="headerlink" title="Transformer中三个多头自注意力层分别有什么意义与作用？"></a>Transformer中三个多头自注意力层分别有什么意义与作用？</h3><p>Transformer中有三个多头自注意力层，编码器中有一个，解码器中有两个。</p>
+<p>编码器中的多头自注意力层的作用是将原始文本序列信息做整合，转换后的文本序列中每个字符都与整个文本序列的信息相关（这也是Transformer中最创新的思想，尽管根据最新的综述研究表明，Transformer的效果非常好其实多头自注意力层并不占据绝大贡献）。示意图如下：</p>
+<img src="/images/loading.gif" data-original="../images/language/image-20211110193809154.png" style="zoom:67%;">
+
+<p>解码器的第一个多头自注意力层比较特殊，原论文给其起名叫Masked Multi-Head-Attention。其一方面也有上图介绍的作用，即对输入文本做整合（对与翻译任务来说，编码器的输入是翻译前的文本，解码器的输入是翻译后的文本）。另一个任务是做掩码，防止信息泄露。拓展解释一下就是在做信息整合的时候，第一个字符其实不应该看到后面的字符，第二个字符也只能看到第一个、第二个字符的信息，以此类推。</p>
+<p>解码器的第二个多头自注意力层与编码器的第一个多头自注意力层功能是完全一样的。不过输入需要额外强调下，我们都知道多头自注意力层是通过计算QKV三个矩阵最后完成信息整合的。在这里，Q是解码器整合后的信息，KV两个矩阵是编码器整合后的信息，是两个完全相同的矩阵。QKV矩阵相乘后，翻译前与翻译后的文本也做了充分的交互整合。至此最终得到的向量矩阵用来做后续下游工作。</p>
+<h3 id="Transformer中的mask机制有什么作用"><a href="#Transformer中的mask机制有什么作用" class="headerlink" title="Transformer中的mask机制有什么作用"></a>Transformer中的mask机制有什么作用</h3><p>有两个作用。</p>
+<ol>
+<li>对不等长的序列做padding补齐</li>
+<li>掩码防止信息泄露</li>
+</ol>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -1766,7 +1791,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">2182.8k</span>&nbsp;字
+                class="white-color">2308.5k</span>&nbsp;字
             
             
             
@@ -2004,7 +2029,7 @@ $(function () {
     
     <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/instantpage/instantpage.js" type="module"></script>
     
-<script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script>
+
         <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
         <script>
         $('a').each(function() {
@@ -2023,7 +2048,7 @@ $(function () {
             }
           }
         });
-        </script></body>
+        </script><script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script></body>
 
 </html>
 

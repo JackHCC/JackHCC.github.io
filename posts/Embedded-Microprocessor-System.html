@@ -459,21 +459,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-11-04
+                    2021-11-10
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    9.1k
+                    8.4k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    43 分
+                    38 分
                 </div>
                 
 
@@ -2013,14 +2013,14 @@ Point_z     FIELD   4
 origin      SPACE   12</code></pre><h3 id="内存访问"><a href="#内存访问" class="headerlink" title="内存访问"></a><strong>内存访问</strong></h3><pre class="line-numbers language-assembly"><code class="language-assembly">//c/c++    
     Tmpimg[i][j]; Inimage[i*4+2][j*4+2];
 
-//i-&gt;r5; j-&gt;r6; Tmpimg-&gt; r8; Inimage-&gt;r9;
+//i->r5; j->r6; Tmpimg-> r8; Inimage->r9;
     ldr    r8,    =Tmping
     ldr    r9,    =Inimage
-//Tmpimg[i][j]-&gt;r10;
+//Tmpimg[i][j]->r10;
     mov    r0,    #Imagewidth
     mul    r10, r5, r0   ;i*Imagewidth
     add    r10, r10, r6   ;i*Imagewidth+j
-//Inimage[i*4+2][j*4+2]-&gt; r11
+//Inimage[i*4+2][j*4+2]-> r11
     mov    r1, r5, asl #2 ; i*4
     add    r1, r1, #2    ;i*4+2
     mul    r11, r1, r0    ;(i*4+2)*Imagewidth
@@ -2730,10 +2730,10 @@ Mul_64 to 64
     ;signed $ch, $cl +=unsigned $a *signed $b
     SMULL        $cl, $ch, $a, $b
     ;c= (signed)a *(signed)b
-    TST        $a, #1&lt;&lt;31
-    ;if(signed)a&lt;0
+    TST        $a, #1<<31
+    ;if(signed)a<0
     ADDNE          $ch, $ch, $b
-    ;c+=(b&lt;&lt;32)
+    ;c+=(b<<32)
     MEND    <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <pre class="line-numbers language-assembly"><code class="language-assembly">    smul_64_to_128
     stmfd    sp!, {r4, r5, lr}
@@ -2757,10 +2757,10 @@ Mul_64 to 64
     ;signed $ch, $cl +=unsigned $a *signed $b
     SMULL        $cl, $ch, $a, $b
     ;c= (signed)a *(signed)b
-    TST        $a, #1&lt;&lt;31
-    ;if(signed)a&lt;0
+    TST        $a, #1<<31
+    ;if(signed)a<0
     ADDNE          $ch, $ch, $b
-    ;c+=(b&lt;&lt;32)
+    ;c+=(b<<32)
     MEND    <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h3 id="浮点计算"><a href="#浮点计算" class="headerlink" title="浮点计算"></a>浮点计算</h3><ul>
 <li>IEEE754浮点格式</li>
@@ -2835,16 +2835,16 @@ InImagewidth     equ        640
 Framecircle 
     mov    r5, #0
 Linecircle
-;i-&gt;r5; j-&gt;r6; Tmpimg-&gt; r8; Inimage-&gt;r9;
+;i->r5; j->r6; Tmpimg-> r8; Inimage->r9;
     ldr    r8,    =Tmpimg
     ldr    r9,    =Inimage
-;Tmpimg[i][j]-&gt;r10;
+;Tmpimg[i][j]->r10;
     mov    r0,    #Imagewidth
     mul    r10, r6, r0   ;i*Imagewidth
     add    r10, r10, r5   ;i*Imagewidth+j
     add    r10,r8
 
-;Inimage[i*4+2][j*4+2]-&gt; r11
+;Inimage[i*4+2][j*4+2]-> r11
     mov r0, #InImagewidth
     mov    r1, r6, lsl #2 ; i*4
     add    r1, r1, #2    ;i*4+2
@@ -2878,6 +2878,656 @@ Tmpimg    space        160*120
 Inimage    space        640*480
 
     end<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="ARM程序基础"><a href="#ARM程序基础" class="headerlink" title="ARM程序基础"></a>ARM程序基础</h1><p>参考内容：</p>
+<ul>
+<li><p>ARM Architecture Reference Manual（V5）, Second Edition</p>
+</li>
+<li><p>Andrew N. Sloss 等，沈建华译，ARM嵌入式系统开发-软件设计与优化，北京航空航天大学出版社，2005年5月</p>
+</li>
+</ul>
+<h2 id="函数调用"><a href="#函数调用" class="headerlink" title="函数调用"></a><strong>函数调用</strong></h2><h3 id="源文件内"><a href="#源文件内" class="headerlink" title="源文件内"></a><strong>源文件内</strong></h3><pre><code>    AREA  function, CODE, READONLY
+    ENTRY
+start
+           MOV     r0, #10
+        MOV     r1, #3         ;参数
+        BL      doadd            ; call
+
+    ……
+
+doadd                               ;函数
+        ADD     r0, r0, r1          ;结果
+        MOV     pc, lr                ;返回
+
+        END</code></pre><h3 id="不同源文件"><a href="#不同源文件" class="headerlink" title="不同源文件"></a><strong>不同源文件</strong></h3><ul>
+<li>File1</li>
+</ul>
+<pre><code>AREA Main, CODE, READONLY
+    IMPORT   Testprg
+    ENTRY     
+main        ……
+        BL Testprg
+        ……
+        END</code></pre><ul>
+<li>File2</li>
+</ul>
+<pre><code>    AREA  Test, CODE, READONLY
+    EXPORT   Testprg
+   Testprg
+        ADD  r0, r1, r0
+        MOV pc,lr
+        END</code></pre><blockquote>
+<p>汇编import的函数文件需要加export</p>
+</blockquote>
+<h3 id="ATPCS（ARM-Thumb-Procedure-Call-Standard）"><a href="#ATPCS（ARM-Thumb-Procedure-Call-Standard）" class="headerlink" title="ATPCS（ARM-Thumb Procedure Call Standard）"></a>ATPCS（ARM-Thumb Procedure Call Standard）</h3><ul>
+<li><p>寄存器约定</p>
+<ul>
+<li><p>R0-r3 (a1-a4) 传递参数</p>
+</li>
+<li><p>R4-r11 (v1-v8)保存局部变量 （r4-r7 for Thumb)</p>
+</li>
+<li><p>R12 (ip) 过程间自定义数据交换</p>
+</li>
+<li><p>R13 (sp) 数据堆栈指针</p>
+</li>
+<li><p>R14 (lr) 保存子程序的返回地址</p>
+</li>
+<li><p>R15（pc）</p>
+</li>
+</ul>
+</li>
+<li><p>ATPCS规定数据栈为FD（满递减）类型，并且对数据栈的操作是8字节对齐。</p>
+</li>
+</ul>
+<blockquote>
+<p>向堆栈写数据，指针减小；数据栈8字节对齐</p>
+</blockquote>
+<ul>
+<li>参数传输规则<ul>
+<li>〈 =4， r0-r3,依次</li>
+<li>大于4，存入数据栈，最后一个数据先入栈</li>
+</ul>
+</li>
+</ul>
+<p><code>function( char a, int *b, int c, short d, long f)</code></p>
+<blockquote>
+<ul>
+<li>参数次序与所使用的寄存器？</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>寄存器的分配与类型（浮点除外）有关？</li>
+</ul>
+</blockquote>
+<ul>
+<li>浮点参数传递(顺序传递)<ul>
+<li>FPA (Floating Point Arithmetic)：f0-f7 (s0-s7, d0-d7,e0-e7)</li>
+<li>VFP (d0-d15, s0-s31)</li>
+</ul>
+</li>
+</ul>
+<p><code>float function(int v1, float v2, char *v3, int v4, float v5, double v6, short v7) ；</code></p>
+<ul>
+<li><p>v1, v3, v4, v7  =&gt; r0, r1, r2, r3</p>
+</li>
+<li><p>v2, v5 =&gt; s0, s1</p>
+</li>
+<li><p>v6 =&gt; d0</p>
+</li>
+</ul>
+<blockquote>
+<p>继承协处理器</p>
+<p>注意参数传递：整形（字符），float，double</p>
+</blockquote>
+<ul>
+<li><p>参数返回规则</p>
+<ul>
+<li><p>结果为32bit整数时，通过r0传递</p>
+</li>
+<li><p>结果为64bit整数时，通过r0和R1传递</p>
+</li>
+<li><p>结果为浮点数时，通过浮点寄存器返回(f0,d0)</p>
+</li>
+<li><p>更多的数据通过内存返回</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="C调用汇编"><a href="#C调用汇编" class="headerlink" title="C调用汇编"></a>C调用汇编</h3><pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
+<span class="token keyword">extern</span> <span class="token keyword">void</span> <span class="token function">strcopy</span><span class="token punctuation">(</span><span class="token keyword">char</span> <span class="token operator">*</span>d<span class="token punctuation">,</span> <span class="token keyword">const</span> <span class="token keyword">char</span> <span class="token operator">*</span>s<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//ASM</span>
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>       <span class="token keyword">const</span> <span class="token keyword">char</span> <span class="token operator">*</span>srcstr <span class="token operator">=</span> <span class="token string">"First string - source "</span><span class="token punctuation">;</span>
+        <span class="token keyword">char</span> dststr<span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string">"Second string - destination "</span><span class="token punctuation">;</span>
+        <span class="token function">strcopy</span><span class="token punctuation">(</span>dststr<span class="token punctuation">,</span>srcstr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"After copying:\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"  %s\n  %s\n"</span><span class="token punctuation">,</span>srcstr<span class="token punctuation">,</span>dststr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-assembly"><code class="language-assembly">        AREA    SCopy, CODE, READONLY
+            EXPORT strcopy
+strcopy 
+        LDRB r2, [r1],#1  ; Load byte and update address.
+           STRB r2, [r0],#1  ; 
+        CMP r2, #0        ; Check for zero terminator.
+            BNE strcopy       ; Keep going if not.
+            MOV pc,lr         ; Return.
+            END<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>参数传递过程？</strong></p>
+<h3 id="汇编调用C"><a href="#汇编调用C" class="headerlink" title="汇编调用C"></a>汇编调用C</h3><pre class="line-numbers language-assembly"><code class="language-assembly">    AREA f, CODE, READONLY
+        IMPORT  g
+    ENTRY           
+        LDR r4, =data
+        LDR  r0, [r4], #4
+    LDR  r1, [r4], #4
+    LDR  r2, [r4], #4
+    LDR  r3, [r4], #4
+    LDR  r5, [r4]
+    STR r5, [sp, #-4]! 
+    BL  g               
+       ADD sp, sp, #4     
+       END<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">g</span><span class="token punctuation">(</span><span class="token keyword">int</span> a<span class="token punctuation">,</span> <span class="token keyword">int</span> b<span class="token punctuation">,</span> <span class="token keyword">int</span> c<span class="token punctuation">,</span> <span class="token keyword">int</span> d<span class="token punctuation">,</span> <span class="token keyword">int</span> e<span class="token punctuation">)</span> 
+    <span class="token punctuation">{</span>  <span class="token keyword">return</span> a <span class="token operator">+</span> b <span class="token operator">+</span> c <span class="token operator">+</span> d <span class="token operator">+</span> e<span class="token punctuation">;</span><span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<blockquote>
+<p>STR r5, [sp, #-4]!     //栈初始满的，需要减去4字节腾出空间</p>
+</blockquote>
+<h3 id="C-调用汇编"><a href="#C-调用汇编" class="headerlink" title="C++调用汇编"></a>C++调用汇编</h3><pre class="line-numbers language-c++"><code class="language-c++">struct S { 
+        S(int s) {i=s; }
+        int i;
+    }
+
+extern "C" void asmfunc(S *);                                                     
+int f() 
+{
+        S s(2);                 
+        asmfunc(&s); 
+    return s.i * 3;
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-assembly"><code class="language-assembly">AREA   Asm, CODE
+        EXPORT asmfunc
+asmfunc            ; the definition of the Asm function
+        LDR r1, [r0] 
+    ADD r1, r1, #5
+        STR r1, [r0]
+        MOV pc, lr
+        END<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="汇编调用C-1"><a href="#汇编调用C-1" class="headerlink" title="汇编调用C++"></a>汇编调用C++</h3><pre class="line-numbers language-assembly"><code class="language-assembly">    AREA  Asm, CODE，READONLY
+        IMPORT cppfunc
+    ENTRY
+    MOV    r0,#2
+        STR    r0,[sp,#-4]! 
+        MOV    r0,sp        
+        BL     cppfunc 
+    LDR    r0, [sp], #4
+        ADD    r0, r0, r0,LSL #1
+    END
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">extern "C" void cppfunc(S * p) {
+ // Definition of the C++ function to be called from ASM.
+    p->i += 5;}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<h3 id="嵌入汇编"><a href="#嵌入汇编" class="headerlink" title="嵌入汇编"></a><strong>嵌入汇编</strong></h3><pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">void</span> <span class="token function">my_strcpy</span><span class="token punctuation">(</span><span class="token keyword">const</span> <span class="token keyword">char</span> <span class="token operator">*</span>src<span class="token punctuation">,</span> <span class="token keyword">char</span> <span class="token operator">*</span>dst<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>    <span class="token keyword">int</span> ch<span class="token punctuation">;</span>
+        __asm<span class="token punctuation">{</span>
+            loop<span class="token punctuation">:</span>
+               LDRB    ch<span class="token punctuation">,</span> <span class="token punctuation">[</span>src<span class="token punctuation">]</span><span class="token punctuation">,</span> #<span class="token number">1</span>
+                      STRB    ch<span class="token punctuation">,</span> <span class="token punctuation">[</span>dst<span class="token punctuation">]</span><span class="token punctuation">,</span> #<span class="token number">1</span>
+              CMP     ch<span class="token punctuation">,</span> #<span class="token number">0</span>
+                     BNE     loop
+        <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li>嵌入 vs 汇编程序<ul>
+<li>不支持 LDR Rn,= XXX 和 ADR, ADRL 伪指令</li>
+<li>不支持 BX</li>
+<li>用”&amp;”替代 “0x” 表示16位数据</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>[src], [dst]  ？</p>
+<p>ch ？</p>
+<p>循环结束条件？</p>
+<p>c中的变量？</p>
+</blockquote>
+<ul>
+<li>小心使用寄存器，尽量不用 R0-R3，lr，ip 和CPSR 中的NZCV 标志位；不用r0-r3，用v1-v8</li>
+</ul>
+<pre class="line-numbers language-c"><code class="language-c">__asm
+<span class="token punctuation">{</span>
+    MOV R0<span class="token punctuation">,</span> x
+    ADD y<span class="token punctuation">,</span> R0<span class="token punctuation">,</span>  y
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li>不要使用寄存器替代变量</li>
+</ul>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">bad_f</span><span class="token punctuation">(</span><span class="token keyword">int</span> x<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">// x in R0</span>
+<span class="token punctuation">{</span>          ……
+            __asm <span class="token punctuation">{</span> 
+               ADD R0<span class="token punctuation">,</span> R0<span class="token punctuation">,</span> #<span class="token number">1</span> ；wrongly asserts that x is still in R0    
+           <span class="token punctuation">}</span>    
+          <span class="token keyword">return</span> x<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// x in R0</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li>无需保存和恢复寄存器</li>
+</ul>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">f</span><span class="token punctuation">(</span><span class="token keyword">int</span> x<span class="token punctuation">)</span><span class="token punctuation">{</span>
+           __asm<span class="token punctuation">{</span>
+                STMFD sp<span class="token operator">!</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>R0<span class="token punctuation">}</span> ；save R0 <span class="token operator">-</span> illegal<span class="token punctuation">:</span> read before write
+                ADD R0<span class="token punctuation">,</span> x<span class="token punctuation">,</span> <span class="token number">1</span>
+                EOR x<span class="token punctuation">,</span> R0<span class="token punctuation">,</span> x
+                LDMFD sp<span class="token operator">!</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>R0<span class="token punctuation">}</span> ； restore R0 <span class="token operator">-</span> not needed<span class="token punctuation">.</span>    
+         <span class="token punctuation">}</span>
+         <span class="token keyword">return</span> x<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li>汇编语言用“,”作为操作数分隔符。如果有C 或C++表达式作为操作数，必须用“( )”将其归约为一个汇编操作数。</li>
+</ul>
+<pre><code> __asm {ADD x, y, (f()+z)}</code></pre><h2 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a><strong>异常处理</strong></h2><h3 id="异常向量表"><a href="#异常向量表" class="headerlink" title="异常向量表"></a><strong>异常向量表</strong></h3><table>
+<thead>
+<tr>
+<th>向量地址</th>
+<th>异常中断类型</th>
+<th>异常中断模式</th>
+<th>优先级</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x0</td>
+<td>Reset</td>
+<td>特权（SVC)</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0x4</td>
+<td>Undefined  Instruction</td>
+<td>未定义指令中止模式</td>
+<td>6</td>
+</tr>
+<tr>
+<td>0x08</td>
+<td>SWI</td>
+<td>特权模式</td>
+<td>6</td>
+</tr>
+<tr>
+<td>0x0c</td>
+<td>Prefetch  Abort</td>
+<td>中止模式</td>
+<td>5</td>
+</tr>
+<tr>
+<td>0x10</td>
+<td>Data  Abort</td>
+<td>中止模式</td>
+<td>2</td>
+</tr>
+<tr>
+<td>0x14</td>
+<td>Reserved</td>
+<td>未使用</td>
+<td>未使用</td>
+</tr>
+<tr>
+<td>0x18</td>
+<td>IRQ中断</td>
+<td>IRQ模式</td>
+<td>4</td>
+</tr>
+<tr>
+<td>0x1c</td>
+<td>FIQ快速中断</td>
+<td>FIQ模式</td>
+<td>3</td>
+</tr>
+</tbody></table>
+<p>确定优先级的作用？</p>
+<ul>
+<li><p>异常向量表特点</p>
+<ul>
+<li>异常事件与异常处理程序之间的对应关系；</li>
+<li>向量表大小32个字节，每个异常向量占据4个字节；</li>
+<li>每个字存放PC赋值的语句，或跳转指令；</li>
+<li>通常存放在存储器地址的低端（或利用寄存器设置）</li>
+</ul>
+</li>
+<li><p>向量表-LDR间接寻址</p>
+</li>
+</ul>
+<pre class="line-numbers language-assembly"><code class="language-assembly">Vectors          LDR     PC, Reset_Addr           ；0x00  
+                  LDR     PC, Undef_Addr
+                   LDR     PC, SWI_Addr
+                   LDR     PC, PAbt_Addr
+                   LDR     PC, DAbt_Addr
+                   NOP                                    ; Reserved Vector 
+                   LDR     PC, IRQ_Addr
+                   LDR     PC, FIQ_Addr
+        ……                                 ; IRQ_Entry, 9条指令
+        Reset_Addr          DCD     Reset_Handler
+        Undef_Addr          DCD     Undef_Handler
+        SWI_Addr            DCD     SWI_Handler
+        PAbt_Addr           DCD     PAbt_Handler
+        DAbt_Addr           DCD     DAbt_Handler
+                    DCD     0                              ; Reserved Address 
+        IRQ_Addr            DCD     IRQ_Handler
+        FIQ_Addr            DCD     FIQ_Handler
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<blockquote>
+<p>LDR   PC, Reset_Addr 会相对寻址 Ldr [pc, #Reset_Addr to pc]</p>
+<p>偏移不能超过4k</p>
+</blockquote>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211110203411716.png" alt=""></p>
+<ul>
+<li>向量表-B跳转</li>
+</ul>
+<pre class="line-numbers language-assembly"><code class="language-assembly">Vectors          
+             B     Reset_Handler  ;0x00
+              B     Undef_Handler
+            B     SWI_Handler
+               B     PAbt_Handler
+               B     DAbt_Handler
+            NOP                          ; Reserved Address 
+            B     IRQ_Handler
+            B     FIQ_Handler<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li><p>B</p>
+<ul>
+<li><p>简单</p>
+</li>
+<li><p>跳转范围受限 （±32MB)</p>
+</li>
+</ul>
+</li>
+<li><p>使用LDR指令</p>
+<ul>
+<li><p>跳转范围不受限</p>
+</li>
+<li><p>额外空间存地址</p>
+</li>
+<li><p>地址存放在4KB范围以内</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>在这里， ”B” 能否改成”BL” ? </p>
+<ul>
+<li>向量表-伪指令LDR</li>
+</ul>
+<pre class="line-numbers language-assembly"><code class="language-assembly">Vectors          
+              LDR PC, = Reset_Handler  ;0x00
+               LDR PC, = Undef_Handler
+            LDR PC, = SWI_Handler
+                LDR PC, = PAbt_Handler
+                LDR PC, = DAbt_Handler
+            NOP                              ; Reserved Address 
+             LDR PC, = IRQ_Handler
+            LDR PC, = FIQ_Handler
+                    ……                                 ; IRQ_Entry, 9条指令
+        ltorg
+        ;Reset_Addr          DCD     Reset_Handler
+        ;Undef_Addr          DCD     Undef_Handler
+        ;SWI_Addr            DCD     SWI_Handler
+        ;PAbt_Addr           DCD     PAbt_Handler
+        ;DAbt_Addr           DCD     DAbt_Handler<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li>向量表/异常服务程序</li>
+</ul>
+<pre class="line-numbers language-assembly"><code class="language-assembly">        import  ISR_IRQ_Handler
+Vectors          
+             B     Reset_Handler  
+              B     Undef_Handler
+            B     SWI_Handler
+               B     PAbt_Handler
+               B     DAbt_Handler
+            NOP    
+            B     ISR_IRQ_Handler
+            B     FIQ_Handler<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<blockquote>
+<p>中断服务程序一般没有参数不需要传回值，或通过内存传递</p>
+</blockquote>
+<p>能否在程序运行时注册（安装）异常服务程序？  </p>
+<h3 id="注册异常服务程序"><a href="#注册异常服务程序" class="headerlink" title="注册异常服务程序"></a>注册异常服务程序</h3><p><strong>能直接写入文本格式程序源码？</strong></p>
+<p>程序运行时，将指令 “B ISR_IRQ_Handler ”写入向量表中？ </p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211110203822211.png" alt=""></p>
+<blockquote>
+<p>构建二进制指令，取高26位，偏移地址：中断向量-中断服务程序入口地址</p>
+</blockquote>
+<ul>
+<li>步骤</li>
+</ul>
+<p>​    （1）读取中断处理程序的地址addr1</p>
+<p>​    （2）将addr1减去该中断对应的中断向量的地址vector1</p>
+<p>​    （3）addr=Addr1-vector1-8 (允许指令预取）</p>
+<p>​    （4）addr LSR #2</p>
+<p>​    （5）if(addr and 0xff000000 ==0)</p>
+<p>​    （6）addr or 0xea00 0000</p>
+<p>​    （7）结果写回中断向量表 </p>
+<ul>
+<li>安装函数</li>
+</ul>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">unsigned</span> <span class="token function">Install_Handler</span> <span class="token punctuation">(</span><span class="token keyword">unsigned</span> <span class="token operator">*</span>handlerloc<span class="token punctuation">,</span> <span class="token keyword">unsigned</span> <span class="token operator">*</span>vector<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>  
+    <span class="token keyword">unsigned</span> vec<span class="token punctuation">,</span> oldvec<span class="token punctuation">;</span>
+    vec <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">unsigned</span><span class="token punctuation">)</span>handlerloc <span class="token operator">-</span> <span class="token punctuation">(</span><span class="token keyword">unsigned</span><span class="token punctuation">)</span>vector <span class="token operator">-</span> <span class="token number">0x8</span><span class="token punctuation">)</span><span class="token operator">>></span><span class="token number">2</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>vec <span class="token operator">&amp;</span> <span class="token number">0xFF000000</span><span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token number">0</span><span class="token punctuation">)</span>
+        <span class="token punctuation">{</span> <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span><span class="token punctuation">}</span>
+    vec <span class="token operator">=</span> <span class="token number">0xEa000000</span> <span class="token operator">|</span> vec<span class="token punctuation">;</span>
+    oldvec <span class="token operator">=</span> <span class="token operator">*</span>vector<span class="token punctuation">;</span>
+    <span class="token operator">*</span>vector <span class="token operator">=</span> vec<span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token punctuation">(</span>oldvec<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">unsigned</span> <span class="token operator">*</span>irqvec <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">unsigned</span> <span class="token operator">*</span><span class="token punctuation">)</span><span class="token number">0x18</span><span class="token punctuation">;</span>    
+<span class="token keyword">static</span> <span class="token keyword">unsigned</span> pIRQ_Handler <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">unsigned</span><span class="token punctuation">)</span>ISR_IRQ_handler    
+<span class="token function">Install_Handler</span> <span class="token punctuation">(</span><span class="token operator">&amp;</span>pIRQ_Handler<span class="token punctuation">,</span> irqvec<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p><strong>中断向量表的基地址？</strong></p>
+<p><strong>上述例程适用条件？跳转地址和向量表偏移地址不能超过正负32M</strong></p>
+<p><strong>如果不能确定异常服务程序的地址范围，如何处理？</strong></p>
+<p><strong>如果向量表采用”LDR”语句，需要修改”DCD” 后的地址, 如何做？</strong></p>
+<ul>
+<li>获取服务程序的入口地址；</li>
+<li>确定异常向量对应的”DCD” 分配的存储地址；</li>
+<li>将服务程序入口地址写入对应的存储单元；</li>
+</ul>
+<h3 id="中断向量扩展"><a href="#中断向量扩展" class="headerlink" title="中断向量扩展"></a><strong>中断向量扩展</strong></h3><p>实际处理器通常有多个外部中断 (IRQ, 外设， IO)，这些中断与其对应的服务程序如何关联？</p>
+<pre class="line-numbers language-assembly"><code class="language-assembly">INTOFFSET           EQU    0X4A000014  ;Address of Interrupt 
+                            ;offset Register
+IntVTAddress           EQU     0x33FFFF20
+
+;Interrupt Vector Table Address                
+HandleEINT0            EQU    IntVTAddress           
+HandleEINT1            EQU    IntVTAddress +4
+……
+HandleTIMER0           EQU    IntVTAddress +4*10
+HandleTIMER1           EQU    IntVTAddress +4*11
+……
+HandleUART1            EQU    IntVTAddress +4*23
+……
+HandleUART0           EQU    IntVTAddress +4*28
+HandleADC             EQU    IntVTAddress +4*31<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c"><code class="language-c">IRQ_Entry
+                          sub    sp<span class="token punctuation">,</span>sp<span class="token punctuation">,</span>#<span class="token number">4</span>       <span class="token punctuation">;</span>reserved <span class="token keyword">for</span> PC
+                    stmfd    sp<span class="token operator">!</span><span class="token punctuation">,</span><span class="token punctuation">{</span>r8<span class="token operator">-</span>r9<span class="token punctuation">}</span>                
+                    ldr    r9<span class="token punctuation">,</span><span class="token operator">=</span>INTOFFSET  <span class="token punctuation">;</span>中断序号
+                    ldr    r9<span class="token punctuation">,</span><span class="token punctuation">[</span>r9<span class="token punctuation">]</span>
+                    ldr    r8<span class="token punctuation">,</span><span class="token operator">=</span>HandleEINT0 <span class="token punctuation">;</span>中断扩展表首地址
+                    add    r8<span class="token punctuation">,</span>r8<span class="token punctuation">,</span>r9<span class="token punctuation">,</span>lsl #<span class="token number">2</span> <span class="token punctuation">;</span> <span class="token operator">?</span>
+                    ldr    r8<span class="token punctuation">,</span><span class="token punctuation">[</span>r8<span class="token punctuation">]</span>   <span class="token punctuation">;</span>Eintx_ Entry Add <span class="token operator">-></span>r8
+                    str    r8<span class="token punctuation">,</span><span class="token punctuation">[</span>sp<span class="token punctuation">,</span>#<span class="token number">8</span><span class="token punctuation">]</span> <span class="token punctuation">;</span>r8<span class="token operator">-></span><span class="token function">SP</span><span class="token punctuation">(</span><span class="token operator">-</span>#<span class="token number">4</span><span class="token punctuation">)</span>
+
+                    ldmfd    sp<span class="token operator">!</span><span class="token punctuation">,</span><span class="token punctuation">{</span>r8<span class="token operator">-</span>r9<span class="token punctuation">,</span>pc<span class="token punctuation">}</span><span class="token punctuation">;</span>Eintx_ Entry Add <span class="token operator">-></span>pc<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="非嵌套中断"><a href="#非嵌套中断" class="headerlink" title="非嵌套中断"></a><strong>非嵌套中断</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211110204320420.png" alt=""></p>
+<pre class="line-numbers language-assembly"><code class="language-assembly">interrupt_handler
+    sub    r14, r14, #4 ; ?
+    stmfd    sp!, {r0-r3, r12, r14}
+    ldr    r1, =IRQStatus
+    ldr    r0,[r1]
+    tst    r0, #0x0080  ;测试中断源
+    blne    my_isr1
+    tst    r0, #0x0001 ；测试中断源
+    blne    my_isr2
+    ldmfd    sp!, {r0-r3, r12, r14}^
+    ldr pc, lr<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="嵌套中断"><a href="#嵌套中断" class="headerlink" title="嵌套中断"></a><strong>嵌套中断</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211110204357478.png" alt=""></p>
+<h2 id="外设访问"><a href="#外设访问" class="headerlink" title="外设访问"></a><strong>外设访问</strong></h2><p>如何控制实验板上LED显示？</p>
+<h3 id="LED连接"><a href="#LED连接" class="headerlink" title="LED连接"></a>LED连接</h3><p><strong>Mainboard</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211110204509420.png" alt=""></p>
+<ul>
+<li><p>LED连接</p>
+<ul>
+<li><p>LED1  -&gt; GPF4</p>
+</li>
+<li><p>LED2  -&gt; GPF5</p>
+</li>
+<li><p>LED3  -&gt; GPF6</p>
+</li>
+<li><p>LED4  -&gt; GPF7</p>
+</li>
+</ul>
+</li>
+<li><p>LED 控制</p>
+<ul>
+<li><p>n0  -&gt; on</p>
+</li>
+<li><p>n1  -&gt; off</p>
+</li>
+</ul>
+</li>
+<li><p>GPF控制</p>
+<ul>
+<li><strong>Registers</strong></li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211110204651064.png" alt=""></p>
+<ul>
+<li><p>The value of Registers</p>
+<ul>
+<li><p>GPFCON (4-7 Output)：0b 0101 0101 XXXX XXXX</p>
+</li>
+<li><p>GPFUP ( 4-7 No concern): 0b XXXX XXXX</p>
+</li>
+<li><p>GPFDAT (4-7 on): 0b 0000 XXXX</p>
+</li>
+<li><p>GPFDAT (4-7 off): 0b 1111 XXXX</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="C-Code"><a href="#C-Code" class="headerlink" title="C Code"></a><strong>C Code</strong></h3><pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">int</span> <span class="token operator">*</span>rGPFCON <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">int</span> <span class="token operator">*</span><span class="token punctuation">)</span> <span class="token number">0x56000050</span><span class="token punctuation">;</span>
+<span class="token keyword">int</span> <span class="token operator">*</span>rGPFDAT <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">int</span> <span class="token operator">*</span><span class="token punctuation">)</span> <span class="token number">0x56000054</span><span class="token punctuation">;</span>
+
+<span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span> <span class="token keyword">void</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token operator">*</span>rGPFCON<span class="token operator">=</span><span class="token number">0x5500</span><span class="token punctuation">;</span>
+    <span class="token keyword">while</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+        <span class="token operator">*</span>rGPFDAT <span class="token operator">=</span> <span class="token number">0x00</span><span class="token punctuation">;</span>
+        <span class="token function">delay</span><span class="token punctuation">(</span><span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
+        <span class="token operator">*</span>rGPFDAT <span class="token operator">=</span> <span class="token number">0xf0</span><span class="token punctuation">;</span>
+        <span class="token function">delay</span><span class="token punctuation">(</span><span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>    <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>如何连接到目标板？</strong></p>
+<h3 id="Emulator"><a href="#Emulator" class="headerlink" title="Emulator"></a><strong>Emulator</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211110204849739.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211110204856786.png" alt=""></p>
+<p>如何在目板RAM中运行程序？</p>
+<h3 id="Run-in-RAM"><a href="#Run-in-RAM" class="headerlink" title="Run in RAM"></a>Run in RAM</h3><ul>
+<li><p>Linker Configure</p>
+<ul>
+<li><p>RO Base=0x30000000</p>
+</li>
+<li><p>RW Base=0x30100000</p>
+</li>
+</ul>
+</li>
+<li><p>DRAM 初始化</p>
+<ul>
+<li>Debug Init</li>
+</ul>
+</li>
+</ul>
+<pre><code>//MEMMAP=0x01; 
+map 0x48000000, 0x60000000 read write ;
+_WDWORD(0x53000000,0x00000000);          //watchdog Timer Control register
+_WDWORD(0x4a000008,0xffffffff);                 //Interrupt Mask Control
+_WDWORD(0x4a00001c,0x000007ff);            //Interrupt sub mask
+_WDWORD(0x4c000014,0x03);                       //Clock Divider Control Register
+_WDWORD(0x4c000004,0x5c042);                 //MPLL Configuration Register
+_WDWORD(0x48000000,0x22111110);          //Bus Width and Wait Status Ctrl
+_WDWORD(0x48000004,0x00000700);          //Bank 0 Control Register
+_WDWORD(0x48000008,0x00000700);          //Bank 1 Control Register
+_WDWORD(0x4800000c,0x00000700);          //Bank 2 Control Register
+_WDWORD(0x48000010,0x00000700);          //Bank 3 Control Register
+_WDWORD(0x48000014,0x00000700);          //Bank 4 Control Register
+_WDWORD(0x48000018,0x00000700);          //Bank 5 Control Register
+_WDWORD(0x4800001c,0x00018005);          //Bank 6 Control Register
+_WDWORD(0x48000020,0x00000700);          //Bank 7 Control Register
+_WDWORD(0x48000024,0x008e0459);          //SDRAM Refresh Control Register 
+_WDWORD(0x48000028,0x000000b2);          //Flexible Bank Size Register 
+_WDWORD(0x4800002c,0x00000030);          //Bank 6 Mode Register
+_WDWORD(0x48000030,0x00000030);          //Bank 7 Mode Register
+_WDWORD(0x56000014,0x01);                      //Port B Data
+_WDWORD(0x56000020,0xaaaa55aa);           //Port C Control
+_WDWORD(0x56000028,0x0ffff);                      //Pull-up Control C
+_WDWORD(0x56000024,0x00000000);          //Port C Data
+_WDWORD(0x56000070,0x00280000);          //Port H Control
+_WDWORD(0x56000078,0x00000000);          //Pull-up Control H
+//pc=0x30000000</code></pre><p>需要在代码中加入初始化，上电后才能正常访问RAM</p>
+<ul>
+<li>下载到RAM </li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211110205053747.png" alt=""></p>
+<p>如何实现上电启动？</p>
+<h3 id="Run-in-FLASH"><a href="#Run-in-FLASH" class="headerlink" title="Run in FLASH"></a>Run in FLASH</h3><ul>
+<li>Linker Configure<ul>
+<li>RO Base=0x00000000</li>
+<li>RW Base=0x30000000</li>
+</ul>
+</li>
+<li>Output Configure<ul>
+<li>Create HEX file</li>
+</ul>
+</li>
+<li>DRAM 初始化<ul>
+<li>Initialization by code</li>
+</ul>
+</li>
+</ul>
+<p>Nor Flash</p>
+<ul>
+<li><p>Set Jumper    ( boot from Nor Flash )(16bit)</p>
+<ul>
+<li><p>SW104: OM0 (Open)</p>
+</li>
+<li><p>SW105: OM1 (Close)</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211110205239787.png" alt=""></p>
+<h3 id="Linker-CMD"><a href="#Linker-CMD" class="headerlink" title="Linker CMD"></a>Linker CMD</h3><pre class="line-numbers language-assembly"><code class="language-assembly">LR_ROM1 0x00000000 
+{    ; load region
+     ER_ROM1 0x00000000 0x0200000  
+    {  ; load address = execution address
+       *.o (RESET, +First)
+       *(InRoot$$Sections)
+       .ANY (+RO)
+   }
+  RW_RAM1 0x30000000 0x4000000  
+  {  ; RW data
+       .ANY (+RW +ZI)
+   }
+   RW_IRAM1 0x40000000 0x00001000  
+   {
+       .ANY (+RW +ZI)
+   }
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211110205321127.png" alt=""></p>
+<h2 id="小结-3"><a href="#小结-3" class="headerlink" title="小结"></a><strong>小结</strong></h2><ul>
+<li>函数调用</li>
+<li>异常向量表</li>
+<li>异常服务程序注册</li>
+<li>外设访问</li>
+</ul>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -3391,7 +4041,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">2182.8k</span>&nbsp;字
+                class="white-color">2308.5k</span>&nbsp;字
             
             
             
@@ -3629,7 +4279,7 @@ $(function () {
     
     <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/instantpage/instantpage.js" type="module"></script>
     
-<script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script>
+
         <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
         <script>
         $('a').each(function() {
@@ -3648,7 +4298,7 @@ $(function () {
             }
           }
         });
-        </script></body>
+        </script><script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script></body>
 
 </html>
 
