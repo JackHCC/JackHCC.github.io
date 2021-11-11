@@ -459,21 +459,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-11-01
+                    2021-11-11
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.9k
+                    4.1k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    8 分
+                    17 分
                 </div>
                 
 
@@ -699,6 +699,196 @@ plt<span class="token punctuation">.</span>axis<span class="token punctuation">(
 plt<span class="token punctuation">.</span>imshow<span class="token punctuation">(</span>hog_image<span class="token punctuation">,</span> cmap<span class="token operator">=</span><span class="token string">"gray"</span><span class="token punctuation">)</span>
 plt<span class="token punctuation">.</span>show<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p><img src="/images/loading.gif" data-original="../images/ML/image-20211101122053966.png" alt=""></p>
+<h1 id="kaggle竞赛中的图像分割的Tips和Tricks"><a href="#kaggle竞赛中的图像分割的Tips和Tricks" class="headerlink" title="kaggle竞赛中的图像分割的Tips和Tricks"></a>kaggle竞赛中的图像分割的Tips和Tricks</h1><h2 id="外部数据"><a href="#外部数据" class="headerlink" title="外部数据"></a>外部数据</h2><ul>
+<li>使用 LUng Node Analysis Grand Challenge 数据，因为这个数据集包含了来自放射学的标注细节。</li>
+<li>使用 LIDC-IDRI 数据，因为它具有找到了肿瘤的所有放射学的描述。</li>
+<li>使用Flickr CC，维基百科通用数据集</li>
+<li>使用Human Protein Atlas Dataset</li>
+<li>使用IDRiD数据集</li>
+</ul>
+<h2 id="数据探索和直觉"><a href="#数据探索和直觉" class="headerlink" title="数据探索和直觉"></a>数据探索和直觉</h2><ul>
+<li>使用0.5的阈值对3D分割进行聚类</li>
+<li>确认在训练集和测试集的标签分布上有没有不一样的地方</li>
+</ul>
+<h2 id="预处理"><a href="#预处理" class="headerlink" title="预处理"></a>预处理</h2><ul>
+<li>使用DoG（Difference of Gaussian）方法进行blob检测，使用skimage中的方法。</li>
+<li>使用基于patch的输入进行训练，为了减少训练时间。</li>
+<li>使用cudf加载数据，不要用Pandas，因为读数据更快。</li>
+<li>确保所有的图像具有相同的方向。</li>
+<li>在进行直方图均衡化的时候，使用对比度限制。</li>
+<li>使用OpenCV进行通用的图像预处理。</li>
+<li>使用自动化主动学习，添加手工标注。</li>
+<li>将所有的图像缩放成相同的分辨率，可以使用相同的模型来扫描不同的厚度。</li>
+<li>将扫描图像归一化为3D的numpy数组。</li>
+<li>对单张图像使用暗通道先验方法进行图像去雾。</li>
+<li>将所有图像转化成<strong>Hounsfield</strong>单位（放射学中的概念）。</li>
+<li>使用RGBY的匹配系数来找到冗余的图像。</li>
+<li>开发一个采样器，让标签更加的均衡。</li>
+<li>对测试图像打伪标签来提升分数。</li>
+<li>将图像/Mask降采样到320x480。</li>
+<li>直方图均衡化（CLAHE）的时候使用kernel size为32×32</li>
+<li>将DCM转化为PNG。</li>
+<li>当有冗余图像的时候，为每个图像计算md5 hash值。</li>
+</ul>
+<h2 id="数据增强"><a href="#数据增强" class="headerlink" title="数据增强"></a>数据增强</h2><ul>
+<li>使用 albumentations 进行数据增强。</li>
+<li>使用随机90度旋转。</li>
+<li>使用水平翻转，上下翻转。</li>
+<li>可以尝试较大的几何变换：弹性变换，仿射变换，样条仿射变换，枕形畸变。</li>
+<li>使用随机HSV。</li>
+<li>使用loss-less增强来进行泛化，防止有用的图像信息出现大的loss。</li>
+<li>应用channel shuffling。</li>
+<li>基于类别的频率进行数据增强。</li>
+<li>使用高斯噪声。</li>
+<li>对3D图像使用lossless重排来进行数据增强。</li>
+<li>0到45度随机旋转。</li>
+<li>从0.8到1.2随机缩放。</li>
+<li>亮度变换。</li>
+<li>随机变化hue和饱和度。</li>
+<li>使用D4：<a href="https://en.wikipedia.org/wiki/Dihedral_group增强。" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Dihedral_group增强。</a></li>
+<li>在进行直方图均衡化的时候使用对比度限制。</li>
+<li>使用AutoAugment：<a href="https://arxiv.org/pdf/1805.09501.pdf增强策略。" target="_blank" rel="noopener">https://arxiv.org/pdf/1805.09501.pdf增强策略。</a></li>
+</ul>
+<h2 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h2><h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><ul>
+<li>使用U-net作为基础结构，并调整以适应3D的输入。</li>
+<li>使用自动化主动学习并添加人工标注。</li>
+<li>使用inception-ResNet v2 architecture结构使用不同的感受野训练特征。</li>
+<li>使用Siamese networks进行对抗训练。</li>
+<li>使用<em>ResNet50</em>, <em>Xception</em>, <em>Inception ResNet</em> <em>v2</em> x 5，最后一层用全连接。</li>
+<li>使用global max-pooling layer，无论什么输入尺寸，返回固定长度的输出。</li>
+<li>使用stacked dilated convolutions。</li>
+<li>VoxelNet。</li>
+<li>在LinkNet的跳跃连接中将相加替换为拼接和conv1x1。</li>
+<li>Generalized mean pooling。</li>
+<li>使用224x224x3的输入，用Keras NASNetLarge从头训练模型。</li>
+<li>使用3D卷积网络。</li>
+<li>使用ResNet152作为预训练的特征提取器。</li>
+<li>将ResNet的最后的全连接层替换为3个使用dropout的全连接层。</li>
+<li>在decoder中使用转置卷积。</li>
+<li>使用VGG作为基础结构。</li>
+<li>使用C3D网络，使用adjusted receptive fields，在网络的最后使用64 unit bottleneck layer 。</li>
+<li>使用带预训练权重的UNet类型的结构在8bit RGB输入图像上提升收敛性和二元分割的性能。</li>
+<li>使用LinkNet，因为又快又省内存。</li>
+<li>MASKRCNN</li>
+<li>BN-Inception</li>
+<li>Fast Point R-CNN</li>
+<li>Seresnext</li>
+<li>UNet and Deeplabv3</li>
+<li>Faster RCNN</li>
+<li>SENet154</li>
+<li>ResNet152</li>
+<li>NASNet-A-Large</li>
+<li>EfficientNetB4</li>
+<li>ResNet101</li>
+<li><em>GAPNet</em></li>
+<li>PNASNet-5-Large</li>
+<li>Densenet121</li>
+<li>AC-GAN</li>
+<li>XceptionNet (96), XceptionNet (299), Inception v3 (139), InceptionResNet v2 (299), DenseNet121 (224)</li>
+<li>AlbuNet (resnet34) from ternausnets</li>
+<li>SpaceNet</li>
+<li>Resnet50 from selim_sef SpaceNet 4</li>
+<li>SCSEUnet (seresnext50) from selim_sef SpaceNet 4</li>
+<li>A custom Unet and Linknet architecture</li>
+<li>FPNetResNet50 (5 folds)</li>
+<li>FPNetResNet101 (5 folds)</li>
+<li>FPNetResNet101 (7 folds with different seeds)</li>
+<li>PANetDilatedResNet34 (4 folds)</li>
+<li>PANetResNet50 (4 folds)</li>
+<li>EMANetResNet101 (2 folds)</li>
+<li>RetinaNet</li>
+<li>Deformable R-FCN</li>
+<li>Deformable Relation Networks</li>
+</ul>
+<h3 id="硬件设置"><a href="#硬件设置" class="headerlink" title="硬件设置"></a>硬件设置</h3><ul>
+<li>Use of the AWS GPU instance p2.xlarge with a NVIDIA K80 GPU</li>
+<li>Pascal Titan-X GPU</li>
+<li>Use of 8 TITAN X GPUs</li>
+<li>6 GPUs: 2<em>1080Ti + 4</em>1080</li>
+<li>Server with 8×NVIDIA Tesla P40, 256 GB RAM and 28 CPU cores</li>
+<li>Intel Core i7 5930k, 2×1080, 64 GB of RAM, 2x512GB SSD, 3TB HDD</li>
+<li>GCP 1x P100, 8x CPU, 15 GB RAM, SSD or 2x P100, 16x CPU, 30 GB RAM</li>
+<li>NVIDIA Tesla P100 GPU with 16GB of RAM</li>
+<li>Intel Core i7 5930k, 2×1080, 64 GB of RAM, 2x512GB SSD, 3TB HDD</li>
+<li>980Ti GPU, 2600k CPU, and 14GB RAM</li>
+</ul>
+<h3 id="损失函数"><a href="#损失函数" class="headerlink" title="损失函数"></a>损失函数</h3><ul>
+<li>Dice Coefficient ，因为在不均衡数据上工作很好。</li>
+<li>Weighted boundary loss 目的是减少预测的分割和ground truth之间的距离。</li>
+<li>MultiLabelSoftMarginLoss 使用one-versus-all损失优化多标签。</li>
+<li>Balanced cross entropy (BCE) with logit loss 通过系数来分配正负样本的权重。</li>
+<li>Lovasz 基于sub-modular损失的convex Lovasz扩展来直接优化平均IoU损失。</li>
+<li>FocalLoss + Lovasz 将Focal loss和Lovasz losses相加得到。</li>
+<li>Arc margin loss 通过添加margin来最大化人脸类别的可分性。</li>
+<li>Npairs loss 计算y_true 和 y_pred之间的npairs损失。</li>
+<li>将BCE和Dice loss组合起来。</li>
+<li>LSEP – 一种成对的排序损失，处处平滑因此容易优化。</li>
+<li>Center loss 同时学习每个类别的特征中心，并对距离特征中心距离太远的样本进行惩罚。</li>
+<li>Ring Loss 对标准的损失函数进行了增强，如Softmax。</li>
+<li>Hard triplet loss 训练网络进行特征嵌入，最大化不同类别之间的特征的距离。</li>
+<li><em>1 + BCE – Dice</em> 包含了BCE和DICE损失再加1。</li>
+<li>Binary cross-entropy –  log(dice) 二元交叉熵减去dice loss的log。</li>
+<li>BCE, dice和focal 损失的组合。</li>
+<li>BCE + DICE - Dice损失通过计算平滑的dice系数得到。</li>
+<li>Focal loss with Gamma 2 标准交叉熵损失的升级。</li>
+<li>BCE + DICE + Focal – 3种损失相加。</li>
+<li>Active Contour Loss 加入了面积和尺寸信息，并集成到深度学习模型中。</li>
+<li>1024 * BCE(results, masks) + BCE(cls, cls_target)</li>
+<li>Focal + kappa – Kappa是一种用于多类别分类的损失，这里和Focal loss相加。</li>
+<li>ArcFaceLoss —  用于人脸识别的Additive Angular Margin Loss。</li>
+<li>soft Dice trained on positives only – 使用预测概率的Soft Dice。</li>
+<li>2.7 * BCE(pred_mask, gt_mask) + 0.9 * DICE(pred_mask, gt_mask) + 0.1 * BCE(pred_empty, gt_empty) 一种自定义损失。</li>
+<li><em>nn.SmoothL1Loss()</em>。</li>
+<li>使用Mean Squared Error objective function，在某些场景下比二元交叉熵损失好。</li>
+</ul>
+<h3 id="训练技巧"><a href="#训练技巧" class="headerlink" title="训练技巧"></a>训练技巧</h3><ul>
+<li>尝试不同的学习率。</li>
+<li>尝试不同的batch size。</li>
+<li>使用SGD + 动量 并手工设计学习率策略。</li>
+<li>太多的增强会降低准确率。</li>
+<li>在图像上进行裁剪做训练，全尺寸图像做预测。</li>
+<li>使用Keras的ReduceLROnPlateau()作为学习率策略。</li>
+<li>不使用数据增强训练到平台期，然后对一些epochs使用软硬增强。</li>
+<li>冻结除了最后一层外的所有层，使用1000张图像进行微调，作为第一步。</li>
+<li>使用分类别采样</li>
+<li>在调试最后一层的时候使用dropout和增强</li>
+<li>使用伪标签来提高分数</li>
+<li>使用Adam在plateau的时候衰减学习率</li>
+<li>用SGD使用Cyclic学习率策略</li>
+<li>如果验证损失持续2个epochs没有降低，将学习率进行衰减</li>
+<li>将10个batches里的最差的batch进行重复训练</li>
+<li>使用默认的UNET进行训练</li>
+<li>对patch进行重叠，这样边缘像素被覆盖两次</li>
+<li>超参数调试：训练时候的学习率，非极大值抑制以及推理时候的分数阈值</li>
+<li>将低置信度得分的包围框去掉。</li>
+<li>训练不同的卷积网络进行模型集成。</li>
+<li>在F1score开始下降的时候就停止训练。</li>
+<li>使用不同的学习率。</li>
+<li>使用层叠的方法用5 folds的方法训练ANN，重复30次。</li>
+</ul>
+<h2 id="评估和验证"><a href="#评估和验证" class="headerlink" title="评估和验证"></a>评估和验证</h2><ul>
+<li>按类别非均匀的划分训练和测试集</li>
+<li>当调试最后一层的时候，使用交叉验证来避免过拟合。</li>
+<li>使用10折交叉验证集成来进行分类。</li>
+<li>检测的时候使用5-10折交叉验证来集成。</li>
+</ul>
+<h2 id="集成方法"><a href="#集成方法" class="headerlink" title="集成方法"></a>集成方法</h2><ul>
+<li>使用简单的投票方法进行集成</li>
+<li>对于类别很多的模型使用LightGBM，使用原始特征。</li>
+<li>对2层模型使用CatBoost。</li>
+<li>使用 ‘curriculum learning’ 来加速模型训练，这种训练模式下，模型先在简单样本上训练，再在困难样本上训练。</li>
+<li>使用ResNet50, InceptionV3, and InceptionResNetV2进行集成。</li>
+<li>对物体检测使用集成。</li>
+<li>对Mask RCNN, YOLOv3, 和Faster RCNN 进行集成。</li>
+</ul>
+<h2 id="后处理"><a href="#后处理" class="headerlink" title="后处理"></a>后处理</h2><ul>
+<li>使用test time augmentation ，对一张图像进行随机变换多次测试后对结果进行平均。</li>
+<li>对测试的预测概率进行均衡化，而不是使用预测的类别。</li>
+<li>对预测结果进行几何平均。</li>
+<li>在推理的时候分块重叠，因为UNet对边缘区域的预测不是很好。</li>
+<li>进行非极大值抑制和包围框的收缩。</li>
+<li>在实例分割中使用分水岭算法后处理来分离物体。</li>
+</ul>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -1212,7 +1402,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">2308.5k</span>&nbsp;字
+                class="white-color">2327.4k</span>&nbsp;字
             
             
             

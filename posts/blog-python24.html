@@ -459,21 +459,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-11-08
+                    2021-11-11
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    10.7k
+                    11.8k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    44 分
+                    48 分
                 </div>
                 
 
@@ -1433,6 +1433,225 @@ try_facets<span class="token punctuation">(</span><span class="token string">"Hi
 <p>从 Top 3 Countries 中可以看到，这款摄像头使用数量排名前三的国家分别是：美国、日本和德国。</p>
 <p>没想到吧，Shodan 居然还能用于产品分析。同样地原理，如果你把关键词改为 <strong><code>apache</code></strong> ，你可以知道目前哪些国家使用apache服务器数量最多，最普遍被使用的版本号是什么。</p>
 <p>为了避免受到不必要的攻击，请大家及时检查所有联网设备的管理端的密码，如果有使用默认密码及弱口令，立即进行密码的更改，以保证服务的安全。</p>
+<h1 id="Gooey-GUI神器"><a href="#Gooey-GUI神器" class="headerlink" title="Gooey - GUI神器"></a>Gooey - GUI神器</h1><h3 id="安装-1"><a href="#安装-1" class="headerlink" title="安装"></a>安装</h3><p>安装方法毫无新意，跟以前我们安装其他库一样：</p>
+<blockquote>
+<p>pip install Gooey</p>
+</blockquote>
+<h3 id="简单示例"><a href="#简单示例" class="headerlink" title="简单示例"></a>简单示例</h3><pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> gooey <span class="token keyword">import</span> Gooey<span class="token punctuation">,</span> GooeyParser
+
+
+@Gooey<span class="token punctuation">(</span>program_name<span class="token operator">=</span><span class="token string">"简单的实例"</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    parser <span class="token operator">=</span> GooeyParser<span class="token punctuation">(</span>description<span class="token operator">=</span><span class="token string">"第一个示例!"</span><span class="token punctuation">)</span>
+    parser<span class="token punctuation">.</span>add_argument<span class="token punctuation">(</span><span class="token string">'文件路径'</span><span class="token punctuation">,</span> widget<span class="token operator">=</span><span class="token string">"FileChooser"</span><span class="token punctuation">)</span>      <span class="token comment" spellcheck="true"># 文件选择框</span>
+    parser<span class="token punctuation">.</span>add_argument<span class="token punctuation">(</span><span class="token string">'日期'</span><span class="token punctuation">,</span> widget<span class="token operator">=</span><span class="token string">"DateChooser"</span><span class="token punctuation">)</span>          <span class="token comment" spellcheck="true"># 日期选择框</span>
+    args <span class="token operator">=</span> parser<span class="token punctuation">.</span>parse_args<span class="token punctuation">(</span><span class="token punctuation">)</span>                                 <span class="token comment" spellcheck="true"># 接收界面传递的参数</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>args<span class="token punctuation">)</span>
+
+
+<span class="token keyword">if</span>   __name__ <span class="token operator">==</span> <span class="token string">'__main__'</span><span class="token punctuation">:</span>
+    main<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这里看代码应该大致知道界面有些什么控件：文件选择框、日期选择框。</p>
+<p>运行之后的效果如下：</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211111103928913.png" alt=""></p>
+<h3 id="组件"><a href="#组件" class="headerlink" title="组件"></a>组件</h3><p>GUI 界面都是由一个个组件排列组成的，上面的例子中我们使用了 FileChooser 和 DateChooser 这两个组件，使用起来是不是很简单？我们来看看 Gooey 还有哪些组件。</p>
+<table>
+<thead>
+<tr>
+<th align="center">控件名</th>
+<th align="center">控件类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">FileChooser</td>
+<td align="center">文件选择器</td>
+</tr>
+<tr>
+<td align="center">MultiFileChooser</td>
+<td align="center">文件多选器</td>
+</tr>
+<tr>
+<td align="center">DirChooser</td>
+<td align="center">目录选择器</td>
+</tr>
+<tr>
+<td align="center">MultiDirChooser</td>
+<td align="center">目录多选器</td>
+</tr>
+<tr>
+<td align="center">FileSaver</td>
+<td align="center">文件保存</td>
+</tr>
+<tr>
+<td align="center">DateChooser</td>
+<td align="center">日期选择</td>
+</tr>
+<tr>
+<td align="center">TextField</td>
+<td align="center">文本输入框</td>
+</tr>
+<tr>
+<td align="center">Dropdown</td>
+<td align="center">下拉列表</td>
+</tr>
+<tr>
+<td align="center">Counter</td>
+<td align="center">计数器</td>
+</tr>
+<tr>
+<td align="center">CheckBox</td>
+<td align="center">复选框</td>
+</tr>
+<tr>
+<td align="center">RadioGroup</td>
+<td align="center">单选框</td>
+</tr>
+</tbody></table>
+<p>这些组件基本上看名称就知道是什么样子的了，都是我们平时常用的页面组件。</p>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>配置参数主要是对Gooey界面做全局配置，配置方法如下：</p>
+<pre class="line-numbers language-python"><code class="language-python">@Gooey<span class="token punctuation">(</span>program_name<span class="token operator">=</span><span class="token string">'全局配置Demo'</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>这里就使用了 program_name 这个配置，主要是配置显示程序的名称。</p>
+<p>除此之外，Gooey 还有好多其他的配置参数：</p>
+<table>
+<thead>
+<tr>
+<th align="center">参数</th>
+<th align="center">类型</th>
+<th align="center">简介</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">advanced</td>
+<td align="center">Boolean</td>
+<td align="center">切换显示全部设置还是仅仅是简化版本</td>
+</tr>
+<tr>
+<td align="center">show_config</td>
+<td align="center">Boolean</td>
+<td align="center">跳过所有配置并立即运行程序</td>
+</tr>
+<tr>
+<td align="center">language</td>
+<td align="center">str</td>
+<td align="center">指定从 gooey/languages 目录读取哪个语言包</td>
+</tr>
+<tr>
+<td align="center">program_name</td>
+<td align="center">str</td>
+<td align="center">GUI 窗口显示的程序名。默认会显 sys.argv[0]。</td>
+</tr>
+<tr>
+<td align="center">program_description</td>
+<td align="center">str</td>
+<td align="center">Settings 窗口顶栏显示的描述性文字。默认值从 ArgumentParser 中获取。</td>
+</tr>
+<tr>
+<td align="center">default_size</td>
+<td align="center">tuple</td>
+<td align="center">窗口默认大小，(600,400)</td>
+</tr>
+<tr>
+<td align="center">required_cols</td>
+<td align="center">int</td>
+<td align="center">设置必选参数行数。</td>
+</tr>
+<tr>
+<td align="center">optional_cols</td>
+<td align="center">int</td>
+<td align="center">设置可选参数行数。</td>
+</tr>
+<tr>
+<td align="center">dump_build_config</td>
+<td align="center">Boolean</td>
+<td align="center">将设置以 JSON 格式保存在硬盘中以供编辑/重用。</td>
+</tr>
+<tr>
+<td align="center">richtext_controls</td>
+<td align="center">Boolean</td>
+<td align="center">打开/关闭控制台对终端控制序列的支持（对字体粗细和颜色的有限支持）</td>
+</tr>
+</tbody></table>
+<p>比如我们上面的例子中除了我们自己设置的，其他的控件例如选择按钮、确定按钮等默认都是英文的，我们可以通过 language 参数来设置语言。语言包在 Gooey 的 GitHub 源码中有：</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211111104136580.png" alt=""></p>
+<p>我们使用语言配置：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> gooey <span class="token keyword">import</span> Gooey<span class="token punctuation">,</span> GooeyParser
+
+
+@Gooey<span class="token punctuation">(</span>program_name<span class="token operator">=</span><span class="token string">"简单的实例"</span><span class="token punctuation">,</span> language<span class="token operator">=</span><span class="token string">'chinese'</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    parser <span class="token operator">=</span> GooeyParser<span class="token punctuation">(</span>description<span class="token operator">=</span><span class="token string">"第一个示例!"</span><span class="token punctuation">)</span>
+    parser<span class="token punctuation">.</span>add_argument<span class="token punctuation">(</span><span class="token string">'文件路径'</span><span class="token punctuation">,</span> widget<span class="token operator">=</span><span class="token string">"FileChooser"</span><span class="token punctuation">)</span>      <span class="token comment" spellcheck="true"># 文件选择框</span>
+    parser<span class="token punctuation">.</span>add_argument<span class="token punctuation">(</span><span class="token string">'日期'</span><span class="token punctuation">,</span> widget<span class="token operator">=</span><span class="token string">"DateChooser"</span><span class="token punctuation">)</span>          <span class="token comment" spellcheck="true"># 日期选择框</span>
+    args <span class="token operator">=</span> parser<span class="token punctuation">.</span>parse_args<span class="token punctuation">(</span><span class="token punctuation">)</span>                                 <span class="token comment" spellcheck="true"># 接收界面传递的参数</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>args<span class="token punctuation">)</span>
+
+
+<span class="token keyword">if</span>   __name__ <span class="token operator">==</span> <span class="token string">'__main__'</span><span class="token punctuation">:</span>
+    main<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这里加了一个 language 参数，我们看看运行后效果：</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211111104200074.png" alt=""></p>
+<h3 id="结构布局"><a href="#结构布局" class="headerlink" title="结构布局"></a>结构布局</h3><p>通过使用一些简单的自定义，您可以使用Gooey实现相当灵活的布局。我们可以通过Gooey装饰器的各种参数来控制总体布局选项。</p>
+<ul>
+<li>show_sidebar=True</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211111104221628.png" alt=""></p>
+<ul>
+<li>show_sidebar=False</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211111104246516.png" alt=""></p>
+<ul>
+<li>navigation=’TABBED’</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211111104303470.png" alt=""></p>
+<ul>
+<li>tabbed_groups=True</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211111104318191.png" alt=""></p>
+<h3 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h3><p>我们通过一个小栗子来看看运行的效果吧。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> gooey <span class="token keyword">import</span> Gooey<span class="token punctuation">,</span> GooeyParser
+
+
+@Gooey<span class="token punctuation">(</span>
+    richtext_controls<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span>                 <span class="token comment" spellcheck="true"># 打开终端对颜色支持</span>
+    program_name<span class="token operator">=</span><span class="token string">"MQTT连接订阅小工具"</span><span class="token punctuation">,</span>        <span class="token comment" spellcheck="true"># 程序名称</span>
+    encoding<span class="token operator">=</span><span class="token string">"utf-8"</span><span class="token punctuation">,</span>                       <span class="token comment" spellcheck="true"># 设置编码格式，打包的时候遇到问题</span>
+    progress_regex<span class="token operator">=</span>r<span class="token string">"^progress: (\d+)%$"</span>    <span class="token comment" spellcheck="true"># 正则，用于模式化运行时进度信息</span>
+<span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    settings_msg <span class="token operator">=</span> <span class="token string">'MQTT device activation information subscription'</span>
+    parser <span class="token operator">=</span> GooeyParser<span class="token punctuation">(</span>description<span class="token operator">=</span>settings_msg<span class="token punctuation">)</span>
+
+    subs <span class="token operator">=</span> parser<span class="token punctuation">.</span>add_subparsers<span class="token punctuation">(</span>help<span class="token operator">=</span><span class="token string">'commands'</span><span class="token punctuation">,</span> dest<span class="token operator">=</span><span class="token string">'command'</span><span class="token punctuation">)</span>
+
+    my_parser <span class="token operator">=</span> subs<span class="token punctuation">.</span>add_parser<span class="token punctuation">(</span><span class="token string">'MQTT消息订阅'</span><span class="token punctuation">)</span>
+    my_parser<span class="token punctuation">.</span>add_argument<span class="token punctuation">(</span><span class="token string">"connect"</span><span class="token punctuation">,</span> metavar<span class="token operator">=</span><span class="token string">'运行环境'</span><span class="token punctuation">,</span>help<span class="token operator">=</span><span class="token string">"请选择开发环境"</span><span class="token punctuation">,</span>choices<span class="token operator">=</span><span class="token punctuation">[</span><span class="token string">'dev环境'</span><span class="token punctuation">,</span><span class="token string">'staging环境'</span><span class="token punctuation">]</span><span class="token punctuation">,</span> default<span class="token operator">=</span><span class="token string">'dev环境'</span><span class="token punctuation">)</span>
+    my_parser<span class="token punctuation">.</span>add_argument<span class="token punctuation">(</span><span class="token string">"device_type"</span><span class="token punctuation">,</span>metavar<span class="token operator">=</span><span class="token string">'设备类型'</span><span class="token punctuation">,</span>help<span class="token operator">=</span><span class="token string">"请选择设备类型"</span><span class="token punctuation">,</span>choices<span class="token operator">=</span><span class="token punctuation">[</span><span class="token string">'H1'</span><span class="token punctuation">,</span><span class="token string">'H3'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>default<span class="token operator">=</span><span class="token string">'H1'</span><span class="token punctuation">)</span>
+    my_parser<span class="token punctuation">.</span>add_argument<span class="token punctuation">(</span><span class="token string">"serialNumber"</span><span class="token punctuation">,</span> metavar<span class="token operator">=</span><span class="token string">'设备SN号'</span><span class="token punctuation">,</span>default<span class="token operator">=</span><span class="token string">'LKVC19060047'</span><span class="token punctuation">,</span>help<span class="token operator">=</span><span class="token string">'多个请用逗号或空格隔开'</span><span class="token punctuation">)</span>
+
+    siege_parser <span class="token operator">=</span> subs<span class="token punctuation">.</span>add_parser<span class="token punctuation">(</span><span class="token string">'进度条控制'</span><span class="token punctuation">)</span>
+    siege_parser<span class="token punctuation">.</span>add_argument<span class="token punctuation">(</span><span class="token string">'num'</span><span class="token punctuation">,</span>help<span class="token operator">=</span><span class="token string">'请输入数字'</span><span class="token punctuation">,</span>default<span class="token operator">=</span><span class="token number">100</span><span class="token punctuation">)</span>
+
+    args <span class="token operator">=</span> parser<span class="token punctuation">.</span>parse_args<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>args<span class="token punctuation">,</span> flush<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>    <span class="token comment" spellcheck="true"># flush=True在打包的时候会用到</span>
+
+
+<span class="token keyword">if</span> __name__ <span class="token operator">==</span> <span class="token string">'__main__'</span><span class="token punctuation">:</span>
+    main<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这个例子运行的效果如下：</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/llllllzzzz.gif" alt=""></p>
+<h3 id="打包成应用程序"><a href="#打包成应用程序" class="headerlink" title="打包成应用程序"></a>打包成应用程序</h3><p>第一步，先安装我们的打包库：</p>
+<blockquote>
+<p>pip install pyinstaller</p>
+</blockquote>
+<p>第二步，执行打包命令：</p>
+<blockquote>
+<p>pyinstaller -F gooeydemo.py -w</p>
+</blockquote>
+<p>等待执行完成，我们就可以在代码目录下看到这样的结构：</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211111104450242.png" alt=""></p>
+<p>我们的 exe 可执行文件就在 dist 文件夹下。</p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -1946,7 +2165,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">2308.5k</span>&nbsp;字
+                class="white-color">2327.4k</span>&nbsp;字
             
             
             
