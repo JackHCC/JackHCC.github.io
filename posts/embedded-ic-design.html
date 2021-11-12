@@ -459,7 +459,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-11-05
+                    2021-11-12
                 </div>
                 
 
@@ -2839,11 +2839,12 @@ c = a | b; // a零扩展为 8'b00001011</code></pre><pre class="line-numbers lan
 </ul>
 </li>
 </ul>
-<pre><code>always @( posedge clk or negedge rst_)
-     if (! rst_)   
-         q &lt;= 0;
-     else
-         q &lt;= d;</code></pre><h4 id="组合块描述风格"><a href="#组合块描述风格" class="headerlink" title="组合块描述风格"></a>组合块描述风格</h4><pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> DFF <span class="token punctuation">(</span>q<span class="token punctuation">,</span> qb<span class="token punctuation">,</span> d<span class="token punctuation">,</span> clk<span class="token punctuation">,</span> clr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token important">always @</span><span class="token punctuation">(</span> <span class="token keyword">posedge</span> clk <span class="token keyword">or</span> <span class="token keyword">negedge</span> rst_<span class="token punctuation">)</span>
+     <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span> rst_<span class="token punctuation">)</span>   
+         q <span class="token operator">&lt;=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+     <span class="token keyword">else</span>
+         q <span class="token operator">&lt;=</span> d<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="组合块描述风格"><a href="#组合块描述风格" class="headerlink" title="组合块描述风格"></a>组合块描述风格</h4><pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> DFF <span class="token punctuation">(</span>q<span class="token punctuation">,</span> qb<span class="token punctuation">,</span> d<span class="token punctuation">,</span> clk<span class="token punctuation">,</span> clr<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token keyword">output</span> q<span class="token punctuation">,</span> qb<span class="token punctuation">;</span>
     <span class="token keyword">input</span> d<span class="token punctuation">,</span>  <span class="token comment" spellcheck="true">// input data</span>
               clk<span class="token punctuation">,</span> <span class="token comment" spellcheck="true">/*input clock */</span> clr<span class="token punctuation">;</span>
@@ -3068,7 +3069,7 @@ c = a | b; // a零扩展为 8'b00001011</code></pre><pre class="line-numbers lan
         q <span class="token operator">=</span> q<span class="token punctuation">;</span> 
 <span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h4 id="条件互斥与条件非互斥"><a href="#条件互斥与条件非互斥" class="headerlink" title="条件互斥与条件非互斥"></a>条件互斥与条件非互斥</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211105110022237.png" alt=""></p>
-<p>注：条件互斥产生并行电路，条件不互斥产生带优先级的串行电路</p>
+<p><strong>注：条件互斥产生并行电路，条件不互斥产生带优先级的串行电路</strong></p>
 <h4 id="条件非互斥的if语句"><a href="#条件非互斥的if语句" class="headerlink" title="条件非互斥的if语句"></a>条件非互斥的if语句</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211105110211954.png" alt=""></p>
 <p><strong>电路结构</strong></p>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211105110323236.png" alt=""></p>
@@ -3172,30 +3173,31 @@ c = a | b; // a零扩展为 8'b00001011</code></pre><pre class="line-numbers lan
 <li><p>异步复位：在同步块的敏感表中包含复位信号的激活边沿。在块内，复位描述方式与同步方式相同。</p>
 </li>
 </ul>
-<pre><code>`timescale 1ns / 1ns
-module reset_tb;
-    reg clk, d, rst ;
-    wire q, qa;
-    sync u0 ( clk, d, rst , q );
-    async u1 ( clk, d, rst , qa );
-    always #5 clk = !clk;
-    initial begin
-        clk = 0; d = 1;
-        rst = 1;
-    @(posedge clk);
-    @(negedge clk);
-        rst = 0;
-    @(posedge clk);
-    @(negedge clk);
-        rst = 1;
-        d = 1;
-    @(negedge clk);
-        rst = 0;
-        d = 1; 
-    @(negedge clk);
-        #10 $finish;
-end
-endmodule</code></pre><p><img src="/images/loading.gif" data-original="../images/basic/image-20211105220557193.png" alt=""></p>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token constant">`timescale</span> <span class="token number">1</span>ns <span class="token operator">/</span> <span class="token number">1</span>ns
+<span class="token keyword">module</span> reset_tb<span class="token punctuation">;</span>
+    <span class="token keyword">reg</span> clk<span class="token punctuation">,</span> d<span class="token punctuation">,</span> rst <span class="token punctuation">;</span>
+    <span class="token keyword">wire</span> q<span class="token punctuation">,</span> qa<span class="token punctuation">;</span>
+    sync u0 <span class="token punctuation">(</span> clk<span class="token punctuation">,</span> d<span class="token punctuation">,</span> rst <span class="token punctuation">,</span> q <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    async u1 <span class="token punctuation">(</span> clk<span class="token punctuation">,</span> d<span class="token punctuation">,</span> rst <span class="token punctuation">,</span> qa <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token important">always </span><span class="token number">#5</span> clk <span class="token operator">=</span> <span class="token operator">!</span>clk<span class="token punctuation">;</span>
+    <span class="token keyword">initial</span> <span class="token keyword">begin</span>
+        clk <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> d <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+        rst <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    @<span class="token punctuation">(</span><span class="token keyword">posedge</span> clk<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    @<span class="token punctuation">(</span><span class="token keyword">negedge</span> clk<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        rst <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    @<span class="token punctuation">(</span><span class="token keyword">posedge</span> clk<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    @<span class="token punctuation">(</span><span class="token keyword">negedge</span> clk<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        rst <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+        d <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    @<span class="token punctuation">(</span><span class="token keyword">negedge</span> clk<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        rst <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        d <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span> 
+    @<span class="token punctuation">(</span><span class="token keyword">negedge</span> clk<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token number">#10</span> <span class="token property">$finish</span><span class="token punctuation">;</span>
+<span class="token keyword">end</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211105220557193.png" alt=""></p>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211105220644825.png" alt=""></p>
 <h4 id="不好的复位描述方式"><a href="#不好的复位描述方式" class="headerlink" title="不好的复位描述方式"></a>不好的复位描述方式</h4><p>下面的异步复位描述（异步复位和同步块分开）是一种很不好的描述风格，并且有的综合工具不支持。在仿真中，如果r和ck在同一时刻改变，则结果不可确定。</p>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211105112928916.png" alt=""></p>
@@ -3729,7 +3731,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">2414.3k</span>&nbsp;字
+                class="white-color">2507.5k</span>&nbsp;字
             
             
             
@@ -3967,7 +3969,7 @@ $(function () {
     
     <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/instantpage/instantpage.js" type="module"></script>
     
-<script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script>
+
         <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
         <script>
         $('a').each(function() {
@@ -3986,7 +3988,7 @@ $(function () {
             }
           }
         });
-        </script></body>
+        </script><script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script></body>
 
 </html>
 
