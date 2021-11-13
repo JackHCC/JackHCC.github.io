@@ -459,21 +459,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-11-12
+                    2021-11-13
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    19.2k
+                    21.3k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    77 分
+                    90 分
                 </div>
                 
 
@@ -3218,6 +3218,616 @@ c = a | b; // a零扩展为 8'b00001011</code></pre><pre class="line-numbers lan
 <li>不是所有的综合工具都能很好地从工艺库里挑选择大的单元或宏单元，这需要用户人工实例化。一些宏单元，例如大的结构规则的数据通路元件，最好使用生产商提供的硅编译器产生。</li>
 <li>综合工具不保证产生最小结果。通常综合结果不如人工结果，只要你有足够的时间。</li>
 </ul>
+<h2 id="代码练习"><a href="#代码练习" class="headerlink" title="代码练习"></a>代码练习</h2><h3 id="练习1"><a href="#练习1" class="headerlink" title="练习1"></a>练习1</h3><h4 id="CLA-Adder-4bit-RTL代码"><a href="#CLA-Adder-4bit-RTL代码" class="headerlink" title="CLA Adder 4bit RTL代码"></a>CLA Adder 4bit RTL代码</h4><pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token constant">`timescale</span> <span class="token number">1</span>ns<span class="token operator">/</span><span class="token number">1</span>ns
+<span class="token keyword">module</span> <span class="token function">CLA_Adder</span><span class="token punctuation">(</span>
+<span class="token keyword">input</span> <span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> a <span class="token punctuation">,</span>
+b <span class="token punctuation">,</span>
+<span class="token keyword">input</span> <span class="token keyword">wire</span> ci<span class="token punctuation">,</span>
+<span class="token keyword">output</span> <span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> s <span class="token punctuation">,</span> 
+<span class="token keyword">output</span> <span class="token keyword">wire</span> co 
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> p <span class="token punctuation">,</span> g<span class="token punctuation">;</span>
+<span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> c<span class="token punctuation">;</span>
+<span class="token keyword">assign</span> g <span class="token operator">=</span> a<span class="token operator">&amp;</span>b <span class="token punctuation">;</span>
+<span class="token keyword">assign</span> p <span class="token operator">=</span> a<span class="token operator">^</span>b <span class="token punctuation">;</span>
+<span class="token keyword">assign</span> c<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> g<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token operator">|</span><span class="token punctuation">(</span>p<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token operator">&amp;</span>ci<span class="token punctuation">)</span> <span class="token punctuation">;</span>
+<span class="token keyword">assign</span> c<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> g<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token operator">|</span><span class="token punctuation">(</span>p<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token operator">&amp;</span>g<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token operator">|</span><span class="token punctuation">(</span>p<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token operator">&amp;</span>p<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token operator">&amp;</span>ci<span class="token punctuation">)</span> <span class="token punctuation">;</span>
+<span class="token keyword">assign</span> c<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">=</span> g<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token operator">|</span><span class="token punctuation">(</span>p<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token operator">&amp;</span>g<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token operator">|</span><span class="token punctuation">(</span>p<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token operator">&amp;</span>p<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token operator">&amp;</span>g<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token operator">|</span><span class="token punctuation">(</span>p<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token operator">&amp;</span>p<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token operator">&amp;</span>p<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token operator">&amp;</span>ci<span class="token punctuation">)</span> <span class="token punctuation">;</span>
+<span class="token keyword">assign</span> c<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span> <span class="token operator">=</span> g<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token operator">|</span><span class="token punctuation">(</span>p<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token operator">&amp;</span>g<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token operator">|</span><span class="token punctuation">(</span>p<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token operator">&amp;</span>p<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token operator">&amp;</span>g<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token operator">|</span><span class="token punctuation">(</span>p<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token operator">&amp;</span>p<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token operator">&amp;</span>p<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token operator">&amp;</span>g<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token operator">|</span><span class="token punctuation">(</span>p<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token operator">&amp;</span>p<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token operator">&amp;</span>p<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token operator">&amp;</span>p<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token operator">&amp;</span>ci<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">assign</span> co <span class="token operator">=</span> c<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span> <span class="token punctuation">;</span>
+<span class="token keyword">assign</span> s<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span> <span class="token operator">=</span> p<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token operator">^</span>c<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">assign</span> s<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">=</span> p<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token operator">^</span>c<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">assign</span> s<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> p<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token operator">^</span>c<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">assign</span> s<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> p<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token operator">^</span>ci <span class="token punctuation">;</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="ALU-4bit-CLA-RTL代码"><a href="#ALU-4bit-CLA-RTL代码" class="headerlink" title="ALU 4bit CLA RTL代码"></a>ALU 4bit CLA RTL代码</h4><pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> <span class="token function">ALU_CLA4_G</span><span class="token punctuation">(</span>
+<span class="token keyword">input</span> <span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> a <span class="token punctuation">,</span>
+b <span class="token punctuation">,</span>
+<span class="token keyword">input</span> <span class="token keyword">wire</span> ci <span class="token punctuation">,</span>
+<span class="token keyword">input</span> <span class="token keyword">wire</span> M <span class="token punctuation">,</span>
+<span class="token keyword">input</span> <span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> S <span class="token punctuation">,</span> 
+<span class="token keyword">output</span> <span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> Do <span class="token punctuation">,</span> 
+<span class="token keyword">output</span> <span class="token keyword">wire</span> co <span class="token punctuation">,</span>
+<span class="token keyword">output</span> <span class="token keyword">wire</span> V <span class="token punctuation">,</span>
+Z
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">3</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> g <span class="token punctuation">,</span> p <span class="token punctuation">;</span>
+<span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">3</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> G <span class="token punctuation">,</span> P <span class="token punctuation">;</span>
+<span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">4</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> c <span class="token punctuation">;</span>
+<span class="token keyword">integer</span> i<span class="token punctuation">;</span>
+<span class="token important">always @</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span>
+    <span class="token function">for</span><span class="token punctuation">(</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">4</span><span class="token punctuation">;</span> i <span class="token operator">=</span> i <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token keyword">begin</span>
+        g<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span>     <span class="token punctuation">(</span> S<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span> <span class="token operator">&amp;</span> a<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">&amp;</span> b<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token punctuation">)</span> <span class="token operator">||</span>
+                <span class="token punctuation">(</span> S<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">&amp;</span> a<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">&amp;</span> <span class="token operator">!</span>b<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token punctuation">)</span> <span class="token operator">||</span>
+                <span class="token operator">!</span>M<span class="token punctuation">;</span>
+        p<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token operator">!</span><span class="token punctuation">(</span> <span class="token punctuation">(</span> S<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span> <span class="token operator">&amp;</span> a<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">&amp;</span> b<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token punctuation">)</span> <span class="token operator">||</span>
+                <span class="token punctuation">(</span> S<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">&amp;</span> a<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">&amp;</span> <span class="token operator">!</span>b<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token punctuation">)</span> <span class="token operator">||</span>
+                <span class="token punctuation">(</span> S<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">&amp;</span> <span class="token operator">!</span>a<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">&amp;</span> b<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token punctuation">)</span> <span class="token operator">||</span>
+                <span class="token punctuation">(</span> S<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">&amp;</span> <span class="token operator">!</span>a<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">&amp;</span> <span class="token operator">!</span>b<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token punctuation">)</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">end</span>
+
+<span class="token keyword">assign</span> G<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> g<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token punctuation">;</span>
+<span class="token keyword">assign</span> G<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> g<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">|</span> <span class="token punctuation">(</span> p<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">&amp;</span> G<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token punctuation">)</span> <span class="token punctuation">;</span>
+<span class="token keyword">assign</span> G<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">=</span> g<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">|</span> <span class="token punctuation">(</span> p<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">&amp;</span> G<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token punctuation">)</span> <span class="token punctuation">;</span>
+<span class="token keyword">assign</span> G<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span> <span class="token operator">=</span> g<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span> <span class="token operator">|</span> <span class="token punctuation">(</span> p<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span> <span class="token operator">&amp;</span> G<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token punctuation">)</span> <span class="token punctuation">;</span> 
+<span class="token keyword">assign</span> P<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> p<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token punctuation">;</span>
+<span class="token keyword">assign</span> P<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> p<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">&amp;</span> P<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token punctuation">;</span>
+<span class="token keyword">assign</span> P<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">=</span> p<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">&amp;</span> P<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token punctuation">;</span>
+<span class="token keyword">assign</span> P<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span> <span class="token operator">=</span> p<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span> <span class="token operator">&amp;</span> P<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token punctuation">;</span> 
+<span class="token keyword">assign</span> c<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> ci <span class="token punctuation">;</span>
+<span class="token keyword">assign</span> c<span class="token punctuation">[</span><span class="token number">4</span> <span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> G <span class="token operator">|</span> <span class="token punctuation">(</span> P <span class="token operator">&amp;</span> <span class="token operator">{</span><span class="token number">4</span><span class="token operator">{</span>c<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token operator">}}</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">assign</span> Do <span class="token operator">=</span> p <span class="token operator">^</span> c<span class="token punctuation">[</span><span class="token number">3</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">assign</span> co <span class="token operator">=</span> c<span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">assign</span> V <span class="token operator">=</span> c<span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span> <span class="token operator">^</span> c<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">assign</span> Z <span class="token operator">=</span> <span class="token operator">!</span> <span class="token punctuation">(</span> <span class="token operator">|</span> Do<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">endmodule</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="ALU-CLA-4bit-测试程序"><a href="#ALU-CLA-4bit-测试程序" class="headerlink" title="ALU CLA 4bit 测试程序"></a>ALU CLA 4bit 测试程序</h4><pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token constant">`timescale</span> <span class="token number">1</span>ns<span class="token operator">/</span><span class="token number">1</span>ns
+<span class="token keyword">module</span> <span class="token function">ALU_CLA4_G_tb</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> a <span class="token punctuation">,</span>
+b <span class="token punctuation">;</span>
+<span class="token keyword">reg</span> ci<span class="token punctuation">;</span>
+<span class="token keyword">reg</span> M <span class="token punctuation">;</span>
+<span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> S <span class="token punctuation">;</span>
+<span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> Do <span class="token punctuation">;</span> 
+<span class="token keyword">wire</span> co<span class="token punctuation">;</span>
+<span class="token keyword">wire</span> V <span class="token punctuation">,</span>
+Z <span class="token punctuation">;</span>
+ALU_CLA4_G <span class="token function">uG</span><span class="token punctuation">(</span>
+<span class="token punctuation">.</span>a <span class="token punctuation">(</span> a <span class="token punctuation">)</span><span class="token punctuation">,</span>
+<span class="token punctuation">.</span>b <span class="token punctuation">(</span> b <span class="token punctuation">)</span><span class="token punctuation">,</span>
+<span class="token punctuation">.</span>ci <span class="token punctuation">(</span> ci <span class="token punctuation">)</span><span class="token punctuation">,</span>
+<span class="token punctuation">.</span>M <span class="token punctuation">(</span> M <span class="token punctuation">)</span><span class="token punctuation">,</span>
+<span class="token punctuation">.</span>S <span class="token punctuation">(</span> S <span class="token punctuation">)</span><span class="token punctuation">,</span> 
+<span class="token punctuation">.</span>Do <span class="token punctuation">(</span> Do <span class="token punctuation">)</span><span class="token punctuation">,</span> 
+<span class="token punctuation">.</span>co <span class="token punctuation">(</span> co <span class="token punctuation">)</span><span class="token punctuation">,</span>
+<span class="token punctuation">.</span>V <span class="token punctuation">(</span> V <span class="token punctuation">)</span><span class="token punctuation">,</span>
+<span class="token punctuation">.</span>Z <span class="token punctuation">(</span> Z <span class="token punctuation">)</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">integer</span> i<span class="token punctuation">;</span>
+<span class="token keyword">reg</span> error <span class="token punctuation">;</span>
+<span class="token keyword">integer</span> func <span class="token punctuation">;</span>
+<span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">3</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> DO_ex<span class="token punctuation">;</span>
+<span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">3</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> opA<span class="token punctuation">,</span>
+            opB<span class="token punctuation">;</span>
+<span class="token keyword">initial</span> <span class="token keyword">begin</span>
+    <span class="token comment" spellcheck="true">//logic test</span>
+    func <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    error <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    a <span class="token operator">=</span> <span class="token number">4'b1100</span><span class="token punctuation">;</span>
+    b <span class="token operator">=</span> <span class="token number">4'b1010</span><span class="token punctuation">;</span>
+    ci<span class="token operator">=</span> <span class="token number">1'b1</span><span class="token punctuation">;</span>
+    M <span class="token operator">=</span> <span class="token number">1'b0</span><span class="token punctuation">;</span>
+    <span class="token function">for</span><span class="token punctuation">(</span>i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">16</span><span class="token punctuation">;</span> i <span class="token operator">=</span> i<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token keyword">begin</span>
+        S <span class="token operator">=</span> i<span class="token punctuation">;</span>
+        <span class="token number">#10</span> <span class="token function">if</span><span class="token punctuation">(</span> Do <span class="token operator">!=</span> DO_ex<span class="token punctuation">)</span> 
+                error <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+            <span class="token keyword">else</span>
+                error <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token keyword">end</span> 
+
+    <span class="token comment" spellcheck="true">//add test</span>
+func <span class="token operator">=</span> func <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">;</span>
+S <span class="token operator">=</span> <span class="token number">4'b1001</span><span class="token punctuation">;</span> ci <span class="token operator">=</span> <span class="token number">1'b0</span><span class="token punctuation">;</span> M <span class="token operator">=</span> <span class="token number">1'b1</span><span class="token punctuation">;</span>
+    <span class="token function">for</span><span class="token punctuation">(</span>i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">256</span><span class="token punctuation">;</span> i <span class="token operator">=</span> i<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token keyword">begin</span>
+        <span class="token operator">{</span>a<span class="token punctuation">,</span> b<span class="token operator">}</span> <span class="token operator">=</span> i<span class="token punctuation">;</span>
+        <span class="token number">#10</span> <span class="token function">if</span><span class="token punctuation">(</span>Do <span class="token operator">!=</span> DO_ex<span class="token punctuation">)</span> 
+                error <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+            <span class="token keyword">else</span>
+                error <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token keyword">end</span>
+<span class="token comment" spellcheck="true">//sub test</span>
+func <span class="token operator">=</span> func <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">;</span>
+S <span class="token operator">=</span> <span class="token number">4'b0110</span><span class="token punctuation">;</span> ci <span class="token operator">=</span> <span class="token number">1'b1</span><span class="token punctuation">;</span> M <span class="token operator">=</span> <span class="token number">1'b1</span><span class="token punctuation">;</span>
+a <span class="token operator">=</span> <span class="token number">4'b1100</span><span class="token punctuation">;</span>
+b <span class="token operator">=</span> <span class="token number">4'b1010</span><span class="token punctuation">;</span>
+<span class="token number">#10</span> <span class="token function">if</span><span class="token punctuation">(</span>Do <span class="token operator">!=</span> DO_ex<span class="token punctuation">)</span> 
+        error <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token keyword">else</span>
+        error <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+
+
+<span class="token comment" spellcheck="true">//carry test</span>
+func <span class="token operator">=</span> func <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">;</span>
+S <span class="token operator">=</span> <span class="token number">4'b1001</span><span class="token punctuation">;</span> ci <span class="token operator">=</span> <span class="token number">1'b0</span><span class="token punctuation">;</span> M <span class="token operator">=</span> <span class="token number">1'b1</span><span class="token punctuation">;</span>
+a <span class="token operator">=</span> <span class="token number">4'b1100</span><span class="token punctuation">;</span>
+b <span class="token operator">=</span> <span class="token number">4'b0110</span><span class="token punctuation">;</span>
+<span class="token number">#10</span> <span class="token function">if</span><span class="token punctuation">(</span>co <span class="token operator">==</span> <span class="token number">1'b0</span><span class="token punctuation">)</span> 
+        error <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token keyword">else</span>
+        error <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+a <span class="token operator">=</span> <span class="token number">4'b0100</span><span class="token punctuation">;</span>
+b <span class="token operator">=</span> <span class="token number">4'b0110</span><span class="token punctuation">;</span>
+<span class="token number">#10</span> <span class="token function">if</span><span class="token punctuation">(</span>co <span class="token operator">==</span> <span class="token number">1'b1</span><span class="token punctuation">)</span> 
+        error <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token keyword">else</span>
+        error <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">//V test</span>
+<span class="token comment" spellcheck="true">//a + b</span>
+<span class="token comment" spellcheck="true">// a = 4'b0111; b = 4'b0010 V = 1</span>
+<span class="token comment" spellcheck="true">// a = 4'b0111; b = 4'b1010 V = 0</span>
+<span class="token comment" spellcheck="true">// a = 4'b1100; b = 4'b1010 V = 1</span>
+<span class="token comment" spellcheck="true">// a = 4'b1100; b = 4'b0110 V = 0</span>
+func <span class="token operator">=</span> func <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">;</span>
+S <span class="token operator">=</span> <span class="token number">4'b1001</span><span class="token punctuation">;</span> ci <span class="token operator">=</span> <span class="token number">1'b0</span><span class="token punctuation">;</span> M <span class="token operator">=</span> <span class="token number">1'b1</span><span class="token punctuation">;</span>
+a <span class="token operator">=</span> <span class="token number">4'b0111</span><span class="token punctuation">;</span>
+b <span class="token operator">=</span> <span class="token number">4'b0010</span><span class="token punctuation">;</span>
+<span class="token number">#10</span> <span class="token function">if</span><span class="token punctuation">(</span>V <span class="token operator">==</span> <span class="token number">1'b0</span><span class="token punctuation">)</span> 
+        error <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token keyword">else</span>
+        error <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+a <span class="token operator">=</span> <span class="token number">4'b0111</span><span class="token punctuation">;</span>
+b <span class="token operator">=</span> <span class="token number">4'b1010</span><span class="token punctuation">;</span>
+<span class="token number">#10</span> <span class="token function">if</span><span class="token punctuation">(</span>V <span class="token operator">==</span> <span class="token number">1'b1</span><span class="token punctuation">)</span> 
+        error <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token keyword">else</span>
+        error <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+a <span class="token operator">=</span> <span class="token number">4'b1100</span><span class="token punctuation">;</span>
+b <span class="token operator">=</span> <span class="token number">4'b1010</span><span class="token punctuation">;</span>
+<span class="token number">#10</span> <span class="token function">if</span><span class="token punctuation">(</span>V <span class="token operator">==</span> <span class="token number">1'b0</span><span class="token punctuation">)</span> 
+        error <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token keyword">else</span>
+        error <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+
+a <span class="token operator">=</span> <span class="token number">4'b1100</span><span class="token punctuation">;</span>
+b <span class="token operator">=</span> <span class="token number">4'b0110</span><span class="token punctuation">;</span>
+<span class="token number">#10</span> <span class="token function">if</span><span class="token punctuation">(</span>V <span class="token operator">==</span> <span class="token number">1'b1</span><span class="token punctuation">)</span> 
+        error <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token keyword">else</span>
+        error <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">//a - b</span>
+<span class="token comment" spellcheck="true">// a = 4'b0111; b = 4'b0010 V = 0</span>
+<span class="token comment" spellcheck="true">// a = 4'b0111; b = 4'b1010 V = 1</span>
+<span class="token comment" spellcheck="true">// a = 4'b1100; b = 4'b1010 V = 0</span>
+<span class="token comment" spellcheck="true">// a = 4'b1100; b = 4'b0110 V = 1</span>
+func <span class="token operator">=</span> func <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">;</span>
+S <span class="token operator">=</span> <span class="token number">4'b0110</span><span class="token punctuation">;</span> ci <span class="token operator">=</span> <span class="token number">1'b1</span><span class="token punctuation">;</span> M <span class="token operator">=</span> <span class="token number">1'b1</span><span class="token punctuation">;</span>
+a <span class="token operator">=</span> <span class="token number">4'b0111</span><span class="token punctuation">;</span>
+b <span class="token operator">=</span> <span class="token number">4'b0010</span><span class="token punctuation">;</span>
+<span class="token number">#10</span> <span class="token function">if</span><span class="token punctuation">(</span>V <span class="token operator">==</span> <span class="token number">1'b1</span><span class="token punctuation">)</span> 
+        error <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token keyword">else</span>
+        error <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+a <span class="token operator">=</span> <span class="token number">4'b0111</span><span class="token punctuation">;</span>
+b <span class="token operator">=</span> <span class="token number">4'b1010</span><span class="token punctuation">;</span>
+<span class="token number">#10</span> <span class="token function">if</span><span class="token punctuation">(</span>V <span class="token operator">==</span> <span class="token number">1'b0</span><span class="token punctuation">)</span> 
+        error <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token keyword">else</span>
+        error <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+
+a <span class="token operator">=</span> <span class="token number">4'b1100</span><span class="token punctuation">;</span>
+b <span class="token operator">=</span> <span class="token number">4'b1010</span><span class="token punctuation">;</span>
+<span class="token number">#10</span> <span class="token function">if</span><span class="token punctuation">(</span>V <span class="token operator">==</span> <span class="token number">1'b1</span><span class="token punctuation">)</span> 
+        error <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token keyword">else</span>
+        error <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+a <span class="token operator">=</span> <span class="token number">4'b1100</span><span class="token punctuation">;</span>
+b <span class="token operator">=</span> <span class="token number">4'b0110</span><span class="token punctuation">;</span>
+<span class="token number">#10</span> <span class="token function">if</span><span class="token punctuation">(</span>V <span class="token operator">==</span> <span class="token number">1'b0</span><span class="token punctuation">)</span> 
+        error <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token keyword">else</span>
+        error <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token number">#10</span> <span class="token property">$finish</span><span class="token punctuation">;</span>
+<span class="token keyword">end</span>   
+
+<span class="token comment" spellcheck="true">//DO expected</span>
+<span class="token important">always @</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token keyword">begin</span>
+    opA <span class="token operator">=</span> a<span class="token punctuation">;</span>
+    opB <span class="token operator">=</span> b<span class="token punctuation">;</span>
+    <span class="token function">case</span><span class="token punctuation">(</span><span class="token operator">{</span>S<span class="token punctuation">,</span> ci<span class="token punctuation">,</span> M<span class="token operator">}</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">//0000 10 0 置全0</span>
+<span class="token comment" spellcheck="true">//0001 10 !A &amp; !B nor</span>
+<span class="token comment" spellcheck="true">//0010 10 !A &amp; B notand</span>
+<span class="token comment" spellcheck="true">//0011 10 !A not A</span>
+        <span class="token number">6'b0000_10</span><span class="token punctuation">:</span> DO_ex <span class="token operator">=</span> <span class="token number">32'b0</span><span class="token punctuation">;</span>
+        <span class="token number">6'b0001_10</span><span class="token punctuation">:</span> DO_ex <span class="token operator">=</span> <span class="token operator">~</span>opA <span class="token operator">&amp;</span> <span class="token operator">~</span>opB<span class="token punctuation">;</span>
+        <span class="token number">6'b0010_10</span><span class="token punctuation">:</span> DO_ex <span class="token operator">=</span> <span class="token operator">~</span>opA <span class="token operator">&amp;</span> opB<span class="token punctuation">;</span>
+        <span class="token number">6'b0011_10</span><span class="token punctuation">:</span> DO_ex <span class="token operator">=</span> <span class="token operator">~</span>opA<span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">//0100 10 A &amp; !B andnot</span>
+<span class="token comment" spellcheck="true">//0101 10 !B not B</span>
+<span class="token comment" spellcheck="true">//0110 10 A&amp;!B | !A&amp;B xor</span>
+<span class="token comment" spellcheck="true">//0111 10 !A | !B nand</span>
+        <span class="token number">6'b0100_10</span><span class="token punctuation">:</span> DO_ex <span class="token operator">=</span> opA <span class="token operator">&amp;</span> <span class="token operator">~</span>opB<span class="token punctuation">;</span>
+        <span class="token number">6'b0101_10</span><span class="token punctuation">:</span> DO_ex <span class="token operator">=</span> <span class="token operator">~</span>opB<span class="token punctuation">;</span>
+        <span class="token number">6'b0110_10</span><span class="token punctuation">:</span> DO_ex <span class="token operator">=</span> opA <span class="token operator">^</span> opB<span class="token punctuation">;</span>
+        <span class="token number">6'b0111_10</span><span class="token punctuation">:</span> DO_ex <span class="token operator">=</span> <span class="token operator">~</span>opA <span class="token operator">|</span> <span class="token operator">~</span>opB<span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">//1000 10 A &amp; B and</span>
+<span class="token comment" spellcheck="true">//1001 10 A&amp;B | !A &amp; !B xnor</span>
+<span class="token comment" spellcheck="true">//1010 10 B 传送B</span>
+<span class="token comment" spellcheck="true">//1011 10 A&amp;B | !A&amp;B |!A&amp;!B notor </span>
+
+        <span class="token number">6'b1000_10</span><span class="token punctuation">:</span> DO_ex <span class="token operator">=</span> opA <span class="token operator">&amp;</span> opB<span class="token punctuation">;</span>
+        <span class="token number">6'b1001_10</span><span class="token punctuation">:</span> DO_ex <span class="token operator">=</span> opA <span class="token operator">~^</span> opB<span class="token punctuation">;</span>
+        <span class="token number">6'b1010_10</span><span class="token punctuation">:</span> DO_ex <span class="token operator">=</span> opB<span class="token punctuation">;</span>
+        <span class="token number">6'b1011_10</span><span class="token punctuation">:</span> DO_ex <span class="token operator">=</span> <span class="token operator">~</span><span class="token punctuation">(</span>opA <span class="token operator">&amp;</span> <span class="token operator">~</span>opB<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">//1100 10 A 传送A</span>
+<span class="token comment" spellcheck="true">//1101 10 A&amp;B | A&amp;!B | !A&amp;!B or not</span>
+<span class="token comment" spellcheck="true">//1110 10 A&amp;B | A&amp;!B | !A&amp;B or </span>
+<span class="token comment" spellcheck="true">//1111 10 1 置全1</span>
+        <span class="token number">6'b1100_10</span><span class="token punctuation">:</span> DO_ex <span class="token operator">=</span> opA <span class="token punctuation">;</span>
+        <span class="token number">6'b1101_10</span><span class="token punctuation">:</span> DO_ex <span class="token operator">=</span> <span class="token operator">~</span><span class="token punctuation">(</span><span class="token operator">~</span>opA <span class="token operator">&amp;</span> opB<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token number">6'b1110_10</span><span class="token punctuation">:</span> DO_ex <span class="token operator">=</span> opA <span class="token operator">|</span> opB<span class="token punctuation">;</span>
+        <span class="token number">6'b1111_10</span><span class="token punctuation">:</span> DO_ex <span class="token operator">=</span> <span class="token operator">{</span><span class="token number">32</span><span class="token operator">{</span><span class="token number">1'b1</span><span class="token operator">}}</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">//1001 01 A ^ B ^ C 加法</span>
+<span class="token comment" spellcheck="true">//0110 11 ( A ~^ B) ^ C 减法</span>
+        <span class="token number">6'b1001_01</span><span class="token punctuation">:</span> DO_ex <span class="token operator">=</span> opA <span class="token operator">+</span> opB<span class="token punctuation">;</span>
+        <span class="token number">6'b0110_11</span><span class="token punctuation">:</span> DO_ex <span class="token operator">=</span> opA <span class="token operator">-</span> opB<span class="token punctuation">;</span>
+        <span class="token keyword">default</span><span class="token punctuation">:</span> DO_ex <span class="token operator">=</span> <span class="token number">32'bx</span><span class="token punctuation">;</span>
+    <span class="token keyword">endcase</span>
+<span class="token keyword">end</span>
+<span class="token keyword">endmodule</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="ALU-CLA-32bit-RTL代码"><a href="#ALU-CLA-32bit-RTL代码" class="headerlink" title="ALU CLA 32bit RTL代码"></a>ALU CLA 32bit RTL代码</h4><pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token constant">`timescale</span> <span class="token number">1</span>ns<span class="token operator">/</span><span class="token number">1</span>ns
+<span class="token keyword">module</span> ALU_CLA32 <span class="token punctuation">(</span>
+<span class="token keyword">input</span> <span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">31</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> opA <span class="token punctuation">,</span> <span class="token comment" spellcheck="true">//操作数A</span>
+opB <span class="token punctuation">,</span> <span class="token comment" spellcheck="true">//操作数B</span>
+<span class="token keyword">input</span> <span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">3</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> S <span class="token punctuation">,</span> <span class="token comment" spellcheck="true">//工作模式</span>
+<span class="token keyword">input</span> <span class="token keyword">wire</span> M <span class="token punctuation">,</span> <span class="token comment" spellcheck="true">//逻辑操作</span>
+Cin <span class="token punctuation">,</span> <span class="token comment" spellcheck="true">//进位输入</span>
+<span class="token keyword">output</span> <span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">31</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> DO <span class="token punctuation">,</span> <span class="token comment" spellcheck="true">//数据输出</span>
+<span class="token keyword">output</span> <span class="token keyword">wire</span> N <span class="token punctuation">,</span>
+Z <span class="token punctuation">,</span>
+V <span class="token punctuation">,</span>
+C
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">8</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> Co<span class="token punctuation">;</span>
+<span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">7</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> Zo<span class="token punctuation">,</span> Vo<span class="token punctuation">;</span>
+<span class="token keyword">assign</span> Co<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> Cin<span class="token punctuation">;</span>
+
+<span class="token keyword">generate</span>
+<span class="token keyword">genvar</span> i<span class="token punctuation">;</span>
+<span class="token function">for</span><span class="token punctuation">(</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">8</span><span class="token punctuation">;</span> i <span class="token operator">=</span> i <span class="token operator">+</span> <span class="token number">1</span> <span class="token punctuation">)</span> <span class="token keyword">begin</span> <span class="token punctuation">:</span> u
+    ALU_CLA4_G <span class="token function">uALU_CLA4_G</span><span class="token punctuation">(</span>
+    <span class="token punctuation">.</span>a <span class="token punctuation">(</span> opA<span class="token punctuation">[</span>i<span class="token operator">*</span><span class="token number">4</span> <span class="token operator">+</span> <span class="token number">3</span> <span class="token punctuation">:</span> i<span class="token operator">*</span><span class="token number">4</span><span class="token punctuation">]</span> <span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token punctuation">.</span>b <span class="token punctuation">(</span> opB<span class="token punctuation">[</span>i<span class="token operator">*</span><span class="token number">4</span> <span class="token operator">+</span> <span class="token number">3</span> <span class="token punctuation">:</span> i<span class="token operator">*</span><span class="token number">4</span><span class="token punctuation">]</span> <span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token punctuation">.</span>ci <span class="token punctuation">(</span> Co<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token punctuation">.</span>M <span class="token punctuation">(</span> M <span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token punctuation">.</span>S <span class="token punctuation">(</span> S <span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token punctuation">.</span>Do <span class="token punctuation">(</span> DO<span class="token punctuation">[</span>i<span class="token operator">*</span><span class="token number">4</span> <span class="token operator">+</span> <span class="token number">3</span> <span class="token punctuation">:</span> i<span class="token operator">*</span><span class="token number">4</span><span class="token punctuation">]</span> <span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token punctuation">.</span>co <span class="token punctuation">(</span> Co<span class="token punctuation">[</span> i<span class="token operator">+</span><span class="token number">1</span> <span class="token punctuation">]</span> <span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token punctuation">.</span>V <span class="token punctuation">(</span> Vo<span class="token punctuation">[</span> i <span class="token punctuation">]</span> <span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token punctuation">.</span>Z <span class="token punctuation">(</span> Zo<span class="token punctuation">[</span> i <span class="token punctuation">]</span> <span class="token punctuation">)</span>
+    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">end</span>
+<span class="token keyword">endgenerate</span>
+<span class="token keyword">assign</span> V <span class="token operator">=</span> Vo<span class="token punctuation">[</span> <span class="token number">7</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">assign</span> N <span class="token operator">=</span> DO<span class="token punctuation">[</span><span class="token number">31</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">assign</span> C <span class="token operator">=</span> Co<span class="token punctuation">[</span> <span class="token number">8</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">assign</span> Z <span class="token operator">=</span> <span class="token operator">&amp;</span> Zo<span class="token punctuation">;</span>
+<span class="token keyword">endmodule</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="ALU-CLA-32bit-测试程序"><a href="#ALU-CLA-32bit-测试程序" class="headerlink" title="ALU CLA 32bit 测试程序"></a>ALU CLA 32bit 测试程序</h4><pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token constant">`timescale</span> <span class="token number">1</span>ns<span class="token operator">/</span><span class="token number">1</span>ns
+<span class="token keyword">module</span> <span class="token function">ALU_CLA32_tb</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">31</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> opA <span class="token punctuation">,</span>
+opB <span class="token punctuation">;</span>
+<span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">3</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> S <span class="token punctuation">;</span>
+<span class="token keyword">reg</span> M <span class="token punctuation">,</span>
+Cin <span class="token punctuation">;</span>
+<span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">31</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> DO <span class="token punctuation">;</span>
+<span class="token keyword">wire</span> N <span class="token punctuation">,</span> Z <span class="token punctuation">,</span>
+V <span class="token punctuation">,</span> C <span class="token punctuation">;</span>
+ALU_CLA32 <span class="token function">uALU32</span><span class="token punctuation">(</span>
+<span class="token punctuation">.</span>opA <span class="token punctuation">(</span> opA <span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token comment" spellcheck="true">//操作数A</span>
+<span class="token punctuation">.</span>opB <span class="token punctuation">(</span> opB <span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token comment" spellcheck="true">//操作数B</span>
+<span class="token punctuation">.</span>S <span class="token punctuation">(</span> S <span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token comment" spellcheck="true">//工作模式选择信号</span>
+<span class="token punctuation">.</span>M <span class="token punctuation">(</span> M <span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token comment" spellcheck="true">//逻辑操作控制信号</span>
+<span class="token punctuation">.</span>Cin <span class="token punctuation">(</span> Cin <span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token comment" spellcheck="true">//进位输入信号</span>
+<span class="token punctuation">.</span>DO <span class="token punctuation">(</span> DO <span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token comment" spellcheck="true">//数据输出</span>
+<span class="token punctuation">.</span>N <span class="token punctuation">(</span> N <span class="token punctuation">)</span><span class="token punctuation">,</span>
+<span class="token punctuation">.</span>Z <span class="token punctuation">(</span> Z <span class="token punctuation">)</span><span class="token punctuation">,</span>
+<span class="token punctuation">.</span>V <span class="token punctuation">(</span> V <span class="token punctuation">)</span><span class="token punctuation">,</span>
+<span class="token punctuation">.</span>C <span class="token punctuation">(</span> C <span class="token punctuation">)</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">initial</span> <span class="token keyword">begin</span>
+opA <span class="token operator">=</span> <span class="token number">32'hFFFF_FFFF</span><span class="token punctuation">;</span>
+opB <span class="token operator">=</span> <span class="token number">32'h0000_0001</span><span class="token punctuation">;</span>
+S <span class="token operator">=</span> <span class="token number">4'b1001</span><span class="token punctuation">;</span>
+M <span class="token operator">=</span> <span class="token number">1'b1</span><span class="token punctuation">;</span>
+Cin <span class="token operator">=</span> <span class="token number">1'b0</span><span class="token punctuation">;</span>
+<span class="token number">#10</span> opA <span class="token operator">=</span> <span class="token number">32'hFFFF_FFFF</span><span class="token punctuation">;</span>
+opB <span class="token operator">=</span> <span class="token number">32'h0000_0000</span><span class="token punctuation">;</span>
+<span class="token number">#10</span> opA <span class="token operator">=</span> <span class="token number">32'hFFFF_FFFF</span><span class="token punctuation">;</span>
+opB <span class="token operator">=</span> <span class="token number">32'hFFFF_FFFF</span><span class="token punctuation">;</span>
+<span class="token number">#10</span> opA <span class="token operator">=</span> <span class="token number">32'h7FFF_FFFF</span><span class="token punctuation">;</span>
+opB <span class="token operator">=</span> <span class="token number">32'h0FFF_FFFF</span><span class="token punctuation">;</span>
+<span class="token number">#10</span> opA <span class="token operator">=</span> <span class="token number">32'h3FFF_FFFF</span><span class="token punctuation">;</span>
+opB <span class="token operator">=</span> <span class="token number">32'h0FFF_FFFF</span><span class="token punctuation">;</span>
+<span class="token number">#10</span> <span class="token property">$finish</span><span class="token punctuation">;</span>
+<span class="token keyword">end</span>
+<span class="token keyword">endmodule</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="练习2"><a href="#练习2" class="headerlink" title="练习2"></a>练习2</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211113154500160.png" alt=""></p>
+<h4 id="移位器RTL代码"><a href="#移位器RTL代码" class="headerlink" title="移位器RTL代码"></a>移位器RTL代码</h4><pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token constant">`timescale</span> <span class="token number">1</span>ns<span class="token operator">/</span><span class="token number">1</span>ns
+<span class="token keyword">module</span> shifter <span class="token punctuation">(</span>
+<span class="token keyword">input</span> <span class="token keyword">wire</span> clk <span class="token punctuation">,</span>
+<span class="token keyword">input</span> <span class="token keyword">wire</span> D_sr <span class="token punctuation">,</span>
+sr <span class="token punctuation">,</span>
+<span class="token keyword">input</span> <span class="token keyword">wire</span> D_sl <span class="token punctuation">,</span>
+sl <span class="token punctuation">,</span>
+<span class="token keyword">input</span> <span class="token keyword">wire</span> <span class="token punctuation">[</span>n<span class="token operator">-</span><span class="token number">1</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> D <span class="token punctuation">,</span>
+<span class="token keyword">input</span> <span class="token keyword">wire</span> ld <span class="token punctuation">,</span>
+<span class="token keyword">output</span> <span class="token keyword">reg</span> <span class="token punctuation">[</span>n<span class="token operator">-</span><span class="token number">1</span> <span class="token punctuation">:</span> <span class="token number">0</span> <span class="token punctuation">]</span> Q
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token important">always @</span><span class="token punctuation">(</span><span class="token keyword">posedge</span> clk<span class="token punctuation">)</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span> ld <span class="token punctuation">)</span>
+        Q <span class="token operator">&lt;=</span> D<span class="token punctuation">;</span>
+    <span class="token keyword">else</span> <span class="token function">if</span><span class="token punctuation">(</span> sr <span class="token punctuation">)</span>
+        Q <span class="token operator">&lt;=</span> <span class="token operator">{</span>D_sr<span class="token punctuation">,</span> Q<span class="token punctuation">[</span><span class="token number">3</span> <span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token operator">}</span><span class="token punctuation">;</span>
+    <span class="token keyword">else</span> <span class="token function">if</span><span class="token punctuation">(</span> sl <span class="token punctuation">)</span>
+        Q <span class="token operator">&lt;=</span> <span class="token operator">{</span>Q<span class="token punctuation">[</span><span class="token number">2</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> D_sl <span class="token operator">}</span><span class="token punctuation">;</span>
+    <span class="token keyword">else</span>
+        Q <span class="token operator">&lt;=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211113154547439.png" alt=""></p>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token constant">`timescale</span> <span class="token number">1</span>ns<span class="token operator">/</span><span class="token number">1</span>ns
+<span class="token keyword">module</span> shifter <span class="token punctuation">(</span>
+<span class="token keyword">input</span> <span class="token keyword">wire</span> clk <span class="token punctuation">,</span>
+<span class="token keyword">input</span> <span class="token keyword">wire</span> D_sr <span class="token punctuation">,</span>
+sr <span class="token punctuation">,</span>
+<span class="token keyword">input</span> <span class="token keyword">wire</span> D_sl <span class="token punctuation">,</span>
+sl <span class="token punctuation">,</span>
+<span class="token keyword">input</span> <span class="token keyword">wire</span> <span class="token punctuation">[</span>n<span class="token operator">-</span><span class="token number">1</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> D <span class="token punctuation">,</span>
+<span class="token keyword">input</span> <span class="token keyword">wire</span> ld <span class="token punctuation">,</span>
+<span class="token keyword">output</span> <span class="token keyword">reg</span> <span class="token punctuation">[</span>n<span class="token operator">-</span><span class="token number">1</span> <span class="token punctuation">:</span> <span class="token number">0</span> <span class="token punctuation">]</span> Q
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">wire</span> <span class="token punctuation">[</span>n<span class="token operator">-</span><span class="token number">1</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> D_in<span class="token punctuation">;</span>
+<span class="token keyword">assign</span> D_in <span class="token operator">=</span>     <span class="token punctuation">(</span> <span class="token operator">{</span><span class="token number">4</span><span class="token operator">{</span>ld<span class="token operator">}}</span> <span class="token operator">&amp;</span> D <span class="token punctuation">)</span> <span class="token operator">|</span>
+                <span class="token punctuation">(</span> <span class="token operator">{</span><span class="token number">4</span><span class="token operator">{</span>sr<span class="token operator">}}</span> <span class="token operator">&amp;</span> <span class="token operator">{</span>D_sr<span class="token punctuation">,</span> Q<span class="token punctuation">[</span>n<span class="token operator">-</span><span class="token number">1</span> <span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token operator">}</span> <span class="token punctuation">)</span> <span class="token operator">|</span>
+                <span class="token punctuation">(</span> <span class="token operator">{</span><span class="token number">4</span><span class="token operator">{</span>sl<span class="token operator">}}</span> <span class="token operator">&amp;</span> <span class="token operator">{</span>Q<span class="token punctuation">[</span>n<span class="token operator">-</span><span class="token number">2</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> D_sl <span class="token operator">}</span> <span class="token punctuation">)</span><span class="token punctuation">;</span> 
+<span class="token important">always @</span><span class="token punctuation">(</span><span class="token keyword">posedge</span> clk<span class="token punctuation">)</span>
+Q <span class="token operator">&lt;=</span> D_in<span class="token punctuation">;</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211113154643866.png" alt=""></p>
+<h3 id="练习3：counter3"><a href="#练习3：counter3" class="headerlink" title="练习3：counter3"></a>练习3：counter3</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211113154704168.png" alt=""></p>
+<h4 id="RTL代码"><a href="#RTL代码" class="headerlink" title="RTL代码"></a>RTL代码</h4><pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token constant">`timescale</span> <span class="token number">1</span>ns<span class="token operator">/</span><span class="token number">1</span>ns
+<span class="token keyword">module</span> fsm <span class="token punctuation">(</span>
+<span class="token keyword">input</span> <span class="token keyword">wire</span> clk <span class="token punctuation">,</span>
+rst <span class="token punctuation">,</span>
+<span class="token keyword">output</span> <span class="token keyword">wire</span> Y2 <span class="token punctuation">,</span>
+Y1 <span class="token punctuation">,</span>
+Y0
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token important">always @</span><span class="token punctuation">(</span><span class="token keyword">posedge</span> clk<span class="token punctuation">,</span> <span class="token keyword">negedge</span> rst<span class="token punctuation">)</span>
+    <span class="token function">if</span><span class="token punctuation">(</span> <span class="token operator">!</span> rst <span class="token punctuation">)</span> <span class="token keyword">begin</span>
+        Q1 <span class="token operator">&lt;=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        Q0 <span class="token operator">&lt;=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        <span class="token keyword">end</span>
+    <span class="token keyword">else</span> <span class="token keyword">begin</span>
+        Q1 <span class="token operator">&lt;=</span> Q1 <span class="token operator">^</span> Q0<span class="token punctuation">;</span>
+        Q0 <span class="token operator">&lt;=</span> <span class="token operator">!</span> Q0<span class="token punctuation">;</span>
+    <span class="token keyword">end</span>
+<span class="token keyword">assign</span> Y2 <span class="token operator">=</span> Q1<span class="token punctuation">;</span>
+<span class="token keyword">assign</span> Y1 <span class="token operator">=</span> Q0<span class="token punctuation">;</span>
+<span class="token keyword">assign</span> Y0 <span class="token operator">=</span> Q1 <span class="token operator">|</span> Q0<span class="token punctuation">;</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="练习-4"><a href="#练习-4" class="headerlink" title="练习 4"></a>练习 4</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211113154805665.png" alt=""></p>
+<h4 id="FSM-方法1"><a href="#FSM-方法1" class="headerlink" title="FSM 方法1"></a>FSM 方法1</h4><pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token constant">`timescale</span> <span class="token number">1</span>ns<span class="token operator">/</span><span class="token number">1</span>ns
+<span class="token keyword">module</span> fsm1 <span class="token punctuation">(</span>
+<span class="token keyword">input</span> <span class="token keyword">wire</span> clk <span class="token punctuation">,</span>
+reset_n <span class="token punctuation">,</span>
+X <span class="token punctuation">,</span>
+<span class="token keyword">output</span> <span class="token keyword">wire</span> Z1 <span class="token punctuation">,</span>
+Z2
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> cnt<span class="token punctuation">;</span>
+<span class="token important">always @</span><span class="token punctuation">(</span><span class="token keyword">posedge</span> clk<span class="token punctuation">,</span> <span class="token keyword">negedge</span> reset_n<span class="token punctuation">)</span>
+    <span class="token function">if</span><span class="token punctuation">(</span> <span class="token operator">!</span> reset_n <span class="token punctuation">)</span>
+        cnt <span class="token operator">&lt;=</span> <span class="token number">2'b00</span><span class="token punctuation">;</span>
+    <span class="token keyword">else</span> <span class="token function">if</span><span class="token punctuation">(</span> X <span class="token punctuation">)</span> <span class="token keyword">begin</span>
+        <span class="token function">if</span><span class="token punctuation">(</span>cnt <span class="token operator">!=</span> <span class="token number">2'b11</span><span class="token punctuation">)</span>
+            cnt <span class="token operator">&lt;=</span> cnt <span class="token operator">+</span> <span class="token number">1'b1</span><span class="token punctuation">;</span>
+        <span class="token keyword">end</span>
+<span class="token keyword">assign</span> Z1 <span class="token operator">=</span> <span class="token operator">^</span> cnt <span class="token punctuation">;</span>
+<span class="token keyword">assign</span> Z2 <span class="token operator">=</span> <span class="token operator">&amp;</span> cnt <span class="token punctuation">;</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="FSM-测试程序"><a href="#FSM-测试程序" class="headerlink" title="FSM 测试程序"></a>FSM 测试程序</h4><pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token constant">`timescale</span> <span class="token number">1</span>ns<span class="token operator">/</span><span class="token number">1</span>ns
+<span class="token keyword">module</span> <span class="token function">fsm1_tb</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">reg</span> clk <span class="token punctuation">,</span>
+reset <span class="token punctuation">,</span>
+x <span class="token punctuation">;</span>
+<span class="token keyword">wire</span> Z1 <span class="token punctuation">,</span>
+Z2 <span class="token punctuation">;</span>
+fsm3 <span class="token function">ufsm3</span><span class="token punctuation">(</span>
+<span class="token punctuation">.</span>clk <span class="token punctuation">(</span> clk <span class="token punctuation">)</span><span class="token punctuation">,</span>
+<span class="token punctuation">.</span>reset_n <span class="token punctuation">(</span> reset <span class="token punctuation">)</span><span class="token punctuation">,</span>
+<span class="token punctuation">.</span>x <span class="token punctuation">(</span> x <span class="token punctuation">)</span><span class="token punctuation">,</span>
+<span class="token punctuation">.</span>Z1 <span class="token punctuation">(</span> Z1 <span class="token punctuation">)</span><span class="token punctuation">,</span>
+<span class="token punctuation">.</span>Z2 <span class="token punctuation">(</span> Z2 <span class="token punctuation">)</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token important">always </span><span class="token number">#5</span> clk <span class="token operator">=</span> <span class="token operator">!</span>clk<span class="token punctuation">;</span>
+
+<span class="token keyword">initial</span> <span class="token keyword">begin</span>
+    clk <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    reset <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    x <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    @<span class="token punctuation">(</span><span class="token keyword">posedge</span> clk<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        reset <span class="token operator">=</span> <span class="token number">1'b1</span><span class="token punctuation">;</span>
+    @<span class="token punctuation">(</span><span class="token keyword">negedge</span> clk<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        x <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token function">repeat</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span> @<span class="token punctuation">(</span><span class="token keyword">posedge</span> clk<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token property">$finish</span><span class="token punctuation">;</span>
+    <span class="token keyword">end</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211113154958057.png" alt=""></p>
+<h4 id="FSM-方法-2"><a href="#FSM-方法-2" class="headerlink" title="FSM 方法 2"></a>FSM 方法 2</h4><pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> fsm2 <span class="token punctuation">(</span>
+<span class="token keyword">input</span> <span class="token keyword">wire</span> clk
+<span class="token punctuation">,</span>
+reset <span class="token punctuation">,</span>
+x <span class="token punctuation">,</span>
+<span class="token keyword">output</span> <span class="token keyword">wire</span> Z1 <span class="token punctuation">,</span>
+Z2
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> state<span class="token punctuation">;</span>
+<span class="token keyword">parameter</span> ST0 <span class="token operator">=</span> <span class="token number">2'b00</span><span class="token punctuation">,</span> ST1 <span class="token operator">=</span> <span class="token number">2'b01</span><span class="token punctuation">,</span>
+ST2 <span class="token operator">=</span> <span class="token number">2'b11</span><span class="token punctuation">,</span> ST3 <span class="token operator">=</span> <span class="token number">2'b10</span><span class="token punctuation">;</span>
+<span class="token important">always @</span><span class="token punctuation">(</span><span class="token keyword">posedge</span> clk<span class="token punctuation">,</span> <span class="token keyword">negedge</span> reset<span class="token punctuation">)</span>
+    <span class="token function">if</span><span class="token punctuation">(</span><span class="token operator">!</span>reset<span class="token punctuation">)</span>
+        state <span class="token operator">&lt;=</span> ST0<span class="token punctuation">;</span>
+    <span class="token keyword">else</span> <span class="token function">if</span><span class="token punctuation">(</span> x <span class="token punctuation">)</span> 
+        <span class="token function">case</span><span class="token punctuation">(</span>state<span class="token punctuation">)</span>
+            ST0 <span class="token punctuation">:</span> state <span class="token operator">&lt;=</span> ST1<span class="token punctuation">;</span>
+            ST1 <span class="token punctuation">:</span> state <span class="token operator">&lt;=</span> ST2<span class="token punctuation">;</span>
+            ST2 <span class="token punctuation">:</span> state <span class="token operator">&lt;=</span> ST3<span class="token punctuation">;</span>
+            <span class="token keyword">default</span><span class="token punctuation">:</span> state <span class="token operator">&lt;=</span> ST3<span class="token punctuation">;</span>
+        <span class="token keyword">endcase</span>
+<span class="token keyword">assign</span> Z1 <span class="token operator">=</span> state <span class="token operator">==</span> ST1 <span class="token operator">||</span> state <span class="token operator">==</span> ST2 <span class="token punctuation">;</span>
+<span class="token keyword">assign</span> Z2 <span class="token operator">=</span> state <span class="token operator">==</span> ST3<span class="token punctuation">;</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211113155119426.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211113155131638.png" alt=""></p>
+<h4 id="FSM-方法3"><a href="#FSM-方法3" class="headerlink" title="FSM 方法3"></a>FSM 方法3</h4><pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> fsm3 <span class="token punctuation">(</span>
+<span class="token keyword">input</span> <span class="token keyword">wire</span> clk <span class="token punctuation">,</span>
+reset <span class="token punctuation">,</span>
+x <span class="token punctuation">,</span>
+<span class="token keyword">output</span> <span class="token keyword">wire</span> Z1 <span class="token punctuation">,</span>
+Z2
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> x_dly<span class="token punctuation">;</span>
+<span class="token important">always @</span><span class="token punctuation">(</span><span class="token keyword">posedge</span> clk<span class="token punctuation">,</span> <span class="token keyword">negedge</span> reset<span class="token punctuation">)</span>
+    <span class="token function">if</span><span class="token punctuation">(</span><span class="token operator">!</span>reset<span class="token punctuation">)</span>
+        x_dly <span class="token operator">&lt;=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token keyword">else</span> <span class="token keyword">begin</span> 
+        x_dly<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">&lt;=</span> x<span class="token punctuation">;</span>
+        x_dly<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">&lt;=</span> x_dly<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+        x_dly<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">&lt;=</span> x_dly<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">|</span> x_dly<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">end</span>
+<span class="token keyword">assign</span> Z1 <span class="token operator">=</span> x_dly<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">&amp;</span> <span class="token operator">!</span>x_dly<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">assign</span> Z2 <span class="token operator">=</span> x_dly<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token punctuation">;</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211113155214317.png" alt=""></p>
+<h3 id="练习-5"><a href="#练习-5" class="headerlink" title="练习 5"></a>练习 5</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211113155234403.png" alt=""></p>
+<h4 id="“111”检测"><a href="#“111”检测" class="headerlink" title="“111”检测"></a>“111”检测</h4><pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> <span class="token function">detect111</span><span class="token punctuation">(</span>
+<span class="token keyword">input</span> <span class="token keyword">wire</span> clk <span class="token punctuation">,</span>
+Rst <span class="token punctuation">,</span>
+x <span class="token punctuation">,</span>
+<span class="token keyword">output</span> <span class="token keyword">wire</span> Out 
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> x_dly<span class="token punctuation">;</span>
+<span class="token important">always @</span><span class="token punctuation">(</span><span class="token keyword">posedge</span> clk<span class="token punctuation">)</span>
+    <span class="token function">if</span><span class="token punctuation">(</span>Rst<span class="token punctuation">)</span>
+        x_dly <span class="token operator">&lt;=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token keyword">else</span> <span class="token keyword">begin</span> 
+        x_dly<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">&lt;=</span> x<span class="token punctuation">;</span>
+    x_dly<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">&lt;=</span> x_dly<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    x_dly<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">&lt;=</span> <span class="token punctuation">(</span><span class="token operator">&amp;</span>x_dly<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">&amp;</span> x<span class="token punctuation">)</span> <span class="token operator">|</span> x_dly<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">end</span>
+<span class="token keyword">assign</span> Out <span class="token operator">=</span> x_dly<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token punctuation">;</span>
+<span class="token keyword">endmodule</span>
+
+<span class="token constant">`timescale</span> <span class="token number">1</span>ns<span class="token operator">/</span><span class="token number">1</span>ns
+<span class="token keyword">module</span> <span class="token function">decect111_tb</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">reg</span> clk <span class="token punctuation">,</span>
+reset <span class="token punctuation">,</span>
+x <span class="token punctuation">;</span>
+<span class="token keyword">wire</span> Out <span class="token punctuation">;</span>
+detect111 <span class="token function">udect</span><span class="token punctuation">(</span>
+<span class="token punctuation">.</span>clk <span class="token punctuation">(</span> clk <span class="token punctuation">)</span><span class="token punctuation">,</span>
+<span class="token punctuation">.</span>Rst <span class="token punctuation">(</span> reset <span class="token punctuation">)</span><span class="token punctuation">,</span>
+<span class="token punctuation">.</span>x <span class="token punctuation">(</span> x <span class="token punctuation">)</span><span class="token punctuation">,</span>
+<span class="token punctuation">.</span>Out <span class="token punctuation">(</span> Out <span class="token punctuation">)</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token important">always </span><span class="token number">#5</span> clk <span class="token operator">=</span> <span class="token operator">!</span>clk<span class="token punctuation">;</span>
+    <span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">9</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> xin<span class="token punctuation">;</span> 
+    <span class="token keyword">initial</span> <span class="token keyword">begin</span>
+        clk <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        reset <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        xin <span class="token operator">=</span> <span class="token number">10'b01_0110_1110</span><span class="token punctuation">;</span>
+        x <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        @<span class="token punctuation">(</span><span class="token keyword">posedge</span> clk<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            reset <span class="token operator">=</span> <span class="token number">1'b1</span><span class="token punctuation">;</span>
+        <span class="token function">repeat</span><span class="token punctuation">(</span><span class="token number">12</span><span class="token punctuation">)</span> <span class="token keyword">begin</span>
+            @<span class="token punctuation">(</span><span class="token keyword">negedge</span> clk<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                x <span class="token operator">=</span> xin<span class="token punctuation">[</span><span class="token number">9</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+                xin <span class="token operator">=</span> xin <span class="token operator">&lt;&lt;</span> <span class="token number">1</span><span class="token punctuation">;</span>
+            <span class="token keyword">end</span>
+        <span class="token property">$finish</span><span class="token punctuation">;</span>
+    <span class="token keyword">end</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211113155428239.png" alt=""></p>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> <span class="token function">detect_fsm</span><span class="token punctuation">(</span>
+<span class="token keyword">input</span> <span class="token keyword">wire</span> clk <span class="token punctuation">,</span>
+reset <span class="token punctuation">,</span>
+x <span class="token punctuation">,</span>
+<span class="token keyword">output</span> <span class="token keyword">wire</span> Out 
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> state<span class="token punctuation">;</span>
+<span class="token keyword">parameter</span> zero <span class="token operator">=</span> <span class="token number">2'b00</span><span class="token punctuation">,</span> one <span class="token operator">=</span> <span class="token number">2'b01</span><span class="token punctuation">,</span>
+two <span class="token operator">=</span> <span class="token number">2'b11</span><span class="token punctuation">,</span> thre <span class="token operator">=</span> <span class="token number">2'b10</span><span class="token punctuation">;</span>
+<span class="token important">always @</span><span class="token punctuation">(</span><span class="token keyword">posedge</span> clk<span class="token punctuation">,</span> <span class="token keyword">negedge</span> reset<span class="token punctuation">)</span>
+    <span class="token function">if</span><span class="token punctuation">(</span><span class="token operator">!</span>reset<span class="token punctuation">)</span>
+        state <span class="token operator">&lt;=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token keyword">else</span> 
+        <span class="token function">case</span><span class="token punctuation">(</span>state<span class="token punctuation">)</span>
+            zero<span class="token punctuation">:</span> <span class="token function">if</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span> state <span class="token operator">&lt;=</span> one<span class="token punctuation">;</span>
+            one<span class="token punctuation">:</span> <span class="token function">if</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span> 
+                    state <span class="token operator">&lt;=</span> two<span class="token punctuation">;</span>
+                <span class="token keyword">else</span>
+                    state <span class="token operator">&lt;=</span> zero<span class="token punctuation">;</span>
+            two<span class="token punctuation">:</span> <span class="token function">if</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span> 
+                    state <span class="token operator">&lt;=</span> thre<span class="token punctuation">;</span>
+                <span class="token keyword">else</span>
+                    state <span class="token operator">&lt;=</span> zero<span class="token punctuation">;</span>
+            <span class="token keyword">default</span><span class="token punctuation">:</span> state <span class="token operator">&lt;=</span> thre<span class="token punctuation">;</span>
+        <span class="token keyword">endcase</span>
+<span class="token keyword">assign</span> Out <span class="token operator">=</span> state <span class="token operator">==</span> thre <span class="token punctuation">;</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211113155535842.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211113155545854.png" alt=""></p>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> <span class="token function">detect_fsm</span><span class="token punctuation">(</span>
+<span class="token keyword">input</span> <span class="token keyword">wire</span> clk <span class="token punctuation">,</span>
+reset <span class="token punctuation">,</span>
+x <span class="token punctuation">,</span>
+<span class="token keyword">output</span> <span class="token keyword">wire</span> Out 
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> state <span class="token punctuation">;</span>
+<span class="token keyword">parameter</span> zero <span class="token operator">=</span> <span class="token number">2'b00</span><span class="token punctuation">,</span> one <span class="token operator">=</span> <span class="token number">2'b01</span><span class="token punctuation">,</span>
+two <span class="token operator">=</span> <span class="token number">2'b11</span><span class="token punctuation">,</span> thre <span class="token operator">=</span> <span class="token number">2'b10</span><span class="token punctuation">;</span>
+<span class="token important">always @</span><span class="token punctuation">(</span><span class="token keyword">posedge</span> clk<span class="token punctuation">,</span> <span class="token keyword">negedge</span> reset<span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">// if(!reset) state &lt;= 0;</span>
+<span class="token comment" spellcheck="true">// else </span>
+    <span class="token function">case</span><span class="token punctuation">(</span>state<span class="token punctuation">)</span>
+        zero<span class="token punctuation">:</span> <span class="token function">if</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span> state <span class="token operator">&lt;=</span> one<span class="token punctuation">;</span>
+        one<span class="token punctuation">:</span> <span class="token function">if</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span> 
+                state <span class="token operator">&lt;=</span> two<span class="token punctuation">;</span>
+            <span class="token keyword">else</span>
+                state <span class="token operator">&lt;=</span> zero<span class="token punctuation">;</span>
+        two<span class="token punctuation">:</span> <span class="token function">if</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span> 
+                state <span class="token operator">&lt;=</span> thre<span class="token punctuation">;</span>
+            <span class="token keyword">else</span>
+                state <span class="token operator">&lt;=</span> zero<span class="token punctuation">;</span>
+                thre<span class="token punctuation">:</span> state <span class="token operator">&lt;=</span> state<span class="token punctuation">;</span>
+        <span class="token keyword">default</span><span class="token punctuation">:</span> state <span class="token operator">&lt;=</span> <span class="token number">'bx</span><span class="token punctuation">;</span>
+    <span class="token keyword">endcase</span>
+<span class="token keyword">assign</span> Out <span class="token operator">=</span> state <span class="token operator">==</span> thre <span class="token punctuation">;</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211113155618238.png" alt=""></p>
+<h2 id="作业"><a href="#作业" class="headerlink" title="作业"></a>作业</h2><p><img src="/images/loading.gif" data-original="../images/basic/image-20211113155742022.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211113155753304.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211113155803409.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211113155815249.png" alt=""></p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -3731,7 +4341,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">2507.5k</span>&nbsp;字
+                class="white-color">2549.9k</span>&nbsp;字
             
             
             
@@ -3969,7 +4579,7 @@ $(function () {
     
     <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/instantpage/instantpage.js" type="module"></script>
     
-
+<script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script>
         <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
         <script>
         $('a').each(function() {
@@ -3988,7 +4598,7 @@ $(function () {
             }
           }
         });
-        </script><script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script></body>
+        </script></body>
 
 </html>
 
