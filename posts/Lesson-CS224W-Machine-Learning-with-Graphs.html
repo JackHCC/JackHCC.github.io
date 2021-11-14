@@ -466,14 +466,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    52
+                    5k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    1 分
+                    31 分
                 </div>
                 
 
@@ -489,7 +489,1165 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <script>
+                <p><a href="http://web.stanford.edu/class/cs224w/" target="_blank" rel="noopener">CS224W | Home (stanford.edu)</a></p>
+<h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><h2 id="Machine-Learning-with-Graphs"><a href="#Machine-Learning-with-Graphs" class="headerlink" title="Machine Learning with Graphs"></a>Machine Learning with Graphs</h2><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114150408195.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114150422199.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114150432882.png" alt=""></p>
+<h3 id="Why-is-Graph-Deep-Learning-Hard"><a href="#Why-is-Graph-Deep-Learning-Hard" class="headerlink" title="Why is Graph Deep Learning Hard?"></a>Why is Graph Deep Learning Hard?</h3><ul>
+<li>Networks are complex<ul>
+<li>Arbitrary size and complex topological structure (i.e., no spatial locality like grids)</li>
+<li>No fixed node ordering or reference point </li>
+<li>Often dynamic and have multimodal features</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114150633660.png" alt=""></p>
+<h3 id="Deep-Learning-in-Graphs"><a href="#Deep-Learning-in-Graphs" class="headerlink" title="Deep Learning in Graphs"></a>Deep Learning in Graphs</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114150708217.png" alt=""></p>
+<h3 id="Representation-Learning"><a href="#Representation-Learning" class="headerlink" title="Representation Learning"></a>Representation Learning</h3><p>(Supervised) Machine Learning Lifecycle:  This feature, that feature. Every single time!</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114151141340.png" alt=""></p>
+<p>Map nodes to d-dimensional  embeddings such that similar nodes in  the network are embedded close  together</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114151205981.png" alt=""></p>
+<h3 id="Course-Outline"><a href="#Course-Outline" class="headerlink" title="Course Outline"></a>Course Outline</h3><p>We are going to cover various topics in Machine  Learning and Representation Learning for graph  structured data: </p>
+<ul>
+<li>Traditional methods: Graphlets, Graph Kernels </li>
+<li>Methods for node embeddings: DeepWalk, Node2Vec</li>
+<li>Graph Neural Networks: GCN, GraphSAGE, GAT,  Theory of GNNs </li>
+<li>Knowledge graphs and reasoning: TransE, BetaE </li>
+<li>Deep generative models for graphs: GraphRNN </li>
+<li>Applications to Biomedicine, Science, Industry</li>
+</ul>
+<h2 id="Applications-of-Graph-ML"><a href="#Applications-of-Graph-ML" class="headerlink" title="Applications of Graph ML"></a>Applications of Graph ML</h2><h3 id="Different-Types-of-Tasks"><a href="#Different-Types-of-Tasks" class="headerlink" title="Different Types of Tasks"></a>Different Types of Tasks</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114151422981.png" alt=""></p>
+<h3 id="Classic-Graph-ML-Tasks"><a href="#Classic-Graph-ML-Tasks" class="headerlink" title="Classic Graph ML Tasks"></a>Classic Graph ML Tasks</h3><ul>
+<li>Node classification: Predict a property of a node <ul>
+<li>Example: Categorize online users / items </li>
+</ul>
+</li>
+<li>Link prediction: Predict whether there are missing  links between two nodes <ul>
+<li>Example: Knowledge graph completion </li>
+</ul>
+</li>
+<li>Graph classification: Categorize different graphs <ul>
+<li>Example: Molecule property prediction </li>
+</ul>
+</li>
+<li>Clustering: Detect if nodes form a community <ul>
+<li>Example: Social circle detection </li>
+</ul>
+</li>
+<li>Other tasks: <ul>
+<li>Graph generation: Drug discovery </li>
+<li>Graph evolution: Physical simulation</li>
+</ul>
+</li>
+</ul>
+<h2 id="Node-level-ML-Tasks"><a href="#Node-level-ML-Tasks" class="headerlink" title="Node-level ML Tasks"></a>Node-level ML Tasks</h2><h3 id="Protein-Folding"><a href="#Protein-Folding" class="headerlink" title="Protein Folding"></a>Protein Folding</h3><p><strong>A protein chain acquires its native 3D structure</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114151653238.png" alt=""></p>
+<p><strong>The Protein Folding Problem</strong></p>
+<p>Computationally predict a protein’s 3D structure  based solely on its amino acid sequence</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114151741995.png" alt=""></p>
+<h3 id="Alphafold-Impact"><a href="#Alphafold-Impact" class="headerlink" title="Alphafold: Impact"></a>Alphafold: Impact</h3><ul>
+<li>Key idea: “Spatial graph” <ul>
+<li>Nodes: Amino acids in a protein sequence </li>
+<li>Edges: Proximity between amino acids (residues)</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114151833311.png" alt=""></p>
+<h2 id="Edge-level-ML-Tasks"><a href="#Edge-level-ML-Tasks" class="headerlink" title="Edge-level ML Tasks"></a>Edge-level ML Tasks</h2><h3 id="Recommender-Systems"><a href="#Recommender-Systems" class="headerlink" title="Recommender Systems"></a>Recommender Systems</h3><ul>
+<li>Users interacts with items <ul>
+<li>Watch movies, buy merchandise, listen to music </li>
+<li>Nodes: Users and items </li>
+<li>Edges: User-item interactions </li>
+</ul>
+</li>
+<li>Goal: Recommend items users might like</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114151940591.png" alt=""></p>
+<h3 id="Pinsage-Graph-based-Recommender"><a href="#Pinsage-Graph-based-Recommender" class="headerlink" title="Pinsage: Graph-based Recommender"></a>Pinsage: Graph-based Recommender</h3><p><a href="https://arxiv.org/pdf/1806.01973.pdf" target="_blank" rel="noopener">Ying et al., Graph Convolutional Neural Networks for Web-Scale Recommender Systems, KDD 2018</a></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114152019114.png" alt=""></p>
+<h3 id="Drug-Side-Effects"><a href="#Drug-Side-Effects" class="headerlink" title="Drug Side Effects"></a>Drug Side Effects</h3><ul>
+<li>Many patients take multiple drugs to treat  complex or co-existing diseases:<ul>
+<li>46% of people ages 70-79 take more than 5 drugs </li>
+<li>Many patients take more than 20 drugs to treat  heart disease, depression, insomnia, etc.</li>
+</ul>
+</li>
+<li>Task: Given a pair of drugs predict  adverse side effects</li>
+</ul>
+<h3 id="Biomedical-Graph-Link-Prediction"><a href="#Biomedical-Graph-Link-Prediction" class="headerlink" title="Biomedical Graph Link Prediction"></a>Biomedical Graph Link Prediction</h3><p><a href="https://arxiv.org/pdf/1802.00543.pdf" target="_blank" rel="noopener">Zitnik et al., Modeling Polypharmacy Side Effects with Graph Convolutional Networks, Bioinformatics 2018</a></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114152134532.png" alt=""></p>
+<h2 id="Subgraph-level-ML-Tasks"><a href="#Subgraph-level-ML-Tasks" class="headerlink" title="Subgraph-level ML Tasks"></a>Subgraph-level ML Tasks</h2><h3 id="Traffic-Prediction"><a href="#Traffic-Prediction" class="headerlink" title="Traffic Prediction"></a>Traffic Prediction</h3><p><strong>Road Network as a Graph</strong></p>
+<ul>
+<li>Nodes: Road segments </li>
+<li>Edges: Connectivity between road segments </li>
+<li>Prediction: Time of Arrival (ETA)</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114152251501.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114152307879.png" alt=""></p>
+<h2 id="Graph-level-ML-Tasks"><a href="#Graph-level-ML-Tasks" class="headerlink" title="Graph-level ML Tasks"></a>Graph-level ML Tasks</h2><h3 id="Drug-Discovery"><a href="#Drug-Discovery" class="headerlink" title="Drug Discovery"></a>Drug Discovery</h3><ul>
+<li>Antibiotics are small molecular graphs <ul>
+<li>Nodes: Atoms </li>
+<li>Edges: Chemical bonds</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114152411240.png" alt=""></p>
+<p><a href="https://www.mdpi.com/2079-6382/3/2/128" target="_blank" rel="noopener">Konaklieva, Monika I. “Molecular targets of β-lactam-based antimicrobials:  beyond the usual suspects.” Antibiotics 3.2 (2014): 128-142.</a></p>
+<h3 id="Deep-Learning-for-Antibiotic-Discovery"><a href="#Deep-Learning-for-Antibiotic-Discovery" class="headerlink" title="Deep Learning for Antibiotic Discovery"></a>Deep Learning for Antibiotic Discovery</h3><p><a href="https://www.sciencedirect.com/science/article/pii/S0092867420301021" target="_blank" rel="noopener">Stokeset al., A Deep Learning Approach to Antibiotic Discovery, Cell 2020</a></p>
+<ul>
+<li>A Graph Neural Network graph classification model </li>
+<li>Predict promising molecules from a pool of candidates</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114152915938.png" alt=""></p>
+<h3 id="Molecule-Generation-Optimization"><a href="#Molecule-Generation-Optimization" class="headerlink" title="Molecule Generation/Optimization"></a>Molecule Generation/Optimization</h3><p><a href="https://arxiv.org/pdf/1806.02473.pdf" target="_blank" rel="noopener">Youet al., Graph Convolutional Policy Network for Goal-Directed Molecular Graph Generation, NeurIPS 2018</a></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114152955374.png" alt=""></p>
+<h3 id="Physics-Simulation"><a href="#Physics-Simulation" class="headerlink" title="Physics Simulation"></a>Physics Simulation</h3><p><a href="https://arxiv.org/pdf/2002.09405.pdf" target="_blank" rel="noopener">Sanchez-Gonzalez et al., Learning to simulate complex physics with graph networks, ICML 2020</a></p>
+<ul>
+<li>Physical simulation as a graph: <ul>
+<li>Nodes: Particles</li>
+<li>Edges: Interaction between particles</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114153108274.png" alt=""></p>
+<h4 id="Simulation-Learning-Framework"><a href="#Simulation-Learning-Framework" class="headerlink" title="Simulation Learning Framework"></a>Simulation Learning Framework</h4><p>A graph evolution task: </p>
+<ul>
+<li>Goal: Predict how a graph will evolve over</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114153212413.png" alt=""></p>
+<h2 id="Choice-of-Graph-Representation"><a href="#Choice-of-Graph-Representation" class="headerlink" title="Choice of Graph Representation"></a>Choice of Graph Representation</h2><h3 id="Components-of-a-Network"><a href="#Components-of-a-Network" class="headerlink" title="Components of a Network"></a>Components of a Network</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114153253676.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114153319772.png" alt=""></p>
+<h3 id="Choosing-a-Proper-Representation"><a href="#Choosing-a-Proper-Representation" class="headerlink" title="Choosing a Proper Representation"></a>Choosing a Proper Representation</h3><ul>
+<li>If you connect individuals that work  with each other, you will explore a  professional network </li>
+<li>If you connect those that have a  sexual relationship, you will be  exploring sexual networks </li>
+<li>If you connect scientific papers that cite each other, you will be studying the citation network</li>
+<li>If you connect all papers with the same word in the title,  what will you be exploring? It is a network, nevertheless</li>
+</ul>
+<h3 id="How-do-you-define-a-graph"><a href="#How-do-you-define-a-graph" class="headerlink" title="How do you define a graph"></a>How do you define a graph</h3><ul>
+<li>How to build a graph: <ul>
+<li>What are nodes? </li>
+<li>What are edges? </li>
+</ul>
+</li>
+<li>Choice of the proper network representation  of a given domain/problem determines our  ability to use networks successfully: <ul>
+<li>In some cases, there is a unique, unambiguous  representation</li>
+<li>In other cases, the representation is by no means unique </li>
+<li>The way you assign links will determine the nature  of the question you can study</li>
+</ul>
+</li>
+</ul>
+<h3 id="Directed-vs-Undirected-Graphs"><a href="#Directed-vs-Undirected-Graphs" class="headerlink" title="Directed vs Undirected Graphs"></a>Directed vs Undirected Graphs</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114153516654.png" alt=""></p>
+<h3 id="Heterogeneous-Graphs"><a href="#Heterogeneous-Graphs" class="headerlink" title="Heterogeneous Graphs"></a>Heterogeneous Graphs</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114153544194.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114153559429.png" alt=""></p>
+<h3 id="Node-Degrees"><a href="#Node-Degrees" class="headerlink" title="Node Degrees"></a>Node Degrees</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114153620904.png" alt=""></p>
+<h3 id="Bipartite-Graph"><a href="#Bipartite-Graph" class="headerlink" title="Bipartite Graph"></a>Bipartite Graph</h3><ul>
+<li>Bipartite graph is a graph whose nodes can  be divided into two disjoint sets U and V such that  every link connects a node in U to one in V; that is,  U and V are independent sets </li>
+<li>Examples: <ul>
+<li>Authors-to-Papers (they authored) </li>
+<li>Actors-to-Movies (they appeared in) </li>
+<li>Users-to-Movies (they rated) </li>
+<li>Recipes-to-Ingredients (they contain) </li>
+</ul>
+</li>
+<li>“Folded” networks: <ul>
+<li>Author collaboration networks </li>
+<li>Movie co-rating networks</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114153743707.png" alt=""></p>
+<h3 id="FoldedProjected-Bipartite-Graphs"><a href="#FoldedProjected-Bipartite-Graphs" class="headerlink" title="FoldedProjected Bipartite Graphs"></a>FoldedProjected Bipartite Graphs</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114153806330.png" alt=""></p>
+<h3 id="Representing-Graphs-Adjacency-Matrix"><a href="#Representing-Graphs-Adjacency-Matrix" class="headerlink" title="Representing Graphs: Adjacency Matrix"></a>Representing Graphs: Adjacency Matrix</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114153828291.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114153842858.png" alt=""></p>
+<h3 id="Networks-are-Sparse-Graphs"><a href="#Networks-are-Sparse-Graphs" class="headerlink" title="Networks are Sparse Graphs"></a>Networks are Sparse Graphs</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114153938780.png" alt=""></p>
+<h3 id="Representing-Graphs-Edge-list"><a href="#Representing-Graphs-Edge-list" class="headerlink" title="Representing Graphs: Edge list"></a>Representing Graphs: Edge list</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114154021381.png" alt=""></p>
+<h3 id="Representing-Graphs-Adjacency-list"><a href="#Representing-Graphs-Adjacency-list" class="headerlink" title="Representing Graphs: Adjacency list"></a>Representing Graphs: Adjacency list</h3><ul>
+<li><p>Adjacency list: </p>
+<ul>
+<li><p>Easier to work with if network is </p>
+<ul>
+<li><p>Large </p>
+</li>
+<li><p>Sparse </p>
+</li>
+</ul>
+</li>
+<li><p>Allows us to quickly retrieve all  neighbors of a given node </p>
+<ul>
+<li><p>1: </p>
+</li>
+<li><p>2: 3, 4 </p>
+</li>
+<li><p>3: 2, 4 </p>
+</li>
+<li><p>4: 5 </p>
+</li>
+<li><p>5: 1, 2</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="Node-and-Edge-Attributes"><a href="#Node-and-Edge-Attributes" class="headerlink" title="Node and Edge Attributes"></a>Node and Edge Attributes</h3><ul>
+<li>Possible options: <ul>
+<li>Weight (e.g., frequency of communication) </li>
+<li>Ranking (best friend, second best friend…) </li>
+<li>Type (friend, relative, co-worker) </li>
+<li>Sign: Friend vs. Foe, Trust vs. Distrust </li>
+<li>Properties depending on the structure of the rest  of the graph: Number of common friends</li>
+</ul>
+</li>
+</ul>
+<h3 id="More-Types-of-Graphs"><a href="#More-Types-of-Graphs" class="headerlink" title="More Types of Graphs"></a>More Types of Graphs</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114154354051.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114154418078.png" alt=""></p>
+<h3 id="Connectivity-of-Undirected-Graphs"><a href="#Connectivity-of-Undirected-Graphs" class="headerlink" title="Connectivity of Undirected Graphs"></a>Connectivity of Undirected Graphs</h3><ul>
+<li>Connected (undirected) graph: <ul>
+<li>Any two vertices can be joined by a path </li>
+</ul>
+</li>
+<li>A disconnected graph is made up by two or  more connected components</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114154501411.png" alt=""></p>
+<h3 id="Connectivity-Example"><a href="#Connectivity-Example" class="headerlink" title="Connectivity: Example"></a>Connectivity: Example</h3><p>The adjacency matrix of a network with several  components can be written in a block- diagonal  form, so that nonzero elements are confined to  squares, with all other elements being zero:</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114154537953.png" alt=""></p>
+<h3 id="Connectivity-of-Directed-Graphs"><a href="#Connectivity-of-Directed-Graphs" class="headerlink" title="Connectivity of Directed Graphs"></a>Connectivity of Directed Graphs</h3><ul>
+<li>Strongly connected directed graph <ul>
+<li>has a path from each node to every other node  and vice versa (e.g., A-B path and B-A path)</li>
+</ul>
+</li>
+<li>Weakly connected directed graph <ul>
+<li>is connected if we disregard the edge directions</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114154640547.png" alt=""></p>
+<p>Strongly connected components (SCCs) can  be identified, but not every node is part of a  nontrivial strongly connected component.</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114154659259.png" alt=""></p>
+<h1 id="Traditional-Methods-for-Machine-Learning-in-Graphs"><a href="#Traditional-Methods-for-Machine-Learning-in-Graphs" class="headerlink" title="Traditional Methods for Machine Learning in Graphs"></a>Traditional Methods for Machine Learning in Graphs</h1><h2 id="Traditional-Methods-for-Machine-Learning-in-Graphs-1"><a href="#Traditional-Methods-for-Machine-Learning-in-Graphs-1" class="headerlink" title="Traditional Methods for Machine Learning in Graphs"></a>Traditional Methods for Machine Learning in Graphs</h2><h3 id="Traditional-ML-Pipeline"><a href="#Traditional-ML-Pipeline" class="headerlink" title="Traditional ML Pipeline"></a>Traditional ML Pipeline</h3><p>Design features for nodes/links/graphs </p>
+<p>Obtain features for all training data</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114155029705.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114155040109.png" alt=""></p>
+<h3 id="Feature-Desian"><a href="#Feature-Desian" class="headerlink" title="Feature Desian"></a>Feature Desian</h3><ul>
+<li><p>Using effective features over graphs is the key  to achieving good model performance. </p>
+</li>
+<li><p>Traditional ML pipeline uses hand-designed  features. </p>
+</li>
+<li><p>In this lecture, we overview the traditional  features for: </p>
+<ul>
+<li>Node-level prediction </li>
+<li>Link-level prediction </li>
+<li>Graph-level prediction </li>
+</ul>
+</li>
+<li><p>For simplicity, we focus on undirected graphs.</p>
+</li>
+<li><p>Goal: Make predictions for a set of objects </p>
+</li>
+<li><p>Design choices: </p>
+<ul>
+<li>Features: d-dimensional vectors </li>
+<li>Objects: Nodes, edges, sets of nodes,  entire graphs </li>
+<li>Objective function: <ul>
+<li>What task are we aiming to solve?</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114155314744.png" alt=""></p>
+<h2 id="Node-level-Tasks-and-Features"><a href="#Node-level-Tasks-and-Features" class="headerlink" title="Node-level Tasks and Features"></a>Node-level Tasks and Features</h2><h3 id="Node-level-Features-Overview"><a href="#Node-level-Features-Overview" class="headerlink" title="Node-level Features: Overview"></a>Node-level Features: Overview</h3><ul>
+<li>Goal: Characterize the structure and position of  a node in the network: <ul>
+<li>Node degree </li>
+<li>Node centrality </li>
+<li>Clustering coefficient </li>
+<li>Graphlets</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114155446882.png" alt=""></p>
+<h3 id="Node-Degree"><a href="#Node-Degree" class="headerlink" title="Node Degree"></a>Node Degree</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114155516487.png" alt=""></p>
+<h3 id="Node-Centrality"><a href="#Node-Centrality" class="headerlink" title="Node Centrality"></a>Node Centrality</h3><ul>
+<li>Node degree counts the neighboring nodes  without capturing their importance. </li>
+<li>Node centrality 𝑐_𝑣 takes the node importance  in a graph into account </li>
+<li>Different ways to model importance: <ul>
+<li>Engienvector centrality </li>
+<li>Betweenness centrality </li>
+<li>Closeness centrality </li>
+<li>and many others…</li>
+</ul>
+</li>
+</ul>
+<h4 id="Eigenvector-centrality"><a href="#Eigenvector-centrality" class="headerlink" title="Eigenvector centrality"></a>Eigenvector centrality</h4><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114155636291.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114155651475.png" alt=""></p>
+<h4 id="Betweenness-centrality"><a href="#Betweenness-centrality" class="headerlink" title="Betweenness centrality"></a>Betweenness centrality</h4><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114155709827.png" alt=""></p>
+<h4 id="Closeness-centrality"><a href="#Closeness-centrality" class="headerlink" title="Closeness centrality"></a>Closeness centrality</h4><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114155731340.png" alt=""></p>
+<h3 id="Clustering-Coefficient"><a href="#Clustering-Coefficient" class="headerlink" title="Clustering Coefficient"></a>Clustering Coefficient</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114155816102.png" alt=""></p>
+<h3 id="Graphlets"><a href="#Graphlets" class="headerlink" title="Graphlets"></a>Graphlets</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114155840431.png" alt=""></p>
+<ul>
+<li><p>Goal: Describe network structure around node 𝑢 </p>
+<ul>
+<li>Graphlets are small subgraphs that describe the  structure of node 𝑢’s network neighborhood Analogy: </li>
+</ul>
+</li>
+<li><p>Degree counts #(edges) that a node touches </p>
+</li>
+<li><p>Clustering coefficient counts #(triangles) that a  node touches. </p>
+</li>
+<li><p>Graphlet Degree Vector (GDV): Graphlet-base  features for nodes </p>
+<ul>
+<li>GDV counts #(graphlets) that a node touches</li>
+</ul>
+</li>
+<li><p>Considering graphlets of size 2-5 nodes we get: </p>
+<ul>
+<li>Vector of 73 coordinates is a signature of a node  that describes the topology of node’s neighborhood  </li>
+</ul>
+</li>
+<li><p>Graphlet degree vector provides a measure of  a node’s local network topology: </p>
+<ul>
+<li>Comparing vectors of two nodes provides a more  detailed measure of local topological similarity than  node degrees or clustering coefficient.</li>
+</ul>
+</li>
+</ul>
+<h4 id="Induced-Subgraph-Isomorphism"><a href="#Induced-Subgraph-Isomorphism" class="headerlink" title="Induced Subgraph Isomorphism"></a>Induced Subgraph Isomorphism</h4><p>Def: Induced subgraph is another graph, formed  from a subset of vertices and all of the edges  connecting the vertices in that subset.</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114160056026.png" alt=""></p>
+<p>Def: Graph Isomorphism(同构) </p>
+<ul>
+<li>Two graphs which contain the same number of nodes  connected in the same way are said to be isomorphic.</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114160128187.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114160159336.png" alt=""></p>
+<p><strong>Graphlet Degree Vector</strong> (GDV): A count  vector of graphlets rooted at a given node</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114160238072.png" alt=""></p>
+<h3 id="Node-level-Feature-Summary"><a href="#Node-level-Feature-Summary" class="headerlink" title="Node-level Feature: Summary"></a>Node-level Feature: Summary</h3><ul>
+<li><p>We have introduced different ways to obtain  node features. </p>
+</li>
+<li><p>They can be categorized as: </p>
+<ul>
+<li>Importance-based features: <ul>
+<li>Node degree </li>
+<li>Different node centrality measures </li>
+</ul>
+</li>
+<li>Structure-based features: <ul>
+<li>Node degree </li>
+<li>Clustering coefficient </li>
+<li>Graphlet count vector</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Importance-based features: capture the  importance of a node in a graph </p>
+<ul>
+<li>Node degree: <ul>
+<li>Simply counts the number of neighboring nodes </li>
+</ul>
+</li>
+<li>Node centrality: <ul>
+<li>Models importance of neighboring nodes in a graph </li>
+<li>Different modeling choices: eigenvector centrality,  betweenness centrality, closeness centrality</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Useful for predicting influential nodes in a graph </p>
+<ul>
+<li>Example: predicting celebrity users in a social  network</li>
+</ul>
+</li>
+<li><p>Structure-based features: Capture topological  properties of local neighborhood around a node. </p>
+<ul>
+<li>Node degree: <ul>
+<li>Counts the number of neighboring nodes </li>
+</ul>
+</li>
+<li>Clustering coefficient: <ul>
+<li>Measures how connected neighboring nodes are </li>
+</ul>
+</li>
+<li>Graphlet degree vector: <ul>
+<li>Counts the occurrences of different graphlets </li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Useful for predicting a particular role a node  plays in a graph: </p>
+<ul>
+<li>Example: Predicting protein functionality in a  protein-protein interaction network</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114164204808.png" alt=""></p>
+<h2 id="Link-Prediction-Task-and-Features"><a href="#Link-Prediction-Task-and-Features" class="headerlink" title="Link Prediction Task and Features"></a>Link Prediction Task and Features</h2><h3 id="Recap"><a href="#Recap" class="headerlink" title="Recap"></a>Recap</h3><ul>
+<li>The task is to predict new links based on the  existing links. </li>
+<li>At test time, node pairs (with no existing links)  are ranked, and top 𝐾 node pairs are predicted. </li>
+<li>The key is to design features for a pair of nodes.</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114164300332.png" alt=""></p>
+<p><strong>Two formulations of the link prediction task:</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114164327858.png" alt=""></p>
+<h3 id="Link-Prediction-via-Proximity"><a href="#Link-Prediction-via-Proximity" class="headerlink" title="Link Prediction via Proximity"></a>Link Prediction via Proximity</h3><ul>
+<li>Methodology: <ul>
+<li>For each pair of nodes (x,y) compute score c(x,y) <ul>
+<li>For example, c(x,y) could be the # of common neighbors  of x and y </li>
+</ul>
+</li>
+<li>Sort pairs (x,y) by the decreasing score c(x,y) </li>
+<li>Predict top n pairs as new links </li>
+<li>See which of these links actually appear in 𝐺[𝑡1 ,𝑡1 ′ ]</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114164503916.png" alt=""></p>
+<h3 id="Link-level-Features-Overview"><a href="#Link-level-Features-Overview" class="headerlink" title="Link-level Features: Overview"></a>Link-level Features: Overview</h3><ul>
+<li>Distance-based feature </li>
+<li>Local neighborhood overlap </li>
+<li>Global neighborhood overlap</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114164529982.png" alt=""></p>
+<h3 id="Distance-based-Features"><a href="#Distance-based-Features" class="headerlink" title="Distance-based Features"></a>Distance-based Features</h3><p>Shortest-path distance between two nodes</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114164603800.png" alt=""></p>
+<p>However, this does not capture the degree of  neighborhood overlap: </p>
+<ul>
+<li>Node pair (B, H) has 2 shared neighboring nodes,  while pairs (B, E) and (A, B) only have 1 such node</li>
+</ul>
+<h3 id="Local-Neighborhood-Overlap"><a href="#Local-Neighborhood-Overlap" class="headerlink" title="Local Neighborhood Overlap"></a>Local Neighborhood Overlap</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114164647894.png" alt=""></p>
+<h3 id="Global-Neighborhood-Overlap"><a href="#Global-Neighborhood-Overlap" class="headerlink" title="Global Neighborhood Overlap"></a>Global Neighborhood Overlap</h3><ul>
+<li><p>Limitation of local neighborhood features: </p>
+<ul>
+<li><p>Metric is always zero if the two nodes do not have  any neighbors in common.</p>
+</li>
+<li><p>However, the two nodes may still potentially be  connected in the future. </p>
+</li>
+</ul>
+</li>
+<li><p>Global neighborhood overlap metrics resolve  the limitation by considering the entire graph.</p>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114164745624.png" alt=""></p>
+<ul>
+<li>Katz index: count the number of walks of all  lengths between a given pair of nodes. </li>
+<li>Q: How to compute #walks between two  nodes? <ul>
+<li>Use powers of the graph adjacency matrix!</li>
+</ul>
+</li>
+</ul>
+<h4 id="Intuition-Powers-of-Adj-Matrices"><a href="#Intuition-Powers-of-Adj-Matrices" class="headerlink" title="Intuition: Powers of Adj Matrices"></a>Intuition: Powers of Adj Matrices</h4><p><strong>Computing #walks between two nodes</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114164853647.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114164908991.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114165005720.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114165018384.png" alt=""></p>
+<h3 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h3><ul>
+<li>Distance-based features: <ul>
+<li>Uses the shortest path length between two nodes  but does not capture how neighborhood overlaps. </li>
+</ul>
+</li>
+<li>Local neighborhood overlap: <ul>
+<li>Captures how many neighboring nodes are shared  by two nodes. </li>
+<li>Becomes zero when no neighbor nodes are shared. </li>
+</ul>
+</li>
+<li>Global neighborhood overlap: <ul>
+<li>Uses global graph structure to score two nodes. </li>
+<li>Katz index counts #walks of all lengths between two  nodes.</li>
+</ul>
+</li>
+</ul>
+<h2 id="Graph-level-Features-and-Graph-Kernels"><a href="#Graph-level-Features-and-Graph-Kernels" class="headerlink" title="Graph-level Features and Graph Kernels"></a>Graph-level Features and Graph Kernels</h2><h3 id="Graph-level-Features"><a href="#Graph-level-Features" class="headerlink" title="Graph-level Features"></a>Graph-level Features</h3><p>Goal: We want features that characterize the  structure of an entire graph</p>
+<h3 id="Backaround-Kernel-Methods"><a href="#Backaround-Kernel-Methods" class="headerlink" title="Backaround Kernel Methods"></a>Backaround Kernel Methods</h3><ul>
+<li>Kernel methods are widely-used for traditional  ML for graph-level prediction. </li>
+<li>Idea: Design kernels instead of feature vectors. </li>
+<li>A quick introduction to Kernels:</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114165703860.png" alt=""></p>
+<h3 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h3><ul>
+<li>Graph Kernels: Measure similarity between  two graphs: <ul>
+<li>Graphlet Kernel [1] </li>
+<li>Weisfeiler-Lehman Kernel [2] </li>
+<li>Other kernels are also proposed in the literature  (beyond the scope of this lecture) <ul>
+<li>Random-walk kernel </li>
+<li>Shortest-path graph kernel </li>
+<li>And many more…</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>[1] Shervashidze, Nino, et al. “Efficient graphlet kernels for large graph comparison.” Artificial Intelligence and Statistics. 2009. </p>
+<p>[2] Shervashidze, Nino, et al. “Weisfeiler-lehman graph kernels.” Journal of Machine Learning Research 12.9 (2011).</p>
+<h3 id="Graph-Kernel-Key-Idea"><a href="#Graph-Kernel-Key-Idea" class="headerlink" title="Graph Kernel: Key Idea"></a>Graph Kernel: Key Idea</h3><ul>
+<li>Goal: Design graph feature vector 𝜙(𝐺) </li>
+<li>Key idea: Bag-of-Words (BoW) for a graph <ul>
+<li>Recall: BoW simply uses the word counts as  features for documents (no ordering considered). </li>
+<li>Naïve extension to a graph: Regard nodes as words. </li>
+<li>Since both graphs have 4 red nodes, we get the  same feature vector for two different graphs…</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114170336494.png" alt=""></p>
+<p>What if we use Bag of node degrees?</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114170358374.png" alt=""></p>
+<p>Both Graphlet Kernel and Weisfeiler-Lehman  (WL) Kernel use Bag-of-* representation of  graph, where * is more sophisticated than  node degrees!</p>
+<h3 id="Graphlet-Features"><a href="#Graphlet-Features" class="headerlink" title="Graphlet Features"></a>Graphlet Features</h3><ul>
+<li>Key idea: Count the number of different  graphlets in a graph. <ul>
+<li>Note: Definition of graphlets here is slightly  different from node-level features.  </li>
+<li>The two differences are: <ul>
+<li>Nodes in graphlets here do not need to be connected (allows for  isolated nodes) </li>
+<li>The graphlets here are not rooted. </li>
+<li>Examples in the next slide illustrate this.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114170616974.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114170627979.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114170640069.png" alt=""></p>
+<h3 id="Graphlet-Kernel"><a href="#Graphlet-Kernel" class="headerlink" title="Graphlet Kernel"></a>Graphlet Kernel</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114170712399.png" alt=""></p>
+<ul>
+<li><p>Limitations: Counting graphlets is expensive! </p>
+</li>
+<li><p>Counting size-𝑘 graphlets for a graph with size 𝑛 by enumeration takes 𝑛^𝑘 . </p>
+</li>
+<li><p>This is unavoidable in the worst-case since  subgraph isomorphism test (judging whether a  graph is a subgraph of another graph) is NP-hard. </p>
+</li>
+<li><p>If a graph’s node degree is bounded by 𝑑, an  𝑂(𝑛𝑑^(𝑘−1)) algorithm exists to count all the  graphlets of size 𝑘.  </p>
+<p><strong>Can we design a more efficient graph kernel?</strong></p>
+</li>
+</ul>
+<h3 id="Weisfeiler-lehman-Kernel"><a href="#Weisfeiler-lehman-Kernel" class="headerlink" title="Weisfeiler-lehman Kernel"></a>Weisfeiler-lehman Kernel</h3><ul>
+<li>Goal: Design an efficient graph feature  descriptor 𝜙 (𝐺) </li>
+<li>Idea: Use neighborhood structure to  iteratively enrich node vocabulary.  </li>
+<li>Generalized version of Bag of node degrees since  node degrees are one-hop neighborhood  information. </li>
+<li>Algorithm to achieve this: Color refinement</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114170929956.png" alt=""></p>
+<p>Example of color refinement given two graphs</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114170948187.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114170958604.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114171007420.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114171017926.png" alt=""></p>
+<p>After color refinement, WL kernel counts number  of nodes with a given color.</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114171038806.png" alt=""></p>
+<p>The WL kernel value is computed by the inner  product of the color count vectors: </p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114171053600.png" alt=""></p>
+<ul>
+<li>WL kernel is computationally efficient <ul>
+<li>The time complexity for color refinement at each step is  linear in #(edges), since it involves aggregating neighboring  colors. </li>
+</ul>
+</li>
+<li>When computing a kernel value, only colors  appeared in the two graphs need to be tracked. <ul>
+<li>Thus, #(colors) is at most the total number of nodes. </li>
+</ul>
+</li>
+<li>Counting colors takes linear-time w.r.t. #(nodes). </li>
+<li>In total, time complexity is linear in #(edges)</li>
+</ul>
+<h3 id="Summary-1"><a href="#Summary-1" class="headerlink" title="Summary"></a>Summary</h3><ul>
+<li><p>Graphlet Kernel </p>
+<ul>
+<li>Graph is represented as Bag-of-graphlets </li>
+<li>Computationally expensive </li>
+</ul>
+</li>
+<li><p>Weisfeiler-Lehman Kernel </p>
+<ul>
+<li>Apply 𝐾-step color refinement algorithm to enrich  node colors <ul>
+<li>Different colors capture different 𝐾-hop neighborhood  structures </li>
+</ul>
+</li>
+<li>Graph is represented as Bag-of-colors </li>
+<li>Computationally efficient </li>
+<li>Closely related to Graph Neural Networks (as we  will see!)</li>
+</ul>
+</li>
+<li><p>Traditional ML Pipeline </p>
+<ul>
+<li>Hand-crafted feature + ML model </li>
+</ul>
+</li>
+<li><p>Hand-crafted features for graph data </p>
+<ul>
+<li>Node-level: <ul>
+<li>Node degree, centrality, clustering coefficient, graphlets </li>
+</ul>
+</li>
+<li>Link-level: <ul>
+<li>distance-based feature </li>
+<li>local/global neighborhood overlap </li>
+</ul>
+</li>
+<li>Graph-level: <ul>
+<li>Graphlet kernel, WL kernel</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="Node-Embeddings"><a href="#Node-Embeddings" class="headerlink" title="Node Embeddings"></a>Node Embeddings</h1><p>Goal: Efficient task-independent feature  learning for machine learning with graphs!</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114184930238.png" alt=""></p>
+<h2 id="Why-Embedding"><a href="#Why-Embedding" class="headerlink" title="Why Embedding?"></a>Why Embedding?</h2><ul>
+<li>Task: Map nodes into an embedding space <ul>
+<li>Similarity of embeddings between nodes indicates  their similarity in the network. For example: <ul>
+<li>Both nodes are close to each other (connected by an edge) </li>
+</ul>
+</li>
+<li>Encode network information </li>
+<li>Potentially used for many downstream predictions</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114185054537.png" alt=""></p>
+<p>2D embedding of nodes of the Zachary’s  Karate Club network:</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114185117044.png" alt=""></p>
+<p><a href="https://arxiv.org/pdf/1403.6652.pdf" target="_blank" rel="noopener">Perozzi et al. DeepWalk: Online Learning of Social Representations. KDD 2014</a></p>
+<h2 id="Node-Embeddings-Encoder-and-Decoder"><a href="#Node-Embeddings-Encoder-and-Decoder" class="headerlink" title="Node Embeddings Encoder and Decoder"></a>Node Embeddings Encoder and Decoder</h2><h3 id="Setup"><a href="#Setup" class="headerlink" title="Setup"></a>Setup</h3><ul>
+<li>Assume we have a graph G: <ul>
+<li>V is the vertex set. </li>
+<li>A is the adjacency matrix (assume binary). </li>
+<li>For simplicity: No node features or extra  information is used</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114185313810.png" alt=""></p>
+<h3 id="Embedding-Nodes"><a href="#Embedding-Nodes" class="headerlink" title="Embedding Nodes"></a>Embedding Nodes</h3><p>Goal is to encode nodes so that similarity in  the embedding space (e.g., dot product)  approximates similarity in the graph</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114185343379.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114185359370.png" alt=""></p>
+<h4 id="Learning-Node-Embeddings"><a href="#Learning-Node-Embeddings" class="headerlink" title="Learning Node Embeddings"></a>Learning Node Embeddings</h4><ol>
+<li>Encoder maps from nodes to embeddings </li>
+<li>Define a node similarity function (i.e., a  measure of similarity in the original network) </li>
+<li>Decoder 𝐃𝐄𝐂 maps from embeddings to the  similarity score </li>
+<li>Optimize the parameters of the encoder so  that:</li>
+</ol>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114185507005.png" alt=""></p>
+<h4 id="Two-Key-Components"><a href="#Two-Key-Components" class="headerlink" title="Two Key Components"></a>Two Key Components</h4><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114185541120.png" alt=""></p>
+<h4 id="“shallow”Encoding"><a href="#“shallow”Encoding" class="headerlink" title="“shallow”Encoding"></a>“shallow”Encoding</h4><p>Simplest encoding approach: Encoder is just an  embedding-lookup</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114185622676.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114185653217.png" alt=""></p>
+<ul>
+<li>Each node is assigned a unique embedding vector (i.e., we directly optimize the embedding of each node) </li>
+<li>Many methods: DeepWalk, node2vec</li>
+</ul>
+<h3 id="Framework-Summary"><a href="#Framework-Summary" class="headerlink" title="Framework Summary"></a>Framework Summary</h3><p>Encoder + Decoder Framework</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114185821145.png" alt=""></p>
+<h3 id="How-to-Define-Node-Similarit"><a href="#How-to-Define-Node-Similarit" class="headerlink" title="How to Define Node Similarit"></a>How to Define Node Similarit</h3><ul>
+<li>Key choice of methods is how they define node similarity. </li>
+<li>Should two nodes have a similar embedding if  they… <ul>
+<li>are linked? </li>
+<li>share neighbors? </li>
+<li>have similar “structural roles”? </li>
+</ul>
+</li>
+<li>We will now learn node similarity definition that uses  random walks, and how to optimize embeddings for  such a similarity measure.</li>
+</ul>
+<h3 id="Note-on-Node-Embeddings"><a href="#Note-on-Node-Embeddings" class="headerlink" title="Note on Node Embeddings"></a>Note on Node Embeddings</h3><ul>
+<li>This is unsupervised/self-supervisedway of  learning node embeddings. <ul>
+<li>We are not utilizing node labels </li>
+<li>We are not utilizing node features </li>
+<li>The goal is to directly estimate a set of coordinates  (i.e., the embedding) of a node so that some aspect  of the network structure (captured by DEC) is  preserved. </li>
+</ul>
+</li>
+<li>These embeddings are task independent <ul>
+<li>They are not trained for a specific task but can be  used for any task.</li>
+</ul>
+</li>
+</ul>
+<h2 id="Random-Walk-Approaches-for-Node-Embeddings"><a href="#Random-Walk-Approaches-for-Node-Embeddings" class="headerlink" title="Random Walk Approaches for Node Embeddings"></a>Random Walk Approaches for Node Embeddings</h2><h3 id="Notation"><a href="#Notation" class="headerlink" title="Notation"></a>Notation</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114190246623.png" alt=""></p>
+<h3 id="Random-Walk"><a href="#Random-Walk" class="headerlink" title="Random Walk"></a>Random Walk</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114191224897.png" alt=""></p>
+<h3 id="Random-walk-Embeddings"><a href="#Random-walk-Embeddings" class="headerlink" title="Random-walk Embeddings"></a>Random-walk Embeddings</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114191304620.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114191410904.png" alt=""></p>
+<h3 id="Why-Random-Walks"><a href="#Why-Random-Walks" class="headerlink" title="Why Random Walks?"></a>Why Random Walks?</h3><ol>
+<li>Expressivity: Flexible stochastic(随机的) definition of  node similarity that incorporates both local  and higher-order neighborhood information Idea: if random walk starting from node 𝑢 visits 𝑣 with high probability, 𝑢 and 𝑣 are  similar (high-order multi-hop information) </li>
+<li>Efficiency: Do not need to consider all node  pairs when training; only need to consider  pairs that co-occur on random walks</li>
+</ol>
+<h3 id="Unsupervised-Feature-Learning"><a href="#Unsupervised-Feature-Learning" class="headerlink" title="Unsupervised Feature Learning"></a>Unsupervised Feature Learning</h3><ul>
+<li>Intuition: Find embedding of nodes in  𝑑-dimensional space that preserves similarity </li>
+<li>Idea: Learn node embedding such that nearby nodes are close together in the network </li>
+<li>Given a node 𝑢, how do we define nearby  nodes?</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114191744402.png" alt=""></p>
+<h3 id="Feature-Learning-as-Optimization"><a href="#Feature-Learning-as-Optimization" class="headerlink" title="Feature Learning as Optimization"></a>Feature Learning as Optimization</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114191851755.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114192332640.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114192807843.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114193211508.png" alt=""></p>
+<p>But doing this naively is too expensive!</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114193322978.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114193414462.png" alt=""></p>
+<h4 id="Negative-Sampling"><a href="#Negative-Sampling" class="headerlink" title="Negative Sampling"></a>Negative Sampling</h4><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114193458015.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114194423952.png" alt=""></p>
+<h4 id="Stochastic-Gradient-Descent"><a href="#Stochastic-Gradient-Descent" class="headerlink" title="Stochastic Gradient Descent"></a>Stochastic Gradient Descent</h4><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114194708482.png" alt=""></p>
+<p>Stochastic Gradient Descent: Instead of evaluating  gradients over all examples, evaluate it for each  individual training example.</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114194843074.png" alt=""></p>
+<h3 id="Random-Walks：Summary"><a href="#Random-Walks：Summary" class="headerlink" title="Random Walks：Summary"></a>Random Walks：Summary</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114195157506.png" alt=""></p>
+<h3 id="How-should-we-randomly-walk"><a href="#How-should-we-randomly-walk" class="headerlink" title="How should we randomly walk?"></a>How should we randomly walk?</h3><ul>
+<li>So far we have described how to optimize  embeddings given a random walk strategy R -</li>
+<li>What strategies should we use to run these  random walks? <ul>
+<li>Simplest idea: Just run fixed-length, unbiased  random walks starting from each node (i.e.,  DeepWalk from Perozzi et al., 2013) <ul>
+<li>The issue is that such notion of similarity is too constrained </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>How can we generalize this?</li>
+</ul>
+<p><a href="https://arxiv.org/pdf/1403.6652.pdf" target="_blank" rel="noopener">Reference: Perozzi et al. 2014. DeepWalk: Online Learning of Social Representations. KDD</a></p>
+<h3 id="Overview-of-node2vec"><a href="#Overview-of-node2vec" class="headerlink" title="Overview of node2vec"></a>Overview of node2vec</h3><p><a href="https://cs.stanford.edu/~jure/pubs/node2vec-kdd16.pdf" target="_blank" rel="noopener">Reference: Grover et al. 2016. node2vec: Scalable Feature Learning for Networks. KDD</a></p>
+<ul>
+<li>Goal: Embed nodes with similar network  neighborhoods close in the feature space. </li>
+<li>We frame this goal as a maximum likelihood  optimization problem, independent to the  downstream prediction task.</li>
+<li>Key observation: Flexible notion of network  neighborhood 𝑁_𝑅(𝑢) of node 𝑢 leads to rich node  embeddings</li>
+<li>Develop biased 2^nd order random walk 𝑅 to  generate network neighborhood 𝑁_𝑅(𝑢) of node 𝑢</li>
+</ul>
+<h4 id="node2vec-Biased-Walks"><a href="#node2vec-Biased-Walks" class="headerlink" title="node2vec: Biased Walks"></a>node2vec: Biased Walks</h4><p>Idea: use flexible, biased random walks that can  trade off between local and global views of the  network (Grover and Leskovec, 2016). </p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114195719803.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114195734036.png" alt=""></p>
+<h4 id="BFS-VS-DFS"><a href="#BFS-VS-DFS" class="headerlink" title="BFS VS.DFS"></a>BFS VS.DFS</h4><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114200935414.png" alt=""></p>
+<ul>
+<li>Biased fixed-length random walk 𝑹 that given a  node 𝒖 generates neighborhood 𝑵_𝑹(𝒖) <ul>
+<li>Two parameters: <ul>
+<li>Return parameter 𝒑: <ul>
+<li>Return back to the previous node </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>In-out parameter 𝒒: <ul>
+<li>Moving outwards (DFS) vs. inwards (BFS) </li>
+<li>Intuitively, 𝑞 is the “ratio” of BFS vs. DFS</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="Biased-Random-Walks"><a href="#Biased-Random-Walks" class="headerlink" title="Biased Random Walks"></a>Biased Random Walks</h4><ul>
+<li>Biased 2nd -order random walks explore network neighborhoods: <ul>
+<li>Rnd. walk just traversed edge (𝑠1 , 𝑤) and is now at 𝑤 </li>
+<li>Insight: Neighbors of 𝑤 can only be:</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114201220400.png" alt=""></p>
+<p>Idea: Remember where the walk came from</p>
+<ul>
+<li>Walker came over edge (𝐬𝟏, 𝐰) and is at 𝐰.  Where to go next?</li>
+<li>𝑝, 𝑞 model transition probabilities <ul>
+<li>𝑝 … return parameter </li>
+<li>𝑞 … ”walk away” parameter</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114201325434.png" alt=""></p>
+<ul>
+<li>Walker came over edge (𝐬𝟏, 𝐰) and is at 𝐰.  Where to go next?</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114201455606.png" alt=""></p>
+<h3 id="node2vec-algorithm"><a href="#node2vec-algorithm" class="headerlink" title="node2vec algorithm"></a>node2vec algorithm</h3><p>1) Compute random walk probabilities </p>
+<p>2) Simulate 𝑟 random walks of length 𝑙 starting  from each node 𝑢 </p>
+<p>3) Optimize the node2vec objective using  Stochastic Gradient Descent </p>
+<p>   Linear-time complexity </p>
+<p>   All 3 steps are individually parallelizable</p>
+<h3 id="Other-Random-Walk-Ideas"><a href="#Other-Random-Walk-Ideas" class="headerlink" title="Other Random Walk Ideas"></a>Other Random Walk Ideas</h3><ul>
+<li>Different kinds of biased random walks: <ul>
+<li><a href="https://ericdongyx.github.io/papers/KDD17-dong-chawla-swami-metapath2vec.pdf" target="_blank" rel="noopener">Based on node attributes (Dong et al., 2017).</a> </li>
+<li><a href="https://arxiv.org/abs/1710.09599" target="_blank" rel="noopener">Based on learned weights (Abu-El-Haija et al., 2017)</a> </li>
+</ul>
+</li>
+<li>Alternative optimization schemes: <ul>
+<li><a href="https://arxiv.org/abs/1503.03578" target="_blank" rel="noopener">Directly optimize based on 1-hop and 2-hop random walk  probabilities (as in LINE from Tang et al. 2015).</a> </li>
+</ul>
+</li>
+<li>Network preprocessing techniques: <ul>
+<li><a href="https://arxiv.org/abs/1706.07845" target="_blank" rel="noopener">Run random walks on modified versions of the original  network (e.g., Ribeiro et al. 2017’s struct2vec, Chen et al.  2016’s HARP).</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="Summary-so-far"><a href="#Summary-so-far" class="headerlink" title="Summary so far"></a>Summary so far</h3><ul>
+<li><p>Core idea: Embed nodes so that distances in  embedding space reflect node similarities in  the original network. </p>
+</li>
+<li><p>Different notions of node similarity: </p>
+<ul>
+<li>Naïve: similar if two nodes are connected </li>
+<li>Neighborhood overlap (covered in Lecture 2) </li>
+<li>Random walk approaches (covered today)</li>
+</ul>
+</li>
+<li><p>So what method should I use..? </p>
+</li>
+<li><p>No one method wins in all cases…. </p>
+<ul>
+<li>E.g., node2vec performs better on node classification  while alternative methods perform better on link  prediction (<a href="https://arxiv.org/abs/1705.02801" target="_blank" rel="noopener">Goyal and Ferrara, 2017 survey)</a>. </li>
+</ul>
+</li>
+<li><p>Random walk approaches are generally more  efficient. </p>
+</li>
+<li><p>In general: Must choose definition of node  similarity that matches your application.</p>
+</li>
+</ul>
+<h2 id="Embedding-Entire-Graphs"><a href="#Embedding-Entire-Graphs" class="headerlink" title="Embedding Entire Graphs"></a>Embedding Entire Graphs</h2><h3 id="Embedding-Entire-Graphs-1"><a href="#Embedding-Entire-Graphs-1" class="headerlink" title="Embedding Entire Graphs"></a>Embedding Entire Graphs</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114202611575.png" alt=""></p>
+<h3 id="Approach-l"><a href="#Approach-l" class="headerlink" title="Approach l"></a>Approach l</h3><ul>
+<li><p>Simple (but effective) approach 1:  </p>
+<ul>
+<li>Run a standard graph embedding  technique on the (sub)graph 𝐺. </li>
+<li>Then just sum (or average) the node  embeddings in the (sub)graph 𝐺.</li>
+</ul>
+<img src="/images/loading.gif" data-original="../images/ML/image-20211114203010880.png" style="zoom:50%;">
+
+</li>
+</ul>
+<p><a href="https://arxiv.org/abs/1509.09292" target="_blank" rel="noopener">Used by Duvenaud et al., 2016 to classify  molecules based on their graph structure</a></p>
+<h3 id="Approach-2"><a href="#Approach-2" class="headerlink" title="Approach 2"></a>Approach 2</h3><p>Approach 2: Introduce a “virtual node” to  represent the (sub)graph and run a standard  graph embedding technique</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114203037704.png" alt=""></p>
+<p><a href="https://arxiv.org/abs/1511.05493" target="_blank" rel="noopener">Proposed by Li et al., 2016 as a general  technique for subgraph embedding</a></p>
+<h3 id="Approach-3-Anonymous-Walk-Embeddings"><a href="#Approach-3-Anonymous-Walk-Embeddings" class="headerlink" title="Approach 3: Anonymous Walk Embeddings"></a>Approach 3: Anonymous Walk Embeddings</h3><p>States in anonymous(匿名的) walks correspond to the index of the first time we visited the node in a  random walk</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114203144450.png" alt=""></p>
+<p><a href="https://arxiv.org/pdf/1805.11921.pdf" target="_blank" rel="noopener">Anonymous Walk Embeddings, ICML 2018</a> </p>
+<ul>
+<li><p>Agnostic to the identity of the nodes visited  (hence anonymous) </p>
+</li>
+<li><p>Example: Random walk w1 :</p>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114203318023.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114203337873.png" alt=""></p>
+<h4 id="Number-of-Walks-Grows"><a href="#Number-of-Walks-Grows" class="headerlink" title="Number of Walks Grows"></a>Number of Walks Grows</h4><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114203413849.png" alt=""></p>
+<h4 id="Simple-Use-of-Anonymous-Walks"><a href="#Simple-Use-of-Anonymous-Walks" class="headerlink" title="Simple Use of Anonymous Walks"></a>Simple Use of Anonymous Walks</h4><ul>
+<li><p>Simulate anonymous walks 𝑤𝑖 of 𝑙 steps and  record their counts. </p>
+</li>
+<li><p>Represent the graph as a probability  distribution over these walks. </p>
+</li>
+<li><p>For example:  </p>
+<ul>
+<li>Set 𝑙 = 3 </li>
+<li>Then we can represent the graph as a 5-dim vector <ul>
+<li>Since there are 5 anonymous walks 𝑤𝑖 of length 3: 111, 112,  121, 122, 123 </li>
+</ul>
+</li>
+<li>𝒛_𝑮[𝑖] = probability of anonymous walk 𝑤𝑖 in graph 𝐺.</li>
+</ul>
+</li>
+<li><p>Sampling anonymous walks: Generate  independently a set of 𝑚 random walks. </p>
+</li>
+<li><p>Represent the graph as a probability distribution  over these walks. </p>
+</li>
+<li><p>How many random walks 𝑚 do we need?</p>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114203740427.png" alt=""></p>
+<h3 id="New-idea-Learn-Walk-Embeddings"><a href="#New-idea-Learn-Walk-Embeddings" class="headerlink" title="New idea: Learn Walk Embeddings"></a>New idea: Learn Walk Embeddings</h3><p>Rather than simply representing each walk by the  fraction of times it occurs, we learn embedding 𝒛_𝒊 of anonymous walk 𝒘_𝒊 .</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114203928449.png" alt=""></p>
+<p>How to embed walks? </p>
+<p>Idea: Embed walks s.t. the next walk can be  predicted</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114204007342.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114204043648.png" alt=""></p>
+<p><a href="https://arxiv.org/pdf/1805.11921.pdf" target="_blank" rel="noopener">Anonymous Walk Embeddings, ICML 2018</a> </p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114204507319.png" alt=""></p>
+<h3 id="Summary-2"><a href="#Summary-2" class="headerlink" title="Summary"></a>Summary</h3><ul>
+<li>We discussed 3 ideas to graph embeddings: </li>
+<li>Approach 1: Embed nodes and sum/avg them </li>
+<li>Approach 2: Create super-node that spans the  (sub) graph and then embed that node. </li>
+<li>Approach 3: Anonymous Walk Embeddings <ul>
+<li>Idea 1: Sample the anon. walks and represent the  graph as fraction of times each anon walk occurs. </li>
+<li>Idea 2: Learn graph embedding together with  anonymous walk embeddings.</li>
+</ul>
+</li>
+</ul>
+<h3 id="Preview-Hierarchical-Embeddings"><a href="#Preview-Hierarchical-Embeddings" class="headerlink" title="Preview: Hierarchical Embeddings"></a>Preview: Hierarchical Embeddings</h3><ul>
+<li>We will discuss more advanced ways to obtain  graph embeddings in Lecture 8. </li>
+<li>We can hierarchically cluster nodes in graphs,  and sum/avg the node embeddings according  to these clusters.</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114204746252.png" alt=""></p>
+<h3 id="How-to-Use-Embeddings"><a href="#How-to-Use-Embeddings" class="headerlink" title="How to Use Embeddings"></a>How to Use Embeddings</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114204819921.png" alt=""></p>
+<ul>
+<li>Encoder-decoder framework: <ul>
+<li>Encoder: embedding lookup </li>
+<li>Decoder: predict score based on embedding to match  node similarity </li>
+</ul>
+</li>
+<li>Node similarity measure: (biased) random walk <ul>
+<li>Examples: DeepWalk, Node2Vec </li>
+</ul>
+</li>
+<li>Extension to Graph embedding: Node embedding  aggregation and Anonymous Walk Embeddings</li>
+</ul>
+<h1 id="Graph-as-Matrix-Pagerank-Random-Walks-and-Embeddings"><a href="#Graph-as-Matrix-Pagerank-Random-Walks-and-Embeddings" class="headerlink" title="Graph as Matrix: Pagerank, Random Walks and Embeddings"></a>Graph as Matrix: Pagerank, Random Walks and Embeddings</h1><h2 id="Pagerank-aka-the-Google-Algorithm"><a href="#Pagerank-aka-the-Google-Algorithm" class="headerlink" title="Pagerank(aka the Google Algorithm)"></a>Pagerank(aka the Google Algorithm)</h2><h3 id="Example-The-Web-as-a-Graph"><a href="#Example-The-Web-as-a-Graph" class="headerlink" title="Example: The Web as a Graph"></a>Example: The Web as a Graph</h3><ul>
+<li>Q: What does the Web “look like” at  a global level? </li>
+<li>Web as a graph: <ul>
+<li>Nodes = web pages </li>
+<li>Edges = hyperlinks </li>
+<li>Side issue: What is a node? <ul>
+<li>Dynamic pages created on the fly </li>
+<li>“dark matter” – inaccessible  database generated pages</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114214917553.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114214932840.png" alt=""></p>
+<h3 id="What-Does-the-Web-Look-Like"><a href="#What-Does-the-Web-Look-Like" class="headerlink" title="What Does the Web Look Like?"></a>What Does the Web Look Like?</h3><ul>
+<li>How is the Web linked? </li>
+<li>What is the “map” of the Web? </li>
+<li>Web as a directed graph [Broder et al. 2000]: <ul>
+<li>Given node v, what nodes can v reach?  </li>
+<li>What other nodes can reach v?</li>
+</ul>
+</li>
+</ul>
+<h3 id="Ranking-Nodes-on-the-Graph"><a href="#Ranking-Nodes-on-the-Graph" class="headerlink" title="Ranking Nodes on the Graph"></a>Ranking Nodes on the Graph</h3><ul>
+<li>All web pages are not equally “important” <a href="http://www.thispersondoesnotexist.com" target="_blank" rel="noopener">www.thispersondoesnotexist.com</a> vs. <a href="http://www.stanford.edu" target="_blank" rel="noopener">www.stanford.edu</a> </li>
+<li>There is large diversity  in the web-graph  node connectivity. </li>
+<li>So, let’s rank the pages  using the web graph link structure!</li>
+</ul>
+<h3 id="Link-Analysis-Algorithms"><a href="#Link-Analysis-Algorithms" class="headerlink" title="Link Analysis Algorithms"></a>Link Analysis Algorithms</h3><ul>
+<li>We will cover the following Link Analysis approaches to compute the importance of  nodes in a graph: <ul>
+<li>PageRank </li>
+<li>Personalized PageRank (PPR) </li>
+<li>Random Walk with Restarts</li>
+</ul>
+</li>
+</ul>
+<h3 id="Links-as-Votes"><a href="#Links-as-Votes" class="headerlink" title="Links as Votes"></a>Links as Votes</h3><ul>
+<li>Idea: Links as votes <ul>
+<li>Page is more important if it has more links <ul>
+<li>In-coming links? Out-going links? </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Think of in-links as votes: <ul>
+<li><a href="http://www.stanford.edu" target="_blank" rel="noopener">www.stanford.edu</a> has 23,400 in-links </li>
+<li>thispersondoesnotexist.com has 1 in-link </li>
+</ul>
+</li>
+<li>Are all in-links equal? <ul>
+<li>Links from important pages count more </li>
+<li>Recursive question! </li>
+</ul>
+</li>
+</ul>
+<h3 id="Pagerank-The”Flow”Model"><a href="#Pagerank-The”Flow”Model" class="headerlink" title="Pagerank: The”Flow”Model"></a>Pagerank: The”Flow”Model</h3><ul>
+<li>A “vote” from an important page is worth more: <ul>
+<li>Each link’s vote is proportional  to the importance of its source  page </li>
+<li>If page i with importance ri has  di out-links, each link gets ri / di votes </li>
+<li>Page j’s own importance rj is  the sum of the votes on its in-links</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114215430610.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114215601977.png" alt=""></p>
+<h3 id="Pagerank-Matrix-Formulation"><a href="#Pagerank-Matrix-Formulation" class="headerlink" title="Pagerank: Matrix Formulation"></a>Pagerank: Matrix Formulation</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114215711107.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114215755515.png" alt=""></p>
+<h3 id="Connection-to-Random-Walk"><a href="#Connection-to-Random-Walk" class="headerlink" title="Connection to Random Walk"></a>Connection to Random Walk</h3><ul>
+<li>Imagine a random web surfer: <ul>
+<li>At any time 𝒕, surfer is on some page 𝑖 </li>
+<li>At time 𝒕 + 𝟏, the surfer follows an  out-link from 𝒊 uniformly at random </li>
+<li>Ends up on some page 𝒋 linked from 𝒊 </li>
+<li>Process repeats indefinitely </li>
+</ul>
+</li>
+<li>Let: <ul>
+<li>𝒑(𝒕) … vector whose 𝑖^th coordinate is the  prob. that the surfer is at page 𝑖 at time 𝑡 </li>
+<li>So, 𝒑(𝒕) is a probability distribution over pages</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114220023823.png" alt=""></p>
+<h3 id="The-Stationary-Distribution"><a href="#The-Stationary-Distribution" class="headerlink" title="The Stationary Distribution"></a>The Stationary Distribution</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114222138055.png" alt=""></p>
+<h3 id="Recall-Eigenvector-of-A-Matrix"><a href="#Recall-Eigenvector-of-A-Matrix" class="headerlink" title="Recall Eigenvector of A Matrix"></a>Recall Eigenvector of A Matrix</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114222334844.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114222411167.png" alt=""></p>
+<h3 id="Summary-3"><a href="#Summary-3" class="headerlink" title="Summary"></a>Summary</h3><p>PageRank: </p>
+<ul>
+<li>Measures importance of nodes in a graph using  the link structure of the web </li>
+<li>Models a random web surfer using the stochastic  adjacency matrix 𝑴 </li>
+<li>PageRank solves 𝒓 = 𝑴𝒓 where 𝒓 can be viewed  as both the principle eigenvector of 𝑴 and as the  stationary distribution of a random walk over the  graph</li>
+</ul>
+<h2 id="Pagerank-How-to-solve"><a href="#Pagerank-How-to-solve" class="headerlink" title="Pagerank: How to solve?"></a>Pagerank: How to solve?</h2><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114222947387.png" alt=""></p>
+<h3 id="Power-Iteration-Method"><a href="#Power-Iteration-Method" class="headerlink" title="Power Iteration Method"></a>Power Iteration Method</h3><p>Given a web graph with N nodes, where the  nodes are pages and edges are hyperlinks</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114223059886.png" alt=""></p>
+<p>About 50 iterations is sufficient to estimate the limiting solution.</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114223659426.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114223740435.png" alt=""></p>
+<h3 id="Three-Ouestions"><a href="#Three-Ouestions" class="headerlink" title="Three Ouestions"></a>Three Ouestions</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114223836586.png" alt=""></p>
+<ul>
+<li>Does this converge? </li>
+<li>Does it converge to what we want? </li>
+<li>Are results reasonable?</li>
+</ul>
+<h3 id="Problems"><a href="#Problems" class="headerlink" title="Problems"></a>Problems</h3><p>Two problems: </p>
+<p>(1) Some pages are  dead ends (have no out-links) </p>
+<p>​    Such pages cause  importance to “leak out” </p>
+<p>(2) Spider traps (all out-links are within the group) </p>
+<p>​    Eventually spider traps absorb all importance</p>
+<h3 id="Does-this-converge"><a href="#Does-this-converge" class="headerlink" title="Does this converge"></a>Does this converge</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114224138856.png" alt=""></p>
+<h3 id="Does-it-converge-to-what-we-want"><a href="#Does-it-converge-to-what-we-want" class="headerlink" title="Does it converge to what we want?"></a>Does it converge to what we want?</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114224207948.png" alt=""></p>
+<h3 id="Solution-to-Spider-Traps"><a href="#Solution-to-Spider-Traps" class="headerlink" title="Solution to Spider Traps"></a>Solution to Spider Traps</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114224305329.png" alt=""></p>
+<h3 id="Solution-to-Dead-Ends"><a href="#Solution-to-Dead-Ends" class="headerlink" title="Solution to Dead Ends"></a>Solution to Dead Ends</h3><ul>
+<li>Teleports: Follow random teleport links with  total probability 1.0 from dead-ends <ul>
+<li>Adjust matrix accordingly</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114224421867.png" alt=""></p>
+<h3 id="Why-Teleports-Solve-the-Problem"><a href="#Why-Teleports-Solve-the-Problem" class="headerlink" title="Why Teleports Solve the Problem?"></a>Why Teleports Solve the Problem?</h3><ul>
+<li>Why are dead-ends and spider traps a problem  and why do teleports solve the problem? </li>
+<li>Spider-traps are not a problem, but with traps  PageRank scores are not what we want <ul>
+<li>Solution: Never get stuck in a spider trap by  teleporting out of it in a finite number of steps </li>
+</ul>
+</li>
+<li>Dead-ends are a problem <ul>
+<li>The matrix is not column stochastic so our initial  assumptions are not met </li>
+<li>Solution: Make matrix column stochastic by always  teleporting when there is nowhere else to go</li>
+</ul>
+</li>
+</ul>
+<h3 id="Solution-Random-Teleports"><a href="#Solution-Random-Teleports" class="headerlink" title="Solution: Random Teleports"></a>Solution: Random Teleports</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114224754314.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114224833186.png" alt=""></p>
+<h4 id="Random-Teleports-beta-0-8"><a href="#Random-Teleports-beta-0-8" class="headerlink" title="Random Teleports(beta=0.8)"></a>Random Teleports(beta=0.8)</h4><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114224910775.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114224924774.png" alt=""></p>
+<h3 id="Summary-4"><a href="#Summary-4" class="headerlink" title="Summary"></a>Summary</h3><ul>
+<li>PageRank solves for 𝒓 = 𝑮𝒓 and can be  efficiently computed by power iteration of the  stochastic adjacency matrix (𝑮)  </li>
+<li>Adding random uniform teleportation solves  issues of dead-ends and spider-traps</li>
+</ul>
+<h2 id="Random-Walk-with-Restarts-and-Personalized-Pagerank"><a href="#Random-Walk-with-Restarts-and-Personalized-Pagerank" class="headerlink" title="Random Walk with Restarts and Personalized Pagerank"></a>Random Walk with Restarts and Personalized Pagerank</h2><h3 id="Example-Recommendation"><a href="#Example-Recommendation" class="headerlink" title="Example: Recommendation"></a>Example: Recommendation</h3><p>Given:  A bipartite graph representing user and item  interactions (e.g. purchase) </p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114225052686.png" alt=""></p>
+<p>Goal: Proximity on graphs </p>
+<ul>
+<li>What items should we recommend to a user who  interacts with item Q? </li>
+<li>Intuition: if items Q and P are interacted by similar  users, recommend P when user interacts with Q</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114225134281.png" alt=""></p>
+<p>Which is more related A,A’ or B,B’?</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114225159496.png" alt=""></p>
+<h3 id="Node-proximity-Measurements"><a href="#Node-proximity-Measurements" class="headerlink" title="Node proximity Measurements"></a>Node proximity Measurements</h3><p>Which is more related A,A’, B,B’ or C,C’?</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114225227419.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114225246889.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114225258445.png" alt=""></p>
+<h3 id="Proximity-on-Graphs"><a href="#Proximity-on-Graphs" class="headerlink" title="Proximity on Graphs"></a>Proximity on Graphs</h3><p>PageRank: </p>
+<ul>
+<li>Ranks nodes by “importance” </li>
+<li>Teleports(传送) with uniform probability to any node in  the network </li>
+</ul>
+<p>Personalized PageRank: </p>
+<ul>
+<li>Ranks proximity of nodes to the teleport nodes 𝑺 </li>
+</ul>
+<p>Proximity(接近) on graphs: </p>
+<ul>
+<li>Q: What is most related item to Item Q? </li>
+<li>Random Walks with Restarts <ul>
+<li>Teleport back to the starting node: 𝑺 = {𝑸}</li>
+</ul>
+</li>
+</ul>
+<h3 id="Idea-Random-Walks"><a href="#Idea-Random-Walks" class="headerlink" title="Idea: Random Walks"></a>Idea: Random Walks</h3><ul>
+<li>Idea <ul>
+<li>Every node has some importance </li>
+<li>Importance gets evenly split among all edges and  pushed to the neighbors: </li>
+</ul>
+</li>
+<li>Given a set of QUERY_NODES, we simulate a  random walk: <ul>
+<li>Make a step to a random neighbor and record the visit  (visit count) </li>
+<li>With probability ALPHA, restart the walk at one of the  QUERY_NODES </li>
+<li>The nodes with the highest visit count have highest  proximity to the QUERY_NODES</li>
+</ul>
+</li>
+</ul>
+<p>Idea: </p>
+<ul>
+<li>Every node has some importance <ul>
+<li>Importance gets evenly split among all edges and  pushed to the neighbors </li>
+<li>Given a set of QUERY NODES Q, simulate a  random walk:</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114230011267.png" alt=""></p>
+<h3 id="Random-Walk-Algorithm"><a href="#Random-Walk-Algorithm" class="headerlink" title="Random Walk Algorithm"></a>Random Walk Algorithm</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114230036155.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114230058590.png" alt=""></p>
+<h3 id="Benefits"><a href="#Benefits" class="headerlink" title="Benefits"></a>Benefits</h3><p>Why is this a good solution? </p>
+<p>Because the “similarity” considers: </p>
+<ul>
+<li>Multiple connections </li>
+<li>Multiple paths </li>
+<li>Direct and indirect connections </li>
+<li>Degree of the node</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114230143054.png" alt=""></p>
+<h3 id="Summary-Page-Rank-Variants"><a href="#Summary-Page-Rank-Variants" class="headerlink" title="Summary: Page Rank Variants"></a>Summary: Page Rank Variants</h3><ul>
+<li><p>PageRank: </p>
+<ul>
+<li>Teleports to any node </li>
+<li>Nodes can have the same probability of the surfer landing: 𝑺 = [0.1,0.1,0.1, 0.1,0.1,0.1, 0.1,0.1,0.1, 0.1] </li>
+</ul>
+</li>
+<li><p>Topic-Specific PageRank aka Personalized PageRank: </p>
+<ul>
+<li>Teleports to a specific set of nodes </li>
+<li>Nodes can have different probabilities of the surfer landing  there: 𝑺 = [0.1,0, 0,0.2, 0, 0,0.5,0,0, 0.2] </li>
+</ul>
+</li>
+<li><p>Random Walk with Restarts: </p>
+<ul>
+<li>Topic-Specific PageRank where teleport is always to the same  node: 𝑺 = [0,0, 0,0, 𝟏, 0, 0, 0, 0, 0,0]</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>A graph is naturally represented as a matrix </li>
+<li>We defined a random walk process over the  graph <ul>
+<li>Random surfer moving across the links and with  random teleportation </li>
+<li>Stochastic adjacency matrix M </li>
+</ul>
+</li>
+<li>PageRank = Limiting distribution of the surfer  location represented node importance <ul>
+<li>Corresponds to the leading eigenvector of  transformed adjacency matrix M.</li>
+</ul>
+</li>
+</ul>
+<h2 id="Matrix-Factorization-and-Node-Embeddings"><a href="#Matrix-Factorization-and-Node-Embeddings" class="headerlink" title="Matrix Factorization and Node Embeddings"></a>Matrix Factorization and Node Embeddings</h2><h3 id="Embeddings-Matrix-Factorization-因式分解"><a href="#Embeddings-Matrix-Factorization-因式分解" class="headerlink" title="Embeddings Matrix Factorization(因式分解)"></a>Embeddings Matrix Factorization(因式分解)</h3><p>Recall: encoder as an embedding lookup</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114230445458.png" alt=""></p>
+<h3 id="Connection-to-Matrix-Factorization"><a href="#Connection-to-Matrix-Factorization" class="headerlink" title="Connection to Matrix Factorization"></a>Connection to Matrix Factorization</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211114230551299.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114230605362.png" alt=""></p>
+<h3 id="Random-Walk-based-Similarity"><a href="#Random-Walk-based-Similarity" class="headerlink" title="Random Walk-based Similarity"></a>Random Walk-based Similarity</h3><ul>
+<li>DeepWalk and node2vec have a more  complex node similarity definition based on  random walks </li>
+<li>DeepWalk is equivalent to matrix  factorization of the following complex matrix  expression:</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114230645556.png" alt=""></p>
+<p><a href="https://keg.cs.tsinghua.edu.cn/jietang/publications/WSDM18-Qiu-et-al-NetMF-network-embedding.pdf" target="_blank" rel="noopener">Network Embedding as Matrix Factorization: Unifying DeepWalk, LINE, PTE, and node2vec, WSDM 18</a></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114230726746.png" alt=""></p>
+<p>Node2vec can also be formulated as a matrix  factorization (albeit a more complex matrix)</p>
+<h3 id="Limitations"><a href="#Limitations" class="headerlink" title="Limitations"></a>Limitations</h3><p>Limitations of node embeddings via matrix  factorization and random walks </p>
+<ul>
+<li>Cannot obtain embeddings for nodes not in the  training set</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114230810157.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114230825196.png" alt=""></p>
+<ul>
+<li>Node 1 and 11 are structurally similar – part of  one triangle, degree 2, … </li>
+<li>However, they have very different embeddings. <ul>
+<li>It’s unlikely that a random walk will reach  node 11 from node 1. </li>
+</ul>
+</li>
+<li>DeepWalk and node2vec do not capture  structural similarity.</li>
+<li>Cannot utilize node, edge and graph features</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211114230907768.png" alt=""></p>
+<p>Solution to these limitations: Deep Representation  Learning and Graph Neural Networks </p>
+<h3 id="Summary-5"><a href="#Summary-5" class="headerlink" title="Summary"></a>Summary</h3><ul>
+<li>PageRank <ul>
+<li>Measures importance of nodes in graph </li>
+<li>Can be efficiently computed by power iteration of  adjacency matrix </li>
+</ul>
+</li>
+<li>Personalized PageRank (PPR) <ul>
+<li>Measures importance of nodes with respect to a  particular node or set of nodes </li>
+<li>Can be efficiently computed by random walk </li>
+</ul>
+</li>
+<li>Node embeddings based on random walks can  be expressed as matrix factorization </li>
+<li>Viewing graphs as matrices plays a key role in all  above algorithms!</li>
+</ul>
+<h1 id="Message-Passing-and-Node-Classification"><a href="#Message-Passing-and-Node-Classification" class="headerlink" title="Message Passing and Node Classification"></a>Message Passing and Node Classification</h1><h2 id="Example-Node-Classification"><a href="#Example-Node-Classification" class="headerlink" title="Example Node Classification"></a>Example Node Classification</h2><p>Todo</p>
+<script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
             if (!el.dataset.src) { return; }
@@ -1004,7 +2162,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">2595.3k</span>&nbsp;字
+                class="white-color">2600.3k</span>&nbsp;字
             
             
             
