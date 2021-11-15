@@ -489,16 +489,13 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="11种滤波算法程序大全（含源代码）"><a href="#11种滤波算法程序大全（含源代码）" class="headerlink" title="11种滤波算法程序大全（含源代码）"></a>11种滤波算法程序大全（含源代码）</h1><h2 id="1、限幅滤波法（又称程序判断滤波法）"><a href="#1、限幅滤波法（又称程序判断滤波法）" class="headerlink" title="1、限幅滤波法（又称程序判断滤波法）"></a>1、限幅滤波法（又称程序判断滤波法）</h2><pre class="line-numbers language-c"><code class="language-c"><span class="token number">1</span>、限幅滤波法（又称程序判断滤波法）
-
-
-<span class="token comment" spellcheck="true">/*
+                <h1 id="11种滤波算法程序大全（含源代码）"><a href="#11种滤波算法程序大全（含源代码）" class="headerlink" title="11种滤波算法程序大全（含源代码）"></a>11种滤波算法程序大全（含源代码）</h1><h2 id="1、限幅滤波法（又称程序判断滤波法）"><a href="#1、限幅滤波法（又称程序判断滤波法）" class="headerlink" title="1、限幅滤波法（又称程序判断滤波法）"></a>1、限幅滤波法（又称程序判断滤波法）</h2><pre class="line-numbers language-c"><code class="language-c"><span class="token comment" spellcheck="true">/*
 A、名称：限幅滤波法（又称程序判断滤波法）
 B、方法：
     根据经验判断，确定两次采样允许的最大偏差值（设为A），
     每次检测到新值时判断：
     如果本次值与上次值之差&lt;=A，则本次值有效，
-    如果本次值与上次值之差&gt;A，则本次值无效，放弃本次值，用上次值代替本次值。
+    如果本次值与上次值之差>A，则本次值无效，放弃本次值，用上次值代替本次值。
 C、优点：
     能有效克服因偶然因素引起的脉冲干扰。
 D、缺点：
@@ -533,11 +530,11 @@ E、整理：shenhaiyu 2013-11-01
 <span class="token keyword">int</span> <span class="token function">Filter</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">int</span> NewValue<span class="token punctuation">;</span>
   NewValue <span class="token operator">=</span> <span class="token function">Get_AD</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">(</span>NewValue <span class="token operator">-</span> Value<span class="token punctuation">)</span> <span class="token operator">&gt;</span> FILTER_A<span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>Value <span class="token operator">-</span> NewValue<span class="token punctuation">)</span> <span class="token operator">&gt;</span> FILTER_A<span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">(</span>NewValue <span class="token operator">-</span> Value<span class="token punctuation">)</span> <span class="token operator">></span> FILTER_A<span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>Value <span class="token operator">-</span> NewValue<span class="token punctuation">)</span> <span class="token operator">></span> FILTER_A<span class="token punctuation">)</span><span class="token punctuation">)</span>
     <span class="token keyword">return</span> Value<span class="token punctuation">;</span>
   <span class="token keyword">else</span>
     <span class="token keyword">return</span> NewValue<span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h2 id="2、中位值滤波法"><a href="#2、中位值滤波法" class="headerlink" title="2、中位值滤波法"></a><strong>2、中位值滤波法</strong></h2><pre class="line-numbers language-c"><code class="language-c"><span class="token comment" spellcheck="true">/*
 A、名称：中位值滤波法
 B、方法：
@@ -582,7 +579,7 @@ E、整理：shenhaiyu 2013-11-01
   <span class="token comment" spellcheck="true">// 采样值从小到大排列（冒泡法）</span>
   <span class="token keyword">for</span><span class="token punctuation">(</span>j <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> j <span class="token operator">&lt;</span> FILTER_N <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span> j<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">for</span><span class="token punctuation">(</span>i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> FILTER_N <span class="token operator">-</span> <span class="token number">1</span> <span class="token operator">-</span> j<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      <span class="token keyword">if</span><span class="token punctuation">(</span>filter_buf<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">&gt;</span> filter_buf<span class="token punctuation">[</span>i <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">if</span><span class="token punctuation">(</span>filter_buf<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">></span> filter_buf<span class="token punctuation">[</span>i <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
         filter_temp <span class="token operator">=</span> filter_buf<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
         filter_buf<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> filter_buf<span class="token punctuation">[</span>i <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
         filter_buf<span class="token punctuation">[</span>i <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> filter_temp<span class="token punctuation">;</span>
@@ -736,7 +733,7 @@ E、整理：shenhaiyu 2013-11-01
   <span class="token comment" spellcheck="true">// 采样值从小到大排列（冒泡法）</span>
   <span class="token keyword">for</span><span class="token punctuation">(</span>j <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> j <span class="token operator">&lt;</span> FILTER_N <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span> j<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">for</span><span class="token punctuation">(</span>i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> FILTER_N <span class="token operator">-</span> <span class="token number">1</span> <span class="token operator">-</span> j<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      <span class="token keyword">if</span><span class="token punctuation">(</span>filter_buf<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">&gt;</span> filter_buf<span class="token punctuation">[</span>i <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">if</span><span class="token punctuation">(</span>filter_buf<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">></span> filter_buf<span class="token punctuation">[</span>i <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
         filter_temp <span class="token operator">=</span> filter_buf<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
         filter_buf<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> filter_buf<span class="token punctuation">[</span>i <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
         filter_buf<span class="token punctuation">[</span>i <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> filter_temp<span class="token punctuation">;</span>
@@ -764,8 +761,8 @@ int Filter() {
   filter_max = filter_buf[0];
   filter_min = filter_buf[0];
   filter_sum = filter_buf[0];
-  for(i = FILTER_N - 1; i &gt; 0; i--) {
-    if(filter_buf[i] &gt; filter_max)
+  for(i = FILTER_N - 1; i > 0; i--) {
+    if(filter_buf[i] > filter_max)
       filter_max=filter_buf[i];
     else if(filter_buf[i] &lt; filter_min)
       filter_min=filter_buf[i];
@@ -818,7 +815,7 @@ E、整理：shenhaiyu 2013-11-01
   <span class="token keyword">int</span> i<span class="token punctuation">;</span>
   <span class="token keyword">int</span> filter_sum <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
   filter_buf<span class="token punctuation">[</span>FILTER_N <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">Get_AD</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">(</span>filter_buf<span class="token punctuation">[</span>FILTER_N <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">-</span> filter_buf<span class="token punctuation">[</span>FILTER_N <span class="token operator">-</span> <span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">&gt;</span> FILTER_A<span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>filter_buf<span class="token punctuation">[</span>FILTER_N <span class="token operator">-</span> <span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">-</span> filter_buf<span class="token punctuation">[</span>FILTER_N <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">&gt;</span> FILTER_A<span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">(</span>filter_buf<span class="token punctuation">[</span>FILTER_N <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">-</span> filter_buf<span class="token punctuation">[</span>FILTER_N <span class="token operator">-</span> <span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">></span> FILTER_A<span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>filter_buf<span class="token punctuation">[</span>FILTER_N <span class="token operator">-</span> <span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">-</span> filter_buf<span class="token punctuation">[</span>FILTER_N <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">></span> FILTER_A<span class="token punctuation">)</span><span class="token punctuation">)</span>
     filter_buf<span class="token punctuation">[</span>FILTER_N <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> filter_buf<span class="token punctuation">[</span>FILTER_N <span class="token operator">-</span> <span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
   <span class="token keyword">for</span><span class="token punctuation">(</span>i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> FILTER_N <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     filter_buf<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> filter_buf<span class="token punctuation">[</span>i <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
@@ -922,7 +919,7 @@ A、名称：消抖滤波法
 B、方法：
     设置一个滤波计数器，将每次采样值与当前有效值比较：
     如果采样值=当前有效值，则计数器清零；
-    如果采样值&lt;&gt;当前有效值，则计数器+1，并判断计数器是否&gt;=上限N（溢出）；
+    如果采样值&lt;>当前有效值，则计数器+1，并判断计数器是否>=上限N（溢出）；
     如果计数器溢出，则将本次值替换当前有效值，并清计数器。
 C、优点：
     对于变化缓慢的被测参数有较好的滤波效果；
@@ -961,7 +958,7 @@ E、整理：shenhaiyu 2013-11-01
   new_value <span class="token operator">=</span> <span class="token function">Get_AD</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token keyword">if</span><span class="token punctuation">(</span>Value <span class="token operator">!=</span> new_value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     i<span class="token operator">++</span><span class="token punctuation">;</span>
-    <span class="token keyword">if</span><span class="token punctuation">(</span>i <span class="token operator">&gt;</span> FILTER_N<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span>i <span class="token operator">></span> FILTER_N<span class="token punctuation">)</span> <span class="token punctuation">{</span>
       i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
       Value <span class="token operator">=</span> new_value<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
@@ -1012,13 +1009,13 @@ E、整理：shenhaiyu 2013-11-01
   <span class="token keyword">int</span> NewValue<span class="token punctuation">;</span>
   <span class="token keyword">int</span> new_value<span class="token punctuation">;</span>
   NewValue <span class="token operator">=</span> <span class="token function">Get_AD</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">(</span>NewValue <span class="token operator">-</span> Value<span class="token punctuation">)</span> <span class="token operator">&gt;</span> FILTER_A<span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>Value <span class="token operator">-</span> NewValue<span class="token punctuation">)</span> <span class="token operator">&gt;</span> FILTER_A<span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">(</span>NewValue <span class="token operator">-</span> Value<span class="token punctuation">)</span> <span class="token operator">></span> FILTER_A<span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>Value <span class="token operator">-</span> NewValue<span class="token punctuation">)</span> <span class="token operator">></span> FILTER_A<span class="token punctuation">)</span><span class="token punctuation">)</span>
     new_value <span class="token operator">=</span> Value<span class="token punctuation">;</span>
   <span class="token keyword">else</span>
     new_value <span class="token operator">=</span> NewValue<span class="token punctuation">;</span>
   <span class="token keyword">if</span><span class="token punctuation">(</span>Value <span class="token operator">!=</span> new_value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     i<span class="token operator">++</span><span class="token punctuation">;</span>
-    <span class="token keyword">if</span><span class="token punctuation">(</span>i <span class="token operator">&gt;</span> FILTER_N<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span>i <span class="token operator">></span> FILTER_N<span class="token punctuation">)</span> <span class="token punctuation">{</span>
       i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
       Value <span class="token operator">=</span> new_value<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
@@ -1027,7 +1024,7 @@ E、整理：shenhaiyu 2013-11-01
     i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
   <span class="token keyword">return</span> Value<span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h2 id="11、卡尔曼滤波（非扩展卡尔曼）"><a href="#11、卡尔曼滤波（非扩展卡尔曼）" class="headerlink" title="11、卡尔曼滤波（非扩展卡尔曼）"></a>11、卡尔曼滤波（非扩展卡尔曼）</h2><pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;Wire.h&gt;</span> </span><span class="token comment" spellcheck="true">// I2C library, gyroscope</span>
+<h2 id="11、卡尔曼滤波（非扩展卡尔曼）"><a href="#11、卡尔曼滤波（非扩展卡尔曼）" class="headerlink" title="11、卡尔曼滤波（非扩展卡尔曼）"></a>11、卡尔曼滤波（非扩展卡尔曼）</h2><pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;Wire.h></span> </span><span class="token comment" spellcheck="true">// I2C library, gyroscope</span>
 
 <span class="token comment" spellcheck="true">// Accelerometer ADXL345</span>
 <span class="token macro property">#<span class="token directive keyword">define</span> ACC (0x53)    </span><span class="token comment" spellcheck="true">//ADXL345 ACC address</span>
@@ -1771,7 +1768,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">2660.4k</span>&nbsp;字
+                class="white-color">2661.2k</span>&nbsp;字
             
             
             
