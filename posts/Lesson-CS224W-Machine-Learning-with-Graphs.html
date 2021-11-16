@@ -459,21 +459,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-11-14
+                    2021-11-17
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    5k
+                    6.1k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    31 分
+                    37 分
                 </div>
                 
 
@@ -1646,7 +1646,239 @@
 <li>Node embeddings based on random walks can  be expressed as matrix factorization </li>
 <li>Viewing graphs as matrices plays a key role in all  above algorithms!</li>
 </ul>
-<h1 id="Message-Passing-and-Node-Classification"><a href="#Message-Passing-and-Node-Classification" class="headerlink" title="Message Passing and Node Classification"></a>Message Passing and Node Classification</h1><h2 id="Example-Node-Classification"><a href="#Example-Node-Classification" class="headerlink" title="Example Node Classification"></a>Example Node Classification</h2><p>Todo</p>
+<h1 id="Message-Passing-and-Node-Classification"><a href="#Message-Passing-and-Node-Classification" class="headerlink" title="Message Passing and Node Classification"></a>Message Passing and Node Classification</h1><h2 id="Example-Node-Classification"><a href="#Example-Node-Classification" class="headerlink" title="Example Node Classification"></a>Example Node Classification</h2><p><img src="/images/loading.gif" data-original="../images/ML/image-20211116225627573.png" alt=""></p>
+<ul>
+<li>Given labels of some nodes </li>
+<li>Let’s predict labels of unlabeled nodes </li>
+<li>This is called <strong>semi-supervised node classification</strong></li>
+</ul>
+<h3 id="Correlations-相关性-Exist-in-Networks"><a href="#Correlations-相关性-Exist-in-Networks" class="headerlink" title="Correlations(相关性) Exist in Networks"></a>Correlations(相关性) Exist in Networks</h3><ul>
+<li><p>Behaviors of nodes are correlated across the  links of the network </p>
+</li>
+<li><p>Correlation: Nearby nodes have the same  color (belonging to the same class)</p>
+</li>
+<li><p>Two explanations for why behaviors of nodes  in networks are correlated:</p>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211116225929813.png" alt=""></p>
+<h3 id="Social-Homophily-趋同性"><a href="#Social-Homophily-趋同性" class="headerlink" title="Social Homophily(趋同性)"></a>Social Homophily(趋同性)</h3><ul>
+<li>Homophily: The tendency of  individuals to associate and bond  with similar others <ul>
+<li>“Birds of a feather flock together”</li>
+<li>It has been observed in a vast array of  network studies, based on a variety of  attributes (e.g., age, gender,  organizational role, etc.) </li>
+<li>Example: Researchers who focus on  the same research area are more likely  to establish a connection (meeting at  conferences, interacting in academic  talks, etc.)</li>
+</ul>
+</li>
+</ul>
+<p><strong>Example of homophily</strong> </p>
+<ul>
+<li>Online social network <ul>
+<li>Nodes = people</li>
+<li>Edges = friendship</li>
+<li>Node color = interests  (sports, arts, etc.)</li>
+</ul>
+</li>
+<li>People with the same  interest are more closely  connected due to  homophily</li>
+</ul>
+<h3 id="Social-Influence-Example"><a href="#Social-Influence-Example" class="headerlink" title="Social Influence Example"></a>Social Influence Example</h3><ul>
+<li>Influence: Social connections can  influence the individual  characteristics of a person. <ul>
+<li>Example: I recommend my musical  preferences to my friends, until one of  them grows to like my same favorite  genres!</li>
+</ul>
+</li>
+</ul>
+<h2 id="How-do-we-leverage-node-correlations-in-networks"><a href="#How-do-we-leverage-node-correlations-in-networks" class="headerlink" title="How do we leverage node correlations in networks?"></a>How do we leverage node correlations in networks?</h2><h3 id="Classification-with-Network-Data"><a href="#Classification-with-Network-Data" class="headerlink" title="Classification with Network Data"></a>Classification with Network Data</h3><p>How do we leverage(影响力) this correlation observed  in networks to help predict node labels?</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211116230602159.png" alt=""></p>
+<p>How do we predict the labels for the nodes in grey?</p>
+<h3 id="Motivation"><a href="#Motivation" class="headerlink" title="Motivation"></a>Motivation</h3><ul>
+<li><p>Similar nodes are typically close together or  directly connected in the network: </p>
+<ul>
+<li>Guilt-by-association: If I am connected to a  node with label X, then I am likely to have  label X as well. </li>
+<li>Example: Malicious/benign web page: Malicious web pages link to one another to  increase visibility, look credible, and rank  higher in search engines</li>
+</ul>
+</li>
+<li><p>Classification label of a node v in network  may depend on: </p>
+<ul>
+<li>Features of v </li>
+<li>Labels of the nodes in v’s neighborhood </li>
+<li>Features of the nodes in v’s neighborhood</li>
+</ul>
+</li>
+</ul>
+<h3 id="Semi-supervised-Learning"><a href="#Semi-supervised-Learning" class="headerlink" title="Semi-supervised Learning"></a>Semi-supervised Learning</h3><ul>
+<li><p>Formal setting: </p>
+<ul>
+<li>Given:  <ul>
+<li>Graph </li>
+<li>Few labeled nodes </li>
+</ul>
+</li>
+<li>Find: Class (red/green) of  remaining nodes </li>
+<li>Main assumption: There is  homophily in the network</li>
+</ul>
+</li>
+<li><p>Example task:</p>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211116230940679.png" alt=""></p>
+<h4 id="Problem-Setting"><a href="#Problem-Setting" class="headerlink" title="Problem Setting"></a>Problem Setting</h4><p><img src="/images/loading.gif" data-original="../images/ML/image-20211116231029875.png" alt=""></p>
+<h4 id="Example-applications"><a href="#Example-applications" class="headerlink" title="Example applications"></a>Example applications</h4><ul>
+<li>Many applications under this setting: <ul>
+<li>Document classification  </li>
+<li>Part of speech tagging  </li>
+<li>Link prediction  </li>
+<li>Optical character recognition  </li>
+<li>Image/3D data segmentation  </li>
+<li>Entity resolution in sensor networks  </li>
+<li>Spam and fraud detection</li>
+</ul>
+</li>
+</ul>
+<p>We focus on semi-supervised binary node classification </p>
+<p>We will introduce three approaches: </p>
+<ul>
+<li><strong>Relational classification</strong> </li>
+<li><strong>Iterative classification</strong> </li>
+<li><strong>Correct &amp; Smooth</strong></li>
+</ul>
+<h2 id="Relational-Classification"><a href="#Relational-Classification" class="headerlink" title="Relational Classification"></a>Relational Classification</h2><h3 id="Probabilistic-Relational-Classifier"><a href="#Probabilistic-Relational-Classifier" class="headerlink" title="Probabilistic Relational Classifier"></a>Probabilistic Relational Classifier</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211116231427817.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211116231506341.png" alt=""></p>
+<p>Challenges: </p>
+<ul>
+<li>Convergence is not guaranteed </li>
+<li>Model cannot use node feature information</li>
+</ul>
+<h3 id="Example-Initialization"><a href="#Example-Initialization" class="headerlink" title="Example: Initialization"></a>Example: Initialization</h3><p>Initialization: </p>
+<ul>
+<li>All labeled nodes with their labels </li>
+<li>All unlabeled nodes 0.5 (belonging to class 1 with  probability 0.5)</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211116231641765.png" alt=""></p>
+<h3 id="Example-lst-Iteration-Update-Node"><a href="#Example-lst-Iteration-Update-Node" class="headerlink" title="Example: lst Iteration, Update Node"></a>Example: lst Iteration, Update Node</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211116231741748.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211116231846430.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211116231924192.png" alt=""></p>
+<h3 id="Example-After-1st-Iteration"><a href="#Example-After-1st-Iteration" class="headerlink" title="Example: After 1st Iteration"></a>Example: After 1st Iteration</h3><p>After Iteration 1 (a round of updates for all  unlabeled nodes)</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211116232015529.png" alt=""></p>
+<h3 id="Example-After-2nd-Iteration"><a href="#Example-After-2nd-Iteration" class="headerlink" title="Example: After 2nd Iteration"></a>Example: After 2nd Iteration</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211116232051667.png" alt=""></p>
+<h3 id="Example-After-3-Iteration"><a href="#Example-After-3-Iteration" class="headerlink" title="Example: After 3] Iteration"></a>Example: After 3] Iteration</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211116232207605.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211116232229830.png" alt=""></p>
+<h3 id="Convergence"><a href="#Convergence" class="headerlink" title="Convergence"></a>Convergence</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211116232257216.png" alt=""></p>
+<h2 id="Iterative-迭代的-Classification"><a href="#Iterative-迭代的-Classification" class="headerlink" title="Iterative(迭代的) Classification"></a>Iterative(迭代的) Classification</h2><p>Relational classifier does not use node  attributes.  </p>
+<p>How can one leverage them?</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211116232406683.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211116232421194.png" alt=""></p>
+<h3 id="Computing-the-Summary-Z-v"><a href="#Computing-the-Summary-Z-v" class="headerlink" title="Computing the Summary Z_v"></a>Computing the Summary Z_v</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211116232625455.png" alt=""></p>
+<h3 id="Architecture-of-Iterative-Classifiers"><a href="#Architecture-of-Iterative-Classifiers" class="headerlink" title="Architecture of Iterative Classifiers"></a>Architecture of Iterative Classifiers</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211116232728306.png" alt=""></p>
+<h3 id="Example-Web-Page-Classification"><a href="#Example-Web-Page-Classification" class="headerlink" title="Example: Web Page Classification"></a>Example: Web Page Classification</h3><ul>
+<li>Input: Graph of web pages </li>
+<li>Node: Web page </li>
+<li>Edge: Hyper-link between web pages </li>
+<li>Directed edge: a page points to another page <ul>
+<li>Node features: Webpage description </li>
+</ul>
+</li>
+<li>For simplicity, we only consider two binary features <ul>
+<li>Task: Predict the topic of the webpage</li>
+</ul>
+</li>
+</ul>
+<p>Baseline: Train a classifier (e.g., linear classifier) to  classify pages based on node attributes</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211116232938924.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211116232956241.png" alt=""></p>
+<h3 id="Iterative-Classifier"><a href="#Iterative-Classifier" class="headerlink" title="Iterative Classifier"></a>Iterative Classifier</h3><h4 id="step-1"><a href="#step-1" class="headerlink" title="step 1"></a>step 1</h4><p><img src="/images/loading.gif" data-original="../images/ML/image-20211116233242445.png" alt=""></p>
+<h4 id="step-2"><a href="#step-2" class="headerlink" title="step 2"></a>step 2</h4><p><img src="/images/loading.gif" data-original="../images/ML/image-20211116233317039.png" alt=""></p>
+<h4 id="step-3-1"><a href="#step-3-1" class="headerlink" title="step 3. 1"></a>step 3. 1<img src="/images/loading.gif" data-original="../images/ML/image-20211116233349992.png" alt=""></h4><h4 id="step-3-2"><a href="#step-3-2" class="headerlink" title="step 3. 2"></a>step 3. 2<img src="/images/loading.gif" data-original="../images/ML/image-20211116233427721.png" alt=""></h4><p><img src="/images/loading.gif" data-original="../images/ML/image-20211116233537476.png" alt=""></p>
+<h4 id="Final-Prediction"><a href="#Final-Prediction" class="headerlink" title="Final Prediction"></a>Final Prediction</h4><p><img src="/images/loading.gif" data-original="../images/ML/image-20211116233603237.png" alt=""></p>
+<h3 id="Summary-6"><a href="#Summary-6" class="headerlink" title="Summary"></a>Summary</h3><ul>
+<li>We talked about 2 approaches to collective  classification </li>
+<li>Relational classification <ul>
+<li>Iteratively update probabilities of node belonging  to a label class based on its neighbors </li>
+</ul>
+</li>
+<li>Iterative classification <ul>
+<li>Improve over collective classification to handle  attribute/feature information </li>
+<li>Classify node v based on its features as well as  labels of neighbors</li>
+</ul>
+</li>
+</ul>
+<h2 id="Collective-Classification-Correct-amp-Smooth"><a href="#Collective-Classification-Correct-amp-Smooth" class="headerlink" title="Collective Classification Correct &amp; Smooth"></a>Collective Classification Correct &amp; Smooth</h2><h3 id="Correct-amp-Smooth"><a href="#Correct-amp-Smooth" class="headerlink" title="Correct &amp; Smooth"></a>Correct &amp; Smooth</h3><p><a href="https://arxiv.org/abs/2010.13993" target="_blank" rel="noopener">Combining Label Propagation and Simple Models Out-performs Graph Neural Networks</a></p>
+<p><a href="https://ogb.stanford.edu/docs/leader_nodeprop/" target="_blank" rel="noopener">OGB leaderboard</a> snapshot at Oct 1st, 2021</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211116233952486.png" alt=""></p>
+<p>Setting: A partially labeled graph and features  over nodes.</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211116234021971.png" alt=""></p>
+<p>C&amp;S follows the three-step procedure: </p>
+<ol>
+<li>Train base predictor </li>
+<li>Use the base predictor to predict soft labels of all nodes. </li>
+<li>Post-process the predictions using graph structure to  obtain the final predictions of all nodes.</li>
+</ol>
+<h3 id="Train-Base-Predictor"><a href="#Train-Base-Predictor" class="headerlink" title="Train Base Predictor"></a>Train Base Predictor</h3><p>Train a base predictor that predict soft  labels (class probabilities) over all nodes. </p>
+<ul>
+<li>Labeled nodes are used for train/validation data. </li>
+<li>Base predictor can be simple: <ul>
+<li>Linear model/Multi-Layer-Perceptron(MLP) over node  features</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211116234148551.png" alt=""></p>
+<h3 id="Predict-Over-All-Nodes"><a href="#Predict-Over-All-Nodes" class="headerlink" title="Predict Over All Nodes"></a>Predict Over All Nodes</h3><p>Given a trained base predictor, we apply it  to obtain soft labels for all the nodes. </p>
+<ul>
+<li>We expect these soft labels to be decently accurate. </li>
+<li>Can we use graph structure to post-process the  predictions to make them more accurate?</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211116234246360.png" alt=""></p>
+<h3 id="Post-process-Predictions"><a href="#Post-process-Predictions" class="headerlink" title="Post-process Predictions"></a>Post-process Predictions</h3><p>C&amp;S uses the 2-step procedure to post-process the soft predictions. </p>
+<ol>
+<li>Correct step</li>
+<li>Smooth step</li>
+</ol>
+<h3 id="C-amp-S-Post-processing-Correct-Step"><a href="#C-amp-S-Post-processing-Correct-Step" class="headerlink" title="C&amp;S Post-processing: Correct Step"></a>C&amp;S Post-processing: Correct Step</h3><ul>
+<li>The key idea is that we expect errors in the base  prediction to be positively correlated along  edges in the graph.  </li>
+<li>In other words, an error at node u increases the  chance of a similar error at neighbors of u.  </li>
+<li>Thus, we should “spread” such uncertainty over the  graph</li>
+</ul>
+<h3 id="Intuition-of-Correct-amp-Smooth"><a href="#Intuition-of-Correct-amp-Smooth" class="headerlink" title="Intuition of Correct &amp; Smooth"></a>Intuition of Correct &amp; Smooth</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20211116234441693.png" alt=""></p>
+<h3 id="Correct-Step"><a href="#Correct-Step" class="headerlink" title="Correct Step"></a>Correct Step</h3><ul>
+<li>Compute training errors of nodes. <ul>
+<li>Training error: Ground-truth label minus soft label.  Defined as 0 for unlabeled nodes.</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211116234544537.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211116234836282.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211116234914939.png" alt=""></p>
+<p><a href="https://mlg.eng.cam.ac.uk/zoubin/papers/zgl.pdf" target="_blank" rel="noopener">Zhu et al. ICML 2013</a></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211116234952059.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211116235007332.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211116235025205.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211116235042742.png" alt=""></p>
+<h3 id="Smooth-Step"><a href="#Smooth-Step" class="headerlink" title="Smooth Step"></a>Smooth Step</h3><ul>
+<li>Smoothen the corrected soft labels along the  edges. <ul>
+<li>Assumption: Neighboring nodes tend to share the  same labels.  </li>
+<li>Note: For training nodes, we use the ground-truth  hard labels instead of the soft labels.</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211116235129283.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211116235142063.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211116235155937.png" alt=""></p>
+<h3 id="Toy-Example-Summary"><a href="#Toy-Example-Summary" class="headerlink" title="Toy Example Summary"></a>Toy Example Summary</h3><p>Our toy example shows that C&amp;S successfully  improves base model performance using  graph structure.</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211116235223544.png" alt=""></p>
+<h3 id="C-amp-S-on-a-Real-world-Dataset"><a href="#C-amp-S-on-a-Real-world-Dataset" class="headerlink" title="C&amp;S on a Real-world Dataset"></a>C&amp;S on a Real-world Dataset</h3><p>C&amp;S significantly improves the performance  of the base model (MLP). </p>
+<p>C&amp;S outperforms Smooth-only (no correct  step) baseline.</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211116235256008.png" alt=""></p>
+<h3 id="Summary-7"><a href="#Summary-7" class="headerlink" title="Summary"></a>Summary</h3><ul>
+<li>Correct &amp; Smooth (C&amp;S) uses graph structure  to post-process the soft node labels predicted  by any base model. </li>
+<li><strong>Correction step</strong>: Diffuse and correct for the  training errors of the base predictor. </li>
+<li><strong>Smooth step</strong>: Smoothen the prediction of the  base predictor. </li>
+<li>C&amp;S achieves strong performance on semisupervised node classification</li>
+</ul>
+<p>We learned how to leverage correlation in  graphs to make prediction on nodes. </p>
+<p>Key techniques: </p>
+<ul>
+<li><strong>Relational classification</strong> </li>
+<li><strong>Iterative classification</strong> </li>
+<li><strong>Correct &amp; Smooth</strong></li>
+</ul>
+<h1 id="Graph-Neural-Networks"><a href="#Graph-Neural-Networks" class="headerlink" title="Graph Neural Networks"></a>Graph Neural Networks</h1><h2 id="Basics-of-Deep-Learning"><a href="#Basics-of-Deep-Learning" class="headerlink" title="Basics of Deep Learning"></a>Basics of Deep Learning</h2><h2 id="Deep-Learning-for-Graphs"><a href="#Deep-Learning-for-Graphs" class="headerlink" title="Deep Learning for Graphs"></a>Deep Learning for Graphs</h2><p>todo</p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -2162,7 +2394,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">2661.2k</span>&nbsp;字
+                class="white-color">2708.7k</span>&nbsp;字
             
             
             
@@ -2400,7 +2632,7 @@ $(function () {
     
     <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/instantpage/instantpage.js" type="module"></script>
     
-
+<script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script>
         <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
         <script>
         $('a').each(function() {
@@ -2419,7 +2651,7 @@ $(function () {
             }
           }
         });
-        </script><script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script></body>
+        </script></body>
 
 </html>
 
