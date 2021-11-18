@@ -26,9 +26,9 @@
     
     <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/jquery/jquery.min.js"></script>
     
-<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
-<link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
-<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+<meta name="generator" content="Hexo 4.2.0"><link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
+</head>
 
 
 <body>
@@ -459,21 +459,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-11-11
+                    2021-11-18
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    11.8k
+                    18.7k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    48 分
+                    77 分
                 </div>
                 
 
@@ -1433,7 +1433,8 @@ try_facets<span class="token punctuation">(</span><span class="token string">"Hi
 <p>从 Top 3 Countries 中可以看到，这款摄像头使用数量排名前三的国家分别是：美国、日本和德国。</p>
 <p>没想到吧，Shodan 居然还能用于产品分析。同样地原理，如果你把关键词改为 <strong><code>apache</code></strong> ，你可以知道目前哪些国家使用apache服务器数量最多，最普遍被使用的版本号是什么。</p>
 <p>为了避免受到不必要的攻击，请大家及时检查所有联网设备的管理端的密码，如果有使用默认密码及弱口令，立即进行密码的更改，以保证服务的安全。</p>
-<h1 id="Gooey-GUI神器"><a href="#Gooey-GUI神器" class="headerlink" title="Gooey - GUI神器"></a>Gooey - GUI神器</h1><h3 id="安装-1"><a href="#安装-1" class="headerlink" title="安装"></a>安装</h3><p>安装方法毫无新意，跟以前我们安装其他库一样：</p>
+<h1 id="Gooey-GUI神器"><a href="#Gooey-GUI神器" class="headerlink" title="Gooey - GUI神器"></a>Gooey - GUI神器</h1><p><a href="https://github.com/chriskiehl/Gooey" target="_blank" rel="noopener">Gooey API</a></p>
+<h3 id="安装-1"><a href="#安装-1" class="headerlink" title="安装"></a>安装</h3><p>安装方法毫无新意，跟以前我们安装其他库一样：</p>
 <blockquote>
 <p>pip install Gooey</p>
 </blockquote>
@@ -1652,6 +1653,728 @@ try_facets<span class="token punctuation">(</span><span class="token string">"Hi
 <p>等待执行完成，我们就可以在代码目录下看到这样的结构：</p>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211111104450242.png" alt=""></p>
 <p>我们的 exe 可执行文件就在 dist 文件夹下。</p>
+<h1 id="Prettytable-输出好看的表格"><a href="#Prettytable-输出好看的表格" class="headerlink" title="Prettytable - 输出好看的表格"></a>Prettytable - 输出好看的表格</h1><p><a href="https://github.com/jazzband/prettytable" target="_blank" rel="noopener">Prettytable API</a></p>
+<h2 id="1-前言"><a href="#1-前言" class="headerlink" title="1. 前言"></a>1. 前言</h2><p>最近在用 Python 写一个小工具，这个工具主要就是用来管理各种资源的信息，比如阿里云的 ECS 等信息，因为我工作的电脑使用的是 LINUX，所以就想着用 python 写一个命令行的管理工具，基本的功能就是同步阿里云的资源的信息到数据库，然后可以使用命令行查询。</p>
+<p>因为信息是展现在命令行中的，众所周知，命令行展现复杂的文本看起来着实累人，于是就想着能像表格那样展示，那看起来就舒服多了。</p>
+<p><strong>prettytable</strong> 库就是这么一个工具，prettytable 可以打印出美观的表格，并且对中文支持相当好（如果有试图自己实现打印表格，你就应该知道处理中文是多么的麻烦）</p>
+<h2 id="2-安装"><a href="#2-安装" class="headerlink" title="2. 安装"></a>2. 安装</h2><p>prettytable 并非 python 的内置库，通过 <code>pip install prettytable</code>即可安装。</p>
+<h2 id="3-示例"><a href="#3-示例" class="headerlink" title="3. 示例"></a>3. 示例</h2><p>我们先来看一个示例：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#!/usr/bin/python</span>
+<span class="token comment" spellcheck="true">#**coding:utf-8**</span>
+<span class="token keyword">import</span> sys
+<span class="token keyword">from</span> prettytable <span class="token keyword">import</span> PrettyTable
+reload<span class="token punctuation">(</span>sys<span class="token punctuation">)</span>
+sys<span class="token punctuation">.</span>setdefaultencoding<span class="token punctuation">(</span><span class="token string">'utf8'</span><span class="token punctuation">)</span>
+
+table <span class="token operator">=</span> PrettyTable<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'编号'</span><span class="token punctuation">,</span><span class="token string">'云编号'</span><span class="token punctuation">,</span><span class="token string">'名称'</span><span class="token punctuation">,</span><span class="token string">'IP地址'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+table<span class="token punctuation">.</span>add_row<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'1'</span><span class="token punctuation">,</span><span class="token string">'server01'</span><span class="token punctuation">,</span><span class="token string">'服务器01'</span><span class="token punctuation">,</span><span class="token string">'172.16.0.1'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+table<span class="token punctuation">.</span>add_row<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'2'</span><span class="token punctuation">,</span><span class="token string">'server02'</span><span class="token punctuation">,</span><span class="token string">'服务器02'</span><span class="token punctuation">,</span><span class="token string">'172.16.0.2'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+table<span class="token punctuation">.</span>add_row<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'3'</span><span class="token punctuation">,</span><span class="token string">'server03'</span><span class="token punctuation">,</span><span class="token string">'服务器03'</span><span class="token punctuation">,</span><span class="token string">'172.16.0.3'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+table<span class="token punctuation">.</span>add_row<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'4'</span><span class="token punctuation">,</span><span class="token string">'server04'</span><span class="token punctuation">,</span><span class="token string">'服务器04'</span><span class="token punctuation">,</span><span class="token string">'172.16.0.4'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+table<span class="token punctuation">.</span>add_row<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'5'</span><span class="token punctuation">,</span><span class="token string">'server05'</span><span class="token punctuation">,</span><span class="token string">'服务器05'</span><span class="token punctuation">,</span><span class="token string">'172.16.0.5'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+table<span class="token punctuation">.</span>add_row<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'6'</span><span class="token punctuation">,</span><span class="token string">'server06'</span><span class="token punctuation">,</span><span class="token string">'服务器06'</span><span class="token punctuation">,</span><span class="token string">'172.16.0.6'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+table<span class="token punctuation">.</span>add_row<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'7'</span><span class="token punctuation">,</span><span class="token string">'server07'</span><span class="token punctuation">,</span><span class="token string">'服务器07'</span><span class="token punctuation">,</span><span class="token string">'172.16.0.7'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+table<span class="token punctuation">.</span>add_row<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'8'</span><span class="token punctuation">,</span><span class="token string">'server08'</span><span class="token punctuation">,</span><span class="token string">'服务器08'</span><span class="token punctuation">,</span><span class="token string">'172.16.0.8'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+table<span class="token punctuation">.</span>add_row<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'9'</span><span class="token punctuation">,</span><span class="token string">'server09'</span><span class="token punctuation">,</span><span class="token string">'服务器09'</span><span class="token punctuation">,</span><span class="token string">'172.16.0.9'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>table<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>以上示例运行结果如下：</p>
+<pre><code>linuxops@deepin:~$ python p.py
++------+----------+----------+------------+
+| 编号 |  云编号  |   名称   |   IP地址   |
++------+----------+----------+------------+
+|  1   | server01 | 服务器01 | 172.16.0.1 |
+|  2   | server02 | 服务器02 | 172.16.0.2 |
+|  3   | server03 | 服务器03 | 172.16.0.3 |
+|  4   | server04 | 服务器04 | 172.16.0.4 |
+|  5   | server05 | 服务器05 | 172.16.0.5 |
+|  6   | server06 | 服务器06 | 172.16.0.6 |
+|  7   | server07 | 服务器07 | 172.16.0.7 |
+|  8   | server08 | 服务器08 | 172.16.0.8 |
+|  9   | server09 | 服务器09 | 172.16.0.9 |
++------+----------+----------+------------+</code></pre><p>在以上的示例中，我们通过<code>form</code>导入了表格库。<code>table</code>实例化了一个表格库，并且添加了<code>['编号','云编号','名称','IP地址']</code>为表头，如果没有添加表头，那么会以默认的Field+编号显示，例如：</p>
+<pre><code>+---------+----------+----------+------------+
+| Field 1 | Field 2  | Field 3  |  Field 4   |
++---------+----------+----------+------------+</code></pre><p>所以为更直观看出每一列的意义，还是要添加表头的。</p>
+<h2 id="4-添加数据"><a href="#4-添加数据" class="headerlink" title="4. 添加数据"></a>4. 添加数据</h2><p>prettytable提供了多种的添加数据的方式，最常用的应该就是按行按列添加数据了。</p>
+<h3 id="按行添加数据-table-add-row"><a href="#按行添加数据-table-add-row" class="headerlink" title="按行添加数据 table.add_row"></a>按行添加数据 table.add_row</h3><p>在上面简单的示例中，我们就是按行添加数据的。</p>
+<p>添加的数据必须要是列表的形式，而且数据的列表长度要和表头的长度一样。在实际的使用中，我们应该要关注到添加的数据是否和表头对应，这一点很重要。</p>
+<h3 id="按列添加数据-table-add-column"><a href="#按列添加数据-table-add-column" class="headerlink" title="按列添加数据 table.add_column()"></a>按列添加数据 table.add_column()</h3><p>看下面的示例：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#!/usr/bin/python</span>
+<span class="token comment" spellcheck="true">#**coding:utf-8**</span>
+<span class="token keyword">import</span> sys
+<span class="token keyword">from</span> prettytable <span class="token keyword">import</span> PrettyTable
+reload<span class="token punctuation">(</span>sys<span class="token punctuation">)</span>
+sys<span class="token punctuation">.</span>setdefaultencoding<span class="token punctuation">(</span><span class="token string">'utf8'</span><span class="token punctuation">)</span>
+
+table <span class="token operator">=</span> PrettyTable<span class="token punctuation">(</span><span class="token punctuation">)</span>
+table<span class="token punctuation">.</span>add_column<span class="token punctuation">(</span><span class="token string">'项目'</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token string">'编号'</span><span class="token punctuation">,</span><span class="token string">'云编号'</span><span class="token punctuation">,</span><span class="token string">'名称'</span><span class="token punctuation">,</span><span class="token string">'IP地址'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+table<span class="token punctuation">.</span>add_column<span class="token punctuation">(</span><span class="token string">'值'</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token string">'1'</span><span class="token punctuation">,</span><span class="token string">'server01'</span><span class="token punctuation">,</span><span class="token string">'服务器01'</span><span class="token punctuation">,</span><span class="token string">'172.16.0.1'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>table<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>运行结果如下：</p>
+<pre><code>+-------+--------+------------+
+| index | 项目 |    值     |
++-------+--------+------------+
+|   1   |  编号  |     1      |
+|   2   | 云编号 |  server01  |
+|   3   |  名称  |  服务器01   |
+|   4   | IP地址 | 172.16.0.1 |
++-------+--------+------------+</code></pre><p>以上示例中，我们通过<code>add_column</code>来按列添加数据，按列添加数据不需要在实例化表格的时候制定表头，它的表头是在添加列的时候指定的。</p>
+<p><code>table.add_column('项目', ['编号','云编号','名称','IP地址'])</code> 这一行代码为例，<code>项目</code>指定了这个列的表头名为”项目”，<code>['编号','云编号','名称','IP地址']</code>为列的值，同样为列表。</p>
+<h3 id="从csv文件添加数据"><a href="#从csv文件添加数据" class="headerlink" title="从csv文件添加数据"></a>从csv文件添加数据</h3><p>PrettyTable不仅提供了手动按行按列添加数据，也支持直接从csv文件中读取数据。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#!/usr/bin/python</span>
+<span class="token comment" spellcheck="true">#**coding:utf-8**</span>
+<span class="token keyword">import</span> sys
+<span class="token keyword">from</span> prettytable <span class="token keyword">import</span> PrettyTable
+<span class="token keyword">from</span> prettytable <span class="token keyword">import</span> from_csv
+reload<span class="token punctuation">(</span>sys<span class="token punctuation">)</span>
+sys<span class="token punctuation">.</span>setdefaultencoding<span class="token punctuation">(</span><span class="token string">'utf8'</span><span class="token punctuation">)</span>
+
+table <span class="token operator">=</span> PrettyTable<span class="token punctuation">(</span><span class="token punctuation">)</span>
+fp <span class="token operator">=</span> open<span class="token punctuation">(</span><span class="token string">"res.csv"</span><span class="token punctuation">,</span> <span class="token string">"r"</span><span class="token punctuation">)</span>
+table <span class="token operator">=</span> from_csv<span class="token punctuation">(</span>fp<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>table<span class="token punctuation">)</span>
+fp<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>如果要读取cvs文件数据，必须要先导入<code>from_csv</code>，否则无法运行。上面的示例运行结果如下：</p>
+<p>PS：csv 文件不能通过 xls 直接重命名得到，会报错。如果是 xls 文件，请用另存为 csv 获得 csv 文件</p>
+<h3 id="从sql查询值添加"><a href="#从sql查询值添加" class="headerlink" title="从sql查询值添加"></a>从sql查询值添加</h3><p>从数据库查询出来的数据可以直接导入到表格打印，下面的例子使用了<code>sqlite3</code>,如果使用的是mysql也是一样的，只要能查询到数据就能导入到表格中。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#!/usr/bin/python</span>
+<span class="token comment" spellcheck="true">#**coding:utf-8**</span>
+<span class="token keyword">import</span> sys
+<span class="token keyword">from</span> prettytable <span class="token keyword">import</span> PrettyTable
+<span class="token keyword">from</span> prettytable <span class="token keyword">import</span> from_db_cursor
+<span class="token keyword">import</span> sqlite3
+reload<span class="token punctuation">(</span>sys<span class="token punctuation">)</span>
+sys<span class="token punctuation">.</span>setdefaultencoding<span class="token punctuation">(</span><span class="token string">'utf8'</span><span class="token punctuation">)</span>
+
+conn <span class="token operator">=</span> sqlite3<span class="token punctuation">.</span>connect<span class="token punctuation">(</span><span class="token string">"/tmp/aliyun.db"</span><span class="token punctuation">)</span>
+cur <span class="token operator">=</span> conn<span class="token punctuation">.</span>cursor<span class="token punctuation">(</span><span class="token punctuation">)</span>
+cur<span class="token punctuation">.</span>execute<span class="token punctuation">(</span><span class="token string">"SELECT * FROM res"</span><span class="token punctuation">)</span>
+table <span class="token operator">=</span> from_db_cursor<span class="token punctuation">(</span>cur<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>table<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>运行结果如下：</p>
+<pre><code>+------+----------+----------+------------+
+| 编号 |  云编号  |   名称   |   IP地址   |
++------+----------+----------+------------+
+|  1   | server01 | 服务器01 | 172.16.0.1 |
+|  2   | server02 | 服务器02 | 172.16.0.2 |
+|  3   | server03 | 服务器03 | 172.16.0.3 |
+|  4   | server04 | 服务器04 | 172.16.0.4 |
+|  5   | server05 | 服务器05 | 172.16.0.5 |
+|  6   | server06 | 服务器06 | 172.16.0.6 |
+|  7   | server07 | 服务器07 | 172.16.0.7 |
+|  8   | server08 | 服务器08 | 172.16.0.8 |
+|  9   | server09 | 服务器09 | 172.16.0.9 |
++------+----------+----------+------------+</code></pre><h3 id="从HTML导入数据"><a href="#从HTML导入数据" class="headerlink" title="从HTML导入数据"></a>从HTML导入数据</h3><p>支持从html的表格中导入，请看下面这个例子：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#!/usr/bin/python</span>
+<span class="token comment" spellcheck="true">#**coding:utf-8**</span>
+<span class="token keyword">import</span> sys
+<span class="token keyword">from</span> prettytable <span class="token keyword">import</span> PrettyTable
+<span class="token keyword">from</span> prettytable <span class="token keyword">import</span> from_html
+reload<span class="token punctuation">(</span>sys<span class="token punctuation">)</span>
+sys<span class="token punctuation">.</span>setdefaultencoding<span class="token punctuation">(</span><span class="token string">'utf8'</span><span class="token punctuation">)</span>
+
+html_string<span class="token operator">=</span><span class="token triple-quoted-string string">'''&lt;table>
+&lt;tr>
+&lt;th>编号&lt;/th>
+&lt;th>云编号&lt;/th>
+&lt;th>名称&lt;/th>
+&lt;th>IP地址&lt;/th>
+&lt;/tr>
+&lt;tr>
+&lt;td>1&lt;/td>
+&lt;td>server01&lt;/td>
+&lt;td>服务器01&lt;/td>
+&lt;td>172.16.0.1&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2&lt;/td>
+&lt;td>server02&lt;/td>
+&lt;td>服务器02&lt;/td>
+&lt;td>172.16.0.2&lt;/td>
+&lt;/tr>
+&lt;/table>'''</span>
+
+table <span class="token operator">=</span> from_html<span class="token punctuation">(</span>html_string<span class="token punctuation">)</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span>table<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>运行结果如下：</p>
+<pre><code>+------+----------+----------+------------+
+| 编号 |  云编号  |   名称   |   IP地址   |
++------+----------+----------+------------+
+|  1   | server01 | 服务器01 | 172.16.0.1 |
+|  2   | server02 | 服务器02 | 172.16.0.2 |
++------+----------+----------+------------+</code></pre><p>如上示例中，我们可以导入html的表格，但是不一样的地方是<code>print</code>语句，使用html表格导入数据的时候print的必须是列表中的第一个元素，否则有可能会报<code>[&lt;prettytable.PrettyTable object at 0x7fa87feba590&gt;]</code>这样的错误。</p>
+<p>这是因为<code>table</code>并不是PrettyTable对象，而是包含单个PrettyTable对象的列表，它通过解析html而来，所以无法直接打印<code>table</code>，而需要打印<code>table[0]</code></p>
+<h2 id="5-表格输出格式"><a href="#5-表格输出格式" class="headerlink" title="5. 表格输出格式"></a>5. 表格输出格式</h2><p>正如支持多种输入一样，表格的输出也支持多种格式，我们在上面中的例子中已经使用了print的方式输出，这是一种常用的输出方式。</p>
+<h3 id="print"><a href="#print" class="headerlink" title="print"></a>print</h3><p>直接通过<code>print</code>打印出表格。这种方式打印出的表格会带边框。</p>
+<h3 id="输出HTML格式的表格"><a href="#输出HTML格式的表格" class="headerlink" title="输出HTML格式的表格"></a>输出HTML格式的表格</h3><p><code>print(table.get_html_string())</code>可以打印出html标签的表格。</p>
+<p>在上面的例子中，使用<code>print(table.get_html_string())</code>会打印出如下结果：</p>
+<pre><code>&lt;table&gt;
+    &lt;tr&gt;
+        &lt;th&gt;编号&lt;/th&gt;
+        &lt;th&gt;云编号&lt;/th&gt;
+        &lt;th&gt;名称&lt;/th&gt;
+        &lt;th&gt;IP地址&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;1&lt;/td&gt;
+        &lt;td&gt;server01&lt;/td&gt;
+        &lt;td&gt;服务器01&lt;/td&gt;
+        &lt;td&gt;172.16.0.1&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;2&lt;/td&gt;
+        &lt;td&gt;server02&lt;/td&gt;
+        &lt;td&gt;服务器02&lt;/td&gt;
+        &lt;td&gt;172.16.0.2&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;</code></pre><h2 id="6-选择性输出"><a href="#6-选择性输出" class="headerlink" title="6. 选择性输出"></a>6. 选择性输出</h2><p>prettytable在创建表格之后，你依然可以有选择的输出某些特定的行.</p>
+<h3 id="输出指定的列"><a href="#输出指定的列" class="headerlink" title="输出指定的列"></a>输出指定的列</h3><p><code>print table.get_string(fields=["编号", "IP地址"])</code>可以输出指定的列</p>
+<h3 id="输出前两行"><a href="#输出前两行" class="headerlink" title="输出前两行"></a>输出前两行</h3><p>通过<code>print(table.get_string(start = 0, end = 2))</code>的可以打印出指定的列，当然<code>start</code>和<code>end</code>参数让我可以自由控制显示区间。当然区间中包含<code>start</code>不包含<code>end</code>，是不是很熟悉这样的用法？</p>
+<blockquote>
+<p>根据输出指定行列的功能，我们可以同时指定行和列来输出，这里就不说明了。</p>
+</blockquote>
+<h3 id="将表格切片"><a href="#将表格切片" class="headerlink" title="将表格切片"></a>将表格切片</h3><p>从上面的输出区间，我们做一个大胆的假设，既然区间包含<code>start</code>不包含<code>end</code>这种规则和切片的一样，我们可以不可通过切片来生成一个新的表格然后将其打印。</p>
+<p>事实上是可以的。</p>
+<pre><code>new_table = table[0:2]
+print(new_table)</code></pre><p>如上代码段中，我们就可以打印出0到1行共2行的表格，python的切片功能异常强大，配合切片我们可以自由的输入任意的行。</p>
+<h3 id="输出排序"><a href="#输出排序" class="headerlink" title="输出排序"></a>输出排序</h3><p>有时候我们需要对输出的表格进行排序，使用<code>print table.get_string(sortby="编号", reversesort=True)</code>就可以对表格进行排序，其中<code>reversesort</code>指定了是否倒序排序,默认为<code>False</code>，即默认正序列排序。</p>
+<p><code>sortby</code>指定了排序的字段。</p>
+<h2 id="7-表格的样式"><a href="#7-表格的样式" class="headerlink" title="7. 表格的样式"></a>7. 表格的样式</h2><h3 id="内置样式"><a href="#内置样式" class="headerlink" title="内置样式"></a>内置样式</h3><p>通过<code>set_style()</code>可以设置表格样式，prettytable内置了多种的样式个人觉得<code>MSWORD_FRIENDLY</code>，<code>PLAIN_COLUMNS</code>，<code>DEFAULT</code> 这三种样式看起来比较清爽，在终端下显示表格本来看起就很累，再加上一下花里胡哨的东西看起来就更累。</p>
+<p>除了以上推荐的三种样式以外，还有一种样式不得不说，那就是<code>RANDOM</code>，这是一种随机的样式，每一次打印都会在内置的样式中随机选择一个，比较好玩。</p>
+<p>具体内置了几种样式，请各位参考官网完整自己尝试输出看看。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#!/usr/bin/python</span>
+<span class="token comment" spellcheck="true">#**coding:utf-8**</span>
+<span class="token keyword">import</span> sys
+<span class="token keyword">from</span> prettytable <span class="token keyword">import</span> PrettyTable
+<span class="token keyword">from</span> prettytable <span class="token keyword">import</span> MSWORD_FRIENDLY
+<span class="token keyword">from</span> prettytable <span class="token keyword">import</span> PLAIN_COLUMNS
+<span class="token keyword">from</span> prettytable <span class="token keyword">import</span> RANDOM
+<span class="token keyword">from</span> prettytable <span class="token keyword">import</span> DEFAULT
+
+reload<span class="token punctuation">(</span>sys<span class="token punctuation">)</span>
+sys<span class="token punctuation">.</span>setdefaultencoding<span class="token punctuation">(</span><span class="token string">'utf8'</span><span class="token punctuation">)</span>
+
+table <span class="token operator">=</span> PrettyTable<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'编号'</span><span class="token punctuation">,</span><span class="token string">'云编号'</span><span class="token punctuation">,</span><span class="token string">'名称'</span><span class="token punctuation">,</span><span class="token string">'IP地址'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+table<span class="token punctuation">.</span>add_row<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'1'</span><span class="token punctuation">,</span><span class="token string">'server01'</span><span class="token punctuation">,</span><span class="token string">'服务器01'</span><span class="token punctuation">,</span><span class="token string">'172.16.0.1'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+table<span class="token punctuation">.</span>add_row<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'3'</span><span class="token punctuation">,</span><span class="token string">'server03'</span><span class="token punctuation">,</span><span class="token string">'服务器03'</span><span class="token punctuation">,</span><span class="token string">'172.16.0.3'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+table<span class="token punctuation">.</span>add_row<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'2'</span><span class="token punctuation">,</span><span class="token string">'server02'</span><span class="token punctuation">,</span><span class="token string">'服务器02'</span><span class="token punctuation">,</span><span class="token string">'172.16.0.2'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+table<span class="token punctuation">.</span>add_row<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'9'</span><span class="token punctuation">,</span><span class="token string">'server09'</span><span class="token punctuation">,</span><span class="token string">'服务器09'</span><span class="token punctuation">,</span><span class="token string">'172.16.0.9'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+table<span class="token punctuation">.</span>add_row<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'4'</span><span class="token punctuation">,</span><span class="token string">'server04'</span><span class="token punctuation">,</span><span class="token string">'服务器04'</span><span class="token punctuation">,</span><span class="token string">'172.16.0.4'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+table<span class="token punctuation">.</span>add_row<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'5'</span><span class="token punctuation">,</span><span class="token string">'server05'</span><span class="token punctuation">,</span><span class="token string">'服务器05'</span><span class="token punctuation">,</span><span class="token string">'172.16.0.5'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+table<span class="token punctuation">.</span>add_row<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'6'</span><span class="token punctuation">,</span><span class="token string">'server06'</span><span class="token punctuation">,</span><span class="token string">'服务器06'</span><span class="token punctuation">,</span><span class="token string">'172.16.0.6'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+table<span class="token punctuation">.</span>add_row<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'8'</span><span class="token punctuation">,</span><span class="token string">'server08'</span><span class="token punctuation">,</span><span class="token string">'服务器08'</span><span class="token punctuation">,</span><span class="token string">'172.16.0.8'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+table<span class="token punctuation">.</span>add_row<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'7'</span><span class="token punctuation">,</span><span class="token string">'server07'</span><span class="token punctuation">,</span><span class="token string">'服务器07'</span><span class="token punctuation">,</span><span class="token string">'172.16.0.7'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+table<span class="token punctuation">.</span>set_style<span class="token punctuation">(</span>DEFAULT<span class="token punctuation">)</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span>table<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="自定义样式"><a href="#自定义样式" class="headerlink" title="自定义样式"></a>自定义样式</h3><p>除了内置的样式以外，PrettyTable也提供了用户自定义，例如对齐方式，数字输出格式，边框连接符等等</p>
+<h3 id="设置对齐方式"><a href="#设置对齐方式" class="headerlink" title="设置对齐方式"></a>设置对齐方式</h3><p><code>align</code>提供了用户设置对齐的方式，值有<code>l</code>，<code>r</code>，<code>c</code>方便代表左对齐，右对齐和居中 如果不设置，默认居中对齐。</p>
+<h3 id="控制边框样式"><a href="#控制边框样式" class="headerlink" title="控制边框样式"></a>控制边框样式</h3><p>在PrettyTable中，边框由三个部分组成，横边框，竖边框，和边框连接符（横竖交叉的链接符号）</p>
+<p>如下示例：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#!/usr/bin/python</span>
+<span class="token comment" spellcheck="true">#**coding:utf-8**</span>
+<span class="token keyword">import</span> sys
+<span class="token keyword">from</span> prettytable <span class="token keyword">import</span> PrettyTable
+
+reload<span class="token punctuation">(</span>sys<span class="token punctuation">)</span>
+sys<span class="token punctuation">.</span>setdefaultencoding<span class="token punctuation">(</span><span class="token string">'utf8'</span><span class="token punctuation">)</span>
+
+table <span class="token operator">=</span> PrettyTable<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'编号'</span><span class="token punctuation">,</span><span class="token string">'云编号'</span><span class="token punctuation">,</span><span class="token string">'名称'</span><span class="token punctuation">,</span><span class="token string">'IP地址'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+table<span class="token punctuation">.</span>add_row<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'1'</span><span class="token punctuation">,</span><span class="token string">'server01'</span><span class="token punctuation">,</span><span class="token string">'服务器01'</span><span class="token punctuation">,</span><span class="token string">'172.16.0.1'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+table<span class="token punctuation">.</span>add_row<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'3'</span><span class="token punctuation">,</span><span class="token string">'server03'</span><span class="token punctuation">,</span><span class="token string">'服务器03'</span><span class="token punctuation">,</span><span class="token string">'172.16.0.3'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+table<span class="token punctuation">.</span>add_row<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'2'</span><span class="token punctuation">,</span><span class="token string">'server02'</span><span class="token punctuation">,</span><span class="token string">'服务器02'</span><span class="token punctuation">,</span><span class="token string">'172.16.0.2'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+table<span class="token punctuation">.</span>add_row<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'9'</span><span class="token punctuation">,</span><span class="token string">'server09'</span><span class="token punctuation">,</span><span class="token string">'服务器09'</span><span class="token punctuation">,</span><span class="token string">'172.16.0.9'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+table<span class="token punctuation">.</span>add_row<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'4'</span><span class="token punctuation">,</span><span class="token string">'server04'</span><span class="token punctuation">,</span><span class="token string">'服务器04'</span><span class="token punctuation">,</span><span class="token string">'172.16.0.4'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+table<span class="token punctuation">.</span>add_row<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'5'</span><span class="token punctuation">,</span><span class="token string">'server05'</span><span class="token punctuation">,</span><span class="token string">'服务器05'</span><span class="token punctuation">,</span><span class="token string">'172.16.0.5'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+table<span class="token punctuation">.</span>add_row<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'6'</span><span class="token punctuation">,</span><span class="token string">'server06'</span><span class="token punctuation">,</span><span class="token string">'服务器06'</span><span class="token punctuation">,</span><span class="token string">'172.16.0.6'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+table<span class="token punctuation">.</span>add_row<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'8'</span><span class="token punctuation">,</span><span class="token string">'server08'</span><span class="token punctuation">,</span><span class="token string">'服务器08'</span><span class="token punctuation">,</span><span class="token string">'172.16.0.8'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+table<span class="token punctuation">.</span>add_row<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'7'</span><span class="token punctuation">,</span><span class="token string">'server07'</span><span class="token punctuation">,</span><span class="token string">'服务器07'</span><span class="token punctuation">,</span><span class="token string">'172.16.0.7'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+table<span class="token punctuation">.</span>align<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string">'l'</span>
+
+table<span class="token punctuation">.</span>border <span class="token operator">=</span> <span class="token boolean">True</span>
+table<span class="token punctuation">.</span>junction_char<span class="token operator">=</span><span class="token string">'$'</span>
+table<span class="token punctuation">.</span>horizontal_char <span class="token operator">=</span> <span class="token string">'+'</span>
+table<span class="token punctuation">.</span>vertical_char <span class="token operator">=</span> <span class="token string">'%'</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span>table<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><code>table.border</code>控制是否显示边框，默认是`True</p>
+<p><code>table.junction_char</code>控制边框连接符</p>
+<p><code>table.horizontal_char</code>控制横边框符号</p>
+<p><code>table.vertical_char</code>控制竖边框符号</p>
+<p>上例运行如下：</p>
+<pre><code>$++++++$++++++++++$++++++++++$++++++++++++$
+% 编号 %  云编号  %   名称   %   IP地址   %
+$++++++$++++++++++$++++++++++$++++++++++++$
+%  1   % server01 % 服务器01 % 172.16.0.1 %
+%  3   % server03 % 服务器03 % 172.16.0.3 %
+%  2   % server02 % 服务器02 % 172.16.0.2 %
+%  9   % server09 % 服务器09 % 172.16.0.9 %
+%  4   % server04 % 服务器04 % 172.16.0.4 %
+%  5   % server05 % 服务器05 % 172.16.0.5 %
+%  6   % server06 % 服务器06 % 172.16.0.6 %
+%  8   % server08 % 服务器08 % 172.16.0.8 %
+%  7   % server07 % 服务器07 % 172.16.0.7 %
+$++++++$++++++++++$++++++++++$++++++++++++$</code></pre><p>以上简单介绍了表格常用的一些样式设置。更具体的方法可参数请参考官方网站：</p>
+<p><a href="https://github.com/jazzband/prettytable" target="_blank" rel="noopener">https://github.com/jazzband/prettytable</a></p>
+<h1 id="Munch-字典黑魔法库"><a href="#Munch-字典黑魔法库" class="headerlink" title="Munch - 字典黑魔法库"></a>Munch - 字典黑魔法库</h1><p><a href="https://pypi.org/project/munch/" target="_blank" rel="noopener">Munch API</a></p>
+<p>当你想访问字典中的某个 key 时，你需要使用字典特定的访问方式，而这种方式需要你键入 一对中括号 还有 一对引号</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token operator">>></span><span class="token operator">></span> profile <span class="token operator">=</span> dict<span class="token punctuation">(</span>name<span class="token operator">=</span><span class="token string">"iswbm"</span><span class="token punctuation">)</span>
+<span class="token operator">>></span><span class="token operator">></span> profile
+<span class="token punctuation">{</span><span class="token string">'name'</span><span class="token punctuation">:</span> <span class="token string">'iswbm'</span><span class="token punctuation">}</span>
+<span class="token operator">>></span><span class="token operator">></span> profile<span class="token punctuation">[</span><span class="token string">"name"</span><span class="token punctuation">]</span>
+<span class="token string">'iswbm'</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>是不是开始觉得忍无可忍了？</p>
+<p>如果可以像调用对象属性一样使用 <code>.</code> 去访问 key 就好了，可以省去很多多余的键盘击入，就像这样子</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token operator">>></span><span class="token operator">></span> profile<span class="token punctuation">.</span>name
+<span class="token string">'iswbm'</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h2 id="1-安装方法"><a href="#1-安装方法" class="headerlink" title="1. 安装方法"></a>1. 安装方法</h2><p>使用如下命令进行安装</p>
+<pre><code>$ python -m pip install munch</code></pre><h2 id="2-简单示例"><a href="#2-简单示例" class="headerlink" title="2. 简单示例"></a>2. 简单示例</h2><p>munch 有一个 Munch 类，它继承自原生字典，使用 isinstance 可以验证</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token operator">>></span><span class="token operator">></span> <span class="token keyword">from</span> munch <span class="token keyword">import</span> Munch
+<span class="token operator">>></span><span class="token operator">></span> profile <span class="token operator">=</span> Munch<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token operator">>></span><span class="token operator">></span> isinstance<span class="token punctuation">(</span>profile<span class="token punctuation">,</span> dict<span class="token punctuation">)</span>
+<span class="token boolean">True</span>
+<span class="token operator">>></span><span class="token operator">></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>并实现了点式赋值与访问，<code>profile.name</code> 与 <code>profile['name']</code> 是等价的</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token operator">>></span><span class="token operator">></span> profile<span class="token punctuation">.</span>name <span class="token operator">=</span> <span class="token string">"iswbm"</span>
+<span class="token operator">>></span><span class="token operator">></span> profile<span class="token punctuation">.</span>age <span class="token operator">=</span> <span class="token number">18</span>
+<span class="token operator">>></span><span class="token operator">></span> profile
+Munch<span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token string">'name'</span><span class="token punctuation">:</span> <span class="token string">'iswbm'</span><span class="token punctuation">,</span> <span class="token string">'age'</span><span class="token punctuation">:</span> <span class="token number">18</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token operator">>></span><span class="token operator">></span>
+<span class="token operator">>></span><span class="token operator">></span> profile<span class="token punctuation">.</span>name
+<span class="token string">'iswbm'</span>
+<span class="token operator">>></span><span class="token operator">></span> profile<span class="token punctuation">[</span><span class="token string">"name"</span><span class="token punctuation">]</span>
+<span class="token string">'iswbm'</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="3-兼容字典的所有操作"><a href="#3-兼容字典的所有操作" class="headerlink" title="3. 兼容字典的所有操作"></a>3. 兼容字典的所有操作</h2><p>本身 Munch 继承自 dict，dict 的操作也同样适用于 Munch 对象，不妨再来验证下</p>
+<p>首先是：增删改查</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 新增元素</span>
+<span class="token operator">>></span><span class="token operator">></span> profile<span class="token punctuation">[</span><span class="token string">"gender"</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string">"male"</span>
+<span class="token operator">>></span><span class="token operator">></span> profile
+Munch<span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token string">'name'</span><span class="token punctuation">:</span> <span class="token string">'iswbm'</span><span class="token punctuation">,</span> <span class="token string">'age'</span><span class="token punctuation">:</span> <span class="token number">18</span><span class="token punctuation">,</span> <span class="token string">'gender'</span><span class="token punctuation">:</span> <span class="token string">'male'</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># 修改元素</span>
+<span class="token operator">>></span><span class="token operator">></span> profile<span class="token punctuation">[</span><span class="token string">"gender"</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string">"female"</span>
+<span class="token operator">>></span><span class="token operator">></span> profile
+Munch<span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token string">'name'</span><span class="token punctuation">:</span> <span class="token string">'iswbm'</span><span class="token punctuation">,</span> <span class="token string">'age'</span><span class="token punctuation">:</span> <span class="token number">18</span><span class="token punctuation">,</span> <span class="token string">'gender'</span><span class="token punctuation">:</span> <span class="token string">'female'</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># 删除元素</span>
+<span class="token operator">>></span><span class="token operator">></span> profile<span class="token punctuation">.</span>pop<span class="token punctuation">(</span><span class="token string">"gender"</span><span class="token punctuation">)</span>
+<span class="token string">'female'</span>
+<span class="token operator">>></span><span class="token operator">></span> profile
+Munch<span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token string">'name'</span><span class="token punctuation">:</span> <span class="token string">'iswbm'</span><span class="token punctuation">,</span> <span class="token string">'age'</span><span class="token punctuation">:</span> <span class="token number">18</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token operator">>></span><span class="token operator">></span>
+<span class="token operator">>></span><span class="token operator">></span> <span class="token keyword">del</span> profile<span class="token punctuation">[</span><span class="token string">"age"</span><span class="token punctuation">]</span>
+<span class="token operator">>></span><span class="token operator">></span> profile
+Munch<span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token string">'name'</span><span class="token punctuation">:</span> <span class="token string">'iswbm'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>再者是：一些常用方法</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token operator">>></span><span class="token operator">></span> profile<span class="token punctuation">.</span>keys<span class="token punctuation">(</span><span class="token punctuation">)</span>
+dict_keys<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'name'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token operator">>></span><span class="token operator">></span>
+<span class="token operator">>></span><span class="token operator">></span> profile<span class="token punctuation">.</span>values<span class="token punctuation">(</span><span class="token punctuation">)</span>
+dict_values<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'iswbm'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token operator">>></span><span class="token operator">></span>
+<span class="token operator">>></span><span class="token operator">></span> profile<span class="token punctuation">.</span>get<span class="token punctuation">(</span><span class="token string">'name'</span><span class="token punctuation">)</span>
+<span class="token string">'iswbm'</span>
+<span class="token operator">>></span><span class="token operator">></span> profile<span class="token punctuation">.</span>setdefault<span class="token punctuation">(</span><span class="token string">'gender'</span><span class="token punctuation">,</span> <span class="token string">'male'</span><span class="token punctuation">)</span>
+<span class="token string">'male'</span>
+<span class="token operator">>></span><span class="token operator">></span> profile
+Munch<span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token string">'name'</span><span class="token punctuation">:</span> <span class="token string">'iswbm'</span><span class="token punctuation">,</span> <span class="token string">'gender'</span><span class="token punctuation">:</span> <span class="token string">'male'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="4-设置返回默认值"><a href="#4-设置返回默认值" class="headerlink" title="4. 设置返回默认值"></a>4. 设置返回默认值</h2><p>当访问一个字典中不存在的 key 时，会报 KeyError 的错误</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token operator">>></span><span class="token operator">></span> profile <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+<span class="token operator">>></span><span class="token operator">></span> profile<span class="token punctuation">[</span><span class="token string">"name"</span><span class="token punctuation">]</span>
+Traceback <span class="token punctuation">(</span>most recent call last<span class="token punctuation">)</span><span class="token punctuation">:</span>
+  File <span class="token string">"&lt;stdin>"</span><span class="token punctuation">,</span> line <span class="token number">1</span><span class="token punctuation">,</span> <span class="token keyword">in</span> <span class="token operator">&lt;</span>module<span class="token operator">></span>
+KeyError<span class="token punctuation">:</span> <span class="token string">'name'</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>对于这种情况，通常我们会使用 get 来规避</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token operator">>></span><span class="token operator">></span> profile <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+<span class="token operator">>></span><span class="token operator">></span> profile<span class="token punctuation">.</span>get<span class="token punctuation">(</span><span class="token string">"name"</span><span class="token punctuation">,</span> <span class="token string">"undefined"</span><span class="token punctuation">)</span>
+<span class="token string">'undefined'</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>当然你在 munch 中仍然可以这么用，不过还有一种更好的方法：使用 DefaultMunch，它会在你访问不存在的 key 时，给你返回一个设定好的默认值</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token operator">>></span><span class="token operator">></span> <span class="token keyword">from</span> munch <span class="token keyword">import</span> DefaultMunch
+<span class="token operator">>></span><span class="token operator">></span> profile <span class="token operator">=</span> DefaultMunch<span class="token punctuation">(</span><span class="token string">"undefined"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token string">"name"</span><span class="token punctuation">:</span> <span class="token string">"iswbm"</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token operator">>></span><span class="token operator">></span> profile
+DefaultMunch<span class="token punctuation">(</span><span class="token string">'undefined'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token string">'name'</span><span class="token punctuation">:</span> <span class="token string">'iswbm'</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token operator">>></span><span class="token operator">></span> profile<span class="token punctuation">.</span>age
+<span class="token string">'undefined'</span>
+<span class="token operator">>></span><span class="token operator">></span> profile
+DefaultMunch<span class="token punctuation">(</span><span class="token string">'undefined'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token string">'name'</span><span class="token punctuation">:</span> <span class="token string">'iswbm'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="5-工厂函数自动创建key"><a href="#5-工厂函数自动创建key" class="headerlink" title="5. 工厂函数自动创建key"></a>5. 工厂函数自动创建key</h2><p>上面使用 <code>DefaultMunch</code> 仅当你访问不存在的 key 是返回一个默认值，但这个行为并不会修改原 munch 对象的任何内容。</p>
+<p>若你想访问不存在的 key 时，自动触发给原 munch 中新增你想要访问的 key ，并为其设置一个默认值，可以试一下 <code>DefaultFactoryMunch</code> 传入一个工厂函数。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token operator">>></span><span class="token operator">></span> <span class="token keyword">from</span> munch <span class="token keyword">import</span> DefaultFactoryMunch
+<span class="token operator">>></span><span class="token operator">></span> profile <span class="token operator">=</span> DefaultFactoryMunch<span class="token punctuation">(</span>list<span class="token punctuation">,</span> name<span class="token operator">=</span><span class="token string">'iswbm'</span><span class="token punctuation">)</span>
+<span class="token operator">>></span><span class="token operator">></span> profile
+DefaultFactoryMunch<span class="token punctuation">(</span>list<span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token string">'name'</span><span class="token punctuation">:</span> <span class="token string">'iswbm'</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token operator">>></span><span class="token operator">></span>
+<span class="token operator">>></span><span class="token operator">></span> profile<span class="token punctuation">.</span>brothers
+<span class="token punctuation">[</span><span class="token punctuation">]</span>
+<span class="token operator">>></span><span class="token operator">></span> profile
+DefaultFactoryMunch<span class="token punctuation">(</span>list<span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token string">'name'</span><span class="token punctuation">:</span> <span class="token string">'iswbm'</span><span class="token punctuation">,</span> <span class="token string">'brothers'</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="6-序列化的支持"><a href="#6-序列化的支持" class="headerlink" title="6. 序列化的支持"></a>6. 序列化的支持</h2><p>Munch 支持序列化为 JSON 或者 YAML 格式的字符串对象</p>
+<p><strong>转换成 JSON</strong></p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token operator">>></span><span class="token operator">></span> <span class="token keyword">from</span> munch <span class="token keyword">import</span> Munch
+<span class="token operator">>></span><span class="token operator">></span> munch_obj <span class="token operator">=</span> Munch<span class="token punctuation">(</span>foo<span class="token operator">=</span>Munch<span class="token punctuation">(</span>lol<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span><span class="token punctuation">,</span> bar<span class="token operator">=</span><span class="token number">100</span><span class="token punctuation">,</span> msg<span class="token operator">=</span><span class="token string">'hello'</span><span class="token punctuation">)</span>
+<span class="token operator">>></span><span class="token operator">></span>
+<span class="token operator">>></span><span class="token operator">></span> <span class="token keyword">import</span> json
+<span class="token operator">>></span><span class="token operator">></span> json<span class="token punctuation">.</span>dumps<span class="token punctuation">(</span>munch_obj<span class="token punctuation">)</span>
+<span class="token string">'{"foo": {"lol": true}, "bar": 100, "msg": "hello"}'</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>转换成 YAML</strong></p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token operator">>></span><span class="token operator">></span> <span class="token keyword">from</span> munch <span class="token keyword">import</span> Munch
+<span class="token operator">>></span><span class="token operator">></span> munch_obj <span class="token operator">=</span> Munch<span class="token punctuation">(</span>foo<span class="token operator">=</span>Munch<span class="token punctuation">(</span>lol<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span><span class="token punctuation">,</span> bar<span class="token operator">=</span><span class="token number">100</span><span class="token punctuation">,</span> msg<span class="token operator">=</span><span class="token string">'hello'</span><span class="token punctuation">)</span>
+<span class="token operator">>></span><span class="token operator">></span> <span class="token keyword">import</span> yaml
+<span class="token operator">>></span><span class="token operator">></span> yaml<span class="token punctuation">.</span>dump<span class="token punctuation">(</span>munch_obj<span class="token punctuation">)</span>
+<span class="token string">'!munch.Munch\nbar: 100\nfoo: !munch.Munch\n  lol: true\nmsg: hello\n'</span>
+<span class="token operator">>></span><span class="token operator">></span>
+<span class="token operator">>></span><span class="token operator">></span> <span class="token keyword">print</span><span class="token punctuation">(</span>yaml<span class="token punctuation">.</span>dump<span class="token punctuation">(</span>munch_obj<span class="token punctuation">)</span><span class="token punctuation">)</span>
+!munch<span class="token punctuation">.</span>Munch
+bar<span class="token punctuation">:</span> <span class="token number">100</span>
+foo<span class="token punctuation">:</span> !munch<span class="token punctuation">.</span>Munch
+  lol<span class="token punctuation">:</span> true
+msg<span class="token punctuation">:</span> hello
+
+<span class="token operator">>></span><span class="token operator">></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>建议使用 <code>safe_dump</code> 去掉 <code>!munch.Munch</code></p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token operator">>></span><span class="token operator">></span> <span class="token keyword">print</span><span class="token punctuation">(</span>yaml<span class="token punctuation">.</span>safe_dump<span class="token punctuation">(</span>munch_obj<span class="token punctuation">)</span><span class="token punctuation">)</span>
+bar<span class="token punctuation">:</span> <span class="token number">100</span>
+foo<span class="token punctuation">:</span>
+  lol<span class="token punctuation">:</span> true
+msg<span class="token punctuation">:</span> hello<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="Rich-完美终端工具"><a href="#Rich-完美终端工具" class="headerlink" title="Rich - 完美终端工具"></a>Rich - 完美终端工具</h1><p><a href="https://github.com/willmcgugan/rich" target="_blank" rel="noopener">Rich API</a></p>
+<p>Rich 是一个 Python 库，可以为你在终端中提供富文本和漂亮、精美的格式。</p>
+<p>使用 Rich API 可以很容易的在终端输出添加各种颜色和不同风格。它可以绘制漂亮的表格，进度条，markdown，突出显示语法的源代码及回溯等等，优秀的功能不胜枚举。</p>
+<h2 id="1-Rich-兼容性"><a href="#1-Rich-兼容性" class="headerlink" title="1.Rich 兼容性"></a>1.Rich 兼容性</h2><p>Rich 适用于 Linux，OSX 和 Windows。可与新的 Windows 终端一起使用，Windows 的经典终端仅限 8 种颜色。</p>
+<p>Rich 还可以与 <strong><code>Jupyter NoteBook</code></strong> 一起使用，而无需其他配置。</p>
+<h2 id="2-Rich-安装说明"><a href="#2-Rich-安装说明" class="headerlink" title="2.Rich 安装说明"></a>2.Rich 安装说明</h2><p><strong>请选择以下任一种方式输入命令安装依赖</strong>：</p>
+<ol>
+<li>Windows 环境 打开 Cmd (开始-运行-CMD)。</li>
+<li>MacOS 环境 打开 Terminal (command+空格输入Terminal)。</li>
+<li>如果你用的是 VSCode编辑器 或 Pycharm，可以直接使用界面下方的Terminal.</li>
+</ol>
+<pre><code>pip install rich</code></pre><h2 id="3-Rich-的-Print-功能"><a href="#3-Rich-的-Print-功能" class="headerlink" title="3.Rich 的 Print 功能"></a>3.Rich 的 Print 功能</h2><p>想毫不费力地将 Rich 的输出功能添加到你的Python脚本程序中，你只需导入 rich print 方法，该方法和其他 Python 的自带功能的参数类似。你可以试试：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> rich <span class="token keyword">import</span> <span class="token keyword">print</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Hello, [bold magenta]World[/bold magenta]!"</span><span class="token punctuation">,</span> <span class="token string">":vampire:"</span><span class="token punctuation">,</span> locals<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118123853228.png" alt=""></p>
+<p>可以看到，基于 rich 的 print 方法输出的内容都是带颜色、带重点的，相比于Python自带的 print 有明显的优势。</p>
+<h2 id="4-自定义-Console-控制台输出"><a href="#4-自定义-Console-控制台输出" class="headerlink" title="4.自定义 Console 控制台输出"></a>4.自定义 Console 控制台输出</h2><p>想要对 Rich 终端内容进行更多的自定义设置，你需要导入并构造一个控制台对象：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> rich<span class="token punctuation">.</span>console <span class="token keyword">import</span> Console
+
+console <span class="token operator">=</span> Console<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>Console 对象含有一个 print 方法，它的界面与 python 内置的 print 功能相似。你可以试试：</p>
+<pre class="line-numbers language-python"><code class="language-python">console<span class="token punctuation">.</span><span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Hello"</span><span class="token punctuation">,</span> <span class="token string">"World!"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>你可能已经料到，这时终端上会显示“ Hello World！”，请注意，与内置的“打印”功能不同，Rich 会将文字自动换行以适合终端宽度。</p>
+<p>有几种方法可以为输出添加自定义颜色和样式。你可以通过添加 style 关键字参数来为整个输出设置样式。例子如下：</p>
+<pre class="line-numbers language-python"><code class="language-python">console<span class="token punctuation">.</span><span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Hello"</span><span class="token punctuation">,</span> <span class="token string">"World!"</span><span class="token punctuation">,</span> style<span class="token operator">=</span><span class="token string">"bold red"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>输出如下图：</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118123919190.png" alt=""></p>
+<p>这个范例一次只设置了一行文字的样式。如果想获得更细腻更复杂的样式，Rich 可以渲染一个特殊的标记，其语法类似于 bbcode。示例如下：</p>
+<pre class="line-numbers language-python"><code class="language-python">console<span class="token punctuation">.</span><span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Where there is a [bold cyan]Will[/bold cyan] there [u]is[/u] a [i]way[/i]."</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118124012077.png" alt=""></p>
+<h2 id="5-Console-控制台记录"><a href="#5-Console-控制台记录" class="headerlink" title="5.Console 控制台记录"></a>5.Console 控制台记录</h2><p>Console 对象具有一个 log() 方法，该方法具有与 print() 类似的界面，除此之外，还能显示当前时间以及被调用的文件和行。</p>
+<p>默认情况下，Rich 将针对 Python 结构和 repr 字符串进行语法突出显示。如果你记录一个集合（如字典或列表），Rich 会把它漂亮地打印出来，使其切合可用空间。下面是其中一些功能的示例：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> rich<span class="token punctuation">.</span>console <span class="token keyword">import</span> Console
+console <span class="token operator">=</span> Console<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+test_data <span class="token operator">=</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span><span class="token string">"jsonrpc"</span><span class="token punctuation">:</span> <span class="token string">"2.0"</span><span class="token punctuation">,</span> <span class="token string">"method"</span><span class="token punctuation">:</span> <span class="token string">"sum"</span><span class="token punctuation">,</span> <span class="token string">"params"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>None<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token boolean">False</span><span class="token punctuation">,</span> <span class="token boolean">True</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token string">"id"</span><span class="token punctuation">:</span> <span class="token string">"1"</span><span class="token punctuation">,</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span><span class="token string">"jsonrpc"</span><span class="token punctuation">:</span> <span class="token string">"2.0"</span><span class="token punctuation">,</span> <span class="token string">"method"</span><span class="token punctuation">:</span> <span class="token string">"notify_hello"</span><span class="token punctuation">,</span> <span class="token string">"params"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">]</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span><span class="token string">"jsonrpc"</span><span class="token punctuation">:</span> <span class="token string">"2.0"</span><span class="token punctuation">,</span> <span class="token string">"method"</span><span class="token punctuation">:</span> <span class="token string">"subtract"</span><span class="token punctuation">,</span> <span class="token string">"params"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token number">42</span><span class="token punctuation">,</span> <span class="token number">23</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token string">"id"</span><span class="token punctuation">:</span> <span class="token string">"2"</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">]</span>
+
+<span class="token keyword">def</span> <span class="token function">test_log</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    enabled <span class="token operator">=</span> <span class="token boolean">False</span>
+    context <span class="token operator">=</span> <span class="token punctuation">{</span>
+        <span class="token string">"foo"</span><span class="token punctuation">:</span> <span class="token string">"bar"</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span>
+    movies <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"Deadpool"</span><span class="token punctuation">,</span> <span class="token string">"Rise of the Skywalker"</span><span class="token punctuation">]</span>
+    console<span class="token punctuation">.</span>log<span class="token punctuation">(</span><span class="token string">"Hello from"</span><span class="token punctuation">,</span> console<span class="token punctuation">,</span> <span class="token string">"!"</span><span class="token punctuation">)</span>
+    console<span class="token punctuation">.</span>log<span class="token punctuation">(</span>test_data<span class="token punctuation">,</span> log_locals<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
+
+
+test_log<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>以上范例的输出如下：</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118124041071.png" alt=""></p>
+<p>注意其中的 log_locals 参数会输出一个表格，该表格包含调用 log 方法的局部变量。</p>
+<p>log 方法既可用于将长时间运行应用程序（例如服务器）的日志记录到终端，也可用于辅助调试。</p>
+<p><strong>Logging 处理程序</strong></p>
+<p>你还可以使用内置的处理类来对 Python 日志记录模块的输出进行格式化和着色。下面是输出示例：</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118124104218.png" alt=""></p>
+<h2 id="6-表情符号"><a href="#6-表情符号" class="headerlink" title="6. 表情符号"></a>6. 表情符号</h2><p>将名称放在两个冒号之间即可在控制台输出中插入表情符号。示例如下：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token operator">>></span><span class="token operator">></span> console<span class="token punctuation">.</span><span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">":smiley: :vampire: :pile_of_poo: :thumbs_up: :raccoon:"</span><span class="token punctuation">)</span>
+😃 🧛 💩 👍 🦝<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>请谨慎地使用此功能。</p>
+<h2 id="7-表格"><a href="#7-表格" class="headerlink" title="7.表格"></a>7.表格</h2><p>Rich 包含多种边框，样式，单元格对齐等格式设置的选项。下面是一个简单的示例：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> rich<span class="token punctuation">.</span>console <span class="token keyword">import</span> Console
+<span class="token keyword">from</span> rich<span class="token punctuation">.</span>table <span class="token keyword">import</span> Column<span class="token punctuation">,</span> Table
+
+console <span class="token operator">=</span> Console<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+table <span class="token operator">=</span> Table<span class="token punctuation">(</span>show_header<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span> header_style<span class="token operator">=</span><span class="token string">"bold magenta"</span><span class="token punctuation">)</span>
+table<span class="token punctuation">.</span>add_column<span class="token punctuation">(</span><span class="token string">"Date"</span><span class="token punctuation">,</span> style<span class="token operator">=</span><span class="token string">"dim"</span><span class="token punctuation">,</span> width<span class="token operator">=</span><span class="token number">12</span><span class="token punctuation">)</span>
+table<span class="token punctuation">.</span>add_column<span class="token punctuation">(</span><span class="token string">"Title"</span><span class="token punctuation">)</span>
+table<span class="token punctuation">.</span>add_column<span class="token punctuation">(</span><span class="token string">"Production Budget"</span><span class="token punctuation">,</span> justify<span class="token operator">=</span><span class="token string">"right"</span><span class="token punctuation">)</span>
+table<span class="token punctuation">.</span>add_column<span class="token punctuation">(</span><span class="token string">"Box Office"</span><span class="token punctuation">,</span> justify<span class="token operator">=</span><span class="token string">"right"</span><span class="token punctuation">)</span>
+table<span class="token punctuation">.</span>add_row<span class="token punctuation">(</span>
+    <span class="token string">"Dev 20, 2019"</span><span class="token punctuation">,</span> <span class="token string">"Star Wars: The Rise of Skywalker"</span><span class="token punctuation">,</span> <span class="token string">"$275,000,000"</span><span class="token punctuation">,</span> <span class="token string">"$375,126,118"</span>
+<span class="token punctuation">)</span>
+table<span class="token punctuation">.</span>add_row<span class="token punctuation">(</span>
+    <span class="token string">"May 25, 2018"</span><span class="token punctuation">,</span>
+    <span class="token string">"[red]Solo[/red]: A Star Wars Story"</span><span class="token punctuation">,</span>
+    <span class="token string">"$275,000,000"</span><span class="token punctuation">,</span>
+    <span class="token string">"$393,151,347"</span><span class="token punctuation">,</span>
+<span class="token punctuation">)</span>
+table<span class="token punctuation">.</span>add_row<span class="token punctuation">(</span>
+    <span class="token string">"Dec 15, 2017"</span><span class="token punctuation">,</span>
+    <span class="token string">"Star Wars Ep. VIII: The Last Jedi"</span><span class="token punctuation">,</span>
+    <span class="token string">"$262,000,000"</span><span class="token punctuation">,</span>
+    <span class="token string">"[bold]$1,332,539,889[/bold]"</span><span class="token punctuation">,</span>
+<span class="token punctuation">)</span>
+
+console<span class="token punctuation">.</span><span class="token keyword">print</span><span class="token punctuation">(</span>table<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>该示例的输出如下：</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118124208244.png" alt=""></p>
+<p>请注意，控制台标记的呈现方式与 print() 和 log() 相同。实际上，由 Rich 渲染的任何内容都可以添加到标题/行（甚至其他表格）中。</p>
+<p>Table 类很聪明，可以调整列的大小以适合终端的可用宽度，并能根据需要做文本环绕的处理。下面是相同的示例，输出与比上表小的终端上：</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118124221644.png" alt=""></p>
+<h2 id="8-进度条"><a href="#8-进度条" class="headerlink" title="8.进度条"></a>8.进度条</h2><p>Rich 可以渲染多个不闪烁的进度条形图，以跟踪长时间运行的任务。</p>
+<p>基本用法：用 track 函数调用程序并迭代结果。下面是一个例子：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> rich<span class="token punctuation">.</span>progress <span class="token keyword">import</span> track
+
+<span class="token keyword">for</span> step <span class="token keyword">in</span> track<span class="token punctuation">(</span>range<span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    do_step<span class="token punctuation">(</span>step<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>添加多个进度条并不难。以下是效果示例：</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118124256100.png" alt=""></p>
+<p>这些列可以配置为显示你所需的任何详细信息。</p>
+<p>内置列包括完成百分比，文件大小，文件速度和剩余时间。下面是显示正在进行的下载的示例：</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118124332727.png" alt=""></p>
+<p>它可以在显示进度的同时下载多个 URL。要自己尝试一下，请参阅示例文件中的 <strong>examples/downloader.py</strong> ，在Python实用宝典公众号后台回复 <strong>rich示例</strong> 下载全部示例。</p>
+<h2 id="9-按列输出数据"><a href="#9-按列输出数据" class="headerlink" title="9.按列输出数据"></a>9.按列输出数据</h2><p>Rich 可以将内容通过排列整齐的，具有相等或最佳的宽度的列来呈现。下面是（macOS / Linux） ls 命令的一个非常基本的克隆，用列来显示目录列表：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> os
+<span class="token keyword">import</span> sys
+
+<span class="token keyword">from</span> rich <span class="token keyword">import</span> <span class="token keyword">print</span>
+<span class="token keyword">from</span> rich<span class="token punctuation">.</span>columns <span class="token keyword">import</span> Columns
+
+directory <span class="token operator">=</span> os<span class="token punctuation">.</span>listdir<span class="token punctuation">(</span>sys<span class="token punctuation">.</span>argv<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>Columns<span class="token punctuation">(</span>directory<span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>以下屏幕截图是列示例的输出，该列显示了从 API 提取的数据：</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118124359880.png" alt=""></p>
+<h2 id="10-Markdown"><a href="#10-Markdown" class="headerlink" title="10.Markdown"></a>10.Markdown</h2><p>Rich 可以呈现markdown，相当不错的将其格式显示到终端。</p>
+<p>为了渲染 markdown，请导入 Markdown 类，将其打印到控制台。例子如下：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> rich<span class="token punctuation">.</span>console <span class="token keyword">import</span> Console
+<span class="token keyword">from</span> rich<span class="token punctuation">.</span>markdown <span class="token keyword">import</span> Markdown
+
+console <span class="token operator">=</span> Console<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">with</span> open<span class="token punctuation">(</span><span class="token string">"README.md"</span><span class="token punctuation">)</span> <span class="token keyword">as</span> readme<span class="token punctuation">:</span>
+    markdown <span class="token operator">=</span> Markdown<span class="token punctuation">(</span>readme<span class="token punctuation">.</span>read<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+console<span class="token punctuation">.</span><span class="token keyword">print</span><span class="token punctuation">(</span>markdown<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>该例子的输出如下图：</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118124425033.png" alt=""></p>
+<h2 id="11-语法突出显示"><a href="#11-语法突出显示" class="headerlink" title="11.语法突出显示"></a>11.语法突出显示</h2><p>Rich 使用 pygments 库来实现语法高亮显示。用法类似于渲染 markdown。构造一个 Syntax 对象并将其打印到控制台。下面是一个例子：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> rich<span class="token punctuation">.</span>console <span class="token keyword">import</span> Console
+<span class="token keyword">from</span> rich<span class="token punctuation">.</span>syntax <span class="token keyword">import</span> Syntax
+
+my_code <span class="token operator">=</span> <span class="token triple-quoted-string string">'''
+def iter_first_last(values: Iterable[T]) -&amp;gt; Iterable[Tuple[bool, bool, T]]:
+    """Iterate and generate a tuple with a flag for first and last value."""
+    iter_values = iter(values)
+    try:
+        previous_value = next(iter_values)
+    except StopIteration:
+        return
+    first = True
+    for value in iter_values:
+        yield first, False, previous_value
+        first = False
+        previous_value = value
+    yield first, True, previous_value
+'''</span>
+syntax <span class="token operator">=</span> Syntax<span class="token punctuation">(</span>my_code<span class="token punctuation">,</span> <span class="token string">"python"</span><span class="token punctuation">,</span> theme<span class="token operator">=</span><span class="token string">"monokai"</span><span class="token punctuation">,</span> line_numbers<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
+console <span class="token operator">=</span> Console<span class="token punctuation">(</span><span class="token punctuation">)</span>
+console<span class="token punctuation">.</span><span class="token keyword">print</span><span class="token punctuation">(</span>syntax<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>输出如下：</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118124453657.png" alt=""></p>
+<h2 id="12-错误回溯-traceback"><a href="#12-错误回溯-traceback" class="headerlink" title="12.错误回溯(traceback)"></a>12.错误回溯(traceback)</h2><p>Rich 可以渲染漂亮的错误回溯日志，比标准的 Python 回溯更容易阅读，并能显示更多代码。</p>
+<p>你可以将 Rich 设置为默认的回溯处理程序，这样所有异常都将由 Rich 为你呈现。</p>
+<p>下面是在 OSX（与 Linux 类似）上的外观：</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118124518923.png" alt=""></p>
+<h1 id="lxml-网页解析库Xpath"><a href="#lxml-网页解析库Xpath" class="headerlink" title="lxml - 网页解析库Xpath"></a>lxml - 网页解析库Xpath</h1><p><a href="https://lxml.de/" target="_blank" rel="noopener">LXML API</a></p>
+<h2 id="lxml的安装"><a href="#lxml的安装" class="headerlink" title="lxml的安装"></a>lxml的安装</h2><p>在使用lxml解析库之前，先简单介绍一下lxml的概念，并讲解如何安装lxml库。</p>
+<p><strong>lxml的基本概念</strong></p>
+<p>lxml是Python的一个解析库，支持html和xml的解析，其解析的效率极快。xpath全称为Xml Path Language，顾名思义，即一种在xml中查找信息的语言。lxml主要是用xpath模块去解析html或者xml等文档内容。</p>
+<p><strong>安装lxml</strong></p>
+<p>lxml的安装其实很简单，下面介绍两种不同的安装方式（适用不同的操作系统）。</p>
+<pre><code>#方式一：pip安装
+pip install lxml
+
+#方式二：wheel安装
+#下载对应系统版本的wheel文件:http://www.lfd.uci.edu/~gohlke/pythonlibs/#lxml
+pip install lxml-4.6.3-cp39-cp39-win_amd64.whl</code></pre><p>方式一，通过pip install lxml 命令就可以直接安装；</p>
+<p>方式二，需要通过下载whl文件，再去安装。whl文件的下载链接为：<a href="http://www.lfd.uci.edu/~gohlke/pythonlibs/#lxml，进入这个链接后选择下载自己python版本和系统版本(32位/64位)对应的whl文件即可；" target="_blank" rel="noopener">http://www.lfd.uci.edu/~gohlke/pythonlibs/#lxml，进入这个链接后选择下载自己python版本和系统版本(32位/64位)对应的whl文件即可；</a></p>
+<h2 id="Xpath的常用规则"><a href="#Xpath的常用规则" class="headerlink" title="Xpath的常用规则"></a>Xpath的常用规则</h2><p>规则具体见表所示。</p>
+<table>
+<thead>
+<tr>
+<th><strong>表达式</strong></th>
+<th><strong>描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>nodename</strong></td>
+<td>选取此节点的所有子节点</td>
+</tr>
+<tr>
+<td><strong>/</strong></td>
+<td>从当前节点选取直接子节点</td>
+</tr>
+<tr>
+<td><strong>//</strong></td>
+<td>从当前节点选择子孙节点</td>
+</tr>
+<tr>
+<td><strong>.</strong></td>
+<td>选取当前节点</td>
+</tr>
+<tr>
+<td><strong>..</strong></td>
+<td>选择当前节点的父节点</td>
+</tr>
+<tr>
+<td><strong>@</strong></td>
+<td>选取属性</td>
+</tr>
+<tr>
+<td>*****</td>
+<td>通配符，选择所有元素节点与元素名</td>
+</tr>
+<tr>
+<td><strong>@*</strong></td>
+<td>选取所有属性</td>
+</tr>
+<tr>
+<td><strong>node</strong></td>
+<td>匹配任何类型的节点</td>
+</tr>
+</tbody></table>
+<p>举例：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> lxml <span class="token keyword">import</span> etree
+<span class="token keyword">from</span> io <span class="token keyword">import</span> StringIO
+test_html <span class="token operator">=</span> <span class="token triple-quoted-string string">'''
+&lt;html>
+    &lt;h4>学号&lt;/h4>
+    &lt;ul>
+       &lt;li>2112001&lt;/li>
+       &lt;li>2112002&lt;/li>
+       &lt;li class='blank'>2112003&lt;/li>
+       &lt;li>2112004&lt;/li>
+    &lt;/ul>
+    &lt;h4>姓名&lt;/h4>
+    &lt;ul class="ul" style="color:red">
+        &lt;li>张三&lt;/li>
+        &lt;li>李四&lt;/li>
+        &lt;li>王五&lt;/li>
+        &lt;li>老六&lt;/li>
+    &lt;/ul>
+&lt;/html>
+'''</span>
+<span class="token comment" spellcheck="true">#将html网页源码加入带etree中</span>
+html <span class="token operator">=</span> etree<span class="token punctuation">.</span>parse<span class="token punctuation">(</span>StringIO<span class="token punctuation">(</span>test_html<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>html<span class="token punctuation">)</span>
+
+结果：
+<span class="token operator">&lt;</span>lxml<span class="token punctuation">.</span>etree<span class="token punctuation">.</span>_ElementTree object at <span class="token number">0x00000283496436C8</span><span class="token operator">></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>上述代码中，先是随机构造了部分html源码，并将其放入lxml的etree对象中。然后待解析的html就可以通过lxml去进行操作。最后对这段html进行不同的提取操作。</p>
+<p>获取所有li标签下的数据，并提取其内容： </p>
+<pre class="line-numbers language-python"><code class="language-python">list <span class="token operator">=</span> html<span class="token punctuation">.</span>xpath<span class="token punctuation">(</span><span class="token string">'//li'</span><span class="token punctuation">)</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> list<span class="token punctuation">:</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"数据："</span> <span class="token operator">+</span> i<span class="token punctuation">.</span>text<span class="token punctuation">)</span>
+
+结果：
+数据：<span class="token number">2112001</span>
+数据：<span class="token number">2112002</span>
+数据：<span class="token number">2112003</span>
+数据：<span class="token number">2112004</span>
+数据：张三
+数据：李四
+数据：王五
+数据：老六<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>通过属性class获取值</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#获取class为blank的所有li标签，并提取其内容</span>
+blank_li_list <span class="token operator">=</span> html<span class="token punctuation">.</span>xpath<span class="token punctuation">(</span><span class="token string">'//li[@class="blank"]'</span><span class="token punctuation">)</span>
+<span class="token keyword">for</span> l <span class="token keyword">in</span> blank_li_list<span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"数据："</span> <span class="token operator">+</span> l<span class="token punctuation">.</span>text<span class="token punctuation">)</span>
+
+结果：
+数据：<span class="token number">2112003</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>删除子元素</p>
+<p>比如要删除第一个ul下的第一个li元素</p>
+<pre class="line-numbers language-python"><code class="language-python">获取html中的所有ul标签
+first_ul <span class="token operator">=</span> html<span class="token punctuation">.</span>find<span class="token punctuation">(</span><span class="token string">"//ul"</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">#获取first_ul下的所有li标签</span>
+ul_li <span class="token operator">=</span> first_ul<span class="token punctuation">.</span>xpath<span class="token punctuation">(</span><span class="token string">"li"</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">#打印长度</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>len<span class="token punctuation">(</span>ul_li<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true"># 删除操作</span>
+ul_li<span class="token punctuation">.</span>remove<span class="token punctuation">(</span>ul_li<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">#打印长度</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>len<span class="token punctuation">(</span>ul_li<span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+结果：
+<span class="token number">4</span>
+<span class="token number">3</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>可以看到获取第一个ul标签，接着取出第一个ul下的所有li标签。输出其长度为4，删除第一个li之后，还是剩下3个li，因此输出3。</p>
+<p>获取最后一个ul标签下的所有li数据</p>
+<pre class="line-numbers language-python"><code class="language-python">last_ul_li <span class="token operator">=</span> html<span class="token punctuation">.</span>xpath<span class="token punctuation">(</span><span class="token string">'//ul[last()]/li'</span><span class="token punctuation">)</span>
+<span class="token keyword">for</span> l <span class="token keyword">in</span> last_ul_li<span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"数据："</span> <span class="token operator">+</span> l<span class="token punctuation">.</span>text<span class="token punctuation">)</span>
+
+结果：
+数据：张三
+数据：李四
+数据：王五
+数据：老六<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="实战-提取小说所有章节"><a href="#实战-提取小说所有章节" class="headerlink" title="实战:提取小说所有章节"></a>实战:提取小说所有章节</h2><p>现在我们来获取《大主宰》整本小说的所有章节，包括<strong>章节名称</strong>和<strong>章节链接</strong>。 </p>
+<p>目标：《大主宰》整本小说的所有章节</p>
+<p>链接：<a href="http://book.chenlove.cn/novel/36.html#catalog" target="_blank" rel="noopener">http://book.chenlove.cn/novel/36.html#catalog</a></p>
+<p>思路：先获取网页源码，接着通过lxml的xpath模块去解析网页源码，并提取出所有章节的标题和章节链接，最后打印输出。</p>
+<p>在开始之前，先预览一下网页页面：</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118125202160.png" alt=""></p>
+<p>通过按F12，点击elements/元素查看网页源代码：</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118125215653.png" alt=""></p>
+<p>通过查看源代码，我们可以知道所有章节标签内容都在class为cate-list的div标签中，ul下的所有li对应网页中每三章为一行。因此获取到li之后，再解析li标签下的三个a标签。完整代码如下：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> requests
+<span class="token keyword">from</span> lxml <span class="token keyword">import</span> etree
+
+<span class="token comment" spellcheck="true"># 设置代理服务器</span>
+headers <span class="token operator">=</span> <span class="token punctuation">{</span>
+    <span class="token string">'User_Agent'</span><span class="token punctuation">:</span> <span class="token string">'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36'</span>
+<span class="token punctuation">}</span>
+<span class="token comment" spellcheck="true">#请求链接</span>
+url <span class="token operator">=</span> <span class="token string">"http://book.chenlove.cn/novel/36.html#catalog"</span>
+response <span class="token operator">=</span> requests<span class="token punctuation">.</span>get<span class="token punctuation">(</span>url<span class="token punctuation">,</span> headers<span class="token operator">=</span>headers<span class="token punctuation">)</span>
+<span class="token keyword">if</span> response<span class="token punctuation">.</span>status_code <span class="token operator">==</span> <span class="token number">200</span><span class="token punctuation">:</span>
+    <span class="token comment" spellcheck="true"># 转化为utf-8格式，不加这条语句，输出爬取的信息为乱码</span>
+    response<span class="token punctuation">.</span>encoding <span class="token operator">=</span> <span class="token string">'utf8'</span>
+    <span class="token comment" spellcheck="true">#获取到源码</span>
+    html <span class="token operator">=</span> etree<span class="token punctuation">.</span>HTML<span class="token punctuation">(</span>response<span class="token punctuation">.</span>text<span class="token punctuation">)</span>
+    ul_li_list <span class="token operator">=</span> html<span class="token punctuation">.</span>xpath<span class="token punctuation">(</span><span class="token string">'//*[@class="cate-list"]/ul/li'</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>通过发送requests请求获取网页源码，并提取出所有小说章节，即class为cate-list的div标签下的所有li标签。接着从li标签中提取出章节标题和章节链接。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">for</span> l <span class="token keyword">in</span> ul_li_list<span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">:</span><span class="token punctuation">]</span><span class="token punctuation">:</span>
+     <span class="token keyword">for</span> i <span class="token keyword">in</span> l<span class="token punctuation">:</span>
+          href <span class="token operator">=</span> i<span class="token punctuation">.</span>xpath<span class="token punctuation">(</span><span class="token string">'.//@href'</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>
+          title <span class="token operator">=</span> i<span class="token punctuation">.</span>xpath<span class="token punctuation">(</span><span class="token string">'.//span[@class="chapter_name"]/text()'</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>
+          <span class="token keyword">print</span><span class="token punctuation">(</span>title<span class="token punctuation">,</span>href<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>集合ul_li_list中存储着所有的li标签，从第五个li开始才是第一章（前面4行是最新章节），因此我们需要从第5行开始，然后通过xpath提取出li中的含有的章节标题和章节链接。</p>
+<p>输出：</p>
+<blockquote>
+<p>第一章 北灵院 /book/12242/39a44ff6dd27f.html</p>
+<p>第二章 被踢出灵路的少年 /book/12242/a85e3aae465a4.html</p>
+<p>第三章 牧域 /book/12242/820e56c8bc179.html</p>
+<p>第四章 大浮屠诀 /book/12242/9b0a211891e10.html</p>
+<p>第五章 大千世界 /book/12242/e6fadddc7bf29.html</p>
+<p>第六章 灵力增幅 /book/12242/6a3c53c1cf3cb.html</p>
+<p>第七章 慕元 /book/12242/7717207387f31.html</p>
+<p>……..</p>
+</blockquote>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -1934,9 +2657,9 @@ try_facets<span class="token punctuation">(</span><span class="token string">"Hi
                     <div class="card-image">
                         
                         
-                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/6.jpg" class="responsive-img" alt="DL专栏1>PyTorch Tricks">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/5.jpg" class="responsive-img" alt="DL专栏1-PyTorch Tricks">
                         
-                        <span class="card-title">DL专栏1>PyTorch Tricks</span>
+                        <span class="card-title">DL专栏1-PyTorch Tricks</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -2165,7 +2888,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">2769.6k</span>&nbsp;字
+                class="white-color">2838.5k</span>&nbsp;字
             
             
             
