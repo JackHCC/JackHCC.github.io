@@ -26,9 +26,9 @@
     
     <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/jquery/jquery.min.js"></script>
     
-<meta name="generator" content="Hexo 4.2.0"><link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
-<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
-</head>
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
 
 
 <body>
@@ -459,21 +459,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-11-17
+                    2021-11-18
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    6.1k
+                    7.7k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    37 分
+                    47 分
                 </div>
                 
 
@@ -1878,8 +1878,336 @@
 <li><strong>Iterative classification</strong> </li>
 <li><strong>Correct &amp; Smooth</strong></li>
 </ul>
-<h1 id="Graph-Neural-Networks"><a href="#Graph-Neural-Networks" class="headerlink" title="Graph Neural Networks"></a>Graph Neural Networks</h1><h2 id="Basics-of-Deep-Learning"><a href="#Basics-of-Deep-Learning" class="headerlink" title="Basics of Deep Learning"></a>Basics of Deep Learning</h2><h2 id="Deep-Learning-for-Graphs"><a href="#Deep-Learning-for-Graphs" class="headerlink" title="Deep Learning for Graphs"></a>Deep Learning for Graphs</h2><p>todo</p>
-<script>
+<h1 id="Graph-Neural-Networks"><a href="#Graph-Neural-Networks" class="headerlink" title="Graph Neural Networks"></a>Graph Neural Networks</h1><h2 id="Basics-of-Deep-Learning"><a href="#Basics-of-Deep-Learning" class="headerlink" title="Basics of Deep Learning"></a>Basics of Deep Learning</h2><h2 id="Deep-Learning-for-Graphs"><a href="#Deep-Learning-for-Graphs" class="headerlink" title="Deep Learning for Graphs"></a>Deep Learning for Graphs</h2><h3 id="Content"><a href="#Content" class="headerlink" title="Content"></a>Content</h3><ul>
+<li>Local network neighborhoods: <ul>
+<li>Describe aggregation strategies </li>
+<li>Define computation graphs </li>
+</ul>
+</li>
+<li>Stacking multiple layers: <ul>
+<li>Describe the model, parameters, training </li>
+<li>How to fit the model? </li>
+<li>Simple example for unsupervised and  supervised training</li>
+</ul>
+</li>
+</ul>
+<h3 id="Setup-1"><a href="#Setup-1" class="headerlink" title="Setup"></a>Setup</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211118160355282.png" alt=""></p>
+<h3 id="A-Naive-Approach"><a href="#A-Naive-Approach" class="headerlink" title="A Naive Approach"></a>A Naive Approach</h3><ul>
+<li>Join adjacency matrix and features </li>
+<li>Feed them into a deep neural net:</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118160533035.png" alt=""></p>
+<p>Issues with this idea: </p>
+<ul>
+<li>O(|V|) parameters </li>
+<li>Not applicable to graphs of different sizes </li>
+<li>Sensitive to node ordering</li>
+</ul>
+<h3 id="Idea-Convolutional-Networks"><a href="#Idea-Convolutional-Networks" class="headerlink" title="Idea: Convolutional Networks"></a>Idea: Convolutional Networks</h3><p>Goal is to generalize convolutions beyond simple lattices（格子） </p>
+<p>Leverage node features/attributes (e.g., text, images)</p>
+<h3 id="Real-world-Graphs"><a href="#Real-world-Graphs" class="headerlink" title="Real-world Graphs"></a><img src="/images/loading.gif" data-original="../images/basic/image-20211118160820640.png" alt="">Real-world Graphs</h3><p>But our graphs look like this:</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118160936978.png" alt=""></p>
+<p>There is no fixed notion of locality or sliding  window on the graph </p>
+<p>Graph is permutation invariant</p>
+<h3 id="Permutation-Invariance（置换不变性）"><a href="#Permutation-Invariance（置换不变性）" class="headerlink" title="Permutation Invariance（置换不变性）"></a><strong>Permutation Invariance（置换不变性）</strong></h3><ul>
+<li>Graph does not have a canonical order of the nodes! </li>
+<li>We can have many different order plans.</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118161107818.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118161127139.png" alt=""></p>
+<p>Graph and node representations  should be the same for Order plan 1 and Order plan 2</p>
+<p>What does it mean by “graph representation is  same for two order plans”?</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118161207951.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118171943856.png" alt=""></p>
+<h3 id="Permutation-Equivariance（置换等变）"><a href="#Permutation-Equivariance（置换等变）" class="headerlink" title="Permutation Equivariance（置换等变）"></a>Permutation Equivariance（置换等变）</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211118172015343.png" alt="">For node representation</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118172455838.png" alt=""></p>
+<h3 id="Graph-Neural-Network-Overview"><a href="#Graph-Neural-Network-Overview" class="headerlink" title="Graph Neural Network Overview"></a>Graph Neural Network Overview</h3><p>Graph neural networks consist of multiple  permutation equivariant / invariant functions</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118172659819.png" alt=""></p>
+<p>Next: Design graph neural  networks that are permutation  invariant / equivariant by  passing and aggregating  information from neighbors</p>
+<h2 id="Graph-Convolutional-Networks"><a href="#Graph-Convolutional-Networks" class="headerlink" title="Graph Convolutional Networks"></a>Graph Convolutional Networks</h2><p>Idea: Node’s neighborhood defines a  computation graph</p>
+<p>Learn how to propagate information across the  graph to compute node features</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118173222021.png" alt=""></p>
+<h3 id="Idea-Aggregate-Neiahbors"><a href="#Idea-Aggregate-Neiahbors" class="headerlink" title="Idea: Aggregate Neiahbors"></a>Idea: Aggregate Neiahbors</h3><p>Key idea: Generate node embeddings based  on local network neighborhoods</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118173341846.png" alt=""></p>
+<p>Intuition: Nodes aggregate information from  their neighbors using neural networks</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118173504017.png" alt=""></p>
+<h3 id="Deep-Model-Many-Layers"><a href="#Deep-Model-Many-Layers" class="headerlink" title="Deep Model: Many Layers"></a>Deep Model: Many Layers</h3><p>Model can be of arbitrary depth: </p>
+<p>Nodes have embeddings at each layer </p>
+<p>Layer-0 embedding of node v is its input feature, x_v </p>
+<p>Layer-k embedding gets information from nodes that are k hops away</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118173642097.png" alt=""></p>
+<h3 id="Neighborhood-Aggregation-聚集"><a href="#Neighborhood-Aggregation-聚集" class="headerlink" title="Neighborhood Aggregation(聚集)"></a>Neighborhood Aggregation(聚集)</h3><p>Neighborhood aggregation: Key distinctions  are in how different approaches aggregate  information across the layers</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118173805151.png" alt=""></p>
+<p>Basic approach: Average information from  neighbors and apply a neural network</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118173840669.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118173904027.png" alt=""></p>
+<h3 id="Equivariant-Property"><a href="#Equivariant-Property" class="headerlink" title="Equivariant Property"></a>Equivariant Property</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211118174540447.png" alt=""></p>
+<p>The target node (blue) has  the same computation graph  for different order plans</p>
+<h3 id="Training-the-Model"><a href="#Training-the-Model" class="headerlink" title="Training the Model"></a>Training the Model</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211118174741645.png" alt=""></p>
+<p>Need to define a loss function on the embeddings.</p>
+<h3 id="Model-Parameters"><a href="#Model-Parameters" class="headerlink" title="Model Parameters"></a>Model Parameters</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211118174912365.png" alt=""></p>
+<h3 id="Matrix-Formulation"><a href="#Matrix-Formulation" class="headerlink" title="Matrix Formulation"></a>Matrix Formulation</h3><p>Many aggregations can be performed  efficiently by (sparse) matrix operations</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118175202660.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118175300420.png" alt=""></p>
+<p>Note: not all GNNs can be expressed in matrix form, when  aggregation function is complex</p>
+<h3 id="How-to-Train-A-GNN"><a href="#How-to-Train-A-GNN" class="headerlink" title="How to Train A GNN"></a>How to Train A GNN</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211118175458003.png" alt=""></p>
+<h4 id="Unsupervised-Training"><a href="#Unsupervised-Training" class="headerlink" title="Unsupervised Training"></a>Unsupervised Training</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211118175554816.png" alt=""></p>
+<p>Node similarity can be anything from  Lecture 3, e.g., a loss based on: </p>
+<ul>
+<li>Random walks (node2vec, DeepWalk, struc2vec) </li>
+<li>Matrix factorization </li>
+<li>Node proximity in the grap</li>
+</ul>
+<h4 id="Supervised-Training"><a href="#Supervised-Training" class="headerlink" title="Supervised Training"></a>Supervised Training</h4><p>Directly train the model for a supervised task  (e.g., node classification)</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118175707510.png" alt=""></p>
+<p>Directly train the model for a supervised task  (e.g., node classification) </p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118175750731.png" alt=""></p>
+<h3 id="Model-Design-Overview"><a href="#Model-Design-Overview" class="headerlink" title="Model Design: Overview"></a>Model Design: Overview</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211118175855277.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118175932975.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118175959015.png" alt=""></p>
+<h3 id="Inductive-Capability"><a href="#Inductive-Capability" class="headerlink" title="Inductive Capability"></a>Inductive Capability</h3><p>The same aggregation parameters are shared  for all nodes: </p>
+<ul>
+<li><p>The number of model parameters is sublinear in  |V| and we can <strong>generalize to unseen nodes</strong>!</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118180108993.png" alt=""></p>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118180222936.png" alt=""></p>
+<p>Inductive node embedding  =&gt; Generalize to entirely unseen graphs </p>
+<p>E.g., train on protein interaction graph from model organism A and generate  embeddings on newly collected data about organism B</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118180326559.png" alt=""></p>
+<p>Many application settings constantly encounter  previously unseen nodes: </p>
+<ul>
+<li>E.g., Reddit, YouTube, Google Scholar </li>
+</ul>
+<p>Need to generate new embeddings “on the fly”</p>
+<h2 id="GNNs-subsume-CNNs-and-Transformers"><a href="#GNNs-subsume-CNNs-and-Transformers" class="headerlink" title="GNNs subsume CNNs and  Transformers"></a>GNNs subsume CNNs and  Transformers</h2><h3 id="Architecture-Comparison"><a href="#Architecture-Comparison" class="headerlink" title="Architecture Comparison"></a>Architecture Comparison</h3><p>How does GNNs compare to prominent  architectures such as Convolutional Neural  Nets, and Transformers?</p>
+<h3 id="GNN-VS-CNN"><a href="#GNN-VS-CNN" class="headerlink" title="GNN VS. CNN"></a>GNN VS. CNN</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211118180612722.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118180749671.png" alt=""></p>
+<p>CNN can be seen as a special GNN with fixed neighbor  size and ordering: </p>
+<ul>
+<li>The size of the filter is pre-defined for a CNN. </li>
+<li>The advantage of GNN is it processes arbitrary  graphs with different degrees for each node</li>
+</ul>
+<p>CNN is not permutation equivariant. </p>
+<ul>
+<li>Switching the order of pixels will leads to different  outputs</li>
+</ul>
+<h3 id="Transformer"><a href="#Transformer" class="headerlink" title="Transformer"></a>Transformer</h3><p>[Attention is all you need. Vaswani et al., NeurIPS 2017]</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118181019045.png" alt=""></p>
+<h3 id="GNN-vs-Transformer"><a href="#GNN-vs-Transformer" class="headerlink" title="GNN vs, Transformer"></a>GNN vs, Transformer</h3><p>A nice blog plot for this: <a href="https://towardsdatascience.com/transformers-are-graph-neural-networks-bca9f75412aa" target="_blank" rel="noopener">https://towardsdatascience.com/transformers-are-graph-neural-networks-bca9f75412aa</a></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118181135494.png" alt=""></p>
+<h3 id="Summary-8"><a href="#Summary-8" class="headerlink" title="Summary"></a>Summary</h3><ul>
+<li>Basics of neural networks <ul>
+<li>Loss, Optimization, Gradient, SGD, non-linearity, MLP</li>
+</ul>
+</li>
+<li>Idea for Deep Learning for Graphs <ul>
+<li>Multiple layers of embedding transformation </li>
+<li>At every layer, use the embedding at previous layer as  the input </li>
+<li>Aggregation of neighbors and self-embeddings </li>
+</ul>
+</li>
+<li>Graph Convolutional Network <ul>
+<li>Mean aggregation; can be expressed in matrix form </li>
+</ul>
+</li>
+<li>GNN is a general architecture <ul>
+<li>CNN and Transformer can be viewed as a special GNN</li>
+</ul>
+</li>
+</ul>
+<h1 id="Graph-Neural-Networks-2"><a href="#Graph-Neural-Networks-2" class="headerlink" title="Graph Neural Networks[2]"></a>Graph Neural Networks[2]</h1><h2 id="A-General-Perspective-on-Graph-Neural-Networks"><a href="#A-General-Perspective-on-Graph-Neural-Networks" class="headerlink" title="A General Perspective on Graph Neural Networks"></a>A General Perspective on Graph Neural Networks</h2><h3 id="A-Genera-GNN-Framework"><a href="#A-Genera-GNN-Framework" class="headerlink" title="A Genera GNN Framework"></a>A Genera GNN Framework</h3><p><a href="https://arxiv.org/pdf/2011.08843.pdf" target="_blank" rel="noopener">J. You, R. Ying, J. Leskovec. Design Space of Graph Neural Networks, NeurIPS 2020</a></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118181625296.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118181708448.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118181736747.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118181750672.png" alt=""></p>
+<h3 id="Summary-9"><a href="#Summary-9" class="headerlink" title="Summary"></a>Summary</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211118181828938.png" alt=""></p>
+<h2 id="A-Single-Layer-of-a-GNN"><a href="#A-Single-Layer-of-a-GNN" class="headerlink" title="A Single Layer of a GNN"></a>A Single Layer of a GNN</h2><h3 id="A-Single-GNN-Layer"><a href="#A-Single-GNN-Layer" class="headerlink" title="A Single GNN Layer"></a>A Single GNN Layer</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211118181939133.png" alt=""></p>
+<h4 id="Message-Computation"><a href="#Message-Computation" class="headerlink" title="Message Computation"></a>Message Computation</h4><h4 id="Aggregation"><a href="#Aggregation" class="headerlink" title="Aggregation"></a><img src="/images/loading.gif" data-original="../images/basic/image-20211118182057368.png" alt="">Aggregation</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211118182129781.png" alt=""></p>
+<h4 id="Issue"><a href="#Issue" class="headerlink" title="Issue"></a>Issue</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211118182215334.png" alt=""></p>
+<h4 id="Putting-things-together"><a href="#Putting-things-together" class="headerlink" title="Putting things together"></a>Putting things together</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211118182315450.png" alt=""></p>
+<h3 id="Classical-GNN-Layers-GCN"><a href="#Classical-GNN-Layers-GCN" class="headerlink" title="Classical GNN Layers: GCN"></a>Classical GNN Layers: GCN</h3><p><a href="https://arxiv.org/pdf/1609.02907.pdf" target="_blank" rel="noopener">T. Kipf, M. Welling. Semi-Supervised Classification with Graph Convolutional Networks, ICLR 2017</a></p>
+<p>Graph Convolutional Networks (GCN)</p>
+<img src="/images/loading.gif" data-original="../images/basic/image-20211118182440842.png" style="zoom:50%;">
+
+<p>How to write this as Message + Aggregation?</p>
+<img src="/images/loading.gif" data-original="../images/basic/image-20211118182508447.png" style="zoom:67%;">
+
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118182531818.png" alt=""></p>
+<h3 id="GraphSAGE"><a href="#GraphSAGE" class="headerlink" title="GraphSAGE"></a>GraphSAGE</h3><p><a href="https://arxiv.org/pdf/1706.02216.pdf" target="_blank" rel="noopener">Hamilton et al. Inductive Representation Learning on Large Graphs, NeurIPS 2017</a></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118182605344.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118182721525.png" alt=""></p>
+<h4 id="L2-Normalization"><a href="#L2-Normalization" class="headerlink" title="L2 Normalization"></a>L2 Normalization</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211118182808881.png" alt=""></p>
+<h3 id="GAT"><a href="#GAT" class="headerlink" title="GAT"></a>GAT</h3><p>Graph Attention Networks</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118182917446.png" alt=""></p>
+<p>Not all node’s neighbors are equally important </p>
+<ul>
+<li><p>Attention is inspired by cognitive attention.  </p>
+</li>
+<li><p>The attention a_uv focuses on the important parts of  the input data and fades out the rest.  </p>
+<ul>
+<li><p>Idea: the NN should devote more computing power on that  small but important part of the data.  </p>
+</li>
+<li><p>Which part of the data is more important depends on the  context and is learned through training.</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>Can we do better than simple  neighborhood aggregation?</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118183053526.png" alt=""></p>
+<h4 id="Attention-Mechanism"><a href="#Attention-Mechanism" class="headerlink" title="Attention Mechanism"></a>Attention Mechanism</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211118183127306.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118183206950.png" alt=""></p>
+<p>What is the form of attention mechanism a? </p>
+<ul>
+<li>The approach is agnostic to the choice of a </li>
+<li>E.g., use a simple single-layer neural network </li>
+<li>a have trainable parameters (weights in the Linear layer)</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118183316007.png" alt=""></p>
+<p><strong>Multi-head attention</strong>: Stabilizes the learning  process of attention mechanism</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118183340078.png" alt=""></p>
+<h4 id="Benefits-of-Attention-Mechanism"><a href="#Benefits-of-Attention-Mechanism" class="headerlink" title="Benefits of Attention Mechanism"></a>Benefits of Attention Mechanism</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211118183547862.png" alt=""></p>
+<h2 id="GNN-Layers-in-Practice"><a href="#GNN-Layers-in-Practice" class="headerlink" title="GNN Layers in Practice"></a>GNN Layers in Practice</h2><p><img src="/images/loading.gif" data-original="../images/basic/image-20211118183651153.png" alt=""></p>
+<p>Many modern deep learning modules can be  incorporated into a GNN layer </p>
+<ul>
+<li>Batch Normalization: <ul>
+<li>Stabilize neural network training </li>
+</ul>
+</li>
+<li>Dropout: <ul>
+<li>Prevent overfitting </li>
+</ul>
+</li>
+<li>Attention/Gating: <ul>
+<li>Control the importance of a message </li>
+</ul>
+</li>
+<li>More: <ul>
+<li>Any other useful deep learning modules</li>
+</ul>
+</li>
+</ul>
+<h3 id="Batch-Normalization"><a href="#Batch-Normalization" class="headerlink" title="Batch Normalization"></a>Batch Normalization</h3><p><a href="https://arxiv.org/pdf/1502.03167.pdf" target="_blank" rel="noopener">S. Loffe, C.Szegedy. Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift, ICML 2015</a></p>
+<ul>
+<li>Goal: Stabilize neural networks training </li>
+<li>Idea: Given a batch of inputs (node embeddings) <ul>
+<li>Re-center the node embeddings into zero mean  </li>
+<li>Re-scale the variance into unit variance</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118183903183.png" alt=""></p>
+<h3 id="Dropout"><a href="#Dropout" class="headerlink" title="Dropout"></a>Dropout</h3><ul>
+<li>Goal: Regularize a neural net to prevent overfitting. </li>
+<li>Idea:  <ul>
+<li>During training: with some probability p, randomly set  neurons to zero (turn off) </li>
+<li>During testing: Use all the neurons for computation</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118184007286.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118184033018.png" alt=""></p>
+<h3 id="Activation-Non-linearity"><a href="#Activation-Non-linearity" class="headerlink" title="Activation(Non-linearity)"></a>Activation(Non-linearity)</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211118184103165.png" alt=""></p>
+<p>Summary: </p>
+<ul>
+<li>Modern deep learning  modules can be included into a GNN  layer for better performance </li>
+<li>Designing novel GNN layers is still  an active research frontier! </li>
+<li>Suggested resources: You can  explore diverse GNN designs or try  out your own ideas in GraphGym</li>
+</ul>
+<h3 id="Stacking-Layers-of-a-GNN"><a href="#Stacking-Layers-of-a-GNN" class="headerlink" title="Stacking Layers of a GNN"></a>Stacking Layers of a GNN</h3><ul>
+<li>How to construct a Graph Neural Network? </li>
+<li>The standard way: Stack GNN layers sequentially</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118184246785.png" alt=""></p>
+<h3 id="The-Over-smoothing-Problem"><a href="#The-Over-smoothing-Problem" class="headerlink" title="The Over-smoothing Problem"></a>The Over-smoothing Problem</h3><ul>
+<li>The Issue of stacking many GNN layers <ul>
+<li>GNN suffers from the over-smoothing problem </li>
+</ul>
+</li>
+<li>The over-smoothing problem: all the node  embeddings converge to the same value <ul>
+<li>This is bad because we want to use node  embeddings to differentiate nodes </li>
+</ul>
+</li>
+<li>Why does the over-smoothing problem  happen?</li>
+</ul>
+<h3 id="Receptive-Field-of-a-GNN"><a href="#Receptive-Field-of-a-GNN" class="headerlink" title="Receptive Field of a GNN"></a>Receptive Field of a GNN</h3><ul>
+<li>Receptive field: the set of nodes that determine  the embedding of a node of interest <ul>
+<li>In a k-layer GNN, each node has a receptive field of  k-hop neighborhood</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118184451889.png" alt=""></p>
+<ul>
+<li>Receptive field overlap for two nodes <ul>
+<li>The shared neighbors quickly grows when we  increase the number of hops (num of GNN layers)</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118184537134.png" alt=""></p>
+<ul>
+<li>We can explain over-smoothing via the notion  of receptive field <ul>
+<li>We knew the embedding of a node is determined  by its receptive field <ul>
+<li>If two nodes have highly-overlapped receptive fields, then  their embeddings are highly similar </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Stack many GNN layers -&gt; nodes will have highlyoverlapped receptive fields -&gt; node embeddings  will be highly similar -&gt; suffer from the over-smoothing problem </li>
+<li>Next: how do we overcome over-smoothing problem?</li>
+</ul>
+<h3 id="Design-GNN-Layer-Connectivity"><a href="#Design-GNN-Layer-Connectivity" class="headerlink" title="Design GNN Layer Connectivity"></a>Design GNN Layer Connectivity</h3><ul>
+<li>What do we learn from the over-smoothing problem?  </li>
+<li>Lesson 1: Be cautious when adding GNN layers <ul>
+<li>Unlike neural networks in other domains (CNN for image  classification), adding more GNN layers do not always help </li>
+<li>Step 1: Analyze the necessary receptive field to solve your  problem. E.g., by computing the diameter of the graph </li>
+<li>Step 2: Set number of GNN layers L to be a bit more than the  receptive field we like. Do not set L to be unnecessarily  large! </li>
+</ul>
+</li>
+<li>Question: How to enhance the expressive power of a  GNN, if the number of GNN layers is small?</li>
+</ul>
+<h3 id="Expressive-Power-for-Shallow-GNNS"><a href="#Expressive-Power-for-Shallow-GNNS" class="headerlink" title="Expressive Power for Shallow GNNS"></a>Expressive Power for Shallow GNNS</h3><ul>
+<li>How to make a shallow GNN more expressive? </li>
+<li>Solution 1: Increase the expressive power within  each GNN layer <ul>
+<li>In our previous examples, each transformation or  aggregation function only include one linear layer </li>
+<li>We can make aggregation / transformation become a  deep neural network!</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118184904401.png" alt=""></p>
+<ul>
+<li>Solution 2: Add layers that do not pass messages <ul>
+<li>A GNN does not necessarily only contain GNN layers <ul>
+<li>E.g., we can add MLP layers (applied to each node) before and after  GNN layers, as pre-process layers and post-process layers </li>
+</ul>
+</li>
+<li>Pre-processing layers: Important when  encoding node features is necessary. </li>
+<li>E.g., when nodes represent images/text </li>
+<li>Post-processing layers: Important when  reasoning / transformation over node  embeddings are needed </li>
+<li>E.g., graph classification, knowledge graphs </li>
+<li>In practice, adding these layers works great</li>
+</ul>
+</li>
+</ul>
+<p>What if my problem still requires many GNN layers? </p>
+<ul>
+<li><p>Lesson 2: Add skip connections in GNNs </p>
+<ul>
+<li><p>Observation from over-smoothing: Node embeddings in  earlier GNN layers can sometimes better differentiate nodes </p>
+</li>
+<li><p>Solution: We can increase the impact of earlier layers on the  final node embeddings, by adding shortcuts in GNN</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118185158513.png" alt=""></p>
+<p><a href="https://openaccess.thecvf.com/content_cvpr_2016/papers/He_Deep_Residual_Learning_CVPR_2016_paper.pdf" target="_blank" rel="noopener">He et al. Deep Residual Learning for Image Recognition, CVPR 2015</a></p>
+<h3 id="Idea-of-Skip-Connections"><a href="#Idea-of-Skip-Connections" class="headerlink" title="Idea of Skip Connections"></a>Idea of Skip Connections</h3><p>Why do skip connections work?</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118185307362.png" alt=""></p>
+<p><a href="https://arxiv.org/abs/1605.06431" target="_blank" rel="noopener">Veit et al. Residual Networks Behave Like Ensembles of Relatively Shallow Networks, ArXiv 2016</a></p>
+<h3 id="Example-GCN-with-Skip-Connections"><a href="#Example-GCN-with-Skip-Connections" class="headerlink" title="Example: GCN with Skip Connections"></a>Example: GCN with Skip Connections</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211118185405314.png" alt=""></p>
+<h3 id="Other-Options-of-Skip-Connections"><a href="#Other-Options-of-Skip-Connections" class="headerlink" title="Other Options of Skip Connections"></a>Other Options of Skip Connections</h3><p><a href="https://arxiv.org/abs/1806.03536" target="_blank" rel="noopener">Xu et al. Representation learning on graphs with jumping knowledge networks, ICML 2018</a></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211118185509213.png" alt=""></p>
+<h1 id="GNN-Augmentation-增强-and-Training"><a href="#GNN-Augmentation-增强-and-Training" class="headerlink" title="GNN Augmentation(增强) and Training"></a>GNN Augmentation(增强) and Training</h1><h2 id="Graph-Augmentation-for-GNNS"><a href="#Graph-Augmentation-for-GNNS" class="headerlink" title="Graph Augmentation for GNNS"></a>Graph Augmentation for GNNS</h2><script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
             if (!el.dataset.src) { return; }
@@ -2392,7 +2720,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">2838.5k</span>&nbsp;字
+                class="white-color">2840.2k</span>&nbsp;字
             
             
             
@@ -2630,7 +2958,7 @@ $(function () {
     
     <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/instantpage/instantpage.js" type="module"></script>
     
-
+<script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script>
         <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
         <script>
         $('a').each(function() {
@@ -2649,7 +2977,7 @@ $(function () {
             }
           }
         });
-        </script><script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script></body>
+        </script></body>
 
 </html>
 
