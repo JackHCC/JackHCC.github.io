@@ -459,21 +459,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-11-13
+                    2021-11-19
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    21.3k
+                    24.9k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    90 分
+                    105 分
                 </div>
                 
 
@@ -3828,6 +3828,568 @@ two <span class="token operator">=</span> <span class="token number">2'b11</span
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211113155753304.png" alt=""></p>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211113155803409.png" alt=""></p>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211113155815249.png" alt=""></p>
+<h1 id="Verilog中的高级结构"><a href="#Verilog中的高级结构" class="headerlink" title="Verilog中的高级结构"></a>Verilog中的高级结构</h1><h2 id="task定义"><a href="#task定义" class="headerlink" title="task定义"></a>task定义</h2><p><img src="/images/loading.gif" data-original="../images/basic/image-20211119100113419.png" alt=""></p>
+<h3 id="任务的主要特点"><a href="#任务的主要特点" class="headerlink" title="任务的主要特点"></a>任务的主要特点</h3><ul>
+<li>任务可以有input,output 和 inout参数。</li>
+<li>传送到任务的参量和与任务I/O说明顺序相同。尽管传送到任务的参量名称与任务内部I/O说明的名字可以相同，但在实际中这通常不好。参量名的唯一性可以使任务具有好的模块性。</li>
+<li>可以在任务内使用时序控制。</li>
+<li>在Verilog中任务定义一个新范围（scope)</li>
+<li>要禁止任务，使用关键字disable 。</li>
+</ul>
+<p>​    <strong>从代码中多处调用任务时要小心。</strong>因为任务的局部变量只有一个拷贝，并行调用任务可能导致错误的结果。在任务中使用时序控制时这种情况时常发生。</p>
+<p>​    <strong>在任务中引用module的变量时要小心。</strong>如果想使任务能多个过程块中调用，则所有在任务或函数内部用到的变量都必须列在端口列表中。</p>
+<h3 id="任务的简单例子"><a href="#任务的简单例子" class="headerlink" title="任务的简单例子"></a>任务的简单例子</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211119100929308.png" alt=""></p>
+<ul>
+<li>调用那一时刻传递值，传递新值需要等待下一次调用</li>
+<li>等task完成一个任务才相应上升沿</li>
+<li>注意参数覆盖</li>
+</ul>
+<h3 id="任务的测试"><a href="#任务的测试" class="headerlink" title="任务的测试"></a>任务的测试</h3><pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token constant">`timescale</span> <span class="token number">1</span>ns<span class="token operator">/</span><span class="token number">1</span>ns
+<span class="token keyword">module</span> <span class="token function">mult_tb</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">reg</span> clk <span class="token punctuation">,</span>
+en_mult <span class="token punctuation">;</span>
+<span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> a <span class="token punctuation">,</span>
+b <span class="token punctuation">;</span>
+<span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> out<span class="token punctuation">;</span>
+mult <span class="token function">umult</span><span class="token punctuation">(</span>
+<span class="token punctuation">.</span>clk <span class="token punctuation">(</span> clk <span class="token punctuation">)</span><span class="token punctuation">,</span>
+<span class="token punctuation">.</span>en_mult <span class="token punctuation">(</span> en_mult <span class="token punctuation">)</span><span class="token punctuation">,</span>
+<span class="token punctuation">.</span>a <span class="token punctuation">(</span> a <span class="token punctuation">)</span><span class="token punctuation">,</span>
+<span class="token punctuation">.</span>b <span class="token punctuation">(</span> b <span class="token punctuation">)</span><span class="token punctuation">,</span>
+<span class="token punctuation">.</span>out <span class="token punctuation">(</span> out <span class="token punctuation">)</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token important">always </span><span class="token number">#5</span> clk <span class="token operator">=</span> <span class="token operator">!</span>clk<span class="token punctuation">;</span>
+
+<span class="token keyword">initial</span> <span class="token keyword">begin</span>
+    clk <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    a <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>
+    b <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">;</span>
+    en_mult <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    @<span class="token punctuation">(</span><span class="token keyword">negedge</span> clk<span class="token punctuation">)</span>
+    a <span class="token operator">=</span> <span class="token number">4</span><span class="token punctuation">;</span>
+    b <span class="token operator">=</span> <span class="token number">8</span><span class="token punctuation">;</span>
+    @<span class="token punctuation">(</span><span class="token keyword">negedge</span> clk<span class="token punctuation">)</span>
+    a <span class="token operator">=</span> <span class="token number">5</span><span class="token punctuation">;</span>
+    b <span class="token operator">=</span> <span class="token number">6</span><span class="token punctuation">;</span>
+    en_mult <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    @<span class="token punctuation">(</span><span class="token keyword">negedge</span> clk<span class="token punctuation">)</span>
+    a <span class="token operator">=</span> <span class="token number">7</span><span class="token punctuation">;</span>
+    b <span class="token operator">=</span> <span class="token number">8</span><span class="token punctuation">;</span>
+    <span class="token number">#10</span> <span class="token property">$finish</span><span class="token punctuation">;</span>
+    <span class="token keyword">end</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="参数传递"><a href="#参数传递" class="headerlink" title="参数传递"></a>参数传递</h3><pre><code>module mult (
+input wire clk ,
+en_mult ,
+input wire [3: 0] a ,
+b ,
+output reg [7: 0] out
+);
+    always @( posedge clk)
+    multme (a, b, out);
+    task multme; // 任务定义
+    input [3: 0] xme,
+            tome;
+    output [7: 0] result;
+    wait (en_mult)
+    result = xme * tome;
+    endtask
+endmodule</code></pre><p><img src="/images/loading.gif" data-original="../images/basic/image-20211119201540653.png" alt=""></p>
+<h3 id="静态任务：参数覆盖"><a href="#静态任务：参数覆盖" class="headerlink" title="静态任务：参数覆盖"></a>静态任务：参数覆盖</h3><pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token constant">`timescale</span> <span class="token number">1</span>ns<span class="token operator">/</span><span class="token number">1</span>ns
+<span class="token keyword">module</span> mult <span class="token punctuation">(</span>
+<span class="token keyword">input</span> <span class="token keyword">wire</span> clk <span class="token punctuation">,</span>
+en_mult <span class="token punctuation">,</span>
+<span class="token keyword">input</span> <span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> a <span class="token punctuation">,</span> b
+<span class="token keyword">output</span> <span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> out1 <span class="token punctuation">,</span>
+out2
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token important">always @</span><span class="token punctuation">(</span> <span class="token keyword">posedge</span> clk<span class="token punctuation">)</span>
+    multme <span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> out1<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// always @( negedge clk)</span>
+    <span class="token comment" spellcheck="true">// multme (a, b, out2);</span>
+<span class="token keyword">task</span> multme<span class="token punctuation">;</span>
+    <span class="token keyword">input</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> xme<span class="token punctuation">,</span>
+                tome<span class="token punctuation">;</span>
+    <span class="token keyword">output</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> result<span class="token punctuation">;</span>
+    <span class="token keyword">begin</span>
+    <span class="token function">wait</span><span class="token punctuation">(</span>en_mult<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token number">#7</span> result <span class="token operator">=</span> xme <span class="token operator">*</span> tome<span class="token punctuation">;</span>
+    <span class="token keyword">end</span>
+<span class="token keyword">endtask</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211119201643625.png" alt=""></p>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token constant">`timescale</span> <span class="token number">1</span>ns<span class="token operator">/</span><span class="token number">1</span>ns
+<span class="token keyword">module</span> mult <span class="token punctuation">(</span>
+<span class="token keyword">input</span> <span class="token keyword">wire</span> clk <span class="token punctuation">,</span>
+en_mult <span class="token punctuation">,</span>
+<span class="token keyword">input</span> <span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> a <span class="token punctuation">,</span> b
+<span class="token keyword">output</span> <span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> out1 <span class="token punctuation">,</span>
+out2
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token important">always @</span><span class="token punctuation">(</span> <span class="token keyword">posedge</span> clk<span class="token punctuation">)</span>
+multme <span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> out1<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token important">always @</span><span class="token punctuation">(</span> <span class="token keyword">negedge</span> clk<span class="token punctuation">)</span>
+multme <span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> out2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">task</span> multme<span class="token punctuation">;</span>
+    <span class="token keyword">input</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> xme<span class="token punctuation">,</span>
+                tome<span class="token punctuation">;</span>
+    <span class="token keyword">output</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> result<span class="token punctuation">;</span>
+    <span class="token keyword">begin</span>
+    <span class="token function">wait</span><span class="token punctuation">(</span>en_mult<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token number">#7</span> result <span class="token operator">=</span> xme <span class="token operator">*</span> tome<span class="token punctuation">;</span>
+    <span class="token keyword">end</span>
+<span class="token keyword">endtask</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211119201735170.png" alt=""></p>
+<h3 id="动态任务：参数传递"><a href="#动态任务：参数传递" class="headerlink" title="动态任务：参数传递"></a>动态任务：参数传递</h3><pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token constant">`timescale</span> <span class="token number">1</span>ns<span class="token operator">/</span><span class="token number">1</span>ns
+<span class="token keyword">module</span> mult <span class="token punctuation">(</span>
+<span class="token keyword">input</span> <span class="token keyword">wire</span> clk <span class="token punctuation">,</span>
+en_mult <span class="token punctuation">,</span>
+<span class="token keyword">input</span> <span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> a <span class="token punctuation">,</span> b
+<span class="token keyword">output</span> <span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> out1 <span class="token punctuation">,</span>
+out2
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token important">always @</span><span class="token punctuation">(</span> <span class="token keyword">posedge</span> clk<span class="token punctuation">)</span>
+    multme <span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> out1<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token important">always @</span><span class="token punctuation">(</span> <span class="token keyword">negedge</span> clk<span class="token punctuation">)</span>
+    multme <span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> out2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">task</span> <span class="token keyword">automatic</span> multme<span class="token punctuation">;</span>
+    <span class="token keyword">input</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> xme<span class="token punctuation">,</span>
+                tome<span class="token punctuation">;</span>
+    <span class="token keyword">output</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> result<span class="token punctuation">;</span>
+    <span class="token keyword">begin</span>
+    <span class="token function">wait</span><span class="token punctuation">(</span>en_mult<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token number">#7</span> result <span class="token operator">=</span> xme <span class="token operator">*</span> tome<span class="token punctuation">;</span>
+    <span class="token keyword">end</span>
+<span class="token keyword">endtask</span>
+<span class="token keyword">endmodule</span>
+<span class="token keyword">automatic</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="函数定义"><a href="#函数定义" class="headerlink" title="函数定义"></a>函数定义</h2><p><img src="/images/loading.gif" data-original="../images/basic/image-20211119102353810.png" alt=""></p>
+<h3 id="函数的特点"><a href="#函数的特点" class="headerlink" title="函数的特点"></a>函数的特点</h3><ul>
+<li>函数定义中<strong>不能包含任何时序控制语句</strong>。</li>
+<li>函数至少有一个输入，<strong>不能包含任何输出或双向端口</strong>。</li>
+<li>函数<strong>只返回一个数据</strong>，其缺省为register类型。</li>
+<li>传送到函数的参数顺序和函数输入参数的说明顺序相同。</li>
+<li>函数在模块（module)内部定义且只能在模块内部调用。</li>
+<li><strong>函数不能调用任务，但任务可以调用函数。</strong></li>
+<li>函数在Verilog中定义了一个新的范围（scope)。</li>
+<li>虽然函数只返回单个值，但返回的值可以使用{信号}赋值。这在需要有多个输出时非常有效。<ul>
+<li>​      {o1, o2, o3, o4} = f_ or_ and (a, b, c, d, e);</li>
+</ul>
+</li>
+</ul>
+<h3 id="函数举例"><a href="#函数举例" class="headerlink" title="函数举例"></a>函数举例</h3><pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> orand <span class="token punctuation">(</span>
+        <span class="token keyword">input</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">,</span> d<span class="token punctuation">,</span> e<span class="token punctuation">,</span>
+        <span class="token keyword">output</span> <span class="token punctuation">[</span><span class="token number">7</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> out
+        <span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> out<span class="token punctuation">;</span>
+        <span class="token important">always @</span><span class="token punctuation">(</span> a <span class="token keyword">or</span> b <span class="token keyword">or</span> c <span class="token keyword">or</span> d <span class="token keyword">or</span> e<span class="token punctuation">)</span>
+              out <span class="token operator">=</span> f_or_and <span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">,</span> d<span class="token punctuation">,</span> e<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 函数调用</span>
+        <span class="token keyword">function</span> <span class="token punctuation">[</span><span class="token number">7</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> f_or_and<span class="token punctuation">;</span>
+                <span class="token keyword">input</span> <span class="token punctuation">[</span><span class="token number">7</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">,</span> d<span class="token punctuation">,</span> e<span class="token punctuation">;</span>
+                <span class="token keyword">if</span>  <span class="token punctuation">(</span>e <span class="token operator">=</span> <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">)</span>
+                        f_or_and <span class="token operator">=</span> <span class="token punctuation">(</span>a <span class="token operator">|</span> b<span class="token punctuation">)</span> <span class="token operator">&amp;</span> <span class="token punctuation">(</span>c <span class="token operator">|</span> d<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    <span class="token keyword">else</span>
+                        f_or_and <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        <span class="token keyword">endfunction</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li>函数中不能有时序控制，但调用它的过程语句可以有时序控制。</li>
+<li>函数名f_or_and在函数中作为register使用</li>
+</ul>
+<h3 id="返回向量的函数"><a href="#返回向量的函数" class="headerlink" title="返回向量的函数"></a>返回向量的函数</h3><ul>
+<li>要返回一个向量值（多于一位），在函数定义时在函数名前说明范围。函数中有多条语句时用begin和end。</li>
+<li>不管在函数内对函数名进行多少次赋值，值只返回一次。下例中，函数还在内部声明了一个整数。 </li>
+</ul>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> <span class="token function">foo</span><span class="token punctuation">(</span>
+        <span class="token keyword">input</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> loo<span class="token punctuation">,</span>
+        <span class="token keyword">output</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> goo<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// 可以持续赋值中调用函数</span>
+        <span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> goo <span class="token operator">=</span> zero_count <span class="token punctuation">(</span> loo <span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">function</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> zero_count<span class="token punctuation">;</span>
+             <span class="token keyword">input</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> in_ bus<span class="token punctuation">;</span>
+             <span class="token keyword">integer</span>  I<span class="token punctuation">;</span>
+             <span class="token keyword">begin</span>
+                 zero_count <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+                 <span class="token keyword">for</span> <span class="token punctuation">(</span>I <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> I <span class="token operator">&lt;</span> <span class="token number">8</span><span class="token punctuation">;</span> I <span class="token operator">=</span> I <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span>
+                     <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span> in_bus<span class="token punctuation">[</span> I <span class="token punctuation">]</span><span class="token punctuation">)</span>
+                         zero_count <span class="token operator">=</span> zero_count <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">;</span>
+            <span class="token keyword">end</span>
+        <span class="token keyword">endfunction</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="函数返回类型"><a href="#函数返回类型" class="headerlink" title="函数返回类型"></a>函数返回类型</h3><ul>
+<li>函数返回值可以声明为其它register类型：integer, real, 或time。</li>
+<li>在任何表达式中都可调用函数</li>
+</ul>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> checksub <span class="token punctuation">(</span>
+        <span class="token keyword">output</span>  <span class="token keyword">reg</span>  neg<span class="token punctuation">,</span>
+        <span class="token keyword">input</span>   <span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">7</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span>  a<span class="token punctuation">,</span>  b
+        <span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">function</span>  <span class="token keyword">integer</span>  subtr<span class="token punctuation">;</span>
+                <span class="token keyword">input</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> in_a<span class="token punctuation">,</span> in_b<span class="token punctuation">;</span>
+                subtr <span class="token operator">=</span> in_a <span class="token operator">-</span> in_b<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 结果可能为负</span>
+        <span class="token keyword">endfunction</span>
+        <span class="token important">always @</span> <span class="token punctuation">(</span>a<span class="token punctuation">,</span>  b<span class="token punctuation">)</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">subtr</span><span class="token punctuation">(</span> a<span class="token punctuation">,</span> b<span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token number">0</span><span class="token punctuation">)</span>
+                         neg <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+                     <span class="token keyword">else</span>
+                         neg <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li>递归函数必须声明为动态的，因为第二次调用会覆盖第一次的值</li>
+<li>逻辑综合工具不支持递归调用</li>
+</ul>
+<h3 id="递归函数-阶乘函数"><a href="#递归函数-阶乘函数" class="headerlink" title="递归函数-阶乘函数"></a>递归函数-阶乘函数</h3><pre><code>`timescale 1ns/1ns 递归函数-阶乘函数
+module fact();
+reg [7 : 0] in_a;
+integer out1,
+out2;
+initial begin
+    in_a = 7;
+    out1 = factorial_R( in_a );
+    out2 = factorial ( in_a );
+    #10 in_a = 14;
+    out1 = factorial_R( in_a );
+    out2 = factorial ( in_a );
+    #10 $finish;
+end
+initial $monitor("%d %d %d", in_a, 
+out1, out2);
+
+function automatic integer factorial_R;
+input [7 : 0] oper;
+if( oper &gt;= 2)
+    factorial_R = oper * factorial_R( oper - 1 );
+else
+    factorial_R = 1;
+endfunction
+
+function integer factorial;
+input [7 : 0] oper;
+integer i;
+begin
+factorial = 1;
+for(i = 2; i &lt;= oper; i = i + 1)
+    factorial = factorial * i;
+end
+endfunction
+endmodule</code></pre><h3 id="递归函数-recursive-Function"><a href="#递归函数-recursive-Function" class="headerlink" title="递归函数(recursive Function)"></a>递归函数(recursive Function)</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211119202100159.png" alt=""></p>
+<h3 id="参数化函数"><a href="#参数化函数" class="headerlink" title="参数化函数"></a>参数化函数</h3><ul>
+<li>函数中可以对返回值的个别位进行赋值。</li>
+<li>函数值的位数、函数端口甚至函数功能都可以参数化。</li>
+</ul>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token punctuation">.</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span>
+<span class="token keyword">parameter</span> MAX_BITS <span class="token operator">=</span> <span class="token number">8</span><span class="token punctuation">;</span>
+<span class="token keyword">reg</span> <span class="token punctuation">[</span>MAX_BITS<span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">]</span>  D<span class="token punctuation">;</span>
+<span class="token keyword">function</span>  <span class="token punctuation">[</span>MAX_BITS<span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">]</span>  reverse_bits<span class="token punctuation">;</span>
+        <span class="token keyword">input</span> <span class="token punctuation">[</span>MAX_BITS<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> data<span class="token punctuation">;</span>
+        <span class="token keyword">integer</span> K<span class="token punctuation">;</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span>K <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> K <span class="token operator">&lt;</span> MAX_BITS<span class="token punctuation">;</span> K <span class="token operator">=</span> K <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span>
+            reverse_bits <span class="token punctuation">[</span>MAX_BITS <span class="token operator">-</span> K<span class="token punctuation">]</span> <span class="token operator">=</span> data <span class="token punctuation">[</span>K<span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">endfunction</span>
+<span class="token important">always @</span> <span class="token punctuation">(</span><span class="token keyword">posedge</span> clk<span class="token punctuation">)</span>
+        D <span class="token operator">=</span> reverse_bits <span class="token punctuation">(</span>D<span class="token punctuation">)</span> <span class="token punctuation">;</span>
+<span class="token punctuation">.</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="多module调用函数"><a href="#多module调用函数" class="headerlink" title="多module调用函数"></a>多module调用函数</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211119104122229.png" alt=""></p>
+<ul>
+<li>一个模块定义的function不能直接调用</li>
+<li>一般把函数单独一个文件存储，调用使用’include</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211119104530717.png" alt=""></p>
+<h2 id="Verilog的任务及函数"><a href="#Verilog的任务及函数" class="headerlink" title="Verilog的任务及函数"></a>Verilog的任务及函数</h2><p><img src="/images/loading.gif" data-original="../images/basic/image-20211119104553440.png" alt=""></p>
+<ul>
+<li>任务和函数必须在module内部定义和调用</li>
+<li>在任务和函数中不能声明wire</li>
+<li>所有输入/输出都是局部寄存器</li>
+<li>任务/函数执行完成后才返回结果。</li>
+<li>例如，若任务/函数中有forever语句，则永远不会返回结果</li>
+</ul>
+<h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><ul>
+<li>函数没有时序控制，因此综合结果为组合逻辑。函数可以在过程块内或持续赋值语句中调用。</li>
+<li>下例中的or/and块由持续赋值语句调用函数实现 </li>
+</ul>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> orand <span class="token punctuation">(</span>
+     <span class="token keyword">input</span> a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">,</span> d<span class="token punctuation">,</span> e<span class="token punctuation">,</span>
+     <span class="token keyword">output</span> <span class="token keyword">wire</span> out
+     <span class="token punctuation">)</span><span class="token punctuation">;</span> 
+     <span class="token keyword">assign</span> out <span class="token operator">=</span> forand <span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">,</span> d<span class="token punctuation">,</span> e<span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token keyword">function</span> forand<span class="token punctuation">;</span>
+          <span class="token keyword">input</span> a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">,</span> d<span class="token punctuation">,</span> e<span class="token punctuation">;</span>
+          <span class="token keyword">if</span> <span class="token punctuation">(</span>e <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">)</span>
+               forand <span class="token operator">=</span> <span class="token punctuation">(</span>a<span class="token operator">|</span> b<span class="token punctuation">)</span> <span class="token operator">&amp;</span> <span class="token punctuation">(</span>c<span class="token operator">|</span> d<span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token keyword">else</span>
+               forand <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+     <span class="token keyword">endfunction</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211119104846509.png" alt=""></p>
+<h3 id="函数—条件不完全？"><a href="#函数—条件不完全？" class="headerlink" title="函数—条件不完全？"></a>函数—条件不完全？</h3><pre class="line-numbers language-python"><code class="language-python">module orand <span class="token punctuation">(</span>
+     input a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">,</span> d<span class="token punctuation">,</span> e<span class="token punctuation">,</span>
+     output wire out
+     <span class="token punctuation">)</span><span class="token punctuation">;</span> 
+     assign out <span class="token operator">=</span> forand <span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">,</span> d<span class="token punctuation">,</span> e<span class="token punctuation">)</span><span class="token punctuation">;</span>
+     function forand<span class="token punctuation">;</span>
+          input a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">,</span> d<span class="token punctuation">,</span> e<span class="token punctuation">;</span>
+          <span class="token keyword">if</span> <span class="token punctuation">(</span>e <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">)</span>
+               forand <span class="token operator">=</span> <span class="token punctuation">(</span>a<span class="token operator">|</span> b<span class="token punctuation">)</span> <span class="token operator">&amp;</span> <span class="token punctuation">(</span>c<span class="token operator">|</span> d<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token operator">//</span>          <span class="token keyword">else</span>
+<span class="token operator">//</span>               forand <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+     endfunction
+endmodule<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211119105605556.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211119202200725.png" alt=""></p>
+<h2 id="任务"><a href="#任务" class="headerlink" title="任务"></a>任务</h2><pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> orandtask <span class="token punctuation">(</span>out<span class="token punctuation">,</span> a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">,</span> d<span class="token punctuation">,</span> e<span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token keyword">input</span> a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">,</span> d<span class="token punctuation">,</span> e<span class="token punctuation">;</span>
+     <span class="token keyword">output</span> out<span class="token punctuation">;</span> <span class="token keyword">reg</span> out<span class="token punctuation">;</span>
+     <span class="token important">always @</span><span class="token punctuation">(</span> a <span class="token keyword">or</span> b <span class="token keyword">or</span> c <span class="token keyword">or</span> d <span class="token keyword">or</span> e<span class="token punctuation">)</span>
+          orand <span class="token punctuation">(</span>out<span class="token punctuation">,</span> a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">,</span> d<span class="token punctuation">,</span> e<span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token keyword">task</span> orand<span class="token punctuation">;</span>
+          <span class="token keyword">input</span> a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">,</span> d<span class="token punctuation">,</span> e<span class="token punctuation">;</span>
+          <span class="token keyword">output</span> out<span class="token punctuation">;</span>
+          <span class="token keyword">if</span> <span class="token punctuation">(</span>e <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">)</span>
+               out <span class="token operator">=</span> <span class="token punctuation">(</span>a<span class="token operator">|</span> b<span class="token punctuation">)</span> <span class="token operator">&amp;</span> <span class="token punctuation">(</span>c<span class="token operator">|</span> d<span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token keyword">else</span>
+               out <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+     <span class="token keyword">endtask</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>任务一般只在测试程序中使用，因为：</p>
+<ul>
+<li>没有时序控制的任务如同函数</li>
+<li>带有时序控制的任务不可综合</li>
+</ul>
+<p>下面是用任务描述的or/and块：</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211119110216418.png" alt=""></p>
+<p>条件不完全会产生什么？</p>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> orandtask <span class="token punctuation">(</span>
+<span class="token keyword">input</span> a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">,</span> d<span class="token punctuation">,</span> e<span class="token punctuation">,</span>
+<span class="token keyword">output</span> <span class="token keyword">reg</span> out 
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token important">always @</span><span class="token punctuation">(</span> <span class="token operator">*</span> <span class="token punctuation">)</span>
+orand <span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">,</span> d<span class="token punctuation">,</span> e<span class="token punctuation">,</span> out<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">task</span> orand<span class="token punctuation">;</span>
+    <span class="token keyword">input</span> a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">,</span> d<span class="token punctuation">,</span> e<span class="token punctuation">;</span>
+    <span class="token keyword">output</span> out<span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>e <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">)</span>
+        out <span class="token operator">=</span> <span class="token punctuation">(</span>a<span class="token operator">|</span> b<span class="token punctuation">)</span> <span class="token operator">&amp;</span> <span class="token punctuation">(</span>c<span class="token operator">|</span> d<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// else</span>
+<span class="token comment" spellcheck="true">// out = 0;</span>
+<span class="token keyword">endtask</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211119202249484.png" alt=""></p>
+<h3 id="任务：电路1"><a href="#任务：电路1" class="headerlink" title="任务：电路1"></a>任务：电路1</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211119202318863.png" alt=""></p>
+<h3 id="任务：电路2"><a href="#任务：电路2" class="headerlink" title="任务：电路2"></a>任务：电路2</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211119202337879.png" alt=""></p>
+<h2 id="命名块-named-block"><a href="#命名块-named-block" class="headerlink" title="命名块(named block)"></a>命名块(named block)</h2><ul>
+<li><p>在关键词begin或fork后加上 ：&lt;块名称&gt; 对块进行命名</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211119110440555.png" alt=""></p>
+</li>
+<li><p>在命名块中可以声明局部变量</p>
+</li>
+<li><p>可以使用关键词<strong>disable</strong>禁止一个命名块</p>
+</li>
+<li><p>命名块定义了一个新的范围</p>
+</li>
+<li><p>命名块会降低仿真速度</p>
+</li>
+</ul>
+<h3 id="禁止命名块和任务"><a href="#禁止命名块和任务" class="headerlink" title="禁止命名块和任务"></a>禁止命名块和任务</h3><pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> do_arith <span class="token punctuation">(</span>out<span class="token punctuation">,</span> a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">,</span> d<span class="token punctuation">,</span> e<span class="token punctuation">,</span> clk<span class="token punctuation">,</span> en_mult<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">input</span> clk<span class="token punctuation">,</span> en_mult<span class="token punctuation">;</span>
+        <span class="token keyword">input</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">,</span> d<span class="token punctuation">,</span> e<span class="token punctuation">;</span>
+        <span class="token keyword">output</span> <span class="token punctuation">[</span><span class="token number">15</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> out<span class="token punctuation">;</span>
+        <span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">15</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> out<span class="token punctuation">;</span>
+        <span class="token important">always @</span><span class="token punctuation">(</span> <span class="token keyword">posedge</span> clk<span class="token punctuation">)</span>
+                <span class="token keyword">begin</span> <span class="token punctuation">:</span> arith_block <span class="token comment" spellcheck="true">// *** 命名块 ***</span>
+                        <span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> tmp1<span class="token punctuation">,</span> tmp2<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// *** 局部变量 ***</span>
+                        <span class="token operator">{</span>tmp1<span class="token punctuation">,</span> tmp2<span class="token operator">}</span> <span class="token operator">=</span> f_or_and <span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">,</span> d<span class="token punctuation">,</span> e<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 函数调用</span>
+                        <span class="token keyword">if</span> <span class="token punctuation">(</span>en_mult<span class="token punctuation">)</span>  multme <span class="token punctuation">(</span>tmp1<span class="token punctuation">,</span> tmp2<span class="token punctuation">,</span> out<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 任务调用</span>
+                <span class="token keyword">end</span>
+        <span class="token important">always @</span><span class="token punctuation">(</span> <span class="token keyword">negedge</span> en_mult<span class="token punctuation">)</span> <span class="token keyword">begin</span> <span class="token comment" spellcheck="true">// 中止运算</span>
+                <span class="token keyword">disable</span>  multme <span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// *** 禁止任务 ***</span>
+                <span class="token keyword">disable</span>  arith_block<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// *** 禁止命名块 ***</span>
+        <span class="token keyword">end</span>
+<span class="token comment" spellcheck="true">// 下面[定义任务和函数</span>
+        ……
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li>disable语句终结一个命名块或任务的所有活动。也就是说，在一个命名块或任务中的所有语句执行完之前就返回。</li>
+</ul>
+<p>​    语法：</p>
+<p>​        disable &lt;块名称&gt;</p>
+<p>​          或</p>
+<p>​        disable &lt;任务名称&gt;</p>
+<ul>
+<li>当命名块或任务被禁止时，所有因他们调度的事件将从事件队列中清除</li>
+<li><strong>disable是典型的不可综合语句。</strong></li>
+<li>在前面的例子中，只禁止命名块也可以达到同样的目的：所有由命名块、任务及其中的函数调度的事件都被取消。</li>
+</ul>
+<h1 id="对验证的支持"><a href="#对验证的支持" class="headerlink" title="对验证的支持"></a>对验证的支持</h1><h2 id="验证系统中的任务-task-及函数-function"><a href="#验证系统中的任务-task-及函数-function" class="headerlink" title="验证系统中的任务(task)及函数(function)"></a>验证系统中的任务(task)及函数(function)</h2><ul>
+<li>Verilog读取当前仿真时间的系统函数</li>
+</ul>
+<p>​    $time  ：返回一个64位整数时间值。</p>
+<p>​    $stime  ：返回一个32位整数时间值。</p>
+<p>​    $realtime ：返回一个实数时间值。</p>
+<p>​                           返回值使用调用模块中`timescale定义的时间单位</p>
+<ul>
+<li>Verilog支持文本输出的系统任务：</li>
+</ul>
+<p>​    $display</p>
+<p>​    $strobe</p>
+<p>​    $write</p>
+<p>​    $monitor</p>
+<h3 id="输出格式化时间信息"><a href="#输出格式化时间信息" class="headerlink" title="输出格式化时间信息"></a>输出格式化时间信息</h3><ul>
+<li>若使用多个`timescale，以最小的时间精度显示时间值。</li>
+<li>可用系统任务$timeformat结合格式符%t全局控制时间显示方式。</li>
+<li>$timeformat系统任务的语法为：<ul>
+<li>$timeformat(&lt;unit&gt;,&lt;precision&gt;,&lt;suffix&gt;,&lt;min_width&gt;)；</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211119111013338.png" alt=""></p>
+<p>对#延迟，Verilog将延迟值舍入最近(四舍五入)时间精度值。</p>
+<p>例如，上面的例子修改为：</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211119111155286.png" alt=""></p>
+<h3 id="显示信号值-—-display"><a href="#显示信号值-—-display" class="headerlink" title="显示信号值 — $display"></a>显示信号值 — $display</h3><ul>
+<li>$display输出参数列表中信号的当前值。</li>
+</ul>
+<p>​    语法：$display([“ format_specifiers”,] <argument_ list="">)</argument_></p>
+<ul>
+<li>$display输出时自动换行。</li>
+</ul>
+<p>​     $display ($time, “%b \t %h \t %d \t %o”, sig1, sig2, sig3, sig4);</p>
+<p>​     $display ($time, “%b \t”, sig1, “%h \t”, sig2, “% d \t”, sig3, “%o”, sig4);</p>
+<ul>
+<li>$display支持二进制、八进制、十进制和十六进制。缺省基数为十进制。</li>
+</ul>
+<p>​      $display (sig1, sig2, sig3, sig4);</p>
+<p>​      $displayb (sig1, sig2, sig3, sig4);</p>
+<p>​      $displayo (sig1, sig2, sig3, sig4);</p>
+<p>​      $displayh (sig1, sig2, sig3, sig4);</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211119111254324.png" alt=""></p>
+<h3 id="显示信号值—-write和-strobe"><a href="#显示信号值—-write和-strobe" class="headerlink" title="显示信号值—$write和$strobe"></a>显示信号值—$write和$strobe</h3><ul>
+<li>$write与$display相同，不同的是<strong>不会自动换行</strong>。</li>
+</ul>
+<p>​     $write($time, “%b \t %h \t %d \t %o \t”, sig1, sig2, sig3, sig4);</p>
+<ul>
+<li>$strobe与$display相同，不同的是在仿真时间前进之前的信号值。而<strong>$display和$write立即显示信号值</strong>。也就是说<strong>$strobe显示稳定状态信号值</strong>，而$display和$write可以显示信号的中间状态值。</li>
+</ul>
+<p>​     $strobe($time, “%b \t %h \t %d \t %o \t”, sig1, sig2, sig3, sig4);</p>
+<ul>
+<li><p>$write和$strobe都支持多种数基，缺省为十进制。</p>
+<ul>
+<li><p>$writeb $strobeb</p>
+</li>
+<li><p>$writeo $strobeo</p>
+</li>
+<li><p>$writeh $strobeh</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211119112357280.png" alt=""></p>
+<h3 id="监视信号值—-monitor"><a href="#监视信号值—-monitor" class="headerlink" title="监视信号值—$monitor"></a>监视信号值—$monitor</h3><ul>
+<li><p><strong>$monitor持续监视参数列表中的变量。</strong></p>
+</li>
+<li><p>在一个时间片中，参数表中任何信号发生变化，$monitor将在仿真时间前进前显示参数表的信号值。</p>
+</li>
+<li><p><strong>后面的$monitor将覆盖前面的$monitor。</strong></p>
+</li>
+<li><p>可以用系统任务$monitoron和$monitoroff控制持续监视。</p>
+</li>
+<li><p><strong>$monitor支持多种基数。缺省为十进制。</strong></p>
+<pre><code> \$monitor (\$time, “%b \t %h \t %d \t %o”, sig1, sig2, sig3, sig4);</code></pre></li>
+<li><p>$monitor是唯一的不断输出信号值的系统任务。其它系统任务在返回值之后就结束。</p>
+</li>
+<li><p>$monitor和$strobe一样，显示参数列表中信号的稳定状态值，也就是在仿真时间前进之前显示信号。<strong>在一个时间步中，参数列表中信号值的任何变化将触发$monitor 。但$time,$stime,$realtime不能触发。</strong></p>
+</li>
+<li><p>任何后续的$monitor覆盖前面调用的$monitor。只有新的$monitor的参数列表中的信号被监视，而前面的$monitor的参数则不被监视。</p>
+</li>
+<li><p>可以用$monitoron和$monitoroff系统任务控制持续监视，使用户可以在仿真时只监视特定时间段的信号。</p>
+</li>
+<li><p>$monitor参数列表的形式与$display相同。</p>
+</li>
+<li><p>$monitor支持多种基数。缺省为十进制。</p>
+<ul>
+<li><p>$monitorb</p>
+</li>
+<li><p>$monitoro</p>
+</li>
+<li><p>$monitorh</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="文件输出"><a href="#文件输出" class="headerlink" title="文件输出"></a>文件输出</h2><pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token punctuation">.</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span>
+<span class="token keyword">integer</span> MCD1<span class="token punctuation">;</span>
+    MCD1 <span class="token operator">=</span> <span class="token property">$fopen</span><span class="token punctuation">(</span><span class="token string">"&lt;name_of_file>"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token property">$fdisplay</span><span class="token punctuation">(</span> MCD1<span class="token punctuation">,</span> P1<span class="token punctuation">,</span> P2<span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">,</span> Pn<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token property">$fwrite</span><span class="token punctuation">(</span> MCD1<span class="token punctuation">,</span> P1<span class="token punctuation">,</span> P2<span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">,</span> Pn<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token property">$fstrobe</span><span class="token punctuation">(</span> MCD1<span class="token punctuation">,</span> P1<span class="token punctuation">,</span> P2<span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">,</span> Pn<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token property">$fmonitor</span><span class="token punctuation">(</span> MCD1<span class="token punctuation">,</span> P1<span class="token punctuation">,</span> P2<span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">,</span> Pn<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token property">$fclose</span><span class="token punctuation">(</span> MCD1<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">.</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li><p>$fopen打开一个文件并返回一个多通道描述符（MCD）。</p>
+<ul>
+<li><p>MCD是与文件唯一对应的32位无符号整数。</p>
+</li>
+<li><p>如果文件不能打开并进行写操作，MCD等于0。</p>
+</li>
+<li><p>如果文件成功打开，MCD中的一位被置位。</p>
+</li>
+</ul>
+</li>
+<li><p>以$f开始的显示系统任务将输出写入与MCD相对应的文件中。 </p>
+</li>
+<li><p>$fopen打开参数中指定的文件并返回一个32位无符号 整数MCD，MCD是与文件一一对应的多通道描述符。如果文件不能打开并进行写操作，它返回0。</p>
+</li>
+<li><p>$fclose关闭MCD指定的通道。</p>
+</li>
+<li><p>输出信息到log文件和标准输出的四个格式化显示任务($display, $write, $monitor, $strobe）都有相对应的任务用于向指定文件输出。</p>
+</li>
+<li><p>这些对应的任务（$fdisplay,$fwrite,$fmonitor,$fstrobe）的参数形式与对应的任务相同，只有一个例外：第一个参数必须是一个指定向何哪个文件输出的MCD。MCD可以是一个表达式，但其值必须是一个32位的无符号整数。这个值决定了该任务向哪个打开的文件写入。</p>
+</li>
+<li><p>MCD可以看作由32个标志构成的组，每个标志代表一个单一的输出通道。</p>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211119122403079.png" alt=""></p>
+<h2 id="文件输入"><a href="#文件输入" class="headerlink" title="文件输入"></a>文件输入</h2><ul>
+<li><p>Verilog中有两个系统任务可以将数据文件读入寄存器组。一个读取二进制数据，另一个读取十六进制数据：</p>
+</li>
+<li><p>$readmemb</p>
+<p> $readmemb (“file_name”, <memory_name>);</memory_name></p>
+<p> $readmemb (“file_name”, <memory_name>, <start_addr>);</start_addr></memory_name></p>
+<p> $readmemb (“file_name”, <memory_name>, <start_addr>, <finish_addr>);</finish_addr></start_addr></memory_name></p>
+</li>
+<li><p>$readmemh</p>
+<p> $readmemh (“ file_name”, <memory_name>);</memory_name></p>
+<p> $readmemh (“ file_name”, <memory_name>, <start_addr>);</start_addr></memory_name></p>
+<p> $readmemh (“ file_name”, <memory_name>, <start_addr>, <finish_addr>);</finish_addr></start_addr></memory_name></p>
+</li>
+</ul>
+<p>系统任务$readmemb和$readmemh从一个文本文件读取数据并写入存储器。</p>
+<ul>
+<li>如果数据为二进制，使用$readmemb；如果数据为十六进制，使用$readmemh。</li>
+<li>filename指定要读入的文件。</li>
+<li>mem_name指定存储器信号名称。</li>
+<li>start和finish给出存储器加载的地址。Start为开始地址，finish为结束地址。如果不指定开始和结束地址，$readmem按从低端开始读入数据，与说明顺序无关。</li>
+</ul>
+<pre><code>$readmemb和$readmemh的文件格式 ：
+            $readmemb("mem_file. txt", mema);</code></pre><ul>
+<li>可以指定二进制（b）或十六进制（h）数</li>
+<li>用下划线“_”提高可读性。</li>
+<li>可以包含单行或多行注释。</li>
+<li>可以用空格和换行区分各个数据。</li>
+<li><strong>可以给后面的值设定一个特定的地址</strong>，格式为：<ul>
+<li>@(hex_address)<ul>
+<li>十六进制地址的大小写不敏感。</li>
+<li><strong>在@和数字之间不允许有空格。</strong> </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211119202454594.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211119202508925.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211119202521363.png" alt=""></p>
+<h2 id="作业：数据转换器"><a href="#作业：数据转换器" class="headerlink" title="作业：数据转换器"></a>作业：数据转换器</h2><p><img src="/images/loading.gif" data-original="../images/basic/image-20211119202551317.png" alt=""></p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -4341,7 +4903,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">2840.2k</span>&nbsp;字
+                class="white-color">2981.7k</span>&nbsp;字
             
             
             
@@ -4579,7 +5141,7 @@ $(function () {
     
     <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/instantpage/instantpage.js" type="module"></script>
     
-<script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script>
+
         <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
         <script>
         $('a').each(function() {
@@ -4598,7 +5160,7 @@ $(function () {
             }
           }
         });
-        </script></body>
+        </script><script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script></body>
 
 </html>
 
