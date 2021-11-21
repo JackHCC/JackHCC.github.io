@@ -459,21 +459,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-11-18
+                    2021-11-21
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    18.7k
+                    19.3k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    77 分
+                    80 分
                 </div>
                 
 
@@ -2375,6 +2375,48 @@ response <span class="token operator">=</span> requests<span class="token punctu
 <p>第七章 慕元 /book/12242/7717207387f31.html</p>
 <p>……..</p>
 </blockquote>
+<h1 id="Tiler-将图片转成像素风"><a href="#Tiler-将图片转成像素风" class="headerlink" title="Tiler - 将图片转成像素风"></a>Tiler - 将图片转成像素风</h1><p><a href="https://github.com/nuno-faria/tiler" target="_blank" rel="noopener">Tiler</a></p>
+<h2 id="安装-2"><a href="#安装-2" class="headerlink" title="安装"></a>安装</h2><p>将项目克隆下载，再安装<code>requirements.txt</code>中的依赖。</p>
+<pre><code>git clone https://github.com/nuno-faria/tiler.git
+
+pip install -r requirements.txt</code></pre><h2 id="转换像素图"><a href="#转换像素图" class="headerlink" title="转换像素图"></a>转换像素图</h2><p>现在演示如何利用<code>Tiler</code>，将普通表情包转换成像素风。</p>
+<p>经过前文的操作，可以在本地看到已经下载好了文件和配置。</p>
+<p>其中，文件夹<code>images</code>里放的是项目示例图片，文件夹<code>tiles</code>里是图块目录，另外<code>conf.py</code>里是配置文件。</p>
+<pre><code>C:\Users\Administrator\tiler</code></pre><p><img src="/images/loading.gif" data-original="../images/basic/image-20211121114759837.png" alt=""></p>
+<p>添加了一个待转换图片——<code>333.png</code>，其实放在其他目录下也不影响，只需要下一步指定好即可。</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211121114824622.png" alt=""></p>
+<p>除了待转换图片，还需要选择像素图块，自带的像素图块中只有line比较合适，我们就先拿它来演示。</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211121114908942.png" alt=""></p>
+<p>其中<code>gen_line_h</code>放置的都是横向的线段图。</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211121114927450.png" alt=""></p>
+<p>生成像素图，在 tiler 目录中执行以下命令：</p>
+<pre><code>python tiler.py ./images/333.png ./tiles/lines/gen_line_h/</code></pre><p>执行过程中，有进度条提醒。待转换图片较小，几秒钟就完成了。</p>
+<p>此时在 tiler 目录中，已经生成了一个新图片——<code>out.png</code>。</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211121114954641.png" alt=""></p>
+<h2 id="自定义"><a href="#自定义" class="headerlink" title="自定义"></a>自定义</h2><p>我猜测是像素图块的问题，上图使用的是长方形的图块。但在自带目录里，未发现有正方形，这样我们就需要<strong>自定义像素块</strong>了。</p>
+<p>想要更好的像素风转换效果，最好再调整一下<strong>参数配置</strong>。</p>
+<p>先说自定义像素块。</p>
+<h3 id="自定义图案"><a href="#自定义图案" class="headerlink" title="自定义图案"></a>自定义图案</h3><p>首先，要在目录<code>tiles</code>内新建一个文件夹<code>square2</code>。</p>
+<p>在其中放入一个自定义的像素图块，我准备的是正方形（50x50像素）。</p>
+<p>建议颜色为<code>#F0F0F0</code>。</p>
+<pre><code>C:\Users\Administrator\tiler\tiles\square2</code></pre><p><img src="/images/loading.gif" data-original="../images/basic/image-20211121115038747.png" alt=""></p>
+<p>光有一个图块还不行，需要利用脚本<code>gen_tiles.py</code> 生成一系列多颜色图块。</p>
+<h3 id="自定义参数"><a href="#自定义参数" class="headerlink" title="自定义参数"></a>自定义参数</h3><p>在生成像素图块前，还可以自定义参数。</p>
+<p>通过更改<code>conf.py</code>中的代码，我调整了<code>DEPTH</code>等值。</p>
+<ul>
+<li>DEPTH：每种颜色的分区数，默认值 4。</li>
+<li>COLOR_DEPTH：图片包含颜色的数量，默认值 32。</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211121115100102.png" alt=""></p>
+<p>作者在<code>conf.py</code>里对每项配置参数都作了注释，大家在使用时可以自行调整。</p>
+<h3 id="自定义效果"><a href="#自定义效果" class="headerlink" title="自定义效果"></a>自定义效果</h3><p>接下来生成新的像素图块。</p>
+<p>在 tiler 目录下执行命令：</p>
+<pre><code>python gen_tiles.py ./tiles/square2/square2.png</code></pre><p><img src="/images/loading.gif" data-original="../images/basic/image-20211121115123413.png" alt=""></p>
+<p>打开文件夹<code>gen_square2</code>，各种颜色的像素图块已经被生成好了。</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211121115136808.png" alt=""></p>
+<p>接下来，就是使用新图块，重新制作像素图：</p>
+<pre><code>python tiler.py ./images/333.png ./tiles/square2/gen_square2/</code></pre><p>生成👇</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211121115155982.png" alt=""></p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -2888,7 +2930,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">3133.8k</span>&nbsp;字
+                class="white-color">3119.4k</span>&nbsp;字
             
             
             

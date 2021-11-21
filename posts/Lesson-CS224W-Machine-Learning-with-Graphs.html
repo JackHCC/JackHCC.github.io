@@ -459,21 +459,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-11-18
+                    2021-11-21
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    7.7k
+                    9.7k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    47 分
+                    60 分
                 </div>
                 
 
@@ -2207,7 +2207,441 @@
 <h3 id="Example-GCN-with-Skip-Connections"><a href="#Example-GCN-with-Skip-Connections" class="headerlink" title="Example: GCN with Skip Connections"></a>Example: GCN with Skip Connections</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211118185405314.png" alt=""></p>
 <h3 id="Other-Options-of-Skip-Connections"><a href="#Other-Options-of-Skip-Connections" class="headerlink" title="Other Options of Skip Connections"></a>Other Options of Skip Connections</h3><p><a href="https://arxiv.org/abs/1806.03536" target="_blank" rel="noopener">Xu et al. Representation learning on graphs with jumping knowledge networks, ICML 2018</a></p>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211118185509213.png" alt=""></p>
-<h1 id="GNN-Augmentation-增强-and-Training"><a href="#GNN-Augmentation-增强-and-Training" class="headerlink" title="GNN Augmentation(增强) and Training"></a>GNN Augmentation(增强) and Training</h1><h2 id="Graph-Augmentation-for-GNNS"><a href="#Graph-Augmentation-for-GNNS" class="headerlink" title="Graph Augmentation for GNNS"></a>Graph Augmentation for GNNS</h2><script>
+<h1 id="GNN-Augmentation-增强-and-Training"><a href="#GNN-Augmentation-增强-and-Training" class="headerlink" title="GNN Augmentation(增强) and Training"></a>GNN Augmentation(增强) and Training</h1><h2 id="Graph-Augmentation-for-GNNS"><a href="#Graph-Augmentation-for-GNNS" class="headerlink" title="Graph Augmentation for GNNS"></a>Graph Augmentation for GNNS</h2><p>Our assumption so far has been  </p>
+<ul>
+<li>Raw input graph = computational graph </li>
+</ul>
+<p>Reasons for breaking this assumption </p>
+<ul>
+<li><p>Features:  </p>
+<ul>
+<li>The input graph lacks features </li>
+</ul>
+</li>
+<li><p>Graph structure: </p>
+<ul>
+<li>The graph is too sparse(稀疏的) -&gt; inefficient message passing </li>
+<li>The graph is too dense -&gt; message passing is too costly </li>
+<li>The graph is too large -&gt; cannot fit the computational  graph into a GPU </li>
+</ul>
+</li>
+<li><p>It’s unlikely that the input graph happens to be  the optimal computation graph for embeddings</p>
+</li>
+</ul>
+<h3 id="Graph-Augmentation-Approaches"><a href="#Graph-Augmentation-Approaches" class="headerlink" title="Graph Augmentation Approaches"></a>Graph Augmentation Approaches</h3><ul>
+<li>Graph Feature augmentation <ul>
+<li>The input graph lacks features -&gt; feature  augmentation </li>
+</ul>
+</li>
+<li>Graph Structure augmentation <ul>
+<li>The graph is too sparse -&gt; Add virtual nodes / edges </li>
+<li>The graph is too dense -&gt; Sample neighbors when  doing message passing </li>
+<li>The graph is too large -&gt; Sample subgraphs to  compute embeddings  </li>
+</ul>
+</li>
+<li>Will cover later in lecture: Scaling up GNNs</li>
+</ul>
+<p>Why do we need feature augmentation? </p>
+<p><strong>(1) Input graph does not have node features</strong> </p>
+<p>This is common when we only have the adj. matrix ¡ Standard approaches: </p>
+<p>​    a) Assign constant values to node</p>
+<p>​    b) Assign unique IDs to nodes </p>
+<p>​        These IDs are converted into one-hot vectors</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211121121440814.png" alt=""></p>
+<h3 id="Feature-augmentation-constant-vs-one-hot"><a href="#Feature-augmentation-constant-vs-one-hot" class="headerlink" title="Feature augmentation: constant vs. one-hot"></a>Feature augmentation: constant vs. one-hot</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211121121513731.png" alt=""></p>
+<p>J. You, J. Gomes-Selman, R. Ying, J. Leskovec. Identity-aware Graph Neural Networks, AAAI 2021</p>
+<p><strong>(2) Certain structures are hard to learn by GNN</strong> </p>
+<p>​    Example: Cycle count feature: </p>
+<p>​        Can GNN learn the length of a cycle that v1 resides in? </p>
+<p>​        Unfortunately, no</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211121122002057.png" alt=""></p>
+<p>​    v1 cannot differentiate which graph it resides in  </p>
+<ul>
+<li>Because all the nodes in the graph have degree of 2 </li>
+<li>The computational graphs will be the same binary tree</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211121122106176.png" alt=""></p>
+<p>Solution:  </p>
+<ul>
+<li>We can use cycle count as augmented node features</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211121122157777.png" alt=""></p>
+<p>Other commonly used augmented features: </p>
+<ul>
+<li>Node degree </li>
+<li>Clustering coefficient </li>
+<li>PageRank </li>
+<li>Centrality </li>
+<li>…</li>
+</ul>
+<h3 id="Add-Virtual-Nodes-Edges"><a href="#Add-Virtual-Nodes-Edges" class="headerlink" title="Add Virtual Nodes/ Edges"></a>Add Virtual Nodes/ Edges</h3><p>Motivation: Augment sparse graphs </p>
+<p>(1) Add virtual edges </p>
+<ul>
+<li>Common approach: Connect 2-hop neighbors via  virtual edges </li>
+<li>Intuition: Instead of using adj. matrix A for GNN  computation, use A + A^2,</li>
+</ul>
+<p>Use cases: Bipartite graphs </p>
+<ul>
+<li>Author-to-papers (they authored) </li>
+<li>2-hop virtual edges make an author-author collaboration graph</li>
+</ul>
+<p>(2) Add virtual nodes </p>
+<ul>
+<li><p>The virtual node will connect to all the  nodes in the graph </p>
+<ul>
+<li><p>Suppose in a sparse graph, two nodes have  shortest path distance of 10 </p>
+</li>
+<li><p>After adding the virtual node, all the nodes  will have a distance of two </p>
+<ul>
+<li>Node A – Virtual node – Node B </li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Benefits: Greatly improves message  passing in sparse graphs</p>
+</li>
+</ul>
+<img src="/images/loading.gif" data-original="../images/basic/image-20211121123047322.png" style="zoom:67%;">
+
+<h3 id="Node-Neighborhood-Sampling"><a href="#Node-Neighborhood-Sampling" class="headerlink" title="Node Neighborhood Sampling"></a>Node Neighborhood Sampling</h3><p><a href="https://arxiv.org/pdf/1706.02216.pdf" target="_blank" rel="noopener">Hamilton et al. Inductive Representation Learning on Large Graphs, NeurIPS 2017</a></p>
+<p>Previously: </p>
+<ul>
+<li>All the nodes are used for message passing</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211121123211164.png" alt=""></p>
+<p>New idea: (Randomly) sample a node’s  neighborhood for message passing</p>
+<p>For example, we can randomly choose 2 neighbors to pass messages in a given layer </p>
+<ul>
+<li>Only nodes B and D will pass messages to A</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211121123313579.png" alt=""></p>
+<p>In the next layer when we compute the embeddings, we can sample different  neighbors </p>
+<ul>
+<li>Only nodes C and D will pass messages to A</li>
+</ul>
+<p>In expectation, we get embeddings similar to  the case where all the neighbors are used </p>
+<ul>
+<li>Benefits: Greatly reduces computational cost <ul>
+<li>Allows for scaling to large graphs (more about this later) </li>
+</ul>
+</li>
+<li>And in practice it works great!</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211121123433789.png" alt=""></p>
+<h2 id="Prediction-with-GNNS"><a href="#Prediction-with-GNNS" class="headerlink" title="Prediction with GNNS"></a>Prediction with GNNS</h2><h3 id="GNN-Training-Pipeline"><a href="#GNN-Training-Pipeline" class="headerlink" title="GNN Training Pipeline"></a>GNN Training Pipeline</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211121123545999.png" alt=""></p>
+<h3 id="Pipeline"><a href="#Pipeline" class="headerlink" title="Pipeline"></a>Pipeline</h3><p>(1) Different prediction heads: </p>
+<ul>
+<li>Node-level tasks </li>
+<li>Edge-level tasks </li>
+<li>Graph-level tasks</li>
+</ul>
+<h3 id="GNN-Prediction-Heads"><a href="#GNN-Prediction-Heads" class="headerlink" title="GNN Prediction Heads"></a>GNN Prediction Heads</h3><p>Idea: Different task levels require different  prediction heads</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211121123718495.png" alt=""></p>
+<h4 id="Node-level"><a href="#Node-level" class="headerlink" title="Node-level"></a>Node-level</h4><p><strong>Node-level prediction</strong>: We can directly make  prediction using node embeddings!</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211121123800804.png" alt=""></p>
+<h4 id="Edae-level"><a href="#Edae-level" class="headerlink" title="Edae-level"></a>Edae-level</h4><p><strong>Edge-level prediction</strong>: Make prediction using  pairs of node embeddings</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211121124152229.png" alt=""></p>
+<p><strong>(1) Concatenation + Linear</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211121124251201.png" alt=""></p>
+<p><strong>(2) Dot product</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211121124319360.png" alt=""></p>
+<h4 id="Graph-level"><a href="#Graph-level" class="headerlink" title="Graph-level"></a>Graph-level</h4><p><strong>Graph-level prediction</strong>: Make prediction using  all the node embeddings in our graph</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211121124422963.png" alt=""></p>
+<p><a href="https://arxiv.org/pdf/1810.00826.pdf" target="_blank" rel="noopener">K. Xu<em>, W. Hu</em>, J. Leskovec, S. Jegelka. How Powerful Are Graph Neural Networks, ICLR 2019</a></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211121124519131.png" alt=""></p>
+<h5 id="Issue-of-Global-Pooling"><a href="#Issue-of-Global-Pooling" class="headerlink" title="Issue of Global Pooling"></a>Issue of Global Pooling</h5><p>Issue: Global pooling over a (large) graph will lose  information</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211121124630985.png" alt=""></p>
+<h5 id="Hierarchical-Global-Pooling"><a href="#Hierarchical-Global-Pooling" class="headerlink" title="Hierarchical Global Pooling"></a>Hierarchical Global Pooling</h5><p>A solution: Let’s aggregate all the node  embeddings hierarchically(等级的)</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211121124801967.png" alt=""></p>
+<p><a href="https://arxiv.org/pdf/1806.08804.pdf" target="_blank" rel="noopener">Ying et al. Hierarchical Graph Representation Learning with Differentiable Pooling, NeurIPS 2018</a></p>
+<p>DiffPool idea: </p>
+<ul>
+<li>Hierarchically pool node embedding</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211121124919721.png" alt=""></p>
+<p>Leverage 2 independent GNNs at each level </p>
+<ul>
+<li>GNN A: Compute node embeddings </li>
+<li>GNN B: Compute the cluster that a node belongs to </li>
+</ul>
+<p>GNNs A and B at each level can be executed in parallel</p>
+<p>For each Pooling layer </p>
+<ul>
+<li>Use clustering assignments from GNN B to aggregate node  embeddings generated by GNN A </li>
+<li>Create a single new node for each cluster, maintaining  edges between clusters to generated a new pooled network </li>
+</ul>
+<p>Jointly train GNN A and GNN B</p>
+<h2 id="Training-Graph-Neural-Networks"><a href="#Training-Graph-Neural-Networks" class="headerlink" title="Training Graph Neural Networks"></a>Training Graph Neural Networks</h2><h3 id="Pipeline-1"><a href="#Pipeline-1" class="headerlink" title="Pipeline"></a>Pipeline</h3><p>(2) Where does ground-truth come from?  </p>
+<ul>
+<li>Supervised labels </li>
+<li>Unsupervised signals</li>
+</ul>
+<h3 id="Supervised-Vs-Unsupervised"><a href="#Supervised-Vs-Unsupervised" class="headerlink" title="Supervised Vs Unsupervised"></a>Supervised Vs Unsupervised</h3><ul>
+<li>Supervised learning on graphs <ul>
+<li>Labels come from external sources <ul>
+<li>E.g., predict drug likeness of a molecular graph </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Unsupervised learning on graphs <ul>
+<li>Signals come from graphs themselves  <ul>
+<li>E.g., link prediction: predict if two nodes are connected </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Sometimes the differences are blurry <ul>
+<li>We still have “supervision” in unsupervised learning <ul>
+<li>E.g., train a GNN to predict node clustering coefficient </li>
+</ul>
+</li>
+<li>An alternative name for “unsupervised” is “self-supervised”</li>
+</ul>
+</li>
+</ul>
+<h3 id="Supervised-Labels-on-Graphs"><a href="#Supervised-Labels-on-Graphs" class="headerlink" title="Supervised Labels on Graphs"></a>Supervised Labels on Graphs</h3><p>Supervised labels come from the specific use  cases. For example:</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211121125549048.png" alt=""></p>
+<p>Advice: Reduce your task to node / edge / graph  labels, since they are easy to work with </p>
+<ul>
+<li>E.g., we knew some nodes form a cluster. We can treat  the cluster that a node belongs to as a node label</li>
+</ul>
+<h3 id="Unsupervised-Signals-on-Graphs"><a href="#Unsupervised-Signals-on-Graphs" class="headerlink" title="Unsupervised Signals on Graphs"></a>Unsupervised Signals on Graphs</h3><ul>
+<li>The problem: sometimes we only have a graph,  without any external labels </li>
+<li>The solution: “self-supervised learning”, we can  find supervision signals within the graph. <ul>
+<li>For example, we can let GNN predict the following:</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211121125728956.png" alt=""></p>
+<p>These tasks do not require any external labels!</p>
+<h3 id="Pipeline-2"><a href="#Pipeline-2" class="headerlink" title="Pipeline"></a>Pipeline</h3><p>(3) How do we compute the final loss? </p>
+<ul>
+<li>Classification loss </li>
+<li>Regression loss</li>
+</ul>
+<h3 id="Settings-for-GNN-Training"><a href="#Settings-for-GNN-Training" class="headerlink" title="Settings for GNN Training"></a>Settings for GNN Training</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211121125933719.png" alt=""></p>
+<h3 id="Classification-or-Rearession"><a href="#Classification-or-Rearession" class="headerlink" title="Classification or Rearession"></a>Classification or Rearession</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211121130003206.png" alt=""></p>
+<h4 id="Classification-LOSS"><a href="#Classification-LOSS" class="headerlink" title="Classification LOSS"></a>Classification LOSS</h4><p>As discussed in lecture 6, cross entropy (CE) is a very common loss function in classification</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211121130041014.png" alt=""></p>
+<h4 id="Regression-Loss"><a href="#Regression-Loss" class="headerlink" title="Regression Loss"></a>Regression Loss</h4><p>For regression tasks we often use Mean Squared  Error (MSE) a.k.a. L2 loss</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211121130126580.png" alt=""></p>
+<h3 id="Pipeline-3"><a href="#Pipeline-3" class="headerlink" title="Pipeline"></a>Pipeline</h3><p>(4) How do we measure the success of a GNN? </p>
+<ul>
+<li>Accuracy </li>
+<li>ROC AUC</li>
+</ul>
+<h3 id="Evaluation-Metrics-Rearession"><a href="#Evaluation-Metrics-Rearession" class="headerlink" title="Evaluation Metrics: Rearession"></a>Evaluation Metrics: Rearession</h3><ul>
+<li>We use standard evaluation metrics for GNN <ul>
+<li>(Content below can be found in any ML course)</li>
+<li>In practice we will use sklearn for implementation </li>
+<li>Suppose we make predictions for N data points </li>
+</ul>
+</li>
+<li>Evaluate regression tasks on graphs:</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211121130302297.png" alt=""></p>
+<h3 id="Evaluation-Metrics-Classification"><a href="#Evaluation-Metrics-Classification" class="headerlink" title="Evaluation Metrics: Classification"></a>Evaluation Metrics: Classification</h3><p>Evaluate classification tasks on graphs:</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211121130344635.png" alt=""></p>
+<h3 id="Metrics-for-Binary-Classification"><a href="#Metrics-for-Binary-Classification" class="headerlink" title="Metrics for Binary Classification"></a>Metrics for Binary Classification</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211121130405807.png" alt=""></p>
+<p>ROC Curve: Captures the tradeoff in TPR and  FPR as the classification threshold is varied  for a binary classifier.</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211121130436056.png" alt=""></p>
+<p>ROC AUC: Area under the ROC Curve.  </p>
+<p>Intuition: The probability that a classifier will rank a  randomly chosen positive instance higher than a  randomly chosen negative one</p>
+<h2 id="Setting-up-GNN-Prediction-Tasks"><a href="#Setting-up-GNN-Prediction-Tasks" class="headerlink" title="Setting-up GNN Prediction Tasks"></a>Setting-up GNN Prediction Tasks</h2><h3 id="Pipeline-4"><a href="#Pipeline-4" class="headerlink" title="Pipeline"></a>Pipeline</h3><p>(5) How do we split our dataset  into train / validation / test set?</p>
+<h3 id="Dataset-Split-Fixed-Random-Split"><a href="#Dataset-Split-Fixed-Random-Split" class="headerlink" title="Dataset Split: Fixed/ Random Split"></a>Dataset Split: Fixed/ Random Split</h3><ul>
+<li>Fixed split: We will split our dataset once <ul>
+<li>Training set: used for optimizing GNN parameters </li>
+<li>Validation set: develop model/hyperparameters </li>
+<li>Test set: held out until we report final performance </li>
+</ul>
+</li>
+<li>A concern: sometimes we cannot guarantee  that the test set will really be held out </li>
+<li>Random split: we will randomly split our  dataset into training / validation / test <ul>
+<li>We report average performance over different  random seeds</li>
+</ul>
+</li>
+</ul>
+<h3 id="Why-Splitting-Graphs-is-Special"><a href="#Why-Splitting-Graphs-is-Special" class="headerlink" title="Why Splitting Graphs is Special"></a>Why Splitting Graphs is Special</h3><p>Suppose we want to split an image dataset </p>
+<ul>
+<li>Image classification: Each data point is an image </li>
+<li>Here data points are independent <ul>
+<li>Image 5 will not affect our prediction on image 1</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211121130839404.png" alt=""></p>
+<p>Splitting a graph dataset is different! </p>
+<ul>
+<li>Node classification: Each data point is a node </li>
+<li>Here data points are NOT independent<ul>
+<li>Node 5 will affect our prediction on node 1, because it will  participate in message passing -&gt; affect node 1’s embedding</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211121130957508.png" alt=""></p>
+<p>What are our options?</p>
+<p>Solution 1 (<strong>Transductive(传导的) setting</strong>): The input  graph can be observed in all the dataset splits  (training, validation and test set).  </p>
+<p>We will only split the (node) labels </p>
+<ul>
+<li>At training time, we compute embeddings using the  entire graph, and train using node 1&amp;2’s labels </li>
+<li>At validation time, we compute embeddings using  the entire graph, and evaluate on node 3&amp;4’s labels</li>
+</ul>
+<p>Solution 2 (<strong>Inductive(归纳法的) setting</strong>): We break the edges  between splits to get multiple graphs </p>
+<ul>
+<li>Now we have 3 graphs that are independent. Node 5 will  not affect our prediction on node 1 any more </li>
+<li>At training time, we compute embeddings using the  graph over node 1&amp;2, and train using node 1&amp;2’s labels </li>
+<li>At validation time, we compute embeddings using the  graph over node 3&amp;4, and evaluate on node 3&amp;4’s labels</li>
+</ul>
+<p>Transductive setting: training / validation / test  sets are on the same graph </p>
+<ul>
+<li>The dataset consists of one graph </li>
+<li>The entire graph can be observed in all dataset splits,  we only split the labels </li>
+<li>Only applicable to node / edge prediction tasks </li>
+</ul>
+<p>Inductive setting: training / validation / test sets  are on different graphs </p>
+<ul>
+<li>The dataset consists of multiple graphs </li>
+<li>Each split can only observe the graph(s) within the split.  A successful model should generalize to unseen graphs </li>
+<li>Applicable to node / edge / graph tasks</li>
+</ul>
+<h3 id="Graph-Classification"><a href="#Graph-Classification" class="headerlink" title="Graph Classification"></a>Graph Classification</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211121131929640.png" alt=""></p>
+<p>Only the <strong>inductive setting is well defined for  graph classification</strong> </p>
+<ul>
+<li>Because we have to test on unseen graphs</li>
+<li>Suppose we have a dataset of 5 graphs. Each split  will contain independent graph(s)</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211121132032550.png" alt=""></p>
+<h3 id="Link-Prediction"><a href="#Link-Prediction" class="headerlink" title="Link Prediction"></a>Link Prediction</h3><p>Goal of link prediction: predict missing edges </p>
+<p>Setting up link prediction is tricky: </p>
+<ul>
+<li>Link prediction is an unsupervised / self-supervised  task. We need to create the labels and dataset  splits on our own </li>
+<li>Concretely, we need to hide some edges from the  GNN and the let the GNN predict if the edges exist</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211121132251694.png" alt=""></p>
+<p>For link prediction, we will split edges twice </p>
+<p>Step 1: Assign 2 types of edges in the original graph </p>
+<ul>
+<li><p>Message edges: Used for GNN message passing </p>
+</li>
+<li><p>Supervision edges: Use for computing objectives </p>
+</li>
+<li><p>After step 1: </p>
+<ul>
+<li><p>Only message edges will remain in the graph </p>
+</li>
+<li><p>Supervision edges are used as supervision for edge  predictions made by the model, will not be fed into GNN!</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>Step 2: Split edges into train / validation / test </p>
+<ul>
+<li>Option 1: Inductive link prediction split <ul>
+<li>Suppose we have a dataset of 3 graphs. Each  inductive split will contain an independent grap</li>
+<li>Suppose we have a dataset of 3 graphs. Each  inductive split will contain an independent graph </li>
+<li>In train or val or test set, each graph will have 2 types of edges: message edges + supervision edges § Supervision edges are not the input to GNN</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211121132836775.png" alt=""></p>
+<ul>
+<li><p>Option 2: Transductive link prediction split: </p>
+<ul>
+<li><p>This is the default setting when people talk about  link prediction </p>
+</li>
+<li><p>Suppose we have a dataset of 1 graph</p>
+</li>
+<li><p>By definition of “transductive”, the entire graph can  be observed in all dataset splits </p>
+<ul>
+<li>But since edges are both part of graph structure and the  supervision, we need to hold out validation / test edges </li>
+<li>To train the training set, we further need to hold out  supervision edges for the training set</li>
+</ul>
+</li>
+<li><p>Next: we will show the exact settings</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211121133040720.png" alt=""></p>
+<p>Summary: Transductive link prediction split</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211121133105561.png" alt=""></p>
+<ul>
+<li>Note: Link prediction settings are tricky and complex. You may find papers do link prediction differently.  </li>
+<li>Luckily, we have full support in PyG and <a href="https://github.com/snap-stanford/GraphGym" target="_blank" rel="noopener">GraphGym</a></li>
+</ul>
+<h3 id="GNN-Training-Pipeline-1"><a href="#GNN-Training-Pipeline-1" class="headerlink" title="GNN Training Pipeline"></a>GNN Training Pipeline</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211121133226107.png" alt=""></p>
+<p>Implementation resources: </p>
+<ul>
+<li><a href="https://github.com/snap-stanford/deepsnap" target="_blank" rel="noopener">DeepSNAP</a> provides core modules for this pipeline  </li>
+<li><a href="https://github.com/snap-stanford/GraphGym" target="_blank" rel="noopener">GraphGym</a> further implements the full pipeline to facilitate GNN design</li>
+</ul>
+<h3 id="Summary-10"><a href="#Summary-10" class="headerlink" title="Summary"></a>Summary</h3><ul>
+<li>GNN Layer:  <ul>
+<li>Transformation + Aggregation </li>
+<li>Classic GNN layers: GCN, GraphSAGE, GAT </li>
+</ul>
+</li>
+<li>Layer connectivity:  <ul>
+<li>The over-smoothing problem </li>
+<li>Solution: skip connections </li>
+</ul>
+</li>
+<li>Graph Augmentation: <ul>
+<li>Feature augmentation </li>
+<li>Structure augmentation </li>
+</ul>
+</li>
+<li>Learning Objectives <ul>
+<li>The full training pipeline of a GNN</li>
+</ul>
+</li>
+</ul>
+<h2 id="When-Things-Dont-Go-As-Planned"><a href="#When-Things-Dont-Go-As-Planned" class="headerlink" title="When Things Dont Go As Planned"></a>When Things Dont Go As Planned</h2><h3 id="General-Tips"><a href="#General-Tips" class="headerlink" title="General Tips"></a>General Tips</h3><ul>
+<li>Data preprocessing is important:  <ul>
+<li>Node attributes can vary a lot! <ul>
+<li>E.g. probability ranges (0,1), but some inputs could have much  larger range, say (−1000, 1000) </li>
+</ul>
+</li>
+<li>Use normalization </li>
+</ul>
+</li>
+<li>Optimizer:  <ul>
+<li>ADAM is relatively robust to learning rate </li>
+</ul>
+</li>
+<li>Activation function <ul>
+<li>ReLU activation function often works well </li>
+<li>Other alternatives: LeakyReLU, SWISH, rational activation </li>
+<li>No activation function at your output layer:  </li>
+</ul>
+</li>
+<li>Include bias term in every layer  </li>
+<li>Embedding dimensions: <ul>
+<li>32, 64 and 128 are often good starting points</li>
+</ul>
+</li>
+</ul>
+<h3 id="Debugging-Deep-Networks"><a href="#Debugging-Deep-Networks" class="headerlink" title="Debugging Deep Networks"></a>Debugging Deep Networks</h3><ul>
+<li>Debug issues: Loss/accuracy not converging  during training <ul>
+<li>Check pipeline (e.g. in PyTorch we need zero_grad) </li>
+<li>Adjust hyperparameters such as learning rate </li>
+<li>Pay attention to weight parameter initialization </li>
+</ul>
+</li>
+<li>Important for model development: <ul>
+<li>Overfit on (part of) training data:  <ul>
+<li>With a small training dataset, loss should be essentially close  to 0, with an expressive neural network </li>
+<li>If neural network cannot overfit a single data point, something  is wrong </li>
+</ul>
+</li>
+<li>Scrutinize loss function! </li>
+<li>Scrutinize visualizations!</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211121133751138.png" alt=""></p>
+<script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
             if (!el.dataset.src) { return; }
@@ -2720,7 +3154,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">3133.8k</span>&nbsp;字
+                class="white-color">3119.4k</span>&nbsp;字
             
             
             
