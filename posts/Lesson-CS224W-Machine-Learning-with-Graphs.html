@@ -26,9 +26,9 @@
     
     <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/jquery/jquery.min.js"></script>
     
-<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
-<link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
-<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+<meta name="generator" content="Hexo 4.2.0"><link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
+</head>
 
 
 <body>
@@ -459,21 +459,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-11-21
+                    2021-11-25
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    9.7k
+                    11.1k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    60 分
+                    69 分
                 </div>
                 
 
@@ -2641,6 +2641,245 @@
 </li>
 </ul>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211121133751138.png" alt=""></p>
+<h1 id="Setting-up-GNN-Prediction-Tasks-1"><a href="#Setting-up-GNN-Prediction-Tasks-1" class="headerlink" title="Setting-up GNN Prediction Tasks"></a>Setting-up GNN Prediction Tasks</h1><h2 id="How-Expressive-are-Graph-Neural-Networks"><a href="#How-Expressive-are-Graph-Neural-Networks" class="headerlink" title="How Expressive are Graph Neural Networks?"></a>How Expressive are Graph Neural Networks?</h2><h3 id="Theory-of-GNNS"><a href="#Theory-of-GNNS" class="headerlink" title="Theory of GNNS"></a>Theory of GNNS</h3><p>How powerful are GNNs? </p>
+<ul>
+<li>Many GNN models have been proposed (e.g.,  GCN, GAT, GraphSAGE, design space). </li>
+<li>What is the expressive power (ability to  distinguish different graph structures) of these  GNN models? </li>
+<li>How to design a maximally expressive GNN  model?</li>
+</ul>
+<h3 id="Background-Many-GNN-Models"><a href="#Background-Many-GNN-Models" class="headerlink" title="Background: Many GNN Models"></a>Background: Many GNN Models</h3><p>Many GNN models have been proposed: </p>
+<ul>
+<li>GCN, GraphSAGE, GAT, Design Space etc.</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211124232206183.png" alt=""></p>
+<h3 id="GNN-Model-Example"><a href="#GNN-Model-Example" class="headerlink" title="GNN Model Example"></a>GNN Model Example</h3><ul>
+<li>GCN (mean-pool) [Kipf and Welling ICLR 2017]</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211124232333035.png" alt=""></p>
+<ul>
+<li>GraphSAGE (max-pool) [Hamilton et al. NeurIPS 2017]</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211124232404770.png" alt=""></p>
+<h3 id="Note-Node-Colors"><a href="#Note-Node-Colors" class="headerlink" title="Note: Node Colors"></a>Note: Node Colors</h3><ul>
+<li>We use node same/different colors to represent  nodes with same/different features. <ul>
+<li>For example, the graph below assumes all the nodes share the same feature.</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211124232516186.png" alt=""></p>
+<ul>
+<li>Key question: How well can a GNN distinguish  different graph structures?</li>
+</ul>
+<h3 id="Local-Neighborhood-Structures"><a href="#Local-Neighborhood-Structures" class="headerlink" title="Local Neighborhood Structures"></a>Local Neighborhood Structures</h3><p>We specifically consider local neighborhood  structures around each node in a graph.</p>
+<ul>
+<li>Example: Nodes 1 and 5  have different  neighborhood structures  because they have  different node degrees.</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211124232626141.png" alt=""></p>
+<p>We specifically consider local neighborhood  structures around each node in a graph. 1 2 3 5 4 </p>
+<ul>
+<li>Example: Nodes 1 and 4 both have the same node  degree of 2. However, they  still have different neighborhood structures  because their neighbors  have different node degrees</li>
+</ul>
+<p>Node 1 has neighbors of degrees 2 and 3. Node 4 has neighbors of degrees 1 and 3.</p>
+<p>We specifically consider local neighborhood  structures around each node in a graph. 1 2 3 5 4 </p>
+<ul>
+<li>Example: Nodes 1 and 2  have the same neighborhood structure  because they are  symmetric within the  graph.</li>
+</ul>
+<p>Node 1 has neighbors of degrees 2 and 3. Node 2 has neighbors of degrees 2 and 3. And even if we go a step deeper to 2nd hop neighbors, both nodes have the same degrees (Node 4 of degree 2)</p>
+<ul>
+<li>Key question: Can GNN node embeddings  distinguish different node’s local  neighborhood structures? <ul>
+<li>If so, when? If not, when will a GNN fail? </li>
+</ul>
+</li>
+<li>Next: We need to understand how a GNN  captures local neighborhood structures. <ul>
+<li>Key concept: Computational graph</li>
+</ul>
+</li>
+</ul>
+<h3 id="Computational-Graph"><a href="#Computational-Graph" class="headerlink" title="Computational Graph"></a>Computational Graph</h3><p>In each layer, a GNN aggregates neighboring node  embeddings. </p>
+<p>A GNN generates node embeddings through a  computational graph defined by the neighborhood. </p>
+<ul>
+<li>Ex: Node 1’s computational graph (2-layer GNN)</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211124233256304.png" alt=""></p>
+<ul>
+<li>Ex: Nodes 1 and 2’s computational graphs.</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211124233315665.png" alt=""></p>
+<ul>
+<li>Ex: Nodes 1 and 2’s computational graphs. </li>
+<li>But GNN only sees node features (not IDs):</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211124233337139.png" alt=""></p>
+<p>A GNN will generate the same embedding for  nodes 1 and 2 because: </p>
+<ul>
+<li>Computational graphs are the same. </li>
+<li>Node features (colors) are identical.</li>
+</ul>
+<p>Note: GNN does not care about node ids, it just aggregates features vectors of different nodes.</p>
+<p>In general, different local neighborhoods  define different computational graphs</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211124233437411.png" alt=""></p>
+<p>Computational graphs are identical to rooted  subtree structures around each node.</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211124233458316.png" alt=""></p>
+<p>GNN‘s node embeddings capture rooted  subtree structures.</p>
+<p>Most expressive GNN maps different rooted  subtrees into different node embeddings  (represented by different colors).</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211124233528263.png" alt=""></p>
+<h3 id="Recall-Iniective-Function"><a href="#Recall-Iniective-Function" class="headerlink" title="Recall: Iniective Function"></a>Recall: Iniective Function</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211124233555015.png" alt=""></p>
+<h3 id="How-Expressive-is-a-GNN"><a href="#How-Expressive-is-a-GNN" class="headerlink" title="How Expressive is a GNN?"></a>How Expressive is a GNN?</h3><p>Most expressive GNN should map subtrees to  the node embeddings injectively.</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211124233631327.png" alt=""></p>
+<p>Key observation: Subtrees of the same depth  can be recursively characterized from the leaf  nodes to the root nodes.</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211124233656532.png" alt=""></p>
+<p>If each step of GNN’s aggregation can fully  retain the neighboring information, the  generated node embeddings can distinguish  different rooted subtrees.</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211124233724688.png" alt=""></p>
+<p>In other words, most expressive GNN would  use an injective neighbor aggregation function at each step. </p>
+<p>Maps different neighbors to different embeddings.</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211124233745404.png" alt=""></p>
+<p>Summary so far </p>
+<ul>
+<li>To generate a node embedding, GNNs use a computational graph corresponding to a subtree  rooted around each node.</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211124233818826.png" alt=""></p>
+<ul>
+<li>GNN can fully distinguish different subtree  structures if every step of its neighbor  aggregation is injective.</li>
+</ul>
+<h2 id="Designing-the-Most-Powerful-Graph-Neural-Network"><a href="#Designing-the-Most-Powerful-Graph-Neural-Network" class="headerlink" title="Designing the Most Powerful Graph Neural Network"></a>Designing the Most Powerful Graph Neural Network</h2><h3 id="Expressive-Power-of-GNNS"><a href="#Expressive-Power-of-GNNS" class="headerlink" title="Expressive Power of GNNS"></a>Expressive Power of GNNS</h3><ul>
+<li>Key observation: Expressive power of GNNs  can be characterized by that of neighbor  aggregation functions they use. <ul>
+<li>A more expressive aggregation function leads to a  more expressive a GNN. </li>
+<li>Injective aggregation function leads to the most  expressive GNN. </li>
+</ul>
+</li>
+<li>Next: <ul>
+<li>Theoretically analyze expressive power of  aggregation functions.</li>
+</ul>
+</li>
+</ul>
+<h3 id="Neighbor-Aggregation"><a href="#Neighbor-Aggregation" class="headerlink" title="Neighbor Aggregation"></a>Neighbor Aggregation</h3><p>Observation: Neighbor aggregation can be abstracted as a function over a multi-set (a  set with repeating elements).</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211124234114863.png" alt=""></p>
+<p>Next: We analyze aggregation functions of  two popular GNN models</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211124234133971.png" alt=""></p>
+<ul>
+<li>GCN (mean-pool) [Kipf &amp; Welling ICLR 2017] <ul>
+<li>Take element-wise mean, followed by linear  function and ReLU activation, i.e., max(0, x). </li>
+<li>Theorem [Xu et al. ICLR 2019]  <ul>
+<li>GCN’s aggregation function cannot distinguish different  multi-sets with the same color proportion.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211124234305197.png" alt=""></p>
+<p>For simplicity, we assume node colors are  represented by one-hot encoding. </p>
+<p>Example) If there are two distinct colors:</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211124234323852.png" alt=""></p>
+<p>This assumption is sufficient to illustrate how GCN  fails.</p>
+<p> <strong>Failure case illustration</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211124234427536.png" alt=""></p>
+<ul>
+<li>GraphSAGE (max-pool) [Hamilton et al. NeurIPS 2017] <ul>
+<li>Apply an MLP, then take element-wise max. </li>
+<li>Theorem [Xu et al. ICLR 2019]  <ul>
+<li>GraphSAGE’s aggregation function cannot distinguish  different multi-sets with the same set of distinct colors. </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211124234506874.png" alt=""></p>
+<p><strong>Failure case illustration</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211124234534845.png" alt=""></p>
+<h3 id="Summary-So-Far"><a href="#Summary-So-Far" class="headerlink" title="Summary So Far"></a>Summary So Far</h3><p>We analyzed the expressive power of GNNs. </p>
+<p>Main takeaways:  </p>
+<ul>
+<li>Expressive power of GNNs can be characterized by  that of the neighbor aggregation function. </li>
+<li>Neighbor aggregation is a function over multi-sets  (sets with repeating elements)  </li>
+<li>GCN and GraphSAGE’s aggregation functions fail to  distinguish some basic multi-sets; hence not injective. </li>
+<li>Therefore, GCN and GraphSAGE are not maximally  powerful GNNs.</li>
+</ul>
+<h3 id="Designing-Most-Expressive-GNNS"><a href="#Designing-Most-Expressive-GNNS" class="headerlink" title="Designing Most Expressive GNNS"></a>Designing Most Expressive GNNS</h3><ul>
+<li>Our goal: Design maximally powerful GNNs  in the class of message-passing GNNs. </li>
+<li>This can be achieved by designing injective neighbor aggregation function over multi-sets. </li>
+<li>Here, we design a neural network that can  model injective multiset function.</li>
+</ul>
+<h3 id="Injective-Multi-set-Function"><a href="#Injective-Multi-set-Function" class="headerlink" title="Injective Multi-set Function"></a>Injective Multi-set Function</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211124234725881.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211124234816499.png" alt=""></p>
+<h3 id="Universal-Approximation-Theorem"><a href="#Universal-Approximation-Theorem" class="headerlink" title="Universal Approximation Theorem"></a>Universal Approximation Theorem</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211124234842803.png" alt=""></p>
+<h3 id="Injective-Multi-set-Function-1"><a href="#Injective-Multi-set-Function-1" class="headerlink" title="Injective Multi-set Function"></a>Injective Multi-set Function</h3><p>We have arrived at a neural network that can  model any injective multi-set function.</p>
+<img src="/images/loading.gif" data-original="../images/basic/image-20211124234919909.png" style="zoom:50%;">
+
+<p>In practice, MLP hidden dimensionality of 100 to  500 is sufficient.</p>
+<h3 id="Most-Expressive-GNN"><a href="#Most-Expressive-GNN" class="headerlink" title="Most Expressive GNN"></a>Most Expressive GNN</h3><p>Graph Isomorphism Network (GIN) [Xu et al. ICLR 2019] </p>
+<p>Apply an MLP, element-wise sum, followed by  another MLP</p>
+<img src="/images/loading.gif" data-original="../images/basic/image-20211124235014695.png" style="zoom:50%;">
+
+<ul>
+<li>Theorem [Xu et al. ICLR 2019]  <ul>
+<li>GIN‘s neighbor aggregation function is injective. </li>
+</ul>
+</li>
+<li>No failure cases! </li>
+<li>GIN is THE most expressive GNN in the class of  message-passing GNNs!</li>
+</ul>
+<h3 id="Full-Model-of-GIN"><a href="#Full-Model-of-GIN" class="headerlink" title="Full Model of GIN"></a>Full Model of GIN</h3><p>So far: We have described the neighbor  aggregation part of GIN. </p>
+<p>We now describe the full model of GIN by  relating it to WL graph kernel (traditional way  of obtaining graph-level features). </p>
+<ul>
+<li>We will see how GIN is a “neural network” version  of the WL graph kernel.</li>
+</ul>
+<h3 id="Relation-to-WL-Graph-Kernel"><a href="#Relation-to-WL-Graph-Kernel" class="headerlink" title="Relation to WL Graph Kernel"></a>Relation to WL Graph Kernel</h3><p>Recall: Color refinement algorithm in WL kernel.</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211124235238709.png" alt=""></p>
+<h3 id="Color-Refinement"><a href="#Color-Refinement" class="headerlink" title="Color Refinement"></a>Color Refinement</h3><p>Example of color refinement given two graphs</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211124235311686.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211124235328474.png" alt=""></p>
+<p>Example of color refinement given two graphs </p>
+<ul>
+<li>Process continues until a stable coloring is  reached </li>
+<li>Two graphs are considered isomorphic if they  have the same set of colors.</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211124235354421.png" alt=""></p>
+<h3 id="The-Complete-GIN-Mode"><a href="#The-Complete-GIN-Mode" class="headerlink" title="The Complete GIN Mode"></a>The Complete GIN Mode</h3><p>GIN uses a neural network to model the  injective HASH function.</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211124235423462.png" alt=""></p>
+<p>Specifically, we will model the injective  function over the tuple:</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211124235437403.png" alt=""></p>
+<p>Theorem (Xu et al. ICLR 2019) </p>
+<p>Any injective function over the tuple</p>
+<img src="/images/loading.gif" data-original="../images/basic/image-20211124235529779.png" style="zoom:50%;">
+
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211124235552059.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211124235634820.png" alt=""></p>
+<h3 id="GIN-and-WL-Graph-Kernel"><a href="#GIN-and-WL-Graph-Kernel" class="headerlink" title="GIN and WL Graph Kernel"></a>GIN and WL Graph Kernel</h3><p>GIN can be understood as differentiable neural  version of the WL graph Kernel:</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211124235709357.png" alt=""></p>
+<p>Advantages of GIN over the WL graph kernel are: </p>
+<ul>
+<li>Node embeddings are low-dimensional; hence, they can  capture the fine-grained similarity of different nodes. </li>
+<li>Parameters of the update function can be learned for the  downstream tasks.</li>
+</ul>
+<h3 id="Expressive-Power-of-GIN"><a href="#Expressive-Power-of-GIN" class="headerlink" title="Expressive Power of GIN"></a>Expressive Power of GIN</h3><ul>
+<li>Because of the relation between GIN and the  WL graph kernel, their expressive is exactly the  same. <ul>
+<li>If two graphs can be distinguished by GIN, they can be  also distinguished by the WL kernel, and vice versa. </li>
+</ul>
+</li>
+<li>How powerful is this? <ul>
+<li>WL kernel has been both theoretically and  empirically shown to distinguish most of the real-world graphs [Cai et al. 1992]. </li>
+<li>Hence, GIN is also powerful enough to distinguish  most of the real graphs!</li>
+</ul>
+</li>
+</ul>
+<h3 id="Summary-of-the-Lecture"><a href="#Summary-of-the-Lecture" class="headerlink" title="Summary of the Lecture"></a>Summary of the Lecture</h3><ul>
+<li>We design a neural network that can model  injective multi-set function. </li>
+<li>We use the neural network for neighbor  aggregation function and arrive at GIN—the  most expressive GNN model. </li>
+<li>The key is to use element-wise sum pooling,  instead of mean-/max-pooling. </li>
+<li>GIN is closely related to the WL graph kernel. </li>
+<li>Both GIN and WL graph kernel can distinguish  most of the real graphs!</li>
+</ul>
+<h3 id="The-Power-of-Pooling"><a href="#The-Power-of-Pooling" class="headerlink" title="The Power of Pooling"></a>The Power of Pooling</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211124235927640.png" alt=""></p>
+<p>Can expressive power of GNNs be improved? </p>
+<p>There are basic graph structures that existing GNN  framework cannot distinguish, such as difference in cycles.</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211124235955061.png" alt=""></p>
+<p>GNNs’ expressive power can be improved to resolve  the above problem. [You et al. AAAI 2021, Li et al. NeurIPS 2020]</p>
+<h3 id="Summary-11"><a href="#Summary-11" class="headerlink" title="Summary"></a>Summary</h3><p>GNNs and connection to bijective functions  on sets. </p>
+<p>Most powerful GNN is equivalent to WL graph  isomorphism test. </p>
+<p>GIN is the most powerful GNN. </p>
+<ul>
+<li>Sum aggregator is more powerful than mean is  more powerful than max.</li>
+</ul>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -3154,7 +3393,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">3119.4k</span>&nbsp;字
+                class="white-color">3122.6k</span>&nbsp;字
             
             
             
