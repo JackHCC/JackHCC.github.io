@@ -26,9 +26,9 @@
     
     <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/jquery/jquery.min.js"></script>
     
-<meta name="generator" content="Hexo 4.2.0"><link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
-<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
-</head>
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
 
 
 <body>
@@ -466,14 +466,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    11.1k
+                    15.8k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    69 分
+                    98 分
                 </div>
                 
 
@@ -2880,6 +2880,942 @@
 <ul>
 <li>Sum aggregator is more powerful than mean is  more powerful than max.</li>
 </ul>
+<h1 id="Heterogeneous-Graphs-and-Knowledge-Graph-Embeddings"><a href="#Heterogeneous-Graphs-and-Knowledge-Graph-Embeddings" class="headerlink" title="Heterogeneous Graphs and Knowledge Graph Embeddings"></a>Heterogeneous Graphs and Knowledge Graph Embeddings</h1><h2 id="Heterogeneous-异构-Graphs-and-Relational-GCN-RGCN"><a href="#Heterogeneous-异构-Graphs-and-Relational-GCN-RGCN" class="headerlink" title="Heterogeneous(异构) Graphs and Relational GCN (RGCN)"></a>Heterogeneous(异构) Graphs and Relational GCN (RGCN)</h2><h3 id="Heterogeneous-异构-Graphs"><a href="#Heterogeneous-异构-Graphs" class="headerlink" title="Heterogeneous(异构) Graphs"></a>Heterogeneous(异构) Graphs</h3><p>A heterogeneous graph is defined as</p>
+<img src="/images/loading.gif" data-original="../images/basic/image-20211125113232278.png" style="zoom:67%;">
+
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125113635518.png" alt=""></p>
+<h3 id="Relational-GCN"><a href="#Relational-GCN" class="headerlink" title="Relational GCN"></a>Relational GCN</h3><p><a href="https://arxiv.org/pdf/1703.06103.pdf" target="_blank" rel="noopener">Schlichtkrull et al., Modeling Relational Data with Graph Convolutional Networks, ESWC 2018</a></p>
+<p>We will extend GCN to handle heterogeneous  graphs with multiple edge/relation types </p>
+<p>We start with a directed graph with one relation </p>
+<ul>
+<li>How do we run GCN and update the representation  of the target node A on this graph?</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125114001101.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125114034454.png" alt=""></p>
+<p><strong>What if the graph has multiple relation types?</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125114430879.png" alt=""></p>
+<p>What if the graph has multiple relation types? </p>
+<p>Use different neural network weights for  different relation types</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125114452613.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125114519967.png" alt=""></p>
+<h4 id="Definition"><a href="#Definition" class="headerlink" title="Definition"></a>Definition</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125114555629.png" alt=""></p>
+<h4 id="RGCN-Scalability"><a href="#RGCN-Scalability" class="headerlink" title="RGCN: Scalability"></a>RGCN: Scalability</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125114654160.png" alt=""></p>
+<h3 id="Block-Diagonal-Matrices"><a href="#Block-Diagonal-Matrices" class="headerlink" title="Block Diagonal Matrices"></a>Block Diagonal Matrices</h3><p>Key insight: make the weights sparse</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125114730067.png" alt=""></p>
+<p>Key insight: Share weights across different  relations!</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125122421352.png" alt=""></p>
+<h3 id="Example-Entity-Node-Classification"><a href="#Example-Entity-Node-Classification" class="headerlink" title="Example: Entity/Node Classification"></a>Example: Entity/Node Classification</h3><p>Goal: Predict the label of a given node</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125122510604.png" alt=""></p>
+<h3 id="Example-Link-Prediction"><a href="#Example-Link-Prediction" class="headerlink" title="Example Link Prediction"></a>Example Link Prediction</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125122540731.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125122601001.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125122618427.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125123058036.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125123121341.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125123802792.png" alt=""></p>
+<h3 id="Summary-of-RGCN"><a href="#Summary-of-RGCN" class="headerlink" title="Summary of RGCN"></a>Summary of RGCN</h3><ul>
+<li>Relational GCN, a graph neural network for  heterogeneous graphs </li>
+<li>Can perform entity classification as well as  link prediction tasks. </li>
+<li>Ideas can easily be extended into RGNN  (RGraphSAGE, RGAT, etc.)</li>
+</ul>
+<h2 id="Knowledge-Graphs-KG-Completion-with-Embeddings"><a href="#Knowledge-Graphs-KG-Completion-with-Embeddings" class="headerlink" title="Knowledge Graphs KG Completion with Embeddings"></a>Knowledge Graphs KG Completion with Embeddings</h2><h3 id="Knowledge-Graphs-KG"><a href="#Knowledge-Graphs-KG" class="headerlink" title="Knowledge Graphs( KG)"></a>Knowledge Graphs( KG)</h3><p>Knowledge in graph form: </p>
+<p>Capture entities, types, and relationships </p>
+<ul>
+<li>Nodes are entities </li>
+<li>Nodes are labeled with  their types </li>
+<li>Edges between two nodes capture relationships  between entities </li>
+<li>KG is an example of a  heterogeneous graph</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125124156465.png" alt=""></p>
+<h3 id="Example-Bibliographic-Networks"><a href="#Example-Bibliographic-Networks" class="headerlink" title="Example: Bibliographic Networks"></a>Example: Bibliographic Networks</h3><ul>
+<li>Node types: paper, title, author, conference,  year </li>
+<li>Relation types: pubWhere, pubYear, hasTitle,  hasAuthor, cite</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125124253212.png" alt=""></p>
+<h3 id="Example-Bio-Knowledge-Graphs"><a href="#Example-Bio-Knowledge-Graphs" class="headerlink" title="Example: Bio Knowledge Graphs"></a>Example: Bio Knowledge Graphs</h3><ul>
+<li>Node types: drug, disease, adverse event,  protein, pathways </li>
+<li>Relation types: has_func, causes, assoc, treats,  is_a</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125124658360.png" alt=""></p>
+<h3 id="Knowledge-Graphs-in-Practice"><a href="#Knowledge-Graphs-in-Practice" class="headerlink" title="Knowledge Graphs in Practice"></a>Knowledge Graphs in Practice</h3><ul>
+<li>Examples of knowledge graphs </li>
+<li>Google Knowledge Graph  </li>
+<li>Amazon Product Graph </li>
+<li>Facebook Graph API  </li>
+<li>IBM Watson  </li>
+<li>Microsoft Satori  </li>
+<li>Project Hanover/Literome </li>
+<li>LinkedIn Knowledge Graph  </li>
+<li>Yandex Object Answer</li>
+</ul>
+<h3 id="Applications-of-Knowledge-Graphs"><a href="#Applications-of-Knowledge-Graphs" class="headerlink" title="Applications of Knowledge Graphs"></a>Applications of Knowledge Graphs</h3><ul>
+<li>Serving information</li>
+<li>Question answering and conversation agents</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125124833006.png" alt=""></p>
+<h3 id="Knowledge-Graph-Datasets"><a href="#Knowledge-Graph-Datasets" class="headerlink" title="Knowledge Graph Datasets"></a>Knowledge Graph Datasets</h3><ul>
+<li>Publicly available KGs: <ul>
+<li>FreeBase, Wikidata, Dbpedia, YAGO, NELL, etc. </li>
+</ul>
+</li>
+<li>Common characteristics: <ul>
+<li>Massive: millions of nodes and edges </li>
+<li>Incomplete: many true edges are missing</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125124916364.png" alt=""></p>
+<h3 id="Example-Freebase"><a href="#Example-Freebase" class="headerlink" title="Example: Freebase"></a>Example: Freebase</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125124942905.png" alt=""></p>
+<h2 id="Knowledge-Graph-Completion-TransE-TransR-DistMul-ComplEx"><a href="#Knowledge-Graph-Completion-TransE-TransR-DistMul-ComplEx" class="headerlink" title="Knowledge Graph Completion TransE, TransR, DistMul, ComplEx"></a>Knowledge Graph Completion TransE, TransR, DistMul, ComplEx</h2><h3 id="KG-Completion-Task"><a href="#KG-Completion-Task" class="headerlink" title="KG Completion Task"></a>KG Completion Task</h3><ul>
+<li>Given an enormous KG, can we complete the KG? </li>
+<li>For a given (head, relation), we predict missing tails. <ul>
+<li>(Note this is slightly different from link prediction task)</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125125118472.png" alt=""></p>
+<h3 id="KG-Representation"><a href="#KG-Representation" class="headerlink" title="KG Representation"></a>KG Representation</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125125200568.png" alt=""></p>
+<h3 id="TransE"><a href="#TransE" class="headerlink" title="TransE"></a>TransE</h3><p><a href="https://hal.archives-ouvertes.fr/file/index/docid/920777/filename/bordes13nips.pdf" target="_blank" rel="noopener">Bordes, et al., Translating embeddings for modeling multi-relational data, NeurIPS 2013</a></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125125309091.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125125342479.png" alt=""></p>
+<h4 id="Connectivity-Patterns-in-KG"><a href="#Connectivity-Patterns-in-KG" class="headerlink" title="Connectivity Patterns in KG"></a>Connectivity Patterns in KG</h4><p>Relations in a heterogeneous KG have  different properties</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125125414582.png" alt=""></p>
+<p>Can we categorize these relation patterns? </p>
+<p>Are KG embedding methods (e.g., TransE)  expressive enough to model these patterns?</p>
+<h4 id="Relation-Patterns"><a href="#Relation-Patterns" class="headerlink" title="Relation Patterns"></a>Relation Patterns</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125125520866.png" alt=""></p>
+<h4 id="Antisymmetric-Relations-in-Transe"><a href="#Antisymmetric-Relations-in-Transe" class="headerlink" title="Antisymmetric Relations in Transe"></a>Antisymmetric Relations in Transe</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125125638800.png" alt=""></p>
+<h4 id="Inverse-Relations-in-TransE"><a href="#Inverse-Relations-in-TransE" class="headerlink" title="Inverse Relations in TransE"></a>Inverse Relations in TransE</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125125730171.png" alt=""></p>
+<h4 id="Composition-in-Transe"><a href="#Composition-in-Transe" class="headerlink" title="Composition in Transe"></a>Composition in Transe</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125125753671.png" alt=""></p>
+<h4 id="Limitation-Symmetric-Relations"><a href="#Limitation-Symmetric-Relations" class="headerlink" title="Limitation Symmetric Relations"></a>Limitation Symmetric Relations</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125125845889.png" alt=""></p>
+<h4 id="Limitation-1-to-n-Relations"><a href="#Limitation-1-to-n-Relations" class="headerlink" title="Limitation: 1-to-n Relations"></a>Limitation: 1-to-n Relations</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125125911425.png" alt=""></p>
+<h2 id="Knowledge-Graph-Completion-TransR"><a href="#Knowledge-Graph-Completion-TransR" class="headerlink" title="Knowledge Graph Completion : TransR"></a>Knowledge Graph Completion : TransR</h2><h3 id="TransR"><a href="#TransR" class="headerlink" title="TransR"></a>TransR</h3><p><a href="https://www.aaai.org/ocs/index.php/AAAI/AAAI15/paper/viewFile/9571/9523/" target="_blank" rel="noopener">Lin, et al., Learning entity and relation embeddings for knowledge graph completion,AAAI 2015</a></p>
+<p>TransE models translation of any relation in  the same embedding space.</p>
+<p>Can we design a new space for each relation  and do translation in relation-specific space?</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125130224413.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125130249365.png" alt=""></p>
+<h3 id="Symmetric-Relations-in-TransR"><a href="#Symmetric-Relations-in-TransR" class="headerlink" title="Symmetric Relations in TransR"></a>Symmetric Relations in TransR</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125130412532.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125130427466.png" alt=""></p>
+<h3 id="1-to-n-Relations-in-TransR"><a href="#1-to-n-Relations-in-TransR" class="headerlink" title="1-to-n Relations in TransR"></a>1-to-n Relations in TransR</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125130641871.png" alt=""></p>
+<h3 id="Inverse-Relations-in-TransR"><a href="#Inverse-Relations-in-TransR" class="headerlink" title="Inverse Relations in TransR"></a>Inverse Relations in TransR</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125131052646.png" alt=""></p>
+<h3 id="Composition-Relations-in-TransR"><a href="#Composition-Relations-in-TransR" class="headerlink" title="Composition Relations in TransR"></a>Composition Relations in TransR</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125132011443.png" alt=""></p>
+<p>High-level intuition: TransR models a triple with  linear functions, they are chainable</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125132035316.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125132052181.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125132127097.png" alt=""></p>
+<h2 id="Knowledge-Graph-Completion-DistMult"><a href="#Knowledge-Graph-Completion-DistMult" class="headerlink" title="Knowledge Graph Completion DistMult"></a>Knowledge Graph Completion DistMult</h2><h3 id="New-Idea-Bilinear-Modeling"><a href="#New-Idea-Bilinear-Modeling" class="headerlink" title="New Idea: Bilinear Modeling"></a>New Idea: Bilinear Modeling</h3><p><a href="https://arxiv.org/pdf/1412.6575.pdf" target="_blank" rel="noopener">Yang et al, Embedding Entities and Relations for Learning and Inference in Knowledge Bases, ICLR 2015</a></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125132249137.png" alt=""></p>
+<h3 id="DistMult"><a href="#DistMult" class="headerlink" title="DistMult"></a>DistMult</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125132316903.png" alt=""></p>
+<h3 id="1-to-n-Relations-in-DistMult"><a href="#1-to-n-Relations-in-DistMult" class="headerlink" title="1-to-n Relations in DistMult"></a>1-to-n Relations in DistMult</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125132452417.png" alt=""></p>
+<h3 id="Symmetric-Relations-in-DistMult"><a href="#Symmetric-Relations-in-DistMult" class="headerlink" title="Symmetric Relations in DistMult"></a>Symmetric Relations in DistMult</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125132517641.png" alt=""></p>
+<h3 id="Limitation-Antisymmetric-Relations"><a href="#Limitation-Antisymmetric-Relations" class="headerlink" title="Limitation: Antisymmetric Relations"></a>Limitation: Antisymmetric Relations</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125132547836.png" alt=""></p>
+<h3 id="Limitation-Inverse-Relations"><a href="#Limitation-Inverse-Relations" class="headerlink" title="Limitation: Inverse Relations"></a>Limitation: Inverse Relations</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125132910534.png" alt=""></p>
+<h3 id="Limitation-Composition-Relations"><a href="#Limitation-Composition-Relations" class="headerlink" title="Limitation: Composition Relations"></a>Limitation: Composition Relations</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125133048467.png" alt=""></p>
+<h2 id="Knowledge-Graph-Completion-ComplEx"><a href="#Knowledge-Graph-Completion-ComplEx" class="headerlink" title="Knowledge Graph Completion ComplEx"></a>Knowledge Graph Completion ComplEx</h2><h3 id="ComplEx"><a href="#ComplEx" class="headerlink" title="ComplEx"></a>ComplEx</h3><p><a href="http://proceedings.mlr.press/v48/trouillon16.pdf" target="_blank" rel="noopener">Trouillon et al, Complex Embeddings for Simple Link Prediction, ICML 2016</a></p>
+<p>Based on Distmult, ComplEx embeds entities  and relations in Complex vector space</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125133511498.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125133526515.png" alt=""></p>
+<h3 id="Antisymmetric-Relations-in-Complex"><a href="#Antisymmetric-Relations-in-Complex" class="headerlink" title="Antisymmetric Relations in Complex"></a>Antisymmetric Relations in Complex</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125133642715.png" alt=""></p>
+<h3 id="Symmetric-Relations-in-Complex"><a href="#Symmetric-Relations-in-Complex" class="headerlink" title="Symmetric Relations in Complex"></a>Symmetric Relations in Complex</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125133723426.png" alt=""></p>
+<h3 id="Inverse-Relations-in-ComplEx"><a href="#Inverse-Relations-in-ComplEx" class="headerlink" title="Inverse Relations in ComplEx"></a>Inverse Relations in ComplEx</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125133751079.png" alt=""></p>
+<h3 id="Composition-and-1-to-n"><a href="#Composition-and-1-to-n" class="headerlink" title="Composition and 1-to-n"></a>Composition and 1-to-n</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125133823651.png" alt=""></p>
+<h3 id="Expressiveness-of-All-Models"><a href="#Expressiveness-of-All-Models" class="headerlink" title="Expressiveness of All Models"></a>Expressiveness of All Models</h3><p>Properties and expressive power of different  KG completion methods:</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125133858385.png" alt=""></p>
+<h3 id="KG-Embeddings-in-Practice"><a href="#KG-Embeddings-in-Practice" class="headerlink" title="KG Embeddings in Practice"></a>KG Embeddings in Practice</h3><p><a href="https://openreview.net/forum?id=HkgEQnRqYQ&amp;noteId=HJlFFR7167" target="_blank" rel="noopener">Sun et al, RotatE: Knowledge Graph Embedding by Relational Rotation in Complex Space, ICLR 2019</a></p>
+<ul>
+<li>Different KGs may have drastically different  relation patterns! </li>
+<li>There is not a general embedding that works  for all KGs, use the table to select models </li>
+<li>Try TransE for a quick run if the target KG does  not have much symmetric relations </li>
+<li>Then use more expressive models, e.g.,  ComplEx, RotatE (TransE in Complex space)</li>
+</ul>
+<h3 id="Summary-12"><a href="#Summary-12" class="headerlink" title="Summary"></a>Summary</h3><ul>
+<li>Link prediction / Graph completion is one of  the prominent tasks on knowledge graphs </li>
+<li>Introduce <strong>TransE / TransR / DistMult /  ComplEx</strong> models with different embedding space and expressiveness</li>
+</ul>
+<h1 id="Reasoning-in-Knowledge-Graphs-using-Embeddings"><a href="#Reasoning-in-Knowledge-Graphs-using-Embeddings" class="headerlink" title="Reasoning in Knowledge Graphs using Embeddings"></a>Reasoning in Knowledge Graphs using Embeddings</h1><h3 id="Example-KG-Biomedicine"><a href="#Example-KG-Biomedicine" class="headerlink" title="Example KG: Biomedicine"></a>Example KG: Biomedicine</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125134236838.png" alt=""></p>
+<h3 id="Predictive-Queries-on-KG"><a href="#Predictive-Queries-on-KG" class="headerlink" title="Predictive Queries on KG"></a>Predictive Queries on KG</h3><p>Can we do multi-hop reasoning, i.e., answer  complex queries on an incomplete, massive KG?</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125134322354.png" alt=""></p>
+<h3 id="Predictive-One-hop-Queries"><a href="#Predictive-One-hop-Queries" class="headerlink" title="Predictive One-hop Queries"></a>Predictive One-hop Queries</h3><p>We can formulate knowledge graph completion  problems as answering one-hop queries.</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125134350031.png" alt=""></p>
+<h3 id="Path-Queries"><a href="#Path-Queries" class="headerlink" title="Path Queries"></a>Path Queries</h3><p>Generalize one-hop queries to path queries by  adding more relations on the path.</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125134559315.png" alt=""></p>
+<p>Query plan of path queries is a chain.</p>
+<p>Question: “What proteins are associated with  adverse events caused by Fulvestrant?”</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125134636080.png" alt=""></p>
+<p>Query: (e:Fulvestrant, (r:Causes, r:Assoc)) Given a KG, how to answer a path query?</p>
+<h3 id="Traversing-Knowledge-Graphs"><a href="#Traversing-Knowledge-Graphs" class="headerlink" title="Traversing Knowledge Graphs"></a>Traversing Knowledge Graphs</h3><ul>
+<li>We answer path queries by traversing the KG:  “What proteins are associated with adverse  events caused by Fulvestrant?” </li>
+<li>Query: (e:Fulvestrant, (r:Causes, r:Assoc))</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125134858926.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125134912765.png" alt=""></p>
+<h3 id="However-KGS-are-incomplete"><a href="#However-KGS-are-incomplete" class="headerlink" title="However, KGS are incomplete"></a>However, KGS are incomplete</h3><ul>
+<li>Answering queries seems easy: Just traverse  the graph. </li>
+<li>But KGs are incomplete and unknown: <ul>
+<li>Many relations between entities are missing or are  incomplete <ul>
+<li>For example, we lack all the biomedical knowledge </li>
+<li>Enumerating all the facts takes non-trivial time and cost,  we cannot hope that KGs will ever be fully complete </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Due to KG incompleteness, one is not able to  identify all the answer entities</li>
+</ul>
+<p>Can we first do KG completion and then  traverse the completed (probabilistic) KG?</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125140136209.png" alt=""></p>
+<h3 id="Task-Predictive-Oueries"><a href="#Task-Predictive-Oueries" class="headerlink" title="Task: Predictive Oueries"></a>Task: Predictive Oueries</h3><p>We need a way to answer path-based queries  over an incomplete knowledge graph.</p>
+<p> We want our approach to implicitly impute and  account for the incomplete KG. </p>
+<p>Task: Predictive queries </p>
+<ul>
+<li>Want to be able to answer arbitrary queries while implicitly imputing for the missing information </li>
+<li>Generalization of the link prediction task</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125140245867.png" alt=""></p>
+<h2 id="Answering-Predictive-Queries-on-Knowledge-Graphs"><a href="#Answering-Predictive-Queries-on-Knowledge-Graphs" class="headerlink" title="Answering Predictive Queries on Knowledge Graphs"></a>Answering Predictive Queries on Knowledge Graphs</h2><h3 id="General-Idea"><a href="#General-Idea" class="headerlink" title="General Idea"></a>General Idea</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125140416321.png" alt=""></p>
+<p>Map queries into embedding space. Learn to reason in  that space </p>
+<ul>
+<li>Embed query into a single point in the Euclidean space:  answer nodes are close to the query. </li>
+<li>Query2Box: Embed query into a hyper-rectangle (box) in the  Euclidean space: answer nodes are enclosed in the box.</li>
+</ul>
+<p>[<a href="https://arxiv.org/abs/1806.01445" target="_blank" rel="noopener">Embedding Logical Queries on Knowledge Graphs.</a> Hamilton, et al., NeurIPS 2018] </p>
+<p>[<a href="http://snap.stanford.edu/query2box/" target="_blank" rel="noopener">Query2box: Reasoning over Knowledge Graphs in Vector Space Using Box Embeddings</a>. Ren, et al., ICLR 2020]</p>
+<h3 id="Idea-Traversing-KG-in-Vector-Space"><a href="#Idea-Traversing-KG-in-Vector-Space" class="headerlink" title="Idea: Traversing KG in Vector Space"></a>Idea: Traversing KG in Vector Space</h3><p><a href="https://aclanthology.org/D15-1038.pdf" target="_blank" rel="noopener">Guu, et al., Traversing knowledge graphs in vector space, EMNLP 2015</a></p>
+<p>Key idea: Embed queries!</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125140710859.png" alt=""></p>
+<h3 id="Traversing-KG-in-Vector-Space"><a href="#Traversing-KG-in-Vector-Space" class="headerlink" title="Traversing KG in Vector Space"></a>Traversing KG in Vector Space</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125140749787.png" alt=""></p>
+<p>The embedding process only involves vector  addition, independent of # entities in the KG!</p>
+<p>Embed path queries in vector space. </p>
+<ul>
+<li>Question: “What proteins are associated with  adverse events caused by Fulvestrant?” </li>
+<li>Query: (e:Fulvestrant, (r:Causes , r:Assoc))</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125140839122.png" alt=""></p>
+<p>Insights: </p>
+<ul>
+<li>We can train TransE to optimize knowledge  graph completion objective (Lecture 10) </li>
+<li>Since TransE can naturally handle compositional  relations, it can handle path queries by  translating in the latent space for multiple hops  using addition of relation embeddings. </li>
+<li>For TransR / DistMult / ComplEx, since they  cannot handle compositional relations, they  cannot be easily extended to handle path  queries.</li>
+</ul>
+<h3 id="Conjunctive-Queries"><a href="#Conjunctive-Queries" class="headerlink" title="Conjunctive Queries"></a>Conjunctive Queries</h3><p>Can we answer more complex queries with logic  conjunction operation? </p>
+<ul>
+<li>Conjunctive Queries: “What are drugs that cause Short  of Breath and treat diseases associated with protein ESR2?” ((e:ESR2, (r:Assoc, r:TreatedBy)), (e:Short of Breath, (r:CausedBy))</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125141006116.png" alt=""></p>
+<p>How do we answer the question by KG traversal?</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125141028674.png" alt=""></p>
+<p>Traverse KG from anchor nodes: ESR2 and Short of  Breath:</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125141105096.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125141419215.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125141438965.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125141454464.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125141520705.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125141535370.png" alt=""></p>
+<ul>
+<li>How can we use embeddings to implicitly impute  the missing (ESR2, Assoc, Breast Cancer)?  </li>
+<li>Intuition: ESR2 interacts with both BRCA1 and ESR1.  Both proteins are associated with breast cancer</li>
+</ul>
+<h3 id="Traversing-KG-in-Vector-Space-1"><a href="#Traversing-KG-in-Vector-Space-1" class="headerlink" title="Traversing KG in Vector Space"></a>Traversing KG in Vector Space</h3><p>“What are drugs that cause Short of Breath and  treat diseases associated with protein ESR2?”</p>
+<p> ((e:ESR2, (r:Assoc, r:TreatedBy)), (e:Short of Breath, (r:CausedBy))</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125141716535.png" alt=""></p>
+<p>Each intermediate node represents a set of entities, how do we  represent it? How do we define the intersection operation in  the latent space?</p>
+<h2 id="Qvery2box-Reasoning-over-KGS-Using-Box-Embeddings"><a href="#Qvery2box-Reasoning-over-KGS-Using-Box-Embeddings" class="headerlink" title="Qvery2box: Reasoning over KGS Using Box Embeddings"></a>Qvery2box: Reasoning over KGS Using Box Embeddings</h2><h3 id="Conjunctive-Queries-1"><a href="#Conjunctive-Queries-1" class="headerlink" title="Conjunctive Queries"></a>Conjunctive Queries</h3><p>How can we answer more complex queries with  logical conjunction operation?</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125141834101.png" alt=""></p>
+<p>(1) Each intermediate node represents a set of  entities; how do we represent it?</p>
+<p>(2) How do we define the intersection operation  in the latent space?</p>
+<h3 id="Box-Embeddings"><a href="#Box-Embeddings" class="headerlink" title="Box Embeddings"></a>Box Embeddings</h3><p><a href="https://openreview.net/forum?id=BJgr4kSFDS" target="_blank" rel="noopener">Ren et al., Query2box: Reasoning over Knowledge Graphs in Vector Space Using Box Embeddings, ICLR 2020.</a></p>
+<p>Embed queries with hyper-rectangles (boxes)</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125142002604.png" alt=""></p>
+<h3 id="Key-Insight-Intersection-交点"><a href="#Key-Insight-Intersection-交点" class="headerlink" title="Key Insight: Intersection(交点)"></a>Key Insight: Intersection(交点)</h3><ul>
+<li>Intersection of boxes is well-defined! </li>
+<li>When we traverse the KG to find the answers,  each step produces a set of reachable entities. </li>
+<li>How can we better model these sets?  <ul>
+<li>Boxes are a powerful abstraction, as we can  project the center and control the offset to model  the set of entities enclosed in the box</li>
+</ul>
+</li>
+</ul>
+<h3 id="Embed-with-Box-Embedding"><a href="#Embed-with-Box-Embedding" class="headerlink" title="Embed with Box Embedding"></a>Embed with Box Embedding</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125142209680.png" alt=""></p>
+<h3 id="Projection-预测-Operator"><a href="#Projection-预测-Operator" class="headerlink" title="Projection(预测) Operator"></a>Projection(预测) Operator</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125142322344.png" alt=""></p>
+<h3 id="Embed-with-Box-Embedding-1"><a href="#Embed-with-Box-Embedding-1" class="headerlink" title="Embed with Box Embedding"></a>Embed with Box Embedding</h3><p>How do we take intersection of boxes?</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125142406480.png" alt=""></p>
+<h3 id="Intersection-Operator"><a href="#Intersection-Operator" class="headerlink" title="Intersection Operator"></a>Intersection Operator</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125142437146.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125142506973.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125142541674.png" alt=""></p>
+<p><strong>Use box intersection operator</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125142629495.png" alt=""></p>
+<h3 id="Entity-to-box-Distance"><a href="#Entity-to-box-Distance" class="headerlink" title="Entity-to-box Distance"></a>Entity-to-box Distance</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125142708751.png" alt=""></p>
+<h3 id="Extending-to-Union-Operation"><a href="#Extending-to-Union-Operation" class="headerlink" title="Extending to Union Operation"></a>Extending to Union Operation</h3><ul>
+<li>Can we embed complex queries with union? E.g.: “What drug can treat breast cancer or lung cancer?” </li>
+<li>Conjunctive queries + disjunction is called  Existential Positive First-order (EPFO) queries. We’ll refer to them as AND-OR queries. </li>
+<li>Can we also design a disjunction operator and  embed AND-OR queries in low-dimensional  vector space?</li>
+</ul>
+<h3 id="Embedding-AND-OR-Queries"><a href="#Embedding-AND-OR-Queries" class="headerlink" title="Embedding AND-OR Queries"></a>Embedding AND-OR Queries</h3><ul>
+<li>Can we embed AND-OR queries in a low-dimensional vector space? </li>
+<li>No! Intuition: Allowing union over arbitrary  queries requires high-dimensional embeddings! </li>
+<li>Example:</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125142818003.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125142832336.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125142913967.png" alt=""></p>
+<ul>
+<li>Example 2:</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125142945483.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125142957994.png" alt=""></p>
+<p>Can we embed AND-OR queries in low-dimensional vector space?</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125143030021.png" alt=""></p>
+<p>Since we cannot embed AND-OR queries in lowdimensional space, can we still handle them? </p>
+<ul>
+<li>Key idea: take all unions out and only do union  at the last step!</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125143057507.png" alt=""></p>
+<h3 id="Disjunctive-Normal-Form"><a href="#Disjunctive-Normal-Form" class="headerlink" title="Disjunctive Normal Form"></a>Disjunctive Normal Form</h3><p>Any AND-OR query can be transformed into  equivalent DNF, i.e., disjunction of  conjunctive queries.</p>
+<img src="/images/loading.gif" data-original="../images/basic/image-20211125143152733.png" style="zoom:67%;">
+
+<h3 id="Distance-Between-q-and-an-Entity"><a href="#Distance-Between-q-and-an-Entity" class="headerlink" title="Distance Between q and an Entity"></a>Distance Between q and an Entity</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125143335482.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125143351801.png" alt=""></p>
+<h2 id="How-to-Train-Query2box"><a href="#How-to-Train-Query2box" class="headerlink" title="How to Train Query2box"></a>How to Train Query2box</h2><h3 id="Training-Overview"><a href="#Training-Overview" class="headerlink" title="Training Overview"></a>Training Overview</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125143431185.png" alt=""></p>
+<p>How to achieve a query, its answers, its negative  answers from the KG to train the parameters? </p>
+<p>How to split the KG for query answering?</p>
+<h3 id="Training"><a href="#Training" class="headerlink" title="Training"></a>Training</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125143503403.png" alt=""></p>
+<h3 id="Query-Generation-from-Templates"><a href="#Query-Generation-from-Templates" class="headerlink" title="Query Generation from Templates"></a>Query Generation from Templates</h3><p>Generate queries from multiple query  templates:</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125143605107.png" alt=""></p>
+<ul>
+<li>How can we generate a complex query? </li>
+<li>We start with a query template </li>
+<li>Query template can be viewed as an abstraction of the  query</li>
+<li>We generate a query by instantiating every variable with  a concrete entity and relation from the KG <ul>
+<li>E.g., instantiate Anchor1 with ESR2 (a node on KG) </li>
+<li>E.g., instantiate Rel1 with Assoc (an edge on KG) </li>
+</ul>
+</li>
+<li>How to instantiate query template given a KG?</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125143700064.png" alt=""></p>
+<p>How to instantiate a query template given a KG?</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125143725279.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125143746088.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125143824359.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125143836765.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125143851219.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125143914046.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125143927158.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125144011278.png" alt=""></p>
+<h2 id="Example-of-Query2box"><a href="#Example-of-Query2box" class="headerlink" title="Example of Query2box"></a>Example of Query2box</h2><h3 id="Visualization"><a href="#Visualization" class="headerlink" title="Visualization"></a>Visualization</h3><ul>
+<li>What do box embeddings actually learn? Example: “List male instrumentalists who play  string instruments” </li>
+<li>We use t-SNE to reduce the embedding space  to a 2-dimensional space, in order to visualize  the query results</li>
+</ul>
+<h3 id="Embedding-Space"><a href="#Embedding-Space" class="headerlink" title="Embedding Space"></a>Embedding Space</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125144257396.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125144311368.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125144322567.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125144337800.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125144348928.png" alt=""></p>
+<h3 id="Summary-13"><a href="#Summary-13" class="headerlink" title="Summary"></a>Summary</h3><p>We introduce answering predictive queries  on large knowledge graphs. </p>
+<p>The key idea is to embed queries by  navigating the embedding space! </p>
+<p>We embed the query by composing learned  operators </p>
+<p>Embedding of the query is close to its answers in  the embedding space</p>
+<h1 id="Fast-Neural-Subgraph-Matching-and-Counting"><a href="#Fast-Neural-Subgraph-Matching-and-Counting" class="headerlink" title="Fast Neural Subgraph Matching and Counting"></a>Fast Neural Subgraph Matching and Counting</h1><h3 id="Subgraphs"><a href="#Subgraphs" class="headerlink" title="Subgraphs"></a>Subgraphs</h3><p>Subgraphs are the building blocks of  networks:</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125144546910.png" alt=""></p>
+<p>They have the power to characterize and  discriminate networks</p>
+<h3 id="Building-Blocks-of-Networks"><a href="#Building-Blocks-of-Networks" class="headerlink" title="Building Blocks of Networks"></a>Building Blocks of Networks</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125144618204.png" alt=""></p>
+<h2 id="Subgraphs-and-Motifs"><a href="#Subgraphs-and-Motifs" class="headerlink" title="Subgraphs and Motifs"></a>Subgraphs and Motifs</h2><h3 id="Definition-1"><a href="#Definition-1" class="headerlink" title="Definition"></a>Definition</h3><p>Two ways to formalize “network building blocks”</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125144717760.png" alt=""></p>
+<p>Alternate terminology: “induced subgraph”</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125144742483.png" alt=""></p>
+<p>Alternate terminology: “non-induced subgraph” or  just “subgraph”</p>
+<p>The best definition depends on the domain!  Examples: </p>
+<ul>
+<li>Chemistry: Node-induced (functional groups) </li>
+<li>Knowledge graphs: Often edge-induced (focus is on  edges representing logical relations)</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125144929169.png" alt=""></p>
+<h3 id="Graph-Isomorphism-同构关系"><a href="#Graph-Isomorphism-同构关系" class="headerlink" title="Graph Isomorphism(同构关系)"></a>Graph Isomorphism(同构关系)</h3><p><strong>Graph isomorphism problem</strong>: Check whether two  graphs are identical:</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125145041160.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125145101036.png" alt=""></p>
+<h3 id="Case-Example-of-Subgraphs"><a href="#Case-Example-of-Subgraphs" class="headerlink" title="Case Example of Subgraphs"></a>Case Example of Subgraphs</h3><p>All non-isomorphic, connected, undirected  graphs of size 4</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125145144457.png" alt=""></p>
+<p>All non-isomorphic, connected, directed  graphs of size 3</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125145200590.png" alt=""></p>
+<h3 id="Network-Motifs"><a href="#Network-Motifs" class="headerlink" title="Network Motifs"></a>Network Motifs</h3><p>Network motifs: “recurring, significant  patterns of interconnections”  </p>
+<p>How to define a network motif:  </p>
+<ul>
+<li>Pattern: Small (node-induced) subgraph </li>
+<li>Recurring: Found many times, i.e., with high  frequency </li>
+<li>Significant: More frequent than expected, i.e., in  randomly generated graphs? </li>
+<li>How to define frequency? How to define random graphs?</li>
+</ul>
+<h3 id="Motifs-Induced-Subaraphs"><a href="#Motifs-Induced-Subaraphs" class="headerlink" title="Motifs: Induced Subaraphs"></a>Motifs: Induced Subaraphs</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125145359536.png" alt=""></p>
+<h3 id="Why-Do-We-Need-Motifs"><a href="#Why-Do-We-Need-Motifs" class="headerlink" title="Why Do We Need Motifs?"></a>Why Do We Need Motifs?</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125145427190.png" alt=""></p>
+<h3 id="Subgraph-Frequency"><a href="#Subgraph-Frequency" class="headerlink" title="Subgraph Frequency"></a>Subgraph Frequency</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125145455485.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125145508992.png" alt=""></p>
+<p>What if the dataset contains multiple graphs,  and we want to compute frequency of  subgraphs in the dataset? </p>
+<p>Solution: Treat the dataset as a giant graph G_T with disconnected components corresponding  to individual graphs</p>
+<h3 id="Defining-Motif-Significance"><a href="#Defining-Motif-Significance" class="headerlink" title="Defining Motif Significance"></a>Defining Motif Significance</h3><p>To define significance, we need to have a  null-model (i.e., point of comparison). </p>
+<p>Key idea: Subgraphs that occur in a real  network much more often than in a random network have functional significance.</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125145619042.png" alt=""></p>
+<h3 id="Defining-Random-Graphs"><a href="#Defining-Random-Graphs" class="headerlink" title="Defining Random Graphs"></a>Defining Random Graphs</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125145657559.png" alt=""></p>
+<h3 id="New-Model-Configuration-Mode"><a href="#New-Model-Configuration-Mode" class="headerlink" title="New Model: Configuration Mode"></a>New Model: Configuration Mode</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125145743250.png" alt=""></p>
+<h3 id="Alternative-for-Spokes-Switching"><a href="#Alternative-for-Spokes-Switching" class="headerlink" title="Alternative for Spokes: Switching"></a>Alternative for Spokes: Switching</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125145836452.png" alt=""></p>
+<p>Intuition: Motifs are overrepresented in a  network when compared to random graphs: </p>
+<ul>
+<li>Step 1: Count motifs in the given graph (G_real) </li>
+<li>Step 2: Generate random graphs with similar  statistics (e.g. number of nodes, edges, degree  sequence), and count motifs in the random  graphs </li>
+<li>Step 3: Use statistical measures to evaluate  how significant is each motif <ul>
+<li>Use Z-score</li>
+</ul>
+</li>
+</ul>
+<h3 id="Z-score-for-Statistical-Sianificance"><a href="#Z-score-for-Statistical-Sianificance" class="headerlink" title="Z-score for Statistical Sianificance"></a>Z-score for Statistical Sianificance</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125145951798.png" alt=""></p>
+<ul>
+<li><p>For each subgraph:  </p>
+<ul>
+<li><p>z-score metric is capable of classifying the subgraph  “significance”: </p>
+<ul>
+<li><p>Negative values indicate under-representation  </p>
+</li>
+<li><p>Positive values indicate over-representation  </p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>We create a network significance profile:  </p>
+<ul>
+<li>A feature vector with values for all subgraph types </li>
+</ul>
+</li>
+<li><p>Next: Compare profiles of different graphs with random  graphs: </p>
+<ul>
+<li>Regulatory network (gene regulation)  </li>
+<li>Neuronal network (synaptic connections)  </li>
+<li>World Wide Web (hyperlinks between pages)  </li>
+<li>Social network (friendships)</li>
+<li>Language networks (word adjacency)</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125150115901.png" alt=""></p>
+<h3 id="Summary-Detecting-Motifs-主题"><a href="#Summary-Detecting-Motifs-主题" class="headerlink" title="Summary: Detecting Motifs(主题)"></a>Summary: Detecting Motifs(主题)</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125150139494.png" alt=""></p>
+<h3 id="Variations-on-the-Motif-Concept"><a href="#Variations-on-the-Motif-Concept" class="headerlink" title="Variations on the Motif Concept"></a>Variations on the Motif Concept</h3><ul>
+<li><p>Extensions: </p>
+<ul>
+<li>Directed and undirected  </li>
+<li>Colored and uncolored  </li>
+<li>Temporal and static motifs </li>
+</ul>
+</li>
+<li><p>Variations on the concept:  </p>
+<ul>
+<li>Different frequency concepts  </li>
+<li>Different significance metrics  </li>
+<li>Under-Representation (anti-motifs)  </li>
+<li>Different null models</li>
+</ul>
+</li>
+<li><p>Subgraphs and motifs are the building blocks  of graphs </p>
+<ul>
+<li>Subgraph isomorphism and counting are NP-hard </li>
+</ul>
+</li>
+<li><p>Understanding which motifs are frequent or  significant in a dataset gives insight into the  unique characteristics of that domain </p>
+</li>
+<li><p>Use random graphs as null model to evaluate  the significance of motif via Z-score</p>
+</li>
+</ul>
+<h2 id="Neural-Subgraph-Matching"><a href="#Neural-Subgraph-Matching" class="headerlink" title="Neural Subgraph Matching"></a>Neural Subgraph Matching</h2><p>Given:  </p>
+<ul>
+<li>Large target graph (can be disconnected) </li>
+<li>Query graph (connected)</li>
+</ul>
+<p>Decide: </p>
+<ul>
+<li>Is a query graph a subgraph in the target graph?</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125150553375.png" alt=""></p>
+<h3 id="Isomorphism-as-an-ML-Task"><a href="#Isomorphism-as-an-ML-Task" class="headerlink" title="Isomorphism as an ML Task"></a>Isomorphism as an ML Task</h3><ul>
+<li>Large target graph (can be disconnected) </li>
+<li>Query graph (has to be connected) </li>
+<li>Use GNN to predict subgraph isomorphism:</li>
+<li>Intuition: Exploit the geometric shape of  embedding space to capture the properties of  subgraph isomorphism</li>
+</ul>
+<h3 id="Task-Setup"><a href="#Task-Setup" class="headerlink" title="Task Setup"></a>Task Setup</h3><p>Consider a binary prediction: Return True if  query is isomorphic to a subgraph of the  target graph, else return False</p>
+<p>Finding node correspondences between Q and T is another challenging  problem, which will not be covered in this lecture.</p>
+<h3 id="Overview-of-the-Approach"><a href="#Overview-of-the-Approach" class="headerlink" title="Overview of the Approach"></a>Overview of the Approach</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125151601190.png" alt=""></p>
+<h3 id="Neural-Architecture-for-Subgraphs"><a href="#Neural-Architecture-for-Subgraphs" class="headerlink" title="Neural Architecture for Subgraphs"></a>Neural Architecture for Subgraphs</h3><p>(1) We are going to work with node-anchored  definitions:</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125151651322.png" alt=""></p>
+<p>(2) We are going to work with node-anchored neighborhoods:</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125151712449.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125151727903.png" alt=""></p>
+<h3 id="Why-Anchor"><a href="#Why-Anchor" class="headerlink" title="Why Anchor?"></a>Why Anchor?</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125151751318.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125151808372.png" alt=""></p>
+<h3 id="Order-Embedding-Space"><a href="#Order-Embedding-Space" class="headerlink" title="Order Embedding Space"></a>Order Embedding Space</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125151828591.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125151842772.png" alt=""></p>
+<h3 id="Why-Order-Embedding-Space"><a href="#Why-Order-Embedding-Space" class="headerlink" title="Why Order Embedding Space?"></a>Why Order Embedding Space?</h3><p>Subgraph isomorphism relationship can be  nicely encoded in order embedding space</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125151910651.png" alt=""></p>
+<p>All properties have their counter-parts in the  order embedding space</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125151935557.png" alt=""></p>
+<h3 id="Order-Constraint"><a href="#Order-Constraint" class="headerlink" title="Order Constraint"></a>Order Constraint</h3><ul>
+<li>We use a GNN to learn to embed neighborhoods  and preserve the order embedding structure </li>
+<li>What loss function should we use, so that the  learned order embedding reflects the subgraph  relationship? </li>
+<li>We design loss functions based on the order  constraint: <ul>
+<li>Order constraint specifies the ideal order embedding  property that reflects subgraph relationships</li>
+</ul>
+</li>
+</ul>
+<p>We specify the order constraint to ensure that  the subgraph properties are preserved in the  order embedding space</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125152050328.png" alt=""></p>
+<h3 id="Loss-Function"><a href="#Loss-Function" class="headerlink" title="Loss Function"></a>Loss Function</h3><p>GNN Embeddings are learned by minimizing a max-margin loss</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125152129798.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125152148335.png" alt=""></p>
+<h3 id="Training-Neural-Subgraph-Matching"><a href="#Training-Neural-Subgraph-Matching" class="headerlink" title="Training Neural Subgraph Matching"></a>Training Neural Subgraph Matching</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125152212144.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125152226314.png" alt=""></p>
+<h3 id="Training-Details"><a href="#Training-Details" class="headerlink" title="Training Details"></a>Training Details</h3><ul>
+<li>How many training examples to sample? <ul>
+<li>At every iteration, we sample new training pairs </li>
+<li>Benefit: Every iteration, the model sees different  subgraph examples </li>
+<li>Improves performance and avoids overfitting – since  there are exponential number of possible subgraphs  to sample from </li>
+</ul>
+</li>
+<li>How deep is the BFS sampling? <ul>
+<li>A hyper-parameter that trades off runtime and  performance </li>
+<li>Usually use 3-5, depending on size of the dataset</li>
+</ul>
+</li>
+</ul>
+<h3 id="Subgraph-Predictions-on-New-Graphs"><a href="#Subgraph-Predictions-on-New-Graphs" class="headerlink" title="Subgraph Predictions on New Graphs"></a>Subgraph Predictions on New Graphs</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125152332240.png" alt=""></p>
+<h3 id="Summary-Neural-Subgraph-Matching"><a href="#Summary-Neural-Subgraph-Matching" class="headerlink" title="Summary: Neural Subgraph Matching"></a>Summary: Neural Subgraph Matching</h3><ul>
+<li>Neural subgraph matching uses a machine learning-based approach to learn the NP-hard problem of  subgraph isomorphism <ul>
+<li>Given query and target graph, it embeds both graphs into an  order embedding space </li>
+<li>Using these embeddings, it then computes E(G_q, G_t) to  determine whether query is a subgraph of the target </li>
+</ul>
+</li>
+<li>Embedding graphs within an order embedding  space allows subgraph isomorphism to be  efficiently represented and tested by the relative  positions of graph embeddings</li>
+</ul>
+<h2 id="Finding-Frequent-Subgraphs"><a href="#Finding-Frequent-Subgraphs" class="headerlink" title="Finding Frequent Subgraphs"></a>Finding Frequent Subgraphs</h2><h3 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a>Intro</h3><p>Generally, finding the most frequent size-k motifs requires solving two challenges:  </p>
+<p>1) Enumerating all size-k connected subgraphs<br>2) Counting #(occurrences of each subgraph type)</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125154601404.png" alt=""></p>
+<h3 id="Why-is-it-Hard"><a href="#Why-is-it-Hard" class="headerlink" title="Why is it Hard?"></a>Why is it Hard?</h3><ul>
+<li>Just knowing if a certain subgraph exists in  a graph, is a hard computational problem! <ul>
+<li>Subgraph isomorphism is NP-complete  </li>
+</ul>
+</li>
+<li>Computation time grows exponentially as  the size of the subgraphs increases  <ul>
+<li>Feasible motif size for traditional methods is  relatively small (3 to 7)</li>
+</ul>
+</li>
+</ul>
+<h3 id="Solution-with-Representation-Learning"><a href="#Solution-with-Representation-Learning" class="headerlink" title="Solution with Representation Learning"></a>Solution with Representation Learning</h3><ul>
+<li>Finding frequent subgraph patterns is  computationally hard <ul>
+<li>Combinatorial explosion of number of possible patterns </li>
+<li>Counting subgraph frequency is NP-hard </li>
+</ul>
+</li>
+<li>Representation learning can tackle these  challenges: <ul>
+<li>Combinatorial explosion -&gt; organize the search space </li>
+<li>Subgraph isomorphism -&gt; prediction using GNN</li>
+</ul>
+</li>
+</ul>
+<p>Representation learning can tackle these  challenges: </p>
+<ul>
+<li>Counting #(occurrences of each subgraph type) <ul>
+<li>Solution: Use GNN to “predict” the frequency of the subgraph. </li>
+</ul>
+</li>
+<li>Enumerating all size-k connected subgraphs <ul>
+<li>Solution: Don’t enumerate subgraphs but construct a  size-k subgraph incrementally <ul>
+<li>Note: We are only interested  in high frequency subgraphs</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="Problem-Setup-Frequent-Motif-Mining"><a href="#Problem-Setup-Frequent-Motif-Mining" class="headerlink" title="Problem Setup: Frequent Motif Mining"></a>Problem Setup: Frequent Motif Mining</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125155541458.png" alt=""></p>
+<h3 id="SpMiner-Overview"><a href="#SpMiner-Overview" class="headerlink" title="SpMiner: Overview"></a>SpMiner: Overview</h3><p>SPMiner: A neural model to identify frequent motifs</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125155630964.png" alt=""></p>
+<h3 id="Key-Idea"><a href="#Key-Idea" class="headerlink" title="Key Idea"></a>Key Idea</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125155658883.png" alt=""></p>
+<h3 id="Motif-Frequency-Estimation"><a href="#Motif-Frequency-Estimation" class="headerlink" title="Motif Frequency Estimation"></a>Motif Frequency Estimation</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125155725778.png" alt=""></p>
+<h3 id="Spminer-Search-Procedure"><a href="#Spminer-Search-Procedure" class="headerlink" title="Spminer Search Procedure"></a>Spminer Search Procedure</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125155754537.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125155810214.png" alt=""></p>
+<p>Termination: Upon reaching a desired motif size, take  the subgraph of the target graph induced by S.</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125155835995.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125155938661.png" alt=""></p>
+<h3 id="Results-Small-Motifs"><a href="#Results-Small-Motifs" class="headerlink" title="Results: Small Motifs"></a>Results: Small Motifs</h3><ul>
+<li>Ground-truth: Find most frequent 10 motifs in  dataset by brute-force exact enumeration (expensive) </li>
+<li>Question: Can the model identify frequent motifs? </li>
+<li>Result: The model identifies 9 and 8 of the top 10  motifs, respectively.</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125160016447.png" alt=""></p>
+<h3 id="Experiments-Large-motifs"><a href="#Experiments-Large-motifs" class="headerlink" title="Experiments: Large motifs"></a>Experiments: Large motifs</h3><ul>
+<li>Question: How do the frequencies of the  identified motif compare? </li>
+<li>Result: SPMiner identifies motifs that appear  10-100x more frequently than the baselines</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125160058760.png" alt=""></p>
+<h3 id="Summary-14"><a href="#Summary-14" class="headerlink" title="Summary"></a>Summary</h3><ul>
+<li>Subgraphs and motifs are important concepts that  provide insights into the structure of graphs. Their  frequency can be used as features for nodes/graphs. </li>
+<li>We covered neural approaches to prediction subgraph  isomorphism relationship. </li>
+<li>Order embeddings have desirable properties and can  be used to encode subgraph relations </li>
+<li>Neural embedding-guided search in order embedding  space can enable ML model to identify motifs much  more frequent than existing methods</li>
+</ul>
+<h1 id="GNNS-for-Recommender-Systems"><a href="#GNNS-for-Recommender-Systems" class="headerlink" title="GNNS for Recommender Systems"></a>GNNS for Recommender Systems</h1><h2 id="Recommender-Systems-Task-and-Evaluation"><a href="#Recommender-Systems-Task-and-Evaluation" class="headerlink" title="Recommender Systems Task and Evaluation"></a>Recommender Systems Task and Evaluation</h2><h3 id="Preliminary-of-Recommendation"><a href="#Preliminary-of-Recommendation" class="headerlink" title="Preliminary of Recommendation"></a>Preliminary of Recommendation</h3><p>Information Explosion in the era of Internet </p>
+<ul>
+<li>10K+ movies in Netflix </li>
+<li>12M products in Amazon </li>
+<li>70M+ music tracks in Spotify </li>
+<li>10B+ videos on YouTube </li>
+<li>200B+ pins (images) in Pinterest </li>
+</ul>
+<p>Personalized recommendation (i.e., suggesting  a small number of interesting items for each  user) is critical for users to effectively explore  the content of their interest.</p>
+<h3 id="Recommender-System-as-a-Graph"><a href="#Recommender-System-as-a-Graph" class="headerlink" title="Recommender System as a Graph"></a>Recommender System as a Graph</h3><p>Recommender system can  be naturally modeled as a  bipartite graph </p>
+<ul>
+<li>A graph with two node types:  users and items. </li>
+<li>Edges connect users and items <ul>
+<li>Indicates user-item interaction  (e.g., click, purchase, review etc.) </li>
+<li>Often associated with timestamp  (timing of the interaction).</li>
+</ul>
+</li>
+</ul>
+<h3 id="Recommendation-Task"><a href="#Recommendation-Task" class="headerlink" title="Recommendation Task"></a>Recommendation Task</h3><ul>
+<li>Given <ul>
+<li>Past user-item interactions </li>
+</ul>
+</li>
+<li>Task <ul>
+<li>Predict new items each user will  interact in the future. </li>
+<li>Can be cast as link prediction problem. <ul>
+<li>Predict new user-item interaction  edges given the past edges.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125161301314.png" alt=""></p>
+<h3 id="Top-k-Recommendation"><a href="#Top-k-Recommendation" class="headerlink" title="Top-k Recommendation"></a>Top-k Recommendation</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125161327256.png" alt=""></p>
+<h3 id="Evaluation-Metric-Recall-k-1"><a href="#Evaluation-Metric-Recall-k-1" class="headerlink" title="Evaluation Metric: Recall@k(1)"></a>Evaluation Metric: Recall@k(1)</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125161418271.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125161433448.png" alt=""></p>
+<h2 id="Recommender-Systems-Embedding-based-Models"><a href="#Recommender-Systems-Embedding-based-Models" class="headerlink" title="Recommender Systems Embedding-based Models"></a>Recommender Systems Embedding-based Models</h2><h3 id="Notation-1"><a href="#Notation-1" class="headerlink" title="Notation"></a>Notation</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125161544042.png" alt=""></p>
+<h3 id="Score-Function"><a href="#Score-Function" class="headerlink" title="Score Function"></a>Score Function</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125161724097.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125161753654.png" alt=""></p>
+<h3 id="Training-Objective"><a href="#Training-Objective" class="headerlink" title="Training Objective"></a>Training Objective</h3><p>Embedding-based models have three kinds of  parameters:</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125161848761.png" alt=""></p>
+<p>Training objective: Optimize the model  parameters to achieve high recall@K on seen  (i.e., training) user-item interactions </p>
+<ul>
+<li>We hope this objective would lead to high  recall@K on unseen (i.e., test) interactions.</li>
+</ul>
+<h3 id="Surrogate-代理-Loss-Functions"><a href="#Surrogate-代理-Loss-Functions" class="headerlink" title="Surrogate(代理) Loss Functions"></a>Surrogate(代理) Loss Functions</h3><ul>
+<li>The vanilla training objective (training  recall@K) is not differentiable. <ul>
+<li>Cannot apply efficient gradient-based optimization. </li>
+</ul>
+</li>
+<li>Two surrogate loss functions are widely-used  to enable efficient gradient-based  optimization. <ul>
+<li>Binary loss </li>
+<li>Bayesian Personalized Ranking (BPR) loss </li>
+</ul>
+</li>
+<li>Surrogate losses are differentiable and should  align well with the original training objective.</li>
+</ul>
+<h3 id="Binary-Loss"><a href="#Binary-Loss" class="headerlink" title="Binary Loss"></a>Binary Loss</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125162203724.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125162305170.png" alt=""></p>
+<p>Binary loss pushes the scores of positive edges  higher than those of negative edges. </p>
+<ul>
+<li>This aligns with the training recall metric since  positive edges need to be recalled.</li>
+</ul>
+<p>Issue: </p>
+<ul>
+<li>In the binary loss, the scores of ALL positive edges are pushed higher than those  of ALL negative edges. </li>
+<li>This would unnecessarily penalize model  predictions even if the training recall metric is  perfect. </li>
+<li>Why? (example in the next slide)</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125162600294.png" alt=""></p>
+<ul>
+<li>Key insight: The binary loss is non-personalized in the sense that the positive/negative edges  are considered across ALL users at once. </li>
+<li>However, the recall metric is inherently  personalized (defined for each user).  <ul>
+<li>The non-personalized binary loss is overly-stringent  for the personalized recall metric.</li>
+</ul>
+</li>
+</ul>
+<h3 id="Desirable-Surrogate-Loss"><a href="#Desirable-Surrogate-Loss" class="headerlink" title="Desirable Surrogate Loss"></a>Desirable Surrogate Loss</h3><p>Lesson learned: Surrogate loss  function should be defined in  a personalized manner. </p>
+<ul>
+<li><p>For each user, we want the  scores of positive items to be  higher than those of the  negative items </p>
+</li>
+<li><p>We do not care about the score  ordering across users. </p>
+</li>
+</ul>
+<p>Bayesian Personalized Ranking  (BPR) loss achieves this!</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125162736104.png" alt=""></p>
+<p>Bayesian Personalized Ranking (BPR) loss is a  personalized surrogate loss that aligns better  with the recall@K metric.</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125162806352.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125162824987.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125162840657.png" alt=""></p>
+<h3 id="Summary-15"><a href="#Summary-15" class="headerlink" title="Summary"></a>Summary</h3><ul>
+<li>We have introduced  <ul>
+<li>Recall@K as a metric for personalized  recommendation </li>
+<li>Embedding-based models <ul>
+<li>Three kinds of parameters to learn <ul>
+<li>user encoder to generate user embeddings </li>
+<li>item encoder to generate item embeddings </li>
+<li>score function to predict the user-item interaction likelihood. </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Surrogate loss functions to achieve the high recall  metric. </li>
+</ul>
+</li>
+<li>Embedding-based models have achieved SoTA in recommender systems.  <ul>
+<li>Why do they work so well?</li>
+</ul>
+</li>
+</ul>
+<h3 id="Why-Embedding-Models-Work"><a href="#Why-Embedding-Models-Work" class="headerlink" title="Why Embedding Models Work?"></a>Why Embedding Models Work?</h3><ul>
+<li>Underlying idea: </li>
+<li>Collaborative filtering <ul>
+<li>Recommend items for a  user by collecting  preferences of many  other similar users. </li>
+<li>Similar users tend to  prefer similar items. </li>
+</ul>
+</li>
+<li>Key question: How to  capture similarity  between users/items?</li>
+</ul>
+<img src="/images/loading.gif" data-original="../images/basic/image-20211125163152461.png" style="zoom:50%;">
+
+<p>Embedding-based models can capture  similarity of users/items! </p>
+<ul>
+<li>Low-dimensional embeddings cannot simply  memorize all user-item interaction data. </li>
+<li>Embeddings are forced to capture similarity  between users/items to fit the data. </li>
+<li>This allows the models to make effective prediction  on unseen user-item interactions.</li>
+</ul>
+<h3 id="This-Lecture-GNNS-for-Recsys"><a href="#This-Lecture-GNNS-for-Recsys" class="headerlink" title="This Lecture: GNNS for Recsys"></a>This Lecture: GNNS for Recsys</h3><p>Neural Graph Collaborative Filtering (NGCF)  [Wang et al. 2019], LightGCN [He et al. 2020] </p>
+<ul>
+<li>Improve the conventional collaborative filtering  models (i.e., matrix factorization) by explicitly  modeling graph structure using GNNs. </li>
+</ul>
+<p>PinSAGE [Ying et al. 2018] </p>
+<ul>
+<li>Use GNNs to generate high-quality embeddings by  simultaneously capturing rich node attributes (e.g.,  images) and the graph structure.</li>
+</ul>
+<h2 id="Neural-Graph-Collaborative-Filtering"><a href="#Neural-Graph-Collaborative-Filtering" class="headerlink" title="Neural Graph Collaborative Filtering"></a>Neural Graph Collaborative Filtering</h2><h3 id="Conventional-Collaborative-Filtering"><a href="#Conventional-Collaborative-Filtering" class="headerlink" title="Conventional Collaborative Filtering"></a>Conventional Collaborative Filtering</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125163443389.png" alt=""></p>
+<h3 id="Limitations-of-MF"><a href="#Limitations-of-MF" class="headerlink" title="Limitations of MF"></a>Limitations of MF</h3><p>The model itself does not explicitly capture  graph structure </p>
+<ul>
+<li>The graph structure is only implicitly captured in  the training objective. </li>
+</ul>
+<p>Only the first-order graph structure (i.e.,  edges) is captured in the training objective. </p>
+<ul>
+<li>High-order graph structure (e.g., k-hop paths  between two nodes) is not explicitly captured.</li>
+</ul>
+<h3 id="Motivation-1"><a href="#Motivation-1" class="headerlink" title="Motivation"></a>Motivation</h3><ul>
+<li>We want a model that… <ul>
+<li>explicitly captures graph structure (beyond  implicitly through the training objective)</li>
+<li>captures high-order graph structure (beyond the  first-order edge connectivity structure) </li>
+</ul>
+</li>
+<li>GNNs are a natural approach to achieve both! <ul>
+<li>Neural Graph Collaborative Filtering (NGCF) [Wang et  al. 2019] </li>
+<li>LightGCN [He et al. 2020] <ul>
+<li>A simplified and improved version of NGCF</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="NGCF-Overview"><a href="#NGCF-Overview" class="headerlink" title="NGCF: Overview"></a>NGCF: Overview</h3><p>Neural Graph Collaborative Filtering (NGCF)  explicitly incorporates high-order graph structure  when generating user/item embeddings. </p>
+<p>Key idea: Use a GNN to generate graph-aware  user/item embeddings.</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125164048727.png" alt=""></p>
+<h3 id="Framework"><a href="#Framework" class="headerlink" title="Framework"></a>Framework</h3><ul>
+<li>Given: User-item bipartite graph. </li>
+<li>NGCF framework: <ul>
+<li>Prepare shallow learnable embedding  for each node. </li>
+<li>Use multi-layer GNNs to propagate  embeddings along the bipartite graph. <ul>
+<li>High-order graph structure is captured. </li>
+</ul>
+</li>
+<li>Final embeddings are explicitly graph-aware! </li>
+</ul>
+</li>
+<li>Two kinds of learnable params are  jointly learned: <ul>
+<li>Shallow user/item embeddings </li>
+<li>GNN’s parameters</li>
+</ul>
+</li>
+</ul>
+<h3 id="Initial-Node-Embeddings"><a href="#Initial-Node-Embeddings" class="headerlink" title="Initial Node Embeddings"></a>Initial Node Embeddings</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125164223519.png" alt=""></p>
+<h3 id="Neighbor-Aggregation-1"><a href="#Neighbor-Aggregation-1" class="headerlink" title="Neighbor Aggregation"></a>Neighbor Aggregation</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125164418608.png" alt=""></p>
+<h3 id="Final-Embeddings-and-Score-Function"><a href="#Final-Embeddings-and-Score-Function" class="headerlink" title="Final Embeddings and Score Function"></a>Final Embeddings and Score Function</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125164518298.png" alt=""></p>
+<h3 id="NGCF-Summary"><a href="#NGCF-Summary" class="headerlink" title="NGCF: Summary"></a>NGCF: Summary</h3><ul>
+<li>Conventional collaborative filtering uses  shallow user/item embeddings. <ul>
+<li>The embeddings do not explicitly model graph  structure. </li>
+<li>The training objective does not model high-order  graph structure.</li>
+</ul>
+</li>
+<li>NGCF uses a GNN to propagate the shallow  embeddings. <ul>
+<li>The embeddings are explicitly aware of high-order graph structure.</li>
+</ul>
+</li>
+</ul>
+<h2 id="Lightgcn"><a href="#Lightgcn" class="headerlink" title="Lightgcn"></a>Lightgcn</h2><h3 id="Motivation-2"><a href="#Motivation-2" class="headerlink" title="Motivation"></a>Motivation</h3><ul>
+<li>Recall: NGCF jointly learns two kinds of  parameters: <ul>
+<li>Shallow user/item embeddings </li>
+<li>GNN’s parameters </li>
+</ul>
+</li>
+<li>Observation: Shallow learnable embeddings are  already quite expressive.</li>
+</ul>
+<img src="/images/loading.gif" data-original="../images/basic/image-20211125164722937.png" style="zoom: 67%;">
+
+<ul>
+<li>Can we simplify the GNN used in NGCF (e.g.,  remove its learnable parameters)? <ul>
+<li>Answer: Yes!  </li>
+<li>Bonus: Simplification improves the  recommendation performance! </li>
+</ul>
+</li>
+<li>Overview of the idea: <ul>
+<li>Adjacency matrix for a bipartite graph </li>
+<li>Matrix formulation of GCN </li>
+<li>Simplification of GCN by removing non-linearity <ul>
+<li>Related: SGC for scalable GNN [Wu et al. 2019]</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="Adjacency-and-Embedding-Matrices"><a href="#Adjacency-and-Embedding-Matrices" class="headerlink" title="Adjacency and Embedding Matrices"></a>Adjacency and Embedding Matrices</h3><p>Adjacency matrix of a (undirected) bipartite graph. </p>
+<p>Shallow embedding matrix</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125164949611.png" alt=""></p>
+<h3 id="Matrix-Formulation-of-GCN"><a href="#Matrix-Formulation-of-GCN" class="headerlink" title="Matrix Formulation of GCN"></a>Matrix Formulation of GCN</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125165017394.png" alt=""></p>
+<h3 id="Simplifying-GCN"><a href="#Simplifying-GCN" class="headerlink" title="Simplifying GCN"></a>Simplifying GCN</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125165047626.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125165133435.png" alt=""></p>
+<h3 id="Multi-scale-Diffusion"><a href="#Multi-scale-Diffusion" class="headerlink" title="Multi-scale Diffusion"></a>Multi-scale Diffusion</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125172521953.png" alt=""></p>
+<h3 id="LightGCN-Model-Overview"><a href="#LightGCN-Model-Overview" class="headerlink" title="LightGCN: Model Overview"></a>LightGCN: Model Overview</h3><p>Given:  </p>
+<ul>
+<li>Adjacency matrix A </li>
+<li>Initial learnable embedding matrix E</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125172642247.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125172656965.png" alt=""></p>
+<p>Average the embedding matrices at  different scales</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125172722635.png" alt=""></p>
+<p>Score function:</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125172741407.png" alt=""></p>
+<h3 id="LightGCN-Intuition"><a href="#LightGCN-Intuition" class="headerlink" title="LightGCN: Intuition"></a>LightGCN: Intuition</h3><p>Question: Why does the simple diffusion  propagation work well? </p>
+<p>Answer: The diffusion directly encourages the  embeddings of similar users/items to be  similar. </p>
+<ul>
+<li>Similar users share many common neighbors  (items) and are expected to have similar future  preferences (interact with similar items)</li>
+</ul>
+<h3 id="Lightgcn-and-GCN-C-amp-S"><a href="#Lightgcn-and-GCN-C-amp-S" class="headerlink" title="Lightgcn and GCN/C&amp;S"></a>Lightgcn and GCN/C&amp;S</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125172851331.png" alt=""></p>
+<h3 id="LIGHTGCN-and-MF-Comparison"><a href="#LIGHTGCN-and-MF-Comparison" class="headerlink" title="LIGHTGCN and MF: Comparison"></a>LIGHTGCN and MF: Comparison</h3><ul>
+<li>Both LightGCN and Matrix Factorization (MF)  learn a unique embedding for each user/item. </li>
+<li>The difference is that <ul>
+<li>MF directly uses the shallow user/item embeddings  for scoring. </li>
+<li>LightGCN uses the diffused user/item embeddings  for scoring. </li>
+</ul>
+</li>
+<li>LightGCN performs better than MF but are also  more computationally expensive due to the  additional diffusion step. <ul>
+<li>The final embedding of a user/item is obtained  by aggregating embeddings of its multi-hop  neighboring nodes.</li>
+</ul>
+</li>
+</ul>
+<h3 id="Summary-16"><a href="#Summary-16" class="headerlink" title="Summary"></a>Summary</h3><ul>
+<li>LightGCN simplifies NGCF by removing the  learnable parameters of GNNs. </li>
+<li>Learnable parameters are all in the shallow  input node embeddings. <ul>
+<li>Diffusion propagation only involves matrix-vector multiplication. </li>
+<li>The simplification leads to better empirical  performance than NGCF</li>
+</ul>
+</li>
+</ul>
+<h2 id="PINSAGE"><a href="#PINSAGE" class="headerlink" title="PINSAGE"></a>PINSAGE</h2><h3 id="Motivation-3"><a href="#Motivation-3" class="headerlink" title="Motivation"></a>Motivation</h3><p>P2P recommendation</p>
+<h3 id="PINSAGE-Pin-Embedding"><a href="#PINSAGE-Pin-Embedding" class="headerlink" title="PINSAGE: Pin Embedding"></a>PINSAGE: Pin Embedding</h3><ul>
+<li>Unifies visual, textual, and graph information. </li>
+<li>The largest industry deployment of a Graph  Convolutional Networks </li>
+<li>Huge Adoption across Pinterest </li>
+<li>Works for fresh content and is available in  a few seconds after pin creation</li>
+</ul>
+<p><a href="https://arxiv.org/pdf/1806.01973.pdf" target="_blank" rel="noopener">Graph Convolutional Neural Networks for Web-Scale Recommender Systems</a></p>
+<p>PinSage graph convolutional network: </p>
+<ul>
+<li><p>Goal: Generate embeddings for nodes in a large-scale  Pinterest graph containing billions of objects </p>
+</li>
+<li><p>Key Idea: Borrow information from nearby nodes </p>
+<ul>
+<li>E.g., bed rail Pin might look like a garden fence, but gates  and beds are rarely adjacent in the graph</li>
+</ul>
+</li>
+<li><p>Pin embeddings are essential to various tasks like  recommendation of Pins, classification, ranking </p>
+</li>
+<li><p>Services like “Related Pins”, “Search”, “Shopping”, “Ads”</p>
+</li>
+</ul>
+<h3 id="Harnessing-Pins-and-Boards"><a href="#Harnessing-Pins-and-Boards" class="headerlink" title="Harnessing Pins and Boards"></a>Harnessing Pins and Boards</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125173813144.png" alt=""></p>
+<h3 id="PINSAGE-Graph-Neural-Network"><a href="#PINSAGE-Graph-Neural-Network" class="headerlink" title="PINSAGE: Graph Neural Network"></a>PINSAGE: Graph Neural Network</h3><ul>
+<li>Graph has tens of billions of nodes and edges </li>
+<li>Further resolves embeddings across the  Pinterest graph</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125173859891.png" alt=""></p>
+<h3 id="PINSAGE-Methods-for-Scaling-Up"><a href="#PINSAGE-Methods-for-Scaling-Up" class="headerlink" title="PINSAGE: Methods for Scaling Up"></a>PINSAGE: Methods for Scaling Up</h3><p>In addition to the GNN model, the PinSAGE paper introduces several methods to scale the  GNN to a billion-scale recommender system  (e.g., Pinterest). </p>
+<ul>
+<li>Shared negative samples across users in a mini-batch </li>
+<li>Hard negative samples </li>
+<li>Curriculum learning </li>
+<li>Mini-batch training of GNNs on a large-graph (to be  covered in the future lecture)</li>
+</ul>
+<h3 id="PINSAGE-Model"><a href="#PINSAGE-Model" class="headerlink" title="PINSAGE Model"></a>PINSAGE Model</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125174011968.png" alt=""></p>
+<h3 id="Training-Data"><a href="#Training-Data" class="headerlink" title="Training Data"></a>Training Data</h3><p>1+B repin pairs: </p>
+<ul>
+<li><p>From Related Pins surface </p>
+</li>
+<li><p>Capture semantic relatedness </p>
+</li>
+<li><p>Goal: Embed such pairs to be “neighbors”</p>
+<p>Example positive training pairs (Q,X):</p>
+</li>
+</ul>
+<h3 id="Shared-Negative-Samples"><a href="#Shared-Negative-Samples" class="headerlink" title="Shared Negative Samples"></a>Shared Negative Samples</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125174135035.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125174150402.png" alt=""></p>
+<h3 id="Curriculum-Learning"><a href="#Curriculum-Learning" class="headerlink" title="Curriculum Learning"></a>Curriculum Learning</h3><ul>
+<li>Key insight: It is effective to make the  negative samples gradually harder in the  process of training. </li>
+<li>At n-th epoch, we add n − 1 hard negative  items. <ul>
+<li>#(Hard negatives) gradually increases in the  process of training. </li>
+</ul>
+</li>
+<li>The model will gradually learn to make finer-grained predictions</li>
+</ul>
+<p>Idea: use harder and harder negative samples </p>
+<p>Include more and more hard negative  samples for each epoch</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125174536511.png" alt=""></p>
+<h3 id="Hard-Negatives"><a href="#Hard-Negatives" class="headerlink" title="Hard Negatives"></a>Hard Negatives</h3><p>Challenge: Industrial recsys needs to make  extremely fine-grained predictions. </p>
+<ul>
+<li><p>#Total items: Up to billions. </p>
+</li>
+<li><p>#Items to recommend for each user: 10 to 100. </p>
+</li>
+</ul>
+<p>Issue: The shared negative items are  randomly sampled from all items </p>
+<ul>
+<li>Most of them are “easy negatives”, i.e., a model  does not need to be fine-grained to distinguish  them from positive items. </li>
+</ul>
+<p>We need a way to sample “hard negatives” to  force the model to be fine-grained</p>
+<ul>
+<li>For each user node, the hard negatives are item  nodes that are close (but not connected) to the  user node in the graph. </li>
+<li>Hard negatives for user u ∈ U are obtained as  follows: <ul>
+<li>Compute personalized page rank (PPR) for user u. </li>
+<li>Sort items in the descending order of their PPR scores. </li>
+<li>Randomly sample item nodes that are ranked high  but not too high, e.g., 2000th —5000th . <ul>
+<li>Item nodes that are close but not too close (connected) to  the user node. </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>The hard negatives for each user are used in  addition to the shared negatives.</li>
+</ul>
+<h3 id="PINSAGE-Negative-Sampling"><a href="#PINSAGE-Negative-Sampling" class="headerlink" title="PINSAGE: Negative Sampling"></a>PINSAGE: Negative Sampling</h3><ul>
+<li>(q, p) positive pairs are given but various  methods to sample negatives to form (q, p, n) </li>
+<li>Distance Weighted Sampling (<a href="https://arxiv.org/abs/1706.07567" target="_blank" rel="noopener">Wu et al., 2017</a>)  - Sample negatives so that query-negative distance  distribution is approx U[0.5, 1.4]</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211125175002076.png" alt=""></p>
+<h3 id="Fine-grained-Object-Similarity"><a href="#Fine-grained-Object-Similarity" class="headerlink" title="Fine-grained Object Similarity"></a>Fine-grained Object Similarity</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125175626904.png" alt=""></p>
+<h3 id="Compare-against-Prod"><a href="#Compare-against-Prod" class="headerlink" title="Compare against Prod"></a>Compare against Prod</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211125175653407.png" alt=""></p>
+<h3 id="PINSAGE-Summary"><a href="#PINSAGE-Summary" class="headerlink" title="PINSAGE: Summary"></a>PINSAGE: Summary</h3><ul>
+<li>PinSAGE uses GNNs to generate high-quality  user/item embeddings that capture both the  rich node attributes and graph structure. </li>
+<li>The PinSAGE model is effectively trained using  sophisticated negative sampling strategies. </li>
+<li>PinSAGE is successfully deployed at Pinterest,  a billion-scale image content recommendation  service. <ul>
+<li>Uncovered in this lecture: How to scale up GNNs to  large-scale graphs. Will be covered in a later lecture</li>
+</ul>
+</li>
+</ul>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -3393,7 +4329,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">3122.6k</span>&nbsp;字
+                class="white-color">3128.2k</span>&nbsp;字
             
             
             
