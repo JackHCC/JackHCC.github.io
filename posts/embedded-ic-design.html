@@ -459,21 +459,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-11-19
+                    2021-11-26
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    24.9k
+                    29.6k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    105 分
+                    124 分
                 </div>
                 
 
@@ -4390,6 +4390,522 @@ orand <span class="token punctuation">(</span>a<span class="token punctuation">,
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211119202508925.png" alt=""></p>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211119202521363.png" alt=""></p>
 <h2 id="作业：数据转换器"><a href="#作业：数据转换器" class="headerlink" title="作业：数据转换器"></a>作业：数据转换器</h2><p><img src="/images/loading.gif" data-original="../images/basic/image-20211119202551317.png" alt=""></p>
+<h1 id="Verilog-Test-Bench使用简介"><a href="#Verilog-Test-Bench使用简介" class="headerlink" title="Verilog Test Bench使用简介"></a>Verilog Test Bench使用简介</h1><h2 id="设计组织"><a href="#设计组织" class="headerlink" title="设计组织"></a><strong>设计组织</strong></h2><p><img src="/images/loading.gif" data-original="../images/basic/image-20211126105142911.png" alt=""></p>
+<p>虚线表示编译时检测输入文件是否存在及可读并允许生成输出文件。 </p>
+<h2 id="test-bench组织"><a href="#test-bench组织" class="headerlink" title="test bench组织"></a>test bench组织</h2><p><img src="/images/loading.gif" data-original="../images/basic/image-20211126105225292.png" alt=""></p>
+<ul>
+<li>简单的test bench向要验证的设计提供向量，人工验证输出。</li>
+<li>复杂的test bench是自检测的，其结果自动验证。 </li>
+</ul>
+<h3 id="施加激励"><a href="#施加激励" class="headerlink" title="施加激励"></a><strong>施加激励</strong></h3><p>产生激励并加到设计有很多 种方法。一些常用的方法有：</p>
+<ul>
+<li>从一个initial块中施加线激励</li>
+<li>从一个循环或always块施加激励</li>
+<li>从一个向量或整数数组施加激励</li>
+<li>记录一个仿真过程，然后在另一个仿真中回放施加激励</li>
+</ul>
+<h3 id="线性激励"><a href="#线性激励" class="headerlink" title="线性激励"></a><strong>线性激励</strong></h3><p>线性激励有以下特性：</p>
+<ul>
+<li>只有变量的值改变时才列出</li>
+<li>易于定义复杂的时序关系</li>
+<li>对一个复杂的测试，测试程序(test bench)可能非常大</li>
+</ul>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> inline_ tb<span class="token punctuation">;</span>
+    <span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> data_ bus<span class="token punctuation">,</span> addr<span class="token punctuation">;</span>
+    <span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> results<span class="token punctuation">;</span>
+    DUT u1 <span class="token punctuation">(</span>results<span class="token punctuation">,</span> data_ bus<span class="token punctuation">,</span> addr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">initial</span>
+        <span class="token keyword">fork</span>
+              data_bus <span class="token operator">=</span> <span class="token number">8'h00</span><span class="token punctuation">;</span>
+              addr <span class="token operator">=</span> <span class="token number">8'h3f</span><span class="token punctuation">;</span>
+          <span class="token number">#10</span> data_ bus <span class="token operator">=</span> <span class="token number">8'h45</span><span class="token punctuation">;</span>
+          <span class="token number">#15</span> addr <span class="token operator">=</span> <span class="token number">8'hf0</span><span class="token punctuation">;</span>
+          <span class="token number">#40</span> data_ bus <span class="token operator">=</span> <span class="token number">8'h0f</span><span class="token punctuation">;</span>
+          <span class="token number">#60</span> <span class="token property">$finish</span><span class="token punctuation">;</span>
+    <span class="token keyword">join</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="循环激励"><a href="#循环激励" class="headerlink" title="循环激励"></a><strong>循环激励</strong></h3><p>从循环产生激励有以下特性：</p>
+<ul>
+<li>在每一次循环，修改同一组激励变量</li>
+<li>有固定的时序关系</li>
+<li>代码紧凑 </li>
+</ul>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token constant">`timescale</span> <span class="token number">1</span>ns<span class="token operator">/</span><span class="token number">1</span>ns
+<span class="token keyword">module</span> loop_tb<span class="token punctuation">;</span>
+    <span class="token keyword">reg</span> clk<span class="token punctuation">;</span>
+    <span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> stimulus<span class="token punctuation">;</span>
+    <span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> results<span class="token punctuation">;</span>
+    <span class="token keyword">integer</span> i<span class="token punctuation">;</span>
+    DUT u1 <span class="token punctuation">(</span>results<span class="token punctuation">,</span> stimulus<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token important">always </span><span class="token keyword">begin</span> <span class="token comment" spellcheck="true">// clock generation</span>
+        clk <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>  <span class="token number">#5</span>  clk <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>  <span class="token number">#5</span>
+    <span class="token keyword">end</span>
+    <span class="token keyword">initial</span> <span class="token keyword">begin</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span>i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">256</span><span class="token punctuation">;</span> i <span class="token operator">=</span> i <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span>
+       @<span class="token punctuation">(</span> <span class="token keyword">negedge</span> clk<span class="token punctuation">)</span>  stimulus <span class="token operator">=</span> i<span class="token punctuation">;</span>
+       <span class="token number">#20</span> <span class="token property">$finish</span><span class="token punctuation">;</span>
+   <span class="token keyword">end</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="数组激励"><a href="#数组激励" class="headerlink" title="数组激励"></a><strong>数组激励</strong></h3><p>从数组产生激励有以下特性：</p>
+<ul>
+<li>在每次反复中，修改同一组激励变量</li>
+<li>激励数组可以直接从文件中读取</li>
+</ul>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> array_ tb<span class="token punctuation">;</span>
+    <span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> stim_ array<span class="token punctuation">[</span> <span class="token number">15</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 数组</span>
+    <span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">7</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> stimulus<span class="token punctuation">;</span>
+    <span class="token keyword">wire</span> result<span class="token punctuation">;</span>
+    <span class="token keyword">integer</span> i<span class="token punctuation">;</span>
+    DUT u1 <span class="token punctuation">(</span>results<span class="token punctuation">,</span> stimulus<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">initial</span> <span class="token keyword">begin</span>
+        <span class="token comment" spellcheck="true">// 从数组读入数据</span>
+        <span class="token number">#20</span> stimulus <span class="token operator">=</span> stim_array<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+        <span class="token number">#30</span> stimulus <span class="token operator">=</span> stim_array<span class="token punctuation">[</span><span class="token number">15</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 线激励</span>
+        <span class="token number">#20</span> stimulus <span class="token operator">=</span> stim_array<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span>i <span class="token operator">=</span> <span class="token number">14</span><span class="token punctuation">;</span> i <span class="token operator">></span> <span class="token number">1</span><span class="token punctuation">;</span> i <span class="token operator">=</span> i <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">// 循环</span>
+            <span class="token number">#50</span> stimulus <span class="token operator">=</span> stim_array<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token punctuation">;</span>
+        <span class="token number">#30</span> <span class="token property">$finish</span><span class="token punctuation">;</span>
+    <span class="token keyword">end</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="矢量采样"><a href="#矢量采样" class="headerlink" title="矢量采样"></a><strong>矢量采样</strong></h3><p>在仿真过程中可以对激励和响应矢量进行采样，作为其它仿真的激励和期望结果。</p>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> capture_tb<span class="token punctuation">;</span>
+    <span class="token keyword">parameter</span> period <span class="token operator">=</span> <span class="token number">20</span>
+    <span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> in_vec<span class="token punctuation">,</span> out_vec<span class="token punctuation">;</span>
+    <span class="token keyword">integer</span> RESULTS<span class="token punctuation">,</span> STIMULUS<span class="token punctuation">;</span>
+    DUT u1 <span class="token punctuation">(</span>out_vec<span class="token punctuation">,</span> in_vec<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">initial</span>  <span class="token keyword">begin</span>
+         STIMULUS <span class="token operator">=</span> <span class="token property">$fopen</span><span class="token punctuation">(</span><span class="token string">"vec.txt"</span><span class="token punctuation">)</span> <span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>STIMULUS <span class="token operator">!=</span> <span class="token number">0</span> <span class="token punctuation">)</span> <span class="token keyword">forever</span> #<span class="token punctuation">(</span> period<span class="token operator">/</span><span class="token number">2</span><span class="token punctuation">)</span>
+            <span class="token property">$fstrobeb</span> <span class="token punctuation">(</span>STIMULUS<span class="token punctuation">,</span> <span class="token string">"%b"</span><span class="token punctuation">,</span> in_vec<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">end</span>
+    <span class="token keyword">initial</span>  <span class="token keyword">begin</span>
+    RESULTS <span class="token operator">=</span> <span class="token property">$fopen</span><span class="token punctuation">(</span><span class="token string">"results.txt"</span><span class="token punctuation">)</span> <span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>RESULTS <span class="token operator">!=</span> <span class="token number">0</span> <span class="token punctuation">)</span> #<span class="token punctuation">(</span> period<span class="token operator">/</span><span class="token number">2</span><span class="token punctuation">)</span> <span class="token keyword">forever</span>                
+        #<span class="token punctuation">(</span> period<span class="token operator">/</span><span class="token number">2</span><span class="token punctuation">)</span>
+                  <span class="token property">$fstrobeb</span> <span class="token punctuation">(</span>RESULTS<span class="token punctuation">,</span> <span class="token string">"%b"</span><span class="token punctuation">,</span> out_vec<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">end</span>
+<span class="token keyword">endmodule</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="矢量回放"><a href="#矢量回放" class="headerlink" title="矢量回放"></a><strong>矢量回放</strong></h3><ul>
+<li><strong>保存在文件中的矢量反过来可以作为激励</strong></li>
+</ul>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> read_file_tb<span class="token punctuation">;</span>
+    <span class="token keyword">parameter</span> num_vecs <span class="token operator">=</span> <span class="token number">256</span><span class="token punctuation">;</span>
+    <span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> data_bus<span class="token punctuation">;</span>
+    <span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> stim <span class="token punctuation">[</span>num_vecs<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">integer</span> i<span class="token punctuation">;</span>
+    DUT u1 <span class="token punctuation">(</span>results<span class="token punctuation">,</span> data_bus<span class="token punctuation">)</span>
+    <span class="token keyword">initial</span>
+        <span class="token keyword">begin</span> <span class="token comment" spellcheck="true">// Vectors are loaded</span>
+            <span class="token property">$readmemb</span> <span class="token punctuation">(</span><span class="token string">"vec.txt"</span><span class="token punctuation">,</span> stim<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">for</span> <span class="token punctuation">(</span>i <span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> num_vecs <span class="token punctuation">;</span> i <span class="token operator">=</span> i <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span>
+            <span class="token number">#50</span> data_bus <span class="token operator">=</span> stim<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">end</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211126105707541.png" alt=""></p>
+<ul>
+<li><p>使用矢量文件输入/输出的优点：</p>
+<ul>
+<li><p>激励修改简单</p>
+</li>
+<li><p>设计反复验证时直接使用工具比较矢量文件。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="错误及警告报告"><a href="#错误及警告报告" class="headerlink" title="错误及警告报告"></a><strong>错误及警告报告</strong></h3><ul>
+<li>使用文本或文件输出类的系统任务报告错误及警告</li>
+</ul>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token important">always @</span><span class="token punctuation">(</span> <span class="token keyword">posedge</span> par_err<span class="token punctuation">)</span>
+    <span class="token property">$display</span> <span class="token punctuation">(</span><span class="token string">" error-bus parity errors detected"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token important">always @</span><span class="token punctuation">(</span> <span class="token keyword">posedge</span> cor_err<span class="token punctuation">)</span>
+    <span class="token property">$display</span><span class="token punctuation">(</span><span class="token string">"warning-correctable error detected"</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>一个更为复杂的test bench可以：</p>
+<ul>
+<li>不但能报告错误，而能进行一些动作，如取消一个激励块并跳转到下一个激励。</li>
+<li>在内部保持错误跟踪，并在每次测试结束时产生一个错误报告。</li>
+</ul>
+<h3 id="建立时钟"><a href="#建立时钟" class="headerlink" title="建立时钟"></a><strong>建立时钟</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211126105832817.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211126105848262.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211126105901328.png" alt=""></p>
+<h3 id="使用task"><a href="#使用task" class="headerlink" title="使用task"></a>使用task</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211126105926273.png" alt=""></p>
+<p>在test bench中使用task可以压缩重复操作，提高代码效率。</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211126105950013.png" alt=""></p>
+<h1 id="存储器建模"><a href="#存储器建模" class="headerlink" title="存储器建模"></a>存储器建模</h1><p>描述存储器必须做两件事：</p>
+<ul>
+<li>说明一个适当容量的存储器。</li>
+<li>提供内容访问的方式，例如：<ul>
+<li>只读</li>
+<li>读和写</li>
+<li>写同时读</li>
+<li>多个读操作，同时进行单个写操作</li>
+<li>同时有多个读和多个写操作，有保证一致性的方法</li>
+</ul>
+</li>
+</ul>
+<h2 id="简单ROM描述"><a href="#简单ROM描述" class="headerlink" title="简单ROM描述"></a>简单ROM描述</h2><p>下面的ROM描述中使用二维寄存器组定义了一个存储器mem。ROM的数据单独保存在文件my_rom_data中，如右边所示。通常用这种方法使ROM数据独立于ROM描述。</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211126102516918.png" alt=""></p>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">7</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> mem <span class="token punctuation">[</span><span class="token number">15</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span>；<span class="token comment" spellcheck="true">// mem为16x8的寄存器数组</span>
+<span class="token keyword">reg</span> MemA <span class="token punctuation">[</span><span class="token number">3</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//MemA是4x1位寄存器数组</span>
+<span class="token keyword">time</span> Events <span class="token punctuation">[</span><span class="token number">3</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//time数组</span>
+<span class="token keyword">integer</span> <span class="token keyword">int</span> <span class="token punctuation">[</span><span class="token number">3</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//整数数组int[3 : 0] </span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>Verilog-1995标准中，不能直接访问一维数组中的某个寄存器数据中的一位，比如要取出下面<code>array[7][5]</code>，需要将<code>array[7]</code>赋给一个reg变量，再从这个变量中取出第5位：</p>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">7</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> array <span class="token punctuation">[</span><span class="token number">15</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">7</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> arrayreg<span class="token punctuation">;</span>
+<span class="token keyword">reg</span> reg5<span class="token punctuation">;</span>
+<span class="token keyword">initial</span> <span class="token keyword">begin</span>
+ arrayreg <span class="token operator">=</span> array<span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+ reg5 <span class="token operator">=</span> arrayreg<span class="token punctuation">[</span><span class="token number">5</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">end</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="寄存器和数组"><a href="#寄存器和数组" class="headerlink" title="寄存器和数组"></a>寄存器和数组</h3><pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token constant">`timescale</span> <span class="token number">1</span>ns<span class="token operator">/</span><span class="token number">1</span>ns
+<span class="token keyword">module</span> reg_tb<span class="token punctuation">;</span>
+ <span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">3</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> RegA<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//一个4位的reg类型数据</span>
+ <span class="token keyword">reg</span> MemA <span class="token punctuation">[</span><span class="token number">3</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//一个reg类型的 4x1 的一维数组</span>
+ <span class="token keyword">initial</span> <span class="token keyword">begin</span>
+    RegA <span class="token operator">=</span> <span class="token number">4'b1101</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//合法</span>
+    MemA <span class="token operator">=</span> <span class="token number">4'b0010</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//非法</span>
+    MemA<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">1'b0</span><span class="token punctuation">;</span>
+    MemA<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">1'b0</span><span class="token punctuation">;</span>
+    MemA<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">1'b1</span><span class="token punctuation">;</span>
+    MemA<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">1'b0</span><span class="token punctuation">;</span>
+    <span class="token property">$display</span><span class="token punctuation">(</span><span class="token string">"RegA = %b "</span><span class="token punctuation">,</span> RegA<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token property">$display</span><span class="token punctuation">(</span><span class="token string">"MemA = %b "</span><span class="token punctuation">,</span> <span class="token operator">{</span>MemA<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">,</span>MemA<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">,</span>MemA<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span>MemA<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token operator">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token number">#100</span> <span class="token property">$finish</span><span class="token punctuation">;</span>
+    <span class="token keyword">end</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="Verilog-2001标准的数组声明"><a href="#Verilog-2001标准的数组声明" class="headerlink" title="Verilog-2001标准的数组声明"></a>Verilog-2001标准的数组声明</h3><pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token constant">`timescale</span> <span class="token number">1</span>ns <span class="token operator">/</span><span class="token number">1</span>ns
+<span class="token keyword">module</span> array<span class="token punctuation">;</span>
+ <span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">7</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> mem <span class="token punctuation">[</span><span class="token number">15</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">7</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+ <span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">7</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> out<span class="token punctuation">;</span> 
+ <span class="token keyword">integer</span> i<span class="token punctuation">,</span> j<span class="token punctuation">,</span> k<span class="token punctuation">;</span>
+ <span class="token keyword">initial</span> <span class="token keyword">begin</span>
+ <span class="token keyword">for</span> <span class="token punctuation">(</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">16</span><span class="token punctuation">;</span> i <span class="token operator">=</span> i <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span>
+ <span class="token function">for</span><span class="token punctuation">(</span>j <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> j <span class="token operator">&lt;</span> <span class="token number">8</span><span class="token punctuation">;</span> j <span class="token operator">=</span> j <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span>
+mem<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token punctuation">]</span> <span class="token operator">=</span> i <span class="token operator">+</span> j<span class="token punctuation">;</span>
+ <span class="token keyword">for</span> <span class="token punctuation">(</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">16</span><span class="token punctuation">;</span> i <span class="token operator">=</span> i <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token keyword">begin</span>
+ <span class="token function">for</span><span class="token punctuation">(</span>j <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> j <span class="token operator">&lt;</span> <span class="token number">8</span><span class="token punctuation">;</span> j <span class="token operator">=</span> j <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token keyword">begin</span>
+out <span class="token operator">=</span> mem<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token property">$write</span><span class="token punctuation">(</span><span class="token string">"\t %0d"</span><span class="token punctuation">,</span> out<span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token keyword">end</span>
+ <span class="token property">$write</span><span class="token punctuation">(</span><span class="token string">"\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token keyword">end</span>
+ <span class="token property">$display</span><span class="token punctuation">(</span><span class="token string">"out = %b"</span><span class="token punctuation">,</span> out<span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token property">$write</span><span class="token punctuation">(</span><span class="token string">"out = "</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token function">for</span><span class="token punctuation">(</span> k <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> k <span class="token operator">&lt;</span> <span class="token number">8</span><span class="token punctuation">;</span> k <span class="token operator">=</span> k <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span> 
+ <span class="token property">$write</span><span class="token punctuation">(</span><span class="token string">"%b"</span><span class="token punctuation">,</span> mem<span class="token punctuation">[</span>i<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">7</span> <span class="token operator">-</span> k<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token property">$write</span><span class="token punctuation">(</span><span class="token string">"\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token property">$finish</span><span class="token punctuation">;</span>
+ <span class="token keyword">end</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211126121722759.png" alt=""></p>
+<h3 id="MSB为0的数组"><a href="#MSB为0的数组" class="headerlink" title="MSB为0的数组"></a>MSB为0的数组</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211126121748562.png" alt=""></p>
+<h3 id="存储器数据装入"><a href="#存储器数据装入" class="headerlink" title="存储器数据装入"></a>存储器数据装入</h3><p>可以使用循环或系统任务给存储器装入初始化数据</p>
+<ul>
+<li>用循环给存储器的每个字赋值</li>
+</ul>
+<pre class="line-numbers language-verilog"><code class="language-verilog">      <span class="token keyword">for</span> <span class="token punctuation">(</span>i<span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> memsize<span class="token punctuation">;</span> i <span class="token operator">=</span> i<span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">// initialize memory</span>
+          mema<span class="token punctuation">[</span> i<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token operator">{</span>wordsize<span class="token operator">{</span> <span class="token number">1'b1</span><span class="token operator">}}</span><span class="token punctuation">;</span> <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<ul>
+<li>调用系统任务$readmem</li>
+</ul>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token property">$readmemb</span><span class="token punctuation">(</span><span class="token string">"mem_file. txt"</span><span class="token punctuation">,</span> mema<span class="token punctuation">)</span><span class="token punctuation">;</span> <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>可以用系统任务$readmem给一个ROM或RAM加载数据。对于ROM，开始时写入的数据就是其实际内容。对于RAM，可以通过初始化，而不是用不同的写周期给每个字装入数据以减少仿真时间。</p>
+<h2 id="异步存储器接口时序"><a href="#异步存储器接口时序" class="headerlink" title="异步存储器接口时序"></a>异步存储器接口时序</h2><p><img src="/images/loading.gif" data-original="../images/basic/image-20211126102739140.png" alt=""></p>
+<h3 id="同步SRAM存储器接口时序-SMIC65nm-1Kx32"><a href="#同步SRAM存储器接口时序-SMIC65nm-1Kx32" class="headerlink" title="同步SRAM存储器接口时序 - SMIC65nm_1Kx32"></a>同步SRAM存储器接口时序 - SMIC65nm_1Kx32</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211126121842279.png" alt=""></p>
+<h3 id="简单的异步RAM描述"><a href="#简单的异步RAM描述" class="headerlink" title="简单的异步RAM描述"></a>简单的异步RAM描述</h3><p>RAM描述比ROM略微复杂，因为必须既有读功能又有写功能，而读写通常使用同一数据总线。这要求使用新的处理双向数据线的建模技术。在下面的例子中，若读端口未使能，则模型不驱动数据总线；此时若数据总线没有写数据驱动，则总线为高阻态Z。这避免了RAM写入时的冲突。</p>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token constant">`timescale</span> <span class="token number">1</span>ns <span class="token operator">/</span><span class="token number">1</span>ns
+<span class="token keyword">module</span> mymem <span class="token punctuation">(</span>
+    <span class="token keyword">inout</span>  <span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> data<span class="token punctuation">,</span>
+    <span class="token keyword">input</span>  <span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> addr<span class="token punctuation">,</span>
+    <span class="token keyword">input</span>  <span class="token keyword">wire</span>     rd<span class="token punctuation">,</span> 
+        wr
+    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> memory <span class="token punctuation">[</span><span class="token number">15</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 16*4</span>
+<span class="token comment" spellcheck="true">// 读</span>
+    <span class="token keyword">assign</span> data <span class="token operator">=</span> rd <span class="token operator">?</span> memory<span class="token punctuation">[</span>addr<span class="token punctuation">]</span> <span class="token punctuation">:</span> <span class="token number">4'bz</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// 写</span>
+    <span class="token important">always @</span><span class="token punctuation">(</span> <span class="token keyword">posedge</span> wr<span class="token punctuation">)</span>
+         memory<span class="token punctuation">[</span>addr<span class="token punctuation">]</span> <span class="token operator">&lt;=</span> data<span class="token punctuation">;</span>
+<span class="token keyword">endmodule</span> <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这个描述可综合，但许多工具仅仅产生一个寄存器堆，因此与一个真正的存储器相比耗费更多的面积。</p>
+<h3 id="异步RAM测试"><a href="#异步RAM测试" class="headerlink" title="异步RAM测试"></a>异步RAM测试</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211126103632622.png" alt=""></p>
+<h3 id="参数化存储器描述"><a href="#参数化存储器描述" class="headerlink" title="参数化存储器描述"></a>参数化存储器描述</h3><p>在下面的例子中，给出如何定义一个字长和地址均参数化的只读存储器件。</p>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> scalable_ROM  #<span class="token punctuation">(</span>
+    <span class="token keyword">parameter</span> addr_bits <span class="token operator">=</span> <span class="token number">8</span><span class="token punctuation">,</span>                     <span class="token comment" spellcheck="true">// 地址总线宽度</span>
+            wordsize <span class="token operator">=</span> <span class="token number">8</span><span class="token punctuation">,</span>                     <span class="token comment" spellcheck="true">// 字宽</span>
+            words <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">1</span> <span class="token operator">&lt;&lt;</span> addr_bits<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">// mem容量</span>
+    <span class="token punctuation">)</span> <span class="token punctuation">(</span>
+    <span class="token keyword">output</span> <span class="token punctuation">[</span>wordsize <span class="token operator">-</span> <span class="token number">1</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> mem_word<span class="token punctuation">,</span>    <span class="token comment" spellcheck="true">// 存储器字</span>
+    <span class="token keyword">input</span>   <span class="token punctuation">[</span>addr_bits <span class="token operator">-</span><span class="token number">1</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> address           <span class="token comment" spellcheck="true">// 地址总线</span>
+    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">reg</span> <span class="token punctuation">[</span>wordsize <span class="token operator">-</span><span class="token number">1</span> <span class="token punctuation">:</span>  <span class="token number">0</span><span class="token punctuation">]</span> mem <span class="token punctuation">[</span>words<span class="token operator">-</span><span class="token number">1</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// mem声明</span>
+
+<span class="token comment" spellcheck="true">// 输出存储器的一个字</span>
+    <span class="token keyword">assign</span>  mem_word <span class="token operator">=</span> mem<span class="token punctuation">[</span>address<span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+<span class="token keyword">endmodule</span> <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="使用双向端口"><a href="#使用双向端口" class="headerlink" title="使用双向端口"></a>使用双向端口</h3><ul>
+<li>用关键词inout声明一个双向端口<ul>
+<li>inout [7:0] databus; </li>
+</ul>
+</li>
+<li>双向端口声明遵循下列规则： <ul>
+<li>inout端口不能声明为寄存器类型，只能是net类型。 </li>
+<li>这样仿真器若有多个驱动时可以确定结果值。 <ul>
+<li>对inout端口可以从任意一个方向驱动数据。端口数据类型缺省为net类 型。不能对net进行过程赋值，只能在过程块外部持续赋值，或将它连 接到基本单元。 </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>在同一时间应只从一个方向驱动inout端口。 <ul>
+<li>例如：在RAM模型中，如果使用双向数据总线读取RAM数据，同时在 数据总线上驱动写数据，则会产生逻辑冲突，使数据总线变为未知。 </li>
+<li>必须设计与inout端口相关的逻辑以确保正确操作。当把该端口作为输 入使用时，必须禁止输出逻辑</li>
+</ul>
+</li>
+</ul>
+<h3 id="双向驱动器建模"><a href="#双向驱动器建模" class="headerlink" title="双向驱动器建模"></a>双向驱动器建模</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211126122126917.png" alt=""></p>
+<h1 id="延时模型"><a href="#延时模型" class="headerlink" title="延时模型"></a>延时模型</h1><h2 id="术语及定义"><a href="#术语及定义" class="headerlink" title="术语及定义"></a>术语及定义</h2><ul>
+<li>模块路径(module path): 穿过模块，连接模块输入(input端口或inout端口）到模块输出(output端口或inout端口）的路径。</li>
+<li>路径延时(path delay)：与特定路径相关的延时</li>
+<li>时序检查(timing check)：监视两个输入信号的时间关系并进行检查的系统任务，以保证电路能正确工作。</li>
+<li>时序驱动设计(timing driven design)：从前端到后端的整个设计流程中，用时序信息连接不同的设计阶段</li>
+</ul>
+<h2 id="延时模型类型-Delay-Modeling-Types"><a href="#延时模型类型-Delay-Modeling-Types" class="headerlink" title="延时模型类型(Delay Modeling Types)"></a>延时模型类型(Delay Modeling Types)</h2><p><img src="/images/loading.gif" data-original="../images/basic/image-20211126110234919.png" alt=""></p>
+<h3 id="块延时-Lumped-Delay"><a href="#块延时-Lumped-Delay" class="headerlink" title="块延时(Lumped Delay)"></a>块延时(Lumped Delay)</h3><ul>
+<li>块延时方法是将全部延时集中到最后一个门上。这种模型简单但不够精确，只适用于简单电路。因为当到输出端有多个路径时不能描述不同路径的不同延时。</li>
+<li>可以用这种方法描述器件的传输延时，并且使用最坏情况下的延时(最大延时）。</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211126110346489.png" alt=""></p>
+<h3 id="分布延时-Distributed-Delays"><a href="#分布延时-Distributed-Delays" class="headerlink" title="分布延时(Distributed Delays)"></a>分布延时(Distributed Delays)</h3><p>分布延时方法是将延时分散到每一个门。在相同的输出端上，不同的路径有不同的延时。分布延时有两个缺点：</p>
+<ul>
+<li>在结构描述中随规模的增大而变得异常复杂。</li>
+<li>仍然不能描述基本单元(primitive)中不同引脚上的不同延时。</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211126110433188.png" alt=""></p>
+<h3 id="路径延时-Module-Path-Delays"><a href="#路径延时-Module-Path-Delays" class="headerlink" title="路径延时(Module Path Delays)"></a>路径延时(Module Path Delays)</h3><p>在专用的specify块描述模块从输入端到输出端的路径延时。</p>
+<ul>
+<li><p>精确性：所有路径延时都能精确说明。</p>
+</li>
+<li><p>模块性：时序说明与功能描述分开说明</p>
+<ul>
+<li><p><strong>功能验证独立于时序验证。</strong></p>
+</li>
+<li><p><strong>在不同的抽象级中保持不变。</strong></p>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211126110548981.png" alt=""></p>
+<h2 id="Specify块"><a href="#Specify块" class="headerlink" title="Specify块"></a>Specify块</h2><ul>
+<li>specify块定义了模块的时序部分<ul>
+<li>时序信息和功能在不同的块中描述，这样功能验证独立于时序验证。specify块在不同的抽象级中保持不变。</li>
+<li>功能描述中的延时，如#delay在综合时不起作用</li>
+</ul>
+</li>
+<li>由specify开始， 到endspecify结束，并且在模块内部</li>
+<li>specify块可以：<ul>
+<li>描述<strong>穿过模块的路径及其延时</strong></li>
+<li>使用关键字specparam在specify中进行<strong>参数声明</strong></li>
+<li>定义特定模块或特定模块路径的脉冲<strong>过滤限制</strong></li>
+<li>描述时序检查以保证器件的<strong>时序约束能够得到满足</strong></li>
+</ul>
+</li>
+</ul>
+<h3 id="精确延时控制"><a href="#精确延时控制" class="headerlink" title="精确延时控制"></a>精确延时控制</h3><ul>
+<li>说明门和模块路径的上升(rise)、下降(fall)和关断(turn-off)延时</li>
+</ul>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">and</span> #<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span>  <span class="token punctuation">(</span>out<span class="token punctuation">,</span> in1<span class="token punctuation">,</span> in2<span class="token punctuation">,</span> in3<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// rise, fall</span>
+<span class="token keyword">bufif0</span> #<span class="token punctuation">(</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">)</span> <span class="token punctuation">(</span>out<span class="token punctuation">,</span> in<span class="token punctuation">,</span> ctrl<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// rise, fall, turn- off</span>
+<span class="token punctuation">(</span>in <span class="token operator">=></span> out<span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// rise, fall</span>
+<span class="token punctuation">(</span>a <span class="token operator">=></span> b<span class="token punctuation">)</span> <span class="token operator">=</span>  <span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// rise, fall, turn-off</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li>在路径延时中可以说明<em>六个延时值</em>(0 -&gt;1, 1 -&gt;0, 0 -&gt;Z, Z -&gt;1, 1 -&gt;Z, Z -&gt;0)</li>
+</ul>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token punctuation">(</span>C <span class="token operator">=></span> Q<span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">12</span><span class="token punctuation">,</span> <span class="token number">17</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">22</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ul>
+<li>在路径延时中说明所有<em>12个延时值</em>(0 -&gt;1, 1 -&gt;0, 0 -&gt;Z, Z -&gt;1, 1 -&gt;Z, Z -&gt;0, 0 -&gt;X, X -&gt;1, 1 -&gt;X, X -&gt;0, X -&gt;Z, Z -&gt;X)</li>
+</ul>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token punctuation">(</span>C <span class="token operator">=></span> Q<span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">12</span><span class="token punctuation">,</span> <span class="token number">17</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">22</span><span class="token punctuation">,</span> <span class="token number">11</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">,</span> <span class="token number">17</span><span class="token punctuation">,</span> <span class="token number">12</span><span class="token punctuation">,</span> <span class="token number">16</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ul>
+<li>上面所说明的每一个延时还可细分为<em>最好、典型、最坏延时</em>。</li>
+</ul>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">or</span> #<span class="token punctuation">(</span> <span class="token number">3.2</span><span class="token punctuation">:</span><span class="token number">4.0</span><span class="token punctuation">:</span><span class="token number">6.3</span><span class="token punctuation">)</span> <span class="token function">o1</span><span class="token punctuation">(</span> out<span class="token punctuation">,</span> in1<span class="token punctuation">,</span> in2<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// min: typ: max</span>
+<span class="token keyword">not</span> #<span class="token punctuation">(</span> <span class="token number">1</span><span class="token punctuation">:</span><span class="token number">2</span><span class="token punctuation">:</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">:</span><span class="token number">3</span><span class="token punctuation">:</span><span class="token number">5</span><span class="token punctuation">)</span> <span class="token punctuation">(</span>o<span class="token punctuation">,</span> in<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment" spellcheck="true">// min: typ: max for rise, fall</span>
+<span class="token punctuation">(</span>b <span class="token operator">=></span> y<span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">:</span><span class="token number">3</span><span class="token punctuation">:</span><span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">:</span><span class="token number">4</span><span class="token punctuation">:</span><span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">:</span><span class="token number">5</span><span class="token punctuation">:</span><span class="token number">8</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// min: typ: max for rise, fall, and turnoff</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<blockquote>
+<p>最坏延时检测set up，最好检测hold time</p>
+</blockquote>
+<p>延时说明定义的是门或模块的<strong>固有延时</strong>。输入上的任何变化要经过说明的延时才能在输出端反映出来。如果没有延时说明，则<strong>基本单元</strong>的延时为0。分布<strong>关断延时</strong>只对三态基本单元有效。</p>
+<ul>
+<li>上升延时是输出转换为 1 时的延时</li>
+<li>下降延时是输出转换为 0 时的延时</li>
+<li>关断延时输出转换为 Z 时的延时</li>
+<li>到X的延时是最小延时，而从X到其它值的转换使用最大延时<ul>
+<li>如果说明了上升、下降和关断延时，则1-&gt;X的延时使用上升和关断延时的最小值。X-&gt;0的延时为下降延时；X-&gt;Z的延时为关断延时。</li>
+<li>如果只说明了上升和下降延时，则1-&gt;X和X-&gt;0使用下降延时，X-&gt;Z使用上升和下降延时的最小延时</li>
+<li>如果只说明了一个延时，则所有跳变使用这个延时。</li>
+<li>如果说明了六个延时，则1-&gt;X使用1-&gt;X和1-&gt;Z中最小延时；X-&gt;0使用1-&gt;0和X-&gt;0的最大延时；X-&gt;Z使用1-&gt;Z和0-&gt;Z中的最大延时。</li>
+</ul>
+</li>
+</ul>
+<h3 id="模块路径的并行连接和全连接"><a href="#模块路径的并行连接和全连接" class="headerlink" title="模块路径的并行连接和全连接"></a>模块路径的并行连接和全连接</h3><ul>
+<li>路径说明必须括在圆括号内</li>
+<li>*&gt;表示全连接，也就是所有输入连接到所有输出</li>
+<li>=&gt;表示并行连接，也就是信号对之间的连接</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211126111425272.png" alt=""></p>
+<p>路径延时说明的例子：</p>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token comment" spellcheck="true">// 从 a 到 out 和从 b 到 out的路径延时说明</span>
+      <span class="token punctuation">(</span>a<span class="token punctuation">,</span> b <span class="token operator">=></span> out<span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token number">2.2</span><span class="token punctuation">;</span>
+     <span class="token punctuation">(</span>a <span class="token operator">=></span> out1<span class="token punctuation">,</span> out2<span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token number">2.2</span><span class="token punctuation">;</span>   <span class="token comment" spellcheck="true">// 使用错误，可使用 (a *> out1, out2) = 2.2;</span>
+
+<span class="token comment" spellcheck="true">// 从 r 到 o1 和 o2 的上升、下降延时说明</span>
+      <span class="token punctuation">(</span>r <span class="token operator">*></span> o1<span class="token punctuation">,</span> o2<span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// 从 a[1] 到 b[1] 和 从 a[0] 到 b[0] 的路径延时说明</span>
+      <span class="token punctuation">(</span>a<span class="token punctuation">[</span> <span class="token number">1</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=></span> b<span class="token punctuation">[</span> <span class="token number">1</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 并行连接</span>
+
+<span class="token comment" spellcheck="true">// 从 a 到 o 的全路径延时说明</span>
+      <span class="token punctuation">(</span>a<span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">*></span> o<span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token number">6.3</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// full connection</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="状态依赖路径延时SDPD"><a href="#状态依赖路径延时SDPD" class="headerlink" title="状态依赖路径延时SDPD"></a>状态依赖路径延时SDPD</h3><p>状态依赖路径延时在说明的条件成立时赋予路径一个延时。</p>
+<p>有时路径延时可能依赖于其它输入的逻辑值。SDPD就是用于说明这种情况。在例子中，b到x的延时依赖于a的状态。</p>
+<p> SDPD说明语法：</p>
+<p>  <em>if</em> &lt;condition&gt; 路径延时说明;</p>
+<p>SDPD说明不使用<em>else</em>子句。条件值为X或Z则认为条件成立。当一个路径中有多个条件成立时使用最小值。</p>
+<p>所有输入状态都应说明。若没有说明则使用分布延时(若说明了分布延时)，否则使用零延时。</p>
+<p>条件有一些限制，但许多仿真器并不遵循IEEE标准的限制。</p>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> XOR2 <span class="token punctuation">(</span>x<span class="token punctuation">,</span> a<span class="token punctuation">,</span> b<span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token keyword">input</span> a<span class="token punctuation">,</span> b<span class="token punctuation">;</span>
+     <span class="token keyword">output</span> x<span class="token punctuation">;</span>
+          <span class="token keyword">xor</span> <span class="token punctuation">(</span>x<span class="token punctuation">,</span> a<span class="token punctuation">,</span> b<span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token keyword">specify</span>
+          <span class="token keyword">if</span> <span class="token punctuation">(</span>a<span class="token punctuation">)</span> <span class="token punctuation">(</span>b<span class="token operator">=></span> x<span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">:</span> <span class="token number">6</span><span class="token punctuation">:</span> <span class="token number">7</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>a<span class="token punctuation">)</span> <span class="token punctuation">(</span>b<span class="token operator">=></span> x<span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">:</span> <span class="token number">7</span><span class="token punctuation">:</span> <span class="token number">8</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token keyword">if</span> <span class="token punctuation">(</span>b<span class="token punctuation">)</span> <span class="token punctuation">(</span>a<span class="token operator">=></span> x<span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">:</span> <span class="token number">5</span><span class="token punctuation">:</span> <span class="token number">7</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>b<span class="token punctuation">)</span> <span class="token punctuation">(</span>a<span class="token operator">=></span> x<span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">:</span> <span class="token number">7</span><span class="token punctuation">:</span> <span class="token number">9</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token keyword">endspecify</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="specify块参数"><a href="#specify块参数" class="headerlink" title="specify块参数"></a>specify块参数</h3><p>specify块中的参数由关键字<em>specparam</em>说明。<em>specparam</em>参数和模块中<em>parameter</em>定义的参数作用范围不同，并且specparam定义的参数不能重载。下面总结了两种参数的差别：</p>
+<ul>
+<li>specify参数<ul>
+<li>关键字为<em>specparam</em>声明</li>
+<li>必须在<em>specify</em>块内声明</li>
+<li>只能在<em>specify</em>块内使用</li>
+<li>不能使用<em>defparam</em>重载</li>
+</ul>
+</li>
+<li>模块参数<ul>
+<li>使用关键字<em>parameter</em>声明</li>
+<li>必须在specify块外声明</li>
+<li>只能在specify块外使用</li>
+<li>可以用defparam重载</li>
+<li>占用存储器，因为在每个模块实例中复制</li>
+</ul>
+</li>
+</ul>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> noror <span class="token punctuation">(</span>O<span class="token punctuation">,</span> A<span class="token punctuation">,</span> B<span class="token punctuation">,</span> C<span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token keyword">output</span> O<span class="token punctuation">;</span>
+     <span class="token keyword">input</span> A<span class="token punctuation">,</span> B<span class="token punctuation">,</span> C<span class="token punctuation">;</span>
+          <span class="token keyword">nor</span> n1 <span class="token punctuation">(</span>net1<span class="token punctuation">,</span> A<span class="token punctuation">,</span> B<span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token keyword">or</span> o1 <span class="token punctuation">(</span>O<span class="token punctuation">,</span> C<span class="token punctuation">,</span> net1<span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token keyword">specify</span>
+          <span class="token keyword">specparam</span> ao <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">,</span> bo <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">,</span> co <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+          <span class="token punctuation">(</span>A <span class="token operator">=></span> O<span class="token punctuation">)</span> <span class="token operator">=</span> ao<span class="token punctuation">;</span>
+          <span class="token punctuation">(</span>B <span class="token operator">=></span> O<span class="token punctuation">)</span> <span class="token operator">=</span> bo<span class="token punctuation">;</span>
+          <span class="token punctuation">(</span>C <span class="token operator">=></span> O<span class="token punctuation">)</span> <span class="token operator">=</span> co<span class="token punctuation">;</span>
+     <span class="token keyword">endspecify</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="路径脉冲控制"><a href="#路径脉冲控制" class="headerlink" title="路径脉冲控制"></a>路径脉冲控制</h2><p>使用<em>specparam</em>参数<em>PATHPULSE$</em>控制模块路径对脉冲的处理。</p>
+<p>语法：</p>
+<pre><code>PATHPULSE$ = (&lt; reject_value&gt;, &lt;error_value&gt;?)
+PATHPULSE$&lt; path_source&gt;$&lt; path_destination&gt; =
+ (&lt; reject_value&gt;, &lt;error_value&gt;?)</code></pre><p><img src="/images/loading.gif" data-original="../images/basic/image-20211126112430827.png" alt=""></p>
+<ul>
+<li>可以用PATHPULSE$声明的 specparam参数说明全局脉冲控制</li>
+<li>PATHPULSE$声明的 specparam参数缩小了指定模块或模块内特定路径的模块路径延时的范围。</li>
+<li>只声明一个值时，error_value和reject_value相同，如</li>
+</ul>
+<pre><code> PATHPULSE$ = 3;  等价于 PATHPULSE$ = (3, 3);</code></pre><ul>
+<li>脉冲宽度小于reject_value的信号将被滤掉，而小于error_value的值会使输出产生不定状态。</li>
+<li>由上面带斜率的波形可以看出，模块中en信号在时间t发生变化并开始影响q；若en脉冲在时间t+2结束，则q没有被完全驱动，q将恢复原值，如点波形所示。若en脉冲在时间t+9结束，q则可能完成驱动，也可能没有，处于未知状态。如果en到t+9一直有效，q将输出新值。</li>
+</ul>
+<h2 id="Verilog时序检查"><a href="#Verilog时序检查" class="headerlink" title="Verilog时序检查"></a>Verilog时序检查</h2><ul>
+<li>使用时序检查以验证设计的时序</li>
+<li>时序检查完成下列工作：<ul>
+<li>确定两个指定事件之间的时差</li>
+<li>比较时差与指定的时限</li>
+<li>如果时差超过指定时限则产生时序不能满足的报告。这个报告只是一个警告信息，不影响模块的输出</li>
+</ul>
+</li>
+<li>Verilog支持的时序检查有：<ul>
+<li>setup(建立时间）</li>
+<li>hold（保持时间）</li>
+<li>pulse width（脉冲宽度）</li>
+<li>clock period（时钟周期）</li>
+<li>skew（倾斜）</li>
+<li>recovery（覆盖）</li>
+</ul>
+</li>
+</ul>
+<p>•系统任务$setup在数据变化到时钟沿的时差小于时限则报告一个timing violation，如</p>
+<p>​    <code>$setup( data, posedge clk, 4);</code></p>
+<p>•系统任务$hold在时钟沿到数据变化的时差小于时限则报告一个timing violation，如</p>
+<p>​    <code>$hold( posedge clk, data, 3);</code></p>
+<p>•<code>$setuphold</code>是<code>$setup</code>和<code>$hold</code>的联合。</p>
+<p>​    <code>$setuphold( posedge clk, data, 4, 3);</code></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211126112735060.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211126112751250.png" alt=""></p>
+<h3 id="时序检查-—-条件时序检查"><a href="#时序检查-—-条件时序检查" class="headerlink" title="时序检查 — 条件时序检查"></a>时序检查 — 条件时序检查</h3><p><strong>在条件时序检查中，是否进行时序检查取决于条件表达式的计算值</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211126112937542.png" alt=""></p>
+<p>条件表达式中条件只能是一个标量信号，这个信号可以：</p>
+<ul>
+<li>用位反操作符（~）取反。</li>
+<li>用等于操作符（= =或！=）与一个标量常量进行比较</li>
+<li>用相同操作符(===或！==）与一个标量常量进行比较</li>
+<li>若条件表达式计算值为1、x或z则认为条件成立。</li>
+</ul>
+<p>由于条件时序检查的条件表达式中只能有一个信号，因此需要多个信号产生条件时必须使用哑逻辑使将它们表达为一个内部信号表示才能用于条件时序检查。</p>
+<ul>
+<li>可以说明并使用一个notifier来显示时序不满足(violation)</li>
+</ul>
+<p>​    <code>$setuphold( ref_event, data_event, s_limit, h_limit, NOTIFY);</code></p>
+<ul>
+<li>notifier是可选的</li>
+<li>notifier是一个1位的寄存器</li>
+<li>时序检查产生violation时，Verilog报告信息并使notifier翻转</li>
+<li>当时序violation产生时，可以用notifier使输出变为未定义值。</li>
+<li>有两种方法使notifier影响输出值</li>
+<li>将notifier作为UDP的一个输入端口</li>
+<li>在高级行为模块中，不需要将notifier声明为端口也可以对其进行操作。</li>
+</ul>
+<blockquote>
+<p>可能导致所有D触发器全部置x</p>
+</blockquote>
+<h3 id="notifier举例"><a href="#notifier举例" class="headerlink" title="notifier举例"></a>notifier举例</h3><pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token constant">`timescale</span> <span class="token number">1</span>ns<span class="token operator">/</span> <span class="token number">1</span>ns
+<span class="token keyword">module</span> dff_notifier <span class="token punctuation">(</span>q<span class="token punctuation">,</span> ck<span class="token punctuation">,</span> d<span class="token punctuation">,</span> rst<span class="token punctuation">,</span> FLAG<span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token keyword">input</span> ck<span class="token punctuation">,</span> d<span class="token punctuation">,</span> rst<span class="token punctuation">;</span>
+     <span class="token keyword">output</span> q<span class="token punctuation">,</span> FLAG<span class="token punctuation">;</span>
+     <span class="token keyword">reg</span> FLAG<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 1-bit notifier</span>
+<span class="token comment" spellcheck="true">// dff 网表</span>
+     ……
+     <span class="token keyword">specify</span>
+          <span class="token punctuation">(</span>ck <span class="token operator">=></span> q<span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">:</span> <span class="token number">3</span><span class="token punctuation">:</span> <span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token property">$setup</span><span class="token punctuation">(</span> d<span class="token punctuation">,</span> <span class="token keyword">posedge</span> ck <span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> FLAG<span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token keyword">endspecify</span>
+<span class="token keyword">endmodule</span>
+
+<span class="token keyword">module</span> test<span class="token punctuation">;</span>
+     <span class="token keyword">reg</span> ck<span class="token punctuation">,</span> d<span class="token punctuation">,</span> rst<span class="token punctuation">;</span>
+     dff_notifier <span class="token punctuation">(</span>q<span class="token punctuation">,</span> ck<span class="token punctuation">,</span> d<span class="token punctuation">,</span> rst<span class="token punctuation">,</span> notifier<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// 产生激励并检查响应</span>
+     <span class="token important">always @</span><span class="token punctuation">(</span> notifier<span class="token punctuation">)</span> <span class="token keyword">begin</span>
+          rst <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span> <span class="token number">#10</span> rst <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+      <span class="token keyword">end</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211126113322997.png" alt=""></p>
+<h3 id="选择仿真延迟模型"><a href="#选择仿真延迟模型" class="headerlink" title="选择仿真延迟模型"></a>选择仿真延迟模型</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211126120645878.png" alt=""></p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -4903,7 +5419,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">3128.2k</span>&nbsp;字
+                class="white-color">3132.9k</span>&nbsp;字
             
             
             
@@ -5141,7 +5657,7 @@ $(function () {
     
     <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/instantpage/instantpage.js" type="module"></script>
     
-
+<script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script>
         <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
         <script>
         $('a').each(function() {
@@ -5160,7 +5676,7 @@ $(function () {
             }
           }
         });
-        </script><script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script></body>
+        </script></body>
 
 </html>
 
