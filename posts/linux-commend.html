@@ -26,9 +26,9 @@
     
     <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/jquery/jquery.min.js"></script>
     
-<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
-<link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
-<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+<meta name="generator" content="Hexo 4.2.0"><link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
+</head>
 
 
 <body>
@@ -459,21 +459,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-11-15
+                    2021-11-29
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    4.9k
+                    6.1k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    23 分
+                    28 分
                 </div>
                 
 
@@ -1772,7 +1772,121 @@ su = Switch User
 
 MIME = Multipurpose Internet Mail Extensions
 
-ECMA = European Computer ManufacturersAssociation</code></pre><script>
+ECMA = European Computer ManufacturersAssociation</code></pre><h1 id="实用-Linux-运维命令及知识"><a href="#实用-Linux-运维命令及知识" class="headerlink" title="实用 Linux 运维命令及知识"></a>实用 Linux 运维命令及知识</h1><p>1、查找当前目录下所有以.tar结尾的文件然后移动到指定目录：</p>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">find</span> <span class="token keyword">.</span> -name “*.tar” -exec <span class="token function">mv</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>./backup/ <span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>注解：find –name 主要用于查找某个文件名字，-exec 、xargs可以用来承接前面的结果，然后将要执行的动作，一般跟find在一起用的很多，find使用我们可以延伸-mtime查找修改时间、-type是指定对象类型（常见包括f代表文件、d代表目录），-size 指定大小，例如经常用到的：查找当前目录30天以前大于100M的LOG文件并删除。</p>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">find</span>  <span class="token keyword">.</span> -name <span class="token string">"*.log"</span> –mtime +30 –typef –size +100M <span class="token operator">|</span><span class="token function">xargs</span> <span class="token function">rm</span> –rf <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>2、批量解压当前目录下以.zip结尾的所有文件到指定目录：</p>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token keyword">for</span> i  <span class="token keyword">in</span>  <span class="token variable"><span class="token variable">`</span><span class="token function">find</span> <span class="token keyword">.</span> –name “*.zip”–type f <span class="token variable">`</span></span>
+
+<span class="token keyword">do</span>
+
+unzip –d <span class="token variable">$i</span> /data/www/img/
+
+<span class="token keyword">done</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>注解：forI in （command）;do … done为for循环的一个常用格式，其中I为变量，可以自己指定。</p>
+<p>3、sed常用命收集：test.txt做测试</p>
+<pre class="line-numbers language-bash"><code class="language-bash">如何去掉行首的.字符: sed-i <span class="token string">'s/^.//g'</span> test.txt
+
+在行首添加一个a字符: <span class="token function">sed</span><span class="token string">'s/^/a/g'</span>    test.txt
+
+在行尾添加一个a字符: <span class="token function">sed</span><span class="token string">'s/$/a/'</span>     tets.txt
+
+在特定行后添加一个c字符:sed <span class="token string">'/wuguangke/ac'</span> test.txt
+
+在行前加入一个c字符: <span class="token function">sed</span><span class="token string">'/wuguangke/ic'</span> test.txt<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>更多sed命令请查阅相关文档。</p>
+<p>4、如何判断某个目录是否存在，不存在则新建，存在则打印信息。</p>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token keyword">if</span>
+
+<span class="token punctuation">[</span><span class="token operator">!</span> –d /data/backup/<span class="token punctuation">]</span><span class="token punctuation">;</span><span class="token keyword">then</span>
+
+Mkdir–p /data/backup/
+
+<span class="token keyword">else</span>
+
+<span class="token keyword">echo</span>  <span class="token string">"The Directory alreadyexists,please exit"</span>
+
+<span class="token keyword">fi</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>注解：if…;then …else ..fi：为if条件语句,!叹号表示反义“不存在“，-d代表目录。</p>
+<p>5、监控linux磁盘根分区，如果根分区空间大于等于90%，发送邮件给Linux SA</p>
+<p>(1)、打印根分区大小</p>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">df</span> -h <span class="token operator">|</span><span class="token function">sed</span> -n <span class="token string">'//$/p'</span><span class="token operator">|</span><span class="token function">awk</span> <span class="token string">'{print <span class="token variable">$5</span>}'</span><span class="token operator">|</span><span class="token function">awk</span> –F ”%” <span class="token string">'{print <span class="token variable">$1</span>}'</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>注解：awk ‘{print $5}’意思是打印第5个域，-F的意思为分隔，例如以%分隔，简单意思就是去掉百分号，awk –F. ‘{print $1}’分隔点.号。</p>
+<p>(2)、if条件判断该大小是否大于90，如果大于90则发送邮件报警</p>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token keyword">while</span> <span class="token function">sleep</span> 5m
+
+<span class="token keyword">do</span>
+
+<span class="token keyword">for</span> i <span class="token keyword">in</span> `df -h <span class="token operator">|</span><span class="token function">sed</span> -n <span class="token string">'//$/p'</span> <span class="token operator">|</span><span class="token function">awk</span> <span class="token string">'{print <span class="token variable">$5</span>}'</span> <span class="token operator">|</span><span class="token function">sed</span> <span class="token string">'s/%//g'</span>`
+
+<span class="token keyword">do</span>
+
+<span class="token keyword">echo</span> <span class="token variable">$i</span>
+
+<span class="token keyword">if</span> <span class="token punctuation">[</span> <span class="token variable">$i</span> -ge 90 <span class="token punctuation">]</span><span class="token punctuation">;</span><span class="token keyword">then</span>
+
+<span class="token keyword">echo</span> “More than 90% Linux of disk space ,Please LinuxSA Check Linux Disk <span class="token operator">!</span>” <span class="token operator">|</span>mail -s “Warn Linux / Parts is <span class="token variable">$i</span>%” 
+
+XXX@XXX.XX
+
+<span class="token keyword">fi</span>
+
+<span class="token keyword">done</span>
+
+<span class="token keyword">done</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>6、统计Nginx访问日志，访问量排在前20 的 ip地址：</p>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">cat</span> access.log <span class="token operator">|</span><span class="token function">awk</span> <span class="token string">'{print <span class="token variable">$1</span>}'</span><span class="token operator">|</span><span class="token function">sort</span><span class="token operator">|</span><span class="token function">uniq</span> -c <span class="token operator">|</span><span class="token function">sort</span> -nr <span class="token operator">|</span><span class="token function">head</span> -20<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>注解：sort排序、uniq（检查及删除文本文件中重复出现的行列 ）</p>
+<p>7、sed另外一个用法找到当前行，然后在修改该行后面的参数：</p>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">sed</span> -i <span class="token string">'/SELINUX/s/enforcing/disabled/'</span> /etc/selinux/config<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>Sed冒号方式</p>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">sed</span> -i ‘s:/tmp:/tmp/abc/:g’test.txt意思是将/tmp改成/tmp/abc/。<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>8、打印出一个文件里面最大和最小值：</p>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">cat</span> a.txt <span class="token operator">|</span><span class="token function">sort</span> -nr<span class="token operator">|</span><span class="token function">awk</span> ‘<span class="token punctuation">{</span><span class="token punctuation">}</span>END<span class="token punctuation">{</span>print<span class="token punctuation">}</span> NR<span class="token operator">==</span>1′
+
+<span class="token function">cat</span> a.txt <span class="token operator">|</span><span class="token function">sort</span> -nr <span class="token operator">|</span><span class="token function">awk</span> ‘END<span class="token punctuation">{</span>print<span class="token punctuation">}</span> NR<span class="token operator">==</span>1′<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>这个才是真正的打印最大最小值：</p>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">sed</span> ‘s/ / /g’ a.txt <span class="token operator">|</span><span class="token function">sort</span> -nr<span class="token operator">|</span><span class="token function">sed</span> -n ’1p<span class="token punctuation">;</span><span class="token variable">$p</span>’<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>9、使用snmpd抓取版本为v2的cacti数据方式：</p>
+<pre class="line-numbers language-bash"><code class="language-bash">snmpwalk -v2c -c public 192.168.0.241<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>10、修改文本中以jk结尾的替换成yz：</p>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">sed</span> -e ‘s/jk$/yz/g’ b.txt<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>11、网络抓包：tcpdump</p>
+<p>tcpdump -nn host 192.168.56.7 and port 80 抓取56.7通过80请求的数据包。</p>
+<pre class="line-numbers language-bash"><code class="language-bash">tcpdump -nn host 192.168.56.7 or <span class="token operator">!</span> host 192.168.0.22 and port 80 排除0.22 80端口！<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>tcp/ip 7层协议物理层–数据链路层-网络层-传输层-会话层-表示层-应用层。</p>
+<p>12、H3C配置团体名配置：首先设置snmp版本如下：</p>
+<pre class="line-numbers language-bash"><code class="language-bash">snmp-agent sys-info version v1 v2c ，然后设置团体名：snmp-agent community <span class="token function">read</span> public<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>13、显示最常用的20条命令：</p>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">cat</span> .bash_history <span class="token operator">|</span><span class="token function">grep</span> -v ^<span class="token comment" spellcheck="true"># |awk ‘{print $1}’ |sort |uniq -c |sort -nr |head-20</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>14、写一个脚本查找最后创建时间是3天前，后缀是*.log的文件并删除。</p>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">find</span> <span class="token keyword">.</span> -mtime +3  -name <span class="token string">"*.log"</span> <span class="token operator">|</span><span class="token function">xargs</span> <span class="token function">rm</span> -rf <span class="token punctuation">{</span><span class="token punctuation">}</span> <span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>15、写一个脚本将某目录下大于100k的文件移动至/tmp下。</p>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">find</span> <span class="token keyword">.</span> -size +100k -exec <span class="token function">mv</span> <span class="token punctuation">{</span><span class="token punctuation">}</span> /tmp <span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>16、写一个防火墙配置脚本，只允许远程主机访问本机的80端口。</p>
+<pre class="line-numbers language-bash"><code class="language-bash">iptables -F
+
+iptables -X
+
+iptables -A INPUT -p tcp --dport 80 -j accept
+
+iptables -A INPUT -p tcp -j REJECT<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>或者</p>
+<pre class="line-numbers language-bash"><code class="language-bash">iptables -A INPUT -m state --state NEW-m tcp -p tcp --dport 80 -j ACCEPT<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>17、写一个脚本进行nginx日志统计，得到访问ip最多的前10个(nginx日志路径：</p>
+<pre class="line-numbers language-bash"><code class="language-bash">/home/logs/nginx/default/access.log<span class="token punctuation">)</span>。
+
+<span class="token function">cd</span> /home/logs.nginx/default
+
+<span class="token function">sort</span> -m -k 4 -o access.logok access.1 access.2 access.3 <span class="token punctuation">..</span><span class="token punctuation">..</span>.
+
+<span class="token function">cat</span> access.logok <span class="token operator">|</span><span class="token function">awk</span> <span class="token string">'{print <span class="token variable">$1</span>}'</span><span class="token operator">|</span><span class="token function">sort</span> -n<span class="token operator">|</span><span class="token function">uniq</span> -c<span class="token operator">|</span><span class="token function">sort</span> -nr <span class="token operator">|</span><span class="token function">head</span> -10<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>18.替换文件中的目录</p>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">sed</span> <span class="token string">'s:/user/local:/tmp:g'</span> test.txt<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>或者</p>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">sed</span> -i <span class="token string">'s//usr/local//tmp/g'</span> test.txt<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
             if (!el.dataset.src) { return; }
@@ -2285,7 +2399,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">3147.3k</span>&nbsp;字
+                class="white-color">3148.9k</span>&nbsp;字
             
             
             
