@@ -459,21 +459,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-11-24
+                    2021-12-01
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    19.9k
+                    21.9k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    82 分
+                    90 分
                 </div>
                 
 
@@ -2417,6 +2417,285 @@ pip install -r requirements.txt</code></pre><h2 id="转换像素图"><a href="#�
 <p>接下来，就是使用新图块，重新制作像素图：</p>
 <pre><code>python tiler.py ./images/333.png ./tiles/square2/gen_square2/</code></pre><p>生成👇</p>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211121115155982.png" alt=""></p>
+<h1 id="Polars-加速版pandas"><a href="#Polars-加速版pandas" class="headerlink" title="Polars - 加速版pandas"></a>Polars - 加速版pandas</h1><p><a href="https://github.com/ritchie46/polars" target="_blank" rel="noopener">Polars API</a></p>
+<p><a href="https://ritchie46.github.io/polars-book/" target="_blank" rel="noopener">Document</a></p>
+<p>Polars是通过Rust编写的一个库，Polars的内存模型是基于Apache Arrow。</p>
+<p>Polars存在两种API，一种是Eager API，另一种则是Lazy API。</p>
+<p>其中Eager API和Pandas的使用类似，语法差不太多，立即执行就能产生结果。</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211201120913389.png" alt=""></p>
+<p>而Lazy API就像Spark，首先将查询转换为逻辑计划，然后对计划进行重组优化，以减少执行时间和内存使用。</p>
+<p>安装Polars，使用百度pip源。</p>
+<pre><code># 安装polars
+pip install polars -i https://mirror.baidu.com/pypi/simple/</code></pre><p>安装成功后，开始测试，比较Pandas和Polars处理数据的情况。</p>
+<p>使用某网站注册用户的用户名数据进行分析，包含约2600万个用户名的CSV文件。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
+
+df <span class="token operator">=</span> pd<span class="token punctuation">.</span>read_csv<span class="token punctuation">(</span><span class="token string">'users.csv'</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>df<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>数据情况如下。</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211201121000610.png" alt=""></p>
+<p>此外还使用了一个自己创建的CSV文件，用以数据整合测试。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
+
+df <span class="token operator">=</span> pd<span class="token punctuation">.</span>read_csv<span class="token punctuation">(</span><span class="token string">'fake_user.csv'</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>df<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>得到结果如下。</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211201121025149.png" alt=""></p>
+<p>首先比较一下两个库的排序算法耗时。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> timeit
+<span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
+
+start <span class="token operator">=</span> timeit<span class="token punctuation">.</span>default_timer<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+df <span class="token operator">=</span> pd<span class="token punctuation">.</span>read_csv<span class="token punctuation">(</span><span class="token string">'users.csv'</span><span class="token punctuation">)</span>
+df<span class="token punctuation">.</span>sort_values<span class="token punctuation">(</span><span class="token string">'n'</span><span class="token punctuation">,</span> ascending<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">)</span>
+stop <span class="token operator">=</span> timeit<span class="token punctuation">.</span>default_timer<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'Time: '</span><span class="token punctuation">,</span> stop <span class="token operator">-</span> start<span class="token punctuation">)</span>
+
+<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>
+Time<span class="token punctuation">:</span>  <span class="token number">27.555776743218303</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>可以看到使用Pandas对数据进行排序，花费了大约28s。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> timeit
+<span class="token keyword">import</span> polars <span class="token keyword">as</span> pl
+
+start <span class="token operator">=</span> timeit<span class="token punctuation">.</span>default_timer<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+df <span class="token operator">=</span> pl<span class="token punctuation">.</span>read_csv<span class="token punctuation">(</span><span class="token string">'users.csv'</span><span class="token punctuation">)</span>
+df<span class="token punctuation">.</span>sort<span class="token punctuation">(</span>by_column<span class="token operator">=</span><span class="token string">'n'</span><span class="token punctuation">,</span> reverse<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
+stop <span class="token operator">=</span> timeit<span class="token punctuation">.</span>default_timer<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'Time: '</span><span class="token punctuation">,</span> stop <span class="token operator">-</span> start<span class="token punctuation">)</span>
+
+<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>
+Time<span class="token punctuation">:</span>  <span class="token number">9.924110282212496</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>Polars只花费了约10s，这意味着Polars比Pandas快了2.7倍。</p>
+<p>下面，我们来试试数据整合的效果，纵向连接。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> timeit
+<span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
+
+start <span class="token operator">=</span> timeit<span class="token punctuation">.</span>default_timer<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+df_users <span class="token operator">=</span> pd<span class="token punctuation">.</span>read_csv<span class="token punctuation">(</span><span class="token string">'users.csv'</span><span class="token punctuation">)</span>
+df_fake <span class="token operator">=</span> pd<span class="token punctuation">.</span>read_csv<span class="token punctuation">(</span><span class="token string">'fake_user.csv'</span><span class="token punctuation">)</span>
+df_users<span class="token punctuation">.</span>append<span class="token punctuation">(</span>df_fake<span class="token punctuation">,</span> ignore_index<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
+stop <span class="token operator">=</span> timeit<span class="token punctuation">.</span>default_timer<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'Time: '</span><span class="token punctuation">,</span> stop <span class="token operator">-</span> start<span class="token punctuation">)</span>
+
+<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>
+Time<span class="token punctuation">:</span>  <span class="token number">15.556222308427095</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>使用Pandas耗时15s。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> timeit
+<span class="token keyword">import</span> polars <span class="token keyword">as</span> pl
+
+start <span class="token operator">=</span> timeit<span class="token punctuation">.</span>default_timer<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+df_users <span class="token operator">=</span> pl<span class="token punctuation">.</span>read_csv<span class="token punctuation">(</span><span class="token string">'users.csv'</span><span class="token punctuation">)</span>
+df_fake <span class="token operator">=</span> pl<span class="token punctuation">.</span>read_csv<span class="token punctuation">(</span><span class="token string">'fake_user.csv'</span><span class="token punctuation">)</span>
+df_users<span class="token punctuation">.</span>vstack<span class="token punctuation">(</span>df_fake<span class="token punctuation">)</span>
+stop <span class="token operator">=</span> timeit<span class="token punctuation">.</span>default_timer<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'Time: '</span><span class="token punctuation">,</span> stop <span class="token operator">-</span> start<span class="token punctuation">)</span>
+
+<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>
+Time<span class="token punctuation">:</span>  <span class="token number">3.475433263927698</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>Polars居然最使用了约3.5s，这里Polars比Pandas快了4.5倍。</p>
+<h1 id="ChatterBot-聊天机器人"><a href="#ChatterBot-聊天机器人" class="headerlink" title="ChatterBot - 聊天机器人"></a>ChatterBot - 聊天机器人</h1><p><a href="https://chatterbot.readthedocs.io/en/stable/" target="_blank" rel="noopener">ChatterBot API</a></p>
+<h2 id="什么是聊天机器人"><a href="#什么是聊天机器人" class="headerlink" title="什么是聊天机器人"></a>什么是聊天机器人</h2><p>聊天机器人也称为聊天机器人、机器人、人工代理等，基本上是由人工智能驱动的软件程序，其目的是通过文本或语音与用户进行对话。我们日常接触的比较著名的例子包括 Siri、Alexa 等</p>
+<p>这些聊天机器人倾向于为用户执行特定任务，聊天机器人经常执行诸如进行交易、预订酒店、提交表格等任务。随着人工智能领域的技术进步，聊天机器人的可能性也是无穷无尽的</p>
+<p>当然了，在当前技术下，聊天机器人还是有很多局限性的</p>
+<ul>
+<li>领域知识 —— 由于真正的人工智能仍然遥不可及，任何聊天机器人在与人类对话时都很难完全理解对话含义</li>
+<li>个性 —— 无法正确响应和相当差的理解能力比任何聊天机器人的常见错误更重要，为聊天机器人添加个性仍然是很遥远和困难的事情</li>
+</ul>
+<p>我们可以将聊天机器人定义为两类</p>
+<ul>
+<li><p>基于特定规则 —— 在这种方法中，机器人是根据规则进行训练的。基于此，机器人可以回答简单的查询，但有时无法回答复杂的对话</p>
+</li>
+<li><p>自学 —— 这些机器人遵循机器学习方法，效率更高，并进一步分为另外两类</p>
+</li>
+<li><ul>
+<li>基于检索模型 —— 在这种方法中，机器人根据用户输入从响应列表中检索最佳响应</li>
+<li>生成模型 —— 这些模型通常会给出答案，而不是从一组答案中进行搜索，这也使它们成为智能机器人</li>
+</ul>
+</li>
+</ul>
+<p>好了，高大上的聊天机器人知识就先介绍到这里，下面我们就通过 chatterbot 来构建一个简单的在线聊天机器人</p>
+<h2 id="ChatterBot-库简介"><a href="#ChatterBot-库简介" class="headerlink" title="ChatterBot 库简介"></a>ChatterBot 库简介</h2><p>ChatterBot 是 Python 中的一个库，它生成对用户输入的响应，使用多种机器学习算法来产生各种响应。用户可以更轻松地使用 ChatterBot 库制作具有更准确响应的聊天机器人</p>
+<p>ChatterBot 的设计允许机器人接受多种语言的训练，最重要的是，机器学习算法使机器人更容易使用用户的输入自行改进</p>
+<p>ChatterBot 可以轻松创建参与对话的软件，每次聊天机器人从用户那里获得输入时，它都会保存输入和响应，这有助于没有初始知识的聊天机器人使用收集到的响应进行自我进化</p>
+<p>随着响应的增加，聊天机器人的准确性也会提高。程序从与输入匹配的最接近匹配语句中选择最接近匹配的响应，然后从该响应的已知语句选择中选择响应</p>
+<p>安装 ChatterBot 也非常简单</p>
+<pre><code>pip install chatterbot</code></pre><h2 id="构建聊天机器人"><a href="#构建聊天机器人" class="headerlink" title="构建聊天机器人"></a>构建聊天机器人</h2><h3 id="机器人训练"><a href="#机器人训练" class="headerlink" title="机器人训练"></a>机器人训练</h3><p>Chatterbot 带有一个数据实用程序模块，可用于训练聊天机器人。目前该模块中有十多种语言的训练数据，我们可以拿来直接使用</p>
+<blockquote>
+<p><a href="https://github.com/gunthercox/chatterbot-corpus" target="_blank" rel="noopener">https://github.com/gunthercox/chatterbot-corpus</a></p>
+</blockquote>
+<p>下面是在 python 中开始使用 ChatterBot 的简单示例</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> chatterbot <span class="token keyword">import</span> chatbot
+<span class="token keyword">from</span> chatterbot<span class="token punctuation">.</span>trainers <span class="token keyword">import</span> ListTrainer
+
+chatbot <span class="token operator">=</span> Chatbot<span class="token punctuation">(</span><span class="token string">'Edureka'</span><span class="token punctuation">)</span>
+trainer <span class="token operator">=</span> ListTrainer<span class="token punctuation">(</span>chatbot<span class="token punctuation">)</span>
+trainer<span class="token punctuation">.</span>train<span class="token punctuation">(</span><span class="token punctuation">[</span> <span class="token string">'hi, can I help you find a course'</span><span class="token punctuation">,</span> <span class="token string">'sure I'</span>d love to find you a course<span class="token string">', '</span>your course have been selected'<span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+response <span class="token operator">=</span> chatbot<span class="token punctuation">.</span>get_response<span class="token punctuation">(</span><span class="token string">"I want a course"</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>在例子中，我们根据提供的输入从聊天机器人获得响应</p>
+<h3 id="构建-flask-app"><a href="#构建-flask-app" class="headerlink" title="构建 flask app"></a>构建 flask app</h3><p>对于基本的 flask 结构，我们直接使用 GitHub 上的一个脚手架，这个是专门用来开发 ChatterBot 应用的</p>
+<blockquote>
+<p><a href="https://github.com/chamkank/flask-chatterbot" target="_blank" rel="noopener">https://github.com/chamkank/flask-chatterbot</a></p>
+</blockquote>
+<p>我们直接克隆项目就好</p>
+<p>把项目下载到本地之后，我们进行一些修改</p>
+<p>我们需要为 HTML 和 CSS 文件添加另外两个目录 static 和模板</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211201121416619.png" alt=""></p>
+<p>修改 App.py 文件</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> flask <span class="token keyword">import</span> Flask<span class="token punctuation">,</span> render_template<span class="token punctuation">,</span> request
+<span class="token keyword">from</span> chatterbot <span class="token keyword">import</span> ChatBot
+<span class="token keyword">from</span> chatterbot<span class="token punctuation">.</span>trainers <span class="token keyword">import</span> ChatterBotCorpusTrainer
+
+app <span class="token operator">=</span> Flask<span class="token punctuation">(</span>__name__<span class="token punctuation">)</span>
+
+english_bot <span class="token operator">=</span> ChatBot<span class="token punctuation">(</span><span class="token string">"Chatterbot"</span><span class="token punctuation">,</span> storage_adapter<span class="token operator">=</span><span class="token string">"chatterbot.storage.SQLStorageAdapter"</span><span class="token punctuation">)</span>
+trainer <span class="token operator">=</span> ChatterBotCorpusTrainer<span class="token punctuation">(</span>english_bot<span class="token punctuation">)</span>
+trainer<span class="token punctuation">.</span>train<span class="token punctuation">(</span><span class="token string">"chatterbot.corpus.english"</span><span class="token punctuation">)</span>
+
+@app<span class="token punctuation">.</span>route<span class="token punctuation">(</span><span class="token string">"/"</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">home</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">return</span> render_template<span class="token punctuation">(</span><span class="token string">"index.html"</span><span class="token punctuation">)</span>
+
+@app<span class="token punctuation">.</span>route<span class="token punctuation">(</span><span class="token string">"/get"</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">get_bot_response</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    userText <span class="token operator">=</span> request<span class="token punctuation">.</span>args<span class="token punctuation">.</span>get<span class="token punctuation">(</span><span class="token string">'msg'</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> str<span class="token punctuation">(</span>english_bot<span class="token punctuation">.</span>get_response<span class="token punctuation">(</span>userText<span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+
+<span class="token keyword">if</span> __name__ <span class="token operator">==</span> <span class="token string">"__main__"</span><span class="token punctuation">:</span>
+    app<span class="token punctuation">.</span>run<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>index.html 文件</p>
+<pre class="line-numbers language-html"><code class="language-html"><span class="token doctype">&lt;!DOCTYPE html></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>head</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>link</span> <span class="token attr-name">rel</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>stylesheet<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>text/css<span class="token punctuation">"</span></span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>/static/style.css<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script language-javascript"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>head</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h1</span><span class="token punctuation">></span></span>Flask Chatterbot Example<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h1</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>chatbox<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>botText<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span><span class="token punctuation">></span></span>Hi! I'm Chatterbot.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>userInput<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>textInput<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>msg<span class="token punctuation">"</span></span> <span class="token attr-name">placeholder</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>Message<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>buttonInput<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>submit<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>Send<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">></span></span><span class="token script language-javascript">
+<span class="token keyword">function</span> <span class="token function">getBotResponse</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<span class="token keyword">var</span> rawText <span class="token operator">=</span> <span class="token function">$</span><span class="token punctuation">(</span><span class="token string">"#textInput"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">val</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> userHtml <span class="token operator">=</span> <span class="token string">'&lt;p class="userText">&lt;span>'</span> <span class="token operator">+</span> rawText <span class="token operator">+</span> <span class="token string">'&lt;/span>&lt;/p>'</span><span class="token punctuation">;</span>
+<span class="token function">$</span><span class="token punctuation">(</span><span class="token string">"#textInput"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">val</span><span class="token punctuation">(</span><span class="token string">""</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">$</span><span class="token punctuation">(</span><span class="token string">"#chatbox"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">append</span><span class="token punctuation">(</span>userHtml<span class="token punctuation">)</span><span class="token punctuation">;</span>
+document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'userInput'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">scrollIntoView</span><span class="token punctuation">(</span><span class="token punctuation">{</span>block<span class="token punctuation">:</span> <span class="token string">'start'</span><span class="token punctuation">,</span> behavior<span class="token punctuation">:</span> <span class="token string">'smooth'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+$<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span><span class="token string">"/get"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> msg<span class="token punctuation">:</span> rawText <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">done</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<span class="token keyword">var</span> botHtml <span class="token operator">=</span> <span class="token string">'&lt;p class="botText">&lt;span>'</span> <span class="token operator">+</span> data <span class="token operator">+</span> <span class="token string">'&lt;/span>&lt;/p>'</span><span class="token punctuation">;</span>
+<span class="token function">$</span><span class="token punctuation">(</span><span class="token string">"#chatbox"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">append</span><span class="token punctuation">(</span>botHtml<span class="token punctuation">)</span><span class="token punctuation">;</span>
+document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'userInput'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">scrollIntoView</span><span class="token punctuation">(</span><span class="token punctuation">{</span>block<span class="token punctuation">:</span> <span class="token string">'start'</span><span class="token punctuation">,</span> behavior<span class="token punctuation">:</span> <span class="token string">'smooth'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token function">$</span><span class="token punctuation">(</span><span class="token string">"#textInput"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">keypress</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<span class="token keyword">if</span><span class="token punctuation">(</span>e<span class="token punctuation">.</span>which <span class="token operator">==</span> <span class="token number">13</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<span class="token function">getBotResponse</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">$</span><span class="token punctuation">(</span><span class="token string">"#buttonInput"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">click</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<span class="token function">getBotResponse</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>index.html 文件将包含应用程序的模板，而 style.css 将包含带有 CSS 代码的样式表。执行上述程序后，我们将得到如下图所示的输出</p>
+<p>Style.css 文件</p>
+<pre class="line-numbers language-css"><code class="language-css"><span class="token selector">body
+</span><span class="token punctuation">{</span>
+<span class="token property">font-family</span><span class="token punctuation">:</span> Garamond<span class="token punctuation">;</span>
+<span class="token property">background-color</span><span class="token punctuation">:</span> black<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token selector">h1
+</span><span class="token punctuation">{</span>
+<span class="token property">color</span><span class="token punctuation">:</span> black<span class="token punctuation">;</span>
+<span class="token property">margin-bottom</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token property">margin-top</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token property">text-align</span><span class="token punctuation">:</span> center<span class="token punctuation">;</span>
+<span class="token property">font-size</span><span class="token punctuation">:</span> <span class="token number">40</span>px<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token selector">h3
+</span><span class="token punctuation">{</span>
+<span class="token property">color</span><span class="token punctuation">:</span> black<span class="token punctuation">;</span>
+<span class="token property">font-size</span><span class="token punctuation">:</span> <span class="token number">20</span>px<span class="token punctuation">;</span>
+<span class="token property">margin-top</span><span class="token punctuation">:</span> <span class="token number">3</span>px<span class="token punctuation">;</span>
+<span class="token property">text-align</span><span class="token punctuation">:</span> center<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token selector"><span class="token id">#chatbox</span>
+</span><span class="token punctuation">{</span>
+<span class="token property">background-color</span><span class="token punctuation">:</span> black<span class="token punctuation">;</span>
+<span class="token property">margin-left</span><span class="token punctuation">:</span> auto<span class="token punctuation">;</span>
+<span class="token property">margin-right</span><span class="token punctuation">:</span> auto<span class="token punctuation">;</span>
+<span class="token property">width</span><span class="token punctuation">:</span> <span class="token number">40%</span><span class="token punctuation">;</span>
+<span class="token property">margin-top</span><span class="token punctuation">:</span> <span class="token number">60</span>px<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token selector"><span class="token id">#userInput</span> </span><span class="token punctuation">{</span>
+<span class="token property">margin-left</span><span class="token punctuation">:</span> auto<span class="token punctuation">;</span>
+<span class="token property">margin-right</span><span class="token punctuation">:</span> auto<span class="token punctuation">;</span>
+<span class="token property">width</span><span class="token punctuation">:</span> <span class="token number">40%</span><span class="token punctuation">;</span>
+<span class="token property">margin-top</span><span class="token punctuation">:</span> <span class="token number">60</span>px<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token selector"><span class="token id">#textInput</span> </span><span class="token punctuation">{</span>
+<span class="token property">width</span><span class="token punctuation">:</span> <span class="token number">87%</span><span class="token punctuation">;</span>
+<span class="token property">border</span><span class="token punctuation">:</span> none<span class="token punctuation">;</span>
+<span class="token property">border-bottom</span><span class="token punctuation">:</span> <span class="token number">3</span>px solid <span class="token hexcode">#009688</span><span class="token punctuation">;</span>
+<span class="token property">font-family</span><span class="token punctuation">:</span> monospace<span class="token punctuation">;</span>
+<span class="token property">font-size</span><span class="token punctuation">:</span> <span class="token number">17</span>px<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token selector"><span class="token id">#buttonInput</span> </span><span class="token punctuation">{</span>
+<span class="token property">padding</span><span class="token punctuation">:</span> <span class="token number">3</span>px<span class="token punctuation">;</span>
+<span class="token property">font-family</span><span class="token punctuation">:</span> monospace<span class="token punctuation">;</span>
+<span class="token property">font-size</span><span class="token punctuation">:</span> <span class="token number">17</span>px<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token selector"><span class="token class">.userText</span> </span><span class="token punctuation">{</span>
+<span class="token property">color</span><span class="token punctuation">:</span> white<span class="token punctuation">;</span>
+<span class="token property">font-family</span><span class="token punctuation">:</span> monospace<span class="token punctuation">;</span>
+<span class="token property">font-size</span><span class="token punctuation">:</span> <span class="token number">17</span>px<span class="token punctuation">;</span>
+<span class="token property">text-align</span><span class="token punctuation">:</span> right<span class="token punctuation">;</span>
+<span class="token property">line-height</span><span class="token punctuation">:</span> <span class="token number">30</span>px<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token selector"><span class="token class">.userText</span> span </span><span class="token punctuation">{</span>
+<span class="token property">background-color</span><span class="token punctuation">:</span> <span class="token hexcode">#009688</span><span class="token punctuation">;</span>
+<span class="token property">padding</span><span class="token punctuation">:</span> <span class="token number">10</span>px<span class="token punctuation">;</span>
+<span class="token property">border-radius</span><span class="token punctuation">:</span> <span class="token number">2</span>px<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token selector"><span class="token class">.botText</span> </span><span class="token punctuation">{</span>
+<span class="token property">color</span><span class="token punctuation">:</span> white<span class="token punctuation">;</span>
+<span class="token property">font-family</span><span class="token punctuation">:</span> monospace<span class="token punctuation">;</span>
+<span class="token property">font-size</span><span class="token punctuation">:</span> <span class="token number">17</span>px<span class="token punctuation">;</span>
+<span class="token property">text-align</span><span class="token punctuation">:</span> left<span class="token punctuation">;</span>
+<span class="token property">line-height</span><span class="token punctuation">:</span> <span class="token number">30</span>px<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token selector"><span class="token class">.botText</span> span </span><span class="token punctuation">{</span>
+<span class="token property">background-color</span><span class="token punctuation">:</span> <span class="token hexcode">#EF5350</span><span class="token punctuation">;</span>
+<span class="token property">padding</span><span class="token punctuation">:</span> <span class="token number">10</span>px<span class="token punctuation">;</span>
+<span class="token property">border-radius</span><span class="token punctuation">:</span> <span class="token number">2</span>px<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token selector"><span class="token id">#tidbit</span> </span><span class="token punctuation">{</span>
+<span class="token property">position</span><span class="token punctuation">:</span>absolute<span class="token punctuation">;</span>
+<span class="token property">bottom</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token property">right</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token property">width</span><span class="token punctuation">:</span> <span class="token number">300</span>px<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>接下来我们打开网页，就可以看到聊天页面啦</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211201121511916.png" alt=""></p>
+<p>有一个文本框，我们可以在其中提供用户输入，机器人将为该语句生成相应的响应消息，当我们输入的消息越多，机器人就会越智能！</p>
 <h1 id="图像处理库合集"><a href="#图像处理库合集" class="headerlink" title="图像处理库合集"></a>图像处理库合集</h1><h2 id="SimpleCV"><a href="#SimpleCV" class="headerlink" title="SimpleCV"></a>SimpleCV</h2><ul>
 <li>SimpleCV也是广泛被使用的构建计算机视觉应用程序的开源框架。手握SimpleCV，你可以访问几个高性能的视觉库，而无需先了解图像色深（bit depth）、文件格式、色彩空间等。SimpleCV拥护者的支持理由有两个，一是初学者也可以借此编写简单的视觉任务，二是无论是相机、视频文件、图像和视频流可互相操作。</li>
 </ul>
@@ -2956,7 +3235,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">3148.9k</span>&nbsp;字
+                class="white-color">3157.6k</span>&nbsp;字
             
             
             
@@ -3194,7 +3473,7 @@ $(function () {
     
     <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/instantpage/instantpage.js" type="module"></script>
     
-
+<script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script>
         <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
         <script>
         $('a').each(function() {
@@ -3213,7 +3492,7 @@ $(function () {
             }
           }
         });
-        </script><script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script></body>
+        </script></body>
 
 </html>
 
