@@ -459,21 +459,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-11-26
+                    2021-12-03
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    29.6k
+                    33.6k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    124 分
+                    139 分
                 </div>
                 
 
@@ -4529,9 +4529,26 @@ orand <span class="token punctuation">(</span>a<span class="token punctuation">,
 <h3 id="建立时钟"><a href="#建立时钟" class="headerlink" title="建立时钟"></a><strong>建立时钟</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211126105832817.png" alt=""></p>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211126105848262.png" alt=""></p>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211126105901328.png" alt=""></p>
+<h4 id="建立时钟（period-20）"><a href="#建立时钟（period-20）" class="headerlink" title="建立时钟（period = 20）"></a>建立时钟（period = 20）</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211203104417226.png" alt=""></p>
 <h3 id="使用task"><a href="#使用task" class="headerlink" title="使用task"></a>使用task</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211126105926273.png" alt=""></p>
 <p>在test bench中使用task可以压缩重复操作，提高代码效率。</p>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211126105950013.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211203104459372.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211203104528982.png" alt=""></p>
+<p>问题：</p>
+<ul>
+<li>什么操作可以容易的在fork…join块做到，而不容易在begin…end块做到？</li>
+<li>通常怎样产生规则激励和不规则激励？</li>
+<li>从一个文件中读取激励时使用什么数据类型？</li>
+<li>在行为级时钟模型中能做哪些在门级时钟模型中很难或不能作到的事？ </li>
+</ul>
+<p>解答：</p>
+<ul>
+<li>fork…join块中不但能够赋值，还可以并行执行循环、条件语句、任务或函数调用。</li>
+<li>循环或always块能有效地产生规则激励，不规则激励适合用在initial块产生。</li>
+<li>用寄存器组（存储器）并用$readmem系统任务从一个文件以读取向量。</li>
+<li>行为级代码可以很容易地产生一个启动时间不规则的时钟波形，并且可以在时刻零初始化时钟。</li>
+</ul>
 <h1 id="存储器建模"><a href="#存储器建模" class="headerlink" title="存储器建模"></a>存储器建模</h1><p>描述存储器必须做两件事：</p>
 <ul>
 <li>说明一个适当容量的存储器。</li>
@@ -4646,6 +4663,13 @@ out <span class="token operator">=</span> mem<span class="token punctuation">[</
     <span class="token keyword">assign</span>  mem_word <span class="token operator">=</span> mem<span class="token punctuation">[</span>address<span class="token punctuation">]</span><span class="token punctuation">;</span>
 
 <span class="token keyword">endmodule</span> <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>例中存储器字范围从0而不是1开始，因为存储器直接用地址线确定地址。 也可以用下面的方式声明存储器并寻址。 </p>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">reg</span> <span class="token punctuation">[</span>wordsize<span class="token punctuation">:</span><span class="token number">1</span><span class="token punctuation">]</span> mem <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">:</span>words<span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 从地址1开始的存储器 </span>
+<span class="token comment" spellcheck="true">// 存储器寻址时地址必须加1 </span>
+<span class="token keyword">wire</span> <span class="token punctuation">[</span>wordsize<span class="token punctuation">:</span><span class="token number">1</span><span class="token punctuation">]</span> mem_word <span class="token operator">=</span> mem<span class="token punctuation">[</span> address <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<h3 id="存储器数据赋值"><a href="#存储器数据赋值" class="headerlink" title="存储器数据赋值"></a>存储器数据赋值</h3><p>可以使用循环或系统任务给存储器装入初始化数据</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211203105126389.png" alt=""></p>
+<p>可以用 系统任务$readmem给一个ROM或RAM加载数据。对于ROM， 开始时写入的数据就是其实际内容。对于RAM，可以通过初始化，而不 是用不同的写周期给每个字装入数据以减少仿真时间</p>
 <h3 id="使用双向端口"><a href="#使用双向端口" class="headerlink" title="使用双向端口"></a>使用双向端口</h3><ul>
 <li>用关键词inout声明一个双向端口<ul>
 <li>inout [7:0] databus; </li>
@@ -4666,6 +4690,19 @@ out <span class="token operator">=</span> mem<span class="token punctuation">[</
 </li>
 </ul>
 <h3 id="双向驱动器建模"><a href="#双向驱动器建模" class="headerlink" title="双向驱动器建模"></a>双向驱动器建模</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211126122126917.png" alt=""></p>
+<h4 id="存储器端口建模"><a href="#存储器端口建模" class="headerlink" title="存储器端口建模"></a>存储器端口建模</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211203105224659.png" alt=""></p>
+<p>问题：</p>
+<ul>
+<li>在Verilog中用什么结构定义一个存储器组？</li>
+<li>如何向存储器加载数据？</li>
+<li>如何通过一个双向（inout）端口传送数据？</li>
+</ul>
+<p>解答：</p>
+<ul>
+<li>在Verilog中将存储器声明为一个一个2维寄存器阵列。</li>
+<li>可以用系统任务$readmem或$readmemb或用过程赋值向存储器加载数据</li>
+<li>因为inout两端信号必须都是net数据类型，因此只能使用基本单元，子模块，或持续赋值驱动数据。同时还必须注意确保在任何一端不要发生驱动冲突。</li>
+</ul>
 <h1 id="延时模型"><a href="#延时模型" class="headerlink" title="延时模型"></a>延时模型</h1><h2 id="术语及定义"><a href="#术语及定义" class="headerlink" title="术语及定义"></a>术语及定义</h2><ul>
 <li>模块路径(module path): 穿过模块，连接模块输入(input端口或inout端口）到模块输出(output端口或inout端口）的路径。</li>
 <li>路径延时(path delay)：与特定路径相关的延时</li>
@@ -4906,6 +4943,327 @@ PATHPULSE$&lt; path_source&gt;$&lt; path_destination&gt; =
 <span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211126113322997.png" alt=""></p>
 <h3 id="选择仿真延迟模型"><a href="#选择仿真延迟模型" class="headerlink" title="选择仿真延迟模型"></a>选择仿真延迟模型</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211126120645878.png" alt=""></p>
+<h1 id="SDF时序标注"><a href="#SDF时序标注" class="headerlink" title="SDF时序标注"></a>SDF时序标注</h1><h2 id="术语及定义-1"><a href="#术语及定义-1" class="headerlink" title="术语及定义"></a>术语及定义</h2><ul>
+<li>CTLF：（Compiled Timing Library Format）编译的时序库格式。特定工艺元件数据的标准格式。</li>
+<li>GCF：（General constraint Format)通用约束格式。约束数据的标准格式。</li>
+<li>MIPD：（Module Input Port Delay)模块输入端口延时。模块输入或输入输出端口的固有互连延时</li>
+<li>MITD：(Multi-source Interconnect Transport Delay)多重互连传输延时。与SITD相似，但支持多个来源的不同延时。</li>
+<li>PLI：（Programming Language Interface）编程语言界面。基于C的对Verilog数据结构的程序访问。</li>
+<li>SDF：Standard Delay Format.(标准延迟格式)。时序数据OVI标准格式。</li>
+<li>SITD：Single-Source Interconnect Transprot Delay，单一源互连传输延迟。和MIPD相似，但支持带脉冲控制的传输延迟。</li>
+<li>SPF：Standard Parasitic Format.（标准寄生参数格式）。提取的寄生参数数据的标准格式。</li>
+</ul>
+<h2 id="精确时序仿真–时序标注"><a href="#精确时序仿真–时序标注" class="headerlink" title="精确时序仿真–时序标注"></a>精确时序仿真–时序标注</h2><p>通常的Verilog元件库仅包含固定时序数据。</p>
+<p>若要进行精确的时序仿真，还需要的数据有：</p>
+<ul>
+<li><p>输入传输时间</p>
+</li>
+<li><p>固有延迟</p>
+</li>
+<li><p>驱动强度</p>
+</li>
+<li><p>总负载</p>
+</li>
+<li><p>互连寄生</p>
+</li>
+<li><p>环境因子</p>
+<ul>
+<li>过程</li>
+<li>温度</li>
+<li>电压</li>
+</ul>
+<p>同时还需要仿真最坏情况下的数据和最佳情况下时钟，反过来也要做一次。在没有时序标注时Verilog仿真器做不到这一点。</p>
+</li>
+</ul>
+<h2 id="时序数据流"><a href="#时序数据流" class="headerlink" title="时序数据流"></a>时序数据流</h2><p><img src="/images/loading.gif" data-original="../images/basic/image-20211203102209798.png" alt=""></p>
+<h2 id="时序数据流程"><a href="#时序数据流程" class="headerlink" title="时序数据流程"></a>时序数据流程</h2><p>延时计算器需要：</p>
+<ul>
+<li>综合出来的网表</li>
+<li>布局布线工具产生的简化的寄生参数</li>
+</ul>
+<p>延迟计算器可以产生：</p>
+<ul>
+<li>粗略延迟，仅基于设计连线和层次</li>
+<li>详细延迟，由后端工具提取的寄生参数信息</li>
+</ul>
+<p>有时序驱动的自顶而下的设计方法中，时序约束贯穿整个设计流程。与时序数据仅向后反馈的情况，如从布线布线工具反馈到综合工具，相比，这种方法时序收敛速度快。</p>
+<p>前端和后端工具使用统一的延迟计算器 会提高时序收敛速度。</p>
+<p>大多数EDA工具接受标准延迟格式（SDF）。</p>
+<h2 id="SDF（标准延迟格式）"><a href="#SDF（标准延迟格式）" class="headerlink" title="SDF（标准延迟格式）"></a>SDF（标准延迟格式）</h2><p>标准延迟格式（SDF）是统一的时序信息表示方法，与工具无关。它可以表示：</p>
+<ul>
+<li>模块路径延迟——条件的和无条件的</li>
+<li>器件延迟</li>
+<li>互连延迟</li>
+<li>端口延迟</li>
+<li>时序检查</li>
+<li>路径和net时序约束</li>
+</ul>
+<p>注意：在specify块中不能说明互连延迟或输入端口延迟。要用互连延迟仿真，必须进行时序标注。</p>
+<p>模块输入端口延迟（MIPD）描述的是到模块输入端口或双向端口的延迟。延迟为惯性的且影响三种跳变：到1，到0，和到z。</p>
+<p>单一源输入传输延迟（SITD）和MIPD相似，但使用传输延迟并且有全局和局部脉冲控制。SITD影响6种跳变：0到1，1到0，0到z，z到0，1到z，z到1。</p>
+<p>多重输入传输延迟（MITDs）和SITD相似，但允许为每个源-负载通路说明独立延迟。</p>
+<h2 id="SDF-Stand-Delay-Format-文件"><a href="#SDF-Stand-Delay-Format-文件" class="headerlink" title="SDF(Stand Delay Format)文件"></a>SDF(Stand Delay Format)文件</h2><p>标准延时格式（SDF）是一种标准的，与工具无关的表示时序数据的文本格式。SDF文件通常用于Verilog仿真。教程不对SDF做详细介绍。</p>
+<p>应注意的是，Verilog仿真器必须能够将SDF文件中的数据标注用于仿真。这些数据包括：</p>
+<ul>
+<li>增量或绝对延时，如模块路径，器件、内部连接和端口(包括输入端口延时）</li>
+<li>时序检查，如setup, hold, recovery, skew, width period</li>
+<li>时序约束，如path</li>
+<li>条件或无条件模块路径延时</li>
+<li>设计、实例、类型或库的专用数据</li>
+<li>比例、环境、工艺及用户定义基本单元</li>
+</ul>
+<p>SDF允许不同工具共享延时数据。可以将关键路径信息由综合器传递给布局布线工具，也可将内部连接线延时信息由布局布线工具反传给仿真器。</p>
+<h2 id="SDF举例"><a href="#SDF举例" class="headerlink" title="SDF举例"></a>SDF举例</h2><p><img src="/images/loading.gif" data-original="../images/basic/image-20211203102608650.png" alt=""></p>
+<h2 id="内部连接延时"><a href="#内部连接延时" class="headerlink" title="内部连接延时"></a>内部连接延时</h2><p>内部连接延时是对器件之间连接线延时的估算。例如：</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211203102702577.png" alt=""></p>
+<p>上面的例子中的内部连接延时说明了一个input到output连接的线延时。</p>
+<p>延时分上升、下降和关断延时，每种延时又有最好、典型和最坏值。</p>
+<ul>
+<li><p>限定于敏感边沿的iopath，时钟到输出；用上升、下降的最好、典型、最坏值说明。</p>
+</li>
+<li><p>条件iopath，input到output；用上升、下降和关断的最好、典型、最坏值说明</p>
+</li>
+</ul>
+<h2 id="IOPATH延时"><a href="#IOPATH延时" class="headerlink" title="IOPATH延时"></a>IOPATH延时</h2><p>IOPATH延时是器件从输入端口到输出端口的一个合法路径上的延时。</p>
+<p>例如：</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211203102852108.png" alt=""></p>
+<p>在上面IOPATH延时的例子中包括：</p>
+<ul>
+<li>端口IOPATH，从输入到输出；用最好、典型和最坏值说明上升和下降延时。</li>
+<li>限定敏感边沿的IOPATH，从时钟到输出，用最好、典型和最坏值描述其上升和下降延时。</li>
+<li>条件IOPATH，从输入到输出；用最好、典型和最坏值描述其上升、下降和关断延时。</li>
+</ul>
+<p>在上面IOPATH延时的例子中，实例test.u1.u2 需要一个如下面所示的specify块用于反标注。</p>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">specify</span>
+     <span class="token punctuation">(</span> in <span class="token operator">=></span> o1<span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">:</span><span class="token number">2</span><span class="token punctuation">:</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">:</span><span class="token number">3</span><span class="token punctuation">:</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token punctuation">(</span> ck <span class="token operator">=></span> o1<span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">:</span><span class="token number">3</span><span class="token punctuation">:</span><span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">:</span><span class="token number">5</span><span class="token punctuation">:</span><span class="token number">6</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token keyword">if</span> <span class="token punctuation">(</span> en <span class="token punctuation">)</span> <span class="token punctuation">(</span> in <span class="token operator">=></span> o2<span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">:</span><span class="token number">4</span><span class="token punctuation">:</span><span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">:</span><span class="token number">5</span><span class="token punctuation">:</span><span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">:</span><span class="token number">5</span><span class="token punctuation">:</span><span class="token number">7</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">endspecify</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>注：SDF文件中的时序信息覆盖specify块中的时序信息</p>
+<h2 id="SDF标注工具"><a href="#SDF标注工具" class="headerlink" title="SDF标注工具"></a>SDF标注工具</h2><p>用系统任务$sdf_annotate标注SDF时序信息。</p>
+<p>可以交互式界面调用这个任务，或在源代码中调任务。 </p>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token property">$sdf_annotate</span> <span class="token punctuation">(</span><span class="token string">"sdf_file"</span><span class="token punctuation">,</span> <span class="token punctuation">[</span>module_instance<span class="token punctuation">,</span>
+          <span class="token string">"config_file"</span><span class="token punctuation">,</span><span class="token string">" log_file"</span><span class="token punctuation">,</span> <span class="token string">"mtm_spec"</span><span class="token punctuation">,</span>
+          <span class="token string">"scale_factors"</span><span class="token punctuation">,</span><span class="token string">" scale_type"</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<ol>
+<li><p>sdf_file：SDF文件名称和绝对或相对路径</p>
+</li>
+<li><p>module_instance：标注范围。缺省为调用$sdf_annotate所在的范围</p>
+</li>
+<li><p>config_file：配置文件的绝对或相对路径。缺省使用预设的设置。</p>
+</li>
+<li><p>Log_file：日志文件名，缺省为sdf.log。可以用+sdf_verbose选项生成一个日志文件。</p>
+</li>
+<li><p>Mtm_spec：选择标注的时序值，可以是{MINIMUM，TYPICAL，MAXIMUM，TOOL_CONTROL}之一。缺省为TOOL_CONTROL(命令行选项)。这个参数覆盖配置文件中MTM关键字。</p>
+</li>
+<li><p>Scale_factors：min:typ:max格式的比例因子，缺省为1.0:1.0:1.0。这个参数覆盖配置文件SCALE_FACTORS关键字。</p>
+</li>
+<li><p>Scale_type：选择比例因子；可以是{FROM_MINIMUM, FROM_TYPICAL, FROM_MAXIMUM, FROM_MTM}之一。缺省为FROM_MTM。这个参数覆盖配置文件中SCALE_TYPE关键字。 </p>
+</li>
+</ol>
+<p>注意：除sdf_file的所有参数可以忽略。sdf_file可以是任意名字，然后在运行时使用命令行选项+sdf_file选项指定一个sdf_file。 </p>
+<h2 id="执行SDF标注"><a href="#执行SDF标注" class="headerlink" title="执行SDF标注"></a>执行SDF标注</h2><p>在下面的例子中，在设计的最顶层进行带比例的SDF标注</p>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> top<span class="token punctuation">;</span>
+    <span class="token punctuation">.</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span>
+    <span class="token keyword">initial</span>      <span class="token property">$sdf_annotate</span> <span class="token punctuation">(</span><span class="token string">"my.sdf"</span><span class="token punctuation">,</span> <span class="token punctuation">,</span> <span class="token punctuation">,</span> <span class="token punctuation">,</span> <span class="token punctuation">,</span> <span class="token number">1.6</span><span class="token punctuation">:</span><span class="token number">1.4</span><span class="token punctuation">:</span><span class="token number">1.2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">.</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>在下面的例子中，对不同的实例分开标注</p>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> top<span class="token punctuation">;</span>
+    <span class="token punctuation">.</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span>
+    cpu u1 <span class="token punctuation">(</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span>
+    fpu u2 <span class="token punctuation">(</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span>
+    dma u3 <span class="token punctuation">(</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span>
+    <span class="token punctuation">.</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span>
+    <span class="token keyword">initial</span> <span class="token keyword">begin</span>
+        <span class="token property">$sdf_annotate</span> <span class="token punctuation">(</span><span class="token string">"sdffiles/cpu.sdf"</span><span class="token punctuation">,</span> u1<span class="token punctuation">,</span> <span class="token punctuation">,</span><span class="token string">"logfiles/cpu_sdf.log"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token property">$sdf_annotate</span> <span class="token punctuation">(</span><span class="token string">"sdffiles/fpu.sdf"</span><span class="token punctuation">,</span> u2<span class="token punctuation">,</span> <span class="token punctuation">,</span><span class="token string">"logfiles/fpu_sdf.log"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token property">$sdf_annotate</span> <span class="token punctuation">(</span><span class="token string">"sdffiles/dma.sdf"</span><span class="token punctuation">,</span> u3<span class="token punctuation">,</span> <span class="token punctuation">,</span><span class="token string">"logfiles/dma_sdf.log"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">end</span>
+    <span class="token punctuation">.</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>和SDF标注相关的命令行选项：</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211203103741421.png" alt=""></p>
+<h2 id="惯性-inertial-和传输-transport-延时模型"><a href="#惯性-inertial-和传输-transport-延时模型" class="headerlink" title="惯性(inertial)和传输(transport)延时模型"></a>惯性(inertial)和传输(transport)延时模型</h2><p>对于惯性延迟，若路径延时小于门的固有延时，信号会被淹没。</p>
+<p>对于传输延迟，输入上每个变化都会反映到输出上。</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211203104115814.png" alt=""></p>
+<p>仿真器使用缺省的延迟模型，有的可以用命令行选项，有的用仿真器专用的编译指令指定延迟模型。</p>
+<h2 id="固有延时和传输延时模型"><a href="#固有延时和传输延时模型" class="headerlink" title="固有延时和传输延时模型"></a>固有延时和传输延时模型</h2><p>仿真时可以用固时延时模型或传输延时模型</p>
+<ul>
+<li>固有延时模型(缺省模型)不传送脉冲宽度小于电路延时的信号。这是开关电路的行为特性</li>
+<li>在传输延时模型中，输入上的所有变化在路径延时之后反映到输出上。这是传输线的行为特性。</li>
+<li>采用命令行选项+transport_path_delays设置传输延时模型</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211203103851270.png" alt=""></p>
+<p>注意：记住使用+pathpulse用于路径延时控制</p>
+<h1 id="编译控制的使用"><a href="#编译控制的使用" class="headerlink" title="编译控制的使用"></a>编译控制的使用</h1><h2 id="Verilog模型库"><a href="#Verilog模型库" class="headerlink" title="Verilog模型库"></a>Verilog模型库</h2><p>生产商提供了大量的Verilog库。这些库并不是Verilog仿真器专用的，但其库管理格式都基于Verilog-XL风格。</p>
+<p>库中每个元件都包括功能及工具专用的时序及工艺信息。</p>
+<ul>
+<li>ASIC和FPGA生产商开发并提供工艺专用库</li>
+<li>设计人员用库中的元件建立网表</li>
+<li>仿真器在编译时扫描模型库寻找实例化模块</li>
+</ul>
+<p>合成库可以支持多种工具，例如它可以包含下列工具所需要的信息</p>
+<ul>
+<li>仿真器（如Verilog-XL和NC Verilog）</li>
+<li>综合器（如Synopsys）</li>
+<li>时序分析器（如Pearl）</li>
+<li>故障仿真（Verifault-XL)</li>
+</ul>
+<h2 id="单元库建模"><a href="#单元库建模" class="headerlink" title="单元库建模"></a>单元库建模</h2><p>建立Verilog单元模型库，需要：</p>
+<ul>
+<li>每个元件（或单元）用一个module描述</li>
+<li>将相关的module放在同一个文件或同一个目录中</li>
+</ul>
+<p>可以用两种抽象级描述库单元</p>
+<ul>
+<li>结构级<ul>
+<li>用 Verilog基本单元或UDP</li>
+<li>用于描述组合逻辑或简单的时序逻辑</li>
+</ul>
+</li>
+<li>行为级<ul>
+<li>用过程块或赋值语句</li>
+<li>用于描述大的或复杂的元件，如RAM或ROM</li>
+</ul>
+</li>
+</ul>
+<p>库单元的特点：</p>
+<ul>
+<li>每个库单元的描述在编译指令`<em>celldefine</em>和`<em>endcelldefine</em>之间</li>
+<li>每个库单元的描述有两部分：<ul>
+<li>功能描述</li>
+<li>时序描述</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211203105937298.png" alt=""></p>
+<h2 id="Verilog库的使用"><a href="#Verilog库的使用" class="headerlink" title="Verilog库的使用"></a>Verilog库的使用</h2><p>在Cadence Verilog仿真器中使用Verilog库：</p>
+<ul>
+<li>使用库文件<ul>
+<li>在命令行中使用选项：-v <em>file_name</em></li>
+</ul>
+</li>
+<li>使用库目录<ul>
+<li>在命令行中使用选项 –y directory_name</li>
+<li>在命令行中使用选项 +libext+file_extension</li>
+</ul>
+</li>
+</ul>
+<p>在使用库目录时，如果每个文件都有一个扩展名，则在Cadence Verilog仿真器必须用+libext选项指定其扩展名。仿真器中没有缺省地使用.v作扩展名</p>
+<p>使用-v或-y选项指定库时，只编译那些设计中用到的模块。如果在命令行中直接输入库文件名而没有使用-v选项 （或在文件中使用编译指令`include），则库中所有模块都被编译。使用选项大大压缩编译时间及内存空间。在NC Verilog中也压缩了使用的磁盘空间。</p>
+<h3 id="库文件扫描"><a href="#库文件扫描" class="headerlink" title="库文件扫描"></a>库文件扫描</h3><p>每一个-v选项指定一个库文件</p>
+<p>verilog test.v design.v -v library_file.v</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211203110351720.png" alt=""></p>
+<h3 id="库目录扫描"><a href="#库目录扫描" class="headerlink" title="库目录扫描"></a>库目录扫描</h3><p>每一个-y选项指定一个库目录。</p>
+<p>+libext+选项指定有效的文件扩展名。</p>
+<p>   verilog test.v design.v -y library_directory +libext+.v</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211203110510406.png" alt=""></p>
+<h2 id="编译指令-uselib"><a href="#编译指令-uselib" class="headerlink" title="编译指令`uselib"></a>编译指令`uselib</h2><ul>
+<li>定义设计中使用的库元件（包括UDP）的位置</li>
+<li>一直有效，直到遇到另一个`uselib或`resetall</li>
+<li>覆盖任何命令行选项中库的设置。也就是说如果不能在`uselib指定的位置找到元件，仿真器不会再按命令行中-v或-y选项去寻找。<img src="/images/loading.gif" data-original="../images/basic/image-20211203110722728.png" alt=""></li>
+</ul>
+<h3 id="编译指令-uselib使用举例"><a href="#编译指令-uselib使用举例" class="headerlink" title="编译指令`uselib使用举例"></a>编译指令`uselib使用举例</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211203110853564.png" alt=""></p>
+<p>在`uselib中库的指定可以使用由`define定义的宏进行文本替换。</p>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token constant">`define</span>  TTL_LIB    dir<span class="token operator">=/</span>libs<span class="token operator">/</span>TTL  libext<span class="token operator">=</span><span class="token punctuation">.</span> v
+<span class="token constant">`define</span>  TTL_UDP   file<span class="token operator">=/</span> libs<span class="token operator">/</span> TTL_U<span class="token operator">/</span>udp<span class="token punctuation">.</span>lib
+<span class="token constant">`uselib</span>  <span class="token constant">`TTL_LIB</span>    <span class="token constant">`TTL_UDP</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>在命令行中用+define+选项给宏一个值。设计易于管理，可移植性高。</p>
+<h2 id="编写与大小无关的源代码"><a href="#编写与大小无关的源代码" class="headerlink" title="编写与大小无关的源代码"></a>编写与大小无关的源代码</h2><p>Verilog是对大小写敏感的语言，如sel和SEL是不同的标识符</p>
+<ul>
+<li>Verilog 关键字均使用小写，如input, output</li>
+<li>标识符中大小写都可以使用，但Sel和sel是不同的标识符</li>
+<li>仿真时使用-u选项进入大小写不敏感模式。仿真器将所有标识符转换为大写形式，而关键字仍保持为小写。</li>
+</ul>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> MUX2_1 <span class="token punctuation">(</span>out<span class="token punctuation">,</span> a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> sel<span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token keyword">output</span> out<span class="token punctuation">;</span>
+     <span class="token keyword">input</span> a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> sel<span class="token punctuation">;</span>
+     <span class="token keyword">not</span> <span class="token function">not1</span><span class="token punctuation">(</span> SEL<span class="token punctuation">,</span> sel<span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token keyword">and</span> <span class="token function">and1</span><span class="token punctuation">(</span> a1<span class="token punctuation">,</span> a<span class="token punctuation">,</span> SEL<span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token keyword">and</span> <span class="token function">and2</span><span class="token punctuation">(</span> b1<span class="token punctuation">,</span> b<span class="token punctuation">,</span> sel<span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token keyword">or</span> <span class="token function">or1</span><span class="token punctuation">(</span> out<span class="token punctuation">,</span> a1<span class="token punctuation">,</span> b1<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>在正常情况下，左边例子中sel和SEL是不同的信号。若使用-u选项，sel和SEL变为相同的信号。</p>
+<p>将产生错误的仿真结果。</p>
+<p>如果在大小写不敏感的工具中使用这个模型，则用-u选项可以找出错误。</p>
+<p>可以用-d选项输出-u选项产生的大小写不敏感的描述</p>
+<h2 id="编译指令"><a href="#编译指令" class="headerlink" title="编译指令"></a>编译指令</h2><p>尽管编译指令是Verilog语言的一部分，但其作用取决于编译器，因此不同的仿真器中其作用可能不同。</p>
+<ul>
+<li><p>`resetall将编译指令变为缺省值。</p>
+</li>
+<li><p>Cadence Verilog仿真器在遇到`resetall时，文本宏定义不变。要清除文本宏定义，使用</p>
+</li>
+</ul>
+<p>​     `undef macro_name</p>
+<ul>
+<li>在使用`include编译指令时，使用+incdir命令行选项指定所包含文件的查找路径。</li>
+</ul>
+<p>​     +incdir+directory1+directory2+…directoryN</p>
+<blockquote>
+<p>Include不要用路径</p>
+</blockquote>
+<ul>
+<li>仿真器首先查找当前目录，若没有找到再沿指定路径顺序查找。</li>
+</ul>
+<p>编译指令从出现时开始有效，直到被覆盖或使其失效。因此编译指令是全局的。</p>
+<p>下列编译指令是Verilog IEEE标准中的：</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211203111557477.png" alt=""></p>
+<h2 id="定义文本宏文件举例"><a href="#定义文本宏文件举例" class="headerlink" title="定义文本宏文件举例"></a>定义文本宏文件举例</h2><p><strong>FIFO_control_define.v</strong></p>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token constant">`ifndef</span> FIFO_CONTROL
+
+<span class="token constant">`define</span> FIFO_CONTROL
+
+<span class="token comment" spellcheck="true">//Tx register address</span>
+<span class="token constant">`define</span> TxSOF0         <span class="token number">8'b0000_0000</span>
+<span class="token constant">`define</span> TxFramehead00    <span class="token number">8'b0000_0001</span>
+<span class="token constant">`define</span> TxFramehead01    <span class="token number">8'b0000_0010</span>
+<span class="token constant">`define</span> TxFramehead02    <span class="token number">8'b0000_0011</span>
+<span class="token constant">`define</span> TxFramehead03    <span class="token number">8'b0000_0100</span>
+<span class="token constant">`define</span> TxFramehead04    <span class="token number">8'b0000_0101</span>
+<span class="token constant">`define</span> TxFramehead05    <span class="token number">8'b0000_0110</span>
+<span class="token constant">`define</span> TxEOF0        <span class="token number">8'b0000_0111</span>
+
+
+<span class="token constant">`endif</span>  <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="定义文本宏"><a href="#定义文本宏" class="headerlink" title="定义文本宏"></a>定义文本宏</h2><p>在命令行定义文本宏： +define+命令行参数</p>
+<p>语法：+define+<em>MACRO_NAME</em>=“<em>MACRO_TEXT</em>”</p>
+<p>注意：文本宏的覆盖可能影响设计的结构，可能强制NC Verilog重新编译全部或部分设计</p>
+<ul>
+<li><p>文本宏中字符串长度没有限制。</p>
+</li>
+<li><p>清除文本宏定义，使用：</p>
+</li>
+</ul>
+<p>​     `undef macro_name</p>
+<ul>
+<li>清除所有文本宏定义，使用</li>
+</ul>
+<p>​     `undefall</p>
+<pre class="line-numbers language-verilog"><code class="language-verilog">verilog test<span class="token punctuation">.</span> v <span class="token operator">+</span>define<span class="token operator">+</span>gate<span class="token operator">=</span><span class="token string">"or"</span>
+<span class="token constant">`define</span> gate <span class="token keyword">and</span>
+<span class="token keyword">module</span> test<span class="token punctuation">;</span>
+     <span class="token keyword">reg</span> a<span class="token punctuation">,</span> b<span class="token punctuation">;</span>
+     <span class="token constant">`gate</span> <span class="token punctuation">(</span>c<span class="token punctuation">,</span> a<span class="token punctuation">,</span> b<span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token keyword">initial</span>
+          <span class="token keyword">begin</span>
+               a<span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> b<span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+               <span class="token property">$monitor</span> <span class="token punctuation">(</span><span class="token property">$time</span><span class="token punctuation">,</span><span class="token punctuation">,</span> c<span class="token punctuation">,</span> a<span class="token punctuation">,</span> b<span class="token punctuation">)</span><span class="token punctuation">;</span>
+               <span class="token number">#1</span> <span class="token property">$finish</span><span class="token punctuation">;</span>
+          <span class="token keyword">end</span>
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="复习"><a href="#复习" class="headerlink" title="复习"></a>复习</h2><p>问题：</p>
+<ul>
+<li>当仿真器遇到编译指令`resetall时将所有编译指令置为缺省值吗？</li>
+<li>使用什么选项指定库的名字？</li>
+<li>如果仿真器没有在编译指令`uselib指定的库中找到实例的定义，它会去哪里寻找？</li>
+</ul>
+<p>解答：</p>
+<ul>
+<li>不是。当使用编译指令`resetall时，IEEE规范没有说明如何处理文本宏。Cadence Verilog仿真器对文本宏不作处理。要重文本宏，使用编译指令`undef。</li>
+<li>使用-v选项和/或-y及+libext+选项。</li>
+<li>不会再去别的位置查找。</li>
+</ul>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -5419,7 +5777,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">3157.6k</span>&nbsp;字
+                class="white-color">3162.3k</span>&nbsp;字
             
             
             

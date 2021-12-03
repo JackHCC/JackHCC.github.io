@@ -459,21 +459,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-12-01
+                    2021-12-03
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    21.9k
+                    22.3k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    90 分
+                    92 分
                 </div>
                 
 
@@ -2696,6 +2696,70 @@ document<span class="token punctuation">.</span><span class="token function">get
 <p>接下来我们打开网页，就可以看到聊天页面啦</p>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211201121511916.png" alt=""></p>
 <p>有一个文本框，我们可以在其中提供用户输入，机器人将为该语句生成相应的响应消息，当我们输入的消息越多，机器人就会越智能！</p>
+<h1 id="Pynput-监控键盘和鼠标"><a href="#Pynput-监控键盘和鼠标" class="headerlink" title="Pynput - 监控键盘和鼠标"></a>Pynput - 监控键盘和鼠标</h1><h2 id="使用pynput库"><a href="#使用pynput库" class="headerlink" title="使用pynput库"></a>使用pynput库</h2><p>pynput 可以监控我们的键盘和鼠标。目前具有此类功能的库有很多，比如 pygame 等游戏库，但是当我们只需要监控键盘和鼠标时，它们就显得过于笨重了。</p>
+<h2 id="对键盘监控"><a href="#对键盘监控" class="headerlink" title="对键盘监控"></a>对键盘监控</h2><p>在他的电脑常驻一个后台进程去实现监控键盘输入并记录下来，代码大概可以这样：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> pynput <span class="token keyword">import</span> keyboard
+<span class="token keyword">def</span> <span class="token function">on_press</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>f<span class="token string">'{key} :pushed'</span><span class="token punctuation">)</span>
+ <span class="token keyword">def</span> <span class="token function">on_release</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment" spellcheck="true">#print(f'{key} released')</span>
+    <span class="token keyword">if</span> key <span class="token operator">==</span> keyboard<span class="token punctuation">.</span>Key<span class="token punctuation">.</span>esc<span class="token punctuation">:</span>
+        <span class="token comment" spellcheck="true"># Stop listener</span>
+        <span class="token keyword">return</span> <span class="token boolean">False</span>
+<span class="token keyword">with</span> keyboard<span class="token punctuation">.</span>Listener<span class="token punctuation">(</span>on_press<span class="token operator">=</span>on_press<span class="token punctuation">,</span>on_release<span class="token operator">=</span>on_release<span class="token punctuation">)</span> <span class="token keyword">as</span> lsn<span class="token punctuation">:</span>
+    lsn<span class="token punctuation">.</span>join<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="对鼠标监控"><a href="#对鼠标监控" class="headerlink" title="对鼠标监控"></a>对鼠标监控</h2><pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> pynput <span class="token keyword">import</span> mouse
+
+<span class="token keyword">def</span> <span class="token function">on_click</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token punctuation">,</span> button<span class="token punctuation">,</span> pressed<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">if</span> button <span class="token operator">==</span> mouse<span class="token punctuation">.</span>Button<span class="token punctuation">.</span>left<span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'left was pressed!'</span><span class="token punctuation">)</span>
+    <span class="token keyword">elif</span> button <span class="token operator">==</span> mouse<span class="token punctuation">.</span>Button<span class="token punctuation">.</span>right<span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'right was pressed!'</span><span class="token punctuation">)</span>
+        <span class="token keyword">return</span> <span class="token boolean">False</span>
+    <span class="token keyword">else</span><span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'mid was pressed!'</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># Collect events until released</span>
+<span class="token keyword">with</span> mouse<span class="token punctuation">.</span>Listener<span class="token punctuation">(</span>on_click<span class="token operator">=</span>on_click<span class="token punctuation">)</span> <span class="token keyword">as</span> listener<span class="token punctuation">:</span>
+    listener<span class="token punctuation">.</span>join<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>你会发现，每条打印都被打印了两次，这是因为按下去和抬起来都会触发鼠标事件。</p>
+<h2 id="监控并记录到日志文件"><a href="#监控并记录到日志文件" class="headerlink" title="监控并记录到日志文件"></a>监控并记录到日志文件</h2><pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> pynput <span class="token keyword">import</span> keyboard<span class="token punctuation">,</span>mouse
+<span class="token keyword">from</span> loguru <span class="token keyword">import</span> logger
+<span class="token keyword">from</span> threading <span class="token keyword">import</span> Thread
+
+<span class="token comment" spellcheck="true"># 定义日志文件</span>
+logger<span class="token punctuation">.</span>add<span class="token punctuation">(</span><span class="token string">'demo.log'</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">on_press</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    logger<span class="token punctuation">.</span>debug<span class="token punctuation">(</span>f<span class="token string">'{key} :pushed'</span><span class="token punctuation">)</span> 
+<span class="token keyword">def</span> <span class="token function">on_release</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment" spellcheck="true">#print(f'{key} released')</span>
+    <span class="token keyword">if</span> key <span class="token operator">==</span> keyboard<span class="token punctuation">.</span>Key<span class="token punctuation">.</span>esc<span class="token punctuation">:</span>
+        <span class="token comment" spellcheck="true"># Stop listener</span>
+        <span class="token keyword">return</span> <span class="token boolean">False</span>
+<span class="token comment" spellcheck="true"># 定义f1用于线程1</span>
+<span class="token keyword">def</span> <span class="token function">f1</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">with</span> keyboard<span class="token punctuation">.</span>Listener<span class="token punctuation">(</span>on_press<span class="token operator">=</span>on_press<span class="token punctuation">,</span>on_release<span class="token operator">=</span>on_release<span class="token punctuation">)</span> <span class="token keyword">as</span> lsn<span class="token punctuation">:</span>
+        lsn<span class="token punctuation">.</span>join<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">on_click</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token punctuation">,</span> button<span class="token punctuation">,</span> pressed<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">if</span> button <span class="token operator">==</span> mouse<span class="token punctuation">.</span>Button<span class="token punctuation">.</span>left<span class="token punctuation">:</span>
+        logger<span class="token punctuation">.</span>debug<span class="token punctuation">(</span><span class="token string">'left was pressed!'</span><span class="token punctuation">)</span>
+    <span class="token keyword">elif</span> button <span class="token operator">==</span> mouse<span class="token punctuation">.</span>Button<span class="token punctuation">.</span>right<span class="token punctuation">:</span>
+        logger<span class="token punctuation">.</span>debug<span class="token punctuation">(</span><span class="token string">'right was pressed!'</span><span class="token punctuation">)</span>
+        <span class="token keyword">return</span> <span class="token boolean">False</span>
+    <span class="token keyword">else</span><span class="token punctuation">:</span>
+        logger<span class="token punctuation">.</span>debug<span class="token punctuation">(</span><span class="token string">'mid was pressed!'</span><span class="token punctuation">)</span> 
+<span class="token comment" spellcheck="true"># 定义f2用于线程2</span>
+<span class="token keyword">def</span> <span class="token function">f2</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment" spellcheck="true"># Collect events until released</span>
+    <span class="token keyword">with</span> mouse<span class="token punctuation">.</span>Listener<span class="token punctuation">(</span>on_click<span class="token operator">=</span>on_click<span class="token punctuation">)</span> <span class="token keyword">as</span> listener<span class="token punctuation">:</span>
+        listener<span class="token punctuation">.</span>join<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">if</span> __name__ <span class="token operator">==</span> <span class="token string">'__main__'</span><span class="token punctuation">:</span>
+    <span class="token comment" spellcheck="true"># 起两个线程分别监控键盘和鼠标</span>
+    t1 <span class="token operator">=</span> Thread<span class="token punctuation">(</span>target<span class="token operator">=</span>f1<span class="token punctuation">)</span>
+    t2 <span class="token operator">=</span> Thread<span class="token punctuation">(</span>target<span class="token operator">=</span>f2<span class="token punctuation">)</span>
+    t1<span class="token punctuation">.</span>start<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    t2<span class="token punctuation">.</span>start<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这样键盘操作已经全部被记录，通过对这个日志文件进行简单的 <code>NLTK</code> 语言处理，就能复原聊天记录。</p>
 <h1 id="图像处理库合集"><a href="#图像处理库合集" class="headerlink" title="图像处理库合集"></a>图像处理库合集</h1><h2 id="SimpleCV"><a href="#SimpleCV" class="headerlink" title="SimpleCV"></a>SimpleCV</h2><ul>
 <li>SimpleCV也是广泛被使用的构建计算机视觉应用程序的开源框架。手握SimpleCV，你可以访问几个高性能的视觉库，而无需先了解图像色深（bit depth）、文件格式、色彩空间等。SimpleCV拥护者的支持理由有两个，一是初学者也可以借此编写简单的视觉任务，二是无论是相机、视频文件、图像和视频流可互相操作。</li>
 </ul>
@@ -3235,7 +3299,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">3157.6k</span>&nbsp;字
+                class="white-color">3162.3k</span>&nbsp;字
             
             
             
