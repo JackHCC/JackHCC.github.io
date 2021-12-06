@@ -459,7 +459,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-11-30
+                    2021-12-06
                 </div>
                 
 
@@ -6545,6 +6545,953 @@ csrw CSR_MTVT, t0<span aria-hidden="true" class="line-numbers-rows"><span></span
     <span class="token keyword">return</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h4 id="Programming-with-VS"><a href="#Programming-with-VS" class="headerlink" title="Programming with VS"></a><strong>Programming with VS</strong></h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211130094622677.png" alt=""></p>
+<h1 id="多核处理器-OpenMP"><a href="#多核处理器-OpenMP" class="headerlink" title="多核处理器-OpenMP"></a>多核处理器-OpenMP</h1><p><img src="/images/loading.gif" data-original="../images/basic/image-20211206181307320.png" alt=""></p>
+<h2 id="并行计算"><a href="#并行计算" class="headerlink" title="并行计算"></a><strong>并行计算</strong></h2><p><img src="/images/loading.gif" data-original="../images/basic/image-20211206181332691.png" alt=""></p>
+<h3 id="处理器结构"><a href="#处理器结构" class="headerlink" title="处理器结构"></a><strong>处理器结构</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211206181444176.png" alt=""></p>
+<h3 id="存储结构"><a href="#存储结构" class="headerlink" title="存储结构"></a><strong>存储结构</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211206181529615.png" alt=""></p>
+<h3 id="线程映射"><a href="#线程映射" class="headerlink" title="线程映射"></a><strong>线程映射</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211206181617087.png" alt=""></p>
+<ul>
+<li>HAL：硬件抽象层</li>
+<li>多核必须操作系统支持</li>
+</ul>
+<h3 id="ARM-MPcore"><a href="#ARM-MPcore" class="headerlink" title="ARM MPcore"></a><strong>ARM</strong> <strong>MPcore</strong></h3><p><strong>Accelerator Coherency Port, ACP</strong></p>
+<p><strong>Snoop Control Unit，SCU</strong></p>
+<p>MPIDR：内核 ID 寄存器</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211206181713644.png" alt=""></p>
+<blockquote>
+<p>Advanced Custom Extension (ACE)</p>
+<p>提供一个额外的PE（process element）识别机制属性：MPIDR_EL1是一个64位的寄存器MPIDR_EL1是一个64位的寄存器。</p>
+<p>域值：</p>
+<p>[63:40]：Reserved, RES0；</p>
+<p>[39:32]：Affinity level3；</p>
+<p>[31]：Reserved, RES1.</p>
+<p>[30]：U 表示一个单处理器系统，与多处理器系统中的pe0不同。这个位的可能值是:0b0 ：处理器是多处理器系统的一部分。0b1 ：处理器是单处理器系统的一部分[29:25]：Reserved, RES0.</p>
+<p>[24]：MT指示关联的最低级别是否由使用多线程类型方法实现的逻辑PEs组成。这个位的值可能是：0b0 当PEs的性能关联级别最低，或者使用MPIDR_EL1.MT的PEs被设置为1时，级别0的不同值或者级别1的相同值或更高级别，是相互独立的0b1 当PEs的性能关联级别最低，或者使用MPIDR_EL1.MT的PEs被设置为1时，级别0的不同值或者级别1的相同值或更高级别的相关性非常高。</p>
+<p>[23:16]：Affinity level 2.</p>
+<p>[15:8]：Affinity level 1. [11:8], 0x00-0x07: Core0-core7</p>
+<p>[7:0]：Affinity level 0. 这个Affinity等级对于确定PE行为最为重要。更高级别的affinity 等级的重要性越低。分配给MPIDR的值的域的集合{Aff2, Aff1, Aff0}在整个系统中必须是不同的访问MPIDR_EL1：MRS , MPIDR_EL1</p>
+</blockquote>
+<h4 id="Interrupt"><a href="#Interrupt" class="headerlink" title="Interrupt"></a><strong>Interrupt</strong></h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211206181757722.png" alt=""></p>
+<h4 id="Power-on-flow"><a href="#Power-on-flow" class="headerlink" title="Power on flow"></a><strong>Power on</strong> <strong>flow</strong></h4><p>可以用CPU1作为启动核吗？</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211206181830045.png" alt=""></p>
+<h4 id="Bootloader"><a href="#Bootloader" class="headerlink" title="Bootloader"></a><strong>Bootloader</strong></h4><pre class="line-numbers language-assembly"><code class="language-assembly">     /*CPU0 */
+    mrs  x4, mpidr_el1    //读取 寄存器    
+     tst    x4,#15               //testwether the current cpu is CPU0,                    //ie. mpidr_el1=15         
+    b.eq 2f
+    /*  Secondary CPUs */
+1: 
+               wfe
+    ldr x4, mbox               
+    cbz x4, 1b        //if x4==0(ie. The value in address of mbox                   
+                        //is 0) dead loop,or jump to x4
+    br x4                // branch to thegiven address 
+2:
+                ……                  //UART initialisation<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li>mbox的地址在Makefile中写定，保存在dts 文件中。</li>
+<li>dts即Device Tree Source 设备树源码, DeviceTree是一种描述硬件的数据结构.</li>
+</ul>
+<blockquote>
+<p>el0：用户模式</p>
+<p>el1：管理员模式（什么中断，复位以后的模式，最常用的）</p>
+<p>el2：虚拟机</p>
+<p>el3：更高级的安全模式</p>
+</blockquote>
+<h4 id="Secondary-holding-pen"><a href="#Secondary-holding-pen" class="headerlink" title="Secondary_holding_pen()"></a><strong>Secondary_holding_pen()</strong></h4><pre class="line-numbers language-assembly"><code class="language-assembly">/* provides a"holding pen" to hold all secondary cores */      ENTRY(secondary_holding_pen)         
+    bl      el2_setup                          // Drop to EL1         
+    mrs  x0, mpidr_el1         
+    and  x0, x0, #15                        // CPU number         
+    adr   x1, 1b         
+    ldp   x2, x3, [x1]         
+    sub   x1, x1, x2         
+    add  x3, x3, x1
+pen:     
+    ldr    x4, [x3]         
+    cmp x4,x0         
+    b.eq secondary_startup         
+    wfe         
+    b       pen
+    ENDPROC(secondary_holding_pen)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li>ldp x1 , x0, [x1] ; 将[x1]中的值取出来, 放入x1 和 x0.</li>
+</ul>
+<h4 id="Fetching-Instructions"><a href="#Fetching-Instructions" class="headerlink" title="Fetching Instructions"></a><strong>Fetching Instructions</strong></h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211206182146337.png" alt=""></p>
+<h3 id="软件架构"><a href="#软件架构" class="headerlink" title="软件架构"></a><strong>软件架构</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211206182231238.png" alt=""></p>
+<h3 id="并行方法"><a href="#并行方法" class="headerlink" title="并行方法"></a><strong>并行方法</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211206182311778.png" alt=""></p>
+<h2 id="OpenMP"><a href="#OpenMP" class="headerlink" title="OpenMP"></a><strong>OpenMP</strong></h2><ul>
+<li><p>直接控制共享内存式并行编程的应用程序接口（API)</p>
+</li>
+<li><p>由三个主要的API组成:</p>
+<ul>
+<li>编译指令</li>
+<li>运行库 Runtime Library Routines</li>
+<li>环境变量 Environment Variables</li>
+</ul>
+</li>
+<li><p><strong>特点</strong></p>
+<ul>
+<li><p>可移植性Portable:</p>
+</li>
+<li><p>适合C/C++和Fortran的API</p>
+</li>
+<li><p>已在多种主要系统实现（ Unix/Linux platforms and Windows NT ）</p>
+</li>
+<li><p>由主要的硬件及软件厂家共同制定和支持</p>
+</li>
+<li><p>主流 SMP 并行程序开发库 </p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="程序结构"><a href="#程序结构" class="headerlink" title="程序结构"></a><strong>程序结构</strong></h3><p><strong>Fork-Joint Mode</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211206182519353.png" alt=""></p>
+<h3 id="编程"><a href="#编程" class="headerlink" title="编程"></a><strong>编程</strong></h3><ul>
+<li>Implementation<ul>
+<li>#pragma</li>
+<li>Run time library</li>
+</ul>
+</li>
+<li>Using Environment varies to control program execution threads. </li>
+</ul>
+<p>For example: OMP_NUM_THREADS</p>
+<h3 id="例程"><a href="#例程" class="headerlink" title="例程"></a><strong>例程</strong></h3><pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">"stdafx.h"</span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">"omp.h"</span></span>
+<span class="token keyword">int</span> <span class="token function">_tmain</span><span class="token punctuation">(</span><span class="token keyword">int</span> argc<span class="token punctuation">,</span> _TCHAR<span class="token operator">*</span> argv<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"Hello from serial.\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"Thread number = %d\n"</span><span class="token punctuation">,</span>
+    <span class="token function">omp_get_thread_num</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment" spellcheck="true">//serial</span>
+    <span class="token macro property">#<span class="token directive keyword">pragma</span> omp parallel        </span><span class="token comment" spellcheck="true">//parallel</span>
+    <span class="token punctuation">{</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"Hello from parallel.Thread number = %d\n"</span><span class="token punctuation">,</span>
+        <span class="token function">omp_get_thread_num</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"Hello from serial again.\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="指令-1"><a href="#指令-1" class="headerlink" title="指令"></a><strong>指令</strong></h3><ul>
+<li><p><strong>#pragma</strong></p>
+<ul>
+<li><p>parallel：表示这段代码将被并行执行。</p>
+</li>
+<li><p>for：表示将循环计算任务分配到多个线程中并行执行。</p>
+</li>
+<li><p>sections：用于实现多个结构块语句的任务分担。</p>
+</li>
+<li><p>parallel sections：类似于parallel for；</p>
+</li>
+<li><p>single：表示一段只被单个线程执行的代码；</p>
+</li>
+<li><p>critical：保证每次只有一个OpenMP线程进入；</p>
+</li>
+<li><p>flush：保证各个OpenMP线程的数据映像的一致性；</p>
+</li>
+<li><p>barrier：用于并行域内代码的线程同步，线程执行到barrier时要停下等待，直到所有线程都执行到barrier时才继续往下执行；atomic：用于指定一个数据操作需要原子性地完成；</p>
+</li>
+<li><p>master：用于指定一段代码由主线程执行；</p>
+</li>
+<li><p>Thread private：用于指定一个或多个变量是线程专用。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>后面会解释线程专有和私有的区别。</strong></p>
+<h2 id="循环"><a href="#循环" class="headerlink" title="循环"></a><strong>循环</strong></h2><p>The results of two program ？</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211206182814300.png" alt=""></p>
+<p>Are these two code segments equivalent？</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211206183049247.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211206183113472.png" alt=""></p>
+<h3 id="Loop-restrictions"><a href="#Loop-restrictions" class="headerlink" title="Loop restrictions"></a><strong>Loop restrictions</strong></h3><ul>
+<li><p>The loop variable must be type of <em>signed integer</em> (v2.5) .</p>
+</li>
+<li><p>The comparison operation must be in the form <em>loop_variable</em></p>
+<ul>
+<li>&lt;, &lt;=, &gt;, or &gt;=<em>loop_invariant_integer.</em></li>
+</ul>
+</li>
+<li><p>The increment portion of the for loop must be <em>integer addition</em> or <em>integer subtraction</em> and by <em>a</em> <em>loop_invariant_value</em>.</p>
+</li>
+<li><p>The loop must be <em>a single entry</em> and <em>single exit,</em> meaning no jump from the inside of loop to outside or outside to the inside are permitted with the exception of the exit statement. No use <em>break, return and</em> <em>goto</em>.</p>
+</li>
+</ul>
+<h2 id="变量-1"><a href="#变量-1" class="headerlink" title="变量"></a><strong>变量</strong></h2><p>Any problem for parallelizing next loop？</p>
+<pre class="line-numbers language-c"><code class="language-c">bool <span class="token function">calsum</span><span class="token punctuation">(</span><span class="token keyword">unsigned</span> <span class="token keyword">char</span> <span class="token operator">*</span>image<span class="token punctuation">,</span> <span class="token keyword">unsigned</span> <span class="token keyword">int</span> <span class="token operator">*</span>sum<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>    <span class="token keyword">int</span> i<span class="token punctuation">;</span>
+    <span class="token keyword">unsigned</span> in hist<span class="token punctuation">[</span><span class="token number">256</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">for</span><span class="token punctuation">(</span>i<span class="token operator">=</span><span class="token number">255</span><span class="token punctuation">;</span>i<span class="token operator">>=</span><span class="token number">0</span><span class="token punctuation">;</span>i<span class="token operator">--</span><span class="token punctuation">)</span> 
+    <span class="token punctuation">{</span>    hist<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span> 
+        <span class="token operator">*</span><span class="token punctuation">(</span>sum<span class="token operator">+</span>i<span class="token punctuation">)</span><span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>  
+    <span class="token punctuation">}</span>
+    i<span class="token operator">=</span>IMAGE_WIDTH<span class="token operator">*</span>IMAGE_HEIGHT<span class="token punctuation">;</span>    
+     <span class="token comment" spellcheck="true">//需要用for</span>
+    <span class="token keyword">do</span><span class="token punctuation">{</span>  i<span class="token operator">--</span><span class="token punctuation">;</span>
+        hist<span class="token punctuation">[</span><span class="token operator">*</span>image<span class="token operator">++</span><span class="token punctuation">]</span><span class="token operator">++</span><span class="token punctuation">;</span>   
+    <span class="token punctuation">}</span><span class="token keyword">while</span><span class="token punctuation">(</span>i<span class="token operator">></span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     image<span class="token operator">=</span>image<span class="token operator">-</span>IMAGE_WIDTH<span class="token operator">*</span>IMAGE_HEIGHT<span class="token punctuation">;</span> 
+    <span class="token operator">*</span>sum<span class="token operator">=</span>hist<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+     <span class="token comment" spellcheck="true">//for循环不能将i计算</span>
+    <span class="token keyword">for</span><span class="token punctuation">(</span> i<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">;</span>i<span class="token operator">&lt;</span><span class="token number">256</span><span class="token punctuation">;</span>i<span class="token operator">++</span><span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>   <span class="token operator">*</span><span class="token punctuation">(</span>sum<span class="token operator">+</span>i<span class="token punctuation">)</span><span class="token operator">=</span>hist<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token operator">+</span><span class="token operator">*</span><span class="token punctuation">(</span>sum<span class="token operator">+</span>i<span class="token number">-1</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token punctuation">}</span> 
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>Challenge？</p>
+<p><em>Loop-carrier dependency</em></p>
+<p><strong>下列程序哪个执行时间短？</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211206183354289.png" alt=""></p>
+<blockquote>
+<p>共享数据打架，并行反而更慢</p>
+</blockquote>
+<ul>
+<li>In parallel region, default behavior is that all variables are <em>shared</em> except loop index<ul>
+<li>All threads read and write the same memory location for each variable</li>
+<li>This is ok if threads are accessing different elements of an array</li>
+<li>Problem if threads write same scalar or array element</li>
+<li>Loop index is <em>private</em>, so each thread has its own copy</li>
+</ul>
+</li>
+</ul>
+<p>看看下列程序的执行时间</p>
+<pre class="line-numbers language-c"><code class="language-c">ifirst <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">;</span>
+<span class="token keyword">int</span> k<span class="token punctuation">[</span><span class="token number">600</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">for</span><span class="token punctuation">(</span>j <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> j <span class="token operator">&lt;=</span> <span class="token number">60</span><span class="token punctuation">;</span> j<span class="token operator">++</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+<span class="token macro property">#<span class="token directive keyword">pragma</span> omp parallel for private(i2)</span>
+    <span class="token keyword">for</span><span class="token punctuation">(</span>i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>i<span class="token operator">&lt;</span><span class="token number">6000000</span><span class="token punctuation">;</span>i<span class="token operator">++</span><span class="token punctuation">)</span><span class="token punctuation">{</span> 
+     i2 <span class="token operator">=</span> i<span class="token operator">-</span><span class="token punctuation">(</span>i<span class="token operator">/</span><span class="token number">600</span><span class="token punctuation">)</span><span class="token operator">*</span><span class="token number">600</span><span class="token punctuation">;</span>
+     k<span class="token punctuation">[</span>i2<span class="token punctuation">]</span> <span class="token operator">=</span> ifirst <span class="token operator">+</span> i<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="private"><a href="#private" class="headerlink" title="private"></a><strong>private</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211206183456235.png" alt=""></p>
+<p>How about variables in function？ </p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">for</span><span class="token punctuation">(</span>i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">100</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token function">mycalc</span><span class="token punctuation">(</span>i<span class="token punctuation">,</span>x<span class="token punctuation">,</span>y<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>how about x, y ?</p>
+<p><strong>试试这个程序</strong></p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">float</span> sum <span class="token operator">=</span> <span class="token number">0.0</span><span class="token punctuation">;</span>
+<span class="token keyword">float</span> a<span class="token punctuation">[</span><span class="token number">10000</span><span class="token punctuation">]</span><span class="token punctuation">,</span>b<span class="token punctuation">[</span><span class="token number">10000</span><span class="token punctuation">]</span><span class="token punctuation">;</span> 
+<span class="token macro property">#<span class="token directive keyword">pragma</span> omp parallel for private(sum)</span>
+   <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">int</span> i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span> i<span class="token operator">&lt;</span><span class="token number">10000</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+     sum <span class="token operator">+</span><span class="token operator">=</span> a<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">*</span> b<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+   <span class="token punctuation">}</span>
+  <span class="token keyword">return</span> sum<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>编译错误？</strong></p>
+<p>试试（shared）</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">float</span> sum <span class="token operator">=</span> <span class="token number">0.0</span><span class="token punctuation">;</span>
+<span class="token keyword">float</span> a<span class="token punctuation">[</span><span class="token number">10000</span><span class="token punctuation">]</span><span class="token punctuation">,</span>b<span class="token punctuation">[</span><span class="token number">10000</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token function">For</span><span class="token punctuation">(</span><span class="token keyword">int</span> j<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>j<span class="token operator">&lt;</span><span class="token number">10</span><span class="token punctuation">;</span>j<span class="token operator">++</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span> 
+    sum<span class="token operator">=</span><span class="token number">0.0</span><span class="token punctuation">;</span>
+<span class="token macro property">#<span class="token directive keyword">pragma</span> omp parallel for shared(sum)</span>
+   <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">int</span> i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span> i<span class="token operator">&lt;</span><span class="token number">10000</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+     sum <span class="token operator">+</span><span class="token operator">=</span> a<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">*</span> b<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+   <span class="token punctuation">}</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span>“j<span class="token operator">=</span><span class="token operator">%</span>d<span class="token punctuation">,</span> sum<span class="token operator">=</span><span class="token operator">%</span>f\n”<span class="token punctuation">,</span>j<span class="token punctuation">,</span>sum<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+  <span class="token keyword">return</span> sum<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>每次结果相同？为什么？</strong></p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">float</span> sum <span class="token operator">=</span> <span class="token number">0.0</span><span class="token punctuation">;</span>
+<span class="token keyword">float</span> a<span class="token punctuation">[</span><span class="token number">10000</span><span class="token punctuation">]</span><span class="token punctuation">,</span>b<span class="token punctuation">[</span><span class="token number">10000</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">int</span> j<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>j<span class="token operator">&lt;</span><span class="token number">10</span><span class="token punctuation">;</span>j<span class="token operator">++</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span> 
+    sum<span class="token operator">=</span><span class="token number">0.0</span><span class="token punctuation">;</span>
+<span class="token macro property">#<span class="token directive keyword">pragma</span> omp parallel for</span>
+   <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">int</span> i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span> i<span class="token operator">&lt;</span><span class="token number">10000</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+     sum <span class="token operator">+</span><span class="token operator">=</span> a<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">*</span> b<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+   <span class="token punctuation">}</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span>“j<span class="token operator">=</span><span class="token operator">%</span>d<span class="token punctuation">,</span> sum<span class="token operator">=</span><span class="token operator">%</span>f\n”<span class="token punctuation">,</span>j<span class="token punctuation">,</span>sum<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+  <span class="token keyword">return</span> sum<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="Critical"><a href="#Critical" class="headerlink" title="Critical"></a><strong>Critical</strong></h3><p><strong>Solution 1</strong></p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">float</span> sum <span class="token operator">=</span> <span class="token number">0.0</span><span class="token punctuation">;</span>
+flaot a<span class="token punctuation">[</span><span class="token number">10000</span><span class="token punctuation">]</span><span class="token punctuation">,</span>b<span class="token punctuation">[</span><span class="token number">10000</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">int</span> j<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>j<span class="token operator">&lt;</span><span class="token number">10</span><span class="token punctuation">;</span>j<span class="token operator">++</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    sum<span class="token operator">=</span><span class="token number">0.0</span><span class="token punctuation">;</span>
+    <span class="token macro property">#<span class="token directive keyword">pragma</span> omp parallel for shared(sum)</span>
+       <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">int</span> i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span> i<span class="token operator">&lt;</span>N<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token macro property">#<span class="token directive keyword">pragma</span> omp critical    </span><span class="token comment" spellcheck="true">//让每次输出结果相同</span>
+         sum <span class="token operator">+</span><span class="token operator">=</span> a<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">*</span> b<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+       <span class="token punctuation">}</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span>“j<span class="token operator">=</span><span class="token operator">%</span>d<span class="token punctuation">,</span> sum<span class="token operator">=</span><span class="token operator">%</span>f\n”<span class="token punctuation">,</span>j<span class="token punctuation">,</span>sum<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">return</span> sum<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="Critical-Construct"><a href="#Critical-Construct" class="headerlink" title="Critical Construct"></a><strong>Critical Construct</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211206184254169.png" alt=""></p>
+<blockquote>
+<p>加锁：RES_lock</p>
+</blockquote>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">void</span> <span class="token function">dequeue</span><span class="token punctuation">(</span>NODE <span class="token operator">*</span> node<span class="token punctuation">)</span> 
+<span class="token punctuation">{</span>
+   <span class="token macro property">#<span class="token directive keyword">pragma</span> omp critical(x)</span>
+   <span class="token punctuation">{</span>
+    node<span class="token operator">=</span>node<span class="token operator">-></span>next<span class="token punctuation">;</span>
+   <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">void</span> <span class="token function">do_work</span><span class="token punctuation">(</span>NODE <span class="token operator">*</span>node<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+ <span class="token macro property">#<span class="token directive keyword">pragma</span> omp critical(x)</span>
+   <span class="token punctuation">{</span>
+    node<span class="token operator">-></span>next<span class="token operator">-></span>data<span class="token operator">=</span><span class="token function">fn1</span><span class="token punctuation">(</span>node<span class="token operator">-></span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    node<span class="token operator">=</span><span class="token function">dequeue</span><span class="token punctuation">(</span>node<span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>What’s wrong? Deadlock!</strong></p>
+<h3 id="Atomic"><a href="#Atomic" class="headerlink" title="Atomic"></a><strong>Atomic</strong></h3><pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">pragma</span> omp parallel for shared(x, y, index, n)</span>
+   <span class="token keyword">for</span> <span class="token punctuation">(</span>i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> n<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token macro property">#<span class="token directive keyword">pragma</span> omp atomic</span>
+        x<span class="token punctuation">[</span>index<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token operator">+</span><span class="token operator">=</span> <span class="token function">work1</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      y<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">+</span><span class="token operator">=</span> <span class="token function">work2</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token punctuation">}</span> <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li>Special case of a critical section </li>
+<li>Applies only to <strong>simple update of memory location</strong></li>
+</ul>
+<h3 id="reduction"><a href="#reduction" class="headerlink" title="reduction"></a><strong>reduction</strong></h3><p><strong>Solution 2</strong></p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">float</span> <span class="token function">dot_prod</span><span class="token punctuation">(</span><span class="token keyword">float</span><span class="token operator">*</span> a<span class="token punctuation">,</span> <span class="token keyword">float</span><span class="token operator">*</span> b<span class="token punctuation">,</span> <span class="token keyword">int</span> N<span class="token punctuation">)</span> 
+<span class="token punctuation">{</span>
+  <span class="token keyword">float</span> sum <span class="token operator">=</span> <span class="token number">0.0</span><span class="token punctuation">;</span>
+<span class="token macro property">#<span class="token directive keyword">pragma</span> omp parallel for reduction(+:sum)</span>
+   <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">int</span> i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span> i<span class="token operator">&lt;</span>N<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    sum <span class="token operator">+</span><span class="token operator">=</span> a<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">*</span> b<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+   <span class="token punctuation">}</span>
+  <span class="token keyword">return</span> sum<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li><p>Each thread performs <strong>its own reduction</strong> (sum, in this case);</p>
+</li>
+<li><p>Results from all threads are automatically reduced (summed) <strong>at the end of the loop</strong></p>
+</li>
+</ul>
+<h2 id="线程"><a href="#线程" class="headerlink" title="线程"></a><strong>线程</strong></h2><h3 id="Any-program-paralleled"><a href="#Any-program-paralleled" class="headerlink" title="Any program paralleled?"></a>Any program paralleled?</h3><p>Fibonacci Sequence 0, 1, 1, 2, 3, 5, 8, 13…… </p>
+<pre class="line-numbers language-c"><code class="language-c">a<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+a<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token keyword">for</span><span class="token punctuation">(</span>i <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">;</span> i <span class="token operator">&lt;=</span> <span class="token number">100</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    a<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> a<span class="token punctuation">[</span>i<span class="token number">-1</span><span class="token punctuation">]</span> <span class="token operator">+</span> a<span class="token punctuation">[</span>i<span class="token number">-2</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>程序运行结果？</strong></p>
+<pre class="line-numbers language-c"><code class="language-c">doube a<span class="token punctuation">[</span><span class="token number">100</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+a<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">0.0</span><span class="token punctuation">;</span>
+a<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">1.0</span><span class="token punctuation">;</span>
+<span class="token keyword">for</span> <span class="token punctuation">(</span>i <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">100</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span>
+    a<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token macro property">#<span class="token directive keyword">pragma</span> omp parallel for</span>
+<span class="token keyword">for</span> <span class="token punctuation">(</span>i <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">100</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    a<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> a<span class="token punctuation">[</span>i <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">+</span> a<span class="token punctuation">[</span>i <span class="token operator">-</span> <span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"a[%d]= %f\n"</span><span class="token punctuation">,</span>i<span class="token punctuation">,</span>a<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>为什么？</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211206184632571.png" alt=""></p>
+<h3 id="线程-1"><a href="#线程-1" class="headerlink" title="线程"></a><strong>线程</strong></h3><ul>
+<li><strong>Assigning Iterations</strong><ul>
+<li><strong>Which Schedule to Use</strong></li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211206184700856.png" alt=""></p>
+<ul>
+<li>Assigning Iterations<ul>
+<li><strong>schedule(static [,chunk])</strong><ul>
+<li>Blocks of iterations of size “chunk” to threads</li>
+<li>Round robin distribution</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">pragma</span> omp parallel for schedule (static, 8)</span>
+<span class="token keyword">for</span> <span class="token punctuation">(</span>i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span><span class="token number">20</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    a<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span>i<span class="token operator">*</span>i<span class="token punctuation">;</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"static_a[%d]= %d, num=%d\n"</span><span class="token punctuation">,</span> i<span class="token punctuation">,</span>a<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span>     <span class="token function">omp_get_thread_num</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li><p>Iterations are divided into chunks of 8</p>
+</li>
+<li><p>If start = 0, then first chunk is </p>
+<ul>
+<li>thread0{0, 1,2,3,4,5,6,7}</li>
+<li>thread1{8, 9,2,10,11,12,13,14,15}</li>
+<li>thread2{16,16,18,19}</li>
+</ul>
+</li>
+<li><p><strong>schedule(dynamic[,chunk])</strong></p>
+<ul>
+<li><p>Threads grab “chunk” iterations</p>
+</li>
+<li><p>When done with iterations, thread requests next set</p>
+</li>
+</ul>
+</li>
+</ul>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">pragma</span> omp parallel for schedule (dynamic, 8)</span>
+<span class="token keyword">for</span> <span class="token punctuation">(</span>i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span><span class="token number">20</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    a<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span>i<span class="token operator">*</span>i<span class="token punctuation">;</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"static_a[%d]= %d, num=%d\n"</span><span class="token punctuation">,</span> i<span class="token punctuation">,</span>a<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span>     <span class="token function">omp_get_thread_num</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li><p>Iterations are divided into chunks of 8</p>
+</li>
+<li><p>If start = 0, then first chunk is </p>
+<ul>
+<li>thread0{0, 1,2,3,4,5,6,7}</li>
+<li>thread2{8, 9,2,10,11,12,13,14,15}</li>
+<li>thread3{16,16,18,19}</li>
+</ul>
+</li>
+<li><p><strong>schedule(guided[,chunk])</strong></p>
+<ul>
+<li>Dynamic schedule starting with large block </li>
+<li>Size of the blocks shrink; no smaller than “chunk”</li>
+</ul>
+</li>
+</ul>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">pragma</span> omp parallel for schedule (guided)</span>
+<span class="token keyword">for</span> <span class="token punctuation">(</span>i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span><span class="token number">20</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    a<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span>i<span class="token operator">*</span>i<span class="token punctuation">;</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"static_a[%d]= %d, num=%d\n"</span><span class="token punctuation">,</span> i<span class="token punctuation">,</span>a<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span>     <span class="token function">omp_get_thread_num</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li>thread0{0, 1,2,3,4}</li>
+<li>thread1{9, 10,11}</li>
+<li>thread2{5,6,7,8} {14,15,16,17,18,19}</li>
+<li>thread3{12,13}</li>
+</ul>
+<h4 id="Section"><a href="#Section" class="headerlink" title="Section"></a><strong>Section</strong></h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211206185039828.png" alt=""></p>
+<h4 id="Barrier"><a href="#Barrier" class="headerlink" title="Barrier"></a><strong>Barrier</strong></h4><pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">pragma</span> omp parallel private(myid,istart,iend)</span>
+<span class="token function">myrange</span><span class="token punctuation">(</span>myid<span class="token punctuation">,</span>istart<span class="token punctuation">,</span>iend<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">for</span><span class="token punctuation">(</span>i<span class="token operator">=</span>istart<span class="token punctuation">;</span> i<span class="token operator">&lt;=</span>iend<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+   a<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> a<span class="token punctuation">[</span>i<span class="token punctuation">]</span> – b<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token macro property">#<span class="token directive keyword">pragma</span> omp barrier</span>
+myval<span class="token punctuation">[</span>myid<span class="token punctuation">]</span> <span class="token operator">=</span> a<span class="token punctuation">[</span>istart<span class="token punctuation">]</span> <span class="token operator">+</span> a<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li><p>Barrier synchronizes threads</p>
+</li>
+<li><p>Here barrier assures that a[istart] or a[0] is available before computing myval</p>
+</li>
+</ul>
+<h4 id="Nowait"><a href="#Nowait" class="headerlink" title="Nowait"></a><strong>Nowait</strong></h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211206185140178.png" alt=""></p>
+<h4 id="Master"><a href="#Master" class="headerlink" title="Master"></a><strong>Master</strong></h4><pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">pragma</span> omp parallel private(myid, istart, iend)</span>
+ <span class="token function">myrange</span><span class="token punctuation">(</span>myid<span class="token punctuation">,</span> istart<span class="token punctuation">,</span> iend<span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token keyword">for</span><span class="token punctuation">(</span>i<span class="token operator">=</span>istart<span class="token punctuation">;</span> i<span class="token operator">&lt;=</span>iend<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    a<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> a<span class="token punctuation">[</span>i<span class="token punctuation">]</span> – b<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+ <span class="token punctuation">}</span>
+ <span class="token macro property">#<span class="token directive keyword">pragma</span> omp barrier</span>
+ <span class="token macro property">#<span class="token directive keyword">pragma</span> omp master</span>
+ <span class="token function">fwrite</span><span class="token punctuation">(</span>fid<span class="token punctuation">,</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span><span class="token keyword">float</span><span class="token punctuation">)</span><span class="token punctuation">,</span> iend<span class="token operator">-</span>istart<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">,</span> a<span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token macro property">#<span class="token directive keyword">pragma</span> omp end master</span>
+ <span class="token function">do_work</span><span class="token punctuation">(</span>istart<span class="token punctuation">,</span> iend<span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token macro property">#<span class="token directive keyword">pragma</span> omp end parallel </span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li><p>If you want part of code to be executed only on master thread, use master directive</p>
+</li>
+<li><p>“non-master” threads will skip over master region and continue</p>
+</li>
+</ul>
+<h4 id="Single"><a href="#Single" class="headerlink" title="Single"></a><strong>Single</strong></h4><pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">pragma</span> omp parallel</span>
+<span class="token punctuation">{</span>
+   <span class="token function">DoManyThings</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token macro property">#<span class="token directive keyword">pragma</span> omp single</span>
+   <span class="token punctuation">{</span>
+     <span class="token function">ExchangeBoundaries</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token punctuation">}</span>  <span class="token comment" spellcheck="true">// threads wait here for single</span>
+   <span class="token function">DoManyMoreThings</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li>Denotes block of code to be executed by only one thread</li>
+<li>First thread to arrive is chosen</li>
+<li>Implicit barrier at end</li>
+</ul>
+<p>Unequal work loads lead to idle threads and wasted time.</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211206185320317.png" alt=""></p>
+<h4 id="Load-Balancing"><a href="#Load-Balancing" class="headerlink" title="Load Balancing"></a><strong>Load Balancing</strong></h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211206185351637.png" alt=""></p>
+<h4 id="Lost-time-waiting-for-locks"><a href="#Lost-time-waiting-for-locks" class="headerlink" title="Lost time waiting for locks"></a>Lost time waiting for locks</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211206185417635.png" alt=""></p>
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a><strong>示例</strong></h3><h4 id="Numerical-Integration"><a href="#Numerical-Integration" class="headerlink" title="Numerical Integration"></a><strong>Numerical Integration</strong></h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211206185455140.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211206185513696.png" alt=""></p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">static</span> <span class="token keyword">long</span> num_steps<span class="token operator">=</span><span class="token number">100000</span><span class="token punctuation">;</span> 
+<span class="token keyword">double</span> step<span class="token punctuation">,</span> pi<span class="token punctuation">;</span>
+
+<span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>  <span class="token keyword">int</span> i<span class="token punctuation">;</span>    
+   <span class="token keyword">double</span> x<span class="token punctuation">,</span> sum <span class="token operator">=</span> <span class="token number">0.0</span><span class="token punctuation">;</span>
+
+   step <span class="token operator">=</span> <span class="token number">1.0</span><span class="token operator">/</span><span class="token punctuation">(</span><span class="token keyword">double</span><span class="token punctuation">)</span> num_steps<span class="token punctuation">;</span>
+ <span class="token macro property">#<span class="token directive keyword">pragma</span> omp parallel for private(x) reduction(+:sum)</span>
+   <span class="token keyword">for</span> <span class="token punctuation">(</span>i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span> i<span class="token operator">&lt;</span> num_steps<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+      x <span class="token operator">=</span> <span class="token punctuation">(</span>i<span class="token operator">+</span><span class="token number">0.5</span><span class="token punctuation">)</span><span class="token operator">*</span>step<span class="token punctuation">;</span>
+      sum <span class="token operator">=</span> sum <span class="token operator">+</span> <span class="token number">4.0</span><span class="token operator">/</span><span class="token punctuation">(</span><span class="token number">1.0</span> <span class="token operator">+</span> x<span class="token operator">*</span>x<span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token punctuation">}</span>
+   pi <span class="token operator">=</span> step <span class="token operator">*</span> sum<span class="token punctuation">;</span>
+   <span class="token function">printf</span><span class="token punctuation">(</span>“Pi <span class="token operator">=</span> <span class="token operator">%</span>f\n”<span class="token punctuation">,</span>pi<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="小结-5"><a href="#小结-5" class="headerlink" title="小结"></a><strong>小结</strong></h2><p>请下载并安装CUDA</p>
+<h1 id="Heterogeneous-Multi-core"><a href="#Heterogeneous-Multi-core" class="headerlink" title="Heterogeneous Multi-core"></a><strong>Heterogeneous Multi-core</strong></h1><p><strong>reference</strong></p>
+<p><a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html" target="_blank" rel="noopener">https://</a><a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html" target="_blank" rel="noopener">docs.nvidia.com/cuda/cuda-c-programming-guide/index.html</a></p>
+<p><a href="http://blog.csdn.net/kkk584520/article/details/9413973" target="_blank" rel="noopener">http</a><a href="http://blog.csdn.net/kkk584520/article/details/9413973" target="_blank" rel="noopener">://blog.csdn.net/kkk584520/article/details/9413973</a></p>
+<h2 id="AMP"><a href="#AMP" class="headerlink" title="AMP"></a><strong>AMP</strong></h2><h3 id="Kirin9000"><a href="#Kirin9000" class="headerlink" title="Kirin9000"></a><strong>Kirin9000</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211206190934459.png" alt=""></p>
+<h3 id="A15-bionic"><a href="#A15-bionic" class="headerlink" title="A15 bionic"></a><strong>A15 bionic</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211206191000726.png" alt=""></p>
+<h3 id="OMAP3530-Ti"><a href="#OMAP3530-Ti" class="headerlink" title="OMAP3530 (Ti)"></a><strong>OMAP3530 (Ti)</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211206191035714.png" alt=""></p>
+<h3 id="AMP-存储架构"><a href="#AMP-存储架构" class="headerlink" title="AMP 存储架构"></a><strong>AMP</strong> <strong>存储架构</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211206191110556.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211206192640767.png" alt=""></p>
+<h2 id="AMP编程"><a href="#AMP编程" class="headerlink" title="AMP编程"></a>AMP编程</h2><p>Multi-thread for AMP？</p>
+<ul>
+<li><p>The method of Programming for SMP？</p>
+<p>Multi- thread (parallelizing).</p>
+</li>
+<li><p>Is “Multi-thread”method available for AMP programming？ Why？</p>
+<p>No！ </p>
+<p>Different architecture processors with different Instructions .</p>
+</li>
+<li><p>Programming for different processors？</p>
+</li>
+</ul>
+<p>​    Independent</p>
+<p>​    Integrated</p>
+<ul>
+<li>How to download binary code to different processors?</li>
+</ul>
+<p>​    Master and Coprocessor independently by tools </p>
+<p>​    From Master to coprocessor</p>
+<ul>
+<li>How to start up the different processors?</li>
+</ul>
+<p>​    Master – Power(reset)</p>
+<p>​    Coprocessor – Set by master</p>
+<h3 id="Independent-Programming"><a href="#Independent-Programming" class="headerlink" title="Independent Programming"></a><strong>Independent Programming</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211206193249543.png" alt=""></p>
+<h3 id="Integrated-Programming"><a href="#Integrated-Programming" class="headerlink" title="Integrated Programming"></a><strong>Integrated Programming</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211206193341198.png" alt=""></p>
+<h3 id="Programming-OMAP3530"><a href="#Programming-OMAP3530" class="headerlink" title="Programming OMAP3530"></a><strong>Programming OMAP3530</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211206193359592.png" alt=""></p>
+<ul>
+<li>xDM算法接口；IPC：Inter-Process Communication</li>
+</ul>
+<h3 id="HSA"><a href="#HSA" class="headerlink" title="HSA"></a><strong>HSA</strong></h3><p>HSA（Heterogeneous System Architecture）</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211206194558828.png" alt=""></p>
+<ul>
+<li>APU：Accelerated Processing Unit ; NUMA: Non Uniform Memory Access Architecture; UMA Uniform Memory Architecture</li>
+</ul>
+<p><strong>Programming</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211206194703138.png" alt=""></p>
+<h2 id="GPU"><a href="#GPU" class="headerlink" title="GPU"></a><strong>GPU</strong></h2><h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a><strong>Reference</strong></h3><ul>
+<li>Manuals </li>
+<li>Programming Guide </li>
+<li>Best Practice Guide </li>
+<li>Books </li>
+<li>CUDA By Examples, Tsinghua University Press </li>
+<li>Training videos </li>
+<li>GTC talks online: optimization, advanced optimization + hundreds of other GPU computing talks <a href="http://www.gputechconf.com/gtcnew/on-demand-gtc.php" target="_blank" rel="noopener">http://www.gputechconf.com/gtcnew/on-demand-gtc.php</a></li>
+<li>NVIDIA GPU Computing webinars <a href="http://developer.nvidia.com/gpu-computing-webinars" target="_blank" rel="noopener">http://developer.nvidia.com/gpu-computing-webinars</a></li>
+</ul>
+<p><strong>GPU</strong></p>
+<ul>
+<li>GPUs are massively multithreaded many core chips</li>
+<li>Hundreds of scalar processors</li>
+<li>Tens of thousands of concurrent threads</li>
+<li>n TFLOP peak performance</li>
+<li>Fine-grained data-parallel computation</li>
+<li>Suppliers</li>
+<li>Intel: Iris™ Pro Graphics[, i740</li>
+<li>NVIDIA: Geforce, Telsa, Tegra</li>
+<li>AMD(ATI)：RX, FirePro</li>
+<li>Matrox</li>
+<li>3dfx</li>
+<li>SiS</li>
+<li>VIA</li>
+</ul>
+<h3 id="GPU-Applications"><a href="#GPU-Applications" class="headerlink" title="GPU Applications"></a><strong>GPU Applications</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211206195811873.png" alt=""></p>
+<h3 id="CPU-vs-GPU"><a href="#CPU-vs-GPU" class="headerlink" title="CPU vs GPU"></a><strong>CPU vs GPU</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211206195825543.png" alt=""></p>
+<h3 id="A-GPU-Device-G80"><a href="#A-GPU-Device-G80" class="headerlink" title="A GPU Device(G80)"></a><strong>A GPU Device(G80)</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211206195843264.png" alt=""></p>
+<ul>
+<li>Vtx =Vertex , 线的顶点；Geom=Geometry</li>
+</ul>
+<h3 id="Texture-Processor-Cluster"><a href="#Texture-Processor-Cluster" class="headerlink" title="Texture Processor Cluster"></a><strong>Texture Processor Cluster</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211206195912989.png" alt=""></p>
+<h3 id="GPU-in-System"><a href="#GPU-in-System" class="headerlink" title="GPU in System"></a><strong>GPU in System</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211206195925836.png" alt=""></p>
+<h3 id="GPU-in-System-1"><a href="#GPU-in-System-1" class="headerlink" title="GPU in System"></a><strong>GPU in System</strong></h3><p>Connected to CPU chipset by PCIe</p>
+<p>PCIe x16 Gen 2: 8 GB/s in one direction, 16 GB/s bi-directionally </p>
+<p>  <a href="http://arstechnica.com/old/content/2004/07/pcie.ars" target="_blank" rel="noopener">http://arstechnica.com/old/content/2004/07/pcie.ars</a></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211206195955185.png" alt=""></p>
+<h2 id="CUDA"><a href="#CUDA" class="headerlink" title="CUDA"></a><strong>CUDA</strong></h2><h3 id="What-is-CUDA"><a href="#What-is-CUDA" class="headerlink" title="What is CUDA"></a><strong>What is CUDA</strong></h3><ul>
+<li>CUDA is the acronym for Compute Unified Device Architecture.<ul>
+<li>A parallel computing architecture developed by NVIDIA.</li>
+<li>The computing engine in GPU.</li>
+<li>CUDA can be accessible to software developers through industry standard programming languages. </li>
+</ul>
+</li>
+<li>CUDA gives developers access to the instruction set and memory of the parallel computation elements in GPUs. </li>
+</ul>
+<h3 id="Processing-Flow"><a href="#Processing-Flow" class="headerlink" title="Processing Flow"></a><strong>Processing Flow</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211206200219166.png" alt=""></p>
+<h3 id="CUDA-Environment"><a href="#CUDA-Environment" class="headerlink" title="CUDA Environment"></a><strong>CUDA Environment</strong></h3><p>Installing CUDA.</p>
+<ul>
+<li>Windows – VSXXXX</li>
+<li>Linux – gcc</li>
+</ul>
+<p><a href="https://developer.nvidia.com/cuda-downloads" target="_blank" rel="noopener">https://developer.nvidia.com/cuda-downloads</a></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211206200325131.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211206200335656.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211206200415114.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211206200427229.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211206200436763.png" alt=""></p>
+<p><strong>新建例程，运行例程，结果？</strong></p>
+<p><strong>源程序的扩展名？</strong></p>
+<p><strong>哪一段代码是在GPU上运行的？</strong></p>
+<p><strong>如何调试GPU上运行的程序？</strong></p>
+<h3 id="Cuda-test"><a href="#Cuda-test" class="headerlink" title="Cuda_test"></a><strong>Cuda_test</strong></h3><p><strong>Testing-CPU</strong></p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token comment" spellcheck="true">// hello_world.c: </span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span> </span>
+
+<span class="token keyword">void</span> <span class="token function">hello_world_kernel</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span> 
+    <span class="token function">printf</span><span class="token punctuation">(</span>“Hello World\n”<span class="token punctuation">)</span><span class="token punctuation">;</span> 
+<span class="token punctuation">}</span>
+
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> 
+<span class="token punctuation">{</span>
+    <span class="token function">hello_world_kernel</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>Testing-GPU</strong></p>
+<pre><code>//hello_world.cu: 
+#include &lt;stdio.h&gt; 
+
+__global__ void hello_world_kernel()
+{ 
+    printf(“Hello World\n”); 
+}
+
+int main() 
+{ 
+     hello_world_kernel&lt;&lt;&lt;1,1&gt;&gt;&gt;(); 
+}</code></pre><p><img src="/images/loading.gif" data-original="../images/basic/image-20211206200624898.png" alt=""></p>
+<p>What’s Wrong？ </p>
+<p>Why？</p>
+<h2 id="CUDA-编程"><a href="#CUDA-编程" class="headerlink" title="CUDA 编程"></a><strong>CUDA</strong> <strong>编程</strong></h2><h3 id="CUDA-Kernel-program"><a href="#CUDA-Kernel-program" class="headerlink" title="CUDA Kernel program"></a><strong>CUDA Kernel program</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211206200713282.png" alt=""></p>
+<h3 id="CUDA-Programming-Mode"><a href="#CUDA-Programming-Mode" class="headerlink" title="CUDA Programming Mode"></a><strong>CUDA Programming Mode</strong></h3><ul>
+<li><p>CUDA C extends C by allowing the programmer to define C functions, called kernels.</p>
+</li>
+<li><p>When called, kernels are executed N times in parallel by N different <em>CUDA</em> threads.</p>
+</li>
+<li><p>A kernel is defined using the __global__ . </p>
+</li>
+<li><p>The number of CUDA threads that execute the kernels is specified using &lt;&lt;&lt;…&gt;&gt;&gt; （Threads）</p>
+<ul>
+<li>cuda_kernel&lt;&lt;&lt;nBlk, nTid&gt;&gt;&gt;(…)</li>
+</ul>
+</li>
+<li><p>Each thread that executes the kernel is given a unique thread ID. </p>
+</li>
+<li><p>A thread block is a batch of threads</p>
+</li>
+<li><p>All threads run the same code</p>
+</li>
+<li><p>Each thread has an ID that it uses to compute memory addresses and make control decision</p>
+</li>
+<li><p>Threads can cooperate with each other by</p>
+</li>
+<li><p>sharing data and synchronizing their execution</p>
+</li>
+<li><p>Threads from different blocks cannot cooperate</p>
+</li>
+<li><p>There is a limit to the number of threads per block</p>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211206200842658.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211206200854133.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211206200904854.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211206200923385.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211206200937740.png" alt=""></p>
+<h4 id="Thread-ID"><a href="#Thread-ID" class="headerlink" title="Thread ID"></a><strong>Thread ID</strong></h4><pre><code>BlockID= blockIdx.y*gridDim.x+blockIdx.x
+
+ThreadID=BlockID*blockDim.x*blockDim.y*blockDim.z
+    +threadIdx.z*blockdIm.x*blockDim.y*
+    +threadIdx.y*blockDim.x
+    +threadIdx.x</code></pre><p>How about 2D or 1D blocks?</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211206201022204.png" alt=""></p>
+<pre><code>dim3 grid(3,2) ；dim3 block(12,1,1)；
+gridDim.x=3; gridDim.y=2; 
+blockDim.x=12; blockDim.y=1; blockDim.z=1;
+blockIdx.x=1; blockIdx.y=1;
+threadIdx.x=4, threadIdx.y=0; threadIdx.z=0;
+threadID=(1*3+1)*12+4=52</code></pre><h4 id="Data-Partition-example"><a href="#Data-Partition-example" class="headerlink" title="Data Partition-example"></a><strong>Data Partition-example</strong></h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211206201052741.png" alt=""></p>
+<h4 id="Example-1D-Block"><a href="#Example-1D-Block" class="headerlink" title="Example (1D-Block)"></a>Example (1D-Block)</h4><pre class="line-numbers language-c"><code class="language-c"><span class="token comment" spellcheck="true">// Kernel definition</span>
+__global__ <span class="token keyword">void</span> <span class="token function">VecAdd</span><span class="token punctuation">(</span><span class="token keyword">float</span><span class="token operator">*</span> A<span class="token punctuation">,</span> <span class="token keyword">float</span><span class="token operator">*</span> B<span class="token punctuation">,</span> <span class="token keyword">float</span><span class="token operator">*</span> C<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">int</span> i <span class="token operator">=</span> threadIdx<span class="token punctuation">.</span>x<span class="token punctuation">;</span>
+    C<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> A<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">+</span> B<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+    <span class="token comment" spellcheck="true">// Kernel invocation with N threads</span>
+    VecAdd<span class="token operator">&lt;&lt;</span><span class="token operator">&lt;</span><span class="token number">1</span><span class="token punctuation">,</span> N<span class="token operator">>></span><span class="token operator">></span><span class="token punctuation">(</span>A<span class="token punctuation">,</span> B<span class="token punctuation">,</span> C<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="Example-2D-Block"><a href="#Example-2D-Block" class="headerlink" title="Example (2D-Block)"></a>Example (2D-Block)</h4><pre class="line-numbers language-c"><code class="language-c"><span class="token comment" spellcheck="true">// Kernel definition</span>
+__global__ <span class="token keyword">void</span> <span class="token function">MatAdd</span><span class="token punctuation">(</span><span class="token keyword">float</span> A<span class="token punctuation">[</span>N<span class="token punctuation">]</span><span class="token punctuation">[</span>N<span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token keyword">float</span> B<span class="token punctuation">[</span>N<span class="token punctuation">]</span><span class="token punctuation">[</span>N<span class="token punctuation">]</span><span class="token punctuation">,</span>
+                       <span class="token keyword">float</span> C<span class="token punctuation">[</span>N<span class="token punctuation">]</span><span class="token punctuation">[</span>N<span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">int</span> i <span class="token operator">=</span> threadIdx<span class="token punctuation">.</span>x<span class="token punctuation">;</span>
+    <span class="token keyword">int</span> j <span class="token operator">=</span> threadIdx<span class="token punctuation">.</span>y<span class="token punctuation">;</span>
+    C<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token punctuation">]</span> <span class="token operator">=</span> A<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token punctuation">]</span> <span class="token operator">+</span> B<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+    <span class="token comment" spellcheck="true">// Kernel invocation with one block of N * N * 1 threads</span>
+    <span class="token keyword">int</span> numBlocks <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    dim3 <span class="token function">threadsPerBlock</span><span class="token punctuation">(</span>N<span class="token punctuation">,</span> N<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    MatAdd<span class="token operator">&lt;&lt;</span><span class="token operator">&lt;</span>numBlocks<span class="token punctuation">,</span> threadsPerBlock<span class="token operator">>></span><span class="token operator">></span><span class="token punctuation">(</span>A<span class="token punctuation">,</span> B<span class="token punctuation">,</span> C<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li>Example (Multi-blocks)</li>
+</ul>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token comment" spellcheck="true">// Kernel definition</span>
+__global__ <span class="token keyword">void</span> <span class="token function">MatAdd</span><span class="token punctuation">(</span><span class="token keyword">float</span> A<span class="token punctuation">[</span>N<span class="token punctuation">]</span><span class="token punctuation">[</span>N<span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token keyword">float</span> B<span class="token punctuation">[</span>N<span class="token punctuation">]</span><span class="token punctuation">[</span>N<span class="token punctuation">]</span><span class="token punctuation">,</span>
+<span class="token keyword">float</span> C<span class="token punctuation">[</span>N<span class="token punctuation">]</span><span class="token punctuation">[</span>N<span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">int</span> i <span class="token operator">=</span> blockIdx<span class="token punctuation">.</span>x <span class="token operator">*</span> blockDim<span class="token punctuation">.</span>x <span class="token operator">+</span> threadIdx<span class="token punctuation">.</span>x<span class="token punctuation">;</span>
+    <span class="token keyword">int</span> j <span class="token operator">=</span> blockIdx<span class="token punctuation">.</span>y <span class="token operator">*</span> blockDim<span class="token punctuation">.</span>y <span class="token operator">+</span> threadIdx<span class="token punctuation">.</span>y<span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>i <span class="token operator">&lt;</span> N <span class="token operator">&amp;&amp;</span> j <span class="token operator">&lt;</span> N<span class="token punctuation">)</span>
+        C<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token punctuation">]</span> <span class="token operator">=</span> A<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token punctuation">]</span> <span class="token operator">+</span> B<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+    <span class="token comment" spellcheck="true">// Kernel invocation</span>
+    dim3 <span class="token function">threadsPerBlock</span><span class="token punctuation">(</span><span class="token number">16</span><span class="token punctuation">,</span> <span class="token number">16</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    dim3 <span class="token function">numBlocks</span><span class="token punctuation">(</span>N <span class="token operator">/</span> threadsPerBlock<span class="token punctuation">.</span>x<span class="token punctuation">,</span> N <span class="token operator">/</span> threadsPerBlock<span class="token punctuation">.</span>y<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    MatAdd<span class="token operator">&lt;&lt;</span><span class="token operator">&lt;</span>numBlocks<span class="token punctuation">,</span> threadsPerBlock<span class="token operator">>></span><span class="token operator">></span><span class="token punctuation">(</span>A<span class="token punctuation">,</span> B<span class="token punctuation">,</span> C<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="Programming"><a href="#Programming" class="headerlink" title="Programming"></a><strong>Programming</strong></h3><h4 id="Heterogeneous-Programming"><a href="#Heterogeneous-Programming" class="headerlink" title="Heterogeneous Programming"></a>Heterogeneous Programming</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211206201303621.png" alt=""></p>
+<h4 id="GPU-Input-and-Output"><a href="#GPU-Input-and-Output" class="headerlink" title="GPU Input and Output"></a><strong>GPU Input and Output</strong></h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211206201328710.png" alt=""></p>
+<h4 id="GPU-Memory"><a href="#GPU-Memory" class="headerlink" title="GPU Memory"></a><strong>GPU Memory</strong></h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211206201359301.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211206201409406.png" alt=""></p>
+<h4 id="Global-Memory"><a href="#Global-Memory" class="headerlink" title="Global Memory"></a>Global Memory</h4><ul>
+<li>Accessible by all threads as well as host (CPU)</li>
+<li>Data lifetime = from allocation to deallocation</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211206201503998.png" alt=""></p>
+<h4 id="Shared-Memory"><a href="#Shared-Memory" class="headerlink" title="Shared Memory"></a>Shared Memory</h4><ul>
+<li><p>Accessible by all threads in the block</p>
+</li>
+<li><p>Data lifetime = the longest thread lifetime</p>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211206201511263.png" alt=""></p>
+<h4 id="Register-amp-Local-memory"><a href="#Register-amp-Local-memory" class="headerlink" title="Register &amp; Local memory"></a>Register &amp; Local memory</h4><ul>
+<li>Automatic variables (scalar/array) inside kernels</li>
+<li>Spills to local memory</li>
+<li>Data lifetime = thread lifetime</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211206201548840.png" alt=""></p>
+<h4 id="Memory-Allocation"><a href="#Memory-Allocation" class="headerlink" title="Memory Allocation"></a><strong>Memory Allocation</strong></h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211206201620757.png" alt=""></p>
+<h4 id="Memory-Copies"><a href="#Memory-Copies" class="headerlink" title="Memory Copies"></a>Memory Copies</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211206201736906.png" alt=""></p>
+<h2 id="示例-1"><a href="#示例-1" class="headerlink" title="示例"></a><strong>示例</strong></h2><h3 id="Arrays-Plus"><a href="#Arrays-Plus" class="headerlink" title="Arrays Plus"></a><strong>Arrays Plus</strong></h3><pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">"cuda_runtime.h"</span></span>
+
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
+
+cudaError_t <span class="token function">addWithCuda</span><span class="token punctuation">(</span><span class="token keyword">int</span> <span class="token operator">*</span>c<span class="token punctuation">,</span> <span class="token keyword">const</span> <span class="token keyword">int</span> <span class="token operator">*</span>a<span class="token punctuation">,</span> 
+            <span class="token keyword">const</span> <span class="token keyword">int</span> <span class="token operator">*</span>b<span class="token punctuation">,</span> <span class="token keyword">unsigned</span> <span class="token keyword">int</span> size<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+__global__ <span class="token keyword">void</span> <span class="token function">addKernel</span><span class="token punctuation">(</span><span class="token keyword">int</span> <span class="token operator">*</span>c<span class="token punctuation">,</span> <span class="token keyword">const</span> <span class="token keyword">int</span> <span class="token operator">*</span>a<span class="token punctuation">,</span> 
+                <span class="token keyword">const</span> <span class="token keyword">int</span> <span class="token operator">*</span>b<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">int</span> i <span class="token operator">=</span> threadIdx<span class="token punctuation">.</span>x<span class="token punctuation">;</span>
+    c<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> a<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">+</span> b<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">const</span> <span class="token keyword">int</span> arraySize <span class="token operator">=</span> <span class="token number">5</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> <span class="token keyword">int</span> a<span class="token punctuation">[</span>arraySize<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> <span class="token keyword">int</span> b<span class="token punctuation">[</span>arraySize<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token number">10</span><span class="token punctuation">,</span> <span class="token number">20</span><span class="token punctuation">,</span> <span class="token number">30</span><span class="token punctuation">,</span> <span class="token number">40</span><span class="token punctuation">,</span> <span class="token number">50</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token keyword">int</span> c<span class="token punctuation">[</span>arraySize<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token number">0</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">// Add vectors in parallel.</span>
+    cudaError_t cudaStatus <span class="token operator">=</span> <span class="token function">addWithCuda</span><span class="token punctuation">(</span>c<span class="token punctuation">,</span> a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> arraySize<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>cudaStatus <span class="token operator">!=</span> cudaSuccess<span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token keyword">return</span> <span class="token number">1</span><span class="token punctuation">;</span> <span class="token punctuation">}</span>
+
+    <span class="token function">printf</span><span class="token punctuation">(</span>"<span class="token punctuation">{</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">4</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">}</span> <span class="token operator">+</span> <span class="token punctuation">{</span><span class="token number">10</span><span class="token punctuation">,</span><span class="token number">20</span><span class="token punctuation">,</span><span class="token number">30</span><span class="token punctuation">,</span><span class="token number">40</span><span class="token punctuation">,</span><span class="token number">50</span><span class="token punctuation">}</span> <span class="token operator">=</span> 
+             <span class="token punctuation">{</span><span class="token operator">%</span>d<span class="token punctuation">,</span><span class="token operator">%</span>d<span class="token punctuation">,</span><span class="token operator">%</span>d<span class="token punctuation">,</span><span class="token operator">%</span>d<span class="token punctuation">,</span><span class="token operator">%</span>d<span class="token punctuation">}</span>\n"<span class="token punctuation">,</span> c<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> c<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> c<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">,</span> c<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">,</span> c<span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+   cudaStatus <span class="token operator">=</span> <span class="token function">cudaDeviceReset</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>cudaStatus <span class="token operator">!=</span> cudaSuccess<span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token keyword">return</span> <span class="token number">1</span><span class="token punctuation">;</span> <span class="token punctuation">}</span>
+
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+
+cudaError_t <span class="token function">addWithCuda</span><span class="token punctuation">(</span><span class="token keyword">int</span> <span class="token operator">*</span>c<span class="token punctuation">,</span> <span class="token keyword">const</span> <span class="token keyword">int</span> <span class="token operator">*</span>a<span class="token punctuation">,</span> <span class="token keyword">const</span> <span class="token keyword">int</span> <span class="token operator">*</span>b<span class="token punctuation">,</span> 
+                <span class="token keyword">unsigned</span> <span class="token keyword">int</span> size<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">int</span> <span class="token operator">*</span>dev_a <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> <span class="token keyword">int</span> <span class="token operator">*</span>dev_b <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> <span class="token keyword">int</span> <span class="token operator">*</span>dev_c <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    cudaError_t cudaStatus<span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// Allocate GPU buffers for three vectors (two input, one output)    .</span>
+    cudaStatus <span class="token operator">=</span> <span class="token function">cudaMalloc</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token operator">*</span><span class="token operator">*</span><span class="token punctuation">)</span><span class="token operator">&amp;</span>dev_c<span class="token punctuation">,</span> size <span class="token operator">*</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>cudaStatus <span class="token operator">!=</span> cudaSuccess<span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token keyword">goto</span> Error<span class="token punctuation">;</span><span class="token punctuation">}</span> 
+
+    cudaStatus <span class="token operator">=</span> <span class="token function">cudaMalloc</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token operator">*</span><span class="token operator">*</span><span class="token punctuation">)</span><span class="token operator">&amp;</span>dev_a<span class="token punctuation">,</span> size <span class="token operator">*</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>cudaStatus <span class="token operator">!=</span> cudaSuccess<span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token keyword">goto</span> Error<span class="token punctuation">;</span><span class="token punctuation">}</span>
+
+    cudaStatus <span class="token operator">=</span> <span class="token function">cudaMalloc</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token operator">*</span><span class="token operator">*</span><span class="token punctuation">)</span><span class="token operator">&amp;</span>dev_b<span class="token punctuation">,</span> size <span class="token operator">*</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>cudaStatus <span class="token operator">!=</span> cudaSuccess<span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token keyword">goto</span> Error<span class="token punctuation">;</span><span class="token punctuation">}</span>
+
+    <span class="token comment" spellcheck="true">// Copy input vectors from host memory to GPU buffers.</span>
+    cudaStatus <span class="token operator">=</span> <span class="token function">cudaMemcpy</span><span class="token punctuation">(</span>dev_a<span class="token punctuation">,</span> a<span class="token punctuation">,</span> size <span class="token operator">*</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">)</span><span class="token punctuation">,</span> 
+                cudaMemcpyHostToDevice<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>cudaStatus <span class="token operator">!=</span> cudaSuccess<span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token keyword">goto</span> Error<span class="token punctuation">;</span><span class="token punctuation">}</span>
+
+     cudaStatus <span class="token operator">=</span> <span class="token function">cudaMemcpy</span><span class="token punctuation">(</span>dev_b<span class="token punctuation">,</span> b<span class="token punctuation">,</span> size <span class="token operator">*</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">)</span><span class="token punctuation">,</span> 
+                cudaMemcpyHostToDevice<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>cudaStatus <span class="token operator">!=</span> cudaSuccess<span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token keyword">goto</span> Error<span class="token punctuation">;</span><span class="token punctuation">}</span>
+    <span class="token comment" spellcheck="true">// Launch a kernel on the GPU with one thread for each element.</span>
+    addKernel<span class="token operator">&lt;&lt;</span><span class="token operator">&lt;</span><span class="token number">1</span><span class="token punctuation">,</span> size<span class="token operator">>></span><span class="token operator">></span><span class="token punctuation">(</span>dev_c<span class="token punctuation">,</span> dev_a<span class="token punctuation">,</span> dev_b<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">// Check for any errors launching the kernel</span>
+    cudaStatus <span class="token operator">=</span> <span class="token function">cudaGetLastError</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>cudaStatus <span class="token operator">!=</span> cudaSuccess<span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token keyword">goto</span> Error<span class="token punctuation">;</span><span class="token punctuation">}</span>
+
+    <span class="token comment" spellcheck="true">// cudaDeviceSynchronize waits for the kernel to finish, and returns</span>
+    <span class="token comment" spellcheck="true">// any errors encountered during the launch.</span>
+    cudaStatus <span class="token operator">=</span> <span class="token function">cudaDeviceSynchronize</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>cudaStatus <span class="token operator">!=</span> cudaSuccess<span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token keyword">goto</span> Error<span class="token punctuation">;</span><span class="token punctuation">}</span>
+
+    <span class="token comment" spellcheck="true">// Copy output vector from GPU buffer to host memory.</span>
+    cudaStatus <span class="token operator">=</span> <span class="token function">cudaMemcpy</span><span class="token punctuation">(</span>c<span class="token punctuation">,</span> dev_c<span class="token punctuation">,</span> size <span class="token operator">*</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">)</span><span class="token punctuation">,</span> 
+                cudaMemcpyDeviceToHost<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>cudaStatus <span class="token operator">!=</span> cudaSuccess<span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token keyword">goto</span> Error<span class="token punctuation">;</span><span class="token punctuation">}</span>
+Error<span class="token punctuation">:</span>
+    <span class="token function">cudaFree</span><span class="token punctuation">(</span>dev_c<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token function">cudaFree</span><span class="token punctuation">(</span>dev_a<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token function">cudaFree</span><span class="token punctuation">(</span>dev_b<span class="token punctuation">)</span><span class="token punctuation">;</span>  
+    <span class="token keyword">return</span> cudaStatus<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>Run the code !</strong></p>
+<h3 id="一维信号均值滤波"><a href="#一维信号均值滤波" class="headerlink" title="一维信号均值滤波"></a><strong>一维信号均值滤波</strong></h3><p>Case</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211206201939285.png" alt=""></p>
+<ul>
+<li>Using global memory<ul>
+<li>One element per thread</li>
+</ul>
+</li>
+</ul>
+<pre class="line-numbers language-c"><code class="language-c">__global__ <span class="token keyword">void</span> <span class="token function">stencil</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token operator">*</span> in<span class="token punctuation">,</span> <span class="token keyword">int</span><span class="token operator">*</span> out<span class="token punctuation">)</span>
+ <span class="token punctuation">{</span>
+    <span class="token keyword">int</span> globIdx <span class="token operator">=</span> blockIdx<span class="token punctuation">.</span>x <span class="token operator">*</span> blockDim<span class="token punctuation">.</span>x <span class="token operator">+</span>     
+            threadIdx<span class="token punctuation">.</span>x<span class="token punctuation">;</span>
+
+    <span class="token keyword">int</span> value <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">for</span> <span class="token punctuation">(</span>offset <span class="token operator">=</span> <span class="token operator">-</span>RADIUS<span class="token punctuation">;</span> offset <span class="token operator">&lt;=</span> RADIUS<span class="token punctuation">;</span>     
+                offset<span class="token operator">++</span><span class="token punctuation">)</span>
+        value <span class="token operator">+</span><span class="token operator">=</span> in<span class="token punctuation">[</span>globIdx <span class="token operator">+</span> offset<span class="token punctuation">]</span><span class="token punctuation">;</span>
+    out<span class="token punctuation">[</span>globIdx<span class="token punctuation">]</span> <span class="token operator">=</span> value<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>A lot of redundant read in neighboring threads.</p>
+<ul>
+<li><p>Using shared memory</p>
+<ul>
+<li><p>One element per thread</p>
+</li>
+<li><p>Read (BLOCK_SIZE + 2 * RADIUS) elements from global memory to shared memory</p>
+</li>
+<li><p>Compute BLOCK_SIZE output elements in shared memory</p>
+</li>
+<li><p>Write BLOCK_SIZE output elements to global memory</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211206202107662.png" alt=""></p>
+<p><strong>Shared Memory</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211206202131095.png" alt=""></p>
+<pre class="line-numbers language-c"><code class="language-c">__global__ <span class="token keyword">void</span> <span class="token function">stencil</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token operator">*</span> in<span class="token punctuation">,</span> <span class="token keyword">int</span><span class="token operator">*</span> out<span class="token punctuation">)</span>
+ <span class="token punctuation">{</span>
+    __shared__ <span class="token keyword">int</span> shared<span class="token punctuation">[</span>BLOCK_SIZE <span class="token operator">+</span> <span class="token number">2</span> <span class="token operator">*</span> RADIUS<span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">int</span> globIdx<span class="token operator">=</span> blockIdx<span class="token punctuation">.</span>x<span class="token operator">*</span> blockDim<span class="token punctuation">.</span>x<span class="token operator">+</span> threadIdx<span class="token punctuation">.</span>x<span class="token punctuation">;</span>
+    <span class="token keyword">int</span> locIdx<span class="token operator">=</span> threadIdx<span class="token punctuation">.</span>x<span class="token operator">+</span> RADIUS<span class="token punctuation">;</span>
+
+    shared<span class="token punctuation">[</span>locIdx<span class="token punctuation">]</span> <span class="token operator">=</span> in<span class="token punctuation">[</span>globIdx<span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>threadIdx<span class="token punctuation">.</span>x<span class="token operator">&lt;</span> RADIUS<span class="token punctuation">)</span> 
+    <span class="token punctuation">{</span>
+        shared<span class="token punctuation">[</span>locIdx–RADIUS<span class="token punctuation">]</span> <span class="token operator">=</span> in<span class="token punctuation">[</span>globIdx–RADIUS<span class="token punctuation">]</span><span class="token punctuation">;</span>  
+        shared<span class="token punctuation">[</span>locIdx<span class="token operator">+</span> blockDim<span class="token punctuation">.</span>x<span class="token punctuation">]</span> <span class="token operator">=</span> in<span class="token punctuation">[</span>globIdx<span class="token operator">+</span> 
+                BLOCK_SIZE<span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token function">__syncthreads</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">int</span> value <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span>offset <span class="token operator">=</span> <span class="token operator">-</span>RADIUS<span class="token punctuation">;</span> offset <span class="token operator">&lt;=</span> RADIUS<span class="token punctuation">;</span> offset<span class="token operator">++</span><span class="token punctuation">)</span>
+        value <span class="token operator">+</span><span class="token operator">=</span> shared<span class="token punctuation">[</span>locIdx<span class="token operator">+</span> offset<span class="token punctuation">]</span><span class="token punctuation">;</span>
+    out<span class="token punctuation">[</span>globIdx<span class="token punctuation">]</span> <span class="token operator">=</span> value<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="Matrix-Multiplication"><a href="#Matrix-Multiplication" class="headerlink" title="Matrix Multiplication"></a><strong>Matrix Multiplication</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211206202158259.png" alt=""></p>
+<pre class="line-numbers language-c"><code class="language-c">__int <span class="token function">main</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+     <span class="token comment" spellcheck="true">//allocate and initialize the matrices M, N, P</span>
+      <span class="token comment" spellcheck="true">//IO to read the input matrices M, N</span>
+   ……
+      <span class="token comment" spellcheck="true">//M * N on the device</span>
+      <span class="token function">MatrixMultiplication</span><span class="token punctuation">(</span>M<span class="token punctuation">,</span> N<span class="token punctuation">,</span> P<span class="token punctuation">,</span> Width<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    ……
+      <span class="token comment" spellcheck="true">// IO to write the Output Matrices P</span>
+      <span class="token comment" spellcheck="true">// Free M, N, P </span>
+      <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">void</span> <span class="token function">MatrixMulOnHost</span><span class="token punctuation">(</span><span class="token keyword">float</span><span class="token operator">*</span> M<span class="token punctuation">,</span> <span class="token keyword">float</span><span class="token operator">*</span> N<span class="token punctuation">,</span> <span class="token keyword">float</span><span class="token operator">*</span> P<span class="token punctuation">,</span> <span class="token keyword">int</span> Width<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> Width<span class="token punctuation">;</span> <span class="token operator">++</span>i<span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> j <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> j <span class="token operator">&lt;</span> Width<span class="token punctuation">;</span> <span class="token operator">++</span>j<span class="token punctuation">)</span> 
+       <span class="token punctuation">{</span>
+    <span class="token keyword">double</span> sum <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+               <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> k <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> k <span class="token operator">&lt;</span> Width<span class="token punctuation">;</span> <span class="token operator">++</span>k<span class="token punctuation">)</span>
+     <span class="token punctuation">{</span>
+       <span class="token keyword">double</span> a <span class="token operator">=</span> M<span class="token punctuation">[</span>i <span class="token operator">*</span> width <span class="token operator">+</span> k<span class="token punctuation">]</span><span class="token punctuation">;</span>
+       <span class="token keyword">double</span> b <span class="token operator">=</span> N<span class="token punctuation">[</span>k <span class="token operator">*</span> width <span class="token operator">+</span> j<span class="token punctuation">]</span><span class="token punctuation">;</span>
+       sum <span class="token operator">+</span><span class="token operator">=</span> a <span class="token operator">*</span> b<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+              P<span class="token punctuation">[</span>i <span class="token operator">*</span> Width <span class="token operator">+</span> j<span class="token punctuation">]</span> <span class="token operator">=</span> sum<span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+   <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>    <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211206202239792.png" alt=""></p>
+<p><strong>Allocating Memory on GPU</strong></p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">void</span> <span class="token function">MatrixMultiplication</span><span class="token punctuation">(</span><span class="token keyword">float</span><span class="token operator">*</span> M<span class="token punctuation">,</span> <span class="token keyword">float</span><span class="token operator">*</span> N<span class="token punctuation">,</span> <span class="token keyword">float</span><span class="token operator">*</span> P<span class="token punctuation">,</span> <span class="token keyword">int</span> Width<span class="token punctuation">)</span>
+<span class="token punctuation">{</span> <span class="token keyword">int</span> size<span class="token operator">=</span>Width<span class="token operator">*</span>Width<span class="token operator">*</span><span class="token keyword">sizeof</span><span class="token punctuation">(</span><span class="token keyword">float</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">float</span> <span class="token operator">*</span> Md<span class="token punctuation">,</span> Nd<span class="token punctuation">,</span> Pd<span class="token punctuation">;</span>
+      dim3 <span class="token function">grid</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span> dim3 <span class="token function">block</span><span class="token punctuation">(</span>Width<span class="token punctuation">,</span>Width<span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">//Allocate device memory</span>
+      <span class="token function">cudaMalloc</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">&amp;</span>Md<span class="token punctuation">,</span> size<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token function">cudaMalloc</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">&amp;</span>Nd<span class="token punctuation">,</span> size<span class="token punctuation">)</span><span class="token punctuation">;</span> 
+       <span class="token function">cudaMalloc</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">&amp;</span>Pd<span class="token punctuation">,</span> size<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">//transfer M,N from host to device</span>
+       <span class="token function">cudaMemcpy</span><span class="token punctuation">(</span>Md<span class="token punctuation">,</span> M<span class="token punctuation">,</span>size<span class="token punctuation">,</span> HostToDevice<span class="token punctuation">)</span><span class="token punctuation">;</span>
+       <span class="token function">cudaMemcpy</span><span class="token punctuation">(</span>Nd<span class="token punctuation">,</span> N<span class="token punctuation">,</span>size<span class="token punctuation">,</span> HostToDevice<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">//kernel innovation code</span>
+     MatrixMulOnKernel<span class="token operator">&lt;&lt;</span><span class="token operator">&lt;</span>grid<span class="token punctuation">,</span> block <span class="token operator">>></span><span class="token operator">></span><span class="token punctuation">(</span>Md<span class="token punctuation">,</span> Nd<span class="token punctuation">,</span> Pd<span class="token punctuation">,</span> Width<span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token comment" spellcheck="true">//transfer p from device to host</span>
+      <span class="token function">cudaMemcpy</span><span class="token punctuation">(</span>P<span class="token punctuation">,</span> Pd<span class="token punctuation">,</span>size<span class="token punctuation">,</span> DeviceToHost<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token function">cudaFree</span><span class="token punctuation">(</span>Md<span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token function">cudaFree</span><span class="token punctuation">(</span>Nd<span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token function">cudaFree</span><span class="token punctuation">(</span>Pd<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>Kernel</strong> <strong>on GPU</strong> </p>
+<pre class="line-numbers language-c"><code class="language-c">__global__void <span class="token function">MatrixMulOnKernel</span><span class="token punctuation">(</span><span class="token keyword">float</span><span class="token operator">*</span> Md<span class="token punctuation">,</span> <span class="token keyword">float</span><span class="token operator">*</span> Nd<span class="token punctuation">,</span> <span class="token keyword">float</span><span class="token operator">*</span> Pd<span class="token punctuation">,</span> <span class="token keyword">int</span> width<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">//2D threadID</span>
+    <span class="token keyword">int</span> tx<span class="token operator">=</span>threadIdx<span class="token punctuation">.</span>x<span class="token punctuation">;</span>
+    <span class="token keyword">int</span> ty<span class="token operator">=</span>threadIdx<span class="token punctuation">.</span>y<span class="token punctuation">;</span>
+   <span class="token comment" spellcheck="true">// pvalue stores the pdelement</span>
+    <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">int</span> k<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>k<span class="token operator">&lt;</span>width<span class="token punctuation">;</span><span class="token operator">++</span>k<span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>    
+         <span class="token keyword">float</span> Mdelement<span class="token operator">=</span>Md<span class="token punctuation">[</span>ty<span class="token operator">*</span>width<span class="token operator">+</span>k<span class="token punctuation">]</span><span class="token punctuation">;</span>
+         <span class="token keyword">float</span> Ndelement<span class="token operator">=</span>Nd<span class="token punctuation">[</span>k<span class="token operator">*</span>width<span class="token operator">+</span>tx<span class="token punctuation">]</span><span class="token punctuation">;</span>
+         pvalue<span class="token operator">+</span><span class="token operator">=</span>Mdelement<span class="token operator">*</span>Ndelement<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+   <span class="token comment" spellcheck="true">//write pvalue to device memory</span>
+    Pd<span class="token punctuation">[</span>ty<span class="token operator">*</span>width<span class="token operator">+</span>tx<span class="token punctuation">]</span><span class="token operator">=</span>pvalue<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211206202331017.png" alt=""></p>
+<p>写个程序计算5x5矩阵相乘，并运行！</p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -7058,7 +8005,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">3162.3k</span>&nbsp;字
+                class="white-color">3163.1k</span>&nbsp;字
             
             
             
@@ -7296,7 +8243,7 @@ $(function () {
     
     <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/instantpage/instantpage.js" type="module"></script>
     
-<script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script>
+
         <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
         <script>
         $('a').each(function() {
@@ -7315,7 +8262,7 @@ $(function () {
             }
           }
         });
-        </script></body>
+        </script><script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script></body>
 
 </html>
 

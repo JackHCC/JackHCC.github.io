@@ -466,14 +466,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    33.6k
+                    34.4k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    139 分
+                    143 分
                 </div>
                 
 
@@ -4806,6 +4806,23 @@ out <span class="token operator">=</span> mem<span class="token punctuation">[</
 
 <span class="token comment" spellcheck="true">// 从 a 到 o 的全路径延时说明</span>
       <span class="token punctuation">(</span>a<span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">*></span> o<span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token number">6.3</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// full connection</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="路径的极性声明"><a href="#路径的极性声明" class="headerlink" title="路径的极性声明"></a>路径的极性声明</h3><p>简单路径可以声明极性。 </p>
+<ul>
+<li>“+”表示正极性（positive polarity） </li>
+<li>“-”表示负极性（negative polarity） </li>
+<li>极性声明是可选项 </li>
+<li>正极性表示从输入到输出是同相，即不会发生信号反转 </li>
+<li>负极性表示异相，信号会发生反转 </li>
+<li>极性声明不会影响仿真，但可能会被其它EDA工具，如时序验证工具 使用。 </li>
+</ul>
+<p>例如： (V + =&gt; W) = （3, 4, 5）;</p>
+<h3 id="边沿敏感路径声明"><a href="#边沿敏感路径声明" class="headerlink" title="边沿敏感路径声明"></a>边沿敏感路径声明</h3><p>边沿敏感路径，是指输入端口是时钟信号，并且需指定触发边沿（posedge /negedge）。 </p>
+<p>例1： (posedge clk =&gt; (out +: in)) = (1, 2); </p>
+<p>表示从clk的上升沿到out的模块路径，其上升延时是1，下降延时是2。 “+: in”表示 out = in，且是同相传输。 </p>
+<p>例2：(negedge clk =&gt; (out -: in)) = (1, 2); </p>
+<p>表示从clk的下降沿到out的模块路径，其上升延时是1，下降延时是2。 (out -: in)表示out= -in，是反相传输。 </p>
+<p>例3：(clk =&gt; (out : in)) = (1,2); </p>
+<p>表示从clk到out的模块路径，其上升延时是1，下降延时是2。 从in到out的数据路径的传输极性是不确定的，同相或者反相。</p>
 <h3 id="状态依赖路径延时SDPD"><a href="#状态依赖路径延时SDPD" class="headerlink" title="状态依赖路径延时SDPD"></a>状态依赖路径延时SDPD</h3><p>状态依赖路径延时在说明的条件成立时赋予路径一个延时。</p>
 <p>有时路径延时可能依赖于其它输入的逻辑值。SDPD就是用于说明这种情况。在例子中，b到x的延时依赖于a的状态。</p>
 <p> SDPD说明语法：</p>
@@ -4942,6 +4959,74 @@ PATHPULSE$&lt; path_source&gt;$&lt; path_destination&gt; =
       <span class="token keyword">end</span>
 <span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211126113322997.png" alt=""></p>
+<h3 id="D触发器时序检查举例"><a href="#D触发器时序检查举例" class="headerlink" title="D触发器时序检查举例"></a>D触发器时序检查举例</h3><pre><code>`timescale 10 ps / 1 ps
+`celldefine
+module LVT_DGRNHDV0 ( Q, QN, CK, D, RN); 
+input CK, D, RN;
+output Q, QN;
+reg NOTIFIER, NOTIFIERw, NOTIFIERs, NOTIFIERh, NOTIFIERc, NOTIFIERm; 
+supply1 xSN, EN; 
+buf X0 (xRN, RN); 
+buf IC (clk, CK); 
+udp_edfft I0 (n0, D, clk, xRN, xSN, EN, NOTIFIER); 
+buf I1 (Q, n0); 
+not I2 (QN, n0); 
+and I4 (Deff, D, xRN); 
+specify 
+(posedge CK =&gt; (Q : D)) = (1.0, 1.0); // arc CK --&gt; Q
+(posedge CK =&gt; (QN : D)) = (1.0, 1.0); // arc CK --&gt; QN 
+$width(posedge CK, 1.0, 0, NOTIFIERw); 
+$setup( D, posedge CK, 1.0, NOTIFIERs); 
+$hold (posedge CK, D, 1.0, NOTIFIERh); 
+$recovery(RN, posedge CK, 1.0, NOTIFIERc); 
+$removal (RN, negedge CK, 1.0, NOTIFIERm); 
+endspecify
+endmodule
+`endcelldefine</code></pre><h4 id="UDP-udp-edfft定义"><a href="#UDP-udp-edfft定义" class="headerlink" title="UDP udp_edfft定义"></a>UDP udp_edfft定义</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211203135517654.png" alt=""></p>
+<h4 id="DFF测试程序"><a href="#DFF测试程序" class="headerlink" title="DFF测试程序"></a>DFF测试程序</h4><pre><code>`timescale 10ps / 1ps
+module dffa_tb ();
+reg d, clk, rst
+;
+wire q, qn
+;
+DFFSRX1 udff ( 
+.D ( d ), .CK ( clk ), .RN ( rst ), 
+.Q ( q ), 
+.QN( qn
+)
+);
+// always #5 clk = !clk
+;
+initial begin
+    clk = 0;
+    d = 0;
+    rst = 0;
+    #2 clk = 1;
+    #2 clk = 0;
+    #1 rst = 1;
+    #1 d = 1;
+    #2 clk = 1;
+    #2 clk = 0;
+    #0.8 clk = 1;
+    #0.8 clk = 0;
+    #0.8 clk = 1;
+    #0.8 clk = 0;
+    #1 d = 0;
+    #0.8 clk = 1;
+    #2 clk = 0;
+    #1 d = 1;
+    #0.8 clk = 1;
+    #2 clk = 0;
+    #2 clk = 1;
+    #0.8 d = 0;
+    #2 clk = 0;
+    #1 rst = 0;
+    #0.8 clk = 1;
+    #2 clk = 0;
+    #0.8 rst = 1;
+    #10 $finish;
+    end
+endmodule</code></pre><p><img src="/images/loading.gif" data-original="../images/basic/image-20211203135651029.png" alt=""></p>
 <h3 id="选择仿真延迟模型"><a href="#选择仿真延迟模型" class="headerlink" title="选择仿真延迟模型"></a>选择仿真延迟模型</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211126120645878.png" alt=""></p>
 <h1 id="SDF时序标注"><a href="#SDF时序标注" class="headerlink" title="SDF时序标注"></a>SDF时序标注</h1><h2 id="术语及定义-1"><a href="#术语及定义-1" class="headerlink" title="术语及定义"></a>术语及定义</h2><ul>
 <li>CTLF：（Compiled Timing Library Format）编译的时序库格式。特定工艺元件数据的标准格式。</li>
@@ -5040,6 +5125,10 @@ PATHPULSE$&lt; path_source&gt;$&lt; path_destination&gt; =
      <span class="token keyword">if</span> <span class="token punctuation">(</span> en <span class="token punctuation">)</span> <span class="token punctuation">(</span> in <span class="token operator">=></span> o2<span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">:</span><span class="token number">4</span><span class="token punctuation">:</span><span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">:</span><span class="token number">5</span><span class="token punctuation">:</span><span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">:</span><span class="token number">5</span><span class="token punctuation">:</span><span class="token number">7</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token keyword">endspecify</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>注：SDF文件中的时序信息覆盖specify块中的时序信息</p>
+<h2 id="SDF实例-dffpg模块及测试程序"><a href="#SDF实例-dffpg模块及测试程序" class="headerlink" title="SDF实例-dffpg模块及测试程序"></a>SDF实例-dffpg模块及测试程序</h2><p><img src="/images/loading.gif" data-original="../images/basic/image-20211203135821112.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211203135838088.png" alt=""></p>
+<h3 id="SDF实例"><a href="#SDF实例" class="headerlink" title="SDF实例"></a>SDF实例</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211203135907975.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211203135923137.png" alt=""></p>
 <h2 id="SDF标注工具"><a href="#SDF标注工具" class="headerlink" title="SDF标注工具"></a>SDF标注工具</h2><p>用系统任务$sdf_annotate标注SDF时序信息。</p>
 <p>可以交互式界面调用这个任务，或在源代码中调任务。 </p>
 <pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token property">$sdf_annotate</span> <span class="token punctuation">(</span><span class="token string">"sdf_file"</span><span class="token punctuation">,</span> <span class="token punctuation">[</span>module_instance<span class="token punctuation">,</span>
@@ -5152,9 +5241,31 @@ PATHPULSE$&lt; path_source&gt;$&lt; path_destination&gt; =
 </ul>
 <p>在使用库目录时，如果每个文件都有一个扩展名，则在Cadence Verilog仿真器必须用+libext选项指定其扩展名。仿真器中没有缺省地使用.v作扩展名</p>
 <p>使用-v或-y选项指定库时，只编译那些设计中用到的模块。如果在命令行中直接输入库文件名而没有使用-v选项 （或在文件中使用编译指令`include），则库中所有模块都被编译。使用选项大大压缩编译时间及内存空间。在NC Verilog中也压缩了使用的磁盘空间。</p>
+<p>如果没有使用-v选项，而是： </p>
+<ul>
+<li>在命令行中直接输入库文件名， </li>
+<li>或在文件中使用编译指令`include， </li>
+</ul>
+<p>则库中所有module都被编译。使用选项大大压缩编译时间及内存空间。在 NC Verilog中也压缩了使用的磁盘空间。</p>
 <h3 id="库文件扫描"><a href="#库文件扫描" class="headerlink" title="库文件扫描"></a>库文件扫描</h3><p>每一个-v选项指定一个库文件</p>
 <p>verilog test.v design.v -v library_file.v</p>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211203110351720.png" alt=""></p>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token constant">`timescale</span> <span class="token number">1</span>ns<span class="token operator">/</span><span class="token number">1</span>ps
+<span class="token constant">`celldefine</span>
+<span class="token keyword">module</span> BUFX2 <span class="token punctuation">(</span>Y<span class="token punctuation">,</span> A<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">output</span> Y<span class="token punctuation">;</span>
+<span class="token keyword">input</span> A<span class="token punctuation">;</span>
+<span class="token keyword">buf</span> <span class="token function">I0</span><span class="token punctuation">(</span>Y<span class="token punctuation">,</span> A<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">specify</span>
+<span class="token comment" spellcheck="true">// delay parameters</span>
+    <span class="token keyword">specparam</span>
+        tplh$A$Y <span class="token operator">=</span> <span class="token number">1.0</span><span class="token punctuation">,</span>
+        tphl$A$Y <span class="token operator">=</span> <span class="token number">1.0</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// path delays</span>
+    <span class="token punctuation">(</span>A <span class="token operator">*></span> Y<span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token punctuation">(</span>tplh$A$Y<span class="token punctuation">,</span> tphl$A$Y<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">endspecify</span>
+<span class="token keyword">endmodule</span> <span class="token comment" spellcheck="true">// BUFX2</span>
+<span class="token constant">`endcelldefine</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h3 id="库目录扫描"><a href="#库目录扫描" class="headerlink" title="库目录扫描"></a>库目录扫描</h3><p>每一个-y选项指定一个库目录。</p>
 <p>+libext+选项指定有效的文件扩展名。</p>
 <p>   verilog test.v design.v -y library_directory +libext+.v</p>
@@ -5170,6 +5281,7 @@ PATHPULSE$&lt; path_source&gt;$&lt; path_destination&gt; =
 <span class="token constant">`define</span>  TTL_UDP   file<span class="token operator">=/</span> libs<span class="token operator">/</span> TTL_U<span class="token operator">/</span>udp<span class="token punctuation">.</span>lib
 <span class="token constant">`uselib</span>  <span class="token constant">`TTL_LIB</span>    <span class="token constant">`TTL_UDP</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 <p>在命令行中用+define+选项给宏一个值。设计易于管理，可移植性高。</p>
+<h2 id="某Windows仿真器—建库"><a href="#某Windows仿真器—建库" class="headerlink" title="某Windows仿真器—建库"></a>某Windows仿真器—建库</h2><p><img src="/images/loading.gif" data-original="../images/basic/image-20211203142012536.png" alt=""></p>
 <h2 id="编写与大小无关的源代码"><a href="#编写与大小无关的源代码" class="headerlink" title="编写与大小无关的源代码"></a>编写与大小无关的源代码</h2><p>Verilog是对大小写敏感的语言，如sel和SEL是不同的标识符</p>
 <ul>
 <li>Verilog 关键字均使用小写，如input, output</li>
@@ -5209,6 +5321,7 @@ PATHPULSE$&lt; path_source&gt;$&lt; path_destination&gt; =
 <p>编译指令从出现时开始有效，直到被覆盖或使其失效。因此编译指令是全局的。</p>
 <p>下列编译指令是Verilog IEEE标准中的：</p>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211203111557477.png" alt=""></p>
+<h2 id="include举例"><a href="#include举例" class="headerlink" title="`include举例"></a>`include举例</h2><p><img src="/images/loading.gif" data-original="../images/basic/image-20211203142050767.png" alt=""></p>
 <h2 id="定义文本宏文件举例"><a href="#定义文本宏文件举例" class="headerlink" title="定义文本宏文件举例"></a>定义文本宏文件举例</h2><p><strong>FIFO_control_define.v</strong></p>
 <pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token constant">`ifndef</span> FIFO_CONTROL
 
@@ -5226,7 +5339,45 @@ PATHPULSE$&lt; path_source&gt;$&lt; path_destination&gt; =
 
 
 <span class="token constant">`endif</span>  <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h2 id="定义文本宏"><a href="#定义文本宏" class="headerlink" title="定义文本宏"></a>定义文本宏</h2><p>在命令行定义文本宏： +define+命令行参数</p>
+<p>verilog FIFO.v FIFO_ctrl.v  +incdir+./include</p>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token constant">`timescale</span> <span class="token number">1</span>ns <span class="token operator">/</span><span class="token number">1</span>ns
+<span class="token constant">`include</span> “FIFO_control_define<span class="token punctuation">.</span>v”
+<span class="token keyword">module</span> FIFO <span class="token punctuation">(</span>
+……
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+……
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token constant">`timescale</span> <span class="token number">1</span>ns <span class="token operator">/</span><span class="token number">1</span>ns
+<span class="token constant">`include</span> “FIFO_control_define<span class="token punctuation">.</span>v”
+<span class="token keyword">module</span> FIFO_ctrl <span class="token punctuation">(</span>
+……
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+……
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="实例化不同module"><a href="#实例化不同module" class="headerlink" title="实例化不同module"></a>实例化不同module</h2><pre><code>`ifdef FPGA //实例化 Alrera FPGA的64x8 RAM2P
+SRAM64x8 uSRAM64x8 (
+.byteena_a ( 1'b0 ),
+.clock ( clk ),
+.data ( DB ),
+.rdaddress ( AA ),
+.rden ( CENA ),
+.wraddress ( AB ),
+.wren ( CENB ),
+.q ( QA )
+);
+`else //实例化SMIC SRAM2P
+S65NLLHS2PH64x8 uS65NLLHS2PH64x8 (
+.QA ( QA ), 
+.CLKA ( clk ), 
+.CLKB ( clk ), 
+.CENA ( CENA ), 
+.CENB ( CENB ), 
+.BWENB ( 8'b0 ),
+.AA ( AA ), 
+.AB ( AB ), 
+.DB ( DB )
+);
+`endif</code></pre><h2 id="定义文本宏"><a href="#定义文本宏" class="headerlink" title="定义文本宏"></a>定义文本宏</h2><p>在命令行定义文本宏： +define+命令行参数</p>
 <p>语法：+define+<em>MACRO_NAME</em>=“<em>MACRO_TEXT</em>”</p>
 <p>注意：文本宏的覆盖可能影响设计的结构，可能强制NC Verilog重新编译全部或部分设计</p>
 <ul>
@@ -5777,7 +5928,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">3162.3k</span>&nbsp;字
+                class="white-color">3163.1k</span>&nbsp;字
             
             
             
@@ -6015,7 +6166,7 @@ $(function () {
     
     <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/instantpage/instantpage.js" type="module"></script>
     
-<script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script>
+
         <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
         <script>
         $('a').each(function() {
@@ -6034,7 +6185,7 @@ $(function () {
             }
           }
         });
-        </script></body>
+        </script><script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script></body>
 
 </html>
 
