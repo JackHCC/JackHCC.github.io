@@ -459,21 +459,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-11-06
+                    2021-12-10
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    2.1k
+                    3.5k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    8 分
+                    13 分
                 </div>
                 
 
@@ -674,6 +674,66 @@ def set_client_debug(request):
 <p><img src="/images/loading.gif" data-original="../images/language/image-20211106185302884.png" alt=""></p>
 <p>例如添加<code>if __name__ == __main__</code>，点击上图的【main】即可:</p>
 <pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">if</span> __name__ <span class="token operator">==</span> <span class="token string">'__main__'</span><span class="token punctuation">:</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h1 id="PyCharm-Docker：打造最舒适的深度学习炼丹炉"><a href="#PyCharm-Docker：打造最舒适的深度学习炼丹炉" class="headerlink" title="PyCharm+Docker：打造最舒适的深度学习炼丹炉"></a>PyCharm+Docker：打造最舒适的深度学习炼丹炉</h1><p>一般炼丹都在服务器上，很少有人在本机跑代码的。之前自己捣鼓怎么用本地的编辑器配上远程服务器的环境来营造一个最舒乎的姿势。最开始用VS Code的SFTP插件，但是用着还是不顺手，因为不能用远程的环境，最后还是选择了强大的PyCharm。</p>
+<p>开始之前你可以对比以下条件来确定自己是否真的需要这样做：</p>
+<ul>
+<li>使用PyCharm作为主力IDE写Python而不是其他（我非常推荐大家用）</li>
+<li>深度学习炼丹师（当然你可以不是，但如果是，你会更舒服）</li>
+<li>服务器在远程或者局域网（局域网的体验最佳）</li>
+<li>使用Docker（能够熟练使用最佳）</li>
+</ul>
+<p>当你配置完成之后，你将能在本地PyCharm IDE上使用远程服务器的Python解释器和环境进行调试和运行，同时能够很方便的将代码在本地和服务器上进行同步。</p>
+<p>OK，废话不多说，正式开始我们的PyCharm+Docker的远程环境配置之旅。</p>
+<p>首先你需要满足以下两个必备条件：</p>
+<ul>
+<li>使用PyCharm专业版，记住一定是专业版（社区版不提供远程服务）</li>
+<li>在服务器上安装docker和nvidia-docker</li>
+</ul>
+<h2 id="新建docker-container"><a href="#新建docker-container" class="headerlink" title="新建docker container"></a><strong>新建docker container</strong></h2><p>首先按照如下命令新建一个docker容器：</p>
+<pre><code>sudo nvidia-docker run -it -p [host_port]:[container_port](do not use 8888) --name:[container_name] [image_name] -v [container_path]:[host_path] /bin/bash</code></pre><p>举个栗子：</p>
+<pre><code>sudo nvidia-docker run -p 5592:5592 -p 5593:5593 -p 8022:22 --name="liuzhen_tf" -v ~/workspace/liuzhen/remote_workspace:/workspace/liuzhen/remote_workspace -it tensorflow/tensorflow:latest-gpu /bin/bash</code></pre><p>正确执行完之后，现在我们就处在新建的docker容器里了（端口映射，容器名，镜像和路径映射这些换成你自己的就行，但是一定要留一个端口映射到容器22端口，因为SFTP默认使用22端口）。</p>
+<h2 id="配置SSH服务"><a href="#配置SSH服务" class="headerlink" title="配置SSH服务"></a><strong>配置SSH服务</strong></h2><p>接着我们在刚刚新建的容器里配置SSH服务，首先安装openssh-server:</p>
+<pre><code>$ apt update
+$ apt install -y openssh-server</code></pre><p>然后建立一个配置文件夹并进行必要的配置：</p>
+<pre><code>$ mkdir /var/run/sshd
+$ echo 'root:passwd' | chpasswd
+# 这里使用你自己想设置的用户名和密码，但是一定要记住！
+$ sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+$ sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+$ echo "export VISIBLE=now" &gt;&gt; /etc/profile</code></pre><p>如果连不上SSH服务，可能是某些版本的PermitRootLogin yes默认被注释了，可以使用如下:</p>
+<pre><code>sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config</code></pre><p>重启SSH激活配置：</p>
+<pre><code>$ service ssh restart</code></pre><p>在服务器（宿主机）上（不是服务器的docker里）测试刚刚新建docker容器中哪个端口转发到了服务器的22端口：</p>
+<pre><code>$ sudo docker port [your_container_name] 22
+# 如果前面的配置生效了，你会看到如下输出
+# 0.0.0.0:8022</code></pre><p>最后测试能否用SSH连接到远程docker：</p>
+<pre><code>$ ssh root@[your_host_ip] -p 8022
+# 密码是你前面自己设置的</code></pre><p>到这里说明服务器的docker端已经完成配置。</p>
+<h2 id="在PyCharm里配置部署环境"><a href="#在PyCharm里配置部署环境" class="headerlink" title="在PyCharm里配置部署环境"></a><strong>在PyCharm里配置部署环境</strong></h2><p>打开PyCharmTools &gt; Deployment &gt; Configuration, 新建一个SFTP服务器，名字自己取：</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210144104226.png" alt=""></p>
+<p>输入如下图配置，注意这里的端口是你刚刚设置的映射到容器22端口的宿主机中的端口，我这里使用的是8022，账号密码是你刚刚自己设置的，这里的Root Path设置一个远程docker容器里的路径:</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210144124639.png" alt=""></p>
+<p>配置完点击Test SFTP connection,如果成功就恭喜你，可以进行下一步了。</p>
+<p>最后在Mappings中配置路径，这里的路径是你本地存放代码的路径，与刚刚配置的Root Path相互映射（意思是Mapping里本机的路径映射到远程的Root Path），方便以后在本地和远程docker中进行代码和其他文件同步。</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210144143648.png" alt=""></p>
+<h2 id="在PyCharm里配置远程解释器"><a href="#在PyCharm里配置远程解释器" class="headerlink" title="在PyCharm里配置远程解释器"></a><strong>在PyCharm里配置远程解释器</strong></h2><p>点击PyCharm的File &gt; Setting &gt; Project &gt; Project Interpreter右边的设置按钮新建一个项目的远程解释器：</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210144209456.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210144220376.png" alt=""></p>
+<p>配置完成以后在项目解释器界面就会出现如下图所示，可以看到此时已经完成远程解释器的本地化：</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210144236817.png" alt=""></p>
+<p>配置完成以后需要等本地和远程的环境同步一下，到这里，恭喜你，可以用最舒服的姿势。。。写代码了。</p>
+<p>配置完成以后的日常是这样的：</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210144256289.png" alt=""></p>
+<p>左边是本地的文件，修改之后可以随时右键deployment-&gt;upload到远程主机，或者直接在本地调试运行；最右边是远程主机的文件，假如直接在远程修改了文件刷新一下同样可以右键下载到本地，但是我不建议这样做，因为这样很容易带来冲突（毕竟没有很好的版本控制）。目前最好的实践是在局域网的服务器上，时延低，同步速度快。</p>
+<h2 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a><strong>常见问题</strong></h2><ol>
+<li>最常见的问题就是docker容器停了以后里面的SSH服务也会相应停止，因此当你发现自己某一天连不上的时候，记得去docker里重启一下ssh服务：</li>
+</ol>
+<pre><code>$ service ssh restart</code></pre><p>解决方案：</p>
+<p>“可以在run的时候加上–restart=always，同时ssh启动的写到dockerfile里去。”</p>
+<ol start="2">
+<li>在容器中执行apt update的时候可能会出现0% working 的问题:</li>
+</ol>
+<p>解决方案：</p>
+<p>”这里不是源的问题，因为容器环境太过纯净，这里需要安装apt-transport-https这个deb文件，下载的时候也要注意不要下载最新的版本，否则也会出现依赖问题，要下载和当前docker容器内的apt相匹配的版本。“</p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -1187,7 +1247,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">3224.1k</span>&nbsp;字
+                class="white-color">3232.4k</span>&nbsp;字
             
             
             

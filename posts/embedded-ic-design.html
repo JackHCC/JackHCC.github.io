@@ -459,21 +459,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-12-03
+                    2021-12-10
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    34.4k
+                    39.8k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    143 分
+                    164 分
                 </div>
                 
 
@@ -5415,6 +5415,794 @@ S65NLLHS2PH64x8 uS65NLLHS2PH64x8 (
 <li>使用-v选项和/或-y及+libext+选项。</li>
 <li>不会再去别的位置查找。</li>
 </ul>
+<h1 id="高性能编码风格"><a href="#高性能编码风格" class="headerlink" title="高性能编码风格"></a>高性能编码风格</h1><h2 id="if-语句"><a href="#if-语句" class="headerlink" title="if 语句"></a>if 语句</h2><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210125451776.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210125500358.png" alt=""></p>
+<h2 id="case语句"><a href="#case语句" class="headerlink" title="case语句"></a>case语句</h2><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210125516552.png" alt=""></p>
+<h3 id="晚到达信号处理"><a href="#晚到达信号处理" class="headerlink" title="晚到达信号处理"></a>晚到达信号处理</h3><p>​    设计时通常知道哪一个 信号到达的时间要晚一些。这些信息可用于构造HDL，使到达晚的信号离输出近一些。</p>
+<p>​    下面的例子中，针对晚到达信号重新构造if和case语句，以提高逻辑性能。</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210125756184.png" alt=""></p>
+<h3 id="晚到达的是数据信号-无优先级"><a href="#晚到达的是数据信号-无优先级" class="headerlink" title="晚到达的是数据信号-无优先级"></a>晚到达的是数据信号-无优先级</h3><p>顺序if语句可以根据关键信号构造HDL。在例1.1a 中，输入信号d处于选择链的最后一级，也就是说d最靠近输出。</p>
+<p>假如信号b_is_late是晚到达信号，我们就要重新构造例1.1a使其最优化。</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210125826718.png" alt=""></p>
+<h3 id="晚到达的是数据信号-保持优先级"><a href="#晚到达的是数据信号-保持优先级" class="headerlink" title="晚到达的是数据信号-保持优先级"></a>晚到达的是数据信号-保持优先级</h3><p>​    顺序if语句可以根据关键信号构造HDL。在例1.1a 中，输入信号d处于选择链的最后一级，也就是说d最靠近输出。</p>
+<p>​    假如信号b_is_late是晚到达信号，我们就要重新构造例1.1a使其最优化。</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210125910650.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210125920729.png" alt=""></p>
+<h3 id="晚到达的是控制信号"><a href="#晚到达的是控制信号" class="headerlink" title="晚到达的是控制信号"></a>晚到达的是控制信号</h3><p>如果晚到达信号作为if语句条件分支的条件，也应使这个信号离输出最近。在下面的例子中，CTRL_is_late是晚到达的控制信号</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210130011450.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210130023988.png" alt=""></p>
+<h2 id="if-case嵌套语句"><a href="#if-case嵌套语句" class="headerlink" title="if-case嵌套语句"></a>if-case嵌套语句</h2><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210130046361.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210130056477.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210130106774.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210130115556.png" alt=""></p>
+<h2 id="归约XOR"><a href="#归约XOR" class="headerlink" title="归约XOR"></a>归约XOR</h2><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210130135526.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210130147462.png" alt=""></p>
+<h3 id="树形结构实现"><a href="#树形结构实现" class="headerlink" title="树形结构实现"></a>树形结构实现</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210130210577.png" alt=""></p>
+<h2 id="高性能编码技术"><a href="#高性能编码技术" class="headerlink" title="高性能编码技术"></a>高性能编码技术</h2><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210130231295.png" alt=""></p>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> BEFORE <span class="token punctuation">(</span>ADDRESS<span class="token punctuation">,</span> PTR1<span class="token punctuation">,</span> PTR2<span class="token punctuation">,</span> B<span class="token punctuation">,</span> CONTROL<span class="token punctuation">,</span> COUNT<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">input</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> PTR1<span class="token punctuation">,</span> PTR2<span class="token punctuation">;</span>
+    <span class="token keyword">input</span> <span class="token punctuation">[</span><span class="token number">15</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> ADDRESS<span class="token punctuation">,</span> B<span class="token punctuation">;</span>
+    <span class="token keyword">input</span> CONTROL<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// CONTROL is late arriving</span>
+    <span class="token keyword">output</span> <span class="token punctuation">[</span><span class="token number">15</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> COUNT<span class="token punctuation">;</span>
+    <span class="token keyword">parameter</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> BASE <span class="token operator">=</span> <span class="token number">8</span>’b10000000<span class="token punctuation">;</span>
+    <span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> PTR<span class="token punctuation">,</span> OFFSET<span class="token punctuation">;</span>
+    <span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">15</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> ADDR<span class="token punctuation">;</span>
+
+    <span class="token keyword">assign</span> PTR <span class="token operator">=</span> <span class="token punctuation">(</span>CONTROL <span class="token punctuation">)</span> <span class="token operator">?</span> PTR1 <span class="token punctuation">:</span> PTR2<span class="token punctuation">;</span>
+    <span class="token keyword">assign</span> OFFSET <span class="token operator">=</span> BASE <span class="token operator">-</span> PTR<span class="token punctuation">;</span> 
+    <span class="token keyword">assign</span> ADDR <span class="token operator">=</span> ADDRESS <span class="token operator">-</span> <span class="token operator">{</span><span class="token number">8</span>’h00<span class="token punctuation">,</span> OFFSET<span class="token operator">}</span><span class="token punctuation">;</span>
+    <span class="token keyword">assign</span> COUNT <span class="token operator">=</span> ADDR <span class="token operator">+</span> B<span class="token punctuation">;</span>
+
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>在某些情况下，可以通过重复逻辑来提高速度。</p>
+<p>在下面的例子中，CONTROL是一个晚到达的输入信号。要提高性能，就要减少CONTROL到输出之间的逻辑。</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210130257481.png" alt=""></p>
+<pre class="line-numbers language-verilog"><code class="language-verilog"><span class="token keyword">module</span> PRECOMPUTED <span class="token punctuation">(</span>ADDRESS<span class="token punctuation">,</span> PTR1<span class="token punctuation">,</span> PTR2<span class="token punctuation">,</span> B<span class="token punctuation">,</span> CONTROL<span class="token punctuation">,</span> COUNT<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">input</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> PTR1<span class="token punctuation">,</span> PTR2<span class="token punctuation">;</span>
+    <span class="token keyword">input</span> <span class="token punctuation">[</span><span class="token number">15</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> ADDRESS<span class="token punctuation">,</span> B<span class="token punctuation">;</span>
+    <span class="token keyword">input</span> CONTROL<span class="token punctuation">;</span>
+    <span class="token keyword">output</span> <span class="token punctuation">[</span><span class="token number">15</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> COUNT<span class="token punctuation">;</span>
+    <span class="token keyword">parameter</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> BASE <span class="token operator">=</span> <span class="token number">8</span>’b10000000<span class="token punctuation">;</span>
+    <span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> OFFSET1<span class="token punctuation">,</span>OFFSET2<span class="token punctuation">;</span>
+    <span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">15</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> ADDR1<span class="token punctuation">,</span>ADDR2<span class="token punctuation">,</span>COUNT1<span class="token punctuation">,</span>COUNT2<span class="token punctuation">;</span>
+
+    <span class="token keyword">assign</span> OFFSET1 <span class="token operator">=</span> BASE <span class="token operator">-</span> PTR1<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// Could be f(BASE,PTR)</span>
+    <span class="token keyword">assign</span> OFFSET2 <span class="token operator">=</span> BASE <span class="token operator">-</span> PTR2<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// Could be f(BASE,PTR)</span>
+    <span class="token keyword">assign</span> ADDR1 <span class="token operator">=</span> ADDRESS <span class="token operator">-</span> <span class="token operator">{</span><span class="token number">8</span>’h00 <span class="token punctuation">,</span> OFFSET1<span class="token operator">}</span><span class="token punctuation">;</span>
+    <span class="token keyword">assign</span> ADDR2 <span class="token operator">=</span> ADDRESS <span class="token operator">-</span> <span class="token operator">{</span><span class="token number">8</span>’h00 <span class="token punctuation">,</span> OFFSET2<span class="token operator">}</span><span class="token punctuation">;</span>
+    <span class="token keyword">assign</span> COUNT1 <span class="token operator">=</span> ADDR1 <span class="token operator">+</span> B<span class="token punctuation">;</span>
+    <span class="token keyword">assign</span> COUNT2 <span class="token operator">=</span> ADDR2 <span class="token operator">+</span> B<span class="token punctuation">;</span>
+    <span class="token keyword">assign</span> COUNT <span class="token operator">=</span> <span class="token punctuation">(</span>CONTROL <span class="token operator">==</span> <span class="token number">1</span>’b1<span class="token punctuation">)</span> <span class="token operator">?</span> COUNT1 <span class="token punctuation">:</span> COUNT2<span class="token punctuation">;</span>
+
+<span class="token keyword">endmodule</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>​    在下面的例子中，if语句的条件表达中包含有操作符。</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210130326095.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210130334657.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210130349386.png" alt=""></p>
+<h2 id="其它要注意的问题"><a href="#其它要注意的问题" class="headerlink" title="其它要注意的问题"></a>其它要注意的问题</h2><ul>
+<li>不要引入不必要的latch</li>
+<li>敏感表要完整</li>
+<li>非结构化的for循环</li>
+<li>资源共享</li>
+</ul>
+<h3 id="不要产生不需要的latch"><a href="#不要产生不需要的latch" class="headerlink" title="不要产生不需要的latch"></a>不要产生不需要的latch</h3><p>条件分支不完全的条件语句（if和case语句）将会产生锁存器</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210130441621.png" alt=""></p>
+<h3 id="敏感表要完整"><a href="#敏感表要完整" class="headerlink" title="敏感表要完整"></a>敏感表要完整</h3><p>不完整的的敏感表将引起综合后网表的仿真结果与以前的不一致。</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210130508965.png" alt=""></p>
+<h3 id="资源共享"><a href="#资源共享" class="headerlink" title="资源共享"></a>资源共享</h3><p>资源共享是指多节代码共享一组逻辑。例如：</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210130530271.png" alt=""></p>
+<p><strong>资源共享可以由RTL代码控制。</strong></p>
+<p>例如，可以改变编码风格强制资源共享。 </p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210130611747.png" alt=""></p>
+<p>只有在同一个条件语句(if和case)不同的分支中的算术操作才会共享。</p>
+<p>条件操作符 ?: 中的算术操作不共享。</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210130629710.png" alt=""></p>
+<h3 id="括号的作用"><a href="#括号的作用" class="headerlink" title="括号的作用"></a>括号的作用</h3><p>利用括号分割逻辑</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210130655409.png" alt=""></p>
+<h2 id="逻辑构造块的编码格式"><a href="#逻辑构造块的编码格式" class="headerlink" title="逻辑构造块的编码格式"></a>逻辑构造块的编码格式</h2><p>下面介绍某些常用逻辑块，如译码器的不同的编码格式。每种块给出了一个通常格式和建议格式。</p>
+<p>所有的例子的位宽都是参数化的。</p>
+<h3 id="3-8译码器"><a href="#3-8译码器" class="headerlink" title="3-8译码器"></a>3-8译码器</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210130755529.png" alt=""></p>
+<h3 id="译码器"><a href="#译码器" class="headerlink" title="译码器"></a>译码器</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210130809236.png" alt=""></p>
+<h3 id="优先级编码器—高位优先"><a href="#优先级编码器—高位优先" class="headerlink" title="优先级编码器—高位优先"></a>优先级编码器—高位优先</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210130829115.png" alt=""></p>
+<h3 id="优先级编码器"><a href="#优先级编码器" class="headerlink" title="优先级编码器"></a>优先级编码器</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210130848928.png" alt=""></p>
+<h3 id="显式有限状态机"><a href="#显式有限状态机" class="headerlink" title="显式有限状态机"></a>显式有限状态机</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210130911118.png" alt=""></p>
+<h1 id="逻辑综合"><a href="#逻辑综合" class="headerlink" title="逻辑综合"></a>逻辑综合</h1><h2 id="逻辑综合介绍"><a href="#逻辑综合介绍" class="headerlink" title="逻辑综合介绍"></a><strong>逻辑综合介绍</strong></h2><h3 id="基于标准单元的设计流程-1"><a href="#基于标准单元的设计流程-1" class="headerlink" title="基于标准单元的设计流程"></a><strong>基于标准单元的设计流程</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210131049025.png" alt=""></p>
+<h3 id="什么是综合？"><a href="#什么是综合？" class="headerlink" title="什么是综合？"></a><strong>什么是综合？</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210132143424.png" alt=""></p>
+<h3 id="工艺无关性"><a href="#工艺无关性" class="headerlink" title="工艺无关性"></a><strong>工艺无关性</strong></h3><p>设计可以转换到任何工艺上。</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210132210297.png" alt=""></p>
+<h3 id="Logic-Synthesis-Overview"><a href="#Logic-Synthesis-Overview" class="headerlink" title="Logic Synthesis Overview"></a><strong>Logic Synthesis Overview</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210132238109.png" alt=""></p>
+<h3 id="HDL-Compiler"><a href="#HDL-Compiler" class="headerlink" title="HDL Compiler"></a><strong>HDL Compiler</strong></h3><p>HDL Compiler将HDL描述转换为Synopsys设计块，并传送给Design Compiler</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210132508236.png" alt=""></p>
+<p>在逻辑图中, 我们可以可看到，verilog文件已经转换为 GTECH 库(the synopsys default)</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210132523467.png" alt=""></p>
+<h3 id="Design-Compiler"><a href="#Design-Compiler" class="headerlink" title="Design Compiler"></a><strong>Design Compiler</strong></h3><p>Design Compiler将 Synopsys设计块映射到用户指定库的门级设计</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210132548809.png" alt=""></p>
+<h3 id="Synopsys相关文件"><a href="#Synopsys相关文件" class="headerlink" title="Synopsys相关文件"></a>Synopsys相关文件</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210132618849.png" alt=""></p>
+<p>注意：</p>
+<p>1.这三个文件总是按所列顺序读取</p>
+<p>2.对于相同的设置项，后面的设置覆盖前面的设置</p>
+<h4 id="synopsys-dc-setup中定义的内容"><a href="#synopsys-dc-setup中定义的内容" class="headerlink" title=".synopsys_dc.setup中定义的内容"></a><strong>.</strong>synopsys_dc.setup中定义的内容</h4><ul>
+<li>link_library ：这个库用来解释所输入的设计描述<ul>
+<li>在用户HDL代码中的门级网表或实例化的单元</li>
+</ul>
+</li>
+<li>target_library：所要映射到的ASIC工艺库<ul>
+<li>在综合过程中使用的wire load或Operating condition模型</li>
+</ul>
+</li>
+<li>symbol_library：用来生成逻辑图</li>
+<li>search_path：定义所引用的库或设计的查找路径</li>
+<li>synthetic_library：要用到的designware库</li>
+<li>其它变量</li>
+</ul>
+<pre><code>search_path =  {. /my_library} + search_path;
+link_library = {“*”, “my_link.db”, “dw_foundation.sldb”} ;
+target_library = {my_target.db};
+symbol_library = {generic.sdb} ;
+synthetic_library = {“dw_foundation.sldb”};
+
+hdlin_translate_off_skip_text = "TRUE"
+edifout_netlist_only = "TRUE"
+verilogout_no_tri = true ;
+plot_command = "lpr -Plp" ;\
+view_script_submenu_items =\
+{"Avoid assign statement", "set_fix_multiple_port_nets -all -buffer_constant", \
+"Change Naming Rule", "change_names -rule verilog -hierarchy", \
+"Write SDF", "write_sdf -version 1.0 -context verilog chip.sdf"}</code></pre><h3 id="ASIC综合的设计流程"><a href="#ASIC综合的设计流程" class="headerlink" title="ASIC综合的设计流程"></a>ASIC综合的设计流程</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210132741719.png" alt=""></p>
+<h2 id="综合对象"><a href="#综合对象" class="headerlink" title="综合对象"></a>综合对象</h2><h3 id="设计对象（逻辑图示）"><a href="#设计对象（逻辑图示）" class="headerlink" title="设计对象（逻辑图示）"></a>设计对象（逻辑图示）</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210132923985.png" alt=""></p>
+<ul>
+<li>Design(设计)：完成一个或多个逻辑功能 的电路</li>
+<li>Cell (单元) ：一个设计在另一个设计中的实例</li>
+<li>Reference (引用) ：单元(Cell)指向的原始设计</li>
+<li>Port (端口) ：设计的输入或输出</li>
+<li>Pin (引脚) ：单元(Cell)的输入或输出</li>
+<li>Net (网线) ：Port-Pin或Pin-Pin之间的连接线</li>
+<li>Clock (时钟) ：指定为时钟源的Port或Pin上所加的波形</li>
+</ul>
+<h3 id="设计对象（Verilog图示）"><a href="#设计对象（Verilog图示）" class="headerlink" title="设计对象（Verilog图示）"></a>设计对象（Verilog图示）</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210133108382.png" alt=""></p>
+<h4 id="练习-1"><a href="#练习-1" class="headerlink" title="练习"></a>练习</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210133126683.png" alt=""></p>
+<h2 id="静态时序分析"><a href="#静态时序分析" class="headerlink" title="静态时序分析"></a>静态时序分析</h2><h3 id="静态时序分析-Design-Time"><a href="#静态时序分析-Design-Time" class="headerlink" title="静态时序分析(Design Time)"></a>静态时序分析(Design Time)</h3><ul>
+<li>分析电路是否符合时序约束( timing constraint)，不需要仿真<ul>
+<li>将设计划分为一系列时序路径( timing path )</li>
+<li>计算每一个路径的延时</li>
+<li>检查所有的路径延时是否符合时序约束</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210133236438.png" alt=""></p>
+<h3 id="Design-Compiler中的时序路径"><a href="#Design-Compiler中的时序路径" class="headerlink" title="Design Compiler中的时序路径"></a>Design Compiler中的时序路径</h3><ul>
+<li>Design Time将设计划分为一系列的信号路径，每一路径都有起点和终点<ul>
+<li>起点：输入端口(Port)和时序器件的clock引脚(pin)</li>
+<li>终点：输出端口(port)和时序器件的数据输入引脚(pin)</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210133315058.png" alt=""></p>
+<h3 id="时序路径组-group"><a href="#时序路径组-group" class="headerlink" title="时序路径组(group)"></a>时序路径组(group)</h3><p>如何将时序路径构成一组？</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210133342288.png" alt=""></p>
+<p>时序路径按控制终点的时钟划分成组</p>
+<p>与每一个时钟相关联的一组路径构成一个组</p>
+<p>缺省情况下，其它与时钟无关的所有路径构成一个组</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210133406246.png" alt=""></p>
+<p><strong>练习</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210133423755.png" alt=""></p>
+<h3 id="逻辑图转换为时序图"><a href="#逻辑图转换为时序图" class="headerlink" title="逻辑图转换为时序图"></a>逻辑图转换为时序图</h3><ul>
+<li>为了计算总的延时，Design Time将每一条路径划分为时序弧 (timing arc)。</li>
+<li>时序弧：一段连接线(net)延时或一个单元(cell)延时</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210133504125.png" alt=""></p>
+<ul>
+<li>计算路径延时举例<ul>
+<li>将所有延着路径的网线和单元的时序弧加起来。</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210133523909.png" alt=""></p>
+<h2 id="IP-Library"><a href="#IP-Library" class="headerlink" title="IP Library"></a>IP Library</h2><h3 id="DesignWare-Library"><a href="#DesignWare-Library" class="headerlink" title="DesignWare Library"></a><strong>DesignWare</strong> <strong>Library</strong></h3><ul>
+<li><p>DesignWare Library是一组可重用的、可综合的IP块，集成在Synopsys综合环境中。</p>
+</li>
+<li><p>缺省的DesignWare库是standard.sldb，包括：</p>
+<ul>
+<li>adder: + , +1</li>
+<li>substractor: -, -1</li>
+<li>comparator: ==, !=, &lt;, &lt;=, &gt;, &gt;=</li>
+<li>mulpilier, divider</li>
+<li>sin cos tan</li>
+<li>Sqrt FIR IIR</li>
+</ul>
+</li>
+<li><p>如果用户在设计中使用了DesignWare的元件，用户可以使用约束来改变其实现方式</p>
+</li>
+<li><p>实现方式查看DW手册</p>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210133746398.png" alt=""></p>
+<ul>
+<li><p>如果用户要使用DesignWare库，必须在.synopsys_dc.setup中设置 “synthetic_library” 和“search_path” </p>
+</li>
+<li><p>Example：<code>synthetic_library = {“dw_foundation.sldb”}</code></p>
+</li>
+<li><p>如果模块在不同的库中都有并且有相同的名字，则使用所列的第一个库中的模块。</p>
+</li>
+</ul>
+<h3 id="DesignWare-Part"><a href="#DesignWare-Part" class="headerlink" title="DesignWare Part"></a><strong>DesignWare</strong> <strong>Part</strong></h3><ul>
+<li><p>有两种方法使用DesignWare中的元件：</p>
+<p> – 推 断: 由design compiler根据约束选择DesignWare元件</p>
+<p> – 实例化: 显式的实例化synthetic模块</p>
+</li>
+<li><p>Example</p>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210133939015.png" alt=""></p>
+<ul>
+<li>Example : assign c = a + b;</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210133958428.png" alt=""></p>
+<h3 id="DW-Select-implementation"><a href="#DW-Select-implementation" class="headerlink" title="DW-Select implementation"></a>DW-Select implementation</h3><ul>
+<li><p>在使用DesignWare库中的元件时, 我们可以选择实现方式。例如，当使用元件 “dw01_add”时, 可以明确指定这个加法器是一个<em>cl*a-adder 或是一个 *rpl</em> –adder。</p>
+</li>
+<li><p>如何指定?</p>
+</li>
+</ul>
+<p>​    – 在<em>RTL</em> 代码中指定（嵌入式）</p>
+<p>​    – 使用dc_shell命令“set_implementation” </p>
+<ul>
+<li>与DesignWare相关的所有信息包含在Synopsys联机文档(SOLD)中的 “DesignWare”部分。</li>
+</ul>
+<p>Synthesis Implementation</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210134052428.png" alt=""></p>
+<h3 id="Implementation-–-嵌入式"><a href="#Implementation-–-嵌入式" class="headerlink" title="Implementation – 嵌入式"></a><strong>Implementation –</strong> <strong>嵌入式</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210134129183.png" alt=""></p>
+<ul>
+<li>Example – 加法器，采用元件 “dw01_add”，实现方式 “ cla”</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210134148965.png" alt=""></p>
+<h3 id="DesignWare-–-set-implementation"><a href="#DesignWare-–-set-implementation" class="headerlink" title="DesignWare – set_implementation"></a>DesignWare – set_implementation</h3><ul>
+<li><p>指定DesignWare元件的实现方式</p>
+<p> – 选择要设定实现方式的的元件，查看其实例名是什么。</p>
+<p> – 根据Synopsys联机文档的DesignWare部分选择实现方式</p>
+<p> – 使用dc_shell命令</p>
+</li>
+</ul>
+<p>​     <em>set_implementation</em> <em>implementation_name</em> <em>instance_name</em></p>
+<p>   – compile</p>
+<p>   – report -resource</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210134234798.png" alt=""></p>
+<h3 id="DesignWare-仿真"><a href="#DesignWare-仿真" class="headerlink" title="DesignWare 仿真"></a>DesignWare 仿真</h3><ul>
+<li><p>推断方式 : 和以前一样，不需要任何专门处理。</p>
+</li>
+<li><p>实例化方式: 在$SYNOPSYS目录, 可以找到designware的仿真模型, 在做仿真时加上这个仿真模型</p>
+</li>
+</ul>
+<p>​    – 其实际目录是：</p>
+<p>​       » $SYNOPSYS/dw/dw0x/src     – for VHDL</p>
+<p>​       » $SYNOPSYS/dw/dw0x/src_ver – for verilog</p>
+<pre><code>//synopsys translate_off
+`include "/synopsys/synthesis/cur/dw/dw01/src_ver/DW01_sub.v"
+`include "/synopsys/synthesis/cur/dw/dw02/src_ver/DW02_mult.v"
+`include "/synopsys/synthesis/cur/dw/dw02/src_ver/DW_div.v"
+`include "/synopsys/synthesis/cur/dw/dw02/src_ver/DW02_mac.v"
+`include "/synopsys/synthesis/cur/dw/dw02/src_ver/DW_square.v"
+//synopsys translate_on</code></pre><h2 id="设置设计约束"><a href="#设置设计约束" class="headerlink" title="设置设计约束"></a>设置设计约束</h2><h3 id="设置环境约束"><a href="#设置环境约束" class="headerlink" title="设置环境约束"></a>设置环境约束</h3><h4 id="为什么要描述一个真实的外部环境"><a href="#为什么要描述一个真实的外部环境" class="headerlink" title="为什么要描述一个真实的外部环境"></a>为什么要描述一个真实的外部环境</h4><ul>
+<li><p>必须要清楚，缺省的条件是不实际的</p>
+<p> – 输入驱动不是无限大。</p>
+</li>
+</ul>
+<p>​    – 负载电容通常不是0</p>
+<p>​    – 要考虑工艺, 温度, 及电压的变化</p>
+<ul>
+<li>工作环境影响目标库元件的选择以及设计的时序</li>
+<li>用户定义的真实的环境 描述电路的工作条件。</li>
+</ul>
+<h4 id="设计环境–-Operating-Environment"><a href="#设计环境–-Operating-Environment" class="headerlink" title="设计环境– Operating Environment"></a>设计环境– <em>Operating Environment</em></h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210134744310.png" alt=""></p>
+<h4 id="工作条件—在综合库中定义"><a href="#工作条件—在综合库中定义" class="headerlink" title="工作条件—在综合库中定义"></a>工作条件—在综合库中定义</h4><ul>
+<li>工作条件模型 scale 元件延时,</li>
+<li>指导优化器模拟工艺、温度和电压变化。</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210134815269.png" alt=""></p>
+<h4 id="输入驱动强度—驱动电阻"><a href="#输入驱动强度—驱动电阻" class="headerlink" title="输入驱动强度—驱动电阻"></a>输入驱动强度—驱动电阻</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210134836122.png" alt=""></p>
+<h4 id="PAD的输入驱动强度"><a href="#PAD的输入驱动强度" class="headerlink" title="PAD的输入驱动强度"></a>PAD的输入驱动强度</h4><ul>
+<li>如果设计如下：</li>
+</ul>
+<p>​    假定使用的输入PAD为PC3D01, 如下图所示。我们可以设置输入驱动强度为0.2468 (ns/pf)</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210134903733.png" alt=""></p>
+<h4 id="PAD的输出负载"><a href="#PAD的输出负载" class="headerlink" title="PAD的输出负载"></a>PAD的输出负载</h4><ul>
+<li><p>如果设计如下</p>
+<p>​    假设使用的输出PAD为PC3O01, 如下列所示。我们可以设置输出负载为0.096 (pf)</p>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210134929838.png" alt=""></p>
+<h4 id="负载预算–Load-Budget"><a href="#负载预算–Load-Budget" class="headerlink" title="负载预算–Load Budget"></a>负载预算–Load Budget</h4><ul>
+<li>可以采用下列规则：<ul>
+<li>假设输出端口是由驱动能力弱的单元驱动（最小的反相器）</li>
+<li>限制每个输入端口的输入电容（如负载不大于10个AND2的电容）</li>
+<li>估算输出端口驱动模块的数目</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210135002983.png" alt=""></p>
+<h4 id="Wire-Load-Model"><a href="#Wire-Load-Model" class="headerlink" title="Wire Load Model"></a>Wire Load Model</h4><ul>
+<li><p>wire load model根据芯片面积和标准单元的扇出估算连接线上的电容</p>
+</li>
+<li><p>在编译时设置这项信息，可以更精确的建立设计模型。</p>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210135032970.png" alt=""></p>
+<p><strong>三种模型</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210135049398.png" alt=""></p>
+<h4 id="Wire-Load-Model举例-Design-Time"><a href="#Wire-Load-Model举例-Design-Time" class="headerlink" title="Wire Load Model举例(Design Time)"></a>Wire Load Model举例(Design Time)</h4><ul>
+<li>要计算连接线的R、C及连线面积</li>
+</ul>
+<ol>
+<li><p>确定连接线的fanout数</p>
+</li>
+<li><p>在wire_load_model的fanout-length对中查找连接线长度</p>
+</li>
+<li><p>长度乘上电容（或R或面积）系数</p>
+</li>
+</ol>
+<p>​        (fanout = 3 ® length = 2.8)</p>
+<p>Cwire = length(2.8) ´ capacitance coefficent (1.3) =3.64 load units</p>
+<p>Rwire = length (2.8) ´ resistance coefficient (3.0) = 8.4 resistance units</p>
+<p>Net area = length (2.8) ´ area coefficient (0.04) = 0.112 net area units</p>
+<p>Cwire = (3.3 + (7-4)*0.15) ´ capacitance coefficent (1.3) </p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210135152671.png" alt=""></p>
+<h3 id="设置设计约束-1"><a href="#设置设计约束-1" class="headerlink" title="设置设计约束"></a>设置设计约束</h3><h4 id="约束-constraint"><a href="#约束-constraint" class="headerlink" title="约束(constraint)"></a>约束(constraint)</h4><ul>
+<li>约束是Design Compiler优化一个设计到目标工艺库的目标</li>
+<li>设计规则约束：与工艺相关的限制，如最大的传输时间、最大的扇出、最大电容等。</li>
+<li>优化约束：设计目标及要求。如最大延时、最小延时、最大面积、最大功耗等。</li>
+<li>在编译时，Design Compiler试图满足所有约束。</li>
+</ul>
+<h4 id="优化约束"><a href="#优化约束" class="headerlink" title="优化约束"></a>优化约束</h4><ul>
+<li>按关注的次序，优化约束有：</li>
+</ul>
+<p>1.最大延时</p>
+<p>2.最小延时</p>
+<p>3.最大功耗</p>
+<p>4.最大面积</p>
+<ul>
+<li>对于组合电路，我们在时序上只需设置最大延时和最小延时</li>
+</ul>
+<h4 id="需要什么设计约束？"><a href="#需要什么设计约束？" class="headerlink" title="需要什么设计约束？"></a>需要什么设计约束？</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210135315775.png" alt=""></p>
+<p>需要约束的时序路径有四类：</p>
+<p>1.输入端口到输出端口的组合逻辑</p>
+<p>2.输入端口到时序元件的数据输入端</p>
+<p>3.时序元件的时钟端到时序元件的数据输入端</p>
+<p>4.时序元件的时钟端到输出端口</p>
+<h4 id="Maximum-Delay-Constraint"><a href="#Maximum-Delay-Constraint" class="headerlink" title="Maximum Delay Constraint"></a>Maximum Delay Constraint</h4><ul>
+<li><p>对于组合电路，主要是</p>
+<p> – 选择时序通路起点和终点。</p>
+<p> – <em>Attributes/Optimization Constraints/Timing Constraints</em></p>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210135350321.png" alt=""></p>
+<h4 id="时序元件相关的路径"><a href="#时序元件相关的路径" class="headerlink" title="时序元件相关的路径"></a>时序元件相关的路径</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210135407000.png" alt=""></p>
+<p>时序元件相关的时序路径有三类：</p>
+<p>1.输入端口到时序元件的数据输入端</p>
+<p>2.时序元件的时钟端到时序元件的数据输入端</p>
+<p>3.时序元件的时钟端到输出端口</p>
+<h4 id="时序电路-gt-指定时钟"><a href="#时序电路-gt-指定时钟" class="headerlink" title="时序电路->指定时钟"></a>时序电路-&gt;指定时钟</h4><ul>
+<li><p>选择时钟端口</p>
+</li>
+<li><p><em>Attributes/Clocks/Specify</em></p>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210135448463.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210135503375.png" alt=""></p>
+<h4 id="时钟树建模"><a href="#时钟树建模" class="headerlink" title="时钟树建模"></a><strong>时钟树建模</strong></h4><ul>
+<li>时钟建模需要两个参数</li>
+</ul>
+<p>1.指定时钟网络的延迟</p>
+<p>​    » <em>set_clock_latency</em> <em>–rise</em> <em>tr</em> <em>–fall</em> <em>tf</em> <em>find (clock, CLK)</em></p>
+<p>2.指定时钟网络的倾斜(uncertainty)</p>
+<p>​       » <em>set_clock_uncertainty</em> <em>–rise</em> <em>tp</em> <em>–fall</em> <em>tm</em> <em>find (clock, CLK)</em></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210135529443.png" alt=""></p>
+<p><strong>时钟树建模举例</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210135546267.png" alt=""></p>
+<p><strong>时钟树建模对建立时间的影响</strong></p>
+<p>假设库中上升沿D触发器(Flip Flop) setup time = 1ns</p>
+<p>  <em>create_clock</em> <em>–period 10 –waveform {0 5} find (port CLK)</em></p>
+<p>  <em>set_clock_latency</em> <em>–rise 1 –fall 2 find (port CLK)</em></p>
+<p>  <em>set_clock_uncertainty</em> <em>–rise 0.5 –fall 0.7 find (port CLK)</em></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210135618160.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210135640650.png" alt=""></p>
+<h4 id="时钟源延迟模型"><a href="#时钟源延迟模型" class="headerlink" title="时钟源延迟模型"></a>时钟源延迟模型</h4><ul>
+<li>源延迟是从实际时钟源到设计的时钟定义点的传播延迟</li>
+</ul>
+<p>​    <em>create_clock</em> <em>-period 10 find(port, CLK)</em></p>
+<p>​    <em>set_clock_latency</em> <em>-source 3</em> <em>find(port, CLK)</em></p>
+<p>​    <em>set_clock_latency</em> <em>1 find(port, CLK)</em></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210135706328.png" alt=""></p>
+<h4 id="衍生时钟-Derived-Clock"><a href="#衍生时钟-Derived-Clock" class="headerlink" title="衍生时钟(Derived Clock)"></a>衍生时钟(Derived Clock)</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210135724965.png" alt=""></p>
+<h4 id="外部时钟延迟-举例"><a href="#外部时钟延迟-举例" class="headerlink" title="外部时钟延迟(举例)"></a>外部时钟延迟(举例)</h4><pre><code>current_design my_design
+create_clock –p 10 find(port, CLK)
+create_clock –p 10 –name VCLK      //虚拟时钟
+set_clock_latency –source 2 find(clock, CLK)
+set_clock_latency –source 1 find(clock,VCLK)
+set_clock_latency 1 find(clock, CLK)
+/* set_propagated_clock all_clocks()*/ /*For post-layout Synthesis*/
+set_input_delay 0.4 –clock VCLK find(port, A)</code></pre><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210135759940.png" alt=""></p>
+<h4 id="时序电路"><a href="#时序电路" class="headerlink" title="时序电路"></a><strong>时序电路</strong></h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210135819765.png" alt=""></p>
+<h4 id="输入延时模型"><a href="#输入延时模型" class="headerlink" title="输入延时模型"></a><strong>输入延时模型</strong></h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210135833751.png" alt=""></p>
+<p><strong>设置输入延时</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210135851991.png" alt=""></p>
+<ul>
+<li>如果输入是PAD( top level)，则将输入延时设置一个适当值。（参考PAD的数据手册或使用<em>characterize</em>命令)</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210135910248.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210135924450.png" alt=""></p>
+<p><strong>设置输出延时</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210135954506.png" alt=""></p>
+<ul>
+<li>如果设计的输出连接到PAD(top level)，将输出延时设置为一个适当的值。(参考PAD数据手册或使用<em>characterize</em>命令）</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210140026977.png" alt=""></p>
+<h4 id="What-have-we-modeled"><a href="#What-have-we-modeled" class="headerlink" title="What have we modeled?"></a>What have we modeled?</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210140043778.png" alt=""></p>
+<ul>
+<li>假设 clock cycle = p</li>
+<li>输入延时 = a ; a + b &lt; p</li>
+<li>输出 延时= e ; d + e &lt; p</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210140113156.png" alt=""></p>
+<ul>
+<li>假设时钟CLK的时钟周期(clock cycle) = p</li>
+<li>输入延时 = a ; a + b &lt; p</li>
+<li>输出 延时= e ; d + e &lt; p</li>
+</ul>
+<h4 id="设置面积约束"><a href="#设置面积约束" class="headerlink" title="设置面积约束"></a><strong>设置面积约束</strong></h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210140144436.png" alt=""></p>
+<h4 id="设计规则约束"><a href="#设计规则约束" class="headerlink" title="设计规则约束"></a><strong>设计规则约束</strong></h4><ul>
+<li><p>设计规则 (design rule)是绝对不能违反的，即使时间及面积约束不能满足也在所不惜。</p>
+</li>
+<li><p>设计规则约束有三类：</p>
+</li>
+</ul>
+<ol>
+<li><p><em>set_max_capacitance</em></p>
+</li>
+<li><p><em>set_max_transition</em></p>
+</li>
+<li><p><em>set_max_fanout</em></p>
+</li>
+</ol>
+<p><strong>设置最大转换时间</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210140237908.png" alt=""></p>
+<p><strong>计算最大转换时间</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210140253503.png" alt=""></p>
+<p><strong>计算最大的fanout_load</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210140313833.png" alt=""></p>
+<p><strong>计算最大电容</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210140333393.png" alt=""></p>
+<p><strong>设置扇出负载</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210140349277.png" alt=""></p>
+<h4 id="False-Path"><a href="#False-Path" class="headerlink" title="False Path"></a><strong>False Path</strong></h4><ul>
+<li><em>false path</em>是不传播信号的通路，或是忽略这个通路上的时序约束。</li>
+<li><em>set_false_path</em>可以禁止一个通路的基于时序的综合</li>
+<li>它主要用于<em>:</em></li>
+</ul>
+<p>​    <em>–</em> 约束异步通路</p>
+<p>​    <em>–</em> 从逻辑上约束 <em>false path</em></p>
+<ul>
+<li><p><em>set_false_path</em> <em>-from {A} -through {C} -to {OUT}</em></p>
+</li>
+<li><p><em>set_false_path</em> <em>-from {B} -through {D} -to {OUT}</em></p>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210140524297.png" alt=""></p>
+<h4 id="多周期通路"><a href="#多周期通路" class="headerlink" title="多周期通路"></a><strong>多周期通路</strong></h4><ul>
+<li>在有些情况下，两个寄存器之间的组合逻辑延迟可能要求多于一个时钟周期，这些通路应设置为<em>multicycle</em>通路。</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210140547298.png" alt=""></p>
+<h4 id="设计检查"><a href="#设计检查" class="headerlink" title="设计检查"></a>设计检查</h4><ul>
+<li>在设置设计属性和设计约束后，建议下一步对设计进行检查。</li>
+<li>Analysis/Check Design</li>
+<li>你可能遇到下列警告：</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210140613375.png" alt=""></p>
+<ul>
+<li><p>这个警告信息称为 “multiple design instance”, 它产生的原因是用相同的HDL描述多次实例化(instance)。</p>
+</li>
+<li><p>如何处理 ?</p>
+</li>
+</ul>
+<p>​    – dont_touch</p>
+<p>​    – ungroup</p>
+<p>​    – uniquify</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210140633824.png" alt=""></p>
+<h4 id="dont-touch"><a href="#dont-touch" class="headerlink" title="dont_touch"></a>dont_touch</h4><ul>
+<li>停止对低层设计的重新编译</li>
+<li>层次将被保留</li>
+<li>单个设计描述可以共享</li>
+<li>用于那些不需要用户做优化的块</li>
+<li>在设计优化过程中, <em>dont_touch</em> 块不会再优化</li>
+<li>如果dont_touch设置在一个<em>unmapped</em> 设计, 设计将保持<em>unmapped</em></li>
+</ul>
+<p><em>Attributes/Optimization Directives/Design</em></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210140718250.png" alt=""></p>
+<ul>
+<li><p>使用过程</p>
+<p> <em>–</em> 对块进行约束</p>
+<p> – 块编译</p>
+<p> – 选择设计中要多实例化的块</p>
+<p> – Attributes/Optimization Directives/Design，设置dont_touch按钮</p>
+<p> – 用层次编译方式编译整个设计</p>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210140736498.png" alt=""></p>
+<h4 id="Ungroup"><a href="#Ungroup" class="headerlink" title="Ungroup"></a>Ungroup</h4><ul>
+<li><p>过程</p>
+<p> – 选中多实例化设计块</p>
+<p> – <em>Attributes/Optimization</em></p>
+</li>
+</ul>
+<p>​    <em>Directives/Design</em> 并设置</p>
+<p>​    Ungroup按钮</p>
+<p>   – 用层次化方式编译整个设计</p>
+<ul>
+<li>展开设计层次</li>
+<li>不保留设计层次</li>
+<li>消耗更多的存储器</li>
+<li>更多的编译时间</li>
+<li>产生最好的设计结果</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210140810535.png" alt=""></p>
+<h4 id="Uniquify"><a href="#Uniquify" class="headerlink" title="Uniquify"></a>Uniquify</h4><ul>
+<li>为每一个实例建立一个单独的文件</li>
+<li>可以选择一个单元或整个设计层次进行uniquify</li>
+<li>允许设计定制自己的界面</li>
+<li>如果环境的变化很大，使用<em>uniquify*<em>，</em>而不使用*Compile+dont_touch</em></li>
+<li>与compile+dont_tough相比，Uniquify 使用更多的存储器和更长的编译时间</li>
+</ul>
+<ul>
+<li>选择设计层次的最顶层（top）</li>
+<li><em>Edit/Uniquify/Hierarchy</em></li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210140857468.png" alt=""></p>
+<ul>
+<li>使用变量<em>uniquify_naming_style**创建新的设计名称</em>, 缺省为 %s_%d</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210140914318.png" alt=""></p>
+<h4 id="多设计实例（总结）"><a href="#多设计实例（总结）" class="headerlink" title="多设计实例（总结）"></a>多设计实例（总结）</h4><ul>
+<li>采用<em>“dont_touc</em>h, ungroup, <em>uniquif</em>y”解决</li>
+<li>最简单的方法是<em>uniquif</em>y, 但需要较多的存储器和编译时间</li>
+<li>如果希望保留设计层次并资源共享，使用<em>dont_touch</em></li>
+<li>如果希望得到一个最好的结果，推荐使用 <em>ungroup，</em>但需要的存储器和编译时间最多。</li>
+</ul>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><ul>
+<li><p>设计实际的设计环境</p>
+<p> – 输入延时, 输出延时</p>
+<p> – 输入驱动强度, 输出负载</p>
+<p> – 工作条件</p>
+<p> – Wireload model</p>
+</li>
+<li><p>设置Design Rule约束(DRC)</p>
+<p> – Maximum fanout</p>
+<p> – Maximum transition time</p>
+<p> – Maximum capacitance</p>
+</li>
+<li><p><strong>设置设计约束</strong></p>
+<p> – 最大延时, 最小延时</p>
+<p> – 说明时钟</p>
+<p> – 最大面积</p>
+<p> – False path, multi-cycle path和multi-frequency时钟</p>
+<p> – 动态功耗, 泄漏功耗</p>
+</li>
+<li><p>处理多实例化问题</p>
+<p> <strong>–</strong> <strong>dont_touch</strong></p>
+<p> <strong>– ungroup</strong></p>
+<p> <strong>– uniquify</strong></p>
+</li>
+<li><p>在编译设计前进行检查</p>
+</li>
+<li><p>保存设置文件并执行脚本文件</p>
+</li>
+</ul>
+<h2 id="设计优化"><a href="#设计优化" class="headerlink" title="设计优化"></a>设计优化</h2><h3 id="设计编译"><a href="#设计编译" class="headerlink" title="设计编译"></a>设计编译</h3><h4 id="Compile-the-“art”of-Synthesis"><a href="#Compile-the-“art”of-Synthesis" class="headerlink" title="Compile: the “art”of Synthesis"></a>Compile: the “art”of Synthesis</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210141125984.png" alt=""></p>
+<h4 id="Architectural-Level-Optimization"><a href="#Architectural-Level-Optimization" class="headerlink" title="Architectural-Level Optimization"></a>Architectural-Level Optimization</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210141144885.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210141157253.png" alt=""></p>
+<h4 id="逻辑级优化-Logic-Level"><a href="#逻辑级优化-Logic-Level" class="headerlink" title="逻辑级优化(Logic-Level)"></a>逻辑级优化(Logic-Level)</h4><ul>
+<li><p>对电路的布尔表达式进行优化</p>
+</li>
+<li><p>对整个设计面积/速度特性有全局的影响</p>
+</li>
+<li><p>策略</p>
+<p> – structure</p>
+<p> – Flatten</p>
+<p> – 如果两者都选用, 则设计先flatten后structure</p>
+</li>
+</ul>
+<h4 id="structuring和flattening"><a href="#structuring和flattening" class="headerlink" title="structuring和flattening"></a>structuring和flattening</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210141244998.png" alt=""></p>
+<h4 id="门级优化–映射"><a href="#门级优化–映射" class="headerlink" title="门级优化–映射"></a>门级优化–映射</h4><ul>
+<li>使用逻辑优化产生的结构</li>
+<li>从工艺库中选择元件以实现这些逻辑结构，以满足电路指定的时间、设计规则和面积目标</li>
+<li>局部影响设计的area/speed特性</li>
+</ul>
+<p>Mapping flow</p>
+<p>–寻找基本配置的门来实现逻辑结构</p>
+<p>–从逻辑上重新安排元件，以满足设计规则、面积、速度和功耗目标。</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210141314309.png" alt=""></p>
+<h4 id="组合电路映射"><a href="#组合电路映射" class="headerlink" title="组合电路映射"></a>组合电路映射</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210141333207.png" alt=""></p>
+<h4 id="时序电路映射"><a href="#时序电路映射" class="headerlink" title="时序电路映射"></a>时序电路映射</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210141353229.png" alt=""></p>
+<h4 id="映射强度"><a href="#映射强度" class="headerlink" title="映射强度"></a>映射强度</h4><ul>
+<li>有三种强度, <em>lo</em>w, <em>mediu</em>m, <em>hig</em>h, 决定编译的映射过程所花费的CPU时间的相对数</li>
+</ul>
+<p>–low – 较快的综合, 不做所有算法</p>
+<p>–medium – 缺省, 对大多数设计是足够的</p>
+<p>–high – 将关键路径重新综合，但会花费较多的CPU时间；在有些情况下，编译会陷入死循环。</p>
+<ul>
+<li>Note: 在Synopsys的编译过程</li>
+</ul>
+<p>​    需要很长时间，因此在进行编译</p>
+<p>​    之前，请确认设置的属性和约束。</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210141417483.png" alt=""></p>
+<h4 id="Compile-Summary"><a href="#Compile-Summary" class="headerlink" title="Compile Summary"></a><strong>Compile Summary</strong></h4><p>逻辑级优化</p>
+<p>   – 优化电路的布尔表达式优化</p>
+<p>   – Flattening (off by default)</p>
+<p>​        » 消除所有的结构</p>
+<p>​        » 当设计输入少于20个时，关闭structure,打开flattening</p>
+<p>   – Structuring</p>
+<p>​        » 寻找共因子以减小面积</p>
+<p>​        » 时序驱动的 (default)</p>
+<p>​        » 布尔优化 (area optimization only)</p>
+<p>门级优化</p>
+<p>   – Mapping ( medium effort is default )</p>
+<p>​      » 从工艺库中选择元件</p>
+<p>​      » 使用逻辑级优化产生的结构</p>
+<p>层次化编译技术</p>
+<p>   – top-down, bottom up and characterize</p>
+<p>   – Timing budgeting</p>
+<p>​       » Design Budgeting</p>
+<p>​       » Automatic Chip Synthesis (ACS)</p>
+<h3 id="Synthesis-Report-and-Analysis"><a href="#Synthesis-Report-and-Analysis" class="headerlink" title="Synthesis Report and Analysis"></a><strong>Synthesis Report and Analysis</strong></h3><ul>
+<li>Analysis/Report<ul>
+<li>通过报告及分析，可以查看设置的属性及优化后的结果</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210141526595.png" alt=""></p>
+<h4 id="Report-We-will-Generate"><a href="#Report-We-will-Generate" class="headerlink" title="Report We will Generate"></a><strong>Report We will Generate</strong></h4><ul>
+<li>属性报告</li>
+</ul>
+<p>–所有的属性、clock、端口、设计及net</p>
+<ul>
+<li>分析报告</li>
+</ul>
+<p>–面积、层次、约束、时间、节点时间</p>
+<h4 id="网线-net-Report"><a href="#网线-net-Report" class="headerlink" title="网线(net) Report"></a>网线(net) Report</h4><ul>
+<li>网线报告显示每一条net的静态结果</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210141618350.png" alt=""></p>
+<h4 id="端口-port-Report"><a href="#端口-port-Report" class="headerlink" title="端口(port) Report"></a>端口(port) Report</h4><ul>
+<li>dc_shell命令</li>
+</ul>
+<p>​     report_port –verbose { port_list }</p>
+<p>​     或在选项菜单中选择verbose（详细）</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210141644376.png" alt=""></p>
+<h4 id="面积-area-Report"><a href="#面积-area-Report" class="headerlink" title="面积(area) Report"></a>面积(area) Report</h4><ul>
+<li>面积报告显示设计的门数</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210141719453.png" alt=""></p>
+<h4 id="层次-hierarchy-Report"><a href="#层次-hierarchy-Report" class="headerlink" title="层次(hierarchy) Report"></a>层次(hierarchy) Report</h4><ul>
+<li>层次报告显示每块的使用的元件及其层次</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210141743399.png" alt=""></p>
+<h4 id="引用-reference-Report"><a href="#引用-reference-Report" class="headerlink" title="引用(reference) Report"></a>引用(reference) Report</h4><ul>
+<li>引用报告显示设计中引用的静态结果</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210141807840.png" alt=""></p>
+<h4 id="约束-constraint-Report"><a href="#约束-constraint-Report" class="headerlink" title="约束(constraint) Report"></a>约束(constraint) Report</h4><ul>
+<li>约束报告显示编译过的设计是否满足约束</li>
+<li>dc_shell&gt; report_constraint –all_violators</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210141834704.png" alt=""></p>
+<h4 id="时序-timing-Report"><a href="#时序-timing-Report" class="headerlink" title="时序(timing) Report"></a>时序(timing) Report</h4><ul>
+<li>用户应知道report_timing产生的路径信息</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210141859985.png" alt=""></p>
+<ul>
+<li>路径延时、路径要求时间和总结部分</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210141923396.png" alt=""></p>
+<h4 id="时序-timing-报告"><a href="#时序-timing-报告" class="headerlink" title="时序(timing) 报告"></a>时序(timing) 报告</h4><ul>
+<li>时序报告显示设计的最大或最小路径延时，缺省时显示一个最大延时路径。</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210141950965.png" alt=""></p>
+<h4 id="What-is-slack"><a href="#What-is-slack" class="headerlink" title="What is slack?"></a>What is slack?</h4><ul>
+<li>slack是要求时间与实际到达时间的差值结果。</li>
+<li>slack为正或0表示约束满足</li>
+<li>slack为负表示约束没有得到满足。</li>
+</ul>
+<h4 id="Report-Power"><a href="#Report-Power" class="headerlink" title="Report Power"></a>Report Power</h4><ul>
+<li>dc_shell&gt; report_power</li>
+</ul>
+<pre><code>Global Operating Voltage = 2.5
+Power-specific unit information :
+    Voltage Units = 1V
+    Capacitance Units = 1.000000pf
+    Time Units = 1ns
+
+    Dynamic Power Units = 1mW (derived from V,C,T units)
+    Leakage Power Units = 1nW
+    Cell Internal Power = 13.4819 mW (58%)
+    Net Switching Power = 9.7291 mW (42%)
+    Total Dynamic Power = 23.2109 mW (100%)
+    Cell Leakage Power = 123.8077 nW </code></pre><h4 id="交互式显示"><a href="#交互式显示" class="headerlink" title="交互式显示"></a>交互式显示</h4><ul>
+<li>从报告中选择一条信息，相应的项会在逻辑图中高亮度显示(按show按钮)</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210142107915.png" alt=""></p>
+<ul>
+<li>高亮度显示可以穿过层次</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210142124995.png" alt=""></p>
+<h4 id="Highlight"><a href="#Highlight" class="headerlink" title="Highlight"></a>Highlight</h4><ul>
+<li>显示最长和最短路径的另一种方法是：Analysis/Highlight</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210142148644.png" alt=""></p>
+<h4 id="Point-Timing-Report"><a href="#Point-Timing-Report" class="headerlink" title="Point Timing Report"></a>Point Timing Report</h4><ul>
+<li><p>Point timing report 显示逻辑图中两个所选的点之间的时序信息。</p>
+</li>
+<li><p>Analysis/report ®point timing</p>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210142213474.png" alt=""></p>
+<h4 id="用逻辑图分析电路"><a href="#用逻辑图分析电路" class="headerlink" title="用逻辑图分析电路"></a>用逻辑图分析电路</h4><ul>
+<li>确定逻辑图中所选的引脚上的信号的到达时间</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210142242210.png" alt=""></p>
+<ul>
+<li>确定在逻辑图中选择的网线的负载</li>
+</ul>
+<p>​    <em>Analysis/Show Net Load</em></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210142258968.png" alt=""></p>
+<h4 id="保存设计"><a href="#保存设计" class="headerlink" title="保存设计"></a><strong>保存设计</strong></h4><ul>
+<li>在退出Design Analyzer之前，将设计保存到文件</li>
+<li><em>File / Save</em> 以DB格式保存设计</li>
+<li><em>File / Save as</em>可以其它的输出格式保存设计</li>
+</ul>
+<p>–Synopsys formats</p>
+<p>​     » equation: .eq</p>
+<p>​     » state table: .st</p>
+<p>–Verilog: .v</p>
+<p>–VHDL: .vhd</p>
+<p>–PLA( Berkeley Espresso): .pla</p>
+<p>–EDIF </p>
+<ul>
+<li><em>File / Save as</em></li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210142349811.png" alt=""></p>
+<ul>
+<li><p>将文件保存为Verilog格式，进行门级仿真，并用Verilog in接口将其转换为OPU数据库用来布局布线</p>
+</li>
+<li><p>如果不能 Verilog in，请检查assign问题</p>
+</li>
+<li><p>如果存在任何assign问题，选择这个块并用下面的dc_shell命令修复：</p>
+</li>
+</ul>
+<p>–set_fix_mutiple_port_nets –all –buffer_constants</p>
+<p>–compile –map_effort medium</p>
+<h4 id="Fix-multiple-Port-Net"><a href="#Fix-multiple-Port-Net" class="headerlink" title="Fix multiple Port Net"></a>Fix multiple Port Net</h4><ul>
+<li>清除verilog assignment问题</li>
+</ul>
+<p>–set_fix_mutiple_port_nets –all –buffer_constants</p>
+<p>–compile –map_effort medium</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210142438341.png" alt=""></p>
+<h4 id="门级仿真-verilog"><a href="#门级仿真-verilog" class="headerlink" title="门级仿真 (verilog)"></a>门级仿真 (verilog)</h4><ul>
+<li>输出门级网表（有两种方法）</li>
+</ul>
+<p>1.File / Save As ® Verilog ( for File format)</p>
+<p>2.dc_shell&gt; write –format verilog –hierarchy –output chip.vg</p>
+<ul>
+<li>产生SDF（有两种方法）</li>
+</ul>
+<p>1.File /Save info ® Design timing</p>
+<p>2.dc_shell&gt; write_sdf –version 1.0 –context verilogchip.sdf</p>
+<ul>
+<li>修改testfixture文件</li>
+</ul>
+<p>​     $sdf_annotate(“the_SDF_file_name”,</p>
+<p>​                   the_top_level_module_instance_name);</p>
+<p>​     For example: $sdf_annotate(“chip.sdf”, top);</p>
+<ul>
+<li>用Verilog-XL进行仿真</li>
+</ul>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -5928,7 +6716,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">3224.1k</span>&nbsp;字
+                class="white-color">3232.4k</span>&nbsp;字
             
             
             
