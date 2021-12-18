@@ -459,21 +459,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-12-14
+                    2021-12-18
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    39.8k
+                    41.6k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    164 分
+                    174 分
                 </div>
                 
 
@@ -5511,7 +5511,9 @@ S65NLLHS2PH64x8 uS65NLLHS2PH64x8 (
 <h3 id="什么是综合？"><a href="#什么是综合？" class="headerlink" title="什么是综合？"></a><strong>什么是综合？</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210132143424.png" alt=""></p>
 <h3 id="工艺无关性"><a href="#工艺无关性" class="headerlink" title="工艺无关性"></a><strong>工艺无关性</strong></h3><p>设计可以转换到任何工艺上。</p>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211210132210297.png" alt=""></p>
-<h3 id="Logic-Synthesis-Overview"><a href="#Logic-Synthesis-Overview" class="headerlink" title="Logic Synthesis Overview"></a><strong>Logic Synthesis Overview</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210132238109.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211218142630147.png" alt=""></p>
+<h3 id="Logic-Synthesis-Overview"><a href="#Logic-Synthesis-Overview" class="headerlink" title="Logic Synthesis Overview"></a><strong>Logic Synthesis Overview</strong></h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211218142713186.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210132238109.png" alt=""></p>
 <h3 id="HDL-Compiler"><a href="#HDL-Compiler" class="headerlink" title="HDL Compiler"></a><strong>HDL Compiler</strong></h3><p>HDL Compiler将HDL描述转换为Synopsys设计块，并传送给Design Compiler</p>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211210132508236.png" alt=""></p>
 <p>在逻辑图中, 我们可以可看到，verilog文件已经转换为 GTECH 库(the synopsys default)</p>
@@ -5522,7 +5524,26 @@ S65NLLHS2PH64x8 uS65NLLHS2PH64x8 (
 <p>注意：</p>
 <p>1.这三个文件总是按所列顺序读取</p>
 <p>2.对于相同的设置项，后面的设置覆盖前面的设置</p>
-<h4 id="synopsys-dc-setup中定义的内容"><a href="#synopsys-dc-setup中定义的内容" class="headerlink" title=".synopsys_dc.setup中定义的内容"></a><strong>.</strong>synopsys_dc.setup中定义的内容</h4><ul>
+<h4 id="bashrc文件"><a href="#bashrc文件" class="headerlink" title=".bashrc文件"></a>.bashrc文件</h4><pre><code>####################################################################
+# This for synopsys software 2020.5.26
+######################################################
+export LM_LICENSE_FILE=27020@server1:27020@server-lic
+export SNPSLMD_LICENSE_FILE=27020@server1:27020@server-lic
+export PATH=$PATH:/sbin:/usr/sbin
+####################################################################
+# For DC2020
+# install_software = syn_VR-2020.09-SP5
+####################################################################
+export SYNOPSYS=/opt/eda/synopsys
+export SYN_DC_DIR=$SYNOPSYS/syn/R-2020.09-SP5
+export PATH=$PATH:$SYN_DC_DIR/bin
+export PATH=$PATH:$SYN_DC_DIR/linux64/bin
+export PATH=$PATH:$SYN_DC_DIR/linux64/syn/bin
+####################################################################
+# For PrimeTime-2008
+export SYN_PT_DIR=$SYNOPSYS/pt2008
+export PATH=$PATH:$SYN_PT_DIR/bin
+####################################################################</code></pre><h4 id="synopsys-dc-setup中定义的内容"><a href="#synopsys-dc-setup中定义的内容" class="headerlink" title=".synopsys_dc.setup中定义的内容"></a><strong>.</strong>synopsys_dc.setup中定义的内容</h4><ul>
 <li>link_library ：这个库用来解释所输入的设计描述<ul>
 <li>在用户HDL代码中的门级网表或实例化的单元</li>
 </ul>
@@ -5549,7 +5570,18 @@ plot_command = "lpr -Plp" ;\
 view_script_submenu_items =\
 {"Avoid assign statement", "set_fix_multiple_port_nets -all -buffer_constant", \
 "Change Naming Rule", "change_names -rule verilog -hierarchy", \
-"Write SDF", "write_sdf -version 1.0 -context verilog chip.sdf"}</code></pre><h3 id="ASIC综合的设计流程"><a href="#ASIC综合的设计流程" class="headerlink" title="ASIC综合的设计流程"></a>ASIC综合的设计流程</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210132741719.png" alt=""></p>
+"Write SDF", "write_sdf -version 1.0 -context verilog chip.sdf"}</code></pre><pre><code># from the System Variable Group
+set smic13_path /data/techlib/smic/smic13/smicSC/aci/sc-x
+set search_path [list ${smic13_path}/symbols/synopsys 
+ ${smic13_path}/synopsys $search_path]
+set link_library [list * typical_1v2c25.db dw_foundation.sldb]
+set target_library [list typical_1v2c25.db]
+set symbol_library [list smic13g.sdb]
+set synthetic_library [list dw_foundation.sldb standard.sldb]
+set command_log_file "./command.log"
+set designer "Yuds"
+set company "PKU"
+set find_converts_name_lists "false"</code></pre><h3 id="ASIC综合的设计流程"><a href="#ASIC综合的设计流程" class="headerlink" title="ASIC综合的设计流程"></a>ASIC综合的设计流程</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210132741719.png" alt=""></p>
 <h2 id="综合对象"><a href="#综合对象" class="headerlink" title="综合对象"></a>综合对象</h2><h3 id="设计对象（逻辑图示）"><a href="#设计对象（逻辑图示）" class="headerlink" title="设计对象（逻辑图示）"></a>设计对象（逻辑图示）</h3><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210132923985.png" alt=""></p>
 <ul>
 <li>Design(设计)：完成一个或多个逻辑功能 的电路</li>
@@ -5667,6 +5699,7 @@ view_script_submenu_items =\
 <p>​     <em>set_implementation</em> <em>implementation_name</em> <em>instance_name</em></p>
 <p>   – compile</p>
 <p>   – report -resource</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211218143219139.png" alt=""></p>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211210134234798.png" alt=""></p>
 <h3 id="DesignWare-仿真"><a href="#DesignWare-仿真" class="headerlink" title="DesignWare 仿真"></a>DesignWare 仿真</h3><ul>
 <li><p>推断方式 : 和以前一样，不需要任何专门处理。</p>
@@ -5706,6 +5739,7 @@ view_script_submenu_items =\
 </ul>
 <p>​    假定使用的输入PAD为PC3D01, 如下图所示。我们可以设置输入驱动强度为0.2468 (ns/pf)</p>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211210134903733.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211218143342647.png" alt=""></p>
 <h4 id="PAD的输出负载"><a href="#PAD的输出负载" class="headerlink" title="PAD的输出负载"></a>PAD的输出负载</h4><ul>
 <li><p>如果设计如下</p>
 <p>​    假设使用的输出PAD为PC3O01, 如下列所示。我们可以设置输出负载为0.096 (pf)</p>
@@ -5730,7 +5764,10 @@ view_script_submenu_items =\
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211210135032970.png" alt=""></p>
 <p><strong>三种模型</strong></p>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211210135049398.png" alt=""></p>
-<h4 id="Wire-Load-Model举例-Design-Time"><a href="#Wire-Load-Model举例-Design-Time" class="headerlink" title="Wire Load Model举例(Design Time)"></a>Wire Load Model举例(Design Time)</h4><ul>
+<p>#或设“auto_wire_load_selection”为true，由工具自动选择 </p>
+<pre><code>set_app_var auto_wire_load_selection false
+set_wire_load_model –name smic13_wl20
+set_wire_load_mode enclosed</code></pre><h4 id="Wire-Load-Model举例-Design-Time"><a href="#Wire-Load-Model举例-Design-Time" class="headerlink" title="Wire Load Model举例(Design Time)"></a>Wire Load Model举例(Design Time)</h4><ul>
 <li>要计算连接线的R、C及连线面积</li>
 </ul>
 <ol>
@@ -5745,6 +5782,7 @@ view_script_submenu_items =\
 <p>Cwire = length(2.8) ´ capacitance coefficent (1.3) =3.64 load units</p>
 <p>Rwire = length (2.8) ´ resistance coefficient (3.0) = 8.4 resistance units</p>
 <p>Net area = length (2.8) ´ area coefficient (0.04) = 0.112 net area units</p>
+<p>(fanout = 7  length = 3.3 + (7-4)*0.15 ) = 3.75</p>
 <p>Cwire = (3.3 + (7-4)*0.15) ´ capacitance coefficent (1.3) </p>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211210135152671.png" alt=""></p>
 <h3 id="设置设计约束-1"><a href="#设置设计约束-1" class="headerlink" title="设置设计约束"></a>设置设计约束</h3><h4 id="约束-constraint"><a href="#约束-constraint" class="headerlink" title="约束(constraint)"></a>约束(constraint)</h4><ul>
@@ -5788,7 +5826,35 @@ view_script_submenu_items =\
 </li>
 </ul>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211210135448463.png" alt=""></p>
-<p><img src="/images/loading.gif" data-original="../images/basic/image-20211210135503375.png" alt=""></p>
+<h4 id="时钟分布的特点"><a href="#时钟分布的特点" class="headerlink" title="时钟分布的特点"></a>时钟分布的特点</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211218143614535.png" alt=""></p>
+<ul>
+<li>许多ASIC设计有一个或多个时钟。时钟树的实现决定了设计的最高工作频率。 如果实现的不好可能导致整个设计不能正常工作。</li>
+<li>上面的图显示了一个时钟网络。时钟sysclk从一个I/O PAD输入后由单元CDR驱 动。这个时钟网格有n个负载。</li>
+<li>时序图中显示了时钟树的clock skew和时钟插入延迟。  有效的时钟树就是减小时钟倾斜和时钟插入延迟。</li>
+<li>插入延迟是时钟有效沿从芯片的输入引脚到达负载的时间。</li>
+<li>时钟倾斜是同一个时钟有效沿到达各个负载的时间差。</li>
+</ul>
+<h4 id="时钟树设计-1"><a href="#时钟树设计-1" class="headerlink" title="时钟树设计"></a>时钟树设计</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211218143740435.png" alt=""></p>
+<ul>
+<li>上面的图是一个时钟树的逻辑图表示。插入到根(root)单元和叶(leaf)单元 之间的缓冲器称为分布单元(Distribution cell)。最后的分布单元驱动一组 叶单元。</li>
+<li>时钟树可以分为任意级数。这个例子为两级。靠近root单元的级数低(lower  level)，靠近叶单元的级数高(upper level) </li>
+<li>时钟树的插入延迟是就从根单元到叶单元之间所有缓冲器的固有延时及其连 接线延时的总和。</li>
+<li>clock skew是时钟树不同分支之间的延迟差。 </li>
+<li>一个有效的时钟分布就是要减小插入延迟和时钟倾斜。要达到这些设计目标 ，要求时钟分布满足下列标准：  <ul>
+<li>分布单元在驱动和负载之间合理匹配，减少传输时间(transition time) 。</li>
+<li>时钟树中输出单元到后面的输入间的互连线产生的延时差要小。</li>
+<li>时钟树的每一级的连接线及负载要均衡。 </li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211218143833425.png" alt=""></p>
+<ul>
+<li>上面的图给出了一个可能的时钟树分配系统的布局和内部连接布线。</li>
+<li>这是一个理想的时钟树物理实现。这个布局中，树的每一级的输入、输出对 之间的连线长度完全相等。如，树最底层的根单元到各个分配单元之间的距 离几乎完全相等。最顶层的各组叶单元的数目也相同。但是这种实现对于布 线不一定是最优的。为了达到最优布线，叶单元的布局不会非常规则。</li>
+<li>另外，在这个实现中假定各个叶单元的输入引脚的负载是相同的。但负载很 有可能并不相同。</li>
+<li>在布局前设计时钟树是非常困难的。必须考虑布局以及不同叶单元的输入引 脚的负载的影响。</li>
+</ul>
+<h4 id="指定时钟"><a href="#指定时钟" class="headerlink" title="指定时钟"></a>指定时钟</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210135503375.png" alt=""></p>
 <h4 id="时钟树建模"><a href="#时钟树建模" class="headerlink" title="时钟树建模"></a><strong>时钟树建模</strong></h4><ul>
 <li>时钟建模需要两个参数</li>
 </ul>
@@ -5806,6 +5872,14 @@ view_script_submenu_items =\
 <p>  <em>set_clock_uncertainty</em> <em>–rise 0.5 –fall 0.7 find (port CLK)</em></p>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211210135618160.png" alt=""></p>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211210135640650.png" alt=""></p>
+<ul>
+<li>假设库中上升沿D触发器的 (Flip Flop)保持时间( hold time) = 1ns <ul>
+<li>create_clock –period 10 –waveform {0 5} find (port CLK) </li>
+<li>set_clock_latency –rise 1 –fall 2 find (port CLK) </li>
+<li>set_clock_uncertainty –rise 0.5 –fall 0.8 find (port CLK)</li>
+</ul>
+</li>
+</ul>
 <h4 id="时钟源延迟模型"><a href="#时钟源延迟模型" class="headerlink" title="时钟源延迟模型"></a>时钟源延迟模型</h4><ul>
 <li>源延迟是从实际时钟源到设计的时钟定义点的传播延迟</li>
 </ul>
@@ -5825,6 +5899,7 @@ set_input_delay 0.4 –clock VCLK find(port, A)</code></pre><p><img src="/images
 <h4 id="时序电路"><a href="#时序电路" class="headerlink" title="时序电路"></a><strong>时序电路</strong></h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210135819765.png" alt=""></p>
 <h4 id="输入延时模型"><a href="#输入延时模型" class="headerlink" title="输入延时模型"></a><strong>输入延时模型</strong></h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210135833751.png" alt=""></p>
 <p><strong>设置输入延时</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211218144231439.png" alt=""></p>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211210135851991.png" alt=""></p>
 <ul>
 <li>如果输入是PAD( top level)，则将输入延时设置一个适当值。（参考PAD的数据手册或使用<em>characterize</em>命令)</li>
@@ -5838,6 +5913,7 @@ set_input_delay 0.4 –clock VCLK find(port, A)</code></pre><p><img src="/images
 </ul>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211210140026977.png" alt=""></p>
 <h4 id="What-have-we-modeled"><a href="#What-have-we-modeled" class="headerlink" title="What have we modeled?"></a>What have we modeled?</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210140043778.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211218144305055.png" alt=""></p>
 <ul>
 <li>假设 clock cycle = p</li>
 <li>输入延时 = a ; a + b &lt; p</li>
@@ -5945,6 +6021,7 @@ set_input_delay 0.4 –clock VCLK find(port, A)</code></pre><p><img src="/images
 <li>产生最好的设计结果</li>
 </ul>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211210140810535.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211218144454501.png" alt=""></p>
 <h4 id="Uniquify"><a href="#Uniquify" class="headerlink" title="Uniquify"></a>Uniquify</h4><ul>
 <li>为每一个实例建立一个单独的文件</li>
 <li>可以选择一个单元或整个设计层次进行uniquify</li>
@@ -5956,6 +6033,7 @@ set_input_delay 0.4 –clock VCLK find(port, A)</code></pre><p><img src="/images
 <li>选择设计层次的最顶层（top）</li>
 <li><em>Edit/Uniquify/Hierarchy</em></li>
 </ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211218144520339.png" alt=""></p>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211210140857468.png" alt=""></p>
 <ul>
 <li>使用变量<em>uniquify_naming_style**创建新的设计名称</em>, 缺省为 %s_%d</li>
@@ -6011,6 +6089,11 @@ set_input_delay 0.4 –clock VCLK find(port, A)</code></pre><p><img src="/images
 </li>
 </ul>
 <h4 id="structuring和flattening"><a href="#structuring和flattening" class="headerlink" title="structuring和flattening"></a>structuring和flattening</h4><p><img src="/images/loading.gif" data-original="../images/basic/image-20211210141244998.png" alt=""></p>
+<p>Flattening</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211218144650920.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211218144801961.png" alt=""></p>
+<p>Structuring</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/image-20211218144748233.png" alt=""></p>
 <h4 id="门级优化–映射"><a href="#门级优化–映射" class="headerlink" title="门级优化–映射"></a>门级优化–映射</h4><ul>
 <li>使用逻辑优化产生的结构</li>
 <li>从工艺库中选择元件以实现这些逻辑结构，以满足电路指定的时间、设计规则和面积目标</li>
@@ -6071,34 +6154,207 @@ set_input_delay 0.4 –clock VCLK find(port, A)</code></pre><p><img src="/images
 <li>网线报告显示每一条net的静态结果</li>
 </ul>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211210141618350.png" alt=""></p>
-<h4 id="端口-port-Report"><a href="#端口-port-Report" class="headerlink" title="端口(port) Report"></a>端口(port) Report</h4><ul>
+<pre><code>****************************************
+Report : net
+Design : ALU_CLA32
+Version: R-2020.09-SP5
+Date : Tue Dec 14 14:59:23 2021
+****************************************
+Operating Conditions: typical_1v2c25 Library: typical_1v2c25
+Wire Load Model Mode: enclosed
+Design Wire Load Model Library
+------------------------------------------------
+ALU_CLA32 smic13_wl20 typical_1v2c25
+Net Fanout Fanin Load Resistance Pins Attributes
+--------------------------------------------------------------------------------
+Cin 1 1 0.02 0.00 2 
+Co 1 1 0.05 0.00 2 
+DO[0] 1 1 0.05 0.00 2 
+DO[31] 1 1 0.05 0.00 2 
+M 1 1 0.02 0.00 2 
+S[0] 1 1 0.02 0.00 2 
+c[1] 2 1 0.05 0.00 3</code></pre><h4 id="端口-port-Report"><a href="#端口-port-Report" class="headerlink" title="端口(port) Report"></a>端口(port) Report</h4><ul>
 <li>dc_shell命令</li>
 </ul>
 <p>​     report_port –verbose { port_list }</p>
 <p>​     或在选项菜单中选择verbose（详细）</p>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211210141644376.png" alt=""></p>
-<h4 id="面积-area-Report"><a href="#面积-area-Report" class="headerlink" title="面积(area) Report"></a>面积(area) Report</h4><ul>
+<pre><code>****************************************
+Report : port
+ -verbose
+Design : ALU_CLA32
+Version: R-2020.09-SP5
+Date : Tue Dec 14 15:05:39 2021
+****************************************
+Pin Wire Max Max Connection
+Port Dir Load Load Trans Cap Class Attrs
+--------------------------------------------------------------------------------
+Cin in 0.0000 0.0000 1.02 0.04 -- 
+M in 0.0000 0.0000 1.02 0.04 -- 
+S[0] in 0.0000 0.0000 1.02 0.04 -- 
+S[1] in 0.0000 0.0000 1.02 0.04 -- 
+opA[0] in 0.0000 0.0000 1.02 0.04 -- 
+Co out 0.0300 0.0000 -- -- -- 
+DO[0] out 0.0300 0.0000 -- -- -- 
+DO[1] out 0.0300 0.0000 -- -- -- 
+DO[2] out 0.0300 0.0000 -- -- -- 
+DO[3] out 0.0300 0.0000 -- -- --</code></pre><h4 id="面积-area-Report"><a href="#面积-area-Report" class="headerlink" title="面积(area) Report"></a>面积(area) Report</h4><ul>
 <li>面积报告显示设计的门数</li>
 </ul>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211210141719453.png" alt=""></p>
-<h4 id="层次-hierarchy-Report"><a href="#层次-hierarchy-Report" class="headerlink" title="层次(hierarchy) Report"></a>层次(hierarchy) Report</h4><ul>
+<pre><code>****************************************
+Report : area
+Design : ALU_CLA32
+Version: R-2020.09-SP5
+Date : Tue Dec 14 15:10:42 2021
+****************************************
+Library(s) Used:
+ typical_1v2c25 (File: /data/techlib/smic/smic13/smicSC/aci/sc-x/synopsys/typical_1v2c25.db)
+Number of ports: 255
+Number of nets: 689
+Number of cells: 475
+Number of combinational cells: 467
+Number of sequential cells: 0
+Number of macros/black boxes: 0
+Number of buf/inv: 229
+Number of references: 15
+Combinational area: 4567.703377
+Buf/Inv area: 1276.444782 
+Noncombinational area: 0.000000
+Macro/Black Box area: 0.000000
+Net Interconnect area: 92680.464661
+Total cell area: 4567.703377
+Total area: 97248.168037</code></pre><h4 id="层次-hierarchy-Report"><a href="#层次-hierarchy-Report" class="headerlink" title="层次(hierarchy) Report"></a>层次(hierarchy) Report</h4><ul>
 <li>层次报告显示每块的使用的元件及其层次</li>
 </ul>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211210141743399.png" alt=""></p>
-<h4 id="引用-reference-Report"><a href="#引用-reference-Report" class="headerlink" title="引用(reference) Report"></a>引用(reference) Report</h4><ul>
+<pre><code>Hierarchical area distribution
+------------------------------
+ Global cell area Local cell area
+ ------------------ ----------------------------
+Hierarchical cell Absolute Percent Combi- Noncombi- Black-
+ Total Total national national boxes Design
+-------------------------------- --------- ------- --------- --------- ------ ------------
+ALU_CLA32 4567.7034 100.0 499.0356 0.0000 0.0000 ALU_CLA32
+u[0].uALU_CLA4_G 799.4754 17.5 799.4754 0.0000 0.0000 ALU_CLA4_G_0
+u[1].uALU_CLA4_G 549.9576 12.0 549.9576 0.0000 0.0000 ALU_CLA4_G_7
+u[2].uALU_CLA4_G 490.5486 10.7 490.5486 0.0000 0.0000 ALU_CLA4_G_6
+u[3].uALU_CLA4_G 449.8110 9.8 449.8110 0.0000 0.0000 ALU_CLA4_G_5
+u[4].uALU_CLA4_G 470.1798 10.3 470.1798 0.0000 0.0000 ALU_CLA4_G_4
+u[5].uALU_CLA4_G 451.5084 9.9 451.5084 0.0000 0.0000 ALU_CLA4_G_3
+u[6].uALU_CLA4_G 436.2318 9.6 436.2318 0.0000 0.0000 ALU_CLA4_G_2
+u[7].uALU_CLA4_G 420.9552 9.2 420.9552 0.0000 0.0000 ALU_CLA4_G_1
+-------------------------------- --------- ------- --------- --------- ------ ------------
+Total 4567.7034 0.0000 0.0000</code></pre><h4 id="report-hierarchy-full"><a href="#report-hierarchy-full" class="headerlink" title="report_hierarchy -full"></a>report_hierarchy -full</h4><p>报告每个模块的使用的元件及其层次</p>
+<pre><code>****************************************
+Report : hierarchy
+ -full
+Design : ALU_CLA32
+Version: R-2020.09-SP5
+Date : Tue Dec 14 15:19:40 2021
+****************************************
+ALU_CLA32
+ ALU_CLA4_G_0
+ AND2X8 typical_1v2c25
+ AOI2BB1X4 typical_1v2c25
+ AOI2BB2X4 typical_1v2c25
+ AOI22X1 typical_1v2c25
+ AOI22X2 typical_1v2c25
+ AOI221X2 typical_1v2c25
+ AOI221XL typical_1v2c25
+ BUFX8 typical_1v2c25
+ CLKAND2X12 typical_1v2c25
+ CLKBUFX2 typical_1v2c25
+ CLKBUFX3 typical_1v2c25
+ ……</code></pre><h4 id="引用-reference-Report"><a href="#引用-reference-Report" class="headerlink" title="引用(reference) Report"></a>引用(reference) Report</h4><ul>
 <li>引用报告显示设计中引用的静态结果</li>
 </ul>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211210141807840.png" alt=""></p>
-<h4 id="约束-constraint-Report"><a href="#约束-constraint-Report" class="headerlink" title="约束(constraint) Report"></a>约束(constraint) Report</h4><ul>
+<pre><code>****************************************
+Report : reference
+Design : ALU_CLA32
+Version: R-2020.09-SP5
+Date : Tue Dec 14 15:26:07 2021
+****************************************
+Attributes:
+ b - black box (unknown)
+ bo - allows boundary optimization
+ d - dont_touch
+ mo - map_only
+ h - hierarchical
+ n - noncombinational
+ r - removable
+ s - synthetic operator
+ u - contains unmapped logic
+Reference Library Unit Area Count Total Area Attributes
+-----------------------------------------------------------------------------
+ALU_CLA4_G_0 799.475409 1 799.475409 h
+ALU_CLA4_G_1 420.955193 1 420.955193 h
+ALU_CLA4_G_2 436.231796 1 436.231796 h
+……
+BUFX2 typical_1v2c25 6.789600 1 6.789600 
+BUFX4 typical_1v2c25 8.487000 1 8.487000</code></pre><h4 id="约束-constraint-Report"><a href="#约束-constraint-Report" class="headerlink" title="约束(constraint) Report"></a>约束(constraint) Report</h4><ul>
 <li>约束报告显示编译过的设计是否满足约束</li>
 <li>dc_shell&gt; report_constraint –all_violators</li>
 </ul>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211210141834704.png" alt=""></p>
-<h4 id="时序-timing-Report"><a href="#时序-timing-Report" class="headerlink" title="时序(timing) Report"></a>时序(timing) Report</h4><ul>
+<pre><code>Startpoint: opB[0] (input port)
+ Endpoint: DO[31] (output port)
+ Path Group: default
+ Path Type: max
+ Des/Clust/Port Wire Load Model Library
+ ------------------------------------------------
+ ALU_CLA32 smic13_wl20 typical_1v2c25
+ Point Incr Path
+ -----------------------------------------------------------------------------------
+ input external delay 0.00 0.00 r
+ opB[0] (in) 0.24 0.24 r
+ U30/Y (BUFX6) 0.14 0.38 r
+ u[0].uALU_CLA4_G/U19/Y (INVX16) 0.05 0.43 f
+ u[0].uALU_CLA4_G/U2/Y (CLKAND2X12) 0.09 0.52 f
+ ……
+ u[7].uALU_CLA4_G/U2/Y (XOR2X4) 0.12 5.28 r
+ DO[31] (out) 0.00 5.28 r
+ data arrival time 5.28
+ max_delay 5.30 5.30
+ output external delay 0.00 5.30
+ data required time 5.30
+ -----------------------------------------------------------------------------------
+ data required time 5.30
+ data arrival time -5.28
+ -----------------------------------------------------------------------------------
+ slack (MET) 0.02</code></pre><h4 id="时序-timing-Report"><a href="#时序-timing-Report" class="headerlink" title="时序(timing) Report"></a>时序(timing) Report</h4><ul>
 <li>用户应知道report_timing产生的路径信息</li>
 </ul>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211210141859985.png" alt=""></p>
-<ul>
+<pre><code>Operating Conditions: typical_1v2c25 Library: typical_1v2c25
+Wire Load Model Mode: enclosed
+ Startpoint: Cin (input port)
+ Endpoint: DO[31] (output port)
+ Path Group: default
+ Path Type: max
+ Des/Clust/Port Wire Load Model Library
+ ------------------------------------------------
+ ALU_CLA32 smic13_wl20 typical_1v2c25
+ Point Incr Path
+ --------------------------------------------------------------------------
+ input external delay 0.00 0.00 r
+ Cin (in) 0.22 0.22 r
+ U38/Y (BUFX4) 0.18 0.39 r
+ u[0].uALU_CLA4_G/ci (ALU_CLA4_G_0) 0.00 0.39 r
+ u[0].uALU_CLA4_G/U41/Y (NAND2X8) 0.06 0.46 f
+……
+ u[7].uALU_CLA4_G/Do[3] (ALU_CLA4_G_1) 0.00 4.85 r
+ DO[31] (out) 0.00 4.85 r
+ data arrival time 4.85
+ max_delay 5.30 5.30
+ output external delay 0.00 5.30
+ data required time 5.30
+ --------------------------------------------------------------------------
+ data required time 5.30
+ data arrival time -4.85
+ --------------------------------------------------------------------------
+ slack (MET) 0.45</code></pre><ul>
 <li>路径延时、路径要求时间和总结部分</li>
 </ul>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211210141923396.png" alt=""></p>
@@ -6125,7 +6381,23 @@ Power-specific unit information :
     Cell Internal Power = 13.4819 mW (58%)
     Net Switching Power = 9.7291 mW (42%)
     Total Dynamic Power = 23.2109 mW (100%)
-    Cell Leakage Power = 123.8077 nW </code></pre><h4 id="交互式显示"><a href="#交互式显示" class="headerlink" title="交互式显示"></a>交互式显示</h4><ul>
+    Cell Leakage Power = 123.8077 nW </code></pre><pre><code>Operating Conditions: typical_1v2c25 Library: typical_1v2c25
+Wire Load Model Mode: enclosed
+Design Wire Load Model Library
+ALU_CLA32 smic13_wl20 typical_1v2c25
+------------------------------------------------
+Global Operating Voltage = 1.2 
+Power-specific unit information :
+ Voltage Units = 1V
+ Capacitance Units = 1.000000pf
+ Time Units = 1ns
+ Dynamic Power Units = 1mW (derived from V,C,T units)
+ Leakage Power Units = 1pW
+ Cell Internal Power = 734.8602 uW (23%)
+ Net Switching Power = 2.4284 mW (77%)
+ ---------
+Total Dynamic Power = 3.1633 mW (100%)
+Cell Leakage Power = 222.9129 nW</code></pre><h4 id="交互式显示"><a href="#交互式显示" class="headerlink" title="交互式显示"></a>交互式显示</h4><ul>
 <li>从报告中选择一条信息，相应的项会在逻辑图中高亮度显示(按show按钮)</li>
 </ul>
 <p><img src="/images/loading.gif" data-original="../images/basic/image-20211210142107915.png" alt=""></p>
@@ -6718,7 +6990,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">3244.3k</span>&nbsp;字
+                class="white-color">3246.2k</span>&nbsp;字
             
             
             
