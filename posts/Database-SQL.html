@@ -1,0 +1,1748 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="SQL Server：数据库基础, JackHCC">
+    <meta name="description" content="SQL Server数据库详解">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>SQL Server：数据库基础 | JackHCC</title>
+    <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/my.css">
+    
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/jquery/jquery.min.js"></script>
+    
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper head-container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/me.jpg" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">JackHCC</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>留言板</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>友情链接</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/me.jpg" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">JackHCC</div>
+        <div class="logo-desc">
+            
+            Make the world betterrrr!!!
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			留言板
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			友情链接
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/JackHCC/JackHCC.github.io" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/JackHCC/JackHCC.github.io" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/14.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">SQL Server：数据库基础</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        height: calc(100vh - 250px);
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 30px;
+        bottom: 146px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/SQL/">
+                                <span class="chip bg-color">SQL</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/Database/" class="post-category">
+                                Database
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2020-03-22
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2021-11-28
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    10.4k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    37 分
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h1 id="SQL数据库基础"><a href="#SQL数据库基础" class="headerlink" title="SQL数据库基础"></a>SQL数据库基础</h1><h3 id="绪论"><a href="#绪论" class="headerlink" title="绪论"></a>绪论</h3><h5 id="1-1-数据、信息与数据处理"><a href="#1-1-数据、信息与数据处理" class="headerlink" title="1.1 数据、信息与数据处理"></a>1.1 数据、信息与数据处理</h5><p><strong>(1) 数据(Data)</strong>：是数据库中存储的基本对象；</p>
+<ul>
+<li>定义：描述事物的符号记录，是信息的符号表示，或称载体；</li>
+<li>种类：数字、文本、图形、图像、声音、视频，学生的档案记录(40951001, 王二小，男，1988，内蒙，tx1201)等。</li>
+</ul>
+<p><strong>(2) 信息</strong>：数据的内涵，是数据的语义解释。</p>
+<p><strong>(3)数据处理</strong>：将数据转换成信息的过程;<strong>数据管理</strong>： 是数据处理的核心。</p>
+<h6 id="1-2-数据管理技术的产生与发展"><a href="#1-2-数据管理技术的产生与发展" class="headerlink" title="1.2  数据管理技术的产生与发展"></a>1.2  数据管理技术的产生与发展</h6><ol>
+<li>人工管理阶段（20世纪50年代中期前）</li>
+</ol>
+<ul>
+<li>数据不保存</li>
+<li>应用程序管理数据</li>
+<li>数据不具有独立性和共享性</li>
+</ul>
+<ol start="2">
+<li>文件系统阶段（20世纪50年代后期到60年代中期）</li>
+</ol>
+<ul>
+<li>数据以文件形式可以长期保存在外存储设备上</li>
+<li>由文件系统管理数据（ “按名访问，按记录存取 ” ）</li>
+<li>数据共享性差，冗余度大（ 面向应用 ）</li>
+<li>数据独立性差</li>
+</ul>
+<ol start="3">
+<li>数据库系统阶段（20世纪60年代后期至今）</li>
+</ol>
+<ul>
+<li>数据结构化, 并与程序分离</li>
+<li>数据的共享性高，冗余度低，易扩充（集中存储）</li>
+<li>数据独立性高</li>
+<li>数据由数据库管理系统统一控制<h6 id="数据库系统阶段——数据独立性高"><a href="#数据库系统阶段——数据独立性高" class="headerlink" title="数据库系统阶段——数据独立性高"></a><strong>数据库系统阶段——数据独立性高</strong></h6><ul>
+<li>物理独立性<br>用户的应用程序与数据库中数据相互独立。当数据的存储格式和组织方法改变时，不影响数据库的逻辑结构，从而不影响应用程序。</li>
+</ul>
+</li>
+<li>逻辑独立性<br>指用户的应用程序与数据库的逻辑结构是相互独立的。数据的逻辑结构改变了，用户程序不用改变。</li>
+<li>数据独立性由DBMS的二级映像功能来保证。<h6 id="数据库系统阶段——DBMS提供数据控制功能"><a href="#数据库系统阶段——DBMS提供数据控制功能" class="headerlink" title="数据库系统阶段——DBMS提供数据控制功能"></a>数据库系统阶段——DBMS提供数据控制功能</h6>(1) 数据的安全性（ （Security） ） 控制<br>保护数据 ， 以防止不合法的使用造成的数据的泄密和破坏 。<br>(2) 数据的完整性（ （Integrity） ） 控制<br>将数据控制在有效范围内 ， 或保证数据间满足一定的关系 。<br>(3) 并发（ （Concurrency） ） 控制<br>对多用户的并发操作加以控制和协调 ， 防止相互干扰 。<br>(4) 数据恢复（ （Recovery） ）<br>将数据库从错误状态恢复到某一已知的正确状态 。<h6 id="数据库系统的发展"><a href="#数据库系统的发展" class="headerlink" title="数据库系统的发展"></a>数据库系统的发展</h6></li>
+<li>初级阶段——第一代数据库<br>出现了层次模型、网状模型的数据库</li>
+<li>中级阶段——第二代数据库<br>关系型数据库和结构化查询语言</li>
+<li>高级阶段——新一代数据库<br>“面向对象”型数据库<h5 id="1-3-数据库系统的组成"><a href="#1-3-数据库系统的组成" class="headerlink" title="1.3 数据库系统的组成"></a>1.3 数据库系统的组成</h5>数据库系统（Database System，DBS）包括以下5部分:</li>
+<li>数据库</li>
+<li>数据库管理系统</li>
+<li>硬件系统</li>
+<li>软件系统</li>
+<li>人员(管理员、分析员、设计员、程序员和用户)<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230336556490" alt=""></li>
+</ul>
+<ol>
+<li><strong>数据库</strong>(Database,简称DB)是长期储存在计算机内、有组织的、可共享的大量数据的集合。<br><strong>数据库的基本特征</strong></li>
+</ol>
+<ul>
+<li>数据按一定的数据模型组织、描述和储存</li>
+<li>可为各种用户共享</li>
+<li>冗余度较小</li>
+<li>数据独立性较高</li>
+<li>易扩展</li>
+</ul>
+<ol start="2">
+<li><strong>数据库管理系统</strong>（Database ManagementSystem ，简称DBMS）</li>
+</ol>
+<ul>
+<li>管理数据库的系统软件 ，是 数据库系统的<strong>核心</strong> 。</li>
+<li>位于用户与操作系统之间的一层数据管理软件。<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230344174492" alt=""></li>
+</ul>
+<p><strong>DBMS的主要功能</strong></p>
+<ul>
+<li>数据定义功能（DDL） </li>
+<li>数据操纵功能（DML） </li>
+<li>数据库的事务管理和运行管理</li>
+<li>数据库的建立和维护功能</li>
+<li>数据通信</li>
+</ul>
+<ol start="3">
+<li><strong>硬件系统</strong><br>硬件系统要有足够的内存用来存放操作系统、DBMS的核心模块、数据缓存、应用程序及数据备份等。</li>
+<li><strong>软件系统</strong><br>包括DBMS、支持DBMS运行的操作系统和具有数据访问接口的高级语言及其编程环境。<h5 id="1-4数据模型"><a href="#1-4数据模型" class="headerlink" title="1.4数据模型"></a>1.4数据模型</h5><img src="/images/loading.gif" data-original="../images/basic/1240-1627230347133494" alt=""></li>
+</ol>
+<p><strong>根据应用目的，模型分为两个层次：</strong></p>
+<ol>
+<li>概念模型( 信息模型)</li>
+</ol>
+<ul>
+<li>按用户的观点 ，独立于计算机实现的，只用来描述和组织 所关心的信息 结构的概念数据模型， 强调语义</li>
+<li>数据库设计人员和用户之间进行交流的语言</li>
+<li>对应于信息世界</li>
+</ul>
+<ol start="2">
+<li>数据模型</li>
+</ol>
+<ul>
+<li>按计算机系统的观点，直接面向计算机系统的，描述数据库中数据的逻辑结构的基本数据模型</li>
+<li>对应于数据世界（机器世界）</li>
+<li>包括<strong>逻辑模型</strong>和<strong>物理模型</strong><h6 id="概念模型（信息世界中）的基本概念"><a href="#概念模型（信息世界中）的基本概念" class="headerlink" title="概念模型（信息世界中）的基本概念"></a>概念模型（信息世界中）的基本概念</h6></li>
+<li>实体Entity ：客观存在并相互区别的事物。具体的人、事、物，抽象的概念（订货）</li>
+<li>属性Attribute ：实体或联系的特征。学生（学号，姓名，性别）</li>
+<li>码，键Key ：唯一标识实体的属性或属性组</li>
+<li>域Domain ：属性的取值范围。性别（男，女）</li>
+<li>实体型Entity Type ：实体名＋属性名集合</li>
+<li>实体集Entity Set ：同型实体的集合</li>
+<li>联系Relationship: 实体与实体之间的联系<h6 id="实体间的联系"><a href="#实体间的联系" class="headerlink" title="实体间的联系"></a>实体间的联系</h6>实体之间的对应关系称为联系，它反映了现实世界事物之间的相互关联。<br>联系的类型：</li>
+<li>一对一联系  记为1  ：1。</li>
+<li>一对多联系  记为 １：n。</li>
+<li>多对多联系  记为m  ：n。<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230351339496" alt=""><h6 id="概念模型的表示方法"><a href="#概念模型的表示方法" class="headerlink" title="概念模型的表示方法"></a>概念模型的表示方法</h6>E-R图：提供了表示实体、属性和实体间联系的方法<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230355677498" alt=""></li>
+</ul>
+<h6 id="建立E-R图的步骤"><a href="#建立E-R图的步骤" class="headerlink" title="建立E-R图的步骤"></a>建立E-R图的步骤</h6><ol>
+<li>确定实体和实体的属性</li>
+<li>确定实体和实体之间的联系及联系的类型</li>
+<li>给联系和实体加上属性。<h6 id="E-R模型实例"><a href="#E-R模型实例" class="headerlink" title="E-R模型实例"></a>E-R模型实例</h6><img src="/images/loading.gif" data-original="../images/basic/1240-1627230358261500" alt=""></li>
+</ol>
+<h6 id="数据模型定义"><a href="#数据模型定义" class="headerlink" title="数据模型定义"></a>数据模型定义</h6><ul>
+<li>数据模型是表示实体类型和实体间联系的模型，是机器世界对现实世界中的数据和信息 抽象、表示和处理 。</li>
+<li>包括逻辑模型和物理模型。<h6 id="数据模型的组成要素-三要素"><a href="#数据模型的组成要素-三要素" class="headerlink" title="数据模型的组成要素(三要素)"></a>数据模型的组成要素(三要素)</h6>数据结构、 数据操作和 数据完整性约束<h6 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h6></li>
+</ul>
+<ol>
+<li>数据结构的概念</li>
+</ol>
+<ul>
+<li>实体及实体间联系的 表示方法，描述了系统的 静态特性.</li>
+</ul>
+<ol start="2">
+<li>数据结构描述的内容</li>
+</ol>
+<ul>
+<li>对象的数据类型、内容、性质有关的对象；</li>
+<li>与数据之间联系有关的对象；<h6 id="数据操作"><a href="#数据操作" class="headerlink" title="数据操作"></a>数据操作</h6><ol>
+<li>概念</li>
+</ol>
+</li>
+<li>对数据库中各种对象(型)的实例(值)允许执行的操作及有关的操作规则，是对系统 动态特性的描述。</li>
+</ul>
+<ol start="2">
+<li>数据操作的类型（2大类）</li>
+</ol>
+<ul>
+<li>数据检索（查询）</li>
+<li>数据更新(包括插入、删除、修改)<h6 id="数据完整性约束"><a href="#数据完整性约束" class="headerlink" title="数据完整性约束"></a>数据完整性约束</h6></li>
+</ul>
+<ol>
+<li>概念：完整性规则是给定的数据模型中数据及其联系所具有的 制约和依存规则。</li>
+<li>作用：限定符合数据模型的数据库状态以及状态的变化，以保证数据的正确、有效、相容。</li>
+<li>四种类型：实体完整性约束、域完整性约束、参照完整性约束和用户自定义完整性约束。<h6 id="最常用的数据模型"><a href="#最常用的数据模型" class="headerlink" title="最常用的数据模型"></a>最常用的数据模型</h6>非关系模型</li>
+</ol>
+<ul>
+<li><p>层次模型(Hierarchical Model)<br>层次模型是数据库系统中最早出现的数据模型;<br>层次数据库系统的典型代表是IBM 公司1968年 年推出的IMS(Information Management System);<br>层次模型用 树形结构(“ 有向树”) 来表示各类实体以及实体间的联系.<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230361693502" alt=""></p>
+</li>
+<li><p>网状模型(Network Model)<br>典型代表是DBTG;<br>通过 有向图结构 表示实体及联系。“网”中每个结点表示一个实体( 型) ，结点之间箭头表示实体( 型);<br>网状数据模型可能有多个根结点，某些非根结点可能有多个父结点，适合表示实体的多对多联系。<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230364424504" alt=""></p>
+<p>关系模型(Relational Model)</p>
+</li>
+<li><p>1970年美国IBM公司San Jose研究室的研究员E.F.Codd首次提出了数据库系统的关系模型</p>
+</li>
+<li><p>关系数据结构：规范化的<strong>二维表</strong>（关系）<br>一个关系就是没有重复行和重复列的二维表，二维表的每一行在关系中称为元组，每一列在关系中称为属性。学生关系的每一行代表一个学生的记录，每一列代表学生记录的一个字段。属性个数（n）称为关系的元。<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230367173506" alt="image.png"></p>
+<h6 id="三种模型比较"><a href="#三种模型比较" class="headerlink" title="三种模型比较"></a>三种模型比较</h6><p><img src="/images/loading.gif" data-original="../images/basic/1240-1627230371905508" alt=""></p>
+<h5 id="1-5数据库系统结构"><a href="#1-5数据库系统结构" class="headerlink" title="1.5数据库系统结构"></a>1.5数据库系统结构</h5></li>
+<li><p>数据库系统内部的体系结构<br>从数据库管理系统角度看，数据库系统通常采用三级模式结构，是数据库系统内部的系统结构。</p>
+</li>
+<li><p>数据库系统外部的体系结构<br>从数据库最终用户角度看，数据库系统的结构分为:集中式结构；客户/服务器结构；浏览器／应用服务器／数据库服务器多层结构等。</p>
+</li>
+<li><p>为了有效地组织、管理数据，提高数据库的逻辑独立性和物理独立性，数据库设计的标准体系结构是3 级模式结构，即<strong>外模式</strong> ,<strong>模式</strong>和<strong>内模式</strong> </p>
+</li>
+<li><p>对应于体系结构，用户或程序员看到或使用的数据库内容被称为视图，可把视图相应分为：</p>
+</li>
+</ul>
+<ol>
+<li>对应于用户的外部视图（ 用户视图）</li>
+<li>对应于应用程序员的 (概念视图)</li>
+<li>对应于系统程序员的内部视图（ 存储视图）<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230377042510" alt=""></li>
+</ol>
+<ul>
+<li>模式（Schema，也称逻辑模式，概念视图）</li>
+</ul>
+<p>– 数据库中 全体数据的逻辑结构和特征 的描述。<br>– 一个数据库只有一个模式<br>– 模式的地位：是数据库系统模式结构的中间层</p>
+<ul>
+<li>外模式（External Schema）</li>
+</ul>
+<p>– 也称 子模式或用户模式；<br>–  数据库用户的数据视图，是与某一应用有关的数据的逻辑表示。<br>– 外模式的地位：介于模式与应用之间<br>–  外模式通常是模式的子集<br>– 一个数据库可以有多个外模式。反映了不同的用户的应用需求、看待数据的方式、对数据保密的要求</p>
+<ul>
+<li>内模式（Internal Schema）</li>
+</ul>
+<p>–  是 数据物理结构 和 存储方式<br>– 是数据在数据库内部的表示方式<br><strong>3级模式是对数据的三个抽象级别</strong><br> 2级映象在DBMS 内部实现这三个抽象层次的联系和转换 ；</p>
+<ul>
+<li>外模式\ 模式映像<br>– 保证数据的<strong>逻辑独立性</strong><br>– 同一个模式可以有任意多个外模式，外模式／模式映象定义外模式与模式之间的对应关系；<br>– 当模式改变时，外模式／模式映象使外模式保持不变；<br>– 应用程序是依据数据的外模式编写的，从而不必修改应用程序，保证了数据与程序的逻辑独立性<ul>
+<li>模式\内模式映像</li>
+</ul>
+– 保证数据的<strong>物理独立性</strong>。<br>– 模式／内模式映象定义了数据 全局逻辑结构与 存储结构之间的对应关系。<br>– 当数据库的存储结构改变了，模式／内模式映象使模式保持不变。<br>– 应用程序不受影响。保证了数据与程序的物理独立性。</li>
+</ul>
+<p>从数据库最终用户角度看（数据库系统外部的体系结构） ，数据库系统的结构分为:</p>
+<ul>
+<li>集中式数据库系统</li>
+<li>客户/服务器（C/S）系统结构</li>
+<li>分布式数据库系统结构</li>
+<li>浏览器／服务器（B/S）系统结构</li>
+</ul>
+<h3 id="关系数据库"><a href="#关系数据库" class="headerlink" title="关系数据库"></a>关系数据库</h3><h5 id="2-1关系数据模型的基本概念"><a href="#2-1关系数据模型的基本概念" class="headerlink" title="2.1关系数据模型的基本概念"></a>2.1关系数据模型的基本概念</h5><p>关系模型的组成（三要素）</p>
+<ul>
+<li>关系数据结构（静态特性）<br>现实世界的实体以及实体间的各种联系均用关系来表示;<br>数据的逻辑结构—-二维表</li>
+<li>关系操作集合（动态特性）<br>插入、删除、修改、查询（选择、投影、连接、除、并、交、差）</li>
+<li>关系完整性约束<br>实体完整性、参照完整性、域完整性、用户定义完整性</li>
+</ul>
+<p>1） 关系: 通常将一个无重复行、重复列的二维表看成一个关系，每个关系都有一个关系名。<br> 2） 元组: 二维表的每一行在关系中称为元组。描述了现实世界中的一个实体或不同实体间的一种联系。<br> 3） 属性: 二维表的每一列在关系中称为属性，每个属性都有一个属性名，各个属性的取值称为属性值。每个属性有一定的取值范围，称为值域。<br> 4）域 （Domain): 关系中每个属性所对应的变化范围叫做属性的变域或简称域，关系中所有属性的实际取值必须来自它对应的域。<br> 5）分量: 一个元组在一个属性域上的取值称为该元组在此属性上的分量。<br>6）关系模式: 二维表的表头那一行称为关系模式，即一个关系的关系名及其全部属性名的集合。关系模式是概念模型中实体型及实体型之间联系的数据模型表示。 一般表示为：<br>关系名（属性名1，属性名2 ， ……，属性名n）<br> 关系模式指出了一个关系的结构；而关系则是由满足关系模式结构的元组构成的集合。关系模式是稳定的、静态的，而关系则是随时间变化的、动态的。<br> 7） 候选码（Candidate key）: 若关系中的某一属性或属性组合的值能唯一地标识一个元组，则称该属性组为候选码<br> 在最简单的情况下，候选码只包含一个属性。<br> 在最极端的情况下，关系模式的所有属性组是这个关系模式的候选码，称为全码（All-key）<br>8） 主码: 若一个关系有多个候选码，则选定其中一个为主<br>码（Primary key）<br> 9）主属性和非主属性<br>– 主码的各个属性称为主属性（Prime attribute）。<br>– 不包含在任何候选码中的属性称为非主属性Non-key attribute）<br>10）外码: 如果关系中某个属性或属性组合并非码，但却是另一个关系的主码，则称此属性或属性组合为本关系的外码或外键(ForeignKey)。在关系数据库中，用外码表示两个表间的联系。</p>
+<h5 id="2-2关系数据模型的集合论定义"><a href="#2-2关系数据模型的集合论定义" class="headerlink" title="2.2关系数据模型的集合论定义"></a>2.2关系数据模型的集合论定义</h5><h6 id="笛卡尔积"><a href="#笛卡尔积" class="headerlink" title="笛卡尔积"></a>笛卡尔积</h6><p><img src="/images/loading.gif" data-original="../images/basic/1240-1627230382727512" alt=""></p>
+<ul>
+<li>笛卡尔积可表示为一个二维表。表中的每行对应一个元组，表中的每列对应一个域。</li>
+<li>基数（Cardinal number）<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230385991514" alt=""><h6 id="关系"><a href="#关系" class="headerlink" title="关系"></a>关系</h6></li>
+<li>笛卡尔积中的任意子集叫作在域 上的n元 关系，简称关系。</li>
+<li>n元关系就会有n个属性。一个关系中的每一个属性的属性名都不同，对应参与笛卡儿积运算的每个集合的名称。</li>
+<li>一个属性的取值范围Di 称为该属性的域（Domain）。<h6 id="基本关系的性质"><a href="#基本关系的性质" class="headerlink" title="基本关系的性质"></a>基本关系的性质</h6><img src="/images/loading.gif" data-original="../images/basic/1240-1627230389678516" alt=""><h6 id="关系模式"><a href="#关系模式" class="headerlink" title="关系模式"></a>关系模式</h6><img src="/images/loading.gif" data-original="../images/basic/1240-1627230392826518" alt=""><h5 id="2-3-关系模型的完整性约束"><a href="#2-3-关系模型的完整性约束" class="headerlink" title="2.3 关系模型的完整性约束"></a>2.3 关系模型的完整性约束</h5>数据库系统提供的监测机制，确保存储数据的规范，称为完整性约束。<ul>
+<li>实体完整性<br>实体完整性通过定义 主码 来实现的。若属性A A 是关系R R 的主属性，则A A 不能取空值且取值唯一 ；<br>一个关系模型中的所有 元组都是惟一 的，没有两个完全相同的元组，也就是一个二维表中没有两个完全相同行，也称为<strong>行完整性</strong>。</li>
+</ul>
+</li>
+<li>域完整性<br>对关系R R 中属性（列）数据的规范，也称<strong>列完整性</strong>，限制属性的 数据类型、格式、取值范围、是否允许空值 等。</li>
+<li>参照完整性<br>参照完整性是通过定义 外 键 FK （ 存在或为空） 来建立实体间联系的。<br>如外键取空，则 FK 中的每个属性的分量都是空值。</li>
+<li>用户定义完整性<br>针对某一具体关系数据库的约束条件，反映某一具体应用所涉及的数据必须满足的语义要求。<h5 id="2-4关系代数"><a href="#2-4关系代数" class="headerlink" title="2.4关系代数"></a>2.4关系代数</h5><img src="/images/loading.gif" data-original="../images/basic/1240-1627230396374520" alt=""><h6 id="笛卡尔积-1"><a href="#笛卡尔积-1" class="headerlink" title="笛卡尔积"></a>笛卡尔积</h6><img src="/images/loading.gif" data-original="../images/basic/1240-1627230400527522" alt=""><h6 id="选择（限制）"><a href="#选择（限制）" class="headerlink" title="选择（限制）"></a>选择（限制）</h6><img src="/images/loading.gif" data-original="../images/basic/1240-1627230403807524" alt=""><h6 id="投影（Projection）"><a href="#投影（Projection）" class="headerlink" title="投影（Projection）"></a>投影（Projection）</h6><img src="/images/loading.gif" data-original="../images/basic/1240-1627230406756526" alt=""><h6 id="连接（Join-）"><a href="#连接（Join-）" class="headerlink" title="连接（Join ）"></a>连接（Join ）</h6><img src="/images/loading.gif" data-original="../images/basic/1240-1627230412508528" alt=""><br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230415751530" alt=""><br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230418432532" alt=""></li>
+</ul>
+<h6 id="除（Division-）"><a href="#除（Division-）" class="headerlink" title="除（Division ）"></a>除（Division ）</h6><p><img src="/images/loading.gif" data-original="../images/basic/1240-1627230421695534" alt=""></p>
+<h3 id="SQL-Server-2008-数据库基础"><a href="#SQL-Server-2008-数据库基础" class="headerlink" title="SQL Server 2008 数据库基础"></a>SQL Server 2008 数据库基础</h3><h5 id="SQL-Server-简介"><a href="#SQL-Server-简介" class="headerlink" title="SQL Server  简介"></a>SQL Server  简介</h5><ul>
+<li>常见数据库产品包括甲骨文公司的Oracle系统，IBM 公司的DB2 系统和Informix 系统，赛贝斯公司的Sybase ASE 系统，微软公司的Microsoft SQL Server 系统和Access 系统，以及MySQL</li>
+<li>2008 年8 月，微软发布Microsoft SQL Server 2008 系统，其代码是Katmai 。该系统在 安全性、可用性、易管理性、可扩展性、商业智能 等方面有了更多的改进和提高，支持 更强大 的数据存储和应用需求。<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230425400536" alt="image.png"></li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/1240-1627230427808538" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/1240-1627230430776540" alt=""></p>
+<h5 id="SQL-Server-2008登录"><a href="#SQL-Server-2008登录" class="headerlink" title="SQL Server 2008登录"></a>SQL Server 2008登录</h5><p><img src="/images/loading.gif" data-original="../images/basic/1240-1627230437465542" alt=""></p>
+<h5 id="SQL-Server-Management-Studio-简介"><a href="#SQL-Server-Management-Studio-简介" class="headerlink" title="SQL Server Management Studio 简介"></a>SQL Server Management Studio 简介</h5><p><img src="/images/loading.gif" data-original="../images/basic/1240-1627230451678544" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/1240-1627230455648546" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/1240-1627230459095548" alt=""></p>
+<h5 id="SQL-Server-2008-数据库的创建与维护"><a href="#SQL-Server-2008-数据库的创建与维护" class="headerlink" title="SQL Server 2008 数据库的创建与维护"></a>SQL Server 2008 数据库的创建与维护</h5><p><img src="/images/loading.gif" data-original="../images/basic/1240-1627230480562550" alt=""></p>
+<ul>
+<li>SQL Server 2008 数据存储结构<br>（1 ）数据库文件<ul>
+<li>主数据文件.mdf</li>
+<li>次要数据文件  .ndf</li>
+<li>日志文件 .ldf</li>
+<li>数据文件结构组成</li>
+<li>页<br>_ SQL Server最小存储数据单位<br>_ 一个页大小是8K</li>
+<li>区<br>_ 管理空间的基本单位<br>_ 8个物理上连续的页（64 KB）<br>_ 表被存储在区</li>
+</ul>
+</li>
+</ul>
+<p>（2)数据库文件组</p>
+<p>   (3)数据库创建<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230486002552" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/1240-1627230491514554" alt=""><br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230494267556" alt=""></p>
+<p>（4）数据库修改<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230496682558" alt=""></p>
+<p>（5）数据库删除<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230499677560" alt=""></p>
+<h5 id="Transact-SQL-程序设计基础"><a href="#Transact-SQL-程序设计基础" class="headerlink" title="Transact-SQL 程序设计基础"></a>Transact-SQL 程序设计基础</h5><p><img src="/images/loading.gif" data-original="../images/basic/1240-1627230502259562" alt=""><br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230504234564" alt=""></p>
+<p> （1 ）标识符分类<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230506778566" alt=""><br>（2）数据类型<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230632295568" alt=""><br>（3）全局变量<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230635178570" alt=""><br>（4）运算符<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230638310572" alt=""><br>（5）批处理<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230641087574" alt=""><br>（6）函数<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230643399576" alt=""><br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230646259578" alt=""><br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230650471580" alt=""><br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230653563582" alt=""><br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230655948584" alt=""><br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230658427586" alt=""><br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230661045588" alt=""><br>（7）流程控制<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230663936590" alt=""></p>
+<h3 id="关系数据库标准语言SQL"><a href="#关系数据库标准语言SQL" class="headerlink" title="关系数据库标准语言SQL"></a>关系数据库标准语言SQL</h3><h5 id="SQL-的三级模式结构"><a href="#SQL-的三级模式结构" class="headerlink" title="SQL 的三级模式结构"></a>SQL 的三级模式结构</h5><p><img src="/images/loading.gif" data-original="../images/basic/1240-1627230666010592" alt=""></p>
+<h5 id="SQL-的数据定义"><a href="#SQL-的数据定义" class="headerlink" title="SQL 的数据定义"></a>SQL 的数据定义</h5><p><img src="/images/loading.gif" data-original="../images/basic/1240-1627230669295594" alt=""><br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230671720596" alt=""><br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230673848598" alt=""></p>
+<ul>
+<li><p>基本表定义<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230678689600" alt=""></p>
+</li>
+<li><p>基本表的修改与删除<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230681089602" alt=""><br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230683496604" alt=""></p>
+</li>
+<li><p>索引的建立和删除<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230685829606" alt=""></p>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/1240-1627230688217608" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/1240-1627230690663610" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/1240-1627230693797612" alt=""><br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230696419614" alt=""></p>
+<ul>
+<li>查询语句</li>
+</ul>
+<p>查询的基本结构包括了三个子句： SELECT、 FROM 、 WHERE。</p>
+<p> 从表中（From子句）,选择满足记录选择条件（Where子句）的记录，并对他们进行分组（Group子句, Having子句表达组选择条件）、统计(统计函数）、排序（Order by 子句）和投影（Select子句） ，形成查询结果集。</p>
+<ol>
+<li>单表无条件查询<br>DISTINCT 保留字的使用：可以使查询的结果中重复列值只保留一个。<br>查询列中含有运算的表达式。<br>查询列中含有字符串常量。<br>查询列中含有聚合函数。<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230700202616" alt=""></li>
+<li>单表有条件查询<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230703850618" alt=""></li>
+</ol>
+<p><img src="/images/loading.gif" data-original="../images/basic/1240-1627230706297620" alt=""><br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230708678622" alt=""><br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230711219624" alt=""><br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230713571626" alt=""><br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230715970628" alt=""></p>
+<ol start="3">
+<li>分组查询和排序查询<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230718547630" alt=""></li>
+</ol>
+<p><img src="/images/loading.gif" data-original="../images/basic/1240-1627230721090632" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/1240-1627230723186634" alt=""></p>
+<ol start="4">
+<li>多表查询</li>
+</ol>
+<ul>
+<li>SQL通过连接查询、笛卡尔积、并操作、交操作、差操作5种关系代数中的运算功能来实现多个数据表的查询。SQL通过连接查询、笛卡尔积、并操作、交操作、差操作5种关系代数中的运算功能来实现多个数据表的查询。</li>
+<li>SQL  提供在子句中列出每个关系 然后在SELECT子句和WHERE子句中引用FROM子句中的关系属性，而WHERE子句中用来连接两个关系的条件。在SELECT子句和WHERE子句中引用FROM子句中的关系属性，而WHERE子句中用来连接两个关系的条件。</li>
+<li>连接查询包括等值连接、非等值连接、自身连接、内连接和外连接等值连接、非等值连接、自身连接、内连接和外连接等。<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230726690636" alt=""></li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/1240-1627230729347638" alt=""><br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230731354640" alt=""><br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230734306642" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/1240-1627230736829644" alt=""><br>5. 嵌套查询<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230739634646" alt=""></p>
+<ul>
+<li>SQL 的数据操纵</li>
+</ul>
+<ol>
+<li>插入数据<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230743563648" alt=""></li>
+<li>修改数据<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230746417650" alt=""></li>
+<li>删除数据<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230748755652" alt=""><br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230751163654" alt=""></li>
+</ol>
+<ul>
+<li>视图<ul>
+<li>视图是 外模式的基本单位，实际上视图是从若干个基本表或视图导出来的虚表。</li>
+<li>当基本表的数据发生变化时，相应的视图数据也会随之改变。</li>
+<li>视图定义后，可以被用户查询、更新，但通过视图来更新基本表中的数据要有一定的限制。</li>
+</ul>
+</li>
+</ul>
+<ol>
+<li>定义视图<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230754747656" alt=""></li>
+</ol>
+<p><img src="/images/loading.gif" data-original="../images/basic/1240-1627230757187658" alt=""><br>2. 删除视图<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230759955660" alt=""><br>3. 查询视图<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230762620662" alt=""><br>4. 更新视图<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230764867664" alt=""></p>
+<ol start="5">
+<li>视图的作用<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230767111666" alt=""></li>
+</ol>
+<ul>
+<li>存储过程<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230769539668" alt=""><br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230771630670" alt=""></li>
+</ul>
+<ol>
+<li>创建执行<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230774140672" alt=""><br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230776531674" alt=""></li>
+<li>修改删除<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230778803676" alt=""></li>
+<li>查看储存<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230780852678" alt=""></li>
+</ol>
+<ul>
+<li>触发器<ul>
+<li>触发器是一种特殊的存储过程，在对表或视图执行，触发器是一种特殊的存储过程，在对表或视图执行 UPDATE 、 INSERT 或 DELETE 操作时自动触发执行操作时自动触发执行。<ul>
+<li>触发器技术是保证数据完整性的高级技术，触发器还可以用于对系统的高级监测，用于实施完整性和强制执行业务规则。<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230783619680" alt=""><br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230786252682" alt=""><br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230788495684" alt=""></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="关系数据库规范化理论"><a href="#关系数据库规范化理论" class="headerlink" title="关系数据库规范化理论"></a>关系数据库规范化理论</h3><h4 id="关系模式的形式化定义"><a href="#关系模式的形式化定义" class="headerlink" title="关系模式的形式化定义"></a>关系模式的形式化定义</h4><p><img src="/images/loading.gif" data-original="../images/basic/1240-1627230790664686" alt=""></p>
+<h4 id="函数依赖的基本概念"><a href="#函数依赖的基本概念" class="headerlink" title="函数依赖的基本概念"></a>函数依赖的基本概念</h4><ul>
+<li>函数依赖<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230792940688" alt=""><br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230795742690" alt=""></li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/basic/1240-1627230798349692" alt=""><br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230800853694" alt=""></p>
+<ul>
+<li>码的函数依赖<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230803525696" alt=""></li>
+</ul>
+<h4 id="关系模式的规范化"><a href="#关系模式的规范化" class="headerlink" title="关系模式的规范化"></a>关系模式的规范化</h4><p><img src="/images/loading.gif" data-original="../images/basic/1240-1627230806233698" alt=""></p>
+<ol>
+<li>第 1 范式 1NF<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230809297700" alt=""></li>
+<li>第 2 范式 2NF<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230812696702" alt=""></li>
+<li>第 3 范式 3NF<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230815466704" alt=""></li>
+<li>BCNF 范式<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230818869706" alt=""></li>
+<li>多值依赖与第 4 范式<br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230821406708" alt=""><br><img src="/images/loading.gif" data-original="../images/basic/1240-1627230824590710" alt=""></li>
+</ol>
+<h3 id="数据库设计"><a href="#数据库设计" class="headerlink" title="数据库设计"></a>数据库设计</h3><p><img src="/images/loading.gif" data-original="../images/basic/1240-1627230826669712" alt=""></p>
+<h4 id="需求分析"><a href="#需求分析" class="headerlink" title="需求分析"></a>需求分析</h4><p><img src="/images/loading.gif" data-original="../images/basic/1240-1627230829498714" alt=""></p>
+<h4 id="概念结构设计"><a href="#概念结构设计" class="headerlink" title="概念结构设计"></a>概念结构设计</h4><p><img src="/images/loading.gif" data-original="../images/basic/1240-1627230833130716" alt=""></p>
+<h4 id="逻辑结构设计"><a href="#逻辑结构设计" class="headerlink" title="逻辑结构设计"></a>逻辑结构设计</h4><p><img src="/images/loading.gif" data-original="../images/basic/1240-1627230836351718" alt=""></p>
+<h4 id="物理结构设计"><a href="#物理结构设计" class="headerlink" title="物理结构设计"></a>物理结构设计</h4><h4 id="数据库实施"><a href="#数据库实施" class="headerlink" title="数据库实施"></a>数据库实施</h4><h4 id="数据库运行与维护"><a href="#数据库运行与维护" class="headerlink" title="数据库运行与维护"></a>数据库运行与维护</h4><h1 id="MySQL-开发规范"><a href="#MySQL-开发规范" class="headerlink" title="MySQL 开发规范"></a>MySQL 开发规范</h1><h2 id="数据库对象命名规范"><a href="#数据库对象命名规范" class="headerlink" title="数据库对象命名规范"></a>数据库对象命名规范</h2><h3 id="数据库对象"><a href="#数据库对象" class="headerlink" title="数据库对象"></a>数据库对象</h3><p>数据库对象是数据库的组成部分，常见的有以下几种：表（Table ）、索引（Index）、视图（View）、图表（Diagram）、缺省值（Default）、规则（Rule）、触发器（Trigger）、存储过程（Stored Procedure）、 用户（User）等。命名规范是指数据库对象如数据库（SCHEMA）、表（TABLE）、索引（INDEX）、约束（CONSTRAINTS）等的命名约定。</p>
+<h3 id="数据库对象全局命名规范"><a href="#数据库对象全局命名规范" class="headerlink" title="数据库对象全局命名规范"></a>数据库对象全局命名规范</h3><p>1、命名使用具有意义的英文词汇，词汇中间以下划线分隔</p>
+<p>2、命名只能使用英文字母、数字、下划线，以英文字母开头</p>
+<p>3、避免用MySQL的保留字如：backup、call、group等</p>
+<p>4、所有数据库对象使用小写字母，实际上MySQL中是可以设置大小写是否敏感的，为了保证统一性，我们这边规范全部小写表示。</p>
+<h3 id="数据库命名规范"><a href="#数据库命名规范" class="headerlink" title="数据库命名规范"></a>数据库命名规范</h3><p>1、数据库命名尽量不超过30个字符。</p>
+<p>2、数据库命名一般为项目名称+代表库含义的简写，比如IM项目的工作流数据库，可以是 im_flow。</p>
+<p>3、数据库创建时必须添加默认字符集和校对规则子句。默认字符集为UTF8（已迁移dumbo的使用utf8mb4）</p>
+<p>4、命名应使用小写。</p>
+<h3 id="表命名规范"><a href="#表命名规范" class="headerlink" title="表命名规范"></a>表命名规范</h3><p>1、常规表表名以t_开头，t代表table的意思，命名规则即 t + 模块（包含模块含义的简写）+ 表（包含表含义的简写），比如用户模块的教育信息表：t_user_eduinfo。</p>
+<p>2、临时表（RD、QA或DBA同学用于数据临时处理的表），命名规则：temp前缀+模块+表+日期后缀：temp_user_eduinfo_20210719</p>
+<p>3、备份表（用于保存和归档历史数据或者作为灾备恢复的数据）命名规则，bak前缀+模块+表+日期后缀：bak_user_eduinfo_20210719</p>
+<p>4、同一个模块的表尽可能使用相同的前缀，表名称尽可能表达含义</p>
+<p>5、多个单词以下划线 _ 分隔</p>
+<p>6、常规表表名尽量不超过30个字符，temp表和bak表视情况而定，也尽量简短为宜，命名应使用小写</p>
+<h3 id="字段命名规范"><a href="#字段命名规范" class="headerlink" title="字段命名规范"></a>字段命名规范</h3><p>1、字段命名需要表示其实际含义的英文单词或简写，单词之间用下划线 _ 进行连接，如 service_ip、service_port。</p>
+<p>2、各表之间相同意义的字段必须同名，比如a表和b表都有创建时间，应该统一为create_time，不一致会很混乱。</p>
+<p>3、多个单词以下划线 _ 分隔</p>
+<p>4、字段名尽量不超过30个字符，命名应该使用小写</p>
+<h3 id="索引命名规范"><a href="#索引命名规范" class="headerlink" title="索引命名规范"></a>索引命名规范</h3><p>1、唯一索引使用uni + 字段名 来命名：create unique index uni_uid on t_user_basic(uid) 。</p>
+<p>2、非唯一索引使用idx + 字段名 来命名：create index idx_uname_mobile on t_user_basic(uname,mobile) 。</p>
+<p>3、多个单词以下划线 _ 分隔。</p>
+<p>4、索引名尽量不超过50个字符，命名应该使用小写，组合索引的字段不宜太多，不然也不利于查询效率的提升。</p>
+<p>5、多单词组成的列名，取尽可能代表意义的缩写，如 test_contact表member_id和friend_id上的组合索引：idx_mid_fid。</p>
+<p>6、理解组合索引最左前缀原则，避免重复建设索引，如果建立了(a,b,c)，相当于建立了(a), (a,b), (a,b,c)。</p>
+<h3 id="视图命名规范"><a href="#视图命名规范" class="headerlink" title="视图命名规范"></a>视图命名规范</h3><p>1、视图名以v开头，表示view，完整结构是v+视图内容含义缩写。</p>
+<p>2、如果视图只来源单个表，则为v+表名。如果视图由几个表关联产生就用v+下划线（_）连接几个表名，视图名尽量不超过30个字符。如超过30个字符则取简写。</p>
+<p>3、如无特殊需要，严禁开发人员创建视图。</p>
+<p>4、命名应使用小写。</p>
+<h3 id="存储过程命名规范"><a href="#存储过程命名规范" class="headerlink" title="存储过程命名规范"></a>存储过程命名规范</h3><p>1、存储过程名以sp开头，表示存储过程（storage procedure）。之后多个单词以下划线（_）进行连接。存储过程命名中应体现其功能。存储过程名尽量不能超过30个字符。</p>
+<p>2、存储过程中的输入参数以i_开头，输出参数以o_开头。</p>
+<p>3、命名应使用小写。</p>
+<pre><code>  create procedure sp_multi_param(in i_id bigint,in i_name varchar(32),out o_memo varchar(100))  </code></pre><h3 id="函数命名规范"><a href="#函数命名规范" class="headerlink" title="函数命名规范"></a>函数命名规范</h3><p>1、函数名以func开始，表示function。之后多个单词以下划线（_）进行连接，函数命名中应体现其功能。函数名尽量不超过30个字符。</p>
+<p>2、命名应使用小写。</p>
+<pre><code>  create function func_format_date(ctime datetime)</code></pre><h3 id="触发器命名规范"><a href="#触发器命名规范" class="headerlink" title="触发器命名规范"></a>触发器命名规范</h3><p>1、触发器以trig开头，表示trigger 触发器。</p>
+<p>2、基本部分，描述触发器所加的表，触发器名尽量不超过30个字符。</p>
+<p>3、后缀（_i,_u,_d）,表示触发条件的触发方式（insert,update或delete）。</p>
+<p>4、命名应使用小写。</p>
+<pre><code>  DROP TRIGGER IF EXISTS trig_attach_log_d;
+  CREATE TRIGGER trig_attach_log_d AFTER DELETE ON t_dept FOR EACH ROW; </code></pre><h3 id="约束命名规范"><a href="#约束命名规范" class="headerlink" title="约束命名规范"></a>约束命名规范</h3><p>1、唯一约束：uk_表名称_字段名。uk是UNIQUE KEY的缩写。比如给一个部门的部门名称加上唯一约束，来保证不重名，如下：ALTER TABLE t_dept ADD CONSTRAINT un_name UNIQUE(name);</p>
+<p>2、外键约束：fk_表名，后面紧跟该外键所在的表名和对应的主表名（不含t_）。子表名和父表名用下划线(_)分隔。如下：ALTER TABLE t_user ADD CONSTRAINT fk_user_dept FOREIGN KEY(depno) REFERENCES t_dept (id);</p>
+<p>3、非空约束：如无特殊需要，建议所有字段默认非空(not null)，不同数据类型必须给出默认值(default)。</p>
+<pre><code>  `id` int(11) NOT NULL,
+  `name` varchar(30) DEFAULT '',
+  `deptId` int(11) DEFAULT 0,
+  `salary` float DEFAULT NULL, </code></pre><p>4、出于性能考虑，如无特殊需要，建议不使用外键。参照完整性由代码控制。这个也是我们普遍的做法，从程序角度进行完整性控制，但是如果不注意，也会产生脏数据。</p>
+<p>5、命名应使用小写。</p>
+<h3 id="用户命名规范"><a href="#用户命名规范" class="headerlink" title="用户命名规范"></a>用户命名规范</h3><p>1、 生产使用的用户命名格式为 code_应用</p>
+<p>2、 只读用户命名规则为 read_应用</p>
+<h2 id="数据库对象设计规范"><a href="#数据库对象设计规范" class="headerlink" title="数据库对象设计规范"></a>数据库对象设计规范</h2><h3 id="存储引擎的选择"><a href="#存储引擎的选择" class="headerlink" title="存储引擎的选择"></a>存储引擎的选择</h3><p>1、如无特殊需求，必须使用innodb存储引擎。</p>
+<p>可以通过 show variables like ‘default_storage_engine’ 来查看当前默认引擎。主要有MyISAM 和 InnoDB，从5.5版本开始默认使用 InnoDB 引擎。</p>
+<p>基本的差别为：MyISAM类型不支持事务处理等高级处理，而InnoDB类型支持。MyISAM类型的表强调的是性能，其执行速度比InnoDB类型更快，但是不提供事务支持，而InnoDB提供事务支持以及外部键等高级数据库功能。</p>
+<h3 id="字符集的选择"><a href="#字符集的选择" class="headerlink" title="字符集的选择"></a>字符集的选择</h3><p>1、如无特殊要求，必须使用utf8或utf8mb4。</p>
+<p>在国内，选择对中文和各语言支持都非常完善的<code>utf8</code>格式是最好的方式，MySQL在5.5之后增加utf8mb4编码，mb4就是most bytes 4的意思，专门用来兼容四字节的unicode。</p>
+<p>所以utf8mb4是utf8的超集，除了将编码改为utf8mb4外不需要做其他转换。当然，为了节省空间，一般情况下使用utf8也就够了。</p>
+<p>可以使用如下脚本来查看数据库的编码格式</p>
+<pre><code>1 SHOW VARIABLES WHERE Variable_name LIKE 'character_set_%' OR Variable_name LIKE 'collation%';
+2 -- 或
+3 SHOW VARIABLES Like '%char%';  </code></pre><h3 id="表设计规范"><a href="#表设计规范" class="headerlink" title="表设计规范"></a>表设计规范</h3><p>1、不同应用间所对应的数据库表之间的关联应尽可能减少，不允许使用外键对表之间进行关联，确保组件对应的表之间的独立性，为系统或表结构的重构提供可能性。目前业内的做法一般 由程序控制参照完整性。</p>
+<p>2、表设计的角度不应该针对整个系统进行数据库设计，而应该根据系统架构中组件划分，针对每个组件所处理的业务进行数据库设计。</p>
+<p>3、表必须要有PK，主键的优势是唯一标识、有效引用、高效检索，所以一般情况下尽量有主键字段。</p>
+<p>4、一个字段只表示一个含义。</p>
+<p>5、表不应该有重复列。</p>
+<p>6、禁止使用复杂数据类型(数组,自定义等)，Json类型的使用视情况而定。</p>
+<p>7、需要join的字段(连接键)，数据类型必须保持绝对一致，避免隐式转换。比如关联的字段都是int类型。</p>
+<p>8、设计应至少满足第三范式,尽量减少数据冗余。一些特殊场景允许反范式化设计，但在项目评审时需要对冗余字段的设计给出解释。</p>
+<p>9、TEXT字段作为大体量文本存储，必须放在独立的表中 , 用PK与主表关联。如无特殊需要，禁止使用TEXT、BLOB字段。</p>
+<p>10、需要定期删除(或者转移)过期数据的表，通过分表解决，我们的做法是按照2/8法则将操作频率较低的历史数据迁移到历史表中，按照时间或者则曾Id做切割点。</p>
+<p>11、单表字段数不要太多，建议最多不要大于50个。过度的宽表对性能也是很大的影响。</p>
+<p>12、MySQL在处理大表时，性能就开始明显降低，所以建议单表物理大小限制在16GB，表中数据行数控制在2000W内。</p>
+<p>业内的规则是超过2000W性能开始明显降低。但是这个值是灵活的，你可以根据实际情况进行测试来判断，比如阿里的标准就是500W，百度的确是2000W。实际上是否宽表，单行数据所占用的空间都有起到作用的。</p>
+<p>13、如果数据量或数据增长在前期规划时就较大，那么在设计评审时就应加入分表策略，后续会有专门的文章来分析数据拆分的做法：垂直拆分（垂直分库和垂直分表）、水平拆分（分库分表和库内分表）；</p>
+<p>14、无特殊需求，严禁使用分区表</p>
+<h3 id="字段设计规范"><a href="#字段设计规范" class="headerlink" title="字段设计规范"></a>字段设计规范</h3><p>1、INT：如无特殊需要，存放整型数字使用UNSIGNED INT型，整型字段后的数字代表显示长度。比如 <code>id</code> int(11) NOT NULL</p>
+<p>2、DATETIME：所有需要精确到时间(时分秒)的字段均使用DATETIME,不要使用TIMESTAMP类型。</p>
+<p>对于TIMESTAMP，它把写入的时间从当前时区转化为UTC（世界标准时间）进行存储。查询时，将其又转化为客户端当前时区进行返回。而对于DATETIME，不做任何改变，基本上是原样输入和输出。</p>
+<p>另外DATETIME存储的范围也比较大：</p>
+<p>timestamp所能存储的时间范围为：’1970-01-01 00:00:01.000000’ 到 ‘2038-01-19 03:14:07.999999’。</p>
+<p>datetime所能存储的时间范围为：’1000-01-01 00:00:00.000000’ 到 ‘9999-12-31 23:59:59.999999’。</p>
+<p>但是特殊情况，对于跨时区的业务，TIMESTAMP更为合适。</p>
+<p>3、VARCHAR：所有动态长度字符串 全部使用VARCHAR类型,类似于状态等有限类别的字段,也使用可以比较明显表示出实际意义的字符串,而不应该使用INT之类的数字来代替；VARCHAR(N)，</p>
+<p>N表示的是字符数而不是字节数。比如VARCHAR(255)，可以最大可存储255个字符（字符包括英文字母，汉字，特殊字符等）。但N应尽可能小，因为MySQL一个表中所有的VARCHAR字段最大长度是65535个字节，且存储字符个数由所选字符集决定。</p>
+<p>如UTF8存储一个字符最大要3个字节，那么varchar在存放占用3个字节长度的字符时不应超过21845个字符。同时，在进行排序和创建临时表一类的内存操作时，会使用N的长度申请内存。(如无特殊需要，原则上单个varchar型字段不允许超过255个字符)</p>
+<p>4、TEXT：仅仅当字符数量可能超过20000个的时候,才可以使用TEXT类型来存放字符类数据,因为所有MySQL数据库都会使用UTF8字符集。</p>
+<p>所有使用TEXT类型的字段必须和原表进行分拆，与原表主键单独组成另外一个表进行存放，与大文本字段的隔离，目的是。如无特殊需要，不使用MEDIUMTEXT、TEXT、LONGTEXT类型</p>
+<p>5、对于精确浮点型数据存储，需要使用DECIMAL，严禁使用FLOAT和DOUBLE。</p>
+<p>6、如无特殊需要，尽量不使用BLOB类型</p>
+<p>7、如无特殊需要，字段建议使用NOT NULL属性，可用默认值代替NULL</p>
+<p>8、自增字段类型必须是整型且必须为UNSIGNED，推荐类型为INT或BIGINT，并且自增字段必须是主键或者主键的一部分。</p>
+<h3 id="索引设计规范"><a href="#索引设计规范" class="headerlink" title="索引设计规范"></a>索引设计规范</h3><p>1、索引区分度</p>
+<p>索引必须创建在索引选择性（区分度）较高的列上，选择性的计算方式为:  selecttivity = count(distinct c_name)/count(*) ; 如果区分度结果小于0.2，则不建议在此列上创建索引，否则大概率会拖慢SQL执行</p>
+<p>2、遵循最左前缀</p>
+<p>对于确定需要组成组合索引的多个字段，设计时建议将选择性高的字段靠前放。使用时，组合索引的首字段，必须在where条件中，且需要按照最左前缀规则去匹配。</p>
+<p>3、禁止使用外键，可以在程序级别来约束完整性</p>
+<p>4、Text类型字段如果需要创建索引，必须使用前缀索引</p>
+<p>5、单张表的索引数量理论上应控制在5个以内。经常有大批量插入、更新操作表，应尽量少建索引，索引建立的原则理论上是多读少写的场景。</p>
+<p>6、ORDER BY，GROUP BY，DISTINCT的字段需要添加在索引的后面，形成覆盖索引</p>
+<p>7、正确理解和计算索引字段的区分度，文中有计算规则，区分度高的索引，可以快速得定位数据，区分度太低，无法有效的利用索引，可能需要扫描大量数据页，和不使用索引没什么差别。</p>
+<p>8、正确理解和计算前缀索引的字段长度，文中有判断规则，合适的长度要保证高的区分度和最恰当的索引存储容量，只有达到最佳状态，才是保证高效率的索引。</p>
+<p>9、联合索引注意最左匹配原则：必须按照从左到右的顺序匹配，MySQL会一直向右匹配索引直到遇到范围查询(&gt;、&lt;、between、like)然后停止匹配。</p>
+<p>如：depno=1 and empname&gt;’’ and job=1 如果建立(depno,empname,job)顺序的索引，job是用不到索引的。</p>
+<p>10、应需而取策略，查询记录的时候，不要一上来就使用*，只取需要的数据，可能的话尽量只利用索引覆盖，可以减少回表操作，提升效率。</p>
+<p>11、正确判断是否使用联合索引（上面联合索引的使用那一小节有说明判断规则），也可以进一步分析到索引下推（IPC），减少回表操作，提升效率。</p>
+<p>12、避免索引失效的原则：禁止对索引字段使用函数、运算符操作，会使索引失效。这是实际上就是需要保证索引所对应字段的”干净度“。</p>
+<p>13、避免非必要的类型转换，字符串字段使用数值进行比较的时候会导致索引无效。</p>
+<p>14、模糊查询’%value%’会使索引无效，变为全表扫描，因为无法判断扫描的区间，但是’value%’是可以有效利用索引。</p>
+<p>15、索引覆盖排序字段，这样可以减少排序步骤，提升查询效率</p>
+<p>16、尽量的扩展索引，非必要不新建索引。比如表中已经有a的索引，现在要加(a,b)的索引，那么只需要修改原来的索引即可。</p>
+<p>举例子：比如一个品牌表，建立的的索引如下，一个主键索引，一个唯一索引</p>
+<pre><code>  PRIMARY KEY (`id`),
+  UNIQUE KEY `uni_brand_define` (`app_id`,`define_id`)</code></pre><p>当你同事业务代码中的检索语句如下的时候，应该立即警告了，即没有覆盖索引，也没按照最左前缀原则：</p>
+<pre><code>  select brand_id,brand_name from  ds_brand_system where status=?  and define_id=?  and app_id=?</code></pre><p>建议改成如下：</p>
+<pre><code>  select brand_id,brand_name from  ds_brand_system where app_id=? and define_id=?  and  status=? </code></pre><h3 id="约束设计规范"><a href="#约束设计规范" class="headerlink" title="约束设计规范"></a>约束设计规范</h3><p>1、PK应该是有序并且无意义的，由开发人员自定义，尽可能简短，并且是自增序列。</p>
+<p>2、表中除PK以外,还存在唯一性约束的,可以在数据库中创建以“uk_”作为前缀的唯一约束索引。</p>
+<p>3、PK字段不允许更新。</p>
+<p>4、禁止创建外键约束，外键约束由程序控制。</p>
+<p>5、如无特殊需要，所有字段必须添加非空约束，即not null。</p>
+<p>6、如无特殊需要，所有字段必须有默认值。</p>
+<h2 id="SQL使用规范"><a href="#SQL使用规范" class="headerlink" title="SQL使用规范"></a>SQL使用规范</h2><h3 id="select-检索的规范性"><a href="#select-检索的规范性" class="headerlink" title="select 检索的规范性"></a>select 检索的规范性</h3><p>1、尽量避免使用<code>select *</code>，join语句使用<code>select *</code>可能导致只需要访问索引即可完成的查询需要回表取数。</p>
+<p>一种是可能取出很多不需要的数据，对于宽表来说，这是灾难；一种是尽可能避免回表，因为取一些根本不需要的数据而回表导致性能低下，是很不合算。</p>
+<p>2、严禁使用 select * from t_name ，而不加任何where条件，道理一样，这样会变成全表全字段扫描。</p>
+<p>3、MySQL中的text类型字段存储：</p>
+<p>3.1、不与其他普通字段存放在一起,因为读取效率低，也会影响其他轻量字段存取效率。</p>
+<p>3.2、如果不需要text类型字段，又使用了select *，会让该执行消耗大量io，效率也很低下</p>
+<p>4、在取出字段上可以使用相关函数，但应尽可能避免出现 now() , rand() , sysdate() 等不确定结果的函数，在Where条件中的过滤条件字段上严禁使用任何函数，包括数据类型转换函数。大量的计算和转换会造成效率低下，这个在索引那边也描述过了。</p>
+<p>5、分页查询语句全部都需要带有排序条件 , 否则很容易引起乱序</p>
+<p>6、用in()/union替换or，效率会好一些，并注意in的个数小于300</p>
+<p>7、严禁使用%前缀进行模糊前缀查询:如：select a,b,c from t_name where a like ‘%name’; 可以使用%模糊后缀查询如：select a,b from t_name where a like ‘name%’;</p>
+<p>8、避免使用子查询，可以把子查询优化为join操作</p>
+<p>通常子查询在in子句中，且子查询中为简单SQL(不包含union、group by、order by、limit从句)时，才可以把子查询转化为关联查询进行优化。</p>
+<p>子查询性能差的原因：</p>
+<ul>
+<li>子查询的结果集无法使用索引，通常子查询的结果集会被存储到临时表中，不论是内存临时表还是磁盘临时表都不会存在索引，所以查询性能 会受到一定的影响；</li>
+<li>特别是对于返回结果集比较大的子查询，其对查询性能的影响也就越大；</li>
+<li>由于子查询会产生大量的临时表也没有索引，所以会消耗过多的CPU和IO资源，产生大量的慢查询。</li>
+</ul>
+<h3 id="操作的规范性"><a href="#操作的规范性" class="headerlink" title="操作的规范性"></a>操作的规范性</h3><p>1、禁止使用不含字段列表的INSERT语句</p>
+<p>如：insert into values (‘a’,’b’,’c’);  应使用  insert into t_name(c1,c2,c3) values (‘a’,’b’,’c’); 。</p>
+<p>2、大批量写操作（UPDATE、DELETE、INSERT），需要分批多次进行操作</p>
+<ul>
+<li>大批量操作可能会造成严重的主从延迟，特别是主从模式下，大批量操作可能会造成严重的主从延迟，因为需要slave从master的binlog中读取日志来进行数据同步。</li>
+<li>binlog日志为row格式时会产生大量的日志</li>
+</ul>
+<h2 id="程序上的约束"><a href="#程序上的约束" class="headerlink" title="程序上的约束"></a>程序上的约束</h2><p>后续我们团队的目标是研发评审工具对开发同学提交的建库、建表、刷数据、查询的语句进行分析，看看是否符合应有的规范。如果不符合，驳回修改。</p>
+<script>
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return; }
+            const img = document.createElement('img');
+            img.style = 'display:none !important;';
+            img.src = el.dataset.src;
+            img.addEventListener('error', () => {
+              img.remove();
+              el.style.color = 'inherit';
+              el.style.backgroundImage = 'none';
+              el.style.background = 'none';
+            });
+            img.addEventListener('load', () => {
+              img.remove();
+            });
+            document.body.appendChild(img);
+          });
+      </script>
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://jackhcc.github.io" rel="external nofollow noreferrer">JackHCC</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://jackhcc.github.io/posts/Database-SQL.html">https://jackhcc.github.io/posts/Database-SQL.html</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="https://jackhcc.github.io" target="_blank">JackHCC</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/SQL/">
+                                    <span class="chip bg-color">SQL</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/reward/aliqr.png" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/reward/wxqr.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+            
+        </div>
+    </div>
+
+    
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/gitalk/gitalk.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/my-gitalk.css">
+
+<div class="card gitalk-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="gitalk-container" class="card-content"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/gitalk/gitalk.min.js"></script>
+<script>
+    let gitalk = new Gitalk({
+        clientID: '3821a0bbb773038a51fc',
+        clientSecret: '4b30b507d67ec5497ec0e77f43f80cb3e0d7dd3a',
+        repo: 'JackHCC.github.io',
+        owner: 'JackHCC',
+        admin: "JackHCC",
+        id: '2020-03-22T22-31-54',
+        distractionFreeMode: false  // Facebook-like distraction free mode
+    });
+
+    gitalk.render('gitalk-container');
+</script>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/posts/Language-R.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/5.jpg" class="responsive-img" alt="R语言">
+                        
+                        <span class="card-title">R语言</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            R语言详解
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2020-03-24
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Language/" class="post-category">
+                                    Language
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/R/">
+                        <span class="chip bg-color">R</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/posts/blog-math-model.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/21.jpg" class="responsive-img" alt="数学建模算法学习">
+                        
+                        <span class="card-title">数学建模算法学习</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            数学建模常见算法总结
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-03-20
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Algorithm/" class="post-category">
+                                    Algorithm
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Algorithm/">
+                        <span class="chip bg-color">Algorithm</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeShrink.js"></script>
+
+
+<!-- 代码块折行 -->
+
+<style type="text/css">
+code[class*="language-"], pre[class*="language-"] { white-space: pre !important; }
+</style>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('4'),
+            headingSelector: 'h1, h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h1, h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+    <footer class="page-footer bg-color">
+    <div class="container row center-align" style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            <span id="year">2020</span>
+            <a href="https://jackhcc.github.io" target="_blank">杰克成</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                class="white-color">3303.6k</span>&nbsp;字
+            
+            
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;人
+            </span>
+            
+            <br>
+            
+            <span id="sitetime">载入运行时间...</span>
+            <script>
+                function siteTime() {
+                    var seconds = 1000;
+                    var minutes = seconds * 60;
+                    var hours = minutes * 60;
+                    var days = hours * 24;
+                    var years = days * 365;
+                    var today = new Date();
+                    var startYear = "2020";
+                    var startMonth = "2";
+                    var startDate = "27";
+                    var startHour = "6";
+                    var startMinute = "30";
+                    var startSecond = "0";
+                    var todayYear = today.getFullYear();
+                    var todayMonth = today.getMonth() + 1;
+                    var todayDate = today.getDate();
+                    var todayHour = today.getHours();
+                    var todayMinute = today.getMinutes();
+                    var todaySecond = today.getSeconds();
+                    var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                    var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                    var diff = t2 - t1;
+                    var diffYears = Math.floor(diff / years);
+                    var diffDays = Math.floor((diff / days) - diffYears * 365);
+                    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+                    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) /
+                        minutes);
+                    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours -
+                        diffMinutes * minutes) / seconds);
+                    if (startYear == todayYear) {
+                        document.getElementById("year").innerHTML = todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffDays + " 天 " + diffHours +
+                            " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    } else {
+                        document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffYears + " 年 " + diffDays +
+                            " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    }
+                }
+                setInterval(siteTime, 1000);
+            </script>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/JackHCC" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:jackcc0701@163.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+    <a href="https://www.facebook.com/profile.php?id=100046343443643" class="tooltipped" target="_blank" data-tooltip="关注我的Facebook: https://www.facebook.com/profile.php?id=100046343443643" data-position="top" data-delay="50">
+        <i class="fab fa-facebook-f"></i>
+    </a>
+
+
+
+    <a href="https://twitter.com/JackChe66021834" class="tooltipped" target="_blank" data-tooltip="关注我的Twitter: https://twitter.com/JackChe66021834" data-position="top" data-delay="50">
+        <i class="fab fa-twitter"></i>
+    </a>
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=2508074836" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 2508074836" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+    <a href="https://weibo.com/u/6885584679" class="tooltipped" target="_blank" data-tooltip="关注我的微博: https://weibo.com/u/6885584679" data-position="top" data-delay="50">
+        <i class="fab fa-weibo"></i>
+    </a>
+
+
+
+    <a href="https://www.zhihu.com/people/8f8482f01f0d6a04e844efe32e0f0710" class="tooltipped" target="_blank" data-tooltip="关注我的知乎: https://www.zhihu.com/people/8f8482f01f0d6a04e844efe32e0f0710" data-position="top" data-delay="50">
+        <i class="fab fa-zhihu1">知</i>
+    </a>
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/materialize/materialize.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/aos/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/js/matery.js"></script>
+
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+    <script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script type="text/javascript" src="/js/fireworks.js"></script>
+
+    <script type="text/javascript">
+        //只在桌面版网页启用特效
+        var windowWidth = $(window).width();
+        if (windowWidth > 768) {
+            document.write('<script type="text/javascript" src="/js/sakura.js"><\/script>'); }
+    </script>
+
+    <!-- weather -->
+	<script type="text/javascript">
+	WIDGET = {FID: 'TToslpmkVO'}
+	</script>
+	<script type="text/javascript" src="https://apip.weatherdt.com/float/static/js/r.js?v=1111"></script>
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <!-- Baidu Analytics -->
+
+<script>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+    <!-- Baidu Push -->
+
+    
+    
+    <script async src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+        <script src="//code.tidio.co/kqhlkxviiccyoa0czpfpu4ijuey9hfre.js"></script>
+        <script> 
+            $(document).ready(function () {
+                setInterval(change_Tidio, 50);  
+                function change_Tidio() { 
+                    var tidio=$("#tidio-chat iframe");
+                    if(tidio.css("display")=="block"&& $(window).width()>977 ){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" &&$(window).width()>977)>0? "-40px" : ($("div.toc-title").length&&$(window).width()>977)>0?"85px":"20px";   
+                        document.getElementById("tidio-chat-iframe").style.right="-15px";   
+                        document.getElementById("tidio-chat-iframe").style.height=parseInt(tidio.css("height"))>=520?"520px":tidio.css("height");
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    } 
+                    else if(tidio.css("display")=="block"&&$(window).width()>601 &&$(window).width()<992 ){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" && 601< $(window).width()<992)>0? "-40px":"20px" ;   
+                        document.getElementById("tidio-chat-iframe").style.right="-15px"; 
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    }
+                    else if(tidio.css("display")=="block"&&$(window).width()<601 && parseInt(tidio.css("height"))<230){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" && $(window).width()<601)>0? "-10px":"45px" ;   
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    }
+                    if( tidio.css("display")=="block"&&$(window).width()<601 && parseInt(tidio.css("height"))>=230){
+                        document.getElementById("tidio-chat-iframe").style.zIndex="998";
+                    }
+                } 
+            }); 
+        </script>
+    
+
+    
+
+    
+    <script type="text/javascript" color="0,0,255"
+        pointColor="0,0,255" opacity='0.7'
+        zIndex="-1" count="99"
+        src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/background/canvas-nest.js"></script>
+    
+
+    
+
+    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/background/ribbon-dynamic.js" async="async"></script>
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/instantpage/instantpage.js" type="module"></script>
+    
+<script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script>
+        <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
+        <script>
+        $('a').each(function() {
+          const $this = $(this);
+          const href = $this.attr('href');
+          if (href && href.match('^((http|https|thunder|qqdl|ed2k|Flashget|qbrowser|ftp|rtsp|mms)://)')) {
+            const strs = href.split('/');
+            if (strs.length >= 3) {
+                const host = strs[2];
+                if (host !== 'your_domain' || window.location.host) {
+                    $this.attr('href', '/go.html?u='+Base64.encode(href)+'').attr('rel', 'external nofollow noopener noreferrer');
+                    if (true) {
+                        $this.attr('target', '_blank');
+                    }
+                }
+            }
+          }
+        });
+        </script></body>
+
+</html>
+

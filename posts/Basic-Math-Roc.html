@@ -1,0 +1,1388 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="ROC曲线详解, JackHCC">
+    <meta name="description" content="ROC曲线相关术语及实现">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>ROC曲线详解 | JackHCC</title>
+    <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/my.css">
+    
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/jquery/jquery.min.js"></script>
+    
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper head-container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/me.jpg" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">JackHCC</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>留言板</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>友情链接</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/me.jpg" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">JackHCC</div>
+        <div class="logo-desc">
+            
+            Make the world betterrrr!!!
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			留言板
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			友情链接
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/JackHCC/JackHCC.github.io" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/JackHCC/JackHCC.github.io" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/16.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">ROC曲线详解</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        height: calc(100vh - 250px);
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 30px;
+        bottom: 146px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/Math/">
+                                <span class="chip bg-color">Math</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/Basic/" class="post-category">
+                                Basic
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2021-08-03
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2021-08-18
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    3k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    11 分
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h2 id="基本术语"><a href="#基本术语" class="headerlink" title="基本术语"></a>基本术语</h2><p><strong>混淆矩阵：</strong><br>如下图：<br><img src="/images/loading.gif" data-original="https://img-blog.csdnimg.cn/20201124181821380.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2R1eWlibzEyMw==,size_16,color_FFFFFF,t_70#pic_center" alt=""></p>
+<ul>
+<li>真正率 TPR：预测为正例且实际为正例的样本占所有正例样本（真实结果为正样本）的比例。</li>
+<li>假正率 FPR：预测为正例但实际为负例的样本占所有负例样本（真实结果为负样本）的比例。</li>
+</ul>
+<p>公式：<img src="/images/loading.gif" data-original="https://img-blog.csdnimg.cn/20201124191244792.png#pic_center" alt=""></p>
+<h2 id="ROC-曲线简介"><a href="#ROC-曲线简介" class="headerlink" title="ROC 曲线简介"></a>ROC 曲线简介</h2><p>接受者操作特性曲线（receiver operating characteristic curve，简称ROC曲线），又称为感受性曲线（sensitivity curve）。得此名的原因在于曲线上各点反映着相同的感受性，它们都是对同一信号刺激的反应，只不过是在几种不同的判定标准下所得的结果而已。接受者操作特性曲线就是以虚惊概率为横轴，击中概率为纵轴所组成的坐标图，和被试在特定刺激条件下由于采用不同的判断标准得出的不同结果画出的曲线 。</p>
+<p>首先介绍一下在模型评估上的一些基本概念：</p>
+<p><img src="/images/loading.gif" data-original="https://img-blog.csdnimg.cn/20201124183043125.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2R1eWlibzEyMw==,size_16,color_FFFFFF,t_70#pic_center" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/3.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/wiki_matrix.png" alt=""></p>
+<p>对于分类器或者说分类算法，评价指标主要有<a href="https://en.wikipedia.org/wiki/Precision_and_recall#Precision" target="_blank" rel="noopener">precision</a>，<a href="https://en.wikipedia.org/wiki/Precision_and_recall#Recall" target="_blank" rel="noopener">recall</a>，<a href="https://en.wikipedia.org/wiki/F1_score" target="_blank" rel="noopener">F1 score</a>等，以及这里要讨论的<a href="https://en.wikipedia.org/wiki/Receiver_operating_characteristic" target="_blank" rel="noopener">ROC</a>和<a href="https://en.wikipedia.org/wiki/Receiver_operating_characteristic#Area_under_the_curve" target="_blank" rel="noopener">AUC</a>。下图是一个ROC曲线的示例：</p>
+<p><a href="https://zhwhong.cn/2017/04/14/ROC-AUC-Precision-Recall-analysis/4.png" target="_blank" rel="noopener"><img src="/images/loading.gif" data-original="../images/basic/4.png" alt=""></a></p>
+<ul>
+<li>横坐标：<strong>1-Specificity</strong>，伪正类率(False positive rate， FPR)，<strong>预测为正但实际为负</strong>的样本占<strong>所有负例样本</strong> 的比例；</li>
+<li>纵坐标：<strong>Sensitivity</strong>，真正类率(True positive rate， TPR)，<strong>预测为正且实际为正</strong>的样本占<strong>所有正例样本</strong> 的比例。</li>
+</ul>
+<p>在一个二分类模型中，假设采用逻辑回归分类器，其给出针对每个实例为正类的概率，那么通过设定一个阈值如0.6，概率大于等于0.6的为正类，小于0.6的为负类。对应的就可以算出一组(FPR,TPR)，在平面中得到对应坐标点。随着阈值的逐渐减小，越来越多的实例被划分为正类，但是这些正类中同样也掺杂着真正的负实例，即TPR和FPR会同时增大。阈值最大时，对应坐标点为(0,0)，阈值最小时，对应坐标点(1,1)。</p>
+<p>如下面这幅图，(a)图中实线为ROC曲线，线上每个点对应一个阈值。</p>
+<p><a href="https://zhwhong.cn/2017/04/14/ROC-AUC-Precision-Recall-analysis/5.png" target="_blank" rel="noopener"><img src="/images/loading.gif" data-original="../images/basic/5.png" alt=""></a></p>
+<p>(a) 理想情况下，TPR应该接近1，FPR应该接近0。ROC曲线上的每一个点对应于一个threshold，对于一个分类器，每个threshold下会有一个TPR和FPR。比如Threshold最大时，TP=FP=0，对应于原点；Threshold最小时，TN=FN=0，对应于右上角的点(1,1)。<br>(b) P和N得分不作为特征间距离d的一个函数，随着阈值theta增加，TP和FP都增加。</p>
+<ul>
+<li>横轴FPR：1-TNR，1-Specificity，FPR越大，预测正类中实际负类越多。</li>
+<li>纵轴TPR：Sensitivity(正类覆盖率)，TPR越大，预测正类中实际正类越多。</li>
+<li>理想目标：TPR=1，FPR=0，即图中(0,1)点，故ROC曲线越靠拢(0,1)点，越偏离45度对角线越好，Sensitivity、Specificity越大效果越好。</li>
+</ul>
+<p>随着阈值threshold调整，ROC坐标系里的点如何移动可以参考：</p>
+<p><a href="https://zhwhong.cn/2017/04/14/ROC-AUC-Precision-Recall-analysis/6.png" target="_blank" rel="noopener"><img src="/images/loading.gif" data-original="../images/basic/6.png" alt=""></a></p>
+<h2 id="如何画ROC曲线"><a href="#如何画ROC曲线" class="headerlink" title="如何画ROC曲线"></a>如何画ROC曲线</h2><p>对于一个特定的分类器和测试数据集，显然只能得到一个分类结果，即一组FPR和TPR结果，而要得到一个曲线，我们实际上需要一系列FPR和TPR的值，这又是如何得到的呢？我们先来看一下Wikipedia上对ROC曲线的<a href="http://en.wikipedia.org/wiki/Receiver_operating_characteristic" target="_blank" rel="noopener">定义</a>：</p>
+<blockquote>
+<p>In signal detection theory, a receiver operating characteristic (ROC), or simply ROC curve, is a graphical plot which illustrates the performance of a binary classifier system as its discrimination threshold is varied.</p>
+</blockquote>
+<p>问题在于“as its discrimination threashold is varied”。如何理解这里的“discrimination threashold”呢？我们忽略了分类器的一个重要功能“概率输出”，即表示分类器认为某个样本具有多大的概率属于正样本（或负样本）。通过更深入地了解各个分类器的内部机理，我们总能想办法得到一种概率输出。通常来说，是将一个实数范围通过某个变换映射到(0,1)区间。</p>
+<p>假如我们已经得到了所有样本的概率输出（属于正样本的概率），现在的问题是如何改变“discrimination threashold”？我们根据每个测试样本属于正样本的概率值从大到小排序。下图是一个示例，图中共有20个测试样本，“Class”一栏表示每个测试样本真正的标签（p表示正样本，n表示负样本），“Score”表示每个测试样本属于正样本的概率。</p>
+<p><a href="https://zhwhong.cn/2017/04/14/ROC-AUC-Precision-Recall-analysis/7.png" target="_blank" rel="noopener"><img src="/images/loading.gif" data-original="../images/basic/7.png" alt=""></a></p>
+<p>接下来，我们从高到低，依次将“Score”值作为阈值threshold，当测试样本属于正样本的概率大于或等于这个threshold时，我们认为它为正样本，否则为负样本。举例来说，对于图中的第4个样本，其“Score”值为0.6，那么样本1，2，3，4都被认为是正样本，因为它们的“Score”值都大于等于0.6，而其他样本则都认为是负样本。每次选取一个不同的threshold，我们就可以得到一组FPR和TPR，即ROC曲线上的一点。这样一来，我们一共得到了20组FPR和TPR的值，将它们画在ROC曲线的结果如下图：</p>
+<p><a href="https://zhwhong.cn/2017/04/14/ROC-AUC-Precision-Recall-analysis/8.png" target="_blank" rel="noopener"><img src="/images/loading.gif" data-original="../images/basic/8.png" alt=""></a></p>
+<p>当我们将threshold设置为1和0时，分别可以得到ROC曲线上的(0,0)和(1,1)两个点。将这些(FPR,TPR)对连接起来，就得到了ROC曲线。当threshold取值越多，ROC曲线越平滑。</p>
+<p>其实，我们并不一定要得到每个测试样本是正样本的概率值，只要得到这个分类器对该测试样本的“评分值”即可（评分值并不一定在(0,1)区间）。评分越高，表示分类器越肯定地认为这个测试样本是正样本，而且同时使用各个评分值作为threshold。我认为将评分值转化为概率更易于理解一些。</p>
+<h2 id="AUC"><a href="#AUC" class="headerlink" title="AUC"></a>AUC</h2><h3 id="AUC值的计算"><a href="#AUC值的计算" class="headerlink" title="AUC值的计算"></a>AUC值的计算</h3><p>AUC (<a href="https://en.wikipedia.org/wiki/Receiver_operating_characteristic#Area_under_the_curve" target="_blank" rel="noopener">Area Under Curve</a>) 被定义为ROC曲线下的面积，显然这个面积的数值不会大于1。又由于ROC曲线一般都处于y=x这条直线的上方，所以AUC的取值范围一般在0.5和1之间。使用AUC值作为评价标准是因为很多时候ROC曲线并不能清晰的说明哪个分类器的效果更好，而作为一个数值，对应AUC更大的分类器效果更好。</p>
+<p>AUC的计算有两种方式，梯形法和ROC AUCH法，都是以逼近法求近似值，具体见<a href="https://en.wikipedia.org/wiki/Receiver_operating_characteristic#Area_under_the_curve" target="_blank" rel="noopener">wikipedia</a>。</p>
+<h3 id="AUC意味着什么"><a href="#AUC意味着什么" class="headerlink" title="AUC意味着什么"></a>AUC意味着什么</h3><p>那么AUC值的含义是什么呢？根据(Fawcett, 2006)，AUC的值的含义是：</p>
+<blockquote>
+<p>The AUC value is equivalent to the probability that a randomly chosen positive example is ranked higher than a randomly chosen negative example.</p>
+</blockquote>
+<p>这句话有些绕，我尝试解释一下：首先AUC值是一个概率值，当你随机挑选一个正样本以及一个负样本，当前的分类算法根据计算得到的Score值将这个正样本排在负样本前面的概率就是AUC值。当然，AUC值越大，当前的分类算法越有可能将正样本排在负样本前面，即能够更好的分类。</p>
+<p>从AUC判断分类器（预测模型）优劣的标准：</p>
+<ul>
+<li>AUC = 1，是完美分类器，采用这个预测模型时，存在至少一个阈值能得出完美预测。绝大多数预测的场合，不存在完美分类器。</li>
+<li>0.5 &lt; AUC &lt; 1，优于随机猜测。这个分类器（模型）妥善设定阈值的话，能有预测价值。</li>
+<li>AUC = 0.5，跟随机猜测一样（例：丢铜板），模型没有预测价值。</li>
+<li>AUC &lt; 0.5，比随机猜测还差；但只要总是反预测而行，就优于随机猜测。</li>
+</ul>
+<p>三种AUC值示例：</p>
+<p><a href="https://zhwhong.cn/2017/04/14/ROC-AUC-Precision-Recall-analysis/9.png" target="_blank" rel="noopener"><img src="/images/loading.gif" data-original="../images/basic/9.png" alt=""></a></p>
+<p>简单说：<strong>AUC值越大的分类器，正确率越高</strong>。</p>
+<h3 id="不同模型AUC的比较"><a href="#不同模型AUC的比较" class="headerlink" title="不同模型AUC的比较"></a>不同模型AUC的比较</h3><p>总的来说，AUC值越大，模型的分类效果越好，疾病检测越准确；不过两个模型AUC值相等并不代表模型效果相同，例子如下：</p>
+<p>下图中有三条ROC曲线，A模型比B和C都要好</p>
+<p><a href="https://plobimage.ybzhao.com/wp-content/uploads/2018/03/1520544674-2873-UKg9E31pANMtBbb6YvWzegM4ibKQ.png" target="_blank" rel="noopener"><img src="/images/loading.gif" data-original="../images/basic/1520544674-2873-UKg9E31pANMtBbb6YvWzegM4ibKQ.png" alt=""></a></p>
+<p>下面两幅图中两条ROC曲线相交于一点，AUC值几乎一样：当需要高Sensitivity时，模型A比B好；当需要高Speciticity时，模型B比A好；</p>
+<p><a href="https://plobimage.ybzhao.com/wp-content/uploads/2018/03/1520544674-1502-SE4F6QDwiaN2RYbnrFXJ3Bm963tg.png" target="_blank" rel="noopener"><img src="/images/loading.gif" data-original="../images/basic/1520544674-1502-SE4F6QDwiaN2RYbnrFXJ3Bm963tg.png" alt=""></a></p>
+<p><a href="https://plobimage.ybzhao.com/wp-content/uploads/2018/03/1520544674-5932-acQwgTIWCjwM6AHfAPX384obtq9A.png" target="_blank" rel="noopener"><img src="/images/loading.gif" data-original="../images/basic/1520544674-5932-acQwgTIWCjwM6AHfAPX384obtq9A.png" alt=""></a></p>
+<h3 id="最优零界点咋么找"><a href="#最优零界点咋么找" class="headerlink" title="最优零界点咋么找"></a>最优零界点咋么找</h3><p>说人话，就是保证TPR高的同时FPR要尽量的小，建立max（TPR+（1-FPR））的模型。同样有三种方法：<strong>找到离（0,1）最近的点、Youden index和最小损耗（cost criterion）</strong>。</p>
+<p><a href="https://plobimage.ybzhao.com/wp-content/uploads/2018/03/1520544674-5549-ntNNo0kJ5XCjl0uv8G4WarRFA4SA.png" target="_blank" rel="noopener"><img src="/images/loading.gif" data-original="https://plobimage.ybzhao.com/wp-content/uploads/2018/03/1520544674-5549-ntNNo0kJ5XCjl0uv8G4WarRFA4SA.png" alt="全面了解ROC曲线"></a></p>
+<p>\1. 如果说Sn 和Sp 分别对应于sensitivity和specificity，所有ROC曲线上的点到ROC的距离可以表示为，让d最小就好啦；</p>
+<p>\2. Youden index : 最大化ROC曲线上的点到x轴的垂直距离（最大化TPR(Sn)和FPR(1-Sp)的差异）；</p>
+<p>\3. 考虑人力物力和财力（第三种方法很少用，因为很难评估）</p>
+<p>其中第二种方法的python实现如下：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">find_optimal_cutoff</span><span class="token punctuation">(</span>tpr<span class="token punctuation">,</span> fpr<span class="token punctuation">,</span> threshold<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    y <span class="token operator">=</span> tpr <span class="token operator">-</span> fpr
+    max_index <span class="token operator">=</span> np<span class="token punctuation">.</span>argmax<span class="token punctuation">(</span>y<span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># Only the first occurrence is returned.</span>
+    optimal_threshold <span class="token operator">=</span> threshold<span class="token punctuation">[</span>max_index<span class="token punctuation">]</span>
+    point <span class="token operator">=</span> <span class="token punctuation">[</span>fpr<span class="token punctuation">[</span>max_index<span class="token punctuation">]</span><span class="token punctuation">,</span> tpr<span class="token punctuation">[</span>max_index<span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token comment" spellcheck="true"># Point using to test</span>
+    <span class="token keyword">return</span> optimal_threshold<span class="token punctuation">,</span> point<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="ROC曲线Python绘制"><a href="#ROC曲线Python绘制" class="headerlink" title="ROC曲线Python绘制"></a>ROC曲线Python绘制</h2><pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>metrics <span class="token keyword">import</span> roc_curve<span class="token punctuation">,</span> auc<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 数据准备</span>
+<span class="token operator">>></span><span class="token operator">></span> <span class="token keyword">import</span> numpy <span class="token keyword">as</span> np
+<span class="token operator">>></span><span class="token operator">></span> <span class="token keyword">from</span> sklearn <span class="token keyword">import</span> metrics
+<span class="token operator">>></span><span class="token operator">></span> y <span class="token operator">=</span> np<span class="token punctuation">.</span>array<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token operator">>></span><span class="token operator">></span> scores <span class="token operator">=</span> np<span class="token punctuation">.</span>array<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">0.1</span><span class="token punctuation">,</span> <span class="token number">0.4</span><span class="token punctuation">,</span> <span class="token number">0.35</span><span class="token punctuation">,</span> <span class="token number">0.8</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># roc_curve的输入为</span>
+<span class="token comment" spellcheck="true"># y: 样本标签</span>
+<span class="token comment" spellcheck="true"># scores: 模型对样本属于正例的概率输出</span>
+<span class="token comment" spellcheck="true"># pos_label: 标记为正例的标签，本例中标记为2的即为正例</span>
+<span class="token operator">>></span><span class="token operator">></span> fpr<span class="token punctuation">,</span> tpr<span class="token punctuation">,</span> thresholds <span class="token operator">=</span> metrics<span class="token punctuation">.</span>roc_curve<span class="token punctuation">(</span>y<span class="token punctuation">,</span> scores<span class="token punctuation">,</span> pos_label<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true"># 假阳性率</span>
+<span class="token operator">>></span><span class="token operator">></span> fpr
+array<span class="token punctuation">(</span><span class="token punctuation">[</span> <span class="token number">0</span><span class="token punctuation">.</span> <span class="token punctuation">,</span>  <span class="token number">0.5</span><span class="token punctuation">,</span>  <span class="token number">0.5</span><span class="token punctuation">,</span>  <span class="token number">1</span><span class="token punctuation">.</span> <span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true"># 真阳性率</span>
+<span class="token operator">>></span><span class="token operator">></span> tpr
+array<span class="token punctuation">(</span><span class="token punctuation">[</span> <span class="token number">0.5</span><span class="token punctuation">,</span>  <span class="token number">0.5</span><span class="token punctuation">,</span>  <span class="token number">1</span><span class="token punctuation">.</span> <span class="token punctuation">,</span>  <span class="token number">1</span><span class="token punctuation">.</span> <span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true"># 阈值</span>
+<span class="token operator">>></span><span class="token operator">></span> thresholds
+array<span class="token punctuation">(</span><span class="token punctuation">[</span> <span class="token number">0.8</span> <span class="token punctuation">,</span>  <span class="token number">0.4</span> <span class="token punctuation">,</span>  <span class="token number">0.35</span><span class="token punctuation">,</span>  <span class="token number">0.1</span> <span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># auc的输入为很简单，就是fpr, tpr值</span>
+<span class="token operator">>></span><span class="token operator">></span> auc <span class="token operator">=</span> metrics<span class="token punctuation">.</span>auc<span class="token punctuation">(</span>fpr<span class="token punctuation">,</span> tpr<span class="token punctuation">)</span>
+<span class="token operator">>></span><span class="token operator">></span> auc
+<span class="token number">0.75</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> matplotlib<span class="token punctuation">.</span>pyplot <span class="token keyword">as</span> plt
+plt<span class="token punctuation">.</span>figure<span class="token punctuation">(</span><span class="token punctuation">)</span>
+lw <span class="token operator">=</span> <span class="token number">2</span>
+plt<span class="token punctuation">.</span>plot<span class="token punctuation">(</span>fpr<span class="token punctuation">,</span> tpr<span class="token punctuation">,</span> color<span class="token operator">=</span><span class="token string">'darkorange'</span><span class="token punctuation">,</span>
+         lw<span class="token operator">=</span>lw<span class="token punctuation">,</span> label<span class="token operator">=</span><span class="token string">'ROC curve (area = %0.2f)'</span> <span class="token operator">%</span> auc<span class="token punctuation">)</span>
+plt<span class="token punctuation">.</span>plot<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> color<span class="token operator">=</span><span class="token string">'navy'</span><span class="token punctuation">,</span> lw<span class="token operator">=</span>lw<span class="token punctuation">,</span> linestyle<span class="token operator">=</span><span class="token string">'--'</span><span class="token punctuation">)</span>
+plt<span class="token punctuation">.</span>xlim<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">0.0</span><span class="token punctuation">,</span> <span class="token number">1.0</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+plt<span class="token punctuation">.</span>ylim<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">0.0</span><span class="token punctuation">,</span> <span class="token number">1.05</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+plt<span class="token punctuation">.</span>xlabel<span class="token punctuation">(</span><span class="token string">'False Positive Rate'</span><span class="token punctuation">)</span>
+plt<span class="token punctuation">.</span>ylabel<span class="token punctuation">(</span><span class="token string">'True Positive Rate'</span><span class="token punctuation">)</span>
+plt<span class="token punctuation">.</span>title<span class="token punctuation">(</span><span class="token string">'Receiver operating characteristic example'</span><span class="token punctuation">)</span>
+plt<span class="token punctuation">.</span>legend<span class="token punctuation">(</span>loc<span class="token operator">=</span><span class="token string">"lower right"</span><span class="token punctuation">)</span>
+plt<span class="token punctuation">.</span>show<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>最终生成的ROC曲线结果如下图：</p>
+<p><img src="/images/loading.gif" data-original="https://img-blog.csdnimg.cn/20201124202226789.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2R1eWlibzEyMw==,size_16,color_FFFFFF,t_70#pic_center" alt=""></p>
+<h2 id="PR曲线"><a href="#PR曲线" class="headerlink" title="PR曲线"></a>PR曲线</h2><p>PR曲线和ROC曲线类似，ROC曲线是FPR和TPR的点连成的线，PR曲线是准确率和召回率的点连成的线，如下图所示。</p>
+<p><a href="https://plobimage.ybzhao.com/wp-content/uploads/2018/03/1520544674-1267-e1eC09hgEsVicS3Y4UrUzjx9dKmA.png" target="_blank" rel="noopener"><img src="/images/loading.gif" data-original="../images/basic/1520544674-1267-e1eC09hgEsVicS3Y4UrUzjx9dKmA.png" alt=""></a></p>
+<p><a href="https://plobimage.ybzhao.com/wp-content/uploads/2018/03/1520544674-9571-IgibeflnZ47WIlVHowAha8OFH2LA.jpg" target="_blank" rel="noopener"><img src="/images/loading.gif" data-original="../images/basic/1520544674-9571-IgibeflnZ47WIlVHowAha8OFH2LA.jpg" alt=""></a></p>
+<p>我们又知道，Recall=TPR，因此PRC的横坐标为ROC的纵坐标。</p>
+<h3 id="ROC曲线与PR曲线的取舍"><a href="#ROC曲线与PR曲线的取舍" class="headerlink" title="ROC曲线与PR曲线的取舍"></a>ROC曲线与PR曲线的取舍</h3><p>相对来讲ROC曲线会稳定很多，在正负样本量都足够的情况下，ROC曲线足够反映模型的判断能力。因此，对于同一模型，PRC和ROC曲线都可以说明一定的问题，而且二者有一定的相关性，如果想评测模型效果，也可以把两条曲线都画出来综合评价。对于有监督的二分类问题，在正负样本都足够的情况下，可以直接用ROC曲线、AUC、KS评价模型效果。在确定阈值过程中，可以根据Precision、Recall或者F1来评价模型的分类效果。对于多分类问题，可以对每一类分别计算Precision、Recall和F1，综合作为模型评价指标。</p>
+<p><a href="https://plobimage.ybzhao.com/wp-content/uploads/2018/03/1520544675-3272-kNs1qZ8ibDjswYZS0SuVpWnjlcEQ.png" target="_blank" rel="noopener"><img src="/images/loading.gif" data-original="../images/basic/1520544675-3272-kNs1qZ8ibDjswYZS0SuVpWnjlcEQ.png" alt=""></a></p>
+<p>在上图中，(a)和(c)为ROC曲线，(b)和(d)为Precision-Recall曲线。(a)和(b)展示的是分类其在原始测试集(正负样本分布平衡)的结果，(c)和(d)是将测试集中负样本的数量增加到原来的10倍后，分类器的结果。可以明显的看出，ROC曲线基本保持原貌，而Precision-Recall曲线则变化较大。</p>
+<script>
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return; }
+            const img = document.createElement('img');
+            img.style = 'display:none !important;';
+            img.src = el.dataset.src;
+            img.addEventListener('error', () => {
+              img.remove();
+              el.style.color = 'inherit';
+              el.style.backgroundImage = 'none';
+              el.style.background = 'none';
+            });
+            img.addEventListener('load', () => {
+              img.remove();
+            });
+            document.body.appendChild(img);
+          });
+      </script>
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://jackhcc.github.io" rel="external nofollow noreferrer">杰克成</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://jackhcc.github.io/posts/Basic-Math-Roc.html">https://jackhcc.github.io/posts/Basic-Math-Roc.html</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="https://jackhcc.github.io" target="_blank">杰克成</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/Math/">
+                                    <span class="chip bg-color">Math</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/reward/aliqr.png" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/reward/wxqr.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+            
+        </div>
+    </div>
+
+    
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/gitalk/gitalk.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/my-gitalk.css">
+
+<div class="card gitalk-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="gitalk-container" class="card-content"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/gitalk/gitalk.min.js"></script>
+<script>
+    let gitalk = new Gitalk({
+        clientID: '3821a0bbb773038a51fc',
+        clientSecret: '4b30b507d67ec5497ec0e77f43f80cb3e0d7dd3a',
+        repo: 'JackHCC.github.io',
+        owner: 'JackHCC',
+        admin: "JackHCC",
+        id: '2021-08-03T14-57-04',
+        distractionFreeMode: false  // Facebook-like distraction free mode
+    });
+
+    gitalk.render('gitalk-container');
+</script>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/posts/Kuhn-Munkres-Algorithm.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/19.jpg" class="responsive-img" alt="Kuhn-Munkres-Algorithm详解">
+                        
+                        <span class="card-title">Kuhn-Munkres-Algorithm详解</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            KM算法基本原理与实现
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-08-06
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Algorithm/" class="post-category">
+                                    Algorithm
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Algorithm/">
+                        <span class="chip bg-color">Algorithm</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/posts/matrix-gradient.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/1.jpg" class="responsive-img" alt="Math-矩阵求导计算">
+                        
+                        <span class="card-title">Math-矩阵求导计算</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            矩阵求导机制
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-08-03
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Basic/" class="post-category">
+                                    Basic
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Math/">
+                        <span class="chip bg-color">Math</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeShrink.js"></script>
+
+
+<!-- 代码块折行 -->
+
+<style type="text/css">
+code[class*="language-"], pre[class*="language-"] { white-space: pre !important; }
+</style>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('4'),
+            headingSelector: 'h1, h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h1, h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+    <footer class="page-footer bg-color">
+    <div class="container row center-align" style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            <span id="year">2020</span>
+            <a href="https://jackhcc.github.io" target="_blank">杰克成</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                class="white-color">3303.6k</span>&nbsp;字
+            
+            
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;人
+            </span>
+            
+            <br>
+            
+            <span id="sitetime">载入运行时间...</span>
+            <script>
+                function siteTime() {
+                    var seconds = 1000;
+                    var minutes = seconds * 60;
+                    var hours = minutes * 60;
+                    var days = hours * 24;
+                    var years = days * 365;
+                    var today = new Date();
+                    var startYear = "2020";
+                    var startMonth = "2";
+                    var startDate = "27";
+                    var startHour = "6";
+                    var startMinute = "30";
+                    var startSecond = "0";
+                    var todayYear = today.getFullYear();
+                    var todayMonth = today.getMonth() + 1;
+                    var todayDate = today.getDate();
+                    var todayHour = today.getHours();
+                    var todayMinute = today.getMinutes();
+                    var todaySecond = today.getSeconds();
+                    var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                    var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                    var diff = t2 - t1;
+                    var diffYears = Math.floor(diff / years);
+                    var diffDays = Math.floor((diff / days) - diffYears * 365);
+                    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+                    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) /
+                        minutes);
+                    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours -
+                        diffMinutes * minutes) / seconds);
+                    if (startYear == todayYear) {
+                        document.getElementById("year").innerHTML = todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffDays + " 天 " + diffHours +
+                            " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    } else {
+                        document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffYears + " 年 " + diffDays +
+                            " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    }
+                }
+                setInterval(siteTime, 1000);
+            </script>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/JackHCC" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:jackcc0701@163.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+    <a href="https://www.facebook.com/profile.php?id=100046343443643" class="tooltipped" target="_blank" data-tooltip="关注我的Facebook: https://www.facebook.com/profile.php?id=100046343443643" data-position="top" data-delay="50">
+        <i class="fab fa-facebook-f"></i>
+    </a>
+
+
+
+    <a href="https://twitter.com/JackChe66021834" class="tooltipped" target="_blank" data-tooltip="关注我的Twitter: https://twitter.com/JackChe66021834" data-position="top" data-delay="50">
+        <i class="fab fa-twitter"></i>
+    </a>
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=2508074836" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 2508074836" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+    <a href="https://weibo.com/u/6885584679" class="tooltipped" target="_blank" data-tooltip="关注我的微博: https://weibo.com/u/6885584679" data-position="top" data-delay="50">
+        <i class="fab fa-weibo"></i>
+    </a>
+
+
+
+    <a href="https://www.zhihu.com/people/8f8482f01f0d6a04e844efe32e0f0710" class="tooltipped" target="_blank" data-tooltip="关注我的知乎: https://www.zhihu.com/people/8f8482f01f0d6a04e844efe32e0f0710" data-position="top" data-delay="50">
+        <i class="fab fa-zhihu1">知</i>
+    </a>
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/materialize/materialize.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/aos/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/js/matery.js"></script>
+
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+    <script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script type="text/javascript" src="/js/fireworks.js"></script>
+
+    <script type="text/javascript">
+        //只在桌面版网页启用特效
+        var windowWidth = $(window).width();
+        if (windowWidth > 768) {
+            document.write('<script type="text/javascript" src="/js/sakura.js"><\/script>'); }
+    </script>
+
+    <!-- weather -->
+	<script type="text/javascript">
+	WIDGET = {FID: 'TToslpmkVO'}
+	</script>
+	<script type="text/javascript" src="https://apip.weatherdt.com/float/static/js/r.js?v=1111"></script>
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <!-- Baidu Analytics -->
+
+<script>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+    <!-- Baidu Push -->
+
+    
+    
+    <script async src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+        <script src="//code.tidio.co/kqhlkxviiccyoa0czpfpu4ijuey9hfre.js"></script>
+        <script> 
+            $(document).ready(function () {
+                setInterval(change_Tidio, 50);  
+                function change_Tidio() { 
+                    var tidio=$("#tidio-chat iframe");
+                    if(tidio.css("display")=="block"&& $(window).width()>977 ){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" &&$(window).width()>977)>0? "-40px" : ($("div.toc-title").length&&$(window).width()>977)>0?"85px":"20px";   
+                        document.getElementById("tidio-chat-iframe").style.right="-15px";   
+                        document.getElementById("tidio-chat-iframe").style.height=parseInt(tidio.css("height"))>=520?"520px":tidio.css("height");
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    } 
+                    else if(tidio.css("display")=="block"&&$(window).width()>601 &&$(window).width()<992 ){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" && 601< $(window).width()<992)>0? "-40px":"20px" ;   
+                        document.getElementById("tidio-chat-iframe").style.right="-15px"; 
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    }
+                    else if(tidio.css("display")=="block"&&$(window).width()<601 && parseInt(tidio.css("height"))<230){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" && $(window).width()<601)>0? "-10px":"45px" ;   
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    }
+                    if( tidio.css("display")=="block"&&$(window).width()<601 && parseInt(tidio.css("height"))>=230){
+                        document.getElementById("tidio-chat-iframe").style.zIndex="998";
+                    }
+                } 
+            }); 
+        </script>
+    
+
+    
+
+    
+    <script type="text/javascript" color="0,0,255"
+        pointColor="0,0,255" opacity='0.7'
+        zIndex="-1" count="99"
+        src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/background/canvas-nest.js"></script>
+    
+
+    
+
+    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/background/ribbon-dynamic.js" async="async"></script>
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/instantpage/instantpage.js" type="module"></script>
+    
+<script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script>
+        <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
+        <script>
+        $('a').each(function() {
+          const $this = $(this);
+          const href = $this.attr('href');
+          if (href && href.match('^((http|https|thunder|qqdl|ed2k|Flashget|qbrowser|ftp|rtsp|mms)://)')) {
+            const strs = href.split('/');
+            if (strs.length >= 3) {
+                const host = strs[2];
+                if (host !== 'your_domain' || window.location.host) {
+                    $this.attr('href', '/go.html?u='+Base64.encode(href)+'').attr('rel', 'external nofollow noopener noreferrer');
+                    if (true) {
+                        $this.attr('target', '_blank');
+                    }
+                }
+            }
+          }
+        });
+        </script></body>
+
+</html>
+

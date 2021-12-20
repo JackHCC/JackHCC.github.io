@@ -1,0 +1,1392 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="Batch Size对神经网络训练的影响, JackHCC">
+    <meta name="description" content="Batch Size对神经网络训练的实验结果">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Batch Size对神经网络训练的影响 | JackHCC</title>
+    <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/my.css">
+    
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/jquery/jquery.min.js"></script>
+    
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper head-container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/me.jpg" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">JackHCC</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>留言板</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>友情链接</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/me.jpg" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">JackHCC</div>
+        <div class="logo-desc">
+            
+            Make the world betterrrr!!!
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			留言板
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			友情链接
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/JackHCC/JackHCC.github.io" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/JackHCC/JackHCC.github.io" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/20.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">Batch Size对神经网络训练的影响</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        height: calc(100vh - 250px);
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 30px;
+        bottom: 146px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/Batch-Size/">
+                                <span class="chip bg-color">Batch Size</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/Paper/" class="post-category">
+                                Paper
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2021-09-23
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2021-09-27
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    5k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    18 分
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><ol>
+<li>什么是Batch Size？</li>
+<li>为什么Batch Size很重要？</li>
+<li>小批量和大批量如何凭经验执行？</li>
+<li>为什么大批量往往性能更差，如何缩小性能差距？</li>
+</ol>
+<h1 id="什么是Batch-Size？"><a href="#什么是Batch-Size？" class="headerlink" title="什么是Batch Size？"></a><strong>什么是Batch Size？</strong></h1><p>训练神经网络以最小化以下形式的损失函数：</p>
+<p><img src="/images/loading.gif" data-original="../images/paper/image-20210927152047035.png" alt=""></p>
+<ul>
+<li>theta 代表模型参数</li>
+<li>m 是训练数据样本的数量</li>
+<li>i 的每个值代表一个单一的训练数据样本</li>
+<li>J_i 表示应用于单个训练样本的损失函数</li>
+</ul>
+<p>通常，这是使用梯度下降来完成的，它计算损失函数相对于参数的梯度，并在该方向上迈出一步。随机梯度下降计算训练数据子集 B_k 上的梯度，而不是整个训练数据集。</p>
+<p><img src="/images/loading.gif" data-original="../images/paper/image-20210927152103929.png" alt=""></p>
+<p>B_k 是从训练数据集中采样的一批，其大小可以从 1 到 m（训练数据点的总数）。这通常称为批量大小为 |B_k| 的小批量训练。我们可以将这些批次级梯度视为“true”梯度的近似值，即整体损失函数相对于 theta 的梯度。我们使用小批量是因为它倾向于更快地收敛，<strong>因为它不需要完全遍历训练数据来更新权重。</strong></p>
+<h1 id="为什么Batch-Size很重要？"><a href="#为什么Batch-Size很重要？" class="headerlink" title="为什么Batch Size很重要？"></a><strong>为什么Batch Size很重要？</strong></h1><p>Keskar 等人指出，<strong>随机梯度下降是连续的，且使用小批量，因此不容易并行化 。使用更大的批量大小可以让我们在更大程度上并行计算，因为我们可以在不同的工作节点之间拆分训练示例。这反过来可以显着加快模型训练。</strong></p>
+<p><strong>然而，较大的批大小虽然能够达到与较小的批大小相似的训练误差，但往往对测试数据的泛化效果更差 。</strong>训练误差和测试误差之间的差距被称为“泛化差距”。因此，“holy grail”是使用大批量实现与小批量相同的测试误差。这将使我们能够在不牺牲模型准确性的情况下显着加快训练速度。</p>
+<h3 id="实验是如何设置的？"><a href="#实验是如何设置的？" class="headerlink" title="实验是如何设置的？"></a><strong>实验是如何设置的？</strong></h3><p>我们将使用不同的批量大小训练神经网络并比较它们的性能。</p>
+<p><strong>数据集</strong>：我们使用 Cats and Dogs 数据集，该数据集包含 23,262 张猫和狗的图像，在两个类之间的比例约为 50/50。由于图像大小不同，我们将它们全部调整为相同大小。我们使用 20% 的数据集作为验证数据，其余作为训练数据。</p>
+<p><strong>评估指标</strong>：我们使用验证数据上的二元交叉熵损失作为衡量模型性能的主要指标。</p>
+<p><img src="/images/loading.gif" data-original="../images/paper/image-20210927152153235.png" alt=""></p>
+<p>基础模型：定义了一个受 VGG16 启发的基础模型，在其中重复应用 (convolution -&gt;max-pool) 操作，使用 ReLU 作为卷积的激活函数。然后，将输出量展平并将其送入两个完全连接的层，最后是一个带有 sigmoid 激活的单神经元层，产生一个介于 0 和 1 之间的输出，它表明模型是预测猫（0）还是 狗 (1).</p>
+<p>训练：使用学习率为 0.01 的 SGD。一直训练到验证损失在 100 次迭代中都没有改善为止。</p>
+<h3 id="Batch-Size如何影响训练？"><a href="#Batch-Size如何影响训练？" class="headerlink" title="Batch Size如何影响训练？"></a><strong>Batch Size如何影响训练？</strong></h3><p><img src="/images/loading.gif" data-original="../images/paper/image-20210927152219802.png" alt=""></p>
+<p>从上图中，我们可以得出结论，<strong>batch size越大：</strong></p>
+<ul>
+<li><strong>训练损失减少的越慢。</strong></li>
+<li><strong>最小验证损失越高。</strong></li>
+<li><strong>每个时期训练所需的时间越少。</strong></li>
+<li><strong>收敛到最小验证损失所需的 epoch 越多。</strong></li>
+</ul>
+<p>让我们一一了解这些。首先，在大批量训练中，训练损失下降得更慢，如红线（批量大小 256）和蓝线（批量大小 32）之间的斜率差异所示。</p>
+<p>其次，大批量训练比小批量训练实现更糟糕的最小验证损失。例如，批量大小为 256 的最小验证损失为 0.395，而批量大小为 32 时为 0.344。</p>
+<p>第三，大批量训练的每个 epoch 花费的时间略少——批量大小 256 为 7.7 秒，而批量大小 256 为 12.4 秒，这反映了与加载少量大批量相关的开销较低，而不是许多小批量依次。如果我们使用多个 GPU 进行并行训练，这种时间差异会更加明显。</p>
+<p>然而，大批量训练需要更多的 epoch 才能收敛到最小值——批量大小 256 为 958，批量大小 32 为 158。因此，大批量训练总体上花费的时间更长：批量大小 256 花费的时间几乎是 32 的四倍！请注意，我们没有在这里并行化训练——如果我们这样做了，那么大批量训练的训练速度可能与小批量训练一样快。</p>
+<p>如果我们并行化训练运行会发生什么？为了回答这个问题，我们使用 TensorFlow 中的 MirroredStrategy 在四个 GPU 上并行训练：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">with</span> tf<span class="token punctuation">.</span>distribute<span class="token punctuation">.</span>MirroredStrategy<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>scope<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>   <span class="token comment" spellcheck="true"># Create, compile, and fit model   # ...</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>MirroredStrategy 将模型的所有变量复制到每个 GPU，并将前向/后向传递计算批量分发到所有 GPU。然后，它使用 all-reduce 组合来自每个 GPU 的梯度，然后将结果应用于每个 GPU 的模型副本。本质上，它正在划分批次并将每个块分配给 GPU。</p>
+<p>我们发现<strong>并行化使每个 epoch 的小批量训练速度稍慢，而它使大批量训练速度更快</strong>——对于 256 批大小，每个 epoch 需要 3.97 秒，低于 7.70 秒。然而，即使有 per-epoch 加速，它也无法在总训练时间方面匹配批量大小 32——当我们乘以总训练时间 (958) 时，我们得到大约 3700 秒的总训练时间，即 仍然远大于批大小 32 的 1915 秒。</p>
+<p><img src="/images/loading.gif" data-original="../images/paper/image-20210927152318693.png" alt=""></p>
+<p>到目前为止，大批量训练看起来并不值得，因为它们需要更长的时间来训练，并且训练和验证损失更严重。为什么会这样？有什么办法可以缩小性能差距吗？</p>
+<h1 id="为什么较小的批量性能更好？"><a href="#为什么较小的批量性能更好？" class="headerlink" title="为什么较小的批量性能更好？"></a><strong>为什么较小的批量性能更好？</strong></h1><p>Keskar 等人对小批量和大批量之间的性能差距提出了一种解释：<strong>使用小批量的训练倾向于收敛到平坦的极小化，该极小化在极小化的小邻域内仅略有变化，而大批量则收敛到尖锐的极小化，这变化很大。平面minimizers 倾向于更好地泛化，因为它们对训练集和测试集之间的变化更加鲁棒 。</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/paper/image-20210927152345086.png" alt=""></p>
+<p>此外，他们发现与大批量训练相比，小批量训练可以找到距离初始权重更远的最小值。他们解释说，小批量训练可能会为训练引入足够的噪声，以退出锐化minimizers 的损失池，而是找到可能更远的平坦minimizers 。</p>
+<p>让我们验证这些假设。</p>
+<p><strong>假设 1：与大批量最小化器相比，小批量minimizers 离初始权重更远。</strong></p>
+<p>我们首先测量初始权重和每个模型找到的最小值之间的欧几里德距离。</p>
+<p><img src="/images/loading.gif" data-original="../images/paper/image-20210927152414492.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/paper/image-20210927152429779.png" alt=""></p>
+<p>按层与初始权重的距离，批大小 32 和 256 的比较</p>
+<p>事实上，我们发现一般来说，批量越大，最小值越接近初始权重。（除了批量大小 128 比批量大小 64 离初始权重更远）。我们还在图 11 中看到，模型中的不同层都是如此。</p>
+<p>为什么大批量训练最终更接近初始权重？是否采取较小的更新步骤？让我们通过测量epoch距离——即epoch i 中的最终权重与epoch i 中的初始权重之间的距离——找出批量大小 32 和 256 的原因。</p>
+<p><img src="/images/loading.gif" data-original="../images/paper/image-20210927152449270.png" alt=""></p>
+<p>上面的第一幅图显示，较大的批次大小确实确实在每个 epoch 中遍历的距离更短。第 32 批训练的 epoch 距离从 0.15 到 0.4 不等，而第 256 批训练的距离约为 0.02–0.04。事实上，正如我们在第二个图中所看到的，epoch距离的比率随着时间的推移而增加！</p>
+<p>但是为什么大批量训练每个 epoch 遍历的距离更短呢？是因为我们的批次较少，因此每个 epoch 的更新较少吗？还是因为每次批量更新遍历的距离更短？或者，答案是两者的结合？</p>
+<p>为了回答这个问题，让我们测量每个批量更新的大小。</p>
+<p><img src="/images/loading.gif" data-original="../images/paper/image-20210927152507607.png" alt=""></p>
+<pre><code>Median batch update norm for batch size 32: 3.3e-3Median batch update norm for batch size 256: 1.5e-3</code></pre><p>我们可以看到，当批大小较大时，每次批更新较小。为什么会这样？</p>
+<p>为了理解这种行为，让我们设置一个虚拟场景，其中我们有两个梯度向量 a 和 b，每个表示一个训练示例的梯度。让我们考虑一下批量大小 = 1 的平均批量更新大小与批量大小 = 2 的情况相比如何。</p>
+<p><img src="/images/loading.gif" data-original="../images/paper/image-20210927152528065.png" alt=""></p>
+<p>如果我们使用 1 的批量大小，我们将在 a 的方向上迈出一步，然后是 b，最终在 a+b 表示的点上。（从技术上讲，b 的梯度将在应用 a 后重新计算，但我们现在先忽略它）。这导致平均批量更新大小为 (|a|+|b|)/2 — 批量更新大小的总和除以批量更新的数量。</p>
+<p>但是，如果我们使用批量大小为 2，批量更新将改为由向量 (a+b)/2 表示 — 图 12 中的红色箭头。因此，平均批量更新大小为 |(a+b)/ 2| / 1 = |a+b|/2。</p>
+<p>现在，让我们比较两个平均批量更新大小：</p>
+<p><img src="/images/loading.gif" data-original="../images/paper/image-20210927152552565.png" alt=""></p>
+<p>在最后一行中，我们使用三角不等式来表明批量大小 1 的平均批量更新大小始终大于或等于批量大小 2 的平均批量更新大小。</p>
+<p>换句话说，为了使批量大小 1 和批量大小 2 的平均批量大小相等，向量 a 和 b 必须指向相同的方向，因为那是 |a| 的时候。+ |b| = |a+b|。我们可以将此参数扩展到 n 个向量——只有当所有 n 个向量都指向同一方向时，batch size=1 和 batch size=n 的平均批量更新大小才相同。然而，这几乎从来都不是这样的，因为梯度向量不太可能指向完全相同的方向。</p>
+<p><img src="/images/loading.gif" data-original="../images/paper/image-20210927152610894.png" alt=""></p>
+<p>如果我们回到小批量更新方程，我们在某种意义上说，当我们扩大批量大小 |B_k| 时，梯度总和的大小相对较慢地扩大。这是因为梯度向量指向不同的方向，因此将批量大小（即要加在一起的梯度向量的数量）加倍并不会使生成的梯度向量总和的大小加倍。同时，我们除以分母 |B_k|这是两倍大，导致整体更新步骤更小。</p>
+<p>这可以解释为什么更大批量的批量更新往往更小——梯度向量的总和变得更大，但不能完全抵消更大的分母|B_k|。</p>
+<h3 id="假设-2：小批量训练找到更平坦的最小值"><a href="#假设-2：小批量训练找到更平坦的最小值" class="headerlink" title="假设 2：小批量训练找到更平坦的最小值"></a><strong>假设 2：小批量训练找到更平坦的最小值</strong></h3><p>现在让我们测量两个minimizers的锐度，并评估小批量训练找到更平坦的minimizers的说法。（请注意，第二个假设可以与第一个假设共存——它们并不相互排斥。）为此，我们从 Keskar 等人那里借用了两种方法。</p>
+<p>在第一个中，我们沿着小批量minimizers（批量大小 32）和大批量minimizers（批量大小 256）之间的线绘制训练和验证损失。这条线由以下等式描述：</p>
+<p><img src="/images/loading.gif" data-original="../images/paper/image-20210927152651916.png" alt=""></p>
+<p>其中 x_l* 是大批量minimizers，x_s* 是小批量minimizers，alpha 是一个介于 -1 和 2 之间的系数。</p>
+<p><img src="/images/loading.gif" data-original="../images/paper/image-20210927152713388.png" alt=""></p>
+<p>正如我们在图中所见，小批量minimizers (alpha=0) 比大批量minimizers (alpha=1) 平坦得多，后者的变化更加剧烈。</p>
+<p>请注意，这是一种相当简单的锐度测量方法，因为它只考虑一个方向。因此，Keskar 等人提出了一个锐度度量，用于衡量损失函数在最小值附近的邻域内的变化程度。首先，我们定义邻域如下：</p>
+<img src="/images/loading.gif" data-original="../images/paper/image-20210927152730435.png" style="zoom:50%;">
+
+<p>其中 epsilon 是定义邻域大小的参数，x 是最小值（权重）。</p>
+<p>然后，我们将锐度度量定义为最小值附近的最大损失：</p>
+<img src="/images/loading.gif" data-original="../images/paper/image-20210927152749100.png" style="zoom:50%;">
+
+<p>其中 f 是损失函数，输入是权重。</p>
+<p>使用上面的定义，让我们计算各种批量大小下的最小化器的锐度，epsilon 值为 1e-3：</p>
+<img src="/images/loading.gif" data-original="../images/paper/image-20210927152818239.png" style="zoom:67%;">
+
+<p>这表明大批量最小化器确实更清晰，正如我们在插值图中看到的那样。</p>
+<p>最后，让我们尝试用 Li 等人制定的过滤器归一化损失可视化来绘制最小化器。这种类型的图选择两个与模型权重具有相同维度的随机方向，然后将每个卷积滤波器（或神经元，在 FC 层的情况下）归一化为与模型权重中的相应滤波器具有相同的范数。这确保了最小化器的锐度不受其权重大小的影响。然后，它沿着这两个方向绘制损失，图的中心是我们希望表征的最小值。</p>
+<p><img src="/images/loading.gif" data-original="../images/paper/image-20210927152844981.png" alt=""></p>
+<p>同样，我们可以从等高线图中看到，对于大批量最小化器，损失变化更加剧烈。</p>
+<h1 id="通过提高学习率可以提高大批量的性能吗"><a href="#通过提高学习率可以提高大批量的性能吗" class="headerlink" title="通过提高学习率可以提高大批量的性能吗"></a><strong>通过提高学习率可以提高大批量的性能吗</strong></h1><p>在假设 1 中，我们看到大批量的更新大小和每个 epoch 的更新频率都较低，而在假设 2 中，我们看到大批量无法探索与小批量一样大的区域。知道了这一点，我们是否可以通过简单地提高学习率来使大批量训练表现更好？</p>
+<p>这种方法以前曾被建议过，例如 Goyal 等人提出：“线性缩放规则：当 minibatch 大小乘以 k 时，将学习率乘以 k。”</p>
+<p>让我们试试这个，批量大小为 32、64、128 和 256。我们将对批量大小 32 使用 0.01 的基本学习率，并相应地缩放其他批量大小。</p>
+<p><img src="/images/loading.gif" data-original="../images/paper/image-20210927152909149.png" alt=""></p>
+<p>事实上，我们发现调整学习率确实消除了小批量和大批量之间的大部分性能差距。现在，批量大小 256 的验证损失为 0.352 而不是 0.395——更接近批量大小 32 的损失 0.345。</p>
+<p>提高学习率如何影响训练时间？由于大批量训练现在可以在与小批量训练大致相同的迭代次数中收敛，如图 25 中的左图所示，现在总体训练时间更短——批量大小 256 为 2197 秒，而批量为 3156 大小为 32。如果我们跨 4 个 GPU 并行化，则加速更加明显。</p>
+<p><img src="/images/loading.gif" data-original="../images/paper/image-20210927152928217.png" alt=""></p>
+<p>这是否意味着大批量现在正在收敛到平面minimizers？如果我们绘制锐度分数，我们可以看到调整学习率确实使大批量最小化器更平坦：</p>
+<p><img src="/images/loading.gif" data-original="../images/paper/image-20210927152944715.png" alt=""></p>
+<p>有趣的是，虽然调整学习率使大批量minimizers更平坦，但它们仍然比最小批量最小化器更锐利（4-7 与 1.14 相比）。为什么会这样仍然是未来调查的问题。</p>
+<p>较大批量的训练运行现在是否与小批量的初始权重相差甚远？</p>
+<p><img src="/images/loading.gif" data-original="../images/paper/image-20210927153001041.png" alt=""></p>
+<p>大多数情况下，答案是肯定的。如果我们看上面的图，调整学习率有助于缩小批量大小 32 与其他批量大小之间在与初始权重的距离方面的差距。（请注意，128 似乎是一个异常，其中增加学习率会降低距离——为什么会出现这种情况，有待未来调查。）</p>
+<h1 id="小批量训练总是优于大批量训练吗？"><a href="#小批量训练总是优于大批量训练吗？" class="headerlink" title="小批量训练总是优于大批量训练吗？"></a><strong>小批量训练总是优于大批量训练吗？</strong></h1><p>鉴于上述观察和文献，如果我们保持学习率不变，我们可能会期望小批量训练总是优于大批量训练。事实上，事实并非如此，正如我们在使用学习率 0.08 时所看到的：</p>
+<p><img src="/images/loading.gif" data-original="../images/paper/image-20210927153028586.png" alt=""></p>
+<p>在这里，我们看到批量大小 64 实际上优于批量大小 32！这是因为学习率和批量大小密切相关——小批量在较小的学习率下表现最好，而大批量在较大的学习率下表现最好。我们可以在下面看到这种现象：</p>
+<p><img src="/images/loading.gif" data-original="../images/paper/image-20210927153044920.png" alt=""></p>
+<p>我们看到，0.01 的学习率对于批大小 32 是最好的，而 0.08 对于其他批大小是最好的。</p>
+<p>因此，如果您注意到大批量训练在相同学习率下优于小批量训练，这可能表明学习率大于小批量训练的最佳值。</p>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a><strong>结论</strong></h1><p>那么，这意味着什么？我们可以从这些实验中得到什么？</p>
+<p>线性缩放规则：当 minibatch 大小乘以 k 时，将学习率乘以 k。尽管我们最初发现大批量性能更差，但我们能够通过提高学习率来缩小大部分差距。我们看到这是由于较大的批次大小应用了较小的批次更新，这是由于批次内梯度向量之间的梯度竞争。</p>
+<p>选择合适的学习率时，较大的批量尺寸可以更快地训练，特别是在并行化时。对于大批量，我们不受 SGD 更新的顺序性质的限制，因为我们不会遇到与将许多小批量顺序加载到内存中相关的开销。我们还可以跨训练示例并行化计算。</p>
+<p>然而，当学习率没有针对较大的批量大小向上调整时，大批量训练可能比小批量训练花费的时间更长，因为它需要更多的训练时期来收敛。因此，您需要调整学习率以实现更大批量和并行化的加速。</p>
+<p>大批量，即使调整了学习率，在我们的实验中表现稍差，但需要更多的数据来确定更大的批量是否总体上表现更差。我们仍然观察到最小批量大小（val loss 0.343）和最大批量大小（val loss 0.352）之间的轻微性能差距。一些人认为小批量具有正则化效果，因为它们将噪声引入更新，帮助训练摆脱次优局部最小值的吸引力 。然而，这些实验的结果表明，性能差距相对较小，至少对于这个数据集。这表明，只要您为批量大小找到合适的学习率，您就可以专注于可能对性能产生更大影响的其他方面的训练。</p>
+<h1 id="亮点总结"><a href="#亮点总结" class="headerlink" title="亮点总结"></a><strong>亮点总结</strong></h1><p>1.随机梯度下降是连续的，且使用小批量，因此不容易并行化 。使用更大的批量大小可以让我们在更大程度上并行计算，因为我们可以在不同的工作节点之间拆分训练示例。这反过来可以显着加快模型训练。</p>
+<p>2.使用小批量的训练倾向于收敛到平坦的极小化，该极小化在极小化的小邻域内仅略有变化，而大批量则收敛到尖锐的极小化，这变化很大。平面minimizers 倾向于更好地泛化，因为它们对训练集和测试集之间的变化更加鲁棒 。</p>
+<h1 id="论文"><a href="#论文" class="headerlink" title="论文"></a>论文</h1><ol>
+<li><p>Keskar, Nocedal, Mudigere, Smelyanskiy, and Tang. On Large-Batch Training for Deep Learning: Generalization Gap and Sharp Minima. <a href="https://arxiv.org/pdf/1609.04836.pdf" target="_blank" rel="noopener">https://arxiv.org/pdf/1609.04836.pdf</a></p>
+</li>
+<li><p>Li, Xu, Taylor, Studer, and Goldstein. Visualizing the Loss Landscape of Neural Nets. <a href="https://papers.nips.cc/paper/7875-visualizing-the-loss-landscape-of-neural-nets.pdf" target="_blank" rel="noopener">https://papers.nips.cc/paper/7875-visualizing-the-loss-landscape-of-neural-nets.pdf</a>.</p>
+</li>
+<li><p>Goyal, Dollar, Girshick, Noordhuis, Wesolowski, Kyrola, Tulloch, Jia, and He. Accurate, Large Minibatch SGD: Training ImageNet in 1 Hour. <a href="https://research.fb.com/wp-content/uploads/2017/06/imagenet1kin1h5.pdf" target="_blank" rel="noopener">https://research.fb.com/wp-content/uploads/2017/06/imagenet1kin1h5.pdf</a>.</p>
+<p><a href="https://mp.weixin.qq.com/s?__biz=MzI4MDYzNzg4Mw==&amp;mid=2247543905&amp;idx=4&amp;sn=25f1fc3fac6f45bc6bbd59363192a482&amp;chksm=ebb714b5dcc09da317b1367695680c13006baa100b40ab256cc160ee28580a794a7b57e0285a&amp;mpshare=1&amp;scene=24&amp;srcid=0927yKo1IcjR1Xq5JE2RbW5w&amp;sharer_sharetime=1632705516063&amp;sharer_shareid=ec97eb55327cbf6d58829bb24c921611#rd" target="_blank" rel="noopener">reference</a></p>
+</li>
+</ol>
+<script>
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return; }
+            const img = document.createElement('img');
+            img.style = 'display:none !important;';
+            img.src = el.dataset.src;
+            img.addEventListener('error', () => {
+              img.remove();
+              el.style.color = 'inherit';
+              el.style.backgroundImage = 'none';
+              el.style.background = 'none';
+            });
+            img.addEventListener('load', () => {
+              img.remove();
+            });
+            document.body.appendChild(img);
+          });
+      </script>
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://jackhcc.github.io" rel="external nofollow noreferrer">杰克成</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://jackhcc.github.io/posts/paper-bs.html">https://jackhcc.github.io/posts/paper-bs.html</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="https://jackhcc.github.io" target="_blank">杰克成</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/Batch-Size/">
+                                    <span class="chip bg-color">Batch Size</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/reward/aliqr.png" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/reward/wxqr.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+            
+        </div>
+    </div>
+
+    
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/gitalk/gitalk.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/my-gitalk.css">
+
+<div class="card gitalk-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="gitalk-container" class="card-content"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/gitalk/gitalk.min.js"></script>
+<script>
+    let gitalk = new Gitalk({
+        clientID: '3821a0bbb773038a51fc',
+        clientSecret: '4b30b507d67ec5497ec0e77f43f80cb3e0d7dd3a',
+        repo: 'JackHCC.github.io',
+        owner: 'JackHCC',
+        admin: "JackHCC",
+        id: '2021-09-23T15-15-12',
+        distractionFreeMode: false  // Facebook-like distraction free mode
+    });
+
+    gitalk.render('gitalk-container');
+</script>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/posts/blog-python19.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/16.jpg" class="responsive-img" alt="Python-Feather文件操作">
+                        
+                        <span class="card-title">Python-Feather文件操作</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            Feather文件格式详解
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-09-24
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Python/" class="post-category">
+                                    Python
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Feather/">
+                        <span class="chip bg-color">Feather</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/posts/blog-python18.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/5.jpg" class="responsive-img" alt="Python-Argparse详解">
+                        
+                        <span class="card-title">Python-Argparse详解</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            Python Argparse学习记录
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-09-22
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Python/" class="post-category">
+                                    Python
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Argparse/">
+                        <span class="chip bg-color">Argparse</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeShrink.js"></script>
+
+
+<!-- 代码块折行 -->
+
+<style type="text/css">
+code[class*="language-"], pre[class*="language-"] { white-space: pre !important; }
+</style>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('4'),
+            headingSelector: 'h1, h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h1, h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+    <footer class="page-footer bg-color">
+    <div class="container row center-align" style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            <span id="year">2020</span>
+            <a href="https://jackhcc.github.io" target="_blank">杰克成</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                class="white-color">3303.6k</span>&nbsp;字
+            
+            
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;人
+            </span>
+            
+            <br>
+            
+            <span id="sitetime">载入运行时间...</span>
+            <script>
+                function siteTime() {
+                    var seconds = 1000;
+                    var minutes = seconds * 60;
+                    var hours = minutes * 60;
+                    var days = hours * 24;
+                    var years = days * 365;
+                    var today = new Date();
+                    var startYear = "2020";
+                    var startMonth = "2";
+                    var startDate = "27";
+                    var startHour = "6";
+                    var startMinute = "30";
+                    var startSecond = "0";
+                    var todayYear = today.getFullYear();
+                    var todayMonth = today.getMonth() + 1;
+                    var todayDate = today.getDate();
+                    var todayHour = today.getHours();
+                    var todayMinute = today.getMinutes();
+                    var todaySecond = today.getSeconds();
+                    var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                    var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                    var diff = t2 - t1;
+                    var diffYears = Math.floor(diff / years);
+                    var diffDays = Math.floor((diff / days) - diffYears * 365);
+                    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+                    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) /
+                        minutes);
+                    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours -
+                        diffMinutes * minutes) / seconds);
+                    if (startYear == todayYear) {
+                        document.getElementById("year").innerHTML = todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffDays + " 天 " + diffHours +
+                            " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    } else {
+                        document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffYears + " 年 " + diffDays +
+                            " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    }
+                }
+                setInterval(siteTime, 1000);
+            </script>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/JackHCC" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:jackcc0701@163.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+    <a href="https://www.facebook.com/profile.php?id=100046343443643" class="tooltipped" target="_blank" data-tooltip="关注我的Facebook: https://www.facebook.com/profile.php?id=100046343443643" data-position="top" data-delay="50">
+        <i class="fab fa-facebook-f"></i>
+    </a>
+
+
+
+    <a href="https://twitter.com/JackChe66021834" class="tooltipped" target="_blank" data-tooltip="关注我的Twitter: https://twitter.com/JackChe66021834" data-position="top" data-delay="50">
+        <i class="fab fa-twitter"></i>
+    </a>
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=2508074836" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 2508074836" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+    <a href="https://weibo.com/u/6885584679" class="tooltipped" target="_blank" data-tooltip="关注我的微博: https://weibo.com/u/6885584679" data-position="top" data-delay="50">
+        <i class="fab fa-weibo"></i>
+    </a>
+
+
+
+    <a href="https://www.zhihu.com/people/8f8482f01f0d6a04e844efe32e0f0710" class="tooltipped" target="_blank" data-tooltip="关注我的知乎: https://www.zhihu.com/people/8f8482f01f0d6a04e844efe32e0f0710" data-position="top" data-delay="50">
+        <i class="fab fa-zhihu1">知</i>
+    </a>
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/materialize/materialize.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/aos/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/js/matery.js"></script>
+
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+    <script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script type="text/javascript" src="/js/fireworks.js"></script>
+
+    <script type="text/javascript">
+        //只在桌面版网页启用特效
+        var windowWidth = $(window).width();
+        if (windowWidth > 768) {
+            document.write('<script type="text/javascript" src="/js/sakura.js"><\/script>'); }
+    </script>
+
+    <!-- weather -->
+	<script type="text/javascript">
+	WIDGET = {FID: 'TToslpmkVO'}
+	</script>
+	<script type="text/javascript" src="https://apip.weatherdt.com/float/static/js/r.js?v=1111"></script>
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <!-- Baidu Analytics -->
+
+<script>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+    <!-- Baidu Push -->
+
+    
+    
+    <script async src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+        <script src="//code.tidio.co/kqhlkxviiccyoa0czpfpu4ijuey9hfre.js"></script>
+        <script> 
+            $(document).ready(function () {
+                setInterval(change_Tidio, 50);  
+                function change_Tidio() { 
+                    var tidio=$("#tidio-chat iframe");
+                    if(tidio.css("display")=="block"&& $(window).width()>977 ){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" &&$(window).width()>977)>0? "-40px" : ($("div.toc-title").length&&$(window).width()>977)>0?"85px":"20px";   
+                        document.getElementById("tidio-chat-iframe").style.right="-15px";   
+                        document.getElementById("tidio-chat-iframe").style.height=parseInt(tidio.css("height"))>=520?"520px":tidio.css("height");
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    } 
+                    else if(tidio.css("display")=="block"&&$(window).width()>601 &&$(window).width()<992 ){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" && 601< $(window).width()<992)>0? "-40px":"20px" ;   
+                        document.getElementById("tidio-chat-iframe").style.right="-15px"; 
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    }
+                    else if(tidio.css("display")=="block"&&$(window).width()<601 && parseInt(tidio.css("height"))<230){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" && $(window).width()<601)>0? "-10px":"45px" ;   
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    }
+                    if( tidio.css("display")=="block"&&$(window).width()<601 && parseInt(tidio.css("height"))>=230){
+                        document.getElementById("tidio-chat-iframe").style.zIndex="998";
+                    }
+                } 
+            }); 
+        </script>
+    
+
+    
+
+    
+    <script type="text/javascript" color="0,0,255"
+        pointColor="0,0,255" opacity='0.7'
+        zIndex="-1" count="99"
+        src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/background/canvas-nest.js"></script>
+    
+
+    
+
+    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/background/ribbon-dynamic.js" async="async"></script>
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/instantpage/instantpage.js" type="module"></script>
+    
+<script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script>
+        <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
+        <script>
+        $('a').each(function() {
+          const $this = $(this);
+          const href = $this.attr('href');
+          if (href && href.match('^((http|https|thunder|qqdl|ed2k|Flashget|qbrowser|ftp|rtsp|mms)://)')) {
+            const strs = href.split('/');
+            if (strs.length >= 3) {
+                const host = strs[2];
+                if (host !== 'your_domain' || window.location.host) {
+                    $this.attr('href', '/go.html?u='+Base64.encode(href)+'').attr('rel', 'external nofollow noopener noreferrer');
+                    if (true) {
+                        $this.attr('target', '_blank');
+                    }
+                }
+            }
+          }
+        });
+        </script></body>
+
+</html>
+

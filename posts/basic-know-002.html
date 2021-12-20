@@ -1,0 +1,1553 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="计算机组成原理学习笔记, JackHCC">
+    <meta name="description" content="计算机组成原理基础知识">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>计算机组成原理学习笔记 | JackHCC</title>
+    <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/my.css">
+    
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/jquery/jquery.min.js"></script>
+    
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper head-container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/me.jpg" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">JackHCC</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>留言板</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>友情链接</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/me.jpg" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">JackHCC</div>
+        <div class="logo-desc">
+            
+            Make the world betterrrr!!!
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			留言板
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			友情链接
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/JackHCC/JackHCC.github.io" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/JackHCC/JackHCC.github.io" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/13.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">计算机组成原理学习笔记</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        height: calc(100vh - 250px);
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 30px;
+        bottom: 146px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/Computer/">
+                                <span class="chip bg-color">Computer</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/Basic/" class="post-category">
+                                Basic
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2021-07-10
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2021-10-14
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    4.9k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    17 分
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h3 id="计算机系统概述"><a href="#计算机系统概述" class="headerlink" title="计算机系统概述"></a>计算机系统概述</h3><h4 id="计算机系统的多层次结构"><a href="#计算机系统的多层次结构" class="headerlink" title="计算机系统的多层次结构"></a>计算机系统的多层次结构</h4><p>微程序设计级、一般机器级、操作系统级、汇编语言级、高级语言级。</p>
+<p><strong>硬件：</strong> </p>
+<p>第1级：微程序机器层M0（微指令系统），由硬件直接执行微指令</p>
+<p>第2级：传统机器M1（机器语言机器），用微程序解释机器指令</p>
+<p><strong>软件：</strong> </p>
+<p>第3级：虚拟机器M2（操作系统机器），用机器语言解释操作系统</p>
+<p>第4级：汇编语言M3（汇编语言机器），用汇编程序翻译成机器语言程序</p>
+<p>第5级：虚拟机器M4（高级语言机器），用编译程序翻译成汇编语言程序</p>
+<h4 id="冯·诺依曼机"><a href="#冯·诺依曼机" class="headerlink" title="冯·诺依曼机"></a>冯·诺依曼机</h4><ul>
+<li>基本工作方式：控制流驱动方式；</li>
+<li>最根本的特征：采用“存储程序”原理，即按地址访问并顺序执行指令；</li>
+<li>指令和数据均以二进制形式存放在存储器中；</li>
+<li>CPU区分依据是：指令周期的不同阶段。</li>
+<li>冯·诺依曼计算机：以运算器为中心</li>
+<li>现代的计算器：以存储器为中心</li>
+<li>5大部件：存储器、运算器、控制器、输入设备、输出设备（适配器）</li>
+<li>三大部分：CPU（运算器、控制器）、I/O设备（输入设备、输出设备）、主存储器</li>
+</ul>
+<h4 id="哈佛结构"><a href="#哈佛结构" class="headerlink" title="哈佛结构"></a>哈佛结构</h4><ul>
+<li>将指令和数据放在两个独立的存储器，允许在一个机器周期内同时获得指令和操作数，提高了执行速度。</li>
+</ul>
+<h4 id="计算机性能指标"><a href="#计算机性能指标" class="headerlink" title="计算机性能指标"></a>计算机性能指标</h4><p><strong>机器字长</strong>：</p>
+<ol>
+<li>CPU一次能处理数据的位数。</li>
+</ol>
+<p>通常与CPU的寄存器位数有关。字长越长，精度越高。</p>
+<ol>
+<li>机器的字长也会影响机器的运算速度。</li>
+</ol>
+<p>字长较短，运算位数多，可能需要多次运算才能完成。</p>
+<ol>
+<li>对硬件造价有影响。</li>
+</ol>
+<p>直接影响ALU、数据总线以及存储字长的位数。</p>
+<p><strong>存储容量：</strong></p>
+<p>主存容量、辅存容量</p>
+<p><strong>运算速度：</strong></p>
+<ul>
+<li>吞吐量和响应时间</li>
+<li>主频和CPU时钟周期</li>
+<li>CPI：执行一条指令所需的时钟周期数。</li>
+<li>CPU执行时间：指运行一个程序所花费的时间。取决于：1、主频；2、CPI；3、指令条数</li>
+<li>MIPS：每秒执行多少百万条指令。</li>
+<li>MFLOPS：每秒执行多少百万次浮点运算。（标志系统性能最有用参数）</li>
+<li>GFLOPS：每秒执行多少十亿次浮点运算。</li>
+<li>TFLOPS：每秒执行多少万亿次浮点运算。 </li>
+</ul>
+<h3 id="数据的表示与运算"><a href="#数据的表示与运算" class="headerlink" title="数据的表示与运算"></a>数据的表示与运算</h3><h4 id="汉字的编码"><a href="#汉字的编码" class="headerlink" title="汉字的编码"></a>汉字的编码</h4><p>①输入码（外码）：区位码、国际码、拼音码、电报码、表形码等</p>
+<p>②内码：0、1（机器码）</p>
+<p>③输出码：汉字字形码</p>
+<ul>
+<li>汉字编码包括汉字的输入编码、汉字内码、汉字字形。用两个字节表示一个汉字，每个字节用七位码。区位码是4位十进制数，前2位是区码，后2位是位码。</li>
+<li>国标码是将十进制的区位码转换为十六进制后，再在每个字节上加上20H。为了方便计算机区分中文字符和英文字符，将国标码两个字节的最高位都改为“1”，这就是汉字内码（十六进制）。</li>
+</ul>
+<h4 id="字符串的存放"><a href="#字符串的存放" class="headerlink" title="字符串的存放"></a>字符串的存放</h4><ul>
+<li>小端模式：按先存储低位字节、后存储高位字节的顺序存放字符串的内容。</li>
+<li>大端模式：按先存储高位字节、后存储低位字节的顺序存放字符串的内容。</li>
+</ul>
+<h4 id="校验码"><a href="#校验码" class="headerlink" title="校验码"></a>校验码</h4><p>①奇偶校验码：只能检出一位错误，不能确定出错的位置；只能检验出奇数位错误，不能检测出偶数位错误。</p>
+<ul>
+<li>奇校验码：整个校验码中“1”的个数为奇数。</li>
+<li>偶校验码：整个校验码中“1”的个数为偶数。</li>
+</ul>
+<p>②海明（汉明）检验码：可检出错位位置</p>
+<p>③循环冗余校验（CRC）码：可检出错误位置（通过除法运算）</p>
+<h4 id="原码、反码、补码、移码"><a href="#原码、反码、补码、移码" class="headerlink" title="原码、反码、补码、移码"></a>原码、反码、补码、移码</h4><ol>
+<li>原码、补码、反码三种机器数的最高位均是符号位。</li>
+<li>当真值为正时，原码、补码、反码的表示形式均相同，即符号位用“0”表示，数值部分与真值相同。当真值为负时，原码、补码、反码的表示形式不同，但其符号位都用“1”表示，而数值部分补码是原码的“求反加1”，反码是原码的“每位求反”。</li>
+<li>同一个真值的移码和补码仅差一个符号位。</li>
+<li>不同机器数表示±0时，其形式不同。[+0]原≠[-0]原， [+0]反≠[-0]反，[+0]补=[-0]补，[+0]移=[-0]移</li>
+<li>当机器字长确定后，补码比原码、反码能多表示一个负数。</li>
+<li>移码只能表示整数，用它表示浮点数的阶码时，能方便地判断阶码的大小。</li>
+</ol>
+<h4 id="补码定点数的加-减运算"><a href="#补码定点数的加-减运算" class="headerlink" title="补码定点数的加/减运算"></a>补码定点数的加/减运算</h4><p><strong>基本公式：</strong>（将符号位和数值部分一起参加运算，并且将符号位产生的进位自然丢掉即可）</p>
+<p>加法：[A]补+[B]补=[A+B]补</p>
+<p>减法：[A-B]补=[A]补+[-B]补（[-B]补由[B]补连同符号位在内，每位取反，末尾加1）</p>
+<p><strong>溢出判断：</strong></p>
+<p>①用一位符号判断溢出：实际参加操作的两个数符号相同，结果又与原操作数的符号不同，即为溢出。</p>
+<p>②用两位符号位判断溢出：当2位符号位不同时，表示溢出，否则，无溢出。不论是否发生溢出，高位（第1位）符号永远代表真正的符号。（变形补码，运算时多一位）01正溢出（上溢）；10负溢出（下溢）</p>
+<p>③采用一位符号位根据数据位的进位情况判断溢出。如果符号位的进位与最高数位的进位不同，则表示结果溢出。</p>
+<h4 id="浮点数的加-减运算"><a href="#浮点数的加-减运算" class="headerlink" title="浮点数的加/减运算"></a>浮点数的加/减运算</h4><ol>
+<li>对阶：两个数的小数点位置对齐（使阶码相等），两个数的阶码相减求阶差，使小阶的尾数向右移位，每右移一位，阶码加1。</li>
+<li>尾数求和：将对阶后的两个尾数按定点加（减）运算规则进行运算。</li>
+<li>规格化：补码规格化形式为[S]补 00.1××××；[S]补 11.0××××。</li>
+</ol>
+<p>①左规：尾数出现00.0××××或11.1××××时，需左规。尾数左移一位，阶码减1。</p>
+<p>②右规：尾数出现01.××××或10.××××时，表示尾数溢出，但在浮点运算中不算溢出，可通过右规处理。尾数右移一位，阶码加1。</p>
+<ol>
+<li>舍入：在对阶和右规的过程中，可能会将尾数的低位丢失，引起误差，影响精度，用舍入法来提高尾数的精度。</li>
+</ol>
+<p>①“0舍1入”法：被移去的最高位数值位为0，则舍去；被移去的最高数值位为1，则在尾数的末位加1。又溢出时，再右规……</p>
+<p>②“恒置1”法：不论丢掉的最高数位是“1”还是“0”，都使尾数末位恒置“1”。</p>
+<p>两种方法同样都有使尾数变大和变小两种可能。</p>
+<ol>
+<li>溢出判断（是否溢出由阶码的符号决定）</li>
+</ol>
+<p>①上溢：阶码[j]补=01，×××，作溢出处理</p>
+<p>②下溢：阶码[j]补=10，×××，按机器零处理</p>
+<p>注：浮点数的计算原理需要多动手去计算理解</p>
+<h4 id="浮点数的表示范围"><a href="#浮点数的表示范围" class="headerlink" title="浮点数的表示范围"></a>浮点数的表示范围</h4><p><img src="/images/loading.gif" data-original="../images/basic/-1627228425723391" alt=""></p>
+<p>上溢：当浮点数阶码大于最大阶码时，上溢，机器停止运算，进行中断溢出处理。</p>
+<p>下溢：当浮点数阶码小于最小阶码时，下溢，溢出的数绝对值很小，通常将位数各位强制为0，按机器零处理，机器可以继续运行。</p>
+<h4 id="8位二进制整数范围"><a href="#8位二进制整数范围" class="headerlink" title="8位二进制整数范围"></a>8位二进制整数范围</h4><p>原码、反码：-127—+127</p>
+<p>补码、移码：-128—+127</p>
+<h4 id="标准IEEE-754标准"><a href="#标准IEEE-754标准" class="headerlink" title="标准IEEE 754标准"></a>标准IEEE 754标准</h4><p>现代计算机中，浮点数一般采用IEEE制定的国际标准： </p>
+<p><img src="/images/loading.gif" data-original="../images/basic/-1627228433426393" alt=""></p>
+<p>常见的浮点数有三种：</p>
+<p>阶码用移码表示，短实数、长实数、临时实数的偏移量用十六进制数表示分别为7FH（127）、3FFH、3FFFH。</p>
+<p>尾数部分通常是用原码、规格化表示，即非“0”的有效位最高位总是“1”，但在IEEE标准中，有效位呈如下形式：1▲ff…ffff，其中▲表示假想的二进制小数点。在实际表示中，对短实数和长实数，这个整数位的1省略，称隐藏位；对于临时实数不采用隐藏位方案。</p>
+<p>规格化的短浮点数真值： </p>
+<p><img src="/images/loading.gif" data-original="../images/basic/-1627228442391395" alt=""></p>
+<h3 id="存储器的存储结构"><a href="#存储器的存储结构" class="headerlink" title="存储器的存储结构"></a>存储器的存储结构</h3><h4 id="存储器的层次化结构"><a href="#存储器的层次化结构" class="headerlink" title="存储器的层次化结构"></a>存储器的层次化结构</h4><p>存储器主要性能指标：速度、容量、每位价格（位价）</p>
+<p>一般来说，速度越高，位价越高；容量越大，位价越低；容量越大，速度越低。</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/-1627228449261397" alt=""></p>
+<p>层次结构主要体现在缓存-主存和主存-辅存这两个层次上。</p>
+<p>①<strong>缓存-主存</strong>：主要解决CPU和主存<strong>速度</strong>不匹配问题</p>
+<p>（由硬件自动完成）数据调动对任何程序员透明。</p>
+<p>②<strong>主存-辅存</strong>：主要解决存储系统的<strong>容量</strong>问题</p>
+<p>（由硬件和操作系统共同完成）数据调动对应用程序员透明。</p>
+<h4 id="动态RAM的刷新"><a href="#动态RAM的刷新" class="headerlink" title="动态RAM的刷新"></a>动态RAM的刷新</h4><p>一般取2ms，对动态RAM的全部基本单元电路必作一次刷新，称为刷新周期，又称再生周期。刷新的单位是行，仅需要行地址。</p>
+<p>①<strong>集中刷新</strong>：在规定的一个刷新周期内，对全部存储单元集中一段时间逐行进行刷新，此刻必须停止读/写操作，称“死时间”或“死区”。（全部一起刷）</p>
+<p>②<strong>分散刷新</strong>：对每行存储单元的刷新分到每个存取周期内完成。优点：没有死区。缺点：存取周期加长，整个系统速度降低。（一个个刷）</p>
+<p>③<strong>异步刷新</strong>：是前两种方式的结合，既缩短“死时间”，又充分利用最大刷新时间间隔为2ms的特点。（一行行刷）</p>
+<p>一行行刷的平均刷新时间：</p>
+<p>行数 = 芯片容量 / 每行存储单元个数</p>
+<p>平均刷新时间 = 间隔最长 / 行数</p>
+<h4 id="动态RAM与静态RAM的比较"><a href="#动态RAM与静态RAM的比较" class="headerlink" title="动态RAM与静态RAM的比较"></a>动态RAM与静态RAM的比较</h4><p><img src="/images/loading.gif" data-original="../images/basic/-1627228458483399" alt=""></p>
+<h4 id="存储容量的扩展"><a href="#存储容量的扩展" class="headerlink" title="存储容量的扩展"></a>存储容量的扩展</h4><ol>
+<li>位扩展</li>
+</ol>
+<p>增加存储字长。例如：2片1K4位的存储芯片可组成1K8位的存储器。</p>
+<p>注意：其中一片的数据线作为高4位D7-D4，另一片的数据线作为低4位D3-D0。</p>
+<ol>
+<li>字扩展</li>
+</ol>
+<p>增加存储器字的数量。例如：2片1K8位的存储芯片可组成一个2K8位的存储器。</p>
+<p>注意：两片都连地址线A0-A9。（从低位连起）</p>
+<ol>
+<li>字、位扩展</li>
+</ol>
+<p>既增加存储字的数量又增加存储字长。</p>
+<h4 id="双口RAM和多模块存储器"><a href="#双口RAM和多模块存储器" class="headerlink" title="双口RAM和多模块存储器"></a>双口RAM和多模块存储器</h4><p>为了提高CPU访问存储器的速度，可以采用双端口存储器（空间并行）、多模块存储器（时间并行）等技术，都属于并行技术。</p>
+<h4 id="多模块存储器"><a href="#多模块存储器" class="headerlink" title="多模块存储器"></a>多模块存储器</h4><p>为了提高访存速度。（CPU速度比存储器快，同时从存储器中取出n条指令，可以充分利用CPU资源，提高运行速度）</p>
+<ol>
+<li>单体多字系统</li>
+</ol>
+<p>在一个存取周期内，从同一地址取出n条指令，然后逐条将指令送至CPU执行，即每隔1/n存取周期，主存向CPU送一条指令，增大了存储器的带宽，提高了存储器的工作速度。</p>
+<p>例如：从同一地址取出4条指令，为单体四字结构，每字W位。按地址在一个存取周期内可读出4*W位的指令或数据，使主存带宽提高到4倍。</p>
+<p>缺点：指令和数据在主存内必须是连续存放的，一旦遇到转移指令，或者操作数不能连续存放，这种方法的效果就不明显。</p>
+<ol>
+<li>多体并行系统</li>
+</ol>
+<p>采用多提模块组成的存储器。每个模块可以并行工作，也可以交叉工作。</p>
+<p>①低位交叉编址</p>
+<p>程序连续存放在相邻体中（交叉存储）。低位地址表示体号，高位地址表示体内地址。</p>
+<p>地址的低n为片选。</p>
+<p>优点：相邻地址单元的数据放在不同组，各组可以并行工作，能较好提高存储器的带宽。</p>
+<p>缺点：某一组出现故障，会影响整个存储器的正常工作。</p>
+<p>②高位交叉编址</p>
+<p>按体内地址顺序存放（顺序存储）。高位地址表示体号，低位地址表示体内地址。</p>
+<p>地址的高n位片选。</p>
+<p>优点： 某一组的故障不影响其他组，且容易通过添加模块来扩充容量。</p>
+<p>缺点：相邻地址单元的数据放在同一组存储单元，各组间串行工作，不利于提升存储器的带宽。 </p>
+<p><img src="/images/loading.gif" data-original="../images/basic/-1627228474781401" alt=""></p>
+<h4 id="Cache计算"><a href="#Cache计算" class="headerlink" title="Cache计算"></a>Cache计算</h4><p>（h越接近1越好，ta越接近tc越好）</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/-1627228482397403" alt=""></p>
+<h4 id="Cache中主存块之间的映射方式"><a href="#Cache中主存块之间的映射方式" class="headerlink" title="Cache中主存块之间的映射方式"></a>Cache中主存块之间的映射方式</h4><p>由主存地址映射到Cache地址称为地址映射。</p>
+<ol>
+<li>直接映射</li>
+</ol>
+<p>主存数据只能装入Cache中的唯一位置。若这个位置已有内容，则产生块冲突，原来的块将无条件地被替换出去（无需使用替换算法）。</p>
+<p><strong>映射关系：</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/-1627228492317405" alt=""></p>
+<p><strong>地址结构：</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/-1627228506134407" alt=""></p>
+<p>优点：实现简单，只需利用主存地址的某些位直接判断，即可确定所需字块是否在缓存中。</p>
+<p>缺点：不够灵活，降低命中率。</p>
+<ol>
+<li>全相联映射</li>
+</ol>
+<p>允许主存中每一字块映射到Cache中的任何一块位置上。可以从已被占满的Cache中替换出任一旧字块。</p>
+<p>通常采用昂贵的“按内容寻址”的相联存储器来完成。</p>
+<p><strong>地址结构：</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/-1627228513826409" alt=""></p>
+<p>优点：灵活，命中率高，缩小了块冲突率，空间利用率高。</p>
+<p>缺点：地址变换速度慢，实现成本高</p>
+<ol>
+<li>组相联映射（上述两种映射的折中）</li>
+</ol>
+<p>将Cache空间分成大小相同的组，主存的一个数据块可以装入到一组内的任何一个位置（组间采取直接映射，组内采取全相联映射）。</p>
+<p><strong>映射关系：</strong>i=j mod Q （i是缓存的组号，j是主存的块号，Q是Cache的组数）Q=1是变为全相联映射</p>
+<p><strong>地址结构：</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/basic/-1627228538226411" alt=""></p>
+<h4 id="Cache中主存块的替换算法"><a href="#Cache中主存块的替换算法" class="headerlink" title="Cache中主存块的替换算法"></a>Cache中主存块的替换算法</h4><ol>
+<li>先进先出（First-In-First-Out，FIFO）算法</li>
+<li>近期最少使用（Least Recently Used，LRU）算法</li>
+<li>随机法</li>
+</ol>
+<h4 id="磁盘存储器"><a href="#磁盘存储器" class="headerlink" title="磁盘存储器"></a>磁盘存储器</h4><ul>
+<li>磁盘寻址的最小单位是扇区。</li>
+<li>道密度：沿磁盘半径方向单位长度的磁道数。</li>
+<li>位密度：单位长度磁道上记录二进制的位数。</li>
+<li>平均寻道时间：从一个磁道转移到另一个磁道的平均时间。（全部寻道时间的一半）</li>
+<li>平均等待时间：旋转等待的平均时间。（转一周时间的一半）</li>
+<li>一扇区的传送时间：T=1 / (转速×扇区数)</li>
+<li>存取一个扇区的时间：T=每个扇区位数 / (转速×扇区数)</li>
+<li>平均存取时间=平均寻道时间 + 平均等待时间 + 传输时间</li>
+<li>每个记录面的磁道数：K=[(外直径-内直径)/2]*磁道密度</li>
+<li>盘组格式化容量：C = 记录面数 * K * 每个扇区字节数 * 扇区数</li>
+<li>盘组非格式化容量：CN = 记录面数 * K * 最内圈磁道周长 * 内层位密度</li>
+</ul>
+<h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><ul>
+<li>WE 为写允许信号：低电平0为写，高电平1为读</li>
+<li>CS为片选信号：低电平0有效</li>
+<li>借位/进位C：1=结果的最高位发生了进位，0=结果的最高位未发生进位</li>
+<li>溢出标志位V：1=溢出，0=没有溢出</li>
+</ul>
+<h3 id="指令系统"><a href="#指令系统" class="headerlink" title="指令系统"></a>指令系统</h3><h4 id="指令的寻址方式"><a href="#指令的寻址方式" class="headerlink" title="指令的寻址方式"></a>指令的寻址方式</h4><p><img src="/images/loading.gif" data-original="../images/basic/-1627228551151413" alt=""></p>
+<p>!<img src="/images/loading.gif" data-original="../images/basic/-1627228662862415" alt=""></p>
+<h4 id="CISC和RISE"><a href="#CISC和RISE" class="headerlink" title="CISC和RISE"></a>CISC和RISE</h4><p><img src="/images/loading.gif" data-original="../images/basic/-1627228669810417" alt=""></p>
+<h4 id="二地址指令操作数物理位置的三种形式"><a href="#二地址指令操作数物理位置的三种形式" class="headerlink" title="二地址指令操作数物理位置的三种形式"></a>二地址指令操作数物理位置的三种形式</h4><ul>
+<li>寄存器——寄存器型（RR型）；</li>
+<li>寄存器——存储器型指令（RS型）；</li>
+<li>存储器——存储器型（SS型）。</li>
+</ul>
+<h3 id="中央处理器CPU"><a href="#中央处理器CPU" class="headerlink" title="中央处理器CPU"></a>中央处理器CPU</h3><h4 id="CPU基本结构"><a href="#CPU基本结构" class="headerlink" title="CPU基本结构"></a>CPU基本结构</h4><p><img src="/images/loading.gif" data-original="../images/basic/-1627228678532419" alt=""></p>
+<h4 id="指令执行方案"><a href="#指令执行方案" class="headerlink" title="指令执行方案"></a>指令执行方案</h4><ol>
+<li>单指令周期</li>
+</ol>
+<p>对所有指令都选用相同的执行时间来完成。</p>
+<p>下一条指令只能在前一条指令执行结束之后才能启动。（串行）</p>
+<p>指令周期取决于执行时间最长的指令的执行时间。</p>
+<ol>
+<li>多指令周期</li>
+</ol>
+<p>对不同类型的指令选用不同的执行步骤来完成。</p>
+<p>下一条指令只能在前一条指令执行结束之后才能启动。（串行）</p>
+<p>可选用不同个数的时钟周期来完成不同指令的执行过程。</p>
+<ol>
+<li>流水线方案</li>
+</ol>
+<p>指令之间可以并行执行的方案。</p>
+<p>追求的目标是力争在每个时钟脉冲周期完成一条指令的执行过程。</p>
+<p>通过在每一个时钟周期启动一条指令，尽量让多条指令同时运行，但各自处在不同的执行步骤中。</p>
+<ul>
+<li>时钟周期：计算机操作的最小单位，由计算机主频确定，是主频的倒数。</li>
+<li>工作脉冲：控制器的最小时间单位，起定时出发作用，一个时钟周期有一个工作脉冲。</li>
+<li>机器周期：即CPU周期，包含若干个时钟周期。</li>
+<li>指令周期：可由多个CPU周期组成。</li>
+<li>存取周期：存储器进行两次独立的存取器操作（连续两次读或写操作）所需最小间隔时间。</li>
+<li>存储字长：存放在一个存储单元中的二进制代码位数</li>
+<li>机器字长：CPU一次能处理数据的位数。</li>
+<li>指令字长：一般去存储字长的整数倍。</li>
+</ul>
+<h4 id="微指令格式"><a href="#微指令格式" class="headerlink" title="微指令格式"></a>微指令格式</h4><ol>
+<li>水平型微指令：直接编码、字段直接编码、字段间接编码和混合编都是。</li>
+</ol>
+<p>特点：一条水平型微指令定义并执行几种并行的基本操作。 </p>
+<p><img src="/images/loading.gif" data-original="../images/basic/-1627228692315421" alt=""></p>
+<ol>
+<li>垂直型微指令：采用类似机器指令操作码的方式，设置操作码字段μOP</li>
+</ol>
+<p>特点：一条垂直型微指令只能定义并执行一种基本操作。</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/-1627228698899423" alt=""></p>
+<ol>
+<li>混合型微指令：在垂直型的基础上增加一些不太复杂的并行操作。指令较短，仍便于编写；微程序也不长，执行速度加快。</li>
+</ol>
+<p><img src="/images/loading.gif" data-original="../images/basic/-1627228705796425" alt=""></p>
+<h4 id="硬布线控制器、微程序控制器"><a href="#硬布线控制器、微程序控制器" class="headerlink" title="硬布线控制器、微程序控制器"></a>硬布线控制器、微程序控制器</h4><p><img src="/images/loading.gif" data-original="../images/basic/-1627228714436427" alt=""></p>
+<h4 id="微指令基本组成"><a href="#微指令基本组成" class="headerlink" title="微指令基本组成"></a>微指令基本组成</h4><ul>
+<li>控制存储器CM：是微程序控制器的核心部件，用于存放微程序，可用ROM构成。</li>
+<li>微指令寄存器CMDR：用于存放从CM中取出的微指令，位数同指令字长相等。</li>
+<li>微地址形成部件：产生初始微地址和后继微地址，以保证微指令的连续执行。</li>
+<li>微地址寄存器CMAR：接受微地址形成部件送来的微地址，为在CM中读取指令作准备。</li>
+<li>地址转移逻辑：在有分支转移时形成新的后继地址。</li>
+</ul>
+<h4 id="机器指令与微指令的关系"><a href="#机器指令与微指令的关系" class="headerlink" title="机器指令与微指令的关系"></a>机器指令与微指令的关系</h4><ul>
+<li>每条机器指令编写成一个微程序；</li>
+<li>每一个微程序包含若干条微指令；</li>
+<li>每一条微指令对应一个或几个微操作命令。</li>
+</ul>
+<h4 id="影响流水线性能的因素"><a href="#影响流水线性能的因素" class="headerlink" title="影响流水线性能的因素"></a>影响流水线性能的因素</h4><ol>
+<li>三种：结构相关、数据相关、控制相关</li>
+<li>数据相关：写后读（RAW）、读后写（WAR）、写后写（WAW）</li>
+<li>若发生数据相关冲突：如果在硬件设计上采用向前传送技术加以改进，则可不延迟。</li>
+</ol>
+<p>流水线性能（吞吐率、加速比、效率）</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/-1627228723972429" alt=""></p>
+<script>
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return; }
+            const img = document.createElement('img');
+            img.style = 'display:none !important;';
+            img.src = el.dataset.src;
+            img.addEventListener('error', () => {
+              img.remove();
+              el.style.color = 'inherit';
+              el.style.backgroundImage = 'none';
+              el.style.background = 'none';
+            });
+            img.addEventListener('load', () => {
+              img.remove();
+            });
+            document.body.appendChild(img);
+          });
+      </script>
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://jackhcc.github.io" rel="external nofollow noreferrer">杰克成</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://jackhcc.github.io/posts/basic-know-002.html">https://jackhcc.github.io/posts/basic-know-002.html</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="https://jackhcc.github.io" target="_blank">杰克成</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/Computer/">
+                                    <span class="chip bg-color">Computer</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/reward/aliqr.png" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/reward/wxqr.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+            
+        </div>
+    </div>
+
+    
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/gitalk/gitalk.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/my-gitalk.css">
+
+<div class="card gitalk-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="gitalk-container" class="card-content"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/gitalk/gitalk.min.js"></script>
+<script>
+    let gitalk = new Gitalk({
+        clientID: '3821a0bbb773038a51fc',
+        clientSecret: '4b30b507d67ec5497ec0e77f43f80cb3e0d7dd3a',
+        repo: 'JackHCC.github.io',
+        owner: 'JackHCC',
+        admin: "JackHCC",
+        id: '2021-07-10T01-40-26',
+        distractionFreeMode: false  // Facebook-like distraction free mode
+    });
+
+    gitalk.render('gitalk-container');
+</script>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/posts/basic-know-003.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/7.jpg" class="responsive-img" alt="操作系统学习笔记">
+                        
+                        <span class="card-title">操作系统学习笔记</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            操作系统基础知识
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-07-11
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Basic/" class="post-category">
+                                    Basic
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/OS/">
+                        <span class="chip bg-color">OS</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/posts/basic-know-001.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/3.jpg" class="responsive-img" alt="科普：计算机时间">
+                        
+                        <span class="card-title">科普：计算机时间</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            计算机时间背后的秘密
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-07-09
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Basic/" class="post-category">
+                                    Basic
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Basic/">
+                        <span class="chip bg-color">Basic</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeShrink.js"></script>
+
+
+<!-- 代码块折行 -->
+
+<style type="text/css">
+code[class*="language-"], pre[class*="language-"] { white-space: pre !important; }
+</style>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('4'),
+            headingSelector: 'h1, h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h1, h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+    <footer class="page-footer bg-color">
+    <div class="container row center-align" style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            <span id="year">2020</span>
+            <a href="https://jackhcc.github.io" target="_blank">杰克成</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                class="white-color">3303.6k</span>&nbsp;字
+            
+            
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;人
+            </span>
+            
+            <br>
+            
+            <span id="sitetime">载入运行时间...</span>
+            <script>
+                function siteTime() {
+                    var seconds = 1000;
+                    var minutes = seconds * 60;
+                    var hours = minutes * 60;
+                    var days = hours * 24;
+                    var years = days * 365;
+                    var today = new Date();
+                    var startYear = "2020";
+                    var startMonth = "2";
+                    var startDate = "27";
+                    var startHour = "6";
+                    var startMinute = "30";
+                    var startSecond = "0";
+                    var todayYear = today.getFullYear();
+                    var todayMonth = today.getMonth() + 1;
+                    var todayDate = today.getDate();
+                    var todayHour = today.getHours();
+                    var todayMinute = today.getMinutes();
+                    var todaySecond = today.getSeconds();
+                    var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                    var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                    var diff = t2 - t1;
+                    var diffYears = Math.floor(diff / years);
+                    var diffDays = Math.floor((diff / days) - diffYears * 365);
+                    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+                    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) /
+                        minutes);
+                    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours -
+                        diffMinutes * minutes) / seconds);
+                    if (startYear == todayYear) {
+                        document.getElementById("year").innerHTML = todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffDays + " 天 " + diffHours +
+                            " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    } else {
+                        document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffYears + " 年 " + diffDays +
+                            " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    }
+                }
+                setInterval(siteTime, 1000);
+            </script>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/JackHCC" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:jackcc0701@163.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+    <a href="https://www.facebook.com/profile.php?id=100046343443643" class="tooltipped" target="_blank" data-tooltip="关注我的Facebook: https://www.facebook.com/profile.php?id=100046343443643" data-position="top" data-delay="50">
+        <i class="fab fa-facebook-f"></i>
+    </a>
+
+
+
+    <a href="https://twitter.com/JackChe66021834" class="tooltipped" target="_blank" data-tooltip="关注我的Twitter: https://twitter.com/JackChe66021834" data-position="top" data-delay="50">
+        <i class="fab fa-twitter"></i>
+    </a>
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=2508074836" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 2508074836" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+    <a href="https://weibo.com/u/6885584679" class="tooltipped" target="_blank" data-tooltip="关注我的微博: https://weibo.com/u/6885584679" data-position="top" data-delay="50">
+        <i class="fab fa-weibo"></i>
+    </a>
+
+
+
+    <a href="https://www.zhihu.com/people/8f8482f01f0d6a04e844efe32e0f0710" class="tooltipped" target="_blank" data-tooltip="关注我的知乎: https://www.zhihu.com/people/8f8482f01f0d6a04e844efe32e0f0710" data-position="top" data-delay="50">
+        <i class="fab fa-zhihu1">知</i>
+    </a>
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/materialize/materialize.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/aos/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/js/matery.js"></script>
+
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+    <script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script type="text/javascript" src="/js/fireworks.js"></script>
+
+    <script type="text/javascript">
+        //只在桌面版网页启用特效
+        var windowWidth = $(window).width();
+        if (windowWidth > 768) {
+            document.write('<script type="text/javascript" src="/js/sakura.js"><\/script>'); }
+    </script>
+
+    <!-- weather -->
+	<script type="text/javascript">
+	WIDGET = {FID: 'TToslpmkVO'}
+	</script>
+	<script type="text/javascript" src="https://apip.weatherdt.com/float/static/js/r.js?v=1111"></script>
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <!-- Baidu Analytics -->
+
+<script>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+    <!-- Baidu Push -->
+
+    
+    
+    <script async src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+        <script src="//code.tidio.co/kqhlkxviiccyoa0czpfpu4ijuey9hfre.js"></script>
+        <script> 
+            $(document).ready(function () {
+                setInterval(change_Tidio, 50);  
+                function change_Tidio() { 
+                    var tidio=$("#tidio-chat iframe");
+                    if(tidio.css("display")=="block"&& $(window).width()>977 ){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" &&$(window).width()>977)>0? "-40px" : ($("div.toc-title").length&&$(window).width()>977)>0?"85px":"20px";   
+                        document.getElementById("tidio-chat-iframe").style.right="-15px";   
+                        document.getElementById("tidio-chat-iframe").style.height=parseInt(tidio.css("height"))>=520?"520px":tidio.css("height");
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    } 
+                    else if(tidio.css("display")=="block"&&$(window).width()>601 &&$(window).width()<992 ){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" && 601< $(window).width()<992)>0? "-40px":"20px" ;   
+                        document.getElementById("tidio-chat-iframe").style.right="-15px"; 
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    }
+                    else if(tidio.css("display")=="block"&&$(window).width()<601 && parseInt(tidio.css("height"))<230){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" && $(window).width()<601)>0? "-10px":"45px" ;   
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    }
+                    if( tidio.css("display")=="block"&&$(window).width()<601 && parseInt(tidio.css("height"))>=230){
+                        document.getElementById("tidio-chat-iframe").style.zIndex="998";
+                    }
+                } 
+            }); 
+        </script>
+    
+
+    
+
+    
+    <script type="text/javascript" color="0,0,255"
+        pointColor="0,0,255" opacity='0.7'
+        zIndex="-1" count="99"
+        src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/background/canvas-nest.js"></script>
+    
+
+    
+
+    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/background/ribbon-dynamic.js" async="async"></script>
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/instantpage/instantpage.js" type="module"></script>
+    
+<script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script>
+        <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
+        <script>
+        $('a').each(function() {
+          const $this = $(this);
+          const href = $this.attr('href');
+          if (href && href.match('^((http|https|thunder|qqdl|ed2k|Flashget|qbrowser|ftp|rtsp|mms)://)')) {
+            const strs = href.split('/');
+            if (strs.length >= 3) {
+                const host = strs[2];
+                if (host !== 'your_domain' || window.location.host) {
+                    $this.attr('href', '/go.html?u='+Base64.encode(href)+'').attr('rel', 'external nofollow noopener noreferrer');
+                    if (true) {
+                        $this.attr('target', '_blank');
+                    }
+                }
+            }
+          }
+        });
+        </script></body>
+
+</html>
+

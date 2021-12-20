@@ -1,0 +1,1528 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="Binary Code Similarity Detection, JackHCC">
+    <meta name="description" content="二进制代码相似性论文解读复现【复现中】">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Binary Code Similarity Detection | JackHCC</title>
+    <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/my.css">
+    
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/jquery/jquery.min.js"></script>
+    
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper head-container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/me.jpg" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">JackHCC</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>留言板</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>友情链接</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/me.jpg" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">JackHCC</div>
+        <div class="logo-desc">
+            
+            Make the world betterrrr!!!
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			留言板
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			友情链接
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/JackHCC/JackHCC.github.io" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/JackHCC/JackHCC.github.io" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/12.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">Binary Code Similarity Detection</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        height: calc(100vh - 250px);
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 30px;
+        bottom: 146px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/BCSD/">
+                                <span class="chip bg-color">BCSD</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/Paper/" class="post-category">
+                                Paper
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2021-08-14
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2021-10-18
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    2k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    9 分
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>二进制代码相似性检测：</p>
+<ul>
+<li><p>基于二进制代码流：word2vec，bert，asm2vec等</p>
+</li>
+<li><p>基于Block：DeepBinDiff</p>
+</li>
+<li><p>基于CFG，LCG图：</p>
+<p>参考：<a href="https://link.springer.com/article/10.1007/s10618-020-00733-5" target="_blank" rel="noopener">图相似性综述</a></p>
+<p><img src="/images/loading.gif" data-original="../images/paper/image-20210817110508043.png" alt=""></p>
+</li>
+<li><p>基于AST：Asteria</p>
+</li>
+</ul>
+<h1 id="SAFE"><a href="#SAFE" class="headerlink" title="SAFE"></a>SAFE</h1><p>论文原文：<a href="https://arxiv.org/pdf/1811.05296.pdf" target="_blank" rel="noopener">https://arxiv.org/pdf/1811.05296.pdf</a></p>
+<p>代码地址：<a href="https://github.com/gadiluna/SAFE" target="_blank" rel="noopener">https://github.com/gadiluna/SAFE</a></p>
+<h3 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h3><h4 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h4><p>基于Word2Vec实现：</p>
+<p><img src="/images/loading.gif" data-original="../images/paper/image-20210816210406507.png" alt=""></p>
+<h4 id="i2v"><a href="#i2v" class="headerlink" title="i2v"></a>i2v</h4><p>根据现有一些不同架构的指令集的汇编指令进行规范化处理，将每条asm instruction变成一个word形式，例如：mov_mem_10，将规范化的指令集构成Corpus，利用word2vec进行embedding，根据Corpus训练拿到权重矩阵即可，但这要求输入的指令在我们的语料库中需要出现（gensim提供的<a href="https://radimrehurek.com/gensim/auto_examples/tutorials/run_fasttext.html#sphx-glr-auto-examples-tutorials-run-fasttext-py" target="_blank" rel="noopener">FastText Model</a>兴许可以解决此问题，有时间可以换这个试试，它与word2vec各有优劣）</p>
+<p>i2v model从原理上来看就是应用了自然语言处理的Word2vec模型。</p>
+<p>关于word2vec模型的介绍可以参考：<a href="https://blog.creativecc.cn/posts/word2vec.html" target="_blank" rel="noopener">word2vec详解</a></p>
+<h4 id="BiRNN（BiLSTM）"><a href="#BiRNN（BiLSTM）" class="headerlink" title="BiRNN（BiLSTM）"></a>BiRNN（BiLSTM）</h4><p>LSTM的全称是Long Short-Term Memory，它是RNN（Recurrent Neural Network）的一种。LSTM由于其设计的特点，非常适合用于对时序数据的建模，如文本数据。BiLSTM是Bi-directional Long Short-Term Memory的缩写，是由前向LSTM与后向LSTM组合而成。两者在自然语言处理任务中都常被用来建模上下文信息。</p>
+<p><strong>为什么使用LSTM与BiLSTM？</strong></p>
+<p>将词的表示组合成句子的表示，可以采用相加的方法，即将所有词的表示进行加和，或者取平均等方法，但是这些方法没有考虑到词语在句子中前后顺序。如句子“我不觉得他好”。“不”字是对后面“好”的否定，即该句子的情感极性是贬义。使用LSTM模型可以更好的捕捉到较长距离的依赖关系。因为LSTM通过训练过程可以学到记忆哪些信息和遗忘哪些信息。</p>
+<p>但是利用LSTM对句子进行建模还存在一个问题：无法编码从后到前的信息。在更细粒度的分类时，如对于强程度的褒义、弱程度的褒义、中性、弱程度的贬义、强程度的贬义的五分类任务需要注意情感词、程度词、否定词之间的交互。举一个例子，“这个餐厅脏得不行，没有隔壁好”，这里的“不行”是对“脏”的程度的一种修饰，通过BiLSTM可以更好的捕捉双向的语义依赖。</p>
+<p>前向的LSTM与后向的LSTM结合成BiLSTM。比如，我们对“我爱中国”这句话进行编码。</p>
+<p><img src="/images/loading.gif" data-original="../images/paper/v2-bf3038dca90a59eb042ea767f684ed29_720w.jpg" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/paper/v2-af41362bbee404ccdbf3cd7634627942_r.jpg" alt=""></p>
+<p>使用PyTorch搭建BiLSTM样例代码：</p>
+<p><strong>模型搭建</strong></p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#!/usr/bin/env python</span>
+<span class="token comment" spellcheck="true"># coding:utf8</span>
+
+<span class="token keyword">import</span> torch
+<span class="token keyword">import</span> torch<span class="token punctuation">.</span>nn <span class="token keyword">as</span> nn
+<span class="token keyword">import</span> torch<span class="token punctuation">.</span>nn<span class="token punctuation">.</span>functional <span class="token keyword">as</span> F
+<span class="token keyword">from</span> torch<span class="token punctuation">.</span>autograd <span class="token keyword">import</span> Variable
+
+torch<span class="token punctuation">.</span>manual_seed<span class="token punctuation">(</span><span class="token number">123456</span><span class="token punctuation">)</span>
+
+
+<span class="token keyword">class</span> <span class="token class-name">BLSTM</span><span class="token punctuation">(</span>nn<span class="token punctuation">.</span>Module<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token triple-quoted-string string">"""
+        Implementation of BLSTM Concatenation for sentiment classification task
+    """</span>
+
+    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> embeddings<span class="token punctuation">,</span> input_dim<span class="token punctuation">,</span> hidden_dim<span class="token punctuation">,</span> num_layers<span class="token punctuation">,</span> output_dim<span class="token punctuation">,</span> max_len<span class="token operator">=</span><span class="token number">40</span><span class="token punctuation">,</span> dropout<span class="token operator">=</span><span class="token number">0.5</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        super<span class="token punctuation">(</span>BLSTM<span class="token punctuation">,</span> self<span class="token punctuation">)</span><span class="token punctuation">.</span>__init__<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+        self<span class="token punctuation">.</span>emb <span class="token operator">=</span> nn<span class="token punctuation">.</span>Embedding<span class="token punctuation">(</span>num_embeddings<span class="token operator">=</span>embeddings<span class="token punctuation">.</span>size<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+                                embedding_dim<span class="token operator">=</span>embeddings<span class="token punctuation">.</span>size<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+                                padding_idx<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">)</span>
+        self<span class="token punctuation">.</span>emb<span class="token punctuation">.</span>weight <span class="token operator">=</span> nn<span class="token punctuation">.</span>Parameter<span class="token punctuation">(</span>embeddings<span class="token punctuation">)</span>
+
+        self<span class="token punctuation">.</span>input_dim <span class="token operator">=</span> input_dim
+        self<span class="token punctuation">.</span>hidden_dim <span class="token operator">=</span> hidden_dim
+        self<span class="token punctuation">.</span>output_dim <span class="token operator">=</span> output_dim
+
+        <span class="token comment" spellcheck="true"># sen encoder</span>
+        self<span class="token punctuation">.</span>sen_len <span class="token operator">=</span> max_len
+        self<span class="token punctuation">.</span>sen_rnn <span class="token operator">=</span> nn<span class="token punctuation">.</span>LSTM<span class="token punctuation">(</span>input_size<span class="token operator">=</span>input_dim<span class="token punctuation">,</span>
+                               hidden_size<span class="token operator">=</span>hidden_dim<span class="token punctuation">,</span>
+                               num_layers<span class="token operator">=</span>num_layers<span class="token punctuation">,</span>
+                               dropout<span class="token operator">=</span>dropout<span class="token punctuation">,</span>
+                               batch_first<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span>
+                               bidirectional<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
+
+        self<span class="token punctuation">.</span>output <span class="token operator">=</span> nn<span class="token punctuation">.</span>Linear<span class="token punctuation">(</span><span class="token number">2</span> <span class="token operator">*</span> self<span class="token punctuation">.</span>hidden_dim<span class="token punctuation">,</span> output_dim<span class="token punctuation">)</span>
+
+    <span class="token keyword">def</span> <span class="token function">bi_fetch</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> rnn_outs<span class="token punctuation">,</span> seq_lengths<span class="token punctuation">,</span> batch_size<span class="token punctuation">,</span> max_len<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        rnn_outs <span class="token operator">=</span> rnn_outs<span class="token punctuation">.</span>view<span class="token punctuation">(</span>batch_size<span class="token punctuation">,</span> max_len<span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span>
+
+        <span class="token comment" spellcheck="true"># (batch_size, max_len, 1, -1)</span>
+        fw_out <span class="token operator">=</span> torch<span class="token punctuation">.</span>index_select<span class="token punctuation">(</span>rnn_outs<span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> Variable<span class="token punctuation">(</span>torch<span class="token punctuation">.</span>LongTensor<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>cuda<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+        fw_out <span class="token operator">=</span> fw_out<span class="token punctuation">.</span>view<span class="token punctuation">(</span>batch_size <span class="token operator">*</span> max_len<span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span>
+        bw_out <span class="token operator">=</span> torch<span class="token punctuation">.</span>index_select<span class="token punctuation">(</span>rnn_outs<span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> Variable<span class="token punctuation">(</span>torch<span class="token punctuation">.</span>LongTensor<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>cuda<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+        bw_out <span class="token operator">=</span> bw_out<span class="token punctuation">.</span>view<span class="token punctuation">(</span>batch_size <span class="token operator">*</span> max_len<span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span>
+
+        batch_range <span class="token operator">=</span> Variable<span class="token punctuation">(</span>torch<span class="token punctuation">.</span>LongTensor<span class="token punctuation">(</span>range<span class="token punctuation">(</span>batch_size<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>cuda<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">*</span> max_len
+        batch_zeros <span class="token operator">=</span> Variable<span class="token punctuation">(</span>torch<span class="token punctuation">.</span>zeros<span class="token punctuation">(</span>batch_size<span class="token punctuation">)</span><span class="token punctuation">.</span>long<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>cuda<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+        fw_index <span class="token operator">=</span> batch_range <span class="token operator">+</span> seq_lengths<span class="token punctuation">.</span>view<span class="token punctuation">(</span>batch_size<span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token number">1</span>
+        fw_out <span class="token operator">=</span> torch<span class="token punctuation">.</span>index_select<span class="token punctuation">(</span>fw_out<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> fw_index<span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># (batch_size, hid)</span>
+
+        bw_index <span class="token operator">=</span> batch_range <span class="token operator">+</span> batch_zeros
+        bw_out <span class="token operator">=</span> torch<span class="token punctuation">.</span>index_select<span class="token punctuation">(</span>bw_out<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> bw_index<span class="token punctuation">)</span>
+
+        outs <span class="token operator">=</span> torch<span class="token punctuation">.</span>cat<span class="token punctuation">(</span><span class="token punctuation">[</span>fw_out<span class="token punctuation">,</span> bw_out<span class="token punctuation">]</span><span class="token punctuation">,</span> dim<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">)</span>
+        <span class="token keyword">return</span> outs
+
+    <span class="token keyword">def</span> <span class="token function">forward</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> sen_batch<span class="token punctuation">,</span> sen_lengths<span class="token punctuation">,</span> sen_mask_matrix<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token triple-quoted-string string">"""
+        :param sen_batch: (batch, sen_length), tensor for sentence sequence
+        :param sen_lengths:
+        :param sen_mask_matrix:
+        :return:
+        """</span>
+
+        <span class="token triple-quoted-string string">''' Embedding Layer | Padding | Sequence_length 40'''</span>
+        sen_batch <span class="token operator">=</span> self<span class="token punctuation">.</span>emb<span class="token punctuation">(</span>sen_batch<span class="token punctuation">)</span>
+
+        batch_size <span class="token operator">=</span> len<span class="token punctuation">(</span>sen_batch<span class="token punctuation">)</span>
+
+        <span class="token triple-quoted-string string">''' Bi-LSTM Computation '''</span>
+        sen_outs<span class="token punctuation">,</span> _ <span class="token operator">=</span> self<span class="token punctuation">.</span>sen_rnn<span class="token punctuation">(</span>sen_batch<span class="token punctuation">.</span>view<span class="token punctuation">(</span>batch_size<span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> self<span class="token punctuation">.</span>input_dim<span class="token punctuation">)</span><span class="token punctuation">)</span>
+        sen_rnn <span class="token operator">=</span> sen_outs<span class="token punctuation">.</span>contiguous<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>view<span class="token punctuation">(</span>batch_size<span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span> <span class="token operator">*</span> self<span class="token punctuation">.</span>hidden_dim<span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># (batch, sen_len, 2*hid)</span>
+
+        <span class="token triple-quoted-string string">''' Fetch the truly last hidden layer of both sides
+        '''</span>
+        sentence_batch <span class="token operator">=</span> self<span class="token punctuation">.</span>bi_fetch<span class="token punctuation">(</span>sen_rnn<span class="token punctuation">,</span> sen_lengths<span class="token punctuation">,</span> batch_size<span class="token punctuation">,</span> self<span class="token punctuation">.</span>sen_len<span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># (batch_size, 2*hid)</span>
+
+        representation <span class="token operator">=</span> sentence_batch
+        out <span class="token operator">=</span> self<span class="token punctuation">.</span>output<span class="token punctuation">(</span>representation<span class="token punctuation">)</span>
+        out_prob <span class="token operator">=</span> F<span class="token punctuation">.</span>softmax<span class="token punctuation">(</span>out<span class="token punctuation">.</span>view<span class="token punctuation">(</span>batch_size<span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+        <span class="token keyword">return</span> out_prob<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>init</strong>()函数中对网络进行初始化，设定词向量维度，前向/后向LSTM中隐层向量的维度，还有要分类的类别数等。</p>
+<p>bi_fetch()函数的作用是将 <img src="/images/loading.gif" data-original="https://www.zhihu.com/equation?tex=h_%7BL2%7D" alt=""> 与 <img src="/images/loading.gif" data-original="https://www.zhihu.com/equation?tex=h_%7BR2%7D" alt=""> 拼接起来并返回拼接后的向量。由于使用了batch，所以需要使用句子长度用来定位开始padding时前一个时刻的输出的隐层向量。</p>
+<p>forward()函数里进行前向计算，得到各个类别的概率值。</p>
+<p><strong>模型训练</strong></p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">train</span><span class="token punctuation">(</span>model<span class="token punctuation">,</span> training_data<span class="token punctuation">,</span> args<span class="token punctuation">,</span> optimizer<span class="token punctuation">,</span> criterion<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    model<span class="token punctuation">.</span>train<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    batch_size <span class="token operator">=</span> args<span class="token punctuation">.</span>batch_size
+
+    sentences<span class="token punctuation">,</span> sentences_seqlen<span class="token punctuation">,</span> sentences_mask<span class="token punctuation">,</span> labels <span class="token operator">=</span> training_data
+
+    <span class="token comment" spellcheck="true"># print batch_size, len(sentences), len(labels)</span>
+
+    <span class="token keyword">assert</span> batch_size <span class="token operator">==</span> len<span class="token punctuation">(</span>sentences<span class="token punctuation">)</span> <span class="token operator">==</span> len<span class="token punctuation">(</span>labels<span class="token punctuation">)</span>
+
+    <span class="token triple-quoted-string string">''' Prepare data and prediction'''</span>
+    sentences_<span class="token punctuation">,</span> sentences_seqlen_<span class="token punctuation">,</span> sentences_mask_ <span class="token operator">=</span> \
+        var_batch<span class="token punctuation">(</span>args<span class="token punctuation">,</span> batch_size<span class="token punctuation">,</span> sentences<span class="token punctuation">,</span> sentences_seqlen<span class="token punctuation">,</span> sentences_mask<span class="token punctuation">)</span>
+    labels_ <span class="token operator">=</span> Variable<span class="token punctuation">(</span>torch<span class="token punctuation">.</span>LongTensor<span class="token punctuation">(</span>labels<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">if</span> args<span class="token punctuation">.</span>cuda<span class="token punctuation">:</span>
+        labels_ <span class="token operator">=</span> labels_<span class="token punctuation">.</span>cuda<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    <span class="token keyword">assert</span> len<span class="token punctuation">(</span>sentences<span class="token punctuation">)</span> <span class="token operator">==</span> len<span class="token punctuation">(</span>labels<span class="token punctuation">)</span>
+
+    model<span class="token punctuation">.</span>zero_grad<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    probs <span class="token operator">=</span> model<span class="token punctuation">(</span>sentences_<span class="token punctuation">,</span> sentences_seqlen_<span class="token punctuation">,</span> sentences_mask_<span class="token punctuation">)</span>
+    loss <span class="token operator">=</span> criterion<span class="token punctuation">(</span>probs<span class="token punctuation">.</span>view<span class="token punctuation">(</span>len<span class="token punctuation">(</span>labels_<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> labels_<span class="token punctuation">)</span>
+
+    loss<span class="token punctuation">.</span>backward<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    optimizer<span class="token punctuation">.</span>step<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>代码中training_data是一个batch的数据，其中包括输入的句子sentences（句子中每个词以词下标表示），输入句子的长度sentences_seqlen，输入的句子对应的情感类别labels。 训练模型前，先清空遗留的梯度值，再根据该batch数据计算出来的梯度进行更新模型。</p>
+<pre class="line-numbers language-python"><code class="language-python">    model<span class="token punctuation">.</span>zero_grad<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    probs <span class="token operator">=</span> model<span class="token punctuation">(</span>sentences_<span class="token punctuation">,</span> sentences_seqlen_<span class="token punctuation">,</span> sentences_mask_<span class="token punctuation">)</span>
+    loss <span class="token operator">=</span> criterion<span class="token punctuation">(</span>probs<span class="token punctuation">.</span>view<span class="token punctuation">(</span>len<span class="token punctuation">(</span>labels_<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> labels_<span class="token punctuation">)</span>
+
+    loss<span class="token punctuation">.</span>backward<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    optimizer<span class="token punctuation">.</span>step<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>模型测试</strong></p>
+<p>以下是进行模型测试的代码。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">test</span><span class="token punctuation">(</span>model<span class="token punctuation">,</span> dataset<span class="token punctuation">,</span> args<span class="token punctuation">,</span> data_part<span class="token operator">=</span><span class="token string">"test"</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token triple-quoted-string string">"""
+    :param model:
+    :param args:
+    :param dataset:
+    :param data_part:
+    :return:
+    """</span>
+
+    tvt_set <span class="token operator">=</span> dataset<span class="token punctuation">[</span>data_part<span class="token punctuation">]</span>
+    tvt_set <span class="token operator">=</span> yutils<span class="token punctuation">.</span>YDataset<span class="token punctuation">(</span>tvt_set<span class="token punctuation">[</span><span class="token string">"xIndexes"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+                              tvt_set<span class="token punctuation">[</span><span class="token string">"yLabels"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+                              to_pad<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span> max_len<span class="token operator">=</span>args<span class="token punctuation">.</span>sen_max_len<span class="token punctuation">)</span>
+
+    test_set <span class="token operator">=</span> tvt_set
+    sentences<span class="token punctuation">,</span> sentences_seqlen<span class="token punctuation">,</span> sentences_mask<span class="token punctuation">,</span> labels <span class="token operator">=</span> test_set<span class="token punctuation">.</span>next_batch<span class="token punctuation">(</span>len<span class="token punctuation">(</span>test_set<span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+    <span class="token keyword">assert</span> len<span class="token punctuation">(</span>test_set<span class="token punctuation">)</span> <span class="token operator">==</span> len<span class="token punctuation">(</span>sentences<span class="token punctuation">)</span> <span class="token operator">==</span> len<span class="token punctuation">(</span>labels<span class="token punctuation">)</span>
+
+    tic <span class="token operator">=</span> time<span class="token punctuation">.</span>time<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    model<span class="token punctuation">.</span>eval<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token triple-quoted-string string">''' Prepare data and prediction'''</span>
+    batch_size <span class="token operator">=</span> len<span class="token punctuation">(</span>sentences<span class="token punctuation">)</span>
+    sentences_<span class="token punctuation">,</span> sentences_seqlen_<span class="token punctuation">,</span> sentences_mask_ <span class="token operator">=</span> \
+        var_batch<span class="token punctuation">(</span>args<span class="token punctuation">,</span> batch_size<span class="token punctuation">,</span> sentences<span class="token punctuation">,</span> sentences_seqlen<span class="token punctuation">,</span> sentences_mask<span class="token punctuation">)</span>
+
+    probs <span class="token operator">=</span> model<span class="token punctuation">(</span>sentences_<span class="token punctuation">,</span> sentences_seqlen_<span class="token punctuation">,</span> sentences_mask_<span class="token punctuation">)</span>
+
+    _<span class="token punctuation">,</span> pred <span class="token operator">=</span> torch<span class="token punctuation">.</span>max<span class="token punctuation">(</span>probs<span class="token punctuation">,</span> dim<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">)</span>
+
+    <span class="token keyword">if</span> args<span class="token punctuation">.</span>cuda<span class="token punctuation">:</span>
+        pred <span class="token operator">=</span> pred<span class="token punctuation">.</span>view<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">.</span>cpu<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>data<span class="token punctuation">.</span>numpy<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">else</span><span class="token punctuation">:</span>
+        pred <span class="token operator">=</span> pred<span class="token punctuation">.</span>view<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">.</span>data<span class="token punctuation">.</span>numpy<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    tit <span class="token operator">=</span> time<span class="token punctuation">.</span>time<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span> tic
+    <span class="token keyword">print</span> <span class="token string">"  Predicting {:d} examples using {:5.4f} seconds"</span><span class="token punctuation">.</span>format<span class="token punctuation">(</span>len<span class="token punctuation">(</span>test_set<span class="token punctuation">)</span><span class="token punctuation">,</span> tit<span class="token punctuation">)</span>
+
+    labels <span class="token operator">=</span> numpy<span class="token punctuation">.</span>asarray<span class="token punctuation">(</span>labels<span class="token punctuation">)</span>
+    <span class="token triple-quoted-string string">''' log and return prf scores '''</span>
+    accuracy <span class="token operator">=</span> test_prf<span class="token punctuation">(</span>pred<span class="token punctuation">,</span> labels<span class="token punctuation">)</span>
+
+    <span class="token keyword">return</span> accuracy
+
+
+<span class="token keyword">def</span> <span class="token function">cal_prf</span><span class="token punctuation">(</span>pred<span class="token punctuation">,</span> right<span class="token punctuation">,</span> gold<span class="token punctuation">,</span> formation<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span> metric_type<span class="token operator">=</span><span class="token string">""</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token triple-quoted-string string">"""
+    :param pred: predicted labels
+    :param right: predicting right labels
+    :param gold: gold labels
+    :param formation: whether format the float to 6 digits
+    :param metric_type:
+    :return: prf for each label
+    """</span>
+    <span class="token triple-quoted-string string">''' Pred: [0, 2905, 0]  Right: [0, 2083, 0]  Gold: [370, 2083, 452] '''</span>
+    num_class <span class="token operator">=</span> len<span class="token punctuation">(</span>pred<span class="token punctuation">)</span>
+    precision <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">0.0</span><span class="token punctuation">]</span> <span class="token operator">*</span> num_class
+    recall <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">0.0</span><span class="token punctuation">]</span> <span class="token operator">*</span> num_class
+    f1_score <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">0.0</span><span class="token punctuation">]</span> <span class="token operator">*</span> num_class
+
+    <span class="token keyword">for</span> i <span class="token keyword">in</span> xrange<span class="token punctuation">(</span>num_class<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token triple-quoted-string string">''' cal precision for each class: right / predict '''</span>
+        precision<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">0</span> <span class="token keyword">if</span> pred<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token number">0</span> <span class="token keyword">else</span> <span class="token number">1.0</span> <span class="token operator">*</span> right<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">/</span> pred<span class="token punctuation">[</span>i<span class="token punctuation">]</span>
+
+        <span class="token triple-quoted-string string">''' cal recall for each class: right / gold '''</span>
+        recall<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">0</span> <span class="token keyword">if</span> gold<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token number">0</span> <span class="token keyword">else</span> <span class="token number">1.0</span> <span class="token operator">*</span> right<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">/</span> gold<span class="token punctuation">[</span>i<span class="token punctuation">]</span>
+
+        <span class="token triple-quoted-string string">''' cal recall for each class: 2 pr / (p+r) '''</span>
+        f1_score<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">0</span> <span class="token keyword">if</span> precision<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token number">0</span> <span class="token operator">or</span> recall<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token number">0</span> \
+            <span class="token keyword">else</span> <span class="token number">2.0</span> <span class="token operator">*</span> <span class="token punctuation">(</span>precision<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">*</span> recall<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token punctuation">(</span>precision<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">+</span> recall<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+        <span class="token keyword">if</span> formation<span class="token punctuation">:</span>
+            precision<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> precision<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>__format__<span class="token punctuation">(</span><span class="token string">".6f"</span><span class="token punctuation">)</span>
+            recall<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> recall<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>__format__<span class="token punctuation">(</span><span class="token string">".6f"</span><span class="token punctuation">)</span>
+            f1_score<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> f1_score<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>__format__<span class="token punctuation">(</span><span class="token string">".6f"</span><span class="token punctuation">)</span>
+
+    <span class="token triple-quoted-string string">''' PRF for each label or PRF for all labels '''</span>
+    <span class="token keyword">if</span> metric_type <span class="token operator">==</span> <span class="token string">"macro"</span><span class="token punctuation">:</span>
+        precision <span class="token operator">=</span> sum<span class="token punctuation">(</span>precision<span class="token punctuation">)</span> <span class="token operator">/</span> len<span class="token punctuation">(</span>precision<span class="token punctuation">)</span>
+        recall <span class="token operator">=</span> sum<span class="token punctuation">(</span>recall<span class="token punctuation">)</span> <span class="token operator">/</span> len<span class="token punctuation">(</span>recall<span class="token punctuation">)</span>
+        f1_score <span class="token operator">=</span> <span class="token number">2</span> <span class="token operator">*</span> precision <span class="token operator">*</span> recall <span class="token operator">/</span> <span class="token punctuation">(</span>precision <span class="token operator">+</span> recall<span class="token punctuation">)</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>precision <span class="token operator">+</span> recall<span class="token punctuation">)</span> <span class="token operator">></span> <span class="token number">0</span> <span class="token keyword">else</span> <span class="token number">0</span>
+    <span class="token keyword">elif</span> metric_type <span class="token operator">==</span> <span class="token string">"micro"</span><span class="token punctuation">:</span>
+        precision <span class="token operator">=</span> <span class="token number">1.0</span> <span class="token operator">*</span> sum<span class="token punctuation">(</span>right<span class="token punctuation">)</span> <span class="token operator">/</span> sum<span class="token punctuation">(</span>pred<span class="token punctuation">)</span> <span class="token keyword">if</span> sum<span class="token punctuation">(</span>pred<span class="token punctuation">)</span> <span class="token operator">></span> <span class="token number">0</span> <span class="token keyword">else</span> <span class="token number">0</span>
+        recall <span class="token operator">=</span> <span class="token number">1.0</span> <span class="token operator">*</span> sum<span class="token punctuation">(</span>right<span class="token punctuation">)</span> <span class="token operator">/</span> sum<span class="token punctuation">(</span>gold<span class="token punctuation">)</span> <span class="token keyword">if</span> sum<span class="token punctuation">(</span>recall<span class="token punctuation">)</span> <span class="token operator">></span> <span class="token number">0</span> <span class="token keyword">else</span> <span class="token number">0</span>
+        f1_score <span class="token operator">=</span> <span class="token number">2</span> <span class="token operator">*</span> precision <span class="token operator">*</span> recall <span class="token operator">/</span> <span class="token punctuation">(</span>precision <span class="token operator">+</span> recall<span class="token punctuation">)</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>precision <span class="token operator">+</span> recall<span class="token punctuation">)</span> <span class="token operator">></span> <span class="token number">0</span> <span class="token keyword">else</span> <span class="token number">0</span>
+
+    <span class="token keyword">return</span> precision<span class="token punctuation">,</span> recall<span class="token punctuation">,</span> f1_score<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>SAFE 使用BiRNN</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/paper/image-20210816212921175.png" alt=""></p>
+<h4 id="Self-Attention-Network"><a href="#Self-Attention-Network" class="headerlink" title="Self-Attention Network"></a>Self-Attention Network</h4><p>参考论文：<a href="https://arxiv.org/pdf/1703.03130.pdf?source=post_page---------------------------" target="_blank" rel="noopener">A STRUCTURED SELF-ATTENTIVE SENTENCE EMBEDDING</a></p>
+<p><img src="/images/loading.gif" data-original="../images/paper/image-20210816214034952.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/paper/image-20210816214229295.png" alt=""></p>
+<p>可以看出SAFE所采用的Self Attention Network和一个全连接层输出函数的embedding，该过程很类似<strong>Transformer</strong>的一个<strong>Encoder</strong></p>
+<h4 id="Siamese-Network"><a href="#Siamese-Network" class="headerlink" title="Siamese Network"></a>Siamese Network</h4><p><a href="https://towardsdatascience.com/a-friendly-introduction-to-siamese-networks-85ab17522942" target="_blank" rel="noopener">A friendly introduction to Siamese Networks</a></p>
+<p>Siamese network就是“连体的神经网络”，神经网络的“<strong>连体”</strong>是通过<strong>共享权值</strong>来实现的，如下图所示。</p>
+<img src="/images/loading.gif" data-original="../images/paper/v2-5070e28622a2f3ee9e3cb5d2259fae86_720w.jpg" style="zoom:50%;">
+
+<p>孪生神经网络事衡量两个输入的相似程度。孪生神经网络有两个输入（Input1 and Input2）,将两个输入feed进入两个神经网络（Network1 and Network2），这两个神经网络分别将输入映射到新的空间<strong>，</strong>形成输入在新的空间中的表示。通过Loss的计算，评价两个输入的相似度。</p>
+<p>SAFE论文中采用的Siamese network如下，采用余弦相似性计算两个函数的相似性。</p>
+<p><img src="/images/loading.gif" data-original="../images/paper/image-20210816214602851.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/paper/image-20210816215120171.png" alt=""></p>
+<h3 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h3><p><img src="/images/loading.gif" data-original="../images/paper/image-20210816215446099.png" alt=""></p>
+<h3 id="评价指标"><a href="#评价指标" class="headerlink" title="评价指标"></a>评价指标</h3><p><img src="/images/loading.gif" data-original="../images/paper/image-20210816215528733.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/paper/image-20210816215600071.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/paper/image-20210816215648285.png" alt=""></p>
+<h3 id="模型改进："><a href="#模型改进：" class="headerlink" title="模型改进："></a>模型改进：</h3><p>增加多点对比，根据函数调用图进行匹配，减少搜索量，根据调用函数的完全图匹配的最高相似度（<a href="https://blog.creativecc.cn/posts/Kuhn-Munkres-Algorithm.html" target="_blank" rel="noopener">Kuhn Munkres算法</a>）的均值作为两个函数的相似性进行对比，测试模型的准确率。</p>
+<h1 id="DeepBinDiff"><a href="#DeepBinDiff" class="headerlink" title="DeepBinDiff"></a>DeepBinDiff</h1><p>论文原文：<a href="https://par.nsf.gov/servlets/purl/10198294" target="_blank" rel="noopener">https://par.nsf.gov/servlets/purl/10198294</a></p>
+<p>代码地址：<a href="https://github.com/yueduan/DeepBinDiff" target="_blank" rel="noopener">https://github.com/yueduan/DeepBinDiff</a></p>
+<script>
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return; }
+            const img = document.createElement('img');
+            img.style = 'display:none !important;';
+            img.src = el.dataset.src;
+            img.addEventListener('error', () => {
+              img.remove();
+              el.style.color = 'inherit';
+              el.style.backgroundImage = 'none';
+              el.style.background = 'none';
+            });
+            img.addEventListener('load', () => {
+              img.remove();
+            });
+            document.body.appendChild(img);
+          });
+      </script>
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://jackhcc.github.io" rel="external nofollow noreferrer">杰克成</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://jackhcc.github.io/posts/paper-bcsd.html">https://jackhcc.github.io/posts/paper-bcsd.html</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="https://jackhcc.github.io" target="_blank">杰克成</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/BCSD/">
+                                    <span class="chip bg-color">BCSD</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/reward/aliqr.png" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/reward/wxqr.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+            
+        </div>
+    </div>
+
+    
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/gitalk/gitalk.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/my-gitalk.css">
+
+<div class="card gitalk-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="gitalk-container" class="card-content"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/gitalk/gitalk.min.js"></script>
+<script>
+    let gitalk = new Gitalk({
+        clientID: '3821a0bbb773038a51fc',
+        clientSecret: '4b30b507d67ec5497ec0e77f43f80cb3e0d7dd3a',
+        repo: 'JackHCC.github.io',
+        owner: 'JackHCC',
+        admin: "JackHCC",
+        id: '2021-08-14T15-33-56',
+        distractionFreeMode: false  // Facebook-like distraction free mode
+    });
+
+    gitalk.render('gitalk-container');
+</script>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/posts/ctf-crypto.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/9.jpg" class="responsive-img" alt="CTF-Crypto要点">
+                        
+                        <span class="card-title">CTF-Crypto要点</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            CTF密码学学习要点
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-08-15
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/CTF/" class="post-category">
+                                    CTF
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/CTF-Cryptography/">
+                        <span class="chip bg-color">CTF-Cryptography</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/posts/ctf-web.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/20.jpg" class="responsive-img" alt="CTF-Web要点">
+                        
+                        <span class="card-title">CTF-Web要点</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            CTF-Web学习要点
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-08-12
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/CTF/" class="post-category">
+                                    CTF
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/CTF-Web/">
+                        <span class="chip bg-color">CTF-Web</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeShrink.js"></script>
+
+
+<!-- 代码块折行 -->
+
+<style type="text/css">
+code[class*="language-"], pre[class*="language-"] { white-space: pre !important; }
+</style>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('4'),
+            headingSelector: 'h1, h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h1, h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+    <footer class="page-footer bg-color">
+    <div class="container row center-align" style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            <span id="year">2020</span>
+            <a href="https://jackhcc.github.io" target="_blank">杰克成</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                class="white-color">3303.6k</span>&nbsp;字
+            
+            
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;人
+            </span>
+            
+            <br>
+            
+            <span id="sitetime">载入运行时间...</span>
+            <script>
+                function siteTime() {
+                    var seconds = 1000;
+                    var minutes = seconds * 60;
+                    var hours = minutes * 60;
+                    var days = hours * 24;
+                    var years = days * 365;
+                    var today = new Date();
+                    var startYear = "2020";
+                    var startMonth = "2";
+                    var startDate = "27";
+                    var startHour = "6";
+                    var startMinute = "30";
+                    var startSecond = "0";
+                    var todayYear = today.getFullYear();
+                    var todayMonth = today.getMonth() + 1;
+                    var todayDate = today.getDate();
+                    var todayHour = today.getHours();
+                    var todayMinute = today.getMinutes();
+                    var todaySecond = today.getSeconds();
+                    var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                    var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                    var diff = t2 - t1;
+                    var diffYears = Math.floor(diff / years);
+                    var diffDays = Math.floor((diff / days) - diffYears * 365);
+                    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+                    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) /
+                        minutes);
+                    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours -
+                        diffMinutes * minutes) / seconds);
+                    if (startYear == todayYear) {
+                        document.getElementById("year").innerHTML = todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffDays + " 天 " + diffHours +
+                            " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    } else {
+                        document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffYears + " 年 " + diffDays +
+                            " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    }
+                }
+                setInterval(siteTime, 1000);
+            </script>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/JackHCC" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:jackcc0701@163.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+    <a href="https://www.facebook.com/profile.php?id=100046343443643" class="tooltipped" target="_blank" data-tooltip="关注我的Facebook: https://www.facebook.com/profile.php?id=100046343443643" data-position="top" data-delay="50">
+        <i class="fab fa-facebook-f"></i>
+    </a>
+
+
+
+    <a href="https://twitter.com/JackChe66021834" class="tooltipped" target="_blank" data-tooltip="关注我的Twitter: https://twitter.com/JackChe66021834" data-position="top" data-delay="50">
+        <i class="fab fa-twitter"></i>
+    </a>
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=2508074836" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 2508074836" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+    <a href="https://weibo.com/u/6885584679" class="tooltipped" target="_blank" data-tooltip="关注我的微博: https://weibo.com/u/6885584679" data-position="top" data-delay="50">
+        <i class="fab fa-weibo"></i>
+    </a>
+
+
+
+    <a href="https://www.zhihu.com/people/8f8482f01f0d6a04e844efe32e0f0710" class="tooltipped" target="_blank" data-tooltip="关注我的知乎: https://www.zhihu.com/people/8f8482f01f0d6a04e844efe32e0f0710" data-position="top" data-delay="50">
+        <i class="fab fa-zhihu1">知</i>
+    </a>
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/materialize/materialize.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/aos/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/js/matery.js"></script>
+
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+    <script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script type="text/javascript" src="/js/fireworks.js"></script>
+
+    <script type="text/javascript">
+        //只在桌面版网页启用特效
+        var windowWidth = $(window).width();
+        if (windowWidth > 768) {
+            document.write('<script type="text/javascript" src="/js/sakura.js"><\/script>'); }
+    </script>
+
+    <!-- weather -->
+	<script type="text/javascript">
+	WIDGET = {FID: 'TToslpmkVO'}
+	</script>
+	<script type="text/javascript" src="https://apip.weatherdt.com/float/static/js/r.js?v=1111"></script>
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <!-- Baidu Analytics -->
+
+<script>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+    <!-- Baidu Push -->
+
+    
+    
+    <script async src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+        <script src="//code.tidio.co/kqhlkxviiccyoa0czpfpu4ijuey9hfre.js"></script>
+        <script> 
+            $(document).ready(function () {
+                setInterval(change_Tidio, 50);  
+                function change_Tidio() { 
+                    var tidio=$("#tidio-chat iframe");
+                    if(tidio.css("display")=="block"&& $(window).width()>977 ){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" &&$(window).width()>977)>0? "-40px" : ($("div.toc-title").length&&$(window).width()>977)>0?"85px":"20px";   
+                        document.getElementById("tidio-chat-iframe").style.right="-15px";   
+                        document.getElementById("tidio-chat-iframe").style.height=parseInt(tidio.css("height"))>=520?"520px":tidio.css("height");
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    } 
+                    else if(tidio.css("display")=="block"&&$(window).width()>601 &&$(window).width()<992 ){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" && 601< $(window).width()<992)>0? "-40px":"20px" ;   
+                        document.getElementById("tidio-chat-iframe").style.right="-15px"; 
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    }
+                    else if(tidio.css("display")=="block"&&$(window).width()<601 && parseInt(tidio.css("height"))<230){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" && $(window).width()<601)>0? "-10px":"45px" ;   
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    }
+                    if( tidio.css("display")=="block"&&$(window).width()<601 && parseInt(tidio.css("height"))>=230){
+                        document.getElementById("tidio-chat-iframe").style.zIndex="998";
+                    }
+                } 
+            }); 
+        </script>
+    
+
+    
+
+    
+    <script type="text/javascript" color="0,0,255"
+        pointColor="0,0,255" opacity='0.7'
+        zIndex="-1" count="99"
+        src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/background/canvas-nest.js"></script>
+    
+
+    
+
+    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/background/ribbon-dynamic.js" async="async"></script>
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/instantpage/instantpage.js" type="module"></script>
+    
+<script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script>
+        <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
+        <script>
+        $('a').each(function() {
+          const $this = $(this);
+          const href = $this.attr('href');
+          if (href && href.match('^((http|https|thunder|qqdl|ed2k|Flashget|qbrowser|ftp|rtsp|mms)://)')) {
+            const strs = href.split('/');
+            if (strs.length >= 3) {
+                const host = strs[2];
+                if (host !== 'your_domain' || window.location.host) {
+                    $this.attr('href', '/go.html?u='+Base64.encode(href)+'').attr('rel', 'external nofollow noopener noreferrer');
+                    if (true) {
+                        $this.attr('target', '_blank');
+                    }
+                }
+            }
+          }
+        });
+        </script></body>
+
+</html>
+

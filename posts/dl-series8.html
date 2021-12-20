@@ -1,0 +1,1746 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="DL专栏8-TensorFlow Tricks, JackHCC">
+    <meta name="description" content="TensorFlow基本使用技巧">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>DL专栏8-TensorFlow Tricks | JackHCC</title>
+    <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/my.css">
+    
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/jquery/jquery.min.js"></script>
+    
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper head-container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/me.jpg" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">JackHCC</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>留言板</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>友情链接</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/me.jpg" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">JackHCC</div>
+        <div class="logo-desc">
+            
+            Make the world betterrrr!!!
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			留言板
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			友情链接
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/JackHCC/JackHCC.github.io" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/JackHCC/JackHCC.github.io" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/0.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">DL专栏8-TensorFlow Tricks</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        height: calc(100vh - 250px);
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 30px;
+        bottom: 146px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/TensorFlow/">
+                                <span class="chip bg-color">TensorFlow</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/Deep-Learning/" class="post-category">
+                                Deep Learning
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2021-10-11
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2021-11-18
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    3.6k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    17 分
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <p>TensorFlow 是一个开源的、基于 Python 的机器学习框架，它由 Google 开发，提供了 Python，C/C++、Java、Go、R 等多种编程语言的接口，并在图形分类、音频处理、推荐系统和自然语言处理等场景下有着丰富的应用，是目前最热门的机器学习框架。</p>
+<h3 id="一、Tensorflow的排序与张量"><a href="#一、Tensorflow的排序与张量" class="headerlink" title="一、Tensorflow的排序与张量"></a><strong>一、Tensorflow的排序与张量</strong></h3><p>Tensorflow允许用户把张量操作和功能定义为计算图。张量是通用的数学符号，代表保存数据值的多维列阵，张量的维数称为阶。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007151607930.png" alt=""></p>
+<p>引用相关的库</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> tensorflow <span class="token keyword">as</span> tf
+<span class="token keyword">import</span> numpy <span class="token keyword">as</span> np<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>获取张量的阶（从下面例子看到tf的计算过程）</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 获取张量的阶（从下面例子看到tf的计算过程）</span>
+g <span class="token operator">=</span> tf<span class="token punctuation">.</span>Graph<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true"># 定义一个计算图</span>
+<span class="token keyword">with</span> g<span class="token punctuation">.</span>as_default<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment" spellcheck="true">## 定义张量t1,t2,t3</span>
+    t1 <span class="token operator">=</span> tf<span class="token punctuation">.</span>constant<span class="token punctuation">(</span>np<span class="token punctuation">.</span>pi<span class="token punctuation">)</span>
+    t2 <span class="token operator">=</span> tf<span class="token punctuation">.</span>constant<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+    t3 <span class="token operator">=</span> tf<span class="token punctuation">.</span>constant<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true">## 获取张量的阶</span>
+    r1 <span class="token operator">=</span> tf<span class="token punctuation">.</span>rank<span class="token punctuation">(</span>t1<span class="token punctuation">)</span>
+    r2 <span class="token operator">=</span> tf<span class="token punctuation">.</span>rank<span class="token punctuation">(</span>t2<span class="token punctuation">)</span>
+    r3 <span class="token operator">=</span> tf<span class="token punctuation">.</span>rank<span class="token punctuation">(</span>t3<span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true">## 获取他们的shapes</span>
+    s1 <span class="token operator">=</span> t1<span class="token punctuation">.</span>get_shape<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    s2 <span class="token operator">=</span> t2<span class="token punctuation">.</span>get_shape<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    s3 <span class="token operator">=</span> t3<span class="token punctuation">.</span>get_shape<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"shapes:"</span><span class="token punctuation">,</span>s1<span class="token punctuation">,</span>s2<span class="token punctuation">,</span>s3<span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true"># 启动前面定义的图来进行下一步操作</span>
+<span class="token keyword">with</span> tf<span class="token punctuation">.</span>Session<span class="token punctuation">(</span>graph<span class="token operator">=</span>g<span class="token punctuation">)</span> <span class="token keyword">as</span> sess<span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Ranks:"</span><span class="token punctuation">,</span>r1<span class="token punctuation">.</span>eval<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>r2<span class="token punctuation">.</span>eval<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>r3<span class="token punctuation">.</span>eval<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007151645703.png" alt=""></p>
+<h3 id="二、Tensorflow-计算图"><a href="#二、Tensorflow-计算图" class="headerlink" title="二、Tensorflow 计算图"></a><strong>二、Tensorflow 计算图</strong></h3><p>Tensorflow 的核心在于构建计算图，并用计算图推导从输入到输出的所有张量之间的关系。</p>
+<p>假设有0阶张量a,b,c，要评估 ，可以表示为下图所示的计算图：</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007151713038.png" alt=""></p>
+<p>可以看到，计算图就是一个节点网络，每个节点就像是一个操作，将函数应用到输入张量，然后返回0个或者更多个张量作为张量作为输出。</p>
+<p>在Tensorflow编制计算图步骤如下： </p>
+<ol>
+<li><p>初始化一个空的计算图</p>
+</li>
+<li><p>为该计算图加入节点（张量和操作）</p>
+</li>
+<li><p>执行计算图：</p>
+<p>a.开始一个新的会话</p>
+<p>b.初始化图中的变量</p>
+<p>c.运行会话中的计算图</p>
+</li>
+</ol>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 初始化一个空的计算图</span>
+g <span class="token operator">=</span> tf<span class="token punctuation">.</span>Graph<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># 为该计算图加入节点（张量和操作）</span>
+<span class="token keyword">with</span> g<span class="token punctuation">.</span>as_default<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    a <span class="token operator">=</span> tf<span class="token punctuation">.</span>constant<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span>name<span class="token operator">=</span><span class="token string">"a"</span><span class="token punctuation">)</span>
+    b <span class="token operator">=</span> tf<span class="token punctuation">.</span>constant<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span>name<span class="token operator">=</span><span class="token string">"b"</span><span class="token punctuation">)</span>
+    c <span class="token operator">=</span> tf<span class="token punctuation">.</span>constant<span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span>name<span class="token operator">=</span><span class="token string">"c"</span><span class="token punctuation">)</span>
+
+    z <span class="token operator">=</span> <span class="token number">2</span><span class="token operator">*</span><span class="token punctuation">(</span>a<span class="token operator">-</span>b<span class="token punctuation">)</span><span class="token operator">+</span>c
+
+<span class="token comment" spellcheck="true"># 执行计算图</span>
+<span class="token comment" spellcheck="true">## 通过调用tf.Session产生会话对象，该调用可以接受一个图为参数（这里是g），否则将启动默认的空图</span>
+<span class="token comment" spellcheck="true">## 执行张量操作的用sess.run(),他将返回大小均匀的列表</span>
+<span class="token keyword">with</span> tf<span class="token punctuation">.</span>Session<span class="token punctuation">(</span>graph<span class="token operator">=</span>g<span class="token punctuation">)</span> <span class="token keyword">as</span> sess<span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'2*(a-b)+c =>'</span><span class="token punctuation">,</span>sess<span class="token punctuation">.</span>run<span class="token punctuation">(</span>z<span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre><code>2*(a-b)+c =&gt; 1</code></pre><h3 id="三、Tensorflow中的占位符"><a href="#三、Tensorflow中的占位符" class="headerlink" title="三、Tensorflow中的占位符"></a><strong>三、Tensorflow中的占位符</strong></h3><p>Tensorflow有提供数据的特别机制。其中一种机制就是使用占位符，他们是一些预先定义好类型和形状的张量。</p>
+<p>通过调用tf.placeholder函数把这些张量加入计算图中，而且他们不包括任何数据。然而一旦执行图中的特定节点就需要提供数据阵列。</p>
+<h4 id="定义占位符"><a href="#定义占位符" class="headerlink" title="定义占位符"></a><strong>定义占位符</strong></h4><pre class="line-numbers language-python"><code class="language-python">g <span class="token operator">=</span> tf<span class="token punctuation">.</span>Graph<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token keyword">with</span> g<span class="token punctuation">.</span>as_default<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    tf_a <span class="token operator">=</span> tf<span class="token punctuation">.</span>placeholder<span class="token punctuation">(</span>tf<span class="token punctuation">.</span>int32<span class="token punctuation">,</span>shape<span class="token operator">=</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>name<span class="token operator">=</span><span class="token string">"tf_a"</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># shape=[]就是定义0阶张量,更高阶张量可以用【n1,n2,n3】表示，如shape=（3,4,5）</span>
+    tf_b <span class="token operator">=</span> tf<span class="token punctuation">.</span>placeholder<span class="token punctuation">(</span>tf<span class="token punctuation">.</span>int32<span class="token punctuation">,</span>shape<span class="token operator">=</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>name<span class="token operator">=</span><span class="token string">"tf_b"</span><span class="token punctuation">)</span>
+    tf_c <span class="token operator">=</span> tf<span class="token punctuation">.</span>placeholder<span class="token punctuation">(</span>tf<span class="token punctuation">.</span>int32<span class="token punctuation">,</span>shape<span class="token operator">=</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>name<span class="token operator">=</span><span class="token string">"tf_c"</span><span class="token punctuation">)</span>
+
+    r1 <span class="token operator">=</span> tf_a <span class="token operator">-</span> tf_b
+    r2 <span class="token operator">=</span> <span class="token number">2</span><span class="token operator">*</span>r1
+    z <span class="token operator">=</span> r2 <span class="token operator">+</span> tf_c<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="为占位符提供数据"><a href="#为占位符提供数据" class="headerlink" title="为占位符提供数据"></a><strong>为占位符提供数据</strong></h4><p>当在图中处理节点的时候，需要产生python字典来为占位符来提供数据阵列。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">with</span> tf<span class="token punctuation">.</span>Session<span class="token punctuation">(</span>graph<span class="token operator">=</span>g<span class="token punctuation">)</span> <span class="token keyword">as</span> sess<span class="token punctuation">:</span>
+    feed <span class="token operator">=</span> <span class="token punctuation">{</span>
+        tf_a<span class="token punctuation">:</span><span class="token number">1</span><span class="token punctuation">,</span>
+        tf_b<span class="token punctuation">:</span><span class="token number">2</span><span class="token punctuation">,</span>
+        tf_c<span class="token punctuation">:</span><span class="token number">3</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'z:'</span><span class="token punctuation">,</span>sess<span class="token punctuation">.</span>run<span class="token punctuation">(</span>z<span class="token punctuation">,</span>feed_dict<span class="token operator">=</span>feed<span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre><code>z: 1</code></pre><h4 id="用batch-sizes为数据阵列定义占位符"><a href="#用batch-sizes为数据阵列定义占位符" class="headerlink" title="用batch_sizes为数据阵列定义占位符"></a><strong>用batch_sizes为数据阵列定义占位符</strong></h4><p>在研发神经网络模型的时候，有时会碰到大小规模不一致的小批量数据。占位符的一个功能是把大小无法确定的维度定义为None。</p>
+<pre class="line-numbers language-python"><code class="language-python">g <span class="token operator">=</span> tf<span class="token punctuation">.</span>Graph<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token keyword">with</span> g<span class="token punctuation">.</span>as_default<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    tf_x <span class="token operator">=</span> tf<span class="token punctuation">.</span>placeholder<span class="token punctuation">(</span>tf<span class="token punctuation">.</span>float32<span class="token punctuation">,</span>shape<span class="token operator">=</span><span class="token punctuation">(</span>None<span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">,</span>name<span class="token operator">=</span><span class="token string">"tf_x"</span><span class="token punctuation">)</span>
+    x_mean <span class="token operator">=</span> tf<span class="token punctuation">.</span>reduce_mean<span class="token punctuation">(</span>tf_x<span class="token punctuation">,</span>axis<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">,</span>name<span class="token operator">=</span><span class="token string">"mean"</span><span class="token punctuation">)</span>
+
+np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>seed<span class="token punctuation">(</span><span class="token number">123</span><span class="token punctuation">)</span>
+<span class="token keyword">with</span> tf<span class="token punctuation">.</span>Session<span class="token punctuation">(</span>graph<span class="token operator">=</span>g<span class="token punctuation">)</span> <span class="token keyword">as</span> sess<span class="token punctuation">:</span>
+    x1 <span class="token operator">=</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>uniform<span class="token punctuation">(</span>low<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">,</span>high<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span>size<span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Feeding data with shape"</span><span class="token punctuation">,</span>x1<span class="token punctuation">.</span>shape<span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Result:"</span><span class="token punctuation">,</span>sess<span class="token punctuation">.</span>run<span class="token punctuation">(</span>x_mean<span class="token punctuation">,</span>feed_dict<span class="token operator">=</span><span class="token punctuation">{</span>tf_x<span class="token punctuation">:</span>x1<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+    x2 <span class="token operator">=</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>uniform<span class="token punctuation">(</span>low<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">,</span>high<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span>size<span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Feeding data with shape"</span><span class="token punctuation">,</span>x2<span class="token punctuation">.</span>shape<span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Result:"</span><span class="token punctuation">,</span>sess<span class="token punctuation">.</span>run<span class="token punctuation">(</span>x_mean<span class="token punctuation">,</span>feed_dict<span class="token operator">=</span><span class="token punctuation">{</span>tf_x<span class="token punctuation">:</span>x2<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007151946360.png" alt=""></p>
+<h3 id="四、Tensorflow-的变量"><a href="#四、Tensorflow-的变量" class="headerlink" title="四、Tensorflow 的变量"></a><strong>四、Tensorflow 的变量</strong></h3><p>就Tensorflow而言，变量是一种特殊类型的张量对象，他允许我们在训练模型阶段，在tensorflow会话中储存和更新模型的参数。</p>
+<h4 id="定义变量"><a href="#定义变量" class="headerlink" title="定义变量"></a><strong>定义变量</strong></h4><ul>
+<li>方式1：tf.Variable() 是为新变量创建对象并将其添加到计算图的类。</li>
+<li>方式2：tf.get_variable()是假设某个变量名在计算图中，可以复用给定变量名的现有值或者不存在则创建新的变量，因此变量名的name非常重要！</li>
+</ul>
+<p>无论采用哪种变量定义方式，直到调用tf.Session启动计算图并且在会话中具体运行了初始化操作后才设置初始值。事实上，只有初始化Tensorflow的变量之后才会为计算图分配内存。</p>
+<pre class="line-numbers language-python"><code class="language-python">g1 <span class="token operator">=</span> tf<span class="token punctuation">.</span>Graph<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token keyword">with</span> g1<span class="token punctuation">.</span>as_default<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    w <span class="token operator">=</span> tf<span class="token punctuation">.</span>Variable<span class="token punctuation">(</span>np<span class="token punctuation">.</span>array<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token punctuation">[</span><span class="token number">5</span><span class="token punctuation">,</span><span class="token number">6</span><span class="token punctuation">,</span><span class="token number">7</span><span class="token punctuation">,</span><span class="token number">8</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">,</span>name<span class="token operator">=</span><span class="token string">"w"</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>w<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="初始化变量"><a href="#初始化变量" class="headerlink" title="初始化变量"></a><strong>初始化变量</strong></h4><p>由于变量是直到调用tf.Session启动计算图并且在会话中具体运行了初始化操作后才设置初始值，只有初始化Tensorflow的变量之后才会为计算图分配内存。因此这个初始化的过程十分重要，这个初始化过程包括：为 相关张量分配内存空间并为其赋予初始值。<br>初始化方式：</p>
+<ul>
+<li>方式1.tf.global_variables_initializer函数，返回初始化所有计算图中现存的变量，要注意的是：定义变量一定要造初始化之前，不然会报错！！！</li>
+<li>方式2：将tf.global_variables_initializer函数储存在init_op（名字不唯一，自己定）对象内，然后用sess.run出来</li>
+</ul>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">with</span> tf<span class="token punctuation">.</span>Session<span class="token punctuation">(</span>graph<span class="token operator">=</span>g1<span class="token punctuation">)</span> <span class="token keyword">as</span> sess<span class="token punctuation">:</span>
+    sess<span class="token punctuation">.</span>run<span class="token punctuation">(</span>tf<span class="token punctuation">.</span>global_variables_initializer<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>sess<span class="token punctuation">.</span>run<span class="token punctuation">(</span>w<span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007152035274.png" alt=""></p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 我们来比较定义变量与初始化顺序的关系</span>
+g2 <span class="token operator">=</span> tf<span class="token punctuation">.</span>Graph<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token keyword">with</span> g2<span class="token punctuation">.</span>as_default<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    w1 <span class="token operator">=</span> tf<span class="token punctuation">.</span>Variable<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span>name<span class="token operator">=</span><span class="token string">"w1"</span><span class="token punctuation">)</span>
+    init_op <span class="token operator">=</span> tf<span class="token punctuation">.</span>global_variables_initializer<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    w2 <span class="token operator">=</span> tf<span class="token punctuation">.</span>Variable<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span>name<span class="token operator">=</span><span class="token string">"w2"</span><span class="token punctuation">)</span>
+
+<span class="token keyword">with</span> tf<span class="token punctuation">.</span>Session<span class="token punctuation">(</span>graph<span class="token operator">=</span>g2<span class="token punctuation">)</span> <span class="token keyword">as</span> sess<span class="token punctuation">:</span>
+    sess<span class="token punctuation">.</span>run<span class="token punctuation">(</span>init_op<span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"w1:"</span><span class="token punctuation">,</span>sess<span class="token punctuation">.</span>run<span class="token punctuation">(</span>w1<span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre><code>w1: 1</code></pre><pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">with</span> tf<span class="token punctuation">.</span>Session<span class="token punctuation">(</span>graph<span class="token operator">=</span>g2<span class="token punctuation">)</span> <span class="token keyword">as</span> sess<span class="token punctuation">:</span>    
+    sess<span class="token punctuation">.</span>run<span class="token punctuation">(</span>init_op<span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"w2:"</span><span class="token punctuation">,</span>sess<span class="token punctuation">.</span>run<span class="token punctuation">(</span>w2<span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007152108360.png" alt=""></p>
+<h4 id="变量范围"><a href="#变量范围" class="headerlink" title="变量范围"></a><strong>变量范围</strong></h4><p>变量范围是一个重要的概念，对建设大型神经网络计算图特别有用。</p>
+<p>可以把变量的域划分为独立的子部分。在创建变量时，该域内创建的操作与张量的名字都以域名为前缀，而且这些域可以嵌套。</p>
+<pre class="line-numbers language-python"><code class="language-python">g <span class="token operator">=</span> tf<span class="token punctuation">.</span>Graph<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token keyword">with</span> g<span class="token punctuation">.</span>as_default<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">with</span> tf<span class="token punctuation">.</span>variable_scope<span class="token punctuation">(</span><span class="token string">"net_A"</span><span class="token punctuation">)</span><span class="token punctuation">:</span>   <span class="token comment" spellcheck="true">#定义一个域net_A</span>
+        <span class="token keyword">with</span> tf<span class="token punctuation">.</span>variable_scope<span class="token punctuation">(</span><span class="token string">"layer-1"</span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token comment" spellcheck="true"># 在域net_A下再定义一个域layer-1</span>
+            w1 <span class="token operator">=</span> tf<span class="token punctuation">.</span>Variable<span class="token punctuation">(</span>tf<span class="token punctuation">.</span>random_normal<span class="token punctuation">(</span>shape<span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">,</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>name<span class="token operator">=</span><span class="token string">"weights"</span><span class="token punctuation">)</span>   <span class="token comment" spellcheck="true"># 该变量定义在net_A/layer-1域下</span>
+        <span class="token keyword">with</span> tf<span class="token punctuation">.</span>variable_scope<span class="token punctuation">(</span><span class="token string">"layer-2"</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+            w2 <span class="token operator">=</span> tf<span class="token punctuation">.</span>Variable<span class="token punctuation">(</span>tf<span class="token punctuation">.</span>random_normal<span class="token punctuation">(</span>shape<span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">,</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>name<span class="token operator">=</span><span class="token string">"weights"</span><span class="token punctuation">)</span>
+    <span class="token keyword">with</span> tf<span class="token punctuation">.</span>variable_scope<span class="token punctuation">(</span><span class="token string">"net_B"</span><span class="token punctuation">)</span><span class="token punctuation">:</span>   <span class="token comment" spellcheck="true"># 定义一个域net_B</span>
+        <span class="token keyword">with</span> tf<span class="token punctuation">.</span>variable_scope<span class="token punctuation">(</span><span class="token string">"layer-2"</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+            w3 <span class="token operator">=</span> tf<span class="token punctuation">.</span>Variable<span class="token punctuation">(</span>tf<span class="token punctuation">.</span>random_normal<span class="token punctuation">(</span>shape<span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">,</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>name<span class="token operator">=</span><span class="token string">"weights"</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>w1<span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>w2<span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>w3<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007152143135.png" alt=""></p>
+<h3 id="五、建立回归模型"><a href="#五、建立回归模型" class="headerlink" title="五、建立回归模型"></a><strong>五、建立回归模型</strong></h3><p>我们需要定义的变量：</p>
+<ul>
+<li>1.输入x：占位符tf_x</li>
+<li>2.输入y：占位符tf_y</li>
+<li>3.模型参数w：定义为变量weight</li>
+<li>4.模型参数b：定义为变量bias</li>
+<li>5.模型输出 ̂ y^：有操作计算得到</li>
+</ul>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> tensorflow  <span class="token keyword">as</span> tf
+<span class="token keyword">import</span> numpy <span class="token keyword">as</span> np
+<span class="token keyword">import</span> matplotlib<span class="token punctuation">.</span>pyplot <span class="token keyword">as</span> plt
+<span class="token operator">%</span>matplotlib inline
+
+g <span class="token operator">=</span> tf<span class="token punctuation">.</span>Graph<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># 定义计算图</span>
+<span class="token keyword">with</span> g<span class="token punctuation">.</span>as_default<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    tf<span class="token punctuation">.</span>set_random_seed<span class="token punctuation">(</span><span class="token number">123</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true">## placeholder</span>
+    tf_x <span class="token operator">=</span> tf<span class="token punctuation">.</span>placeholder<span class="token punctuation">(</span>shape<span class="token operator">=</span><span class="token punctuation">(</span>None<span class="token punctuation">)</span><span class="token punctuation">,</span>dtype<span class="token operator">=</span>tf<span class="token punctuation">.</span>float32<span class="token punctuation">,</span>name<span class="token operator">=</span><span class="token string">"tf_x"</span><span class="token punctuation">)</span>
+    tf_y <span class="token operator">=</span> tf<span class="token punctuation">.</span>placeholder<span class="token punctuation">(</span>shape<span class="token operator">=</span><span class="token punctuation">(</span>None<span class="token punctuation">)</span><span class="token punctuation">,</span>dtype<span class="token operator">=</span>tf<span class="token punctuation">.</span>float32<span class="token punctuation">,</span>name<span class="token operator">=</span><span class="token string">"tf_y"</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true">## define the variable (model parameters)</span>
+    weight <span class="token operator">=</span> tf<span class="token punctuation">.</span>Variable<span class="token punctuation">(</span>tf<span class="token punctuation">.</span>random_normal<span class="token punctuation">(</span>shape<span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span>stddev<span class="token operator">=</span><span class="token number">0.25</span><span class="token punctuation">)</span><span class="token punctuation">,</span>name<span class="token operator">=</span><span class="token string">"weight"</span><span class="token punctuation">)</span>
+    bias <span class="token operator">=</span> tf<span class="token punctuation">.</span>Variable<span class="token punctuation">(</span><span class="token number">0.0</span><span class="token punctuation">,</span>name<span class="token operator">=</span><span class="token string">"bias"</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true">## build the model</span>
+    y_hat <span class="token operator">=</span> tf<span class="token punctuation">.</span>add<span class="token punctuation">(</span>weight<span class="token operator">*</span>tf_x<span class="token punctuation">,</span>bias<span class="token punctuation">,</span>name<span class="token operator">=</span><span class="token string">"y_hat"</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true">## compute the cost</span>
+    cost <span class="token operator">=</span> tf<span class="token punctuation">.</span>reduce_mean<span class="token punctuation">(</span>tf<span class="token punctuation">.</span>square<span class="token punctuation">(</span>tf_y<span class="token operator">-</span>y_hat<span class="token punctuation">)</span><span class="token punctuation">,</span>name<span class="token operator">=</span><span class="token string">"cost"</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true">## train the model</span>
+    optim <span class="token operator">=</span> tf<span class="token punctuation">.</span>train<span class="token punctuation">.</span>GradientDescentOptimizer<span class="token punctuation">(</span>learning_rate<span class="token operator">=</span><span class="token number">0.001</span><span class="token punctuation">)</span>
+    train_op <span class="token operator">=</span> optim<span class="token punctuation">.</span>minimize<span class="token punctuation">(</span>cost<span class="token punctuation">,</span>name<span class="token operator">=</span><span class="token string">"train_op"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 创建会话启动计算图并训练模型</span>
+<span class="token comment" spellcheck="true">## create a random toy dataset for regression</span>
+np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>seed<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">make_random_data</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    x <span class="token operator">=</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>uniform<span class="token punctuation">(</span>low<span class="token operator">=</span><span class="token operator">-</span><span class="token number">2</span><span class="token punctuation">,</span>high<span class="token operator">=</span><span class="token number">4</span><span class="token punctuation">,</span>size<span class="token operator">=</span><span class="token number">100</span><span class="token punctuation">)</span>
+    y <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+    <span class="token keyword">for</span> t <span class="token keyword">in</span> x<span class="token punctuation">:</span>
+        r <span class="token operator">=</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>normal<span class="token punctuation">(</span>loc<span class="token operator">=</span><span class="token number">0.0</span><span class="token punctuation">,</span>scale<span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">0.5</span> <span class="token operator">+</span> t<span class="token operator">*</span>t<span class="token operator">/</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">,</span>size<span class="token operator">=</span>None<span class="token punctuation">)</span>
+        y<span class="token punctuation">.</span>append<span class="token punctuation">(</span>r<span class="token punctuation">)</span>
+    <span class="token keyword">return</span> x<span class="token punctuation">,</span><span class="token number">1.726</span><span class="token operator">*</span>x<span class="token number">-0.84</span><span class="token operator">+</span>np<span class="token punctuation">.</span>array<span class="token punctuation">(</span>y<span class="token punctuation">)</span>
+
+x<span class="token punctuation">,</span>y <span class="token operator">=</span> make_random_data<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+plt<span class="token punctuation">.</span>plot<span class="token punctuation">(</span>x<span class="token punctuation">,</span>y<span class="token punctuation">,</span><span class="token string">'o'</span><span class="token punctuation">)</span>
+plt<span class="token punctuation">.</span>show<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007152303571.png" alt=""></p>
+<pre class="line-numbers language-python"><code class="language-python">
+<span class="token comment" spellcheck="true">## train/test splits</span>
+x_train<span class="token punctuation">,</span>y_train <span class="token operator">=</span> x<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token number">100</span><span class="token punctuation">]</span><span class="token punctuation">,</span>y<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token number">100</span><span class="token punctuation">]</span>
+x_test<span class="token punctuation">,</span>y_test <span class="token operator">=</span> x<span class="token punctuation">[</span><span class="token number">100</span><span class="token punctuation">:</span><span class="token punctuation">]</span><span class="token punctuation">,</span>y<span class="token punctuation">[</span><span class="token number">100</span><span class="token punctuation">:</span><span class="token punctuation">]</span>
+
+n_epochs <span class="token operator">=</span> <span class="token number">500</span>
+train_costs  <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+<span class="token keyword">with</span> tf<span class="token punctuation">.</span>Session<span class="token punctuation">(</span>graph<span class="token operator">=</span>g<span class="token punctuation">)</span> <span class="token keyword">as</span> sess<span class="token punctuation">:</span>
+    sess<span class="token punctuation">.</span>run<span class="token punctuation">(</span>tf<span class="token punctuation">.</span>global_variables_initializer<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true">## train the model for n_epochs</span>
+    <span class="token keyword">for</span> e <span class="token keyword">in</span> range<span class="token punctuation">(</span>n_epochs<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        c<span class="token punctuation">,</span>_ <span class="token operator">=</span> sess<span class="token punctuation">.</span>run<span class="token punctuation">(</span><span class="token punctuation">[</span>cost<span class="token punctuation">,</span>train_op<span class="token punctuation">]</span><span class="token punctuation">,</span>feed_dict<span class="token operator">=</span><span class="token punctuation">{</span>tf_x<span class="token punctuation">:</span>x_train<span class="token punctuation">,</span>tf_y<span class="token punctuation">:</span>y_train<span class="token punctuation">}</span><span class="token punctuation">)</span>
+        train_costs<span class="token punctuation">.</span>append<span class="token punctuation">(</span>c<span class="token punctuation">)</span>
+        <span class="token keyword">if</span> <span class="token operator">not</span> e <span class="token operator">%</span> <span class="token number">50</span><span class="token punctuation">:</span>
+            <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Epoch %4d: %.4f"</span><span class="token operator">%</span><span class="token punctuation">(</span>e<span class="token punctuation">,</span>c<span class="token punctuation">)</span><span class="token punctuation">)</span>
+plt<span class="token punctuation">.</span>plot<span class="token punctuation">(</span>train_costs<span class="token punctuation">)</span>
+plt<span class="token punctuation">.</span>show<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007152322395.png" alt=""></p>
+<h3 id="六、在Tensorflow计算图中用张量名执行对象"><a href="#六、在Tensorflow计算图中用张量名执行对象" class="headerlink" title="六、在Tensorflow计算图中用张量名执行对象"></a><strong>六、在Tensorflow计算图中用张量名执行对象</strong></h3><p>只需要把</p>
+<pre class="line-numbers language-python"><code class="language-python">sess<span class="token punctuation">.</span>run<span class="token punctuation">(</span><span class="token punctuation">[</span>cost<span class="token punctuation">,</span>train_op<span class="token punctuation">]</span><span class="token punctuation">,</span>feed_dict<span class="token operator">=</span><span class="token punctuation">{</span>tf_x<span class="token punctuation">:</span>x_train<span class="token punctuation">,</span>tf_y<span class="token punctuation">:</span>y_train<span class="token punctuation">}</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>改为</p>
+<pre class="line-numbers language-python"><code class="language-python">sess<span class="token punctuation">.</span>run<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'cost:0'</span><span class="token punctuation">,</span><span class="token string">'train_op:0'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>feed_dict<span class="token operator">=</span><span class="token punctuation">{</span><span class="token string">'tf_x:0'</span><span class="token punctuation">:</span>x_train<span class="token punctuation">,</span><span class="token string">'tf_y:0'</span><span class="token punctuation">:</span>y_train<span class="token punctuation">}</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>注意：只有张量名才有：0后缀，操作是没有：0后缀的，例如train_op并没有train_op：0</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">## train/test splits</span>
+x_train<span class="token punctuation">,</span>y_train <span class="token operator">=</span> x<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token number">100</span><span class="token punctuation">]</span><span class="token punctuation">,</span>y<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token number">100</span><span class="token punctuation">]</span>
+x_test<span class="token punctuation">,</span>y_test <span class="token operator">=</span> x<span class="token punctuation">[</span><span class="token number">100</span><span class="token punctuation">:</span><span class="token punctuation">]</span><span class="token punctuation">,</span>y<span class="token punctuation">[</span><span class="token number">100</span><span class="token punctuation">:</span><span class="token punctuation">]</span>
+
+n_epochs <span class="token operator">=</span> <span class="token number">500</span>
+train_costs  <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+<span class="token keyword">with</span> tf<span class="token punctuation">.</span>Session<span class="token punctuation">(</span>graph<span class="token operator">=</span>g<span class="token punctuation">)</span> <span class="token keyword">as</span> sess<span class="token punctuation">:</span>
+    sess<span class="token punctuation">.</span>run<span class="token punctuation">(</span>tf<span class="token punctuation">.</span>global_variables_initializer<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true">## train the model for n_epochs</span>
+    <span class="token keyword">for</span> e <span class="token keyword">in</span> range<span class="token punctuation">(</span>n_epochs<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        c<span class="token punctuation">,</span>_ <span class="token operator">=</span> sess<span class="token punctuation">.</span>run<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'cost:0'</span><span class="token punctuation">,</span><span class="token string">'train_op'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>feed_dict<span class="token operator">=</span><span class="token punctuation">{</span><span class="token string">'tf_x:0'</span><span class="token punctuation">:</span>x_train<span class="token punctuation">,</span><span class="token string">'tf_y:0'</span><span class="token punctuation">:</span>y_train<span class="token punctuation">}</span><span class="token punctuation">)</span>
+        train_costs<span class="token punctuation">.</span>append<span class="token punctuation">(</span>c<span class="token punctuation">)</span>
+        <span class="token keyword">if</span> <span class="token operator">not</span> e <span class="token operator">%</span> <span class="token number">50</span><span class="token punctuation">:</span>
+            <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Epoch %4d: %.4f"</span><span class="token operator">%</span><span class="token punctuation">(</span>e<span class="token punctuation">,</span>c<span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007152357706.png" alt=""></p>
+<h3 id="七、在Tensorflow中储存和恢复模型"><a href="#七、在Tensorflow中储存和恢复模型" class="headerlink" title="七、在Tensorflow中储存和恢复模型"></a><strong>七、在Tensorflow中储存和恢复模型</strong></h3><p>神经网络训练可能需要几天几周的时间，因此我们需要把训练出来的模型储存下来供下次使用。</p>
+<p>储存的方法是在定义计算图的时候加入：saver = tf.train.Saver()，并且在训练后输入saver.save(sess,’./trained-model’)</p>
+<pre class="line-numbers language-python"><code class="language-python">g <span class="token operator">=</span> tf<span class="token punctuation">.</span>Graph<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># 定义计算图</span>
+<span class="token keyword">with</span> g<span class="token punctuation">.</span>as_default<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    tf<span class="token punctuation">.</span>set_random_seed<span class="token punctuation">(</span><span class="token number">123</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true">## placeholder</span>
+    tf_x <span class="token operator">=</span> tf<span class="token punctuation">.</span>placeholder<span class="token punctuation">(</span>shape<span class="token operator">=</span><span class="token punctuation">(</span>None<span class="token punctuation">)</span><span class="token punctuation">,</span>dtype<span class="token operator">=</span>tf<span class="token punctuation">.</span>float32<span class="token punctuation">,</span>name<span class="token operator">=</span><span class="token string">"tf_x"</span><span class="token punctuation">)</span>
+    tf_y <span class="token operator">=</span> tf<span class="token punctuation">.</span>placeholder<span class="token punctuation">(</span>shape<span class="token operator">=</span><span class="token punctuation">(</span>None<span class="token punctuation">)</span><span class="token punctuation">,</span>dtype<span class="token operator">=</span>tf<span class="token punctuation">.</span>float32<span class="token punctuation">,</span>name<span class="token operator">=</span><span class="token string">"tf_y"</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true">## define the variable (model parameters)</span>
+    weight <span class="token operator">=</span> tf<span class="token punctuation">.</span>Variable<span class="token punctuation">(</span>tf<span class="token punctuation">.</span>random_normal<span class="token punctuation">(</span>shape<span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span>stddev<span class="token operator">=</span><span class="token number">0.25</span><span class="token punctuation">)</span><span class="token punctuation">,</span>name<span class="token operator">=</span><span class="token string">"weight"</span><span class="token punctuation">)</span>
+    bias <span class="token operator">=</span> tf<span class="token punctuation">.</span>Variable<span class="token punctuation">(</span><span class="token number">0.0</span><span class="token punctuation">,</span>name<span class="token operator">=</span><span class="token string">"bias"</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true">## build the model</span>
+    y_hat <span class="token operator">=</span> tf<span class="token punctuation">.</span>add<span class="token punctuation">(</span>weight<span class="token operator">*</span>tf_x<span class="token punctuation">,</span>bias<span class="token punctuation">,</span>name<span class="token operator">=</span><span class="token string">"y_hat"</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true">## compute the cost</span>
+    cost <span class="token operator">=</span> tf<span class="token punctuation">.</span>reduce_mean<span class="token punctuation">(</span>tf<span class="token punctuation">.</span>square<span class="token punctuation">(</span>tf_y<span class="token operator">-</span>y_hat<span class="token punctuation">)</span><span class="token punctuation">,</span>name<span class="token operator">=</span><span class="token string">"cost"</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true">## train the model</span>
+    optim <span class="token operator">=</span> tf<span class="token punctuation">.</span>train<span class="token punctuation">.</span>GradientDescentOptimizer<span class="token punctuation">(</span>learning_rate<span class="token operator">=</span><span class="token number">0.001</span><span class="token punctuation">)</span>
+    train_op <span class="token operator">=</span> optim<span class="token punctuation">.</span>minimize<span class="token punctuation">(</span>cost<span class="token punctuation">,</span>name<span class="token operator">=</span><span class="token string">"train_op"</span><span class="token punctuation">)</span>
+    saver <span class="token operator">=</span> tf<span class="token punctuation">.</span>train<span class="token punctuation">.</span>Saver<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true"># 创建会话启动计算图并训练模型</span>
+<span class="token comment" spellcheck="true">## create a random toy dataset for regression</span>
+np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>seed<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">make_random_data</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    x <span class="token operator">=</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>uniform<span class="token punctuation">(</span>low<span class="token operator">=</span><span class="token operator">-</span><span class="token number">2</span><span class="token punctuation">,</span>high<span class="token operator">=</span><span class="token number">4</span><span class="token punctuation">,</span>size<span class="token operator">=</span><span class="token number">100</span><span class="token punctuation">)</span>
+    y <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+    <span class="token keyword">for</span> t <span class="token keyword">in</span> x<span class="token punctuation">:</span>
+        r <span class="token operator">=</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>normal<span class="token punctuation">(</span>loc<span class="token operator">=</span><span class="token number">0.0</span><span class="token punctuation">,</span>scale<span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">0.5</span> <span class="token operator">+</span> t<span class="token operator">*</span>t<span class="token operator">/</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">,</span>size<span class="token operator">=</span>None<span class="token punctuation">)</span>
+        y<span class="token punctuation">.</span>append<span class="token punctuation">(</span>r<span class="token punctuation">)</span>
+    <span class="token keyword">return</span> x<span class="token punctuation">,</span><span class="token number">1.726</span><span class="token operator">*</span>x<span class="token number">-0.84</span><span class="token operator">+</span>np<span class="token punctuation">.</span>array<span class="token punctuation">(</span>y<span class="token punctuation">)</span>
+
+x<span class="token punctuation">,</span>y <span class="token operator">=</span> make_random_data<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+plt<span class="token punctuation">.</span>plot<span class="token punctuation">(</span>x<span class="token punctuation">,</span>y<span class="token punctuation">,</span><span class="token string">'o'</span><span class="token punctuation">)</span>
+plt<span class="token punctuation">.</span>show<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true">## train/test splits</span>
+x_train<span class="token punctuation">,</span>y_train <span class="token operator">=</span> x<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token number">100</span><span class="token punctuation">]</span><span class="token punctuation">,</span>y<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token number">100</span><span class="token punctuation">]</span>
+x_test<span class="token punctuation">,</span>y_test <span class="token operator">=</span> x<span class="token punctuation">[</span><span class="token number">100</span><span class="token punctuation">:</span><span class="token punctuation">]</span><span class="token punctuation">,</span>y<span class="token punctuation">[</span><span class="token number">100</span><span class="token punctuation">:</span><span class="token punctuation">]</span>
+
+n_epochs <span class="token operator">=</span> <span class="token number">500</span>
+train_costs  <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+<span class="token keyword">with</span> tf<span class="token punctuation">.</span>Session<span class="token punctuation">(</span>graph<span class="token operator">=</span>g<span class="token punctuation">)</span> <span class="token keyword">as</span> sess<span class="token punctuation">:</span>
+    sess<span class="token punctuation">.</span>run<span class="token punctuation">(</span>tf<span class="token punctuation">.</span>global_variables_initializer<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true">## train the model for n_epochs</span>
+    <span class="token keyword">for</span> e <span class="token keyword">in</span> range<span class="token punctuation">(</span>n_epochs<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        c<span class="token punctuation">,</span>_ <span class="token operator">=</span> sess<span class="token punctuation">.</span>run<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'cost:0'</span><span class="token punctuation">,</span><span class="token string">'train_op'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>feed_dict<span class="token operator">=</span><span class="token punctuation">{</span><span class="token string">'tf_x:0'</span><span class="token punctuation">:</span>x_train<span class="token punctuation">,</span><span class="token string">'tf_y:0'</span><span class="token punctuation">:</span>y_train<span class="token punctuation">}</span><span class="token punctuation">)</span>
+        train_costs<span class="token punctuation">.</span>append<span class="token punctuation">(</span>c<span class="token punctuation">)</span>
+        <span class="token keyword">if</span> <span class="token operator">not</span> e <span class="token operator">%</span> <span class="token number">50</span><span class="token punctuation">:</span>
+            <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Epoch %4d: %.4f"</span><span class="token operator">%</span><span class="token punctuation">(</span>e<span class="token punctuation">,</span>c<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    saver<span class="token punctuation">.</span>save<span class="token punctuation">(</span>sess<span class="token punctuation">,</span><span class="token string">'C:/Users/Leo/Desktop/trained-model/'</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007152426225.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007152441395.png" alt=""></p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 加载保存的模型g2 = tf.Graph()</span>
+<span class="token keyword">with</span> tf<span class="token punctuation">.</span>Session<span class="token punctuation">(</span>graph<span class="token operator">=</span>g2<span class="token punctuation">)</span> <span class="token keyword">as</span> sess<span class="token punctuation">:</span>
+    new_saver <span class="token operator">=</span> tf<span class="token punctuation">.</span>train<span class="token punctuation">.</span>import_meta_graph<span class="token punctuation">(</span><span class="token string">"C:/Users/Leo/Desktop/trained-model/.meta"</span><span class="token punctuation">)</span>
+    new_saver<span class="token punctuation">.</span>restore<span class="token punctuation">(</span>sess<span class="token punctuation">,</span><span class="token string">'C:/Users/Leo/Desktop/trained-model/'</span><span class="token punctuation">)</span>
+    y_pred <span class="token operator">=</span> sess<span class="token punctuation">.</span>run<span class="token punctuation">(</span><span class="token string">'y_hat:0'</span><span class="token punctuation">,</span>feed_dict<span class="token operator">=</span><span class="token punctuation">{</span><span class="token string">'tf_x:0'</span><span class="token punctuation">:</span>x_test<span class="token punctuation">}</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007152503420.png" alt=""></p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">## 可视化模型</span>
+x_arr <span class="token operator">=</span> np<span class="token punctuation">.</span>arange<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">4</span><span class="token punctuation">,</span><span class="token number">0.1</span><span class="token punctuation">)</span>
+g2 <span class="token operator">=</span> tf<span class="token punctuation">.</span>Graph<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">with</span> tf<span class="token punctuation">.</span>Session<span class="token punctuation">(</span>graph<span class="token operator">=</span>g2<span class="token punctuation">)</span> <span class="token keyword">as</span> sess<span class="token punctuation">:</span>
+    new_saver <span class="token operator">=</span> tf<span class="token punctuation">.</span>train<span class="token punctuation">.</span>import_meta_graph<span class="token punctuation">(</span><span class="token string">"C:/Users/Leo/Desktop/trained-model/.meta"</span><span class="token punctuation">)</span>
+    new_saver<span class="token punctuation">.</span>restore<span class="token punctuation">(</span>sess<span class="token punctuation">,</span><span class="token string">'C:/Users/Leo/Desktop/trained-model/'</span><span class="token punctuation">)</span>
+    y_arr <span class="token operator">=</span> sess<span class="token punctuation">.</span>run<span class="token punctuation">(</span><span class="token string">'y_hat:0'</span><span class="token punctuation">,</span>feed_dict<span class="token operator">=</span><span class="token punctuation">{</span><span class="token string">'tf_x:0'</span><span class="token punctuation">:</span>x_arr<span class="token punctuation">}</span><span class="token punctuation">)</span>
+    plt<span class="token punctuation">.</span>figure<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    plt<span class="token punctuation">.</span>plot<span class="token punctuation">(</span>x_train<span class="token punctuation">,</span>y_train<span class="token punctuation">,</span><span class="token string">'bo'</span><span class="token punctuation">)</span>
+    plt<span class="token punctuation">.</span>plot<span class="token punctuation">(</span>x_test<span class="token punctuation">,</span>y_test<span class="token punctuation">,</span><span class="token string">'bo'</span><span class="token punctuation">,</span>alpha<span class="token operator">=</span><span class="token number">0.3</span><span class="token punctuation">)</span>
+    plt<span class="token punctuation">.</span>plot<span class="token punctuation">(</span>x_arr<span class="token punctuation">,</span>y_arr<span class="token punctuation">.</span>T<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token string">'-r'</span><span class="token punctuation">,</span>lw<span class="token operator">=</span><span class="token number">3</span><span class="token punctuation">)</span>
+    plt<span class="token punctuation">.</span>show<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007152520783.png" alt=""></p>
+<h3 id="八、把张量转换成多维数据阵列"><a href="#八、把张量转换成多维数据阵列" class="headerlink" title="八、把张量转换成多维数据阵列"></a><strong>八、把张量转换成多维数据阵列</strong></h3><h4 id="获得张量的形状"><a href="#获得张量的形状" class="headerlink" title="获得张量的形状"></a><strong>获得张量的形状</strong></h4><p>在numpy中我们可以用arr.shape来获得Numpy阵列的形状，而在Tensorflow中则用tf.get_shape函数完成：</p>
+<p>注意：在tf.get_shape函数的结果是不可以索引的，需要用as.list()换成列表才能索引。</p>
+<pre class="line-numbers language-python"><code class="language-python">g <span class="token operator">=</span> tf<span class="token punctuation">.</span>Graph<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token keyword">with</span> g<span class="token punctuation">.</span>as_default<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    arr <span class="token operator">=</span> np<span class="token punctuation">.</span>array<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">.</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">.</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">.</span><span class="token punctuation">,</span><span class="token number">3.5</span><span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">.</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">.</span><span class="token punctuation">,</span><span class="token number">6</span><span class="token punctuation">.</span><span class="token punctuation">,</span><span class="token number">6.5</span><span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">.</span><span class="token punctuation">,</span><span class="token number">8</span><span class="token punctuation">.</span><span class="token punctuation">,</span><span class="token number">9</span><span class="token punctuation">.</span><span class="token punctuation">,</span><span class="token number">9.5</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+    T1 <span class="token operator">=</span> tf<span class="token punctuation">.</span>constant<span class="token punctuation">(</span>arr<span class="token punctuation">,</span>name<span class="token operator">=</span><span class="token string">"T1"</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>T1<span class="token punctuation">)</span>
+    s <span class="token operator">=</span> T1<span class="token punctuation">.</span>get_shape<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Shape of T1 is "</span><span class="token punctuation">,</span>s<span class="token punctuation">)</span>
+    T2 <span class="token operator">=</span> tf<span class="token punctuation">.</span>Variable<span class="token punctuation">(</span>tf<span class="token punctuation">.</span>random_normal<span class="token punctuation">(</span>shape<span class="token operator">=</span>s<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>T2<span class="token punctuation">)</span>
+    T3 <span class="token operator">=</span> tf<span class="token punctuation">.</span>Variable<span class="token punctuation">(</span>tf<span class="token punctuation">.</span>random_normal<span class="token punctuation">(</span>shape<span class="token operator">=</span><span class="token punctuation">(</span>s<span class="token punctuation">.</span>as_list<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>T3<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007152548459.png" alt=""></p>
+<h4 id="改变张量的形状"><a href="#改变张量的形状" class="headerlink" title="改变张量的形状"></a><strong>改变张量的形状</strong></h4><p>现在来看看Tensorflow如何改变张量的形状，在Numpy可以用np.reshape或arr.reshape，在一维的时候可以用-1来自动计算最后的维度。在Tensorflow内调用tf.reshape</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">with</span> g<span class="token punctuation">.</span>as_default<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    T4 <span class="token operator">=</span> tf<span class="token punctuation">.</span>reshape<span class="token punctuation">(</span>T1<span class="token punctuation">,</span>shape<span class="token operator">=</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span>name<span class="token operator">=</span><span class="token string">"T4"</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>T4<span class="token punctuation">)</span>
+    T5 <span class="token operator">=</span> tf<span class="token punctuation">.</span>reshape<span class="token punctuation">(</span>T1<span class="token punctuation">,</span>shape<span class="token operator">=</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span>name<span class="token operator">=</span><span class="token string">"T5"</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>T5<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007152613567.png" alt=""></p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">with</span> tf<span class="token punctuation">.</span>Session<span class="token punctuation">(</span>graph<span class="token operator">=</span>g<span class="token punctuation">)</span> <span class="token keyword">as</span> sess<span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>sess<span class="token punctuation">.</span>run<span class="token punctuation">(</span>T4<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>sess<span class="token punctuation">.</span>run<span class="token punctuation">(</span>T5<span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007152632734.png" alt=""></p>
+<h4 id="将张量分裂为张量列表"><a href="#将张量分裂为张量列表" class="headerlink" title="将张量分裂为张量列表"></a><strong>将张量分裂为张量列表</strong></h4><pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">with</span> g<span class="token punctuation">.</span>as_default<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    tf_splt <span class="token operator">=</span> tf<span class="token punctuation">.</span>split<span class="token punctuation">(</span>T5<span class="token punctuation">,</span>num_or_size_splits<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">,</span>axis<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">,</span>name<span class="token operator">=</span><span class="token string">"T8"</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>tf_splt<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007152656479.png" alt=""></p>
+<h4 id="张量的拼接"><a href="#张量的拼接" class="headerlink" title="张量的拼接"></a><strong>张量的拼接</strong></h4><pre class="line-numbers language-python"><code class="language-python">g <span class="token operator">=</span> tf<span class="token punctuation">.</span>Graph<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token keyword">with</span> g<span class="token punctuation">.</span>as_default<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    t1 <span class="token operator">=</span> tf<span class="token punctuation">.</span>ones<span class="token punctuation">(</span>shape<span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span>dtype<span class="token operator">=</span>tf<span class="token punctuation">.</span>float32<span class="token punctuation">,</span>name<span class="token operator">=</span><span class="token string">"t1"</span><span class="token punctuation">)</span>
+    t2 <span class="token operator">=</span> tf<span class="token punctuation">.</span>zeros<span class="token punctuation">(</span>shape<span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span>dtype<span class="token operator">=</span>tf<span class="token punctuation">.</span>float32<span class="token punctuation">,</span>name<span class="token operator">=</span><span class="token string">"t2"</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>t1<span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>t2<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007152722599.png" alt=""></p>
+<pre class="line-numbers language-python"><code class="language-python">
+<span class="token keyword">with</span> g<span class="token punctuation">.</span>as_default<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    t3 <span class="token operator">=</span> tf<span class="token punctuation">.</span>concat<span class="token punctuation">(</span><span class="token punctuation">[</span>t1<span class="token punctuation">,</span>t2<span class="token punctuation">]</span><span class="token punctuation">,</span>axis<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">,</span>name<span class="token operator">=</span><span class="token string">"t3"</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>t3<span class="token punctuation">)</span>
+    t4 <span class="token operator">=</span> tf<span class="token punctuation">.</span>concat<span class="token punctuation">(</span><span class="token punctuation">[</span>t1<span class="token punctuation">,</span>t2<span class="token punctuation">]</span><span class="token punctuation">,</span>axis<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span>name<span class="token operator">=</span><span class="token string">"t4"</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>t4<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007152741056.png" alt=""></p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">with</span> tf<span class="token punctuation">.</span>Session<span class="token punctuation">(</span>graph<span class="token operator">=</span>g<span class="token punctuation">)</span> <span class="token keyword">as</span> sess<span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>t3<span class="token punctuation">.</span>eval<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>t4<span class="token punctuation">.</span>eval<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007152755134.png" alt=""></p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">with</span> tf<span class="token punctuation">.</span>Session<span class="token punctuation">(</span>graph<span class="token operator">=</span>g<span class="token punctuation">)</span> <span class="token keyword">as</span> sess<span class="token punctuation">:</span>    
+    <span class="token keyword">print</span><span class="token punctuation">(</span>sess<span class="token punctuation">.</span>run<span class="token punctuation">(</span>t3<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>sess<span class="token punctuation">.</span>run<span class="token punctuation">(</span>t4<span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007152824080.png" alt=""></p>
+<h3 id="九、利用控制流构图"><a href="#九、利用控制流构图" class="headerlink" title="九、利用控制流构图"></a><strong>九、利用控制流构图</strong></h3><p>这里主要讨论在Tensorflow执行像python一样的if语句，循环while语句，if…else..语句等。</p>
+<h4 id="条件语句"><a href="#条件语句" class="headerlink" title="条件语句"></a><strong>条件语句</strong></h4><p>tf.cond()语句我们来试试：</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007152856127.png" alt=""></p>
+<pre class="line-numbers language-python"><code class="language-python">x<span class="token punctuation">,</span>y <span class="token operator">=</span> <span class="token number">1.0</span><span class="token punctuation">,</span><span class="token number">2.0</span>
+
+g <span class="token operator">=</span> tf<span class="token punctuation">.</span>Graph<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token keyword">with</span> g<span class="token punctuation">.</span>as_default<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    tf_x <span class="token operator">=</span> tf<span class="token punctuation">.</span>placeholder<span class="token punctuation">(</span>dtype<span class="token operator">=</span>tf<span class="token punctuation">.</span>float32<span class="token punctuation">,</span>shape<span class="token operator">=</span>None<span class="token punctuation">,</span>name<span class="token operator">=</span><span class="token string">"tf_x"</span><span class="token punctuation">)</span>
+    tf_y <span class="token operator">=</span> tf<span class="token punctuation">.</span>placeholder<span class="token punctuation">(</span>dtype<span class="token operator">=</span>tf<span class="token punctuation">.</span>float32<span class="token punctuation">,</span>shape<span class="token operator">=</span>None<span class="token punctuation">,</span>name<span class="token operator">=</span><span class="token string">"tf_y"</span><span class="token punctuation">)</span>
+    res <span class="token operator">=</span> tf<span class="token punctuation">.</span>cond<span class="token punctuation">(</span>tf_x<span class="token operator">&lt;</span>tf_y<span class="token punctuation">,</span><span class="token keyword">lambda</span><span class="token punctuation">:</span> tf<span class="token punctuation">.</span>add<span class="token punctuation">(</span>tf_x<span class="token punctuation">,</span>tf_y<span class="token punctuation">,</span>name<span class="token operator">=</span><span class="token string">"result_add"</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token keyword">lambda</span><span class="token punctuation">:</span> tf<span class="token punctuation">.</span>subtract<span class="token punctuation">(</span>tf_x<span class="token punctuation">,</span>tf_y<span class="token punctuation">,</span>name<span class="token operator">=</span><span class="token string">"result_sub"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Object:"</span><span class="token punctuation">,</span>res<span class="token punctuation">)</span>  <span class="token comment" spellcheck="true">#对象被命名为"cond/Merge:0"</span>
+
+<span class="token keyword">with</span> tf<span class="token punctuation">.</span>Session<span class="token punctuation">(</span>graph<span class="token operator">=</span>g<span class="token punctuation">)</span> <span class="token keyword">as</span> sess<span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"x&lt;y: %s -> Result:"</span><span class="token operator">%</span><span class="token punctuation">(</span>x<span class="token operator">&lt;</span>y<span class="token punctuation">)</span><span class="token punctuation">,</span>res<span class="token punctuation">.</span>eval<span class="token punctuation">(</span>feed_dict<span class="token operator">=</span><span class="token punctuation">{</span><span class="token string">"tf_x:0"</span><span class="token punctuation">:</span>x<span class="token punctuation">,</span><span class="token string">"tf_y:0"</span><span class="token punctuation">:</span>y<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    x<span class="token punctuation">,</span>y <span class="token operator">=</span> <span class="token number">2.0</span><span class="token punctuation">,</span><span class="token number">1.0</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"x&lt;y: %s -> Result:"</span><span class="token operator">%</span><span class="token punctuation">(</span>x<span class="token operator">&lt;</span>y<span class="token punctuation">)</span><span class="token punctuation">,</span>res<span class="token punctuation">.</span>eval<span class="token punctuation">(</span>feed_dict<span class="token operator">=</span><span class="token punctuation">{</span><span class="token string">"tf_x:0"</span><span class="token punctuation">:</span>x<span class="token punctuation">,</span><span class="token string">"tf_y:0"</span><span class="token punctuation">:</span>y<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007152913356.png" alt=""></p>
+<h4 id="执行python的if…else语句"><a href="#执行python的if…else语句" class="headerlink" title="执行python的if…else语句"></a><strong>执行python的if…else语句</strong></h4><p>tf.case()</p>
+<pre class="line-numbers language-python"><code class="language-python">f1 <span class="token operator">=</span> <span class="token keyword">lambda</span><span class="token punctuation">:</span> tf<span class="token punctuation">.</span>constant<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
+f2 <span class="token operator">=</span> <span class="token keyword">lambda</span><span class="token punctuation">:</span> tf<span class="token punctuation">.</span>constant<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
+result <span class="token operator">=</span> tf<span class="token punctuation">.</span>case<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">(</span>tf<span class="token punctuation">.</span>less<span class="token punctuation">(</span>x<span class="token punctuation">,</span>y<span class="token punctuation">)</span><span class="token punctuation">,</span>f1<span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">,</span>default<span class="token operator">=</span>f2<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007152939931.png" alt=""></p>
+<h4 id="执行python的while语句"><a href="#执行python的while语句" class="headerlink" title="执行python的while语句"></a><strong>执行python的while语句</strong></h4><p>tf.while_loop()</p>
+<pre class="line-numbers language-python"><code class="language-python">i <span class="token operator">=</span> tf<span class="token punctuation">.</span>constant<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
+threshold <span class="token operator">=</span> <span class="token number">100</span>
+c <span class="token operator">=</span> <span class="token keyword">lambda</span> i<span class="token punctuation">:</span> tf<span class="token punctuation">.</span>less<span class="token punctuation">(</span>i<span class="token punctuation">,</span><span class="token number">100</span><span class="token punctuation">)</span>
+b <span class="token operator">=</span> <span class="token keyword">lambda</span> i<span class="token punctuation">:</span> tf<span class="token punctuation">.</span>add<span class="token punctuation">(</span>i<span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span>
+r <span class="token operator">=</span> tf<span class="token punctuation">.</span>while_loop<span class="token punctuation">(</span>cond<span class="token operator">=</span>c<span class="token punctuation">,</span>body<span class="token operator">=</span>b<span class="token punctuation">,</span>loop_vars<span class="token operator">=</span><span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>r<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007153002073.png" alt=""></p>
+<h3 id="十、用TensorBoard可视化图"><a href="#十、用TensorBoard可视化图" class="headerlink" title="十、用TensorBoard可视化图"></a><strong>十、用TensorBoard可视化图</strong></h3><p>TensorBoard是Tensorflow一个非常好的工具，它负责可视化和模型学习。可视化允许我们看到节点之间的连接，探索它们之间的依赖关系，并且在需要的时候进行模型调试。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">build_classifier</span><span class="token punctuation">(</span>data<span class="token punctuation">,</span> labels<span class="token punctuation">,</span> n_classes<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    data_shape <span class="token operator">=</span> data<span class="token punctuation">.</span>get_shape<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>as_list<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    weights <span class="token operator">=</span> tf<span class="token punctuation">.</span>get_variable<span class="token punctuation">(</span>name<span class="token operator">=</span><span class="token string">'weights'</span><span class="token punctuation">,</span>
+                              shape<span class="token operator">=</span><span class="token punctuation">(</span>data_shape<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> n_classes<span class="token punctuation">)</span><span class="token punctuation">,</span>
+                              dtype<span class="token operator">=</span>tf<span class="token punctuation">.</span>float32<span class="token punctuation">)</span>
+    bias <span class="token operator">=</span> tf<span class="token punctuation">.</span>get_variable<span class="token punctuation">(</span>name<span class="token operator">=</span><span class="token string">'bias'</span><span class="token punctuation">,</span>
+                           initializer<span class="token operator">=</span>tf<span class="token punctuation">.</span>zeros<span class="token punctuation">(</span>shape<span class="token operator">=</span>n_classes<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>weights<span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>bias<span class="token punctuation">)</span>
+    logits <span class="token operator">=</span> tf<span class="token punctuation">.</span>add<span class="token punctuation">(</span>tf<span class="token punctuation">.</span>matmul<span class="token punctuation">(</span>data<span class="token punctuation">,</span> weights<span class="token punctuation">)</span><span class="token punctuation">,</span>
+                    bias<span class="token punctuation">,</span>
+                    name<span class="token operator">=</span><span class="token string">'logits'</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>logits<span class="token punctuation">)</span>
+    <span class="token keyword">return</span> logits<span class="token punctuation">,</span> tf<span class="token punctuation">.</span>nn<span class="token punctuation">.</span>softmax<span class="token punctuation">(</span>logits<span class="token punctuation">)</span>
+
+<span class="token keyword">def</span> <span class="token function">build_generator</span><span class="token punctuation">(</span>data<span class="token punctuation">,</span> n_hidden<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    data_shape <span class="token operator">=</span> data<span class="token punctuation">.</span>get_shape<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>as_list<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    w1 <span class="token operator">=</span> tf<span class="token punctuation">.</span>Variable<span class="token punctuation">(</span>
+        tf<span class="token punctuation">.</span>random_normal<span class="token punctuation">(</span>shape<span class="token operator">=</span><span class="token punctuation">(</span>data_shape<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+                                n_hidden<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        name<span class="token operator">=</span><span class="token string">'w1'</span><span class="token punctuation">)</span>
+    b1 <span class="token operator">=</span> tf<span class="token punctuation">.</span>Variable<span class="token punctuation">(</span>tf<span class="token punctuation">.</span>zeros<span class="token punctuation">(</span>shape<span class="token operator">=</span>n_hidden<span class="token punctuation">)</span><span class="token punctuation">,</span>
+                     name<span class="token operator">=</span><span class="token string">'b1'</span><span class="token punctuation">)</span>
+    hidden <span class="token operator">=</span> tf<span class="token punctuation">.</span>add<span class="token punctuation">(</span>tf<span class="token punctuation">.</span>matmul<span class="token punctuation">(</span>data<span class="token punctuation">,</span> w1<span class="token punctuation">)</span><span class="token punctuation">,</span> b1<span class="token punctuation">,</span>
+                    name<span class="token operator">=</span><span class="token string">'hidden_pre-activation'</span><span class="token punctuation">)</span>
+    hidden <span class="token operator">=</span> tf<span class="token punctuation">.</span>nn<span class="token punctuation">.</span>relu<span class="token punctuation">(</span>hidden<span class="token punctuation">,</span> <span class="token string">'hidden_activation'</span><span class="token punctuation">)</span>
+
+    w2 <span class="token operator">=</span> tf<span class="token punctuation">.</span>Variable<span class="token punctuation">(</span>
+        tf<span class="token punctuation">.</span>random_normal<span class="token punctuation">(</span>shape<span class="token operator">=</span><span class="token punctuation">(</span>n_hidden<span class="token punctuation">,</span>
+                                data_shape<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        name<span class="token operator">=</span><span class="token string">'w2'</span><span class="token punctuation">)</span>
+    b2 <span class="token operator">=</span> tf<span class="token punctuation">.</span>Variable<span class="token punctuation">(</span>tf<span class="token punctuation">.</span>zeros<span class="token punctuation">(</span>shape<span class="token operator">=</span>data_shape<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+                     name<span class="token operator">=</span><span class="token string">'b2'</span><span class="token punctuation">)</span>
+    output <span class="token operator">=</span> tf<span class="token punctuation">.</span>add<span class="token punctuation">(</span>tf<span class="token punctuation">.</span>matmul<span class="token punctuation">(</span>hidden<span class="token punctuation">,</span> w2<span class="token punctuation">)</span><span class="token punctuation">,</span> b2<span class="token punctuation">,</span>
+                    name <span class="token operator">=</span> <span class="token string">'output'</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> output<span class="token punctuation">,</span> tf<span class="token punctuation">.</span>nn<span class="token punctuation">.</span>sigmoid<span class="token punctuation">(</span>output<span class="token punctuation">)</span>
+
+batch_size<span class="token operator">=</span><span class="token number">64</span>
+g <span class="token operator">=</span> tf<span class="token punctuation">.</span>Graph<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token keyword">with</span> g<span class="token punctuation">.</span>as_default<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    tf_X <span class="token operator">=</span> tf<span class="token punctuation">.</span>placeholder<span class="token punctuation">(</span>shape<span class="token operator">=</span><span class="token punctuation">(</span>batch_size<span class="token punctuation">,</span> <span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+                          dtype<span class="token operator">=</span>tf<span class="token punctuation">.</span>float32<span class="token punctuation">,</span>
+                          name<span class="token operator">=</span><span class="token string">'tf_X'</span><span class="token punctuation">)</span>
+    <span class="token comment" spellcheck="true">## build the generator</span>
+    <span class="token keyword">with</span> tf<span class="token punctuation">.</span>variable_scope<span class="token punctuation">(</span><span class="token string">'generator'</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        gen_out1 <span class="token operator">=</span> build_generator<span class="token punctuation">(</span>data<span class="token operator">=</span>tf_X<span class="token punctuation">,</span>
+                                   n_hidden<span class="token operator">=</span><span class="token number">50</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true">## build the classifier</span>
+    <span class="token keyword">with</span> tf<span class="token punctuation">.</span>variable_scope<span class="token punctuation">(</span><span class="token string">'classifier'</span><span class="token punctuation">)</span> <span class="token keyword">as</span> scope<span class="token punctuation">:</span>
+        <span class="token comment" spellcheck="true">## classifier for the original data:</span>
+        cls_out1 <span class="token operator">=</span> build_classifier<span class="token punctuation">(</span>data<span class="token operator">=</span>tf_X<span class="token punctuation">,</span>
+                                    labels<span class="token operator">=</span>tf<span class="token punctuation">.</span>ones<span class="token punctuation">(</span>
+                                        shape<span class="token operator">=</span>batch_size<span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+        <span class="token comment" spellcheck="true">## reuse the classifier for generated data</span>
+        scope<span class="token punctuation">.</span>reuse_variables<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        cls_out2 <span class="token operator">=</span> build_classifier<span class="token punctuation">(</span>data<span class="token operator">=</span>gen_out1<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+                                    labels<span class="token operator">=</span>tf<span class="token punctuation">.</span>zeros<span class="token punctuation">(</span>
+                                        shape<span class="token operator">=</span>batch_size<span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+        init_op <span class="token operator">=</span> tf<span class="token punctuation">.</span>global_variables_initializer<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007153036731.png" alt=""></p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">with</span> tf<span class="token punctuation">.</span>Session<span class="token punctuation">(</span>graph<span class="token operator">=</span>g<span class="token punctuation">)</span> <span class="token keyword">as</span> sess<span class="token punctuation">:</span>
+    sess<span class="token punctuation">.</span>run<span class="token punctuation">(</span>tf<span class="token punctuation">.</span>global_variables_initializer<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    file_writer <span class="token operator">=</span> tf<span class="token punctuation">.</span>summary<span class="token punctuation">.</span>FileWriter<span class="token punctuation">(</span>logdir<span class="token operator">=</span><span class="token string">"C:/Users/Leo/Desktop/trained-model/logs/"</span><span class="token punctuation">,</span>graph<span class="token operator">=</span>g<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>在win+R输入cmd后输入命令：</p>
+<pre><code>tensorboard --logdir="C:/Users/Leo/Desktop/trained-model/logs"</code></pre><p><img src="/images/loading.gif" data-original="../images/ML/image-20211007153120684.png" alt=""></p>
+<script>
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return; }
+            const img = document.createElement('img');
+            img.style = 'display:none !important;';
+            img.src = el.dataset.src;
+            img.addEventListener('error', () => {
+              img.remove();
+              el.style.color = 'inherit';
+              el.style.backgroundImage = 'none';
+              el.style.background = 'none';
+            });
+            img.addEventListener('load', () => {
+              img.remove();
+            });
+            document.body.appendChild(img);
+          });
+      </script>
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://jackhcc.github.io" rel="external nofollow noreferrer">杰克成</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://jackhcc.github.io/posts/dl-series8.html">https://jackhcc.github.io/posts/dl-series8.html</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="https://jackhcc.github.io" target="_blank">杰克成</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/TensorFlow/">
+                                    <span class="chip bg-color">TensorFlow</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/reward/aliqr.png" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/reward/wxqr.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+            
+        </div>
+    </div>
+
+    
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/gitalk/gitalk.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/my-gitalk.css">
+
+<div class="card gitalk-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="gitalk-container" class="card-content"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/gitalk/gitalk.min.js"></script>
+<script>
+    let gitalk = new Gitalk({
+        clientID: '3821a0bbb773038a51fc',
+        clientSecret: '4b30b507d67ec5497ec0e77f43f80cb3e0d7dd3a',
+        repo: 'JackHCC.github.io',
+        owner: 'JackHCC',
+        admin: "JackHCC",
+        id: '2021-10-11T15-13-24',
+        distractionFreeMode: false  // Facebook-like distraction free mode
+    });
+
+    gitalk.render('gitalk-container');
+</script>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/posts/dl-series9.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/11.jpg" class="responsive-img" alt="DL专栏9-Summary of Deep Learning">
+                        
+                        <span class="card-title">DL专栏9-Summary of Deep Learning</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            高性能深度学习综述
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-10-12
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Deep-Learning/" class="post-category">
+                                    Deep Learning
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Deep-Learning/">
+                        <span class="chip bg-color">Deep Learning</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/posts/dl-series7.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/2.jpg" class="responsive-img" alt="DL专栏7-CNN调优方法">
+                        
+                        <span class="card-title">DL专栏7-CNN调优方法</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            CNN基础与调优方法总结
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-10-10
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Deep-Learning/" class="post-category">
+                                    Deep Learning
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/CNN/">
+                        <span class="chip bg-color">CNN</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeShrink.js"></script>
+
+
+<!-- 代码块折行 -->
+
+<style type="text/css">
+code[class*="language-"], pre[class*="language-"] { white-space: pre !important; }
+</style>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('4'),
+            headingSelector: 'h1, h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h1, h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+    <footer class="page-footer bg-color">
+    <div class="container row center-align" style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            <span id="year">2020</span>
+            <a href="https://jackhcc.github.io" target="_blank">杰克成</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                class="white-color">3303.6k</span>&nbsp;字
+            
+            
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;人
+            </span>
+            
+            <br>
+            
+            <span id="sitetime">载入运行时间...</span>
+            <script>
+                function siteTime() {
+                    var seconds = 1000;
+                    var minutes = seconds * 60;
+                    var hours = minutes * 60;
+                    var days = hours * 24;
+                    var years = days * 365;
+                    var today = new Date();
+                    var startYear = "2020";
+                    var startMonth = "2";
+                    var startDate = "27";
+                    var startHour = "6";
+                    var startMinute = "30";
+                    var startSecond = "0";
+                    var todayYear = today.getFullYear();
+                    var todayMonth = today.getMonth() + 1;
+                    var todayDate = today.getDate();
+                    var todayHour = today.getHours();
+                    var todayMinute = today.getMinutes();
+                    var todaySecond = today.getSeconds();
+                    var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                    var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                    var diff = t2 - t1;
+                    var diffYears = Math.floor(diff / years);
+                    var diffDays = Math.floor((diff / days) - diffYears * 365);
+                    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+                    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) /
+                        minutes);
+                    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours -
+                        diffMinutes * minutes) / seconds);
+                    if (startYear == todayYear) {
+                        document.getElementById("year").innerHTML = todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffDays + " 天 " + diffHours +
+                            " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    } else {
+                        document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffYears + " 年 " + diffDays +
+                            " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    }
+                }
+                setInterval(siteTime, 1000);
+            </script>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/JackHCC" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:jackcc0701@163.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+    <a href="https://www.facebook.com/profile.php?id=100046343443643" class="tooltipped" target="_blank" data-tooltip="关注我的Facebook: https://www.facebook.com/profile.php?id=100046343443643" data-position="top" data-delay="50">
+        <i class="fab fa-facebook-f"></i>
+    </a>
+
+
+
+    <a href="https://twitter.com/JackChe66021834" class="tooltipped" target="_blank" data-tooltip="关注我的Twitter: https://twitter.com/JackChe66021834" data-position="top" data-delay="50">
+        <i class="fab fa-twitter"></i>
+    </a>
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=2508074836" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 2508074836" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+    <a href="https://weibo.com/u/6885584679" class="tooltipped" target="_blank" data-tooltip="关注我的微博: https://weibo.com/u/6885584679" data-position="top" data-delay="50">
+        <i class="fab fa-weibo"></i>
+    </a>
+
+
+
+    <a href="https://www.zhihu.com/people/8f8482f01f0d6a04e844efe32e0f0710" class="tooltipped" target="_blank" data-tooltip="关注我的知乎: https://www.zhihu.com/people/8f8482f01f0d6a04e844efe32e0f0710" data-position="top" data-delay="50">
+        <i class="fab fa-zhihu1">知</i>
+    </a>
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/materialize/materialize.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/aos/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/js/matery.js"></script>
+
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+    <script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script type="text/javascript" src="/js/fireworks.js"></script>
+
+    <script type="text/javascript">
+        //只在桌面版网页启用特效
+        var windowWidth = $(window).width();
+        if (windowWidth > 768) {
+            document.write('<script type="text/javascript" src="/js/sakura.js"><\/script>'); }
+    </script>
+
+    <!-- weather -->
+	<script type="text/javascript">
+	WIDGET = {FID: 'TToslpmkVO'}
+	</script>
+	<script type="text/javascript" src="https://apip.weatherdt.com/float/static/js/r.js?v=1111"></script>
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <!-- Baidu Analytics -->
+
+<script>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+    <!-- Baidu Push -->
+
+    
+    
+    <script async src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+        <script src="//code.tidio.co/kqhlkxviiccyoa0czpfpu4ijuey9hfre.js"></script>
+        <script> 
+            $(document).ready(function () {
+                setInterval(change_Tidio, 50);  
+                function change_Tidio() { 
+                    var tidio=$("#tidio-chat iframe");
+                    if(tidio.css("display")=="block"&& $(window).width()>977 ){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" &&$(window).width()>977)>0? "-40px" : ($("div.toc-title").length&&$(window).width()>977)>0?"85px":"20px";   
+                        document.getElementById("tidio-chat-iframe").style.right="-15px";   
+                        document.getElementById("tidio-chat-iframe").style.height=parseInt(tidio.css("height"))>=520?"520px":tidio.css("height");
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    } 
+                    else if(tidio.css("display")=="block"&&$(window).width()>601 &&$(window).width()<992 ){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" && 601< $(window).width()<992)>0? "-40px":"20px" ;   
+                        document.getElementById("tidio-chat-iframe").style.right="-15px"; 
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    }
+                    else if(tidio.css("display")=="block"&&$(window).width()<601 && parseInt(tidio.css("height"))<230){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" && $(window).width()<601)>0? "-10px":"45px" ;   
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    }
+                    if( tidio.css("display")=="block"&&$(window).width()<601 && parseInt(tidio.css("height"))>=230){
+                        document.getElementById("tidio-chat-iframe").style.zIndex="998";
+                    }
+                } 
+            }); 
+        </script>
+    
+
+    
+
+    
+    <script type="text/javascript" color="0,0,255"
+        pointColor="0,0,255" opacity='0.7'
+        zIndex="-1" count="99"
+        src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/background/canvas-nest.js"></script>
+    
+
+    
+
+    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/background/ribbon-dynamic.js" async="async"></script>
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/instantpage/instantpage.js" type="module"></script>
+    
+<script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script>
+        <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
+        <script>
+        $('a').each(function() {
+          const $this = $(this);
+          const href = $this.attr('href');
+          if (href && href.match('^((http|https|thunder|qqdl|ed2k|Flashget|qbrowser|ftp|rtsp|mms)://)')) {
+            const strs = href.split('/');
+            if (strs.length >= 3) {
+                const host = strs[2];
+                if (host !== 'your_domain' || window.location.host) {
+                    $this.attr('href', '/go.html?u='+Base64.encode(href)+'').attr('rel', 'external nofollow noopener noreferrer');
+                    if (true) {
+                        $this.attr('target', '_blank');
+                    }
+                }
+            }
+          }
+        });
+        </script></body>
+
+</html>
+

@@ -1,0 +1,1666 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="DL专栏17-网络可视化, JackHCC">
+    <meta name="description" content="深度学习模型网络可视化概述">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>DL专栏17-网络可视化 | JackHCC</title>
+    <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/my.css">
+    
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/jquery/jquery.min.js"></script>
+    
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper head-container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/me.jpg" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">JackHCC</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>留言板</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>友情链接</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/me.jpg" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">JackHCC</div>
+        <div class="logo-desc">
+            
+            Make the world betterrrr!!!
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			留言板
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			友情链接
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/JackHCC/JackHCC.github.io" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/JackHCC/JackHCC.github.io" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/9.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">DL专栏17-网络可视化</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        height: calc(100vh - 250px);
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 30px;
+        bottom: 146px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/Deep-Learning/">
+                                <span class="chip bg-color">Deep Learning</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/Deep-Learning/" class="post-category">
+                                Deep Learning
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2021-11-05
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2021-11-28
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    4.2k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    17 分
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h1 id="PyTorch下的可视化工具"><a href="#PyTorch下的可视化工具" class="headerlink" title="PyTorch下的可视化工具"></a>PyTorch下的可视化工具</h1><h2 id="一、网络结构的可视化"><a href="#一、网络结构的可视化" class="headerlink" title="一、网络结构的可视化"></a>一、网络结构的可视化</h2><p>我们训练神经网络时，除了随着step或者epoch观察损失函数的走势，从而建立对目前网络优化的基本认知外，也可以通过一些额外的可视化库来可视化我们的神经网络结构图。这将更加地高效地向读者展现目前的网络结构。</p>
+<p>为了可视化神经网络，我们先建立一个简单的卷积层神经网络：</p>
+<pre class="line-numbers language-python"><code class="language-python"> <span class="token keyword">import</span> torch
+ <span class="token keyword">import</span> torch<span class="token punctuation">.</span>nn <span class="token keyword">as</span> nn
+
+ <span class="token keyword">class</span> <span class="token class-name">ConvNet</span><span class="token punctuation">(</span>nn<span class="token punctuation">.</span>Module<span class="token punctuation">)</span><span class="token punctuation">:</span>
+     <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+         super<span class="token punctuation">(</span>ConvNet<span class="token punctuation">,</span> self<span class="token punctuation">)</span><span class="token punctuation">.</span>__init__<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+         self<span class="token punctuation">.</span>conv1 <span class="token operator">=</span> nn<span class="token punctuation">.</span>Sequential<span class="token punctuation">(</span>
+             nn<span class="token punctuation">.</span>Conv2d<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">16</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+             nn<span class="token punctuation">.</span>ReLU<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+             nn<span class="token punctuation">.</span>AvgPool2d<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span>
+         <span class="token punctuation">)</span>
+
+         self<span class="token punctuation">.</span>conv2 <span class="token operator">=</span> nn<span class="token punctuation">.</span>Sequential<span class="token punctuation">(</span>
+             nn<span class="token punctuation">.</span>Conv2d<span class="token punctuation">(</span><span class="token number">16</span><span class="token punctuation">,</span> <span class="token number">32</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+             nn<span class="token punctuation">.</span>ReLU<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+             nn<span class="token punctuation">.</span>MaxPool2d<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span>
+         <span class="token punctuation">)</span>
+
+         self<span class="token punctuation">.</span>fc <span class="token operator">=</span> nn<span class="token punctuation">.</span>Sequential<span class="token punctuation">(</span>
+             nn<span class="token punctuation">.</span>Linear<span class="token punctuation">(</span><span class="token number">32</span> <span class="token operator">*</span> <span class="token number">7</span> <span class="token operator">*</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">128</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+             nn<span class="token punctuation">.</span>ReLU<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+             nn<span class="token punctuation">.</span>Linear<span class="token punctuation">(</span><span class="token number">128</span><span class="token punctuation">,</span> <span class="token number">64</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+             nn<span class="token punctuation">.</span>ReLU<span class="token punctuation">(</span><span class="token punctuation">)</span>
+         <span class="token punctuation">)</span>
+
+         self<span class="token punctuation">.</span>out <span class="token operator">=</span> nn<span class="token punctuation">.</span>Linear<span class="token punctuation">(</span><span class="token number">64</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span>
+
+     <span class="token keyword">def</span> <span class="token function">forward</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> x<span class="token punctuation">)</span><span class="token punctuation">:</span>
+         x <span class="token operator">=</span> self<span class="token punctuation">.</span>conv1<span class="token punctuation">(</span>x<span class="token punctuation">)</span>
+         x <span class="token operator">=</span> self<span class="token punctuation">.</span>conv2<span class="token punctuation">(</span>x<span class="token punctuation">)</span>
+         x <span class="token operator">=</span> x<span class="token punctuation">.</span>view<span class="token punctuation">(</span>x<span class="token punctuation">.</span>size<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span>
+         x <span class="token operator">=</span> self<span class="token punctuation">.</span>fc<span class="token punctuation">(</span>x<span class="token punctuation">)</span>
+         output <span class="token operator">=</span> self<span class="token punctuation">.</span>out<span class="token punctuation">(</span>x<span class="token punctuation">)</span>
+         <span class="token keyword">return</span> output<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>输出网络结构：</p>
+<pre class="line-numbers language-python"><code class="language-python"> MyConvNet <span class="token operator">=</span> ConvNet<span class="token punctuation">(</span><span class="token punctuation">)</span>
+ <span class="token keyword">print</span><span class="token punctuation">(</span>MyConvNet<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>输出结果：</p>
+<pre><code> ConvNet(
+   (conv1): Sequential(
+     (0): Conv2d(1, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+     (1): ReLU()
+     (2): AvgPool2d(kernel_size=2, stride=2, padding=0)
+   )
+   (conv2): Sequential(
+     (0): Conv2d(16, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+     (1): ReLU()
+     (2): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+   )
+   (fc): Sequential(
+     (0): Linear(in_features=1568, out_features=128, bias=True)
+     (1): ReLU()
+     (2): Linear(in_features=128, out_features=64, bias=True)
+     (3): ReLU()
+   )
+   (out): Linear(in_features=64, out_features=10, bias=True)
+ )</code></pre><p>有了基本的神经网络后，我们分别通过<code>HiddenLayer</code>和<code>PyTorchViz</code>库来可视化上述的卷积层神经网络。</p>
+<blockquote>
+<p>需要说明的是，这两个库都是基于Graphviz开发的，因此倘若你的电脑上没有安装并且没有添加环境变量，请自行安装Graphviz工具，安装教程</p>
+</blockquote>
+<h3 id="1-1-通过HiddenLayer可视化网络"><a href="#1-1-通过HiddenLayer可视化网络" class="headerlink" title="1.1 通过HiddenLayer可视化网络"></a>1.1 通过HiddenLayer可视化网络</h3><p>首先当然是安装库啦，打开cmd，输入：</p>
+<pre><code> pip install hiddenlayer</code></pre><p>绘制的基本程序如下：</p>
+<pre class="line-numbers language-python"><code class="language-python"> <span class="token keyword">import</span> hiddenlayer <span class="token keyword">as</span> h
+ vis_graph <span class="token operator">=</span> h<span class="token punctuation">.</span>build_graph<span class="token punctuation">(</span>MyConvNet<span class="token punctuation">,</span> torch<span class="token punctuation">.</span>zeros<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">1</span> <span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">28</span><span class="token punctuation">,</span> <span class="token number">28</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span>   <span class="token comment" spellcheck="true"># 获取绘制图像的对象</span>
+ vis_graph<span class="token punctuation">.</span>theme <span class="token operator">=</span> h<span class="token punctuation">.</span>graph<span class="token punctuation">.</span>THEMES<span class="token punctuation">[</span><span class="token string">"blue"</span><span class="token punctuation">]</span><span class="token punctuation">.</span>copy<span class="token punctuation">(</span><span class="token punctuation">)</span>     <span class="token comment" spellcheck="true"># 指定主题颜色</span>
+ vis_graph<span class="token punctuation">.</span>save<span class="token punctuation">(</span><span class="token string">"./demo1.png"</span><span class="token punctuation">)</span>   <span class="token comment" spellcheck="true"># 保存图像的路径</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>效果如下：</p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211108122812087.png" alt=""></p>
+<h3 id="1-2-通过PyTorchViz可视化网络"><a href="#1-2-通过PyTorchViz可视化网络" class="headerlink" title="1.2 通过PyTorchViz可视化网络"></a>1.2 通过PyTorchViz可视化网络</h3><p>先安装库：</p>
+<pre><code> pip install torchviz</code></pre><p>这里我们只使用可视化函数<code>make_dot()</code>来获取绘图对象，基本使用和<code>HiddenLayer</code>差不多，不同的地方在于<code>PyTorch</code>绘图之前可以指定一个网络的输入值和预测值。</p>
+<pre class="line-numbers language-python"><code class="language-python"> <span class="token keyword">from</span> torchviz <span class="token keyword">import</span> make_dot
+ x <span class="token operator">=</span> torch<span class="token punctuation">.</span>randn<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">28</span><span class="token punctuation">,</span> <span class="token number">28</span><span class="token punctuation">)</span><span class="token punctuation">.</span>requires_grad_<span class="token punctuation">(</span><span class="token boolean">True</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># 定义一个网络的输入值</span>
+ y <span class="token operator">=</span> MyConvNet<span class="token punctuation">(</span>x<span class="token punctuation">)</span>    <span class="token comment" spellcheck="true"># 获取网络的预测值</span>
+
+ MyConvNetVis <span class="token operator">=</span> make_dot<span class="token punctuation">(</span>y<span class="token punctuation">,</span> params<span class="token operator">=</span>dict<span class="token punctuation">(</span>list<span class="token punctuation">(</span>MyConvNet<span class="token punctuation">.</span>named_parameters<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token punctuation">[</span><span class="token punctuation">(</span><span class="token string">'x'</span><span class="token punctuation">,</span> x<span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+ MyConvNetVis<span class="token punctuation">.</span>format <span class="token operator">=</span> <span class="token string">"png"</span>
+ <span class="token comment" spellcheck="true"># 指定文件生成的文件夹</span>
+ MyConvNetVis<span class="token punctuation">.</span>directory <span class="token operator">=</span> <span class="token string">"data"</span>
+ <span class="token comment" spellcheck="true"># 生成文件</span>
+ MyConvNetVis<span class="token punctuation">.</span>view<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>打开与上述代码相同根目录下的data文件夹，里面会有一个<code>.gv</code>文件和一个<code>.png</code>文件，其中的<code>.gv</code>文件是Graphviz工具生成图片的脚本代码，<code>.png</code>是<code>.gv</code>文件编译生成的图片，直接打开<code>.png</code>文件就行。</p>
+<blockquote>
+<p>默认情况下，上述程序运行后会自动打开.png文件</p>
+</blockquote>
+<p>生成图片：</p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211108122928333.png" alt=""></p>
+<h2 id="二、训练过程可视化"><a href="#二、训练过程可视化" class="headerlink" title="二、训练过程可视化"></a>二、训练过程可视化</h2><p>观察我们的网络的每一步的损失函数或准确率的变化可以有效地帮助我们判断当前训练过程的优劣。如果能将这些过程可视化，那么我们判断的准确性和舒适性都会有所增加。</p>
+<p>此处主要讲通过可视化神器<code>tensorboardX</code>和刚刚用到的<code>HiddenLayer</code>来实现训练过程的可视化。</p>
+<p>为了训练网络，我们先导入训练网络需要的数据，此处就导入MNIST数据集，并做训练前的一些基本的数据处理。</p>
+<pre class="line-numbers language-python"><code class="language-python"> <span class="token keyword">import</span> torchvision
+ <span class="token keyword">import</span> torch<span class="token punctuation">.</span>utils<span class="token punctuation">.</span>data <span class="token keyword">as</span> Data
+ <span class="token comment" spellcheck="true"># 准备训练用的MNIST数据集</span>
+ train_data <span class="token operator">=</span> torchvision<span class="token punctuation">.</span>datasets<span class="token punctuation">.</span>MNIST<span class="token punctuation">(</span>
+     root <span class="token operator">=</span> <span class="token string">"./data/MNIST"</span><span class="token punctuation">,</span>  <span class="token comment" spellcheck="true"># 提取数据的路径</span>
+     train<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span> <span class="token comment" spellcheck="true"># 使用MNIST内的训练数据</span>
+     transform<span class="token operator">=</span>torchvision<span class="token punctuation">.</span>transforms<span class="token punctuation">.</span>ToTensor<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>    <span class="token comment" spellcheck="true"># 转换成torch.tensor</span>
+     download<span class="token operator">=</span><span class="token boolean">False</span>   <span class="token comment" spellcheck="true"># 如果是第一次运行的话，置为True，表示下载数据集到root目录</span>
+ <span class="token punctuation">)</span>
+
+ <span class="token comment" spellcheck="true"># 定义loader</span>
+ train_loader <span class="token operator">=</span> Data<span class="token punctuation">.</span>DataLoader<span class="token punctuation">(</span>
+     dataset<span class="token operator">=</span>train_data<span class="token punctuation">,</span>
+     batch_size<span class="token operator">=</span><span class="token number">128</span><span class="token punctuation">,</span>
+     shuffle<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span>
+     num_workers<span class="token operator">=</span><span class="token number">0</span>
+ <span class="token punctuation">)</span>
+
+ test_data <span class="token operator">=</span> torchvision<span class="token punctuation">.</span>datasets<span class="token punctuation">.</span>MNIST<span class="token punctuation">(</span>
+     root<span class="token operator">=</span><span class="token string">"./data/MNIST"</span><span class="token punctuation">,</span>
+     train<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">,</span>    <span class="token comment" spellcheck="true"># 使用测试数据</span>
+     download<span class="token operator">=</span><span class="token boolean">False</span>
+ <span class="token punctuation">)</span>
+
+ <span class="token comment" spellcheck="true"># 将测试数据压缩到0-1</span>
+ test_data_x <span class="token operator">=</span> test_data<span class="token punctuation">.</span>data<span class="token punctuation">.</span>type<span class="token punctuation">(</span>torch<span class="token punctuation">.</span>FloatTensor<span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">255.0</span>
+ test_data_x <span class="token operator">=</span> torch<span class="token punctuation">.</span>unsqueeze<span class="token punctuation">(</span>test_data_x<span class="token punctuation">,</span> dim<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">)</span>
+ test_data_y <span class="token operator">=</span> test_data<span class="token punctuation">.</span>targets
+
+ <span class="token comment" spellcheck="true"># 打印一下测试数据和训练数据的shape</span>
+ <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"test_data_x.shape:"</span><span class="token punctuation">,</span> test_data_x<span class="token punctuation">.</span>shape<span class="token punctuation">)</span>
+ <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"test_data_y.shape:"</span><span class="token punctuation">,</span> test_data_y<span class="token punctuation">.</span>shape<span class="token punctuation">)</span>
+
+ <span class="token keyword">for</span> x<span class="token punctuation">,</span> y <span class="token keyword">in</span> train_loader<span class="token punctuation">:</span>
+     <span class="token keyword">print</span><span class="token punctuation">(</span>x<span class="token punctuation">.</span>shape<span class="token punctuation">)</span>
+     <span class="token keyword">print</span><span class="token punctuation">(</span>y<span class="token punctuation">.</span>shape<span class="token punctuation">)</span>
+     <span class="token keyword">break</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>结果：</p>
+<pre><code> test_data_x.shape: torch.Size([10000, 1, 28, 28])
+ test_data_y.shape: torch.Size([10000])
+ torch.Size([128, 1, 28, 28])
+ torch.Size([128])</code></pre><h3 id="2-1-通过tensorboardX可视化训练过程"><a href="#2-1-通过tensorboardX可视化训练过程" class="headerlink" title="2.1 通过tensorboardX可视化训练过程"></a>2.1 通过tensorboardX可视化训练过程</h3><p><code>tensorboard</code>是谷歌开发的深度学习框架tensorflow的一套深度学习可视化神器，在pytorch团队的努力下，他们开发出了tensorboardX来让pytorch的玩家也能享受tensorboard的福利。</p>
+<p>先安装相关的库：</p>
+<pre><code> pip install tensorboardX
+ pip install tensorboard</code></pre><p>并将tensorboard.exe所在的文件夹路径加入环境变量path中（比如我的tensorboard.exe的路径为<code>D:\Python376\Scripts\tensorboard.exe</code>，那么就在path中加入<code>D:\Python376\Scripts</code>）</p>
+<p>下面是<code>tensorboardX</code>的使用过程。基本使用为，先通过<code>tensorboardX</code>下的<code>SummaryWriter</code>类获取一个日志编写器对象。然后通过这个对象的一组方法往日志中添加事件，即生成相应的图片，最后启动前端服务器，在localhost中就可以看到最终的结果了。</p>
+<p>训练网络，并可视化网络训练过程的代码如下：</p>
+<pre class="line-numbers language-python"><code class="language-python"> <span class="token keyword">from</span> tensorboardX <span class="token keyword">import</span> SummaryWriter
+ logger <span class="token operator">=</span> SummaryWriter<span class="token punctuation">(</span>log_dir<span class="token operator">=</span><span class="token string">"data/log"</span><span class="token punctuation">)</span>
+
+ <span class="token comment" spellcheck="true"># 获取优化器和损失函数</span>
+ optimizer <span class="token operator">=</span> torch<span class="token punctuation">.</span>optim<span class="token punctuation">.</span>Adam<span class="token punctuation">(</span>MyConvNet<span class="token punctuation">.</span>parameters<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> lr<span class="token operator">=</span><span class="token number">3e</span><span class="token operator">-</span><span class="token number">4</span><span class="token punctuation">)</span>
+ loss_func <span class="token operator">=</span> nn<span class="token punctuation">.</span>CrossEntropyLoss<span class="token punctuation">(</span><span class="token punctuation">)</span>
+ log_step_interval <span class="token operator">=</span> <span class="token number">100</span>      <span class="token comment" spellcheck="true"># 记录的步数间隔</span>
+
+ <span class="token keyword">for</span> epoch <span class="token keyword">in</span> range<span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+     <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"epoch:"</span><span class="token punctuation">,</span> epoch<span class="token punctuation">)</span>
+     <span class="token comment" spellcheck="true"># 每一轮都遍历一遍数据加载器</span>
+     <span class="token keyword">for</span> step<span class="token punctuation">,</span> <span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token punctuation">)</span> <span class="token keyword">in</span> enumerate<span class="token punctuation">(</span>train_loader<span class="token punctuation">)</span><span class="token punctuation">:</span>
+         <span class="token comment" spellcheck="true"># 前向计算->计算损失函数->(从损失函数)反向传播->更新网络</span>
+         predict <span class="token operator">=</span> MyConvNet<span class="token punctuation">(</span>x<span class="token punctuation">)</span>
+         loss <span class="token operator">=</span> loss_func<span class="token punctuation">(</span>predict<span class="token punctuation">,</span> y<span class="token punctuation">)</span>
+         optimizer<span class="token punctuation">.</span>zero_grad<span class="token punctuation">(</span><span class="token punctuation">)</span>   <span class="token comment" spellcheck="true"># 清空梯度（可以不写）</span>
+         loss<span class="token punctuation">.</span>backward<span class="token punctuation">(</span><span class="token punctuation">)</span>     <span class="token comment" spellcheck="true"># 反向传播计算梯度</span>
+         optimizer<span class="token punctuation">.</span>step<span class="token punctuation">(</span><span class="token punctuation">)</span>    <span class="token comment" spellcheck="true"># 更新网络</span>
+         global_iter_num <span class="token operator">=</span> epoch <span class="token operator">*</span> len<span class="token punctuation">(</span>train_loader<span class="token punctuation">)</span> <span class="token operator">+</span> step <span class="token operator">+</span> <span class="token number">1</span>  <span class="token comment" spellcheck="true"># 计算当前是从训练开始时的第几步(全局迭代次数)</span>
+         <span class="token keyword">if</span> global_iter_num <span class="token operator">%</span> log_step_interval <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">:</span>
+             <span class="token comment" spellcheck="true"># 控制台输出一下</span>
+             <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"global_step:{}, loss:{:.2}"</span><span class="token punctuation">.</span>format<span class="token punctuation">(</span>global_iter_num<span class="token punctuation">,</span> loss<span class="token punctuation">.</span>item<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+             <span class="token comment" spellcheck="true"># 添加的第一条日志：损失函数-全局迭代次数</span>
+             logger<span class="token punctuation">.</span>add_scalar<span class="token punctuation">(</span><span class="token string">"train loss"</span><span class="token punctuation">,</span> loss<span class="token punctuation">.</span>item<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">,</span>global_step<span class="token operator">=</span>global_iter_num<span class="token punctuation">)</span>
+             <span class="token comment" spellcheck="true"># 在测试集上预测并计算正确率</span>
+             test_predict <span class="token operator">=</span> MyConvNet<span class="token punctuation">(</span>test_data_x<span class="token punctuation">)</span>
+             _<span class="token punctuation">,</span> predict_idx <span class="token operator">=</span> torch<span class="token punctuation">.</span>max<span class="token punctuation">(</span>test_predict<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span>     <span class="token comment" spellcheck="true"># 计算softmax后的最大值的索引，即预测结果</span>
+             acc <span class="token operator">=</span> accuracy_score<span class="token punctuation">(</span>test_data_y<span class="token punctuation">,</span> predict_idx<span class="token punctuation">)</span>
+             <span class="token comment" spellcheck="true"># 添加第二条日志：正确率-全局迭代次数</span>
+             logger<span class="token punctuation">.</span>add_scalar<span class="token punctuation">(</span><span class="token string">"test accuary"</span><span class="token punctuation">,</span> acc<span class="token punctuation">.</span>item<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> global_step<span class="token operator">=</span>global_iter_num<span class="token punctuation">)</span>
+             <span class="token comment" spellcheck="true"># 添加第三条日志：这个batch下的128张图像</span>
+             img <span class="token operator">=</span> vutils<span class="token punctuation">.</span>make_grid<span class="token punctuation">(</span>x<span class="token punctuation">,</span> nrow<span class="token operator">=</span><span class="token number">12</span><span class="token punctuation">)</span>
+             logger<span class="token punctuation">.</span>add_image<span class="token punctuation">(</span><span class="token string">"train image sample"</span><span class="token punctuation">,</span> img<span class="token punctuation">,</span> global_step<span class="token operator">=</span>global_iter_num<span class="token punctuation">)</span>
+             <span class="token comment" spellcheck="true"># 添加第三条日志：网络中的参数分布直方图</span>
+             <span class="token keyword">for</span> name<span class="token punctuation">,</span> param <span class="token keyword">in</span> MyConvNet<span class="token punctuation">.</span>named_parameters<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+                 logger<span class="token punctuation">.</span>add_histogram<span class="token punctuation">(</span>name<span class="token punctuation">,</span> param<span class="token punctuation">.</span>data<span class="token punctuation">.</span>numpy<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> global_step<span class="token operator">=</span>global_iter_num<span class="token punctuation">)</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>运行完后，我们通过cmd来到与代码同一级的目录（如果你使用的是pycharm，可以通过pycharm中的终端）输入指令<code>tensorboard --logdir="./data/log"</code>，启动服务器。</p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211108123044109.png" alt=""></p>
+<blockquote>
+<p>logdir后面的参数是日志文件的文件夹的路径</p>
+</blockquote>
+<p>然后在谷歌浏览器中访问红框框中的url，便可得到可视化界面，点击上面的页面控件，可以查看我们通过<code>add_scalar</code>、<code>add_image</code>和<code>add_histogram</code>得到的图像，而且各方面做得都很丝滑。</p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211108123108767.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211108123122541.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211108123134279.png" alt=""></p>
+<h4 id="填坑"><a href="#填坑" class="headerlink" title="填坑"></a>填坑</h4><p><strong>第一个错误，运行<code>tensorboard --logdir="./data/log"</code>，遇到报错，内容为有重复的tensorboard的包。</strong></p>
+<p>解决方法：找到site-packages（如果你是像我一样全局安装的，那么找到解释器那一级目录的site-packages，如果是在项目虚拟环境中安装的，那么找到项目中的site-packages），删去下图中红框框标出来的文件夹。</p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211108123246985.png" alt=""></p>
+<p><strong>第二个错误，在解决第一个错误后，再次运行命令，还是报错，内容为编码出错。</strong></p>
+<p><strong>解决方法：</strong>确保命令涉及的文件路径、所有程序涉及到文件不含中文。发现计算机名字含有中文，然后tensorboard的日志文件是以本地计算机名为后缀的，所以将计算机名修改成了英文，重启后再输入指令就ok了。</p>
+<h3 id="2-2-HiddenLayer可视化训练过程"><a href="#2-2-HiddenLayer可视化训练过程" class="headerlink" title="2.2 HiddenLayer可视化训练过程"></a>2.2 HiddenLayer可视化训练过程</h3><p>tensorboard的图像很华丽，但是使用过程相较于其他的工具包较为繁琐，所以小网络一般没必要使用tensorboard。</p>
+<pre class="line-numbers language-python"><code class="language-python"> <span class="token keyword">import</span> hiddenlayer <span class="token keyword">as</span> hl
+ <span class="token keyword">import</span> time
+
+ <span class="token comment" spellcheck="true"># 记录训练过程的指标</span>
+ history <span class="token operator">=</span> hl<span class="token punctuation">.</span>History<span class="token punctuation">(</span><span class="token punctuation">)</span>
+ <span class="token comment" spellcheck="true"># 使用canvas进行可视化</span>
+ canvas <span class="token operator">=</span> hl<span class="token punctuation">.</span>Canvas<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+ <span class="token comment" spellcheck="true"># 获取优化器和损失函数</span>
+ optimizer <span class="token operator">=</span> torch<span class="token punctuation">.</span>optim<span class="token punctuation">.</span>Adam<span class="token punctuation">(</span>MyConvNet<span class="token punctuation">.</span>parameters<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> lr<span class="token operator">=</span><span class="token number">3e</span><span class="token operator">-</span><span class="token number">4</span><span class="token punctuation">)</span>
+ loss_func <span class="token operator">=</span> nn<span class="token punctuation">.</span>CrossEntropyLoss<span class="token punctuation">(</span><span class="token punctuation">)</span>
+ log_step_interval <span class="token operator">=</span> <span class="token number">100</span>      <span class="token comment" spellcheck="true"># 记录的步数间隔</span>
+
+ <span class="token keyword">for</span> epoch <span class="token keyword">in</span> range<span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+     <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"epoch:"</span><span class="token punctuation">,</span> epoch<span class="token punctuation">)</span>
+     <span class="token comment" spellcheck="true"># 每一轮都遍历一遍数据加载器</span>
+     <span class="token keyword">for</span> step<span class="token punctuation">,</span> <span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token punctuation">)</span> <span class="token keyword">in</span> enumerate<span class="token punctuation">(</span>train_loader<span class="token punctuation">)</span><span class="token punctuation">:</span>
+         <span class="token comment" spellcheck="true"># 前向计算->计算损失函数->(从损失函数)反向传播->更新网络</span>
+         predict <span class="token operator">=</span> MyConvNet<span class="token punctuation">(</span>x<span class="token punctuation">)</span>
+         loss <span class="token operator">=</span> loss_func<span class="token punctuation">(</span>predict<span class="token punctuation">,</span> y<span class="token punctuation">)</span>
+         optimizer<span class="token punctuation">.</span>zero_grad<span class="token punctuation">(</span><span class="token punctuation">)</span>   <span class="token comment" spellcheck="true"># 清空梯度（可以不写）</span>
+         loss<span class="token punctuation">.</span>backward<span class="token punctuation">(</span><span class="token punctuation">)</span>     <span class="token comment" spellcheck="true"># 反向传播计算梯度</span>
+         optimizer<span class="token punctuation">.</span>step<span class="token punctuation">(</span><span class="token punctuation">)</span>    <span class="token comment" spellcheck="true"># 更新网络</span>
+         global_iter_num <span class="token operator">=</span> epoch <span class="token operator">*</span> len<span class="token punctuation">(</span>train_loader<span class="token punctuation">)</span> <span class="token operator">+</span> step <span class="token operator">+</span> <span class="token number">1</span>  <span class="token comment" spellcheck="true"># 计算当前是从训练开始时的第几步(全局迭代次数)</span>
+         <span class="token keyword">if</span> global_iter_num <span class="token operator">%</span> log_step_interval <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">:</span>
+             <span class="token comment" spellcheck="true"># 控制台输出一下</span>
+             <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"global_step:{}, loss:{:.2}"</span><span class="token punctuation">.</span>format<span class="token punctuation">(</span>global_iter_num<span class="token punctuation">,</span> loss<span class="token punctuation">.</span>item<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+             <span class="token comment" spellcheck="true"># 在测试集上预测并计算正确率</span>
+             test_predict <span class="token operator">=</span> MyConvNet<span class="token punctuation">(</span>test_data_x<span class="token punctuation">)</span>
+             _<span class="token punctuation">,</span> predict_idx <span class="token operator">=</span> torch<span class="token punctuation">.</span>max<span class="token punctuation">(</span>test_predict<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># 计算softmax后的最大值的索引，即预测结果</span>
+             acc <span class="token operator">=</span> accuracy_score<span class="token punctuation">(</span>test_data_y<span class="token punctuation">,</span> predict_idx<span class="token punctuation">)</span>
+
+             <span class="token comment" spellcheck="true"># 以epoch和step为索引，创建日志字典</span>
+             history<span class="token punctuation">.</span>log<span class="token punctuation">(</span><span class="token punctuation">(</span>epoch<span class="token punctuation">,</span> step<span class="token punctuation">)</span><span class="token punctuation">,</span>
+                         train_loss<span class="token operator">=</span>loss<span class="token punctuation">,</span>
+                         test_acc<span class="token operator">=</span>acc<span class="token punctuation">,</span>
+                         hidden_weight<span class="token operator">=</span>MyConvNet<span class="token punctuation">.</span>fc<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">.</span>weight<span class="token punctuation">)</span>
+
+             <span class="token comment" spellcheck="true"># 可视化</span>
+             <span class="token keyword">with</span> canvas<span class="token punctuation">:</span>
+                 canvas<span class="token punctuation">.</span>draw_plot<span class="token punctuation">(</span>history<span class="token punctuation">[</span><span class="token string">"train_loss"</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+                 canvas<span class="token punctuation">.</span>draw_plot<span class="token punctuation">(</span>history<span class="token punctuation">[</span><span class="token string">"test_acc"</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+                 canvas<span class="token punctuation">.</span>draw_image<span class="token punctuation">(</span>history<span class="token punctuation">[</span><span class="token string">"hidden_weight"</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<blockquote>
+<p>不同于tensorboard，hiddenlayer会在程序运行的过程中动态生成图像，而不是模型训练完后</p>
+</blockquote>
+<p>下面为模型训练的某一时刻的截图：</p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211108123417712.png" alt=""></p>
+<h2 id="三、使用Visdom进行可视化"><a href="#三、使用Visdom进行可视化" class="headerlink" title="三、使用Visdom进行可视化"></a>三、使用Visdom进行可视化</h2><p>Visdom是Facebook为pytorch开发的一块可视化工具。类似于tensorboard，visdom也是通过在本地启动前端服务器来实现可视化的，而在具体操作上，visdom又类似于matplotlib.pyplot。所以使用起来很灵活。</p>
+<p>首先先安装visdom库，然后补坑。由于启动前端服务器需要大量依赖项，所以在第一次启动时可能会很慢（需要下载前端三板斧的依赖项），解决方法请见这里。</p>
+<p>先导入需要的第三方库：</p>
+<pre class="line-numbers language-python"><code class="language-python"> <span class="token keyword">from</span> visdom <span class="token keyword">import</span> Visdom
+ <span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>datasets <span class="token keyword">import</span>  load_iris
+ <span class="token keyword">import</span> torch
+ <span class="token keyword">import</span> numpy <span class="token keyword">as</span> np
+ <span class="token keyword">from</span> PIL <span class="token keyword">import</span> Image<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>matplotlib里，用户绘图可以通过plt这个对象来绘图，在visdom中，同样需要一个绘图对象，我们通过<code>vis = Visdom()</code>来获取。具体绘制时，由于我们会一次画好几张图，所以visdom要求用户在绘制时指定当前绘制图像的窗口名字（也就是<code>win</code>这个参数）；除此之外，为了到时候显示的分块，用户还需要指定绘图环境<code>env</code>，这个参数相同的图像，最后会显示在同一张页面上。</p>
+<p>绘制线图（相当于matplotlib中的<code>plt.plot</code>）</p>
+<pre class="line-numbers language-python"><code class="language-python"> <span class="token comment" spellcheck="true"># 绘制图像需要的数据</span>
+ iris_x<span class="token punctuation">,</span> iris_y <span class="token operator">=</span> load_iris<span class="token punctuation">(</span>return_X_y<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
+
+ <span class="token comment" spellcheck="true"># 获取绘图对象，相当于plt</span>
+ vis <span class="token operator">=</span> Visdom<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+ <span class="token comment" spellcheck="true"># 添加折线图</span>
+ x <span class="token operator">=</span> torch<span class="token punctuation">.</span>linspace<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">.</span>view<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+ sigmoid <span class="token operator">=</span> torch<span class="token punctuation">.</span>nn<span class="token punctuation">.</span>Sigmoid<span class="token punctuation">(</span><span class="token punctuation">)</span>
+ sigmoid_y <span class="token operator">=</span> sigmoid<span class="token punctuation">(</span>x<span class="token punctuation">)</span>
+ tanh <span class="token operator">=</span> torch<span class="token punctuation">.</span>nn<span class="token punctuation">.</span>Tanh<span class="token punctuation">(</span><span class="token punctuation">)</span>
+ tanh_y <span class="token operator">=</span> tanh<span class="token punctuation">(</span>x<span class="token punctuation">)</span>
+ relu <span class="token operator">=</span> torch<span class="token punctuation">.</span>nn<span class="token punctuation">.</span>ReLU<span class="token punctuation">(</span><span class="token punctuation">)</span>
+ relu_y <span class="token operator">=</span> relu<span class="token punctuation">(</span>x<span class="token punctuation">)</span>
+ <span class="token comment" spellcheck="true"># 连接三个张量</span>
+ plot_x <span class="token operator">=</span> torch<span class="token punctuation">.</span>cat<span class="token punctuation">(</span><span class="token punctuation">[</span>x<span class="token punctuation">,</span> x<span class="token punctuation">,</span> x<span class="token punctuation">]</span><span class="token punctuation">,</span> dim<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">)</span>
+ plot_y <span class="token operator">=</span> torch<span class="token punctuation">.</span>cat<span class="token punctuation">(</span><span class="token punctuation">[</span>sigmoid_y<span class="token punctuation">,</span> tanh_y<span class="token punctuation">,</span> relu_y<span class="token punctuation">]</span><span class="token punctuation">,</span> dim<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">)</span>
+ <span class="token comment" spellcheck="true"># 绘制线性图</span>
+ vis<span class="token punctuation">.</span>line<span class="token punctuation">(</span>X<span class="token operator">=</span>plot_x<span class="token punctuation">,</span> Y<span class="token operator">=</span>plot_y<span class="token punctuation">,</span> win<span class="token operator">=</span><span class="token string">"line plot"</span><span class="token punctuation">,</span> env<span class="token operator">=</span><span class="token string">"main"</span><span class="token punctuation">,</span>
+          opts<span class="token operator">=</span><span class="token punctuation">{</span>
+              <span class="token string">"dash"</span> <span class="token punctuation">:</span> np<span class="token punctuation">.</span>array<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">"solid"</span><span class="token punctuation">,</span> <span class="token string">"dash"</span><span class="token punctuation">,</span> <span class="token string">"dashdot"</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+              <span class="token string">"legend"</span> <span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">"Sigmoid"</span><span class="token punctuation">,</span> <span class="token string">"Tanh"</span><span class="token punctuation">,</span> <span class="token string">"ReLU"</span><span class="token punctuation">]</span>
+          <span class="token punctuation">}</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>绘制散点图：</p>
+<pre class="line-numbers language-python"><code class="language-python"> <span class="token comment" spellcheck="true"># 绘制2D和3D散点图</span>
+ <span class="token comment" spellcheck="true"># 参数Y用来指定点的分布，win指定图像的窗口名称，env指定图像所在的环境，opts通过字典来指定一些样式</span>
+ vis<span class="token punctuation">.</span>scatter<span class="token punctuation">(</span>iris_x<span class="token punctuation">[</span> <span class="token punctuation">:</span> <span class="token punctuation">,</span> <span class="token number">0</span> <span class="token punctuation">:</span> <span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">,</span> Y<span class="token operator">=</span>iris_y<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">,</span> win<span class="token operator">=</span><span class="token string">"windows1"</span><span class="token punctuation">,</span> env<span class="token operator">=</span><span class="token string">"main"</span><span class="token punctuation">)</span>
+ vis<span class="token punctuation">.</span>scatter<span class="token punctuation">(</span>iris_x<span class="token punctuation">[</span> <span class="token punctuation">:</span> <span class="token punctuation">,</span> <span class="token number">0</span> <span class="token punctuation">:</span> <span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">,</span> Y<span class="token operator">=</span>iris_y<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">,</span> win<span class="token operator">=</span><span class="token string">"3D scatter"</span><span class="token punctuation">,</span> env<span class="token operator">=</span><span class="token string">"main"</span><span class="token punctuation">,</span>
+             opts<span class="token operator">=</span><span class="token punctuation">{</span>
+                 <span class="token string">"markersize"</span> <span class="token punctuation">:</span> <span class="token number">4</span><span class="token punctuation">,</span>   <span class="token comment" spellcheck="true"># 点的大小</span>
+                 <span class="token string">"xlabel"</span> <span class="token punctuation">:</span> <span class="token string">"特征1"</span><span class="token punctuation">,</span>
+                 <span class="token string">"ylabel"</span> <span class="token punctuation">:</span> <span class="token string">"特征2"</span>
+             <span class="token punctuation">}</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>绘制茎叶图：</p>
+<pre class="line-numbers language-python"><code class="language-python"> <span class="token comment" spellcheck="true"># 添加茎叶图</span>
+ x <span class="token operator">=</span> torch<span class="token punctuation">.</span>linspace<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">.</span>view<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+ y1 <span class="token operator">=</span> torch<span class="token punctuation">.</span>sin<span class="token punctuation">(</span>x<span class="token punctuation">)</span>
+ y2 <span class="token operator">=</span> torch<span class="token punctuation">.</span>cos<span class="token punctuation">(</span>x<span class="token punctuation">)</span>
+
+ <span class="token comment" spellcheck="true"># 连接张量</span>
+ plot_x <span class="token operator">=</span> torch<span class="token punctuation">.</span>cat<span class="token punctuation">(</span><span class="token punctuation">[</span>x<span class="token punctuation">,</span> x<span class="token punctuation">]</span><span class="token punctuation">,</span> dim<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">)</span>
+ plot_y <span class="token operator">=</span> torch<span class="token punctuation">.</span>cat<span class="token punctuation">(</span><span class="token punctuation">[</span>y1<span class="token punctuation">,</span> y2<span class="token punctuation">]</span><span class="token punctuation">,</span> dim<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">)</span>
+ <span class="token comment" spellcheck="true"># 绘制茎叶图</span>
+ vis<span class="token punctuation">.</span>stem<span class="token punctuation">(</span>X<span class="token operator">=</span>plot_x<span class="token punctuation">,</span> Y<span class="token operator">=</span>plot_y<span class="token punctuation">,</span> win<span class="token operator">=</span><span class="token string">"stem plot"</span><span class="token punctuation">,</span> env<span class="token operator">=</span><span class="token string">"main"</span><span class="token punctuation">,</span>
+          opts<span class="token operator">=</span><span class="token punctuation">{</span>
+              <span class="token string">"legend"</span> <span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">"sin"</span><span class="token punctuation">,</span> <span class="token string">"cos"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+              <span class="token string">"title"</span> <span class="token punctuation">:</span> <span class="token string">"茎叶图"</span>
+          <span class="token punctuation">}</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>绘制热力图：</p>
+<pre class="line-numbers language-python"><code class="language-python"> <span class="token comment" spellcheck="true"># 计算鸢尾花数据集特征向量的相关系数矩阵</span>
+ iris_corr <span class="token operator">=</span> torch<span class="token punctuation">.</span>from_numpy<span class="token punctuation">(</span>np<span class="token punctuation">.</span>corrcoef<span class="token punctuation">(</span>iris_x<span class="token punctuation">,</span> rowvar<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+ <span class="token comment" spellcheck="true"># 绘制热力图</span>
+ vis<span class="token punctuation">.</span>heatmap<span class="token punctuation">(</span>iris_corr<span class="token punctuation">,</span> win<span class="token operator">=</span><span class="token string">"heatmap"</span><span class="token punctuation">,</span> env<span class="token operator">=</span><span class="token string">"main"</span><span class="token punctuation">,</span>
+             opts<span class="token operator">=</span><span class="token punctuation">{</span>
+                 <span class="token string">"rownames"</span> <span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">"x1"</span><span class="token punctuation">,</span> <span class="token string">"x2"</span><span class="token punctuation">,</span> <span class="token string">"x3"</span><span class="token punctuation">,</span> <span class="token string">"x4"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+                 <span class="token string">"columnnames"</span> <span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">"x1"</span><span class="token punctuation">,</span> <span class="token string">"x2"</span><span class="token punctuation">,</span> <span class="token string">"x3"</span><span class="token punctuation">,</span> <span class="token string">"x4"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+                 <span class="token string">"title"</span> <span class="token punctuation">:</span> <span class="token string">"热力图"</span>
+             <span class="token punctuation">}</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>可视化图片，这里我们使用自定义的env名MyPlotEnv</p>
+<pre class="line-numbers language-python"><code class="language-python"> <span class="token comment" spellcheck="true"># 可视化图片</span>
+ img_Image <span class="token operator">=</span> Image<span class="token punctuation">.</span>open<span class="token punctuation">(</span><span class="token string">"./example.jpg"</span><span class="token punctuation">)</span>
+ img_array <span class="token operator">=</span> np<span class="token punctuation">.</span>array<span class="token punctuation">(</span>img_Image<span class="token punctuation">.</span>convert<span class="token punctuation">(</span><span class="token string">"L"</span><span class="token punctuation">)</span><span class="token punctuation">,</span> dtype<span class="token operator">=</span>np<span class="token punctuation">.</span>float32<span class="token punctuation">)</span>
+ img_tensor <span class="token operator">=</span> torch<span class="token punctuation">.</span>from_numpy<span class="token punctuation">(</span>img_array<span class="token punctuation">)</span>
+ <span class="token keyword">print</span><span class="token punctuation">(</span>img_tensor<span class="token punctuation">.</span>shape<span class="token punctuation">)</span>
+
+ <span class="token comment" spellcheck="true"># 这次env自定义</span>
+ vis<span class="token punctuation">.</span>image<span class="token punctuation">(</span>img_tensor<span class="token punctuation">,</span> win<span class="token operator">=</span><span class="token string">"one image"</span><span class="token punctuation">,</span> env<span class="token operator">=</span><span class="token string">"MyPlotEnv"</span><span class="token punctuation">,</span>
+           opts<span class="token operator">=</span><span class="token punctuation">{</span>
+               <span class="token string">"title"</span> <span class="token punctuation">:</span> <span class="token string">"一张图像"</span>
+           <span class="token punctuation">}</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>可视化文本，同样在MyPlotEnv中绘制：</p>
+<pre class="line-numbers language-python"><code class="language-python"> <span class="token comment" spellcheck="true"># 可视化文本</span>
+ text <span class="token operator">=</span> <span class="token string">"hello world"</span>
+ vis<span class="token punctuation">.</span>text<span class="token punctuation">(</span>text<span class="token operator">=</span>text<span class="token punctuation">,</span> win<span class="token operator">=</span><span class="token string">"text plot"</span><span class="token punctuation">,</span> env<span class="token operator">=</span><span class="token string">"MyPlotEnv"</span><span class="token punctuation">,</span>
+          opts<span class="token operator">=</span><span class="token punctuation">{</span>
+              <span class="token string">"title"</span> <span class="token punctuation">:</span> <span class="token string">"可视化文本"</span>
+          <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>运行上述代码，再通过在终端中输入<code>python3 -m visdom.server</code>启动服务器，然后根据终端返回的URL，在谷歌浏览器中访问这个URL，就可以看到图像了。</p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211108123500249.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211108123520377.png" alt=""></p>
+<blockquote>
+<p>在Environment中输入不同的env参数可以看到我们在不同环境下绘制的图片。对于分类图集特别有用。</p>
+</blockquote>
+<p>在终端中按下Ctrl+C可以终止前端服务器。</p>
+<h3 id="进一步"><a href="#进一步" class="headerlink" title="进一步"></a>进一步</h3><p>需要注意，如果你的前端服务器停掉了，那么所有的图片都会丢失，因为此时的图像的数据都是驻留在内存中，而并没有dump到本地磁盘。那么如何保存当前visdom中的可视化结果，并在将来复用呢？其实很简单，比如我现在有一堆来之不易的Mel频谱图：</p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211108123549970.png" alt=""></p>
+<p>点击Manage Views</p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211108123619302.png" alt=""></p>
+<p>接着，在你的User目录下（Windows是C:\Users\账户.visdom文件夹，Linux是在~.visdom文件夹下），可以看到保存好的env：</p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211108123636175.png" alt=""></p>
+<p>它是以json文件格式保存的，那么如果你保存完后再shut down当前的前端服务器，图像数据便不会丢失。</p>
+<p>好的，现在在保存完你珍贵的数据后，请关闭你的visdom前端服务器。然后再启动它。</p>
+<p>如何查看保存的数据呢？很简答，下次打开visdom前端后，visdom会在.visdom文件夹下读取所有的保存数据完成初始化，这意味着，你直接启动visdom，其他什么也不用做就可以看到之前保存的数据啦！</p>
+<p>那么如何服用保存的数据呢？既然你都知道了visdom保存的数据在哪里，那么直接通过python的json包来读取这个数据文件，然后做解析就可以了，这是方法一，演示如下：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> json
+
+<span class="token keyword">with</span> open<span class="token punctuation">(</span>r<span class="token string">"...\.visdom\normal.json"</span><span class="token punctuation">,</span> <span class="token string">"r"</span><span class="token punctuation">,</span> encoding<span class="token operator">=</span><span class="token string">"utf-8"</span><span class="token punctuation">)</span> <span class="token keyword">as</span> f<span class="token punctuation">:</span>
+    dataset <span class="token punctuation">:</span> dict <span class="token operator">=</span> json<span class="token punctuation">.</span>load<span class="token punctuation">(</span>f<span class="token punctuation">)</span>
+
+jsons <span class="token punctuation">:</span> dict <span class="token operator">=</span> dataset<span class="token punctuation">[</span><span class="token string">"jsons"</span><span class="token punctuation">]</span>      <span class="token comment" spellcheck="true"># 这里存着你想要恢复的数据</span>
+reload <span class="token punctuation">:</span> dict <span class="token operator">=</span> dataset<span class="token punctuation">[</span><span class="token string">"reload"</span><span class="token punctuation">]</span>    <span class="token comment" spellcheck="true"># 这里存着有关窗口尺寸的数据 </span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span>jsons<span class="token punctuation">.</span>keys<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>     <span class="token comment" spellcheck="true"># 查看所有的win</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>out:</p>
+<pre class="line-numbers language-python"><code class="language-python">dict_keys<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'jsons'</span><span class="token punctuation">,</span> <span class="token string">'reload'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+dict_keys<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'1.wav'</span><span class="token punctuation">,</span> <span class="token string">'2.wav'</span><span class="token punctuation">,</span> <span class="token string">'3.wav'</span><span class="token punctuation">,</span> <span class="token string">'4.wav'</span><span class="token punctuation">,</span> <span class="token string">'5.wav'</span><span class="token punctuation">,</span> <span class="token string">'6.wav'</span><span class="token punctuation">,</span> <span class="token string">'7.wav'</span><span class="token punctuation">,</span> <span class="token string">'8.wav'</span><span class="token punctuation">,</span> <span class="token string">'9.wav'</span><span class="token punctuation">,</span> <span class="token string">'10.wav'</span><span class="token punctuation">,</span> <span class="token string">'11.wav'</span><span class="token punctuation">,</span> <span class="token string">'12.wav'</span><span class="token punctuation">,</span> <span class="token string">'13.wav'</span><span class="token punctuation">,</span> <span class="token string">'14.wav'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>但这么做不是很优雅，所以visdom封装了第二种方法。你当然可以通过访问文件夹.visdom来查看当前可用的env，但是也可以这么做：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> visdom <span class="token keyword">import</span> Visdom
+
+vis <span class="token operator">=</span> Visdom<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>vis<span class="token punctuation">.</span>get_env_list<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>out:</p>
+<pre><code>Setting up a new session...
+['main', 'normal']</code></pre><p>在获取了可用的环境名后，你可以通过get_window_data方法来获取指定env、指定win下的图像数据。请注意，该方法返回str，故需要通过json来解析：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> visdom <span class="token keyword">import</span> Visdom
+<span class="token keyword">import</span> json
+
+vis <span class="token operator">=</span> Visdom<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+window <span class="token operator">=</span> vis<span class="token punctuation">.</span>get_window_data<span class="token punctuation">(</span>win<span class="token operator">=</span><span class="token string">"1.wav"</span><span class="token punctuation">,</span> env<span class="token operator">=</span><span class="token string">"normal"</span><span class="token punctuation">)</span>    
+window <span class="token operator">=</span> json<span class="token punctuation">.</span>loads<span class="token punctuation">(</span>window<span class="token punctuation">)</span>         <span class="token comment" spellcheck="true"># window 是 str，需要解析为字典</span>
+
+content <span class="token operator">=</span> window<span class="token punctuation">[</span><span class="token string">"content"</span><span class="token punctuation">]</span>
+data <span class="token operator">=</span> content<span class="token punctuation">[</span><span class="token string">"data"</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>data<span class="token punctuation">.</span>keys<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>out:</p>
+<pre><code>Setting up a new session...
+dict_keys(['z', 'x', 'y', 'zmin', 'zmax', 'type', 'colorscale'])</code></pre><p>通过索引这些keys，相信想复用原本的图像数据并不困难。</p>
+<h1 id="神经网络结构图的画图工具"><a href="#神经网络结构图的画图工具" class="headerlink" title="神经网络结构图的画图工具"></a>神经网络结构图的画图工具</h1><h3 id="NN-SVG"><a href="#NN-SVG" class="headerlink" title="NN-SVG"></a><a href="http://alexlenail.me/NN-SVG/index.html" target="_blank" rel="noopener">NN-SVG</a></h3><p>NN-SVG是一个在线神经网络结构绘制网页平台，进入后点点鼠标就可以绘制出精美的神经网络图像，且还可以对整幅图像的方向，以及接点、连接线、箭头等等要素的样式、大小、颜色、权重、间隙大小等属性加以调整，可谓非常方便、非常强大。</p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211014182409027.png" alt=""></p>
+<h3 id="Netron"><a href="#Netron" class="headerlink" title="Netron"></a><a href="https://github.com/lutzroeder/netron" target="_blank" rel="noopener">Netron</a></h3><p>Netron是一个对神经网络以及各类机器学习、深度学习算法进行可视化的工具，分为软件版与在线版（在线版<a href="https://link.zhihu.com/?target=https%3A//netron.app/">网页</a>：<a href="https://netron.app/" target="_blank" rel="noopener">https://netron.app/</a>）。绘制时我们需要先建立并保存自己的模型（并且还是要运行之后的，因为其会显示模型中具体参数的变化情况），随后用其打开即可。Netron支持的模型格式如下所示。</p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211014182631202.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211014182546268.png" alt=""></p>
+<h3 id="PlotNeuralNet"><a href="#PlotNeuralNet" class="headerlink" title="PlotNeuralNet"></a><a href="https://github.com/HarisIqbal88/PlotNeuralNet" target="_blank" rel="noopener">PlotNeuralNet</a></h3><p>使用的门槛相对来说就高一些了，用LaTex语言编辑，所以可以发挥的空间就大了。</p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211014183153652.png" alt=""></p>
+<h3 id="ConvNetDraw"><a href="#ConvNetDraw" class="headerlink" title="ConvNetDraw"></a><a href="https://cbovar.github.io/ConvNetDraw/" target="_blank" rel="noopener">ConvNetDraw</a></h3><p>采用如下的语法直接配置网络，可以简单调整x，y，z等3个维度</p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211014183526880.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211014183412259.png" alt=""></p>
+<h3 id="Draw-Convnet"><a href="#Draw-Convnet" class="headerlink" title="Draw_Convnet"></a><a href="https://github.com/gwding/draw_convnet" target="_blank" rel="noopener">Draw_Convnet</a></h3><p>看看画的图如下，核心工具是matplotlib，图不酷炫，但是好在规规矩矩，可以严格控制，论文用挺合适的。</p>
+<p><img src="/images/loading.gif" data-original="../images/language/image-20211014183732004.png" alt=""></p>
+<h3 id="Netscope"><a href="#Netscope" class="headerlink" title="Netscope"></a><a href="https://github.com/ethereon/netscope" target="_blank" rel="noopener">Netscope</a></h3><p><img src="/images/loading.gif" data-original="../images/language/image-20211014184217475.png" alt=""></p>
+<h3 id="ML-Visuals"><a href="#ML-Visuals" class="headerlink" title="ML Visuals"></a><a href="https://github.com/dair-ai/ml-visuals" target="_blank" rel="noopener">ML Visuals</a></h3><p><img src="/images/loading.gif" data-original="../images/language/image-20211014184345166.png" alt=""></p>
+<h3 id="Tensorboard"><a href="#Tensorboard" class="headerlink" title="Tensorboard"></a><a href="https://www.tensorflow.org/tensorboard/graphs" target="_blank" rel="noopener">Tensorboard</a></h3><p><img src="/images/loading.gif" data-original="../images/DL/image-20211128112418252.png" alt=""></p>
+<h3 id="Caffe"><a href="#Caffe" class="headerlink" title="Caffe"></a><a href="https://github.com/BVLC/caffe/blob/master/python/caffe/draw.py" target="_blank" rel="noopener">Caffe</a></h3><p><img src="/images/loading.gif" data-original="../images/DL/image-20211128112505299.png" alt=""></p>
+<h3 id="Matlab"><a href="#Matlab" class="headerlink" title="Matlab"></a><a href="http://www.mathworks.com/help/nnet/ref/view.html" target="_blank" rel="noopener">Matlab</a></h3><p><img src="/images/loading.gif" data-original="../images/DL/image-20211128112535069.png" alt=""></p>
+<h3 id="Keras-js"><a href="#Keras-js" class="headerlink" title="Keras.js"></a><a href="https://transcranial.github.io/keras-js/#/inception-v3" target="_blank" rel="noopener">Keras.js</a></h3><p><img src="/images/loading.gif" data-original="../images/DL/image-20211128112605000.png" alt=""></p>
+<h3 id="DotNet"><a href="#DotNet" class="headerlink" title="DotNet"></a><a href="https://github.com/martisak/dotnets" target="_blank" rel="noopener">DotNet</a></h3><p><img src="/images/loading.gif" data-original="../images/DL/image-20211128112650375.png" alt=""></p>
+<h3 id="Graphviz"><a href="#Graphviz" class="headerlink" title="Graphviz"></a><a href="http://www.graphviz.org/" target="_blank" rel="noopener">Graphviz</a></h3><p><img src="/images/loading.gif" data-original="../images/DL/image-20211128112718128.png" alt=""></p>
+<h3 id="ConX"><a href="#ConX" class="headerlink" title="ConX"></a><a href="https://conx.readthedocs.io/en/latest/index.html" target="_blank" rel="noopener">ConX</a></h3><p><img src="/images/loading.gif" data-original="../images/DL/image-20211128112755508.png" alt=""></p>
+<h3 id="ENNUI"><a href="#ENNUI" class="headerlink" title="ENNUI"></a><a href="https://math.mit.edu/ennui/" target="_blank" rel="noopener">ENNUI</a></h3><p><img src="/images/loading.gif" data-original="../images/DL/image-20211128112830682.png" alt=""></p>
+<h3 id="Neataptic"><a href="#Neataptic" class="headerlink" title="Neataptic"></a><a href="https://wagenaartje.github.io/neataptic/" target="_blank" rel="noopener">Neataptic</a></h3><p><img src="/images/loading.gif" data-original="../images/DL/image-20211128112858893.png" alt=""></p>
+<script>
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return; }
+            const img = document.createElement('img');
+            img.style = 'display:none !important;';
+            img.src = el.dataset.src;
+            img.addEventListener('error', () => {
+              img.remove();
+              el.style.color = 'inherit';
+              el.style.backgroundImage = 'none';
+              el.style.background = 'none';
+            });
+            img.addEventListener('load', () => {
+              img.remove();
+            });
+            document.body.appendChild(img);
+          });
+      </script>
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://jackhcc.github.io" rel="external nofollow noreferrer">杰克成</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://jackhcc.github.io/posts/dl-series17.html">https://jackhcc.github.io/posts/dl-series17.html</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="https://jackhcc.github.io" target="_blank">杰克成</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/Deep-Learning/">
+                                    <span class="chip bg-color">Deep Learning</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/reward/aliqr.png" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/reward/wxqr.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+            
+        </div>
+    </div>
+
+    
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/gitalk/gitalk.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/my-gitalk.css">
+
+<div class="card gitalk-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="gitalk-container" class="card-content"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/gitalk/gitalk.min.js"></script>
+<script>
+    let gitalk = new Gitalk({
+        clientID: '3821a0bbb773038a51fc',
+        clientSecret: '4b30b507d67ec5497ec0e77f43f80cb3e0d7dd3a',
+        repo: 'JackHCC.github.io',
+        owner: 'JackHCC',
+        admin: "JackHCC",
+        id: '2021-11-05T12-23-18',
+        distractionFreeMode: false  // Facebook-like distraction free mode
+    });
+
+    gitalk.render('gitalk-container');
+</script>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/posts/Language-Python.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/20.jpg" class="responsive-img" alt="Python v3.10">
+                        
+                        <span class="card-title">Python v3.10</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            Python语言手册
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-11-06
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Language/" class="post-category">
+                                    Language
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Python/">
+                        <span class="chip bg-color">Python</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/posts/Language-Python-Lib2.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/7.jpg" class="responsive-img" alt="Python-Standard Library">
+                        
+                        <span class="card-title">Python-Standard Library</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            Python标准库详解【2】
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-11-04
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Python/" class="post-category">
+                                    Python
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Python/">
+                        <span class="chip bg-color">Python</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeShrink.js"></script>
+
+
+<!-- 代码块折行 -->
+
+<style type="text/css">
+code[class*="language-"], pre[class*="language-"] { white-space: pre !important; }
+</style>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('4'),
+            headingSelector: 'h1, h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h1, h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+    <footer class="page-footer bg-color">
+    <div class="container row center-align" style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            <span id="year">2020</span>
+            <a href="https://jackhcc.github.io" target="_blank">杰克成</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                class="white-color">3303.6k</span>&nbsp;字
+            
+            
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;人
+            </span>
+            
+            <br>
+            
+            <span id="sitetime">载入运行时间...</span>
+            <script>
+                function siteTime() {
+                    var seconds = 1000;
+                    var minutes = seconds * 60;
+                    var hours = minutes * 60;
+                    var days = hours * 24;
+                    var years = days * 365;
+                    var today = new Date();
+                    var startYear = "2020";
+                    var startMonth = "2";
+                    var startDate = "27";
+                    var startHour = "6";
+                    var startMinute = "30";
+                    var startSecond = "0";
+                    var todayYear = today.getFullYear();
+                    var todayMonth = today.getMonth() + 1;
+                    var todayDate = today.getDate();
+                    var todayHour = today.getHours();
+                    var todayMinute = today.getMinutes();
+                    var todaySecond = today.getSeconds();
+                    var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                    var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                    var diff = t2 - t1;
+                    var diffYears = Math.floor(diff / years);
+                    var diffDays = Math.floor((diff / days) - diffYears * 365);
+                    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+                    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) /
+                        minutes);
+                    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours -
+                        diffMinutes * minutes) / seconds);
+                    if (startYear == todayYear) {
+                        document.getElementById("year").innerHTML = todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffDays + " 天 " + diffHours +
+                            " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    } else {
+                        document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffYears + " 年 " + diffDays +
+                            " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    }
+                }
+                setInterval(siteTime, 1000);
+            </script>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/JackHCC" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:jackcc0701@163.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+    <a href="https://www.facebook.com/profile.php?id=100046343443643" class="tooltipped" target="_blank" data-tooltip="关注我的Facebook: https://www.facebook.com/profile.php?id=100046343443643" data-position="top" data-delay="50">
+        <i class="fab fa-facebook-f"></i>
+    </a>
+
+
+
+    <a href="https://twitter.com/JackChe66021834" class="tooltipped" target="_blank" data-tooltip="关注我的Twitter: https://twitter.com/JackChe66021834" data-position="top" data-delay="50">
+        <i class="fab fa-twitter"></i>
+    </a>
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=2508074836" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 2508074836" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+    <a href="https://weibo.com/u/6885584679" class="tooltipped" target="_blank" data-tooltip="关注我的微博: https://weibo.com/u/6885584679" data-position="top" data-delay="50">
+        <i class="fab fa-weibo"></i>
+    </a>
+
+
+
+    <a href="https://www.zhihu.com/people/8f8482f01f0d6a04e844efe32e0f0710" class="tooltipped" target="_blank" data-tooltip="关注我的知乎: https://www.zhihu.com/people/8f8482f01f0d6a04e844efe32e0f0710" data-position="top" data-delay="50">
+        <i class="fab fa-zhihu1">知</i>
+    </a>
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/materialize/materialize.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/aos/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/js/matery.js"></script>
+
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+    <script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script type="text/javascript" src="/js/fireworks.js"></script>
+
+    <script type="text/javascript">
+        //只在桌面版网页启用特效
+        var windowWidth = $(window).width();
+        if (windowWidth > 768) {
+            document.write('<script type="text/javascript" src="/js/sakura.js"><\/script>'); }
+    </script>
+
+    <!-- weather -->
+	<script type="text/javascript">
+	WIDGET = {FID: 'TToslpmkVO'}
+	</script>
+	<script type="text/javascript" src="https://apip.weatherdt.com/float/static/js/r.js?v=1111"></script>
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <!-- Baidu Analytics -->
+
+<script>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+    <!-- Baidu Push -->
+
+    
+    
+    <script async src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+        <script src="//code.tidio.co/kqhlkxviiccyoa0czpfpu4ijuey9hfre.js"></script>
+        <script> 
+            $(document).ready(function () {
+                setInterval(change_Tidio, 50);  
+                function change_Tidio() { 
+                    var tidio=$("#tidio-chat iframe");
+                    if(tidio.css("display")=="block"&& $(window).width()>977 ){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" &&$(window).width()>977)>0? "-40px" : ($("div.toc-title").length&&$(window).width()>977)>0?"85px":"20px";   
+                        document.getElementById("tidio-chat-iframe").style.right="-15px";   
+                        document.getElementById("tidio-chat-iframe").style.height=parseInt(tidio.css("height"))>=520?"520px":tidio.css("height");
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    } 
+                    else if(tidio.css("display")=="block"&&$(window).width()>601 &&$(window).width()<992 ){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" && 601< $(window).width()<992)>0? "-40px":"20px" ;   
+                        document.getElementById("tidio-chat-iframe").style.right="-15px"; 
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    }
+                    else if(tidio.css("display")=="block"&&$(window).width()<601 && parseInt(tidio.css("height"))<230){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" && $(window).width()<601)>0? "-10px":"45px" ;   
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    }
+                    if( tidio.css("display")=="block"&&$(window).width()<601 && parseInt(tidio.css("height"))>=230){
+                        document.getElementById("tidio-chat-iframe").style.zIndex="998";
+                    }
+                } 
+            }); 
+        </script>
+    
+
+    
+
+    
+    <script type="text/javascript" color="0,0,255"
+        pointColor="0,0,255" opacity='0.7'
+        zIndex="-1" count="99"
+        src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/background/canvas-nest.js"></script>
+    
+
+    
+
+    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/background/ribbon-dynamic.js" async="async"></script>
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/instantpage/instantpage.js" type="module"></script>
+    
+<script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script>
+        <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
+        <script>
+        $('a').each(function() {
+          const $this = $(this);
+          const href = $this.attr('href');
+          if (href && href.match('^((http|https|thunder|qqdl|ed2k|Flashget|qbrowser|ftp|rtsp|mms)://)')) {
+            const strs = href.split('/');
+            if (strs.length >= 3) {
+                const host = strs[2];
+                if (host !== 'your_domain' || window.location.host) {
+                    $this.attr('href', '/go.html?u='+Base64.encode(href)+'').attr('rel', 'external nofollow noopener noreferrer');
+                    if (true) {
+                        $this.attr('target', '_blank');
+                    }
+                }
+            }
+          }
+        });
+        </script></body>
+
+</html>
+

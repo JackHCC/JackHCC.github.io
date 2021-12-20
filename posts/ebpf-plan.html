@@ -1,0 +1,2180 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="从零开始的内核ebpf开发之旅, JackHCC">
+    <meta name="description" content="从零开始的学习内核ebpf">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>从零开始的内核ebpf开发之旅 | JackHCC</title>
+    <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/my.css">
+    
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/jquery/jquery.min.js"></script>
+    
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper head-container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/me.jpg" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">JackHCC</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>留言板</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>友情链接</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/me.jpg" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">JackHCC</div>
+        <div class="logo-desc">
+            
+            Make the world betterrrr!!!
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			留言板
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			友情链接
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/JackHCC/JackHCC.github.io" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/JackHCC/JackHCC.github.io" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/2.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">从零开始的内核ebpf开发之旅</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        height: calc(100vh - 250px);
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 30px;
+        bottom: 146px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/EBPF/">
+                                <span class="chip bg-color">EBPF</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/Linux-Kernel/" class="post-category">
+                                Linux Kernel
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2021-07-27
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2021-09-11
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    8.6k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    32 分
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>内核研究与开发是计算机底层处于与硬件打交道的部位，ebpf可以理解为是内核开发的一个模块。在研究ebpf开发之前需要对计算机的一些基础知识学习了解，懂得计算机的基本组成和操作系统的基本原理和运行机制，了解Linux内核设计的机制和相关源码的阅读与理解，再深入内核模块观察ebpf的设计思路，进而做到对ebpf的开发与实现。</p>
+<p>在此之前，首先需要储备一些基本的计算机知识。</p>
+<h2 id="基础知识储备"><a href="#基础知识储备" class="headerlink" title="基础知识储备"></a>基础知识储备</h2><h3 id="计算机组成原理"><a href="#计算机组成原理" class="headerlink" title="计算机组成原理"></a>计算机组成原理</h3><p>学习计算机组成原理可以对计算机的基础架构有所理解，了解计算机中常见的术语和概念。</p>
+<p>计算机组成原理知识要点见：<a href="https://starcross.feishu.cn/docs/doccnS4QQYHiGZhIzEchK8SrIun" target="_blank" rel="noopener">计算机组成原理学习笔记</a></p>
+<h3 id="操作系统"><a href="#操作系统" class="headerlink" title="操作系统"></a>操作系统</h3><p>操作系统作为人和计算机交互的桥梁，理解其工作原理对后续内核开发有很好的帮助，对操作系统的术语了解知道其背后的道理是开发的基础。</p>
+<p><a href="https://www.bilibili.com/video/BV1uW411f72n" target="_blank" rel="noopener">清华大学操作系统课程入口</a></p>
+<p>操作系统知识要点见：<a href="https://starcross.feishu.cn/docs/doccnaAGNkNcChj02pqY32L7msb" target="_blank" rel="noopener">操作系统学习笔记</a></p>
+<h3 id="C语言"><a href="#C语言" class="headerlink" title="C语言"></a>C语言</h3><p>C语言是Linux内核开发主要使用的编程语言和开发工具，需要熟悉其基本语法和结构。</p>
+<p><a href="http://c.biancheng.net/c/" target="_blank" rel="noopener">C语言中文网入口</a></p>
+<p><a href="https://devdocs.io/c/" target="_blank" rel="noopener">C语言API入口</a></p>
+<h2 id="Linux基础"><a href="#Linux基础" class="headerlink" title="Linux基础"></a>Linux基础</h2><p>了解Linux基本组成和常用的shell命令，熟悉Linux的文件架构。</p>
+<h3 id="FHS-Filesystem-Hierarchy-Standard"><a href="#FHS-Filesystem-Hierarchy-Standard" class="headerlink" title="FHS(Filesystem Hierarchy Standard):"></a>FHS(Filesystem Hierarchy Standard):</h3><p>FHS依据文件系统使用的频繁与否与是否允许使用者随意更动, 而将目录定义成为四种交互作用的形态,用表格来说有点像底下这样：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>可分享的(shareable)</th>
+<th>不可分享的(unshareable)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>不变的(static)</td>
+<td>/usr (软件放置处)</td>
+<td>/etc (配置文件)</td>
+</tr>
+<tr>
+<td></td>
+<td>/opt (第三方协力软件)</td>
+<td>/boot (开机与核心档)</td>
+</tr>
+<tr>
+<td>可变动的(variable)</td>
+<td>/var/mail (使用者邮件信箱)</td>
+<td>/var/run (程序相关)</td>
+</tr>
+<tr>
+<td></td>
+<td>/var/spool/news (新闻组)</td>
+<td>/var/lock (程序相关)</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p>可分享的：可以分享给其他系统挂载使用的目录,所以包括执行文件与用户的邮件等数据, 是能够分享给网络上其他主机挂载用的目录；</p>
+</li>
+<li><p>不可分享的：自己机器上面运作的装置文件或者是与程序有关的socket文件等, 由于仅与自身机器有关,所以当然就不适合分享给其他主机了.</p>
+</li>
+<li><p>不变的：有些数据是不会经常变动的,跟随着distribution而不变动. 例如函式库、文件说明文件、系统管理员所管理的主机服务配置文件等等；</p>
+</li>
+<li><p>可变动的：经常改变的数据,例如登录文件、一般用户可自行收受的新闻组等.</p>
+</li>
+</ul>
+<p>事实上,FHS针对目录树架构仅定义出三层目录底下应该放置什么数据而已,分别是底下这三个目录的定义：</p>
+<ol>
+<li>/ (root, 根目录)：与开机系统有关；</li>
+<li>/usr (unix software resource)：与软件安装/执行有关；</li>
+<li>/var (variable)：与系统运作过程有关.</li>
+</ol>
+<h4 id="根目录-的意义与内容："><a href="#根目录-的意义与内容：" class="headerlink" title="根目录 (/) 的意义与内容："></a>根目录 (/) 的意义与内容：</h4><blockquote>
+<p><strong>概要:</strong></p>
+<ol>
+<li>所有的目录都是由根目录衍生出来的(根目录是整个系统最重要的一个目录)</li>
+<li>与开机/还原/系统修复等动作有关. (由于系统开机时需要特定的开机软件、核心文件、开机所需程序、 函式库等等文件数据,若系统出现错误时,根目录也必须要包含有能够修复文件系统的程序才行)</li>
+<li>FHS标准建议：<strong>根目录(/)所在分割槽应该越小越好, 且应用程序所安装的软件最好不要与根目录放在同一个分割槽内,保持根目录越小越好</strong>.(因为越大的分割槽妳会放入越多的数据,如此一来根目录所在分割槽就可能会有较多发生错误的机会,如此不但效能较佳,根目录所在的文件系统也较不容易发生问题.)</li>
+</ol>
+<p><strong>根目录(/)底下目录FHS定义的说明：</strong><br>| 目录   | 应放置文件内容                                               |<br>| —— | ———————————————————— |<br>| /bin   | 系统有很多放置执行文件的目录,但/bin比较特殊.因为/bin放置的是在单人维护模式下还能够被操作的指令. 在/bin底下的指令可以被root与一般账号所使用,主要有：cat, chmod, chown, date, mv, mkdir, cp, bash等等常用的指令. |<br>| /boot  | 这个目录主要在放置开机会使用到的文件,包括Linux核心文件以及开机选单与开机所需配置文件等等. Linux kernel常用的档名为：vmlinuz,如果使用的是grub这个开机管理程序, 则还会存在/boot/grub/这个目录喔！ |<br>| /dev   | 在Linux系统上,任何装置与接口设备都是以文件的型态存在于这个目录当中的. 你只要透过存取这个目录底下的某个文件,就等于存取某个装置啰～ 比要重要的文件有/dev/null, /dev/zero, /dev/tty, /dev/lp<em>, /dev/hd</em>, /dev/sd*等等 |<br>| /etc   | 系统主要的配置文件几乎都放置在这个目录内,例如人员的账号密码文件、 各种服务的启始档等等.一般来说,这个目录下的各文件属性是可以让一般使用者查阅的, 但是只有root有权力修改.FHS建议不要放置可执行文件(binary)在这个目录中喔.比较重要的文件有： /etc/inittab, /etc/init.d/, /etc/modprobe.conf, /etc/X11/, /etc/fstab, /etc/sysconfig/ 等等.另外,其下重要的目录有：/etc/init.d/：所有服务的预设启动 script 都是放在这里的,例如要启动或者关闭 iptables 的话：『 /etc/init.d/iptables start』、『/etc/init.d/iptables stop』/etc/xinetd.d/：这就是所谓的super daemon管理的各项服务的配置文件目录./etc/X11/：与 X Window 有关的各种配置文件都在这里,尤其是 xorg.conf 这个 X Server 的配置文件. |<br>| /home  | 这是系统默认的用户家目录(home directory).在你新增一个一般使用者账号时, 默认的用户家目录都会规范到这里来.比较重要的是,家目录有两种代号喔： ~：代表目前这个用户的家目录,而  ~dmtsai ：则代表 dmtsai 的家目录！ |<br>| /lib   | 系统的函式库非常的多,而/lib放置的则是在开机时会用到的函式库, 以及在/bin或/sbin底下的指令会呼叫的函式库而已. 什么是函式库呢？妳可以将他想成是『外挂』,某些指令必须要有这些『外挂』才能够顺利完成程序的执行之意. 尤其重要的是/lib/modules/这个目录, 因为该目录会放置核心相关的模块(驱动程序)喔！ |<br>| /media | media是『媒体』的英文,顾名思义,这个/media底下放置的就是可移除的装置啦！ 包括软盘、光盘、DVD等等装置都暂时挂载于此.常见的档名有：/media/floppy, /media/cdrom等等. |<br>| /mnt   | 如果妳想要暂时挂载某些额外的装置,一般建议妳可以放置到这个目录中. 在古早时候,这个目录的用途与/media相同啦！只是有了/media之后,这个目录就用来暂时挂载用了. |<br>| /opt   | 这个是给第三方协力软件放置的目录.什么是第三方协力软件啊？ 举例来说,KDE这个桌面管理系统是一个独立的计划,不过他可以安装到Linux系统中,因此KDE的软件就建议放置到此目录下了. 另外,如果妳想要自行安装额外的软件(非原本的distribution提供的),那么也能够将你的软件安装到这里来. 不过,以前的Linux系统中,我们还是习惯放置在/usr/local目录下呢！ |<br>| /root  | 系统管理员(root)的家目录.之所以放在这里,是因为如果进入单人维护模式而仅挂载根目录时, 该目录就能够拥有root的家目录,所以我们会希望root的家目录与根目录放置在同一个分割槽中. |<br>| /sbin  | Linux有非常多指令是用来设定系统环境的,这些指令只有root才能够利用来『设定』系统,其他用户最多只能用来『查询』而已. 放在/sbin底下的为开机过程中所需要的,里面包括了开机、修复、还原系统所需要的指令. 至于某些服务器软件程序,一般则放置到/usr/sbin/当中.至于本机自行安装的软件所产生的系统执行文件(system binary), 则放置到/usr/local/sbin/当中了.常见的指令包括：fdisk, fsck, ifconfig, init, mkfs等等. |<br>| /srv   | srv可以视为『service』的缩写,是一些网络服务启动之后,这些服务所需要取用的数据目录. 常见的服务例如WWW, FTP等等.举例来说,WWW服务器需要的网页数据就可以放置在/srv/www/里面. |<br>| /tmp   | 这是让一般使用者或者是正在执行的程序暂时放置文件的地方. 这个目录是任何人都能够存取的,所以你需要定期的清理一下.当然,重要数据不可放置在此目录啊！ 因为FHS甚至建议在开机时,应该要将/tmp下的数据都删除唷！ |</p>
+<p>除上 FHS 中定义的目录说明外, 底下是几个在Linux当中非常重要的目录：</p>
+<table>
+<thead>
+<tr>
+<th>目录</th>
+<th>应放置文件内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>/lost+found</td>
+<td>这个目录是使用标准的ext2/ext3文件系统格式才会产生的一个目录,目的在于当文件系统发生错误时, 将一些遗失的片段放置到这个目录下.这个目录通常会在分割槽的最顶层存在, 例如你加装一颗硬盘于/disk中,那在这个系统下就会自动产生一个这样的目录『/disk/lost+found』</td>
+</tr>
+<tr>
+<td>/proc</td>
+<td>这个目录本身是一个『虚拟文件系统(virtual filesystem)』喔！他放置的数据都是在内存当中, 例如系统核心、行程信息(process)、周边装置的状态及网络状态等等.因为这个目录下的数据都是在内存当中, 所以本身不占任何硬盘空间啊！比较重要的文件例如：/proc/cpuinfo, /proc/dma, /proc/interrupts, /proc/ioports, /proc/net/* 等等.</td>
+</tr>
+<tr>
+<td>/sys</td>
+<td>这个目录其实跟/proc非常类似,也是一个虚拟的文件系统,主要也是记录与核心相关的信息. 包括目前已加载的核心模块与核心侦测到的硬件装置信息等等.这个目录同样不占硬盘容量喔！</td>
+</tr>
+</tbody></table>
+<p>不可与根目录分开的目录(与开机过程有关)：<br>根目录与开机有关,<strong>开机过程中仅有根目录会被挂载</strong>, 其他分割槽则是在开机完成之后才会持续的进行挂载的行为.就是因为如此,因此根目录下与开机过程有关的目录, 就不能够与根目录放到不同的分割槽去！</p>
+<ul>
+<li>/etc：配置文件</li>
+<li>/bin：重要执行档</li>
+<li>/dev：所需要的装置文件</li>
+<li>/lib：执行档所需的函式库与核心所需的模块</li>
+<li>/sbin：重要的系统执行文件 </li>
+</ul>
+</blockquote>
+<h4 id="usr-的意义与内容："><a href="#usr-的意义与内容：" class="headerlink" title="/usr 的意义与内容："></a>/usr 的意义与内容：</h4><blockquote>
+<p>概要:</p>
+<ol>
+<li>依据FHS的基本定义,/usr里面放置的数据属于可分享的与不可变动的(shareable, static), 如果你知道如何透过网络进行分割槽的挂载,那么/usr确实可以分享给局域网络内的其他主机来使用！</li>
+<li>usr(Unix Software Resource 即Unix操作系统软件资源) FHS建议所有软件开发者,应该将他们的数据合理的分别放置到这个目录下的次目录,而不要自行建立该软件自己独立的目录.</li>
+<li>所有系统默认的软件(distribution发布者提供的软件)都会放置到/usr底下,因此这个目录有点类似Windows 系统的『C:\Windows\ + C:\Program files\』这两个目录的综合体,系统刚安装完毕时,这个目录会占用最多的硬盘容量.</li>
+</ol>
+</blockquote>
+<blockquote>
+<p>一般来说,/usr的次目录建议有底下这些：<br>| 目录          | 应放置文件内容                                               |<br>| ————- | ———————————————————— |<br>| /usr/X11R6/   | 为X Window System重要数据所放置的目录,之所以取名为X11R6是因为最后的X版本为第11版,且该版的第6次释出之意. |<br>| /usr/bin/     | 绝大部分的用户可使用指令都放在这里！请注意到他与/bin的不同之处.(是否与开机过程有关) |<br>| /usr/include/ | c/c++等程序语言的档头(header)与包含档(include)放置处,当我们以tarball方式 (*.tar.gz 的方式安装软件)安装某些数据时,会使用到里头的许多包含档喔！ |<br>| /usr/lib/     | 包含各应用软件的函式库、目标文件(object file),以及不被一般使用者惯用的执行档或脚本(script). 某些软件会提供一些特殊的指令来进行服务器的设定,这些指令也不会经常被系统管理员操作, 那就会被摆放到这个目录下啦.要注意的是,如果你使用的是X86_64的Linux系统, 那可能会有/usr/lib64/目录产生喔！ |<br>| /usr/local/   | 系统管理员在本机自行安装自己下载的软件(非distribution默认提供者),建议安装到此目录, 这样会比较便于管理.举例来说,你的distribution提供的软件较旧,你想安装较新的软件但又不想移除旧版, 此时你可以将新版软件安装于/usr/local/目录下,可与原先的旧版软件有分别啦！ 你可以自行到/usr/local去看看,该目录下也是具有bin, etc, include, lib…的次目录喔！ |<br>| /usr/sbin/    | 非系统正常运作所需要的系统指令.最常见的就是某些网络服务器软件的服务指令(daemon)啰！ |<br>| /usr/share/   | 放置共享文件的地方,在这个目录下放置的数据几乎是不分硬件架构均可读取的数据, 因为几乎都是文本文件嘛！在此目录下常见的还有这些次目录：/usr/share/man：联机帮助文件/usr/share/doc：软件杂项的文件说明/usr/share/zoneinfo：与时区有关的时区文件 |<br>| /usr/src/     | 一般原始码建议放置到这里,src有source的意思.至于核心原始码则建议放置到/usr/src/linux/目录下. |</p>
+</blockquote>
+<h4 id="var-的意义与内容："><a href="#var-的意义与内容：" class="headerlink" title="/var 的意义与内容："></a>/var 的意义与内容：</h4><blockquote>
+<p>概要:</p>
+<p>/var目录主要针对常态性变动的文件,包括缓存(cache)、登录档(log file)以及某些软件运作所产生的文件, 包括程序文件(lock file, run file),或者例如MySQL数据库的文件等等. 所以/var在系统运作后才会渐渐占用硬盘容量的目录</p>
+<p>常见的次目录有：</p>
+<table>
+<thead>
+<tr>
+<th>目录</th>
+<th>应放置文件内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>/var/cache/</td>
+<td>应用程序本身运作过程中会产生的一些暂存档；</td>
+</tr>
+<tr>
+<td>/var/lib/</td>
+<td>程序本身执行的过程中,需要使用到的数据文件放置的目录.在此目录下各自的软件应该要有各自的目录. 举例来说,MySQL的数据库放置到/var/lib/mysql/而rpm的数据库则放到/var/lib/rpm去！</td>
+</tr>
+<tr>
+<td>/var/lock/</td>
+<td>某些装置或者是文件资源一次只能被一个应用程序所使用,如果同时有两个程序使用该装置时, 就可能产生一些错误的状况,因此就得要将该装置上锁(lock),以确保该装置只会给单一软件所使用. 举例来说,刻录机正在刻录一块光盘,你想一下,会不会有两个人同时在使用一个刻录机烧片？ 如果两个人同时刻录,那片子写入的是谁的数据？所以当第一个人在刻录时该刻录机就会被上锁, 第二个人就得要该装置被解除锁定(就是前一个人用完了)才能够继续使用啰.</td>
+</tr>
+<tr>
+<td>/var/log/</td>
+<td>重要到不行！这是登录文件放置的目录！里面比较重要的文件如/var/log/messages, /var/log/wtmp(记录登入者的信息)等.</td>
+</tr>
+<tr>
+<td>/var/mail/</td>
+<td>放置个人电子邮件信箱的目录,不过这个目录也被放置到/var/spool/mail/目录中！ 通常这两个目录是互为链接文件啦！</td>
+</tr>
+<tr>
+<td>/var/run/</td>
+<td>某些程序或者是服务启动后,会将他们的PID放置在这个目录下喔！ 至于PID的意义我们会在后续章节提到的.</td>
+</tr>
+<tr>
+<td>/var/spool/</td>
+<td>这个目录通常放置一些队列数据,所谓的『队列』就是排队等待其他程序使用的数据啦！ 这些数据被使用后通常都会被删除.举例来说,系统收到新信会放置到/var/spool/mail/中, 但使用者收下该信件后该封信原则上就会被删除.信件如果暂时寄不出去会被放到/var/spool/mqueue/中, 等到被送出后就被删除.如果是工作排程数据(crontab),就会被放置到/var/spool/cron/目录中！</td>
+</tr>
+</tbody></table>
+<p>针对FHS,各家distributions的异同:</p>
+<p>由于FHS仅是定义出最上层(/)及次层(/usr, /var)的目录内容应该要放置的文件或目录数据, 因此,在其他次目录层级内,就可以随开发者自行来配置了.举例来说,CentOS的网络设定数据放在 /etc/sysconfig/network-scripts/ 目录下,但是SuSE则是将网络放置在 /etc/sysconfig/network/ 目录下,目录名称可是不同的呢！不过只要记住大致的FHS标准,差异性其实有限啦！</p>
+</blockquote>
+<h3 id="Linux-命令大全查询表"><a href="#Linux-命令大全查询表" class="headerlink" title="Linux 命令大全查询表"></a>Linux 命令大全查询表</h3><table>
+<thead>
+<tr>
+<th>Linux 命令大全</th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1、文件管理</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-cat.html" target="_blank" rel="noopener">cat</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-chattr.html" target="_blank" rel="noopener">chattr</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-chgrp.html" target="_blank" rel="noopener">chgrp</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-chmod.html" target="_blank" rel="noopener">chmod</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-chown.html" target="_blank" rel="noopener">chown</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-cksum.html" target="_blank" rel="noopener">cksum</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-cmp.html" target="_blank" rel="noopener">cmp</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-diff.html" target="_blank" rel="noopener">diff</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-diffstat.html" target="_blank" rel="noopener">diffstat</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-file.html" target="_blank" rel="noopener">file</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-find.html" target="_blank" rel="noopener">find</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-git.html" target="_blank" rel="noopener">git</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-gitview.html" target="_blank" rel="noopener">gitview</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-indent.html" target="_blank" rel="noopener">indent</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-cut.html" target="_blank" rel="noopener">cut</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-ln.html" target="_blank" rel="noopener">ln</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-less.html" target="_blank" rel="noopener">less</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-locate.html" target="_blank" rel="noopener">locate</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-lsattr.html" target="_blank" rel="noopener">lsattr</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-mattrib.html" target="_blank" rel="noopener">mattrib</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-mc.html" target="_blank" rel="noopener">mc</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-mdel.html" target="_blank" rel="noopener">mdel</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-mdir.html" target="_blank" rel="noopener">mdir</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-mktemp.html" target="_blank" rel="noopener">mktemp</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-more.html" target="_blank" rel="noopener">more</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-mmove.html" target="_blank" rel="noopener">mmove</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-mread.html" target="_blank" rel="noopener">mread</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-mren.html" target="_blank" rel="noopener">mren</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-mtools.html" target="_blank" rel="noopener">mtools</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-mtoolstest.html" target="_blank" rel="noopener">mtoolstest</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-mv.html" target="_blank" rel="noopener">mv</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-od.html" target="_blank" rel="noopener">od</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-paste.html" target="_blank" rel="noopener">paste</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-patch.html" target="_blank" rel="noopener">patch</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-rcp.html" target="_blank" rel="noopener">rcp</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-rm.html" target="_blank" rel="noopener">rm</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-slocate.html" target="_blank" rel="noopener">slocate</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-split.html" target="_blank" rel="noopener">split</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-tee.html" target="_blank" rel="noopener">tee</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-tmpwatch.html" target="_blank" rel="noopener">tmpwatch</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-touch.html" target="_blank" rel="noopener">touch</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-umask.html" target="_blank" rel="noopener">umask</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-which.html" target="_blank" rel="noopener">which</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-cp.html" target="_blank" rel="noopener">cp</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-whereis.html" target="_blank" rel="noopener">whereis</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-mcopy.html" target="_blank" rel="noopener">mcopy</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-mshowfat.html" target="_blank" rel="noopener">mshowfat</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-rhmask.html" target="_blank" rel="noopener">rhmask</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-scp.html" target="_blank" rel="noopener">scp</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-awk.html" target="_blank" rel="noopener">awk</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>2、文档编辑</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-col.html" target="_blank" rel="noopener">col</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-colrm.html" target="_blank" rel="noopener">colrm</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-comm.html" target="_blank" rel="noopener">comm</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-csplit.html" target="_blank" rel="noopener">csplit</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-ed.html" target="_blank" rel="noopener">ed</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-egrep.html" target="_blank" rel="noopener">egrep</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-ex.html" target="_blank" rel="noopener">ex</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-fgrep.html" target="_blank" rel="noopener">fgrep</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-fmt.html" target="_blank" rel="noopener">fmt</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-fold.html" target="_blank" rel="noopener">fold</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-grep.html" target="_blank" rel="noopener">grep</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-ispell.html" target="_blank" rel="noopener">ispell</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-jed.html" target="_blank" rel="noopener">jed</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-joe.html" target="_blank" rel="noopener">joe</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-join.html" target="_blank" rel="noopener">join</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-look.html" target="_blank" rel="noopener">look</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-mtype.html" target="_blank" rel="noopener">mtype</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-pico.html" target="_blank" rel="noopener">pico</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-rgrep.html" target="_blank" rel="noopener">rgrep</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-sed.html" target="_blank" rel="noopener">sed</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-sort.html" target="_blank" rel="noopener">sort</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-spell.html" target="_blank" rel="noopener">spell</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-tr.html" target="_blank" rel="noopener">tr</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-expr.html" target="_blank" rel="noopener">expr</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-uniq.html" target="_blank" rel="noopener">uniq</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-wc.html" target="_blank" rel="noopener">wc</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>3、文件传输</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-lprm.html" target="_blank" rel="noopener">lprm</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-lpr.html" target="_blank" rel="noopener">lpr</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-lpq.html" target="_blank" rel="noopener">lpq</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-lpd.html" target="_blank" rel="noopener">lpd</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-bye.html" target="_blank" rel="noopener">bye</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-ftp.html" target="_blank" rel="noopener">ftp</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-uuto.html" target="_blank" rel="noopener">uuto</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-uupick.html" target="_blank" rel="noopener">uupick</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-uucp.html" target="_blank" rel="noopener">uucp</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-uucico.html" target="_blank" rel="noopener">uucico</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-tftp.html" target="_blank" rel="noopener">tftp</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-ncftp.html" target="_blank" rel="noopener">ncftp</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-ftpshut.html" target="_blank" rel="noopener">ftpshut</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-ftpwho.html" target="_blank" rel="noopener">ftpwho</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-ftpcount.html" target="_blank" rel="noopener">ftpcount</a></td>
+<td></td>
+</tr>
+<tr>
+<td>4、磁盘管理</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-cd.html" target="_blank" rel="noopener">cd</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-df.html" target="_blank" rel="noopener">df</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-dirs.html" target="_blank" rel="noopener">dirs</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-du.html" target="_blank" rel="noopener">du</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-edquota.html" target="_blank" rel="noopener">edquota</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-eject.html" target="_blank" rel="noopener">eject</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-mcd.html" target="_blank" rel="noopener">mcd</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-mdeltree.html" target="_blank" rel="noopener">mdeltree</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-mdu.html" target="_blank" rel="noopener">mdu</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-mkdir.html" target="_blank" rel="noopener">mkdir</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-mlabel.html" target="_blank" rel="noopener">mlabel</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-mmd.html" target="_blank" rel="noopener">mmd</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-mrd.html" target="_blank" rel="noopener">mrd</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-mzip.html" target="_blank" rel="noopener">mzip</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-pwd.html" target="_blank" rel="noopener">pwd</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-quota.html" target="_blank" rel="noopener">quota</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-mount.html" target="_blank" rel="noopener">mount</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-mmount.html" target="_blank" rel="noopener">mmount</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-rmdir.html" target="_blank" rel="noopener">rmdir</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-rmt.html" target="_blank" rel="noopener">rmt</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-stat.html" target="_blank" rel="noopener">stat</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-tree.html" target="_blank" rel="noopener">tree</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-umount.html" target="_blank" rel="noopener">umount</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-ls.html" target="_blank" rel="noopener">ls</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-quotacheck.html" target="_blank" rel="noopener">quotacheck</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-quotaoff.html" target="_blank" rel="noopener">quotaoff</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-lndir.html" target="_blank" rel="noopener">lndir</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-repquota.html" target="_blank" rel="noopener">repquota</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-quotaon.html" target="_blank" rel="noopener">quotaon</a></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>5、磁盘维护</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-badblocks.html" target="_blank" rel="noopener">badblocks</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-cfdisk.html" target="_blank" rel="noopener">cfdisk</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-dd.html" target="_blank" rel="noopener">dd</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-e2fsck.html" target="_blank" rel="noopener">e2fsck</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-ext2ed.html" target="_blank" rel="noopener">ext2ed</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-fsck.html" target="_blank" rel="noopener">fsck</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-fsck-minix.html" target="_blank" rel="noopener">fsck.minix</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-fsconf.html" target="_blank" rel="noopener">fsconf</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-fdformat.html" target="_blank" rel="noopener">fdformat</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-hdparm.html" target="_blank" rel="noopener">hdparm</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-mformat.html" target="_blank" rel="noopener">mformat</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-mkbootdisk.html" target="_blank" rel="noopener">mkbootdisk</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-mkdosfs.html" target="_blank" rel="noopener">mkdosfs</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-mke2fs.html" target="_blank" rel="noopener">mke2fs</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-mkfs-ext2.html" target="_blank" rel="noopener">mkfs.ext2</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-mkfs-msdos.html" target="_blank" rel="noopener">mkfs.msdos</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-mkinitrd.html" target="_blank" rel="noopener">mkinitrd</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-mkisofs.html" target="_blank" rel="noopener">mkisofs</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-mkswap.html" target="_blank" rel="noopener">mkswap</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-mpartition.html" target="_blank" rel="noopener">mpartition</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-swapon.html" target="_blank" rel="noopener">swapon</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-symlinks.html" target="_blank" rel="noopener">symlinks</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-sync.html" target="_blank" rel="noopener">sync</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-mbadblocks.html" target="_blank" rel="noopener">mbadblocks</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-mkfs-minix.html" target="_blank" rel="noopener">mkfs.minix</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-fsck-ext2.html" target="_blank" rel="noopener">fsck.ext2</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-fdisk.html" target="_blank" rel="noopener">fdisk</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-losetup.html" target="_blank" rel="noopener">losetup</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-mkfs.html" target="_blank" rel="noopener">mkfs</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-sfdisk.html" target="_blank" rel="noopener">sfdisk</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-swapoff.html" target="_blank" rel="noopener">swapoff</a></td>
+<td></td>
+</tr>
+<tr>
+<td>6、网络通讯</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-apachectl.html" target="_blank" rel="noopener">apachectl</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-arpwatch.html" target="_blank" rel="noopener">arpwatch</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-dip.html" target="_blank" rel="noopener">dip</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-getty.html" target="_blank" rel="noopener">getty</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-mingetty.html" target="_blank" rel="noopener">mingetty</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-uux.html" target="_blank" rel="noopener">uux</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-telnet.html" target="_blank" rel="noopener">telnet</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-uulog.html" target="_blank" rel="noopener">uulog</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-uustat.html" target="_blank" rel="noopener">uustat</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-ppp-off.html" target="_blank" rel="noopener">ppp-off</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-netconfig.html" target="_blank" rel="noopener">netconfig</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-nc.html" target="_blank" rel="noopener">nc</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-httpd.html" target="_blank" rel="noopener">httpd</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-ifconfig.html" target="_blank" rel="noopener">ifconfig</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-minicom.html" target="_blank" rel="noopener">minicom</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-mesg.html" target="_blank" rel="noopener">mesg</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-dnsconf.html" target="_blank" rel="noopener">dnsconf</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-wall.html" target="_blank" rel="noopener">wall</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-netstat.html" target="_blank" rel="noopener">netstat</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-ping.html" target="_blank" rel="noopener">ping</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-pppstats.html" target="_blank" rel="noopener">pppstats</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-samba.html" target="_blank" rel="noopener">samba</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-setserial.html" target="_blank" rel="noopener">setserial</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-talk.html" target="_blank" rel="noopener">talk</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-traceroute.html" target="_blank" rel="noopener">traceroute</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-tty.html" target="_blank" rel="noopener">tty</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-newaliases.html" target="_blank" rel="noopener">newaliases</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-uuname.html" target="_blank" rel="noopener">uuname</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-netconf.html" target="_blank" rel="noopener">netconf</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-write.html" target="_blank" rel="noopener">write</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-statserial.html" target="_blank" rel="noopener">statserial</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-efax.html" target="_blank" rel="noopener">efax</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-pppsetup.html" target="_blank" rel="noopener">pppsetup</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-tcpdump.html" target="_blank" rel="noopener">tcpdump</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-ytalk.html" target="_blank" rel="noopener">ytalk</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-cu.html" target="_blank" rel="noopener">cu</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-smbd.html" target="_blank" rel="noopener">smbd</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-testparm.html" target="_blank" rel="noopener">testparm</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-smbclient.html" target="_blank" rel="noopener">smbclient</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-shapecfg.html" target="_blank" rel="noopener">shapecfg</a></td>
+</tr>
+<tr>
+<td>7、系统管理</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-adduser.html" target="_blank" rel="noopener">adduser</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-chfn.html" target="_blank" rel="noopener">chfn</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-useradd.html" target="_blank" rel="noopener">useradd</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-date.html" target="_blank" rel="noopener">date</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-exit.html" target="_blank" rel="noopener">exit</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-finger.html" target="_blank" rel="noopener">finger</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-fwhios.html" target="_blank" rel="noopener">fwhios</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-sleep.html" target="_blank" rel="noopener">sleep</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-suspend.html" target="_blank" rel="noopener">suspend</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-groupdel.html" target="_blank" rel="noopener">groupdel</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-groupmod.html" target="_blank" rel="noopener">groupmod</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-halt.html" target="_blank" rel="noopener">halt</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-kill.html" target="_blank" rel="noopener">kill</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-last.html" target="_blank" rel="noopener">last</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-lastb.html" target="_blank" rel="noopener">lastb</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-login.html" target="_blank" rel="noopener">login</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-logname.html" target="_blank" rel="noopener">logname</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-logout.html" target="_blank" rel="noopener">logout</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-ps.html" target="_blank" rel="noopener">ps</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-nice.html" target="_blank" rel="noopener">nice</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-procinfo.html" target="_blank" rel="noopener">procinfo</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-top.html" target="_blank" rel="noopener">top</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-pstree.html" target="_blank" rel="noopener">pstree</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-reboot.html" target="_blank" rel="noopener">reboot</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-rlogin.html" target="_blank" rel="noopener">rlogin</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-rsh.html" target="_blank" rel="noopener">rsh</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-sliplogin.html" target="_blank" rel="noopener">sliplogin</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-screen.html" target="_blank" rel="noopener">screen</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-shutdown.html" target="_blank" rel="noopener">shutdown</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-rwho.html" target="_blank" rel="noopener">rwho</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-sudo.html" target="_blank" rel="noopener">sudo</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-gitps.html" target="_blank" rel="noopener">gitps</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-swatch.html" target="_blank" rel="noopener">swatch</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-tload.html" target="_blank" rel="noopener">tload</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-logrotate.html" target="_blank" rel="noopener">logrotate</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-uname.html" target="_blank" rel="noopener">uname</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-chsh.html" target="_blank" rel="noopener">chsh</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-userconf.html" target="_blank" rel="noopener">userconf</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-userdel.html" target="_blank" rel="noopener">userdel</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-usermod.html" target="_blank" rel="noopener">usermod</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-vlock.html" target="_blank" rel="noopener">vlock</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-who.html" target="_blank" rel="noopener">who</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-whoami.html" target="_blank" rel="noopener">whoami</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-whois.html" target="_blank" rel="noopener">whois</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-newgrp.html" target="_blank" rel="noopener">newgrp</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-renice.html" target="_blank" rel="noopener">renice</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-su.html" target="_blank" rel="noopener">su</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-skill.html" target="_blank" rel="noopener">skill</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-w.html" target="_blank" rel="noopener">w</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-id.html" target="_blank" rel="noopener">id</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-free.html" target="_blank" rel="noopener">free</a></td>
+<td></td>
+</tr>
+<tr>
+<td>8、系统设置</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-reset.html" target="_blank" rel="noopener">reset</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-clear.html" target="_blank" rel="noopener">clear</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-alias.html" target="_blank" rel="noopener">alias</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-dircolors.html" target="_blank" rel="noopener">dircolors</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-aumix.html" target="_blank" rel="noopener">aumix</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-bind.html" target="_blank" rel="noopener">bind</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-chroot.html" target="_blank" rel="noopener">chroot</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-clock.html" target="_blank" rel="noopener">clock</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-crontab.html" target="_blank" rel="noopener">crontab</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-declare.html" target="_blank" rel="noopener">declare</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-depmod.html" target="_blank" rel="noopener">depmod</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-dmesg.html" target="_blank" rel="noopener">dmesg</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-enable.html" target="_blank" rel="noopener">enable</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-eval.html" target="_blank" rel="noopener">eval</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-export.html" target="_blank" rel="noopener">export</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-pwunconv.html" target="_blank" rel="noopener">pwunconv</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-grpconv.html" target="_blank" rel="noopener">grpconv</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-rpm.html" target="_blank" rel="noopener">rpm</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-insmod.html" target="_blank" rel="noopener">insmod</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-kbdconfig.html" target="_blank" rel="noopener">kbdconfig</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-lilo.html" target="_blank" rel="noopener">lilo</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-liloconfig.html" target="_blank" rel="noopener">liloconfig</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-lsmod.html" target="_blank" rel="noopener">lsmod</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-minfo.html" target="_blank" rel="noopener">minfo</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-set.html" target="_blank" rel="noopener">set</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-modprobe.html" target="_blank" rel="noopener">modprobe</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-ntsysv.html" target="_blank" rel="noopener">ntsysv</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-mouseconfig.html" target="_blank" rel="noopener">mouseconfig</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-passwd.html" target="_blank" rel="noopener">passwd</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-pwconv.html" target="_blank" rel="noopener">pwconv</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-rdate.html" target="_blank" rel="noopener">rdate</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-resize.html" target="_blank" rel="noopener">resize</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-rmmod.html" target="_blank" rel="noopener">rmmod</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-grpunconv.html" target="_blank" rel="noopener">grpunconv</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-modinfo.html" target="_blank" rel="noopener">modinfo</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-time.html" target="_blank" rel="noopener">time</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-setup.html" target="_blank" rel="noopener">setup</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-sndconfig.html" target="_blank" rel="noopener">sndconfig</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-setenv.html" target="_blank" rel="noopener">setenv</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-setconsole.html" target="_blank" rel="noopener">setconsole</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-timeconfig.html" target="_blank" rel="noopener">timeconfig</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-ulimit.html" target="_blank" rel="noopener">ulimit</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-unset.html" target="_blank" rel="noopener">unset</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-chkconfig.html" target="_blank" rel="noopener">chkconfig</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-apmd.html" target="_blank" rel="noopener">apmd</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-hwclock.html" target="_blank" rel="noopener">hwclock</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-mkkickstart.html" target="_blank" rel="noopener">mkkickstart</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-fbset.html" target="_blank" rel="noopener">fbset</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-unalias.html" target="_blank" rel="noopener">unalias</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-svgatextmode.html" target="_blank" rel="noopener">SVGATextMode</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>9、备份压缩</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-ar.html" target="_blank" rel="noopener">ar</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-bunzip2.html" target="_blank" rel="noopener">bunzip2</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-bzip2.html" target="_blank" rel="noopener">bzip2</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-bzip2recover.html" target="_blank" rel="noopener">bzip2recover</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-gunzip.html" target="_blank" rel="noopener">gunzip</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-unarj.html" target="_blank" rel="noopener">unarj</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-compress.html" target="_blank" rel="noopener">compress</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-cpio.html" target="_blank" rel="noopener">cpio</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-dump.html" target="_blank" rel="noopener">dump</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-uuencode.html" target="_blank" rel="noopener">uuencode</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-gzexe.html" target="_blank" rel="noopener">gzexe</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-gzip.html" target="_blank" rel="noopener">gzip</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-lha.html" target="_blank" rel="noopener">lha</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-restore.html" target="_blank" rel="noopener">restore</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-tar.html" target="_blank" rel="noopener">tar</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-mdir.html" target="_blank" rel="noopener">uudecode</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-unzip.html" target="_blank" rel="noopener">unzip</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-zip.html" target="_blank" rel="noopener">zip</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-zipinfo.html" target="_blank" rel="noopener">zipinfo</a></td>
+<td></td>
+</tr>
+<tr>
+<td>10、设备管理</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-setleds.html" target="_blank" rel="noopener">setleds</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-loadkeys.html" target="_blank" rel="noopener">loadkeys</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-rdev.html" target="_blank" rel="noopener">rdev</a></td>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-dumpkeys.html" target="_blank" rel="noopener">dumpkeys</a></td>
+</tr>
+<tr>
+<td><a href="https://www.w3cschool.cn/linux/linux-comm-makedev.html" target="_blank" rel="noopener">MAKEDEV</a></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h2 id="Linux内核"><a href="#Linux内核" class="headerlink" title="Linux内核"></a>Linux内核</h2><h3 id="Linux内核学习策略"><a href="#Linux内核学习策略" class="headerlink" title="Linux内核学习策略"></a>Linux内核学习策略</h3><p>Linux学习建议配套远古版本的Linux内核源码学习，有助于帮助理解内核设计的思路，下载并阅读<a href="http://ftp.sjtu.edu.cn/sites/ftp.kernel.org/pub/linux/kernel/v1.0/" target="_blank" rel="noopener">Linux内核1.0版本</a>的源码去学习，该版本基本包含了内核基本部件，后续的版本都是在此基础上扩充功能，但是基本的内在没有变化。</p>
+<p>内核源码不同版本间的阅读与对比可参考<a href="https://elixir.bootlin.com/linux/1.0/source" target="_blank" rel="noopener">Bootlin</a>，其中1.0源码目录结构如下，其中对主要文件目录进行解释：</p>
+<table>
+<thead>
+<tr>
+<th><a href="https://elixir.bootlin.com/linux/1.0/source/boot" target="_blank" rel="noopener">boot</a></th>
+<th>Linux系统引导与启动相关代码</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://elixir.bootlin.com/linux/1.0/source/drivers" target="_blank" rel="noopener">drivers</a></td>
+<td>驱动相关代码</td>
+</tr>
+<tr>
+<td><a href="https://elixir.bootlin.com/linux/1.0/source/fs" target="_blank" rel="noopener">fs</a></td>
+<td>文件系统相关代码</td>
+</tr>
+<tr>
+<td><a href="https://elixir.bootlin.com/linux/1.0/source/ibcs" target="_blank" rel="noopener">ibcs</a></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="https://elixir.bootlin.com/linux/1.0/source/include" target="_blank" rel="noopener">include</a></td>
+<td>头文件代码</td>
+</tr>
+<tr>
+<td><a href="https://elixir.bootlin.com/linux/1.0/source/init" target="_blank" rel="noopener">init</a></td>
+<td>main.c初始化系统代码</td>
+</tr>
+<tr>
+<td><a href="https://elixir.bootlin.com/linux/1.0/source/ipc" target="_blank" rel="noopener">ipc</a></td>
+<td>进程通信相关代码</td>
+</tr>
+<tr>
+<td><a href="https://elixir.bootlin.com/linux/1.0/source/kernel" target="_blank" rel="noopener">kernel</a></td>
+<td>系统中断体系结构，进程周期等相关代码</td>
+</tr>
+<tr>
+<td><a href="https://elixir.bootlin.com/linux/1.0/source/lib" target="_blank" rel="noopener">lib</a></td>
+<td>通用函数库代码</td>
+</tr>
+<tr>
+<td><a href="https://elixir.bootlin.com/linux/1.0/source/mm" target="_blank" rel="noopener">mm</a></td>
+<td>内存管理相关代码</td>
+</tr>
+<tr>
+<td><a href="https://elixir.bootlin.com/linux/1.0/source/net" target="_blank" rel="noopener">net</a></td>
+<td>网络相关代码</td>
+</tr>
+<tr>
+<td><a href="https://elixir.bootlin.com/linux/1.0/source/tools" target="_blank" rel="noopener">tools</a></td>
+<td>工具相关代码</td>
+</tr>
+<tr>
+<td><a href="https://elixir.bootlin.com/linux/1.0/source/zBoot" target="_blank" rel="noopener">zBoot</a></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>对照着内核设计的源代码进行学习，会从根源上思考这样设计的目的是什么。</p>
+<h3 id="Linux内核开发环境配置"><a href="#Linux内核开发环境配置" class="headerlink" title="Linux内核开发环境配置"></a>Linux内核开发环境配置</h3><p>内核开发环境和源码安装配置：<a href="https://starcross.feishu.cn/docs/doccnVo4HU8TrSWwmJodvpVp8jd" target="_blank" rel="noopener">Linux内核开发环境配置</a></p>
+<h3 id="Linux内核简介"><a href="#Linux内核简介" class="headerlink" title="Linux内核简介"></a>Linux内核简介</h3><h4 id="Linux-内核的用途是什么？"><a href="#Linux-内核的用途是什么？" class="headerlink" title="Linux 内核的用途是什么？"></a>Linux 内核的用途是什么？</h4><p>Linux 内核有 4 项工作：</p>
+<ol>
+<li><strong>内存管理：</strong>追踪记录有多少内存存储了什么以及存储在哪里</li>
+<li><strong>进程管理：</strong>确定哪些进程可以使用中央处理器（CPU）、何时使用以及持续多长时间</li>
+<li><strong>设备驱动程序：</strong>充当硬件与进程之间的调解程序/解释程序</li>
+<li><strong>系统调用和安全防护：</strong>从流程接受服务请求</li>
+</ol>
+<p>在正确实施的情况下，内核对于用户是不可见的，它在自己的小世界（称为内核空间）中工作，并从中分配内存和跟踪所有内容的存储位置。用户所看到的内容（例如 Web 浏览器和文件）则被称为用户空间。这些应用通过系统调用接口（SCI）与内核进行交互。</p>
+<p>举例来说，内核就像是一个为高管（硬件）服务的忙碌的个人助理。助理的工作就是将员工和公众（用户）的消息和请求（进程）转交给高管，记住存放的内容和位置（内存），并确定在任何特定的时间谁可以拜访高管、会面时间有多长。</p>
+<h3 id="Linux内核学习路线和框架图"><a href="#Linux内核学习路线和框架图" class="headerlink" title="Linux内核学习路线和框架图"></a>Linux内核学习路线和框架图</h3><p><img src="/images/loading.gif" data-original="../images/basic/-16272330948601006" alt=""></p>
+<h3 id="Linux-Security-Coaching"><a href="#Linux-Security-Coaching" class="headerlink" title="Linux Security Coaching"></a>Linux Security Coaching</h3><p><img src="/images/loading.gif" data-original="../images/basic/-16272331050761008" alt=""></p>
+<h3 id="Linux内核基础学习资料"><a href="#Linux内核基础学习资料" class="headerlink" title="Linux内核基础学习资料"></a>Linux内核基础学习资料</h3><p><a href="https://www.bilibili.com/video/BV1eo4y197tQ?from=search&amp;seid=16735116070729069726" target="_blank" rel="noopener">Linux内核与系统驱动保护入口</a></p>
+<p>该视频资料详细介绍了Linux内核的知识点及其在内核中的实现进行比对，很有参考价值。</p>
+<h2 id="MakeFile详解"><a href="#MakeFile详解" class="headerlink" title="MakeFile详解"></a>MakeFile详解</h2><p>Makefile 可以简单的认为是一个工程文件的编译规则，描述了整个工程的编译和链接等规则。详细介绍如下：</p>
+<p><a href="https://starcross.feishu.cn/docs/doccnokdI6NRWWkV2F6r17Xqw4f" target="_blank" rel="noopener">MakeFile详解</a></p>
+<p>Makefile文件负责编写程序的编译与运行规则，免去命令行使用Clang去逐步编译分析。</p>
+<h2 id="GDB详解"><a href="#GDB详解" class="headerlink" title="GDB详解"></a>GDB详解</h2><p>GDB是一个强大的调试工具，通过它可以实现C程序代码bug的调试。</p>
+<p><a href="https://starcross.feishu.cn/docs/doccnZZYHtJv69P0n0IPwiu7TJg" target="_blank" rel="noopener">GDB详解</a></p>
+<h2 id="Linux崩溃调试"><a href="#Linux崩溃调试" class="headerlink" title="Linux崩溃调试"></a>Linux崩溃调试</h2><p>Linux内核Crash下的问题解决方案：</p>
+<p><a href="https://starcross.feishu.cn/docs/doccnIBwXKozjRqC7qDZJ9m7EVf" target="_blank" rel="noopener">Linux调试之崩溃</a></p>
+<h2 id="EBPF基础"><a href="#EBPF基础" class="headerlink" title="EBPF基础"></a>EBPF基础</h2><h3 id="什么是ebpf？"><a href="#什么是ebpf？" class="headerlink" title="什么是ebpf？"></a>什么是ebpf？</h3><p>Linux 内核一直是实现监控/可观测性、网络和安全功能的理想地方。 不过很多情况下这并非易事，因为这些工作需要修改内核源码或加载内核模块， 最终实现形式是在已有的层层抽象之上叠加新的抽象。 eBPF 是一项革命性技术，它能在内核中运行沙箱程序（sandbox programs）， 而无需修改内核源码或者加载内核模块。</p>
+<p><img src="/images/loading.gif" data-original="../images/basic/-16272331209401010" alt=""></p>
+<p>eBPF 催生了一种全新的软件开发方式。基于这种方式，我们不仅能对内核行为进行 编程，甚至还能编写跨多个子系统的处理逻辑，而传统上这些子系统是完全独立、 无法用一套逻辑来处理的。</p>
+<p><strong>安全：</strong></p>
+<p>观测和理解所有的系统调用的能力，以及在 packet 层和 socket 层审视所有的网络操作的能力， 这两者相结合，为系统安全提供了革命性的新方法。 以前，系统调用过滤、网络层过滤和进程上下文跟踪是在完全独立的系统中完成的； eBPF 的出现统一了可观测性和各层面的控制能力，使我们有更加丰富的上下文和更精细的控制能力， 因而能创建更加安全的系统。</p>
+<p><strong>网络：</strong></p>
+<p>eBPF 的两大特色 —— 可编程和高性能 —— 使它能满足所有的网络包处理需求。 可编程意味着无需离开内核中的包处理上下文，就能添加额外的协议解析器或任何转发逻辑， 以满足不断变化的需求。高性能的 JIT 编译器使 eBPF 程序能达到几乎与原生编译的内核态代码一样的执行性能。</p>
+<p><strong>跟踪 &amp; 性能分析：</strong></p>
+<p>eBPF 程序能够加载到 trace points、内核及用户空间应用程序中的 probe points， 这种能力使我们对应用程序的运行时行为（runtime behavior）和系统本身 （system itself）提供了史无前例的可观测性。应用端和系统端的这种观测能力相结合， 能在排查系统性能问题时提供强大的能力和独特的信息。BPF 使用了很多高级数据结构， 因此能非常高效地导出有意义的可观测数据，而不是像很多同类系统一样导出海量的原始采样数据。</p>
+<p><strong>观测 &amp; 监控：</strong></p>
+<p>相比于操作系统提供的静态计数器（counters、gauges），eBPF 能在内核中收集和聚合自定义 metric， 并能从不同数据源来生成可观测数据。这既扩展了可观测性的深度，也显著减少了整体系统开销， 因为现在可以选择只收集需要的数据，并且后者是直方图或类似的格式，而非原始采样数据。</p>
+<h3 id="Linux驱动模块开发"><a href="#Linux驱动模块开发" class="headerlink" title="Linux驱动模块开发"></a>Linux驱动模块开发</h3><h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><p>Linux 内核的整体结构已经非常庞大,而其包含的组件也非常多。这会导致两个问题,一是生成的内核会很大,二是如果我们要在现有的内核中新增或删除功能,将不得不重新编译内核。Linux 提供了这样的一种机制,这种机制被称为模块(Module)。使得编译出的内核本身并不需要包含所有功能,而在这些功能需要被使用的时候,其对应的代码被动态地加载到内核中。</p>
+<h4 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h4><p>先来看一个最简单的内核模块“Hello World”，代码如下：</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;linux/init.h></span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;linux/module.h></span></span>
+
+<span class="token keyword">static</span> <span class="token keyword">int</span> <span class="token function">hello_init</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span> <span class="token operator">/</span>初始化函数<span class="token operator">/</span>
+<span class="token punctuation">{</span>
+ <span class="token function">printk</span><span class="token punctuation">(</span>KERN_INFO <span class="token string">" Hello World enter\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">hello_exit</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span> <span class="token operator">/</span>卸载函数<span class="token operator">/</span>
+<span class="token punctuation">{</span>
+ <span class="token function">printk</span><span class="token punctuation">(</span>KERN_INFO <span class="token string">" Hello World exit\n "</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token function">module_init</span><span class="token punctuation">(</span>hello_init<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token operator">/</span>模块初始化<span class="token operator">/</span>
+<span class="token function">module_exit</span><span class="token punctuation">(</span>hello_exit<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token operator">/</span>卸载模块<span class="token operator">/</span>
+
+<span class="token function">MODULE_LICENSE</span><span class="token punctuation">(</span><span class="token string">"Dual BSD/GPL"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token operator">/</span>许可声明<span class="token operator">/</span>
+
+<span class="token function">MODULE_AUTHOR</span><span class="token punctuation">(</span><span class="token string">"Linux"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">MODULE_DESCRIPTION</span><span class="token punctuation">(</span><span class="token string">"A simple Hello World Module"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">MODULE_ALIAS</span><span class="token punctuation">(</span><span class="token string">"a simplest module"</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这个模块定义了两个函数, 一个在模块加载到内核时被调用( hello_init )以及一个在模块被去除时被调用( hello_exit ). moudle_init 和 module_exit 这几行使用了特别的内核宏来指出这两个函数的角色. 另一个特别的宏 (MODULE_LICENSE) 是用来告知内核, 该模块带有一个自由的许可证.</p>
+<p>注：内核模块中用于输出的函数是内核空间的 printk()而非用户空间的 printf()，具体用法参考附件 printk函数介绍。</p>
+<h4 id="几个常用命令"><a href="#几个常用命令" class="headerlink" title="几个常用命令"></a>几个常用命令</h4><h5 id="加载模块"><a href="#加载模块" class="headerlink" title="加载模块"></a>加载模块</h5><p>通过“insmod ./hello.ko”命令可以加载，加载时输出“Hello World enter”。</p>
+<h5 id="卸载模块"><a href="#卸载模块" class="headerlink" title="卸载模块"></a>卸载模块</h5><p>通过“rmmod hello”命令可以卸载，卸载时输出“Hello World exit”。</p>
+<h5 id="查看系统中已经加载的模块列表"><a href="#查看系统中已经加载的模块列表" class="headerlink" title="查看系统中已经加载的模块列表"></a>查看系统中已经加载的模块列表</h5><p>在Linux中，使用lsmod命令可以获得系统中加载了的所有模块以及模块间的依赖关系，例如：</p>
+<pre><code>root@imx6:~$ lsmod
+Module      Size    Used by
+hello      1568    0 
+ohci1394     32716   0 
+ide_scsi     16708   0 
+ide_cd      39392   0 
+cdrom      36960   1 ide_cd</code></pre><h5 id="查看某个具体模块的详细信息"><a href="#查看某个具体模块的详细信息" class="headerlink" title="查看某个具体模块的详细信息"></a>查看某个具体模块的详细信息</h5><p>使用modinfo &lt;模块名&gt;命令可以获得模块的信息,包括模块作者、模块的说明、模块所支持 的参数以及 vermagic:</p>
+<pre><code>root@imx6:~$ modinfo hello.ko
+filename:   hello.ko
+license:   Dual BSD/GPL
+author:    Song Baohua
+description: A simple Hello World Module
+alias:    a simplest module
+vermagic:   2.6.15.5 686 gcc-3.2
+depends: </code></pre><h4 id="Linux-内核模块程序的结构"><a href="#Linux-内核模块程序的结构" class="headerlink" title="Linux 内核模块程序的结构"></a>Linux 内核模块程序的结构</h4><p>一个Linux内核模块主要由如下几个部分组成：</p>
+<p>1、模块加载函数（一般需要） 当通过insmod或modprobe命令加载内核模块时，模块的加载函数会自动被内核执行，完成本模块的相关初始化工作。</p>
+<p>2、模块卸载函数（一般需要） 当通过rmmod命令卸载某模块时，模块的卸载函数会自动被内核执行，完成与模块卸载函数相反的功能。 </p>
+<p>3、模块许可证声明（必须） 许可证（LICENSE）声明描述内核模块的许可权限，如果不声明LICENSE，模块被加载时，将收到内核被污染 （kernel tainted）的警告。在Linux 2.6内核中，可接受的LICENSE包括“GPL”、“GPL v2”、“GPL and additional rights”、“Dual BSD/GPL”、“Dual MPL/GPL”和“Proprietary”。大多数情况下，内核模块应遵循GPL兼容许可权。Linux 2.6内核模块最常见的是以MODULE_LICENSE( “Dual BSD/GPL” )语句声明模块采BSD/GPL双LICENSE。 </p>
+<p>4、模块参数（可选） 模块参数是模块被加载的时候可以被传递给它的值，它本身对应模块内部的全局变量。</p>
+<p>5、模块导出符号（可选） 内核模块可以导出符号（symbol，对应于函数或变量），这样其它模块可以使用本模块中的变量或函数。 </p>
+<p>6、模块作者等信息声明（可选） 用于申明模块作者的相关信息，一般用于备注作者姓名、邮箱等。</p>
+<h5 id="模块加载函数"><a href="#模块加载函数" class="headerlink" title="模块加载函数"></a>模块加载函数</h5><p>Linux 内核模块加载函数一般以_ _init 标识声明,典型的模块加载函数如下：</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">static</span> <span class="token keyword">int</span> _ _init <span class="token function">initialization_function</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+<span class="token comment" spellcheck="true">/* 初始化代码 */</span>
+<span class="token punctuation">}</span>
+<span class="token function">module_init</span><span class="token punctuation">(</span>initialization_function<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>模块加载函数必须以“module_init(函数名)”的形式被指定。它返回整型值,若初始化成功,应返回 0。而在初始化失败时,应该返回错误编码。在 Linux 内核里,错误编码是一个负值。</p>
+<p>在 Linux 2.6 内核中,可以使用 request_module(const char *fmt, …)函数加载内核模块,驱动开发人员可以通过调用。</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token function">request_module</span><span class="token punctuation">(</span>module_name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">/**** 或者 ****/</span>
+<span class="token function">request_module</span><span class="token punctuation">(</span><span class="token string">"char-major-%d-%d"</span><span class="token punctuation">,</span> <span class="token function">MAJOR</span><span class="token punctuation">(</span>dev<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">MINOR</span><span class="token punctuation">(</span>dev<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>注意：在 Linux 中,所有标识为_ init 的函数在连接的时候都放在.init.text 这个区段内,此外,所有的 init 函数在区段.initcall.init 中还保存了一份函数指针,在初始化时内核会通过这些函数指针调用这些 _init 函数,并在初始化完成后,释放 init 区段(包括.init.text、.initcall.init 等)。</p>
+<h5 id="模块卸载函数"><a href="#模块卸载函数" class="headerlink" title="模块卸载函数"></a>模块卸载函数</h5><pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">static</span> <span class="token keyword">void</span> _ _exit <span class="token function">cleanup_function</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+<span class="token comment" spellcheck="true">/* 释放代码 */</span>
+<span class="token punctuation">}</span>
+<span class="token function">module_exit</span><span class="token punctuation">(</span>cleanup_function<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>模块卸载函数在模块卸载的时候执行,不返回任何值,必须以“module_exit(函数名)”的形式来指定。通常来说,模块卸载函数要完成与模块加载函数相反的功能,如下所示。</p>
+<p>若模块加载函数注册了 XXX,则模块卸载函数应该注销 XXX。</p>
+<p>若模块加载函数动态申请了内存,则模块卸载函数应释放该内存。</p>
+<p>若模块加载函数申请了硬件资源(中断、DMA 通道、I/O 端口和 I/O 内存等)的占用,则模块卸载函数应释放这些硬件资源。</p>
+<p>若模块加载函数开启了硬件,则卸载函数中一般要关闭之。</p>
+<h5 id="模块参数"><a href="#模块参数" class="headerlink" title="模块参数"></a>模块参数</h5><p>用“module_param(参数名,参数类型,参数读/写权限)”为模块定义一个参数,例如下列代码定义了 1 个整型参数和 1 个字符指针参数:</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">static</span> <span class="token keyword">char</span> <span class="token operator">*</span>book_name <span class="token operator">=</span> <span class="token string">" dissecting Linux Device Driver "</span><span class="token punctuation">;</span>
+<span class="token keyword">static</span> <span class="token keyword">int</span> num <span class="token operator">=</span> <span class="token number">4</span> <span class="token number">000</span><span class="token punctuation">;</span>
+<span class="token function">module_param</span><span class="token punctuation">(</span>num<span class="token punctuation">,</span> <span class="token keyword">int</span><span class="token punctuation">,</span> S_IRUGO<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">module_param</span><span class="token punctuation">(</span>book_name<span class="token punctuation">,</span> charp<span class="token punctuation">,</span> S_IRUGO<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>参数类型可以是 byte、short、ushort、int、uint、long、ulong、charp(字符指针)、bool 或 invbool(布尔的反),在模块被编译时会将 module_param 中声明的类型与变量定义的类型进行比较,判断是否一致。</p>
+<p>在装载内核模块时,用户可以向模块传递参数,形式为“insmode(或 modprobe)模块名 参数名=参数值”,如果不传递,参数将使用模块内定义的缺省值。</p>
+<h5 id="内核模块的符号导出"><a href="#内核模块的符号导出" class="headerlink" title="内核模块的符号导出"></a>内核模块的符号导出</h5><p>模块可以使用如下宏导出符号到内核符号表：</p>
+<pre><code>EXPORT_SYMBOL(符号名);
+EXPORT_SYMBOL_GPL(符号名);</code></pre><p>导出的符号将可以被其他模块使用,使用前声明一下即可。EXPORT_SYMBOL_GPL()只适用于包含 GPL 许可权的模块。</p>
+<h5 id="模块声明与描述"><a href="#模块声明与描述" class="headerlink" title="模块声明与描述"></a>模块声明与描述</h5><p>在Linux内核模块中，我们可以用MODULE_AUTHOR、MODULE_DESCRIPTION、MODULE_VERSION、MODULE_DEVICE_TABLE、MODULE_ALIAS分别声明模块的作者、描述、版本、设备表和别名，例如：</p>
+<pre><code>MODULE_AUTHOR(author);
+MODULE_DESCRIPTION(description);
+MODULE_VERSION(version_string);
+MODULE_DEVICE_TABLE(table_info);
+MODULE_ALIAS(alternate_name);</code></pre><p>对于USB、PCI等设备驱动，通常会创建一个MODULE_DEVICE_TABLE。</p>
+<h4 id="MakeFile"><a href="#MakeFile" class="headerlink" title="MakeFile"></a>MakeFile</h4><h5 id="Kernel-modules"><a href="#Kernel-modules" class="headerlink" title="Kernel modules"></a>Kernel modules</h5><pre><code>obj-m += hello.o</code></pre><h5 id="Specify-flags-for-the-module-compilation"><a href="#Specify-flags-for-the-module-compilation" class="headerlink" title="Specify flags for the module compilation."></a>Specify flags for the module compilation.</h5><pre><code>#EXTRA_CFLAGS=-g -O0
+
+build: kernel_modules
+kernel_modules:
+make -C /lib/modules/$(KVERS)/build M=$(CURDIR) modules #modules表示编译成模块的意思
+#CURDIR是make的内嵌变量，自动设置为当前目录
+
+clean:
+make -C /lib/modules/$(KVERS)/build M=$(CURDIR) clean
+该 Makefile 文件应该与源代码 hello.c 位于同一目录,开启其中的 EXTRA_CFLAGS=-g -O0可以得到包含调试信息的 hello.ko 模块。运行 make 命令得到的模块可直接在 PC 上运行。</code></pre><p>注：uname 的更多用法详见附件</p>
+<p>如果一个模块包括多个.c 文件(如 file1.c、file2.c),则应该以如下方式编写 Makefile:</p>
+<pre><code>obj-m := modulename.o
+modulename-objs := file1.o file2.o</code></pre><p>obj-m是个makefile变量，它的值可以是一串.o文件的表列</p>
+<h3 id="EBPF详解"><a href="#EBPF详解" class="headerlink" title="EBPF详解"></a>EBPF详解</h3><p>ebpf详细学习笔记和记录：</p>
+<p><a href="https://starcross.feishu.cn/docs/doccnZJbiuHUfwNpotNEbD5FhBh" target="_blank" rel="noopener">EBPF（Berkeley Packet Filter）学习记录</a></p>
+<p>在这里不赘述ebpf的历史等没有太多学习意义的信息，主要从实际开发角度需要去展开必要介绍。</p>
+<h2 id="Seccross项目理解"><a href="#Seccross项目理解" class="headerlink" title="Seccross项目理解"></a>Seccross项目理解</h2><p>开发记录及相关源码分析记录：</p>
+<p><a href="https://starcross.feishu.cn/docs/doccnLdElunAoBYEfnCXDyxif5K" target="_blank" rel="noopener">SECCROSS项目解读</a></p>
+<p><a href="https://starcross.feishu.cn/docs/doccn6uncVOKjl08w9zOl9CyAhd" target="_blank" rel="noopener">开发记录</a></p>
+<script>
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return; }
+            const img = document.createElement('img');
+            img.style = 'display:none !important;';
+            img.src = el.dataset.src;
+            img.addEventListener('error', () => {
+              img.remove();
+              el.style.color = 'inherit';
+              el.style.backgroundImage = 'none';
+              el.style.background = 'none';
+            });
+            img.addEventListener('load', () => {
+              img.remove();
+            });
+            document.body.appendChild(img);
+          });
+      </script>
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://jackhcc.github.io" rel="external nofollow noreferrer">杰克成</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://jackhcc.github.io/posts/ebpf-plan.html">https://jackhcc.github.io/posts/ebpf-plan.html</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="https://jackhcc.github.io" target="_blank">杰克成</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/EBPF/">
+                                    <span class="chip bg-color">EBPF</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/reward/aliqr.png" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/reward/wxqr.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+            
+        </div>
+    </div>
+
+    
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/gitalk/gitalk.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/my-gitalk.css">
+
+<div class="card gitalk-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="gitalk-container" class="card-content"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/gitalk/gitalk.min.js"></script>
+<script>
+    let gitalk = new Gitalk({
+        clientID: '3821a0bbb773038a51fc',
+        clientSecret: '4b30b507d67ec5497ec0e77f43f80cb3e0d7dd3a',
+        repo: 'JackHCC.github.io',
+        owner: 'JackHCC',
+        admin: "JackHCC",
+        id: '2021-07-27T01-38-47',
+        distractionFreeMode: false  // Facebook-like distraction free mode
+    });
+
+    gitalk.render('gitalk-container');
+</script>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/posts/ebpf-learning.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/4.jpg" class="responsive-img" alt="EBPF（Berkeley Packet Filter）学习记录">
+                        
+                        <span class="card-title">EBPF（Berkeley Packet Filter）学习记录</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            EBPF学习笔记与实战应用
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-07-28
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Linux-Kernel/" class="post-category">
+                                    Linux Kernel
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/EBPF/">
+                        <span class="chip bg-color">EBPF</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/posts/decompiling.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/22.jpg" class="responsive-img" alt="反编译理论基础">
+                        
+                        <span class="card-title">反编译理论基础</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            反编译基础知识与算法
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-07-26
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Decompile/" class="post-category">
+                                    Decompile
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Decompiling/">
+                        <span class="chip bg-color">Decompiling</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeShrink.js"></script>
+
+
+<!-- 代码块折行 -->
+
+<style type="text/css">
+code[class*="language-"], pre[class*="language-"] { white-space: pre !important; }
+</style>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('4'),
+            headingSelector: 'h1, h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h1, h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+    <footer class="page-footer bg-color">
+    <div class="container row center-align" style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            <span id="year">2020</span>
+            <a href="https://jackhcc.github.io" target="_blank">杰克成</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                class="white-color">3303.6k</span>&nbsp;字
+            
+            
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;人
+            </span>
+            
+            <br>
+            
+            <span id="sitetime">载入运行时间...</span>
+            <script>
+                function siteTime() {
+                    var seconds = 1000;
+                    var minutes = seconds * 60;
+                    var hours = minutes * 60;
+                    var days = hours * 24;
+                    var years = days * 365;
+                    var today = new Date();
+                    var startYear = "2020";
+                    var startMonth = "2";
+                    var startDate = "27";
+                    var startHour = "6";
+                    var startMinute = "30";
+                    var startSecond = "0";
+                    var todayYear = today.getFullYear();
+                    var todayMonth = today.getMonth() + 1;
+                    var todayDate = today.getDate();
+                    var todayHour = today.getHours();
+                    var todayMinute = today.getMinutes();
+                    var todaySecond = today.getSeconds();
+                    var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                    var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                    var diff = t2 - t1;
+                    var diffYears = Math.floor(diff / years);
+                    var diffDays = Math.floor((diff / days) - diffYears * 365);
+                    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+                    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) /
+                        minutes);
+                    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours -
+                        diffMinutes * minutes) / seconds);
+                    if (startYear == todayYear) {
+                        document.getElementById("year").innerHTML = todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffDays + " 天 " + diffHours +
+                            " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    } else {
+                        document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffYears + " 年 " + diffDays +
+                            " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    }
+                }
+                setInterval(siteTime, 1000);
+            </script>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/JackHCC" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:jackcc0701@163.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+    <a href="https://www.facebook.com/profile.php?id=100046343443643" class="tooltipped" target="_blank" data-tooltip="关注我的Facebook: https://www.facebook.com/profile.php?id=100046343443643" data-position="top" data-delay="50">
+        <i class="fab fa-facebook-f"></i>
+    </a>
+
+
+
+    <a href="https://twitter.com/JackChe66021834" class="tooltipped" target="_blank" data-tooltip="关注我的Twitter: https://twitter.com/JackChe66021834" data-position="top" data-delay="50">
+        <i class="fab fa-twitter"></i>
+    </a>
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=2508074836" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 2508074836" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+    <a href="https://weibo.com/u/6885584679" class="tooltipped" target="_blank" data-tooltip="关注我的微博: https://weibo.com/u/6885584679" data-position="top" data-delay="50">
+        <i class="fab fa-weibo"></i>
+    </a>
+
+
+
+    <a href="https://www.zhihu.com/people/8f8482f01f0d6a04e844efe32e0f0710" class="tooltipped" target="_blank" data-tooltip="关注我的知乎: https://www.zhihu.com/people/8f8482f01f0d6a04e844efe32e0f0710" data-position="top" data-delay="50">
+        <i class="fab fa-zhihu1">知</i>
+    </a>
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/materialize/materialize.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/aos/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/js/matery.js"></script>
+
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+    <script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script type="text/javascript" src="/js/fireworks.js"></script>
+
+    <script type="text/javascript">
+        //只在桌面版网页启用特效
+        var windowWidth = $(window).width();
+        if (windowWidth > 768) {
+            document.write('<script type="text/javascript" src="/js/sakura.js"><\/script>'); }
+    </script>
+
+    <!-- weather -->
+	<script type="text/javascript">
+	WIDGET = {FID: 'TToslpmkVO'}
+	</script>
+	<script type="text/javascript" src="https://apip.weatherdt.com/float/static/js/r.js?v=1111"></script>
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <!-- Baidu Analytics -->
+
+<script>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+    <!-- Baidu Push -->
+
+    
+    
+    <script async src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+        <script src="//code.tidio.co/kqhlkxviiccyoa0czpfpu4ijuey9hfre.js"></script>
+        <script> 
+            $(document).ready(function () {
+                setInterval(change_Tidio, 50);  
+                function change_Tidio() { 
+                    var tidio=$("#tidio-chat iframe");
+                    if(tidio.css("display")=="block"&& $(window).width()>977 ){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" &&$(window).width()>977)>0? "-40px" : ($("div.toc-title").length&&$(window).width()>977)>0?"85px":"20px";   
+                        document.getElementById("tidio-chat-iframe").style.right="-15px";   
+                        document.getElementById("tidio-chat-iframe").style.height=parseInt(tidio.css("height"))>=520?"520px":tidio.css("height");
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    } 
+                    else if(tidio.css("display")=="block"&&$(window).width()>601 &&$(window).width()<992 ){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" && 601< $(window).width()<992)>0? "-40px":"20px" ;   
+                        document.getElementById("tidio-chat-iframe").style.right="-15px"; 
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    }
+                    else if(tidio.css("display")=="block"&&$(window).width()<601 && parseInt(tidio.css("height"))<230){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" && $(window).width()<601)>0? "-10px":"45px" ;   
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    }
+                    if( tidio.css("display")=="block"&&$(window).width()<601 && parseInt(tidio.css("height"))>=230){
+                        document.getElementById("tidio-chat-iframe").style.zIndex="998";
+                    }
+                } 
+            }); 
+        </script>
+    
+
+    
+
+    
+    <script type="text/javascript" color="0,0,255"
+        pointColor="0,0,255" opacity='0.7'
+        zIndex="-1" count="99"
+        src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/background/canvas-nest.js"></script>
+    
+
+    
+
+    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/background/ribbon-dynamic.js" async="async"></script>
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/instantpage/instantpage.js" type="module"></script>
+    
+<script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script>
+        <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
+        <script>
+        $('a').each(function() {
+          const $this = $(this);
+          const href = $this.attr('href');
+          if (href && href.match('^((http|https|thunder|qqdl|ed2k|Flashget|qbrowser|ftp|rtsp|mms)://)')) {
+            const strs = href.split('/');
+            if (strs.length >= 3) {
+                const host = strs[2];
+                if (host !== 'your_domain' || window.location.host) {
+                    $this.attr('href', '/go.html?u='+Base64.encode(href)+'').attr('rel', 'external nofollow noopener noreferrer');
+                    if (true) {
+                        $this.attr('target', '_blank');
+                    }
+                }
+            }
+          }
+        });
+        </script></body>
+
+</html>
+

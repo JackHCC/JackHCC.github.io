@@ -1,0 +1,2096 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="Graph embedding详解, JackHCC">
+    <meta name="description" content="Graph embedding学习记录">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Graph embedding详解 | JackHCC</title>
+    <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/my.css">
+    
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/jquery/jquery.min.js"></script>
+    
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper head-container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/me.jpg" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">JackHCC</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>留言板</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>友情链接</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/me.jpg" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">JackHCC</div>
+        <div class="logo-desc">
+            
+            Make the world betterrrr!!!
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			留言板
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			友情链接
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/JackHCC/JackHCC.github.io" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/JackHCC/JackHCC.github.io" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/10.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">Graph embedding详解</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        height: calc(100vh - 250px);
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 30px;
+        bottom: 146px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/GNN/">
+                                <span class="chip bg-color">GNN</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/Deep-learning/" class="post-category">
+                                Deep learning
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2021-09-01
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2021-09-15
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    11.9k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    46 分
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h1 id="DeepWalk"><a href="#DeepWalk" class="headerlink" title="DeepWalk"></a>DeepWalk</h1><p>原论文：<a href="https://export.arxiv.org/pdf/1403.6652" target="_blank" rel="noopener">DeepWalk: Online Learning of Social Representations</a></p>
+<p>项目代码：<a href="https://github.com/phanein/deepwalk" target="_blank" rel="noopener">https://github.com/phanein/deepwalk</a></p>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>虽然DeepWalk是KDD 2014的工作，但却是我们了解Graph Embedding无法绕过的一个方法。</p>
+<p>我们都知道在NLP任务中，word2vec是一种常用的word embedding方法，word2vec通过语料库中的句子序列来描述词与词的共现关系，进而学习到词语的向量表示。</p>
+<p>DeepWalk的思想类似word2vec，使用<strong>图中节点与节点的共现关系</strong>来学习节点的向量表示。那么关键的问题就是如何来描述节点与节点的共现关系，DeepWalk给出的方法是使用随机游走(RandomWalk)的方式在图中进行节点采样。</p>
+<p>RandomWalk是一种<strong>可重复访问已访问节点的深度优先遍历</strong>算法。给定当前访问起始节点，从其邻居中随机采样节点作为下一个访问节点，重复此过程，直到访问序列长度满足预设条件。</p>
+<p>获取足够数量的节点访问序列后，使用skip-gram model 进行向量学习。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902195323654.png" alt=""></p>
+<h2 id="DeepWalk-核心代码"><a href="#DeepWalk-核心代码" class="headerlink" title="DeepWalk 核心代码"></a>DeepWalk 核心代码</h2><p>DeepWalk算法主要包括两个步骤，第一步为随机游走采样节点序列，第二步为使用skip-gram model（word2vec）学习表达向量。</p>
+<p>①构建同构网络，从网络中的每个节点开始分别进行Random Walk 采样，得到局部相关联的训练数据； ②对采样数据进行SkipGram训练，将离散的网络节点表示成向量化，最大化节点共现，使用Hierarchical Softmax来做超大规模分类的分类器</p>
+<h2 id="DeepWalk-算法原理"><a href="#DeepWalk-算法原理" class="headerlink" title="DeepWalk 算法原理"></a>DeepWalk 算法原理</h2><p><img src="/images/loading.gif" data-original="../images/ML/image-20210901223228278.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210901223256599.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210901223513237.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902195016126.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/3ede9a1091a2fff483582d0fe22de257-16305834864723.png" alt=""></p>
+<p>语言模型的输入是语料库和词汇表，而 <code>DeepWalk</code> 的输入是一组<code>short random walk</code> 序列和图的顶点 </p>
+<h3 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20210902195640043.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902195738693.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/9e18bf6ded458c44ca671f1660b3b192.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902195837390.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902195914735.png" alt=""></p>
+<h3 id="训练与优化"><a href="#训练与优化" class="headerlink" title="训练与优化"></a>训练与优化</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20210902200006723.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902200046450.png" alt=""></p>
+<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><h3 id="数据集："><a href="#数据集：" class="headerlink" title="数据集："></a>数据集：</h3><ul>
+<li><code>BlogCatalog</code> 数据集：由博客作者提供的社交关系网络。标签代表作者提供的主题类别。</li>
+<li><code>Flickr</code> 数据集：<code>Flickr</code>网站用户之间的关系网络。标签代表用户的兴趣组，如“黑白照片”。</li>
+<li><code>YouTube</code> 数据集：<code>YouTube</code> 网站用户之间的社交网络。标签代表用户的视频兴趣组，如“动漫、摔跤”。</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/6b30839e497f901daa504504607af694.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902200245679.png" alt=""></p>
+<h2 id="Random-Walk"><a href="#Random-Walk" class="headerlink" title="Random Walk"></a>Random Walk</h2><p>我们可以通过并行的方式加速路径采样，在采用多进程进行加速时，相比于开一个进程池让每次外层循环启动一个进程，我们采用固定为每个进程分配指定数量的<code>num_walks</code>的方式，这样可以最大限度减少进程频繁创建与销毁的时间开销。</p>
+<p><code>deepwalk_walk</code>方法对应上一节伪代码中第6行，<code>_simulate_walks</code>对应伪代码中第3行开始的外层循环。最后的<code>Parallel</code>为多进程并行时的任务分配操作。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">deepwalk_walk</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> walk_length<span class="token punctuation">,</span> start_node<span class="token punctuation">)</span><span class="token punctuation">:</span>
+
+    walk <span class="token operator">=</span> <span class="token punctuation">[</span>start_node<span class="token punctuation">]</span>
+
+    <span class="token keyword">while</span> len<span class="token punctuation">(</span>walk<span class="token punctuation">)</span> <span class="token operator">&lt;</span> walk_length<span class="token punctuation">:</span>
+        cur <span class="token operator">=</span> walk<span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span>
+        cur_nbrs <span class="token operator">=</span> list<span class="token punctuation">(</span>self<span class="token punctuation">.</span>G<span class="token punctuation">.</span>neighbors<span class="token punctuation">(</span>cur<span class="token punctuation">)</span><span class="token punctuation">)</span>
+        <span class="token keyword">if</span> len<span class="token punctuation">(</span>cur_nbrs<span class="token punctuation">)</span> <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">:</span>
+            walk<span class="token punctuation">.</span>append<span class="token punctuation">(</span>random<span class="token punctuation">.</span>choice<span class="token punctuation">(</span>cur_nbrs<span class="token punctuation">)</span><span class="token punctuation">)</span>
+        <span class="token keyword">else</span><span class="token punctuation">:</span>
+            <span class="token keyword">break</span>
+    <span class="token keyword">return</span> walk
+
+<span class="token keyword">def</span> <span class="token function">_simulate_walks</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> nodes<span class="token punctuation">,</span> num_walks<span class="token punctuation">,</span> walk_length<span class="token punctuation">,</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    walks <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+    <span class="token keyword">for</span> _ <span class="token keyword">in</span> range<span class="token punctuation">(</span>num_walks<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        random<span class="token punctuation">.</span>shuffle<span class="token punctuation">(</span>nodes<span class="token punctuation">)</span>
+        <span class="token keyword">for</span> v <span class="token keyword">in</span> nodes<span class="token punctuation">:</span>           
+            walks<span class="token punctuation">.</span>append<span class="token punctuation">(</span>self<span class="token punctuation">.</span>deepwalk_walk<span class="token punctuation">(</span>alk_length<span class="token operator">=</span>walk_length<span class="token punctuation">,</span> start_node<span class="token operator">=</span>v<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> walks
+
+results <span class="token operator">=</span> Parallel<span class="token punctuation">(</span>n_jobs<span class="token operator">=</span>workers<span class="token punctuation">,</span> verbose<span class="token operator">=</span>verbose<span class="token punctuation">,</span> <span class="token punctuation">)</span><span class="token punctuation">(</span>
+    delayed<span class="token punctuation">(</span>self<span class="token punctuation">.</span>_simulate_walks<span class="token punctuation">)</span><span class="token punctuation">(</span>nodes<span class="token punctuation">,</span> num<span class="token punctuation">,</span> walk_length<span class="token punctuation">)</span> <span class="token keyword">for</span> num <span class="token keyword">in</span>
+    partition_num<span class="token punctuation">(</span>num_walks<span class="token punctuation">,</span> workers<span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+walks <span class="token operator">=</span> list<span class="token punctuation">(</span>itertools<span class="token punctuation">.</span>chain<span class="token punctuation">(</span><span class="token operator">*</span>results<span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="LINE"><a href="#LINE" class="headerlink" title="LINE"></a>LINE</h1><p>原论文：<a href="https://arxiv.org/pdf/1503.03578.pdf%C2%A0%E3%80%90WWW" target="_blank" rel="noopener">LINE: Large-scale Information Network Embedding</a></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902200414956.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902200458852.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902200519990.png" alt=""></p>
+<h2 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h2><h3 id="一阶邻近度"><a href="#一阶邻近度" class="headerlink" title="一阶邻近度"></a>一阶邻近度</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20210902200612463.png" alt=""></p>
+<h3 id="二阶邻近度"><a href="#二阶邻近度" class="headerlink" title="二阶邻近度"></a>二阶邻近度</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20210902200651824.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902200707551.png" alt=""></p>
+<h3 id="融合"><a href="#融合" class="headerlink" title="融合"></a>融合</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20210902200729545.png" alt=""></p>
+<h3 id="最优化问题"><a href="#最优化问题" class="headerlink" title="最优化问题"></a>最优化问题</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20210902200817507.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902200831778.png" alt=""></p>
+<h3 id="边采样"><a href="#边采样" class="headerlink" title="边采样"></a>边采样</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20210902200907572.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902200924518.png" alt=""></p>
+<h3 id="二阶邻居"><a href="#二阶邻居" class="headerlink" title="二阶邻居"></a>二阶邻居</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20210902200946516.png" alt=""></p>
+<h3 id="新顶点"><a href="#新顶点" class="headerlink" title="新顶点"></a>新顶点</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20210902201003966.png" alt=""></p>
+<h2 id="LINE核心代码"><a href="#LINE核心代码" class="headerlink" title="LINE核心代码"></a>LINE核心代码</h2><h3 id="模型和损失函数定义"><a href="#模型和损失函数定义" class="headerlink" title="模型和损失函数定义"></a>模型和损失函数定义</h3><p>LINE使用梯度下降的方法进行优化，直接使用tensorflow进行实现，就可以不用人工写参数更新的逻辑了~</p>
+<p>这里的 实现中把1阶和2阶的方法融合到一起了，可以通过超参数<code>order</code>控制是分开优化还是联合优化，论文推荐分开优化。</p>
+<p>首先输入就是两个顶点的编号，然后分别拿到各自对应的embedding向量，最后输出内积的结果。 真实<code>label</code>定义为1或者-1，通过模型输出的内积和<code>line_loss</code>就可以优化使用了负采样技巧的目标函数了~</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">line_loss</span><span class="token punctuation">(</span>y_true<span class="token punctuation">,</span> y_pred<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">return</span> <span class="token operator">-</span>K<span class="token punctuation">.</span>mean<span class="token punctuation">(</span>K<span class="token punctuation">.</span>log<span class="token punctuation">(</span>K<span class="token punctuation">.</span>sigmoid<span class="token punctuation">(</span>y_true<span class="token operator">*</span>y_pred<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token keyword">def</span> <span class="token function">create_model</span><span class="token punctuation">(</span>numNodes<span class="token punctuation">,</span> embedding_size<span class="token punctuation">,</span> order<span class="token operator">=</span><span class="token string">'second'</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+
+    v_i <span class="token operator">=</span> Input<span class="token punctuation">(</span>shape<span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    v_j <span class="token operator">=</span> Input<span class="token punctuation">(</span>shape<span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+    first_emb <span class="token operator">=</span> Embedding<span class="token punctuation">(</span>numNodes<span class="token punctuation">,</span> embedding_size<span class="token punctuation">,</span> name<span class="token operator">=</span><span class="token string">'first_emb'</span><span class="token punctuation">)</span>
+    second_emb <span class="token operator">=</span> Embedding<span class="token punctuation">(</span>numNodes<span class="token punctuation">,</span> embedding_size<span class="token punctuation">,</span> name<span class="token operator">=</span><span class="token string">'second_emb'</span><span class="token punctuation">)</span>
+    context_emb <span class="token operator">=</span> Embedding<span class="token punctuation">(</span>numNodes<span class="token punctuation">,</span> embedding_size<span class="token punctuation">,</span> name<span class="token operator">=</span><span class="token string">'context_emb'</span><span class="token punctuation">)</span>
+
+    v_i_emb <span class="token operator">=</span> first_emb<span class="token punctuation">(</span>v_i<span class="token punctuation">)</span>
+    v_j_emb <span class="token operator">=</span> first_emb<span class="token punctuation">(</span>v_j<span class="token punctuation">)</span>
+
+    v_i_emb_second <span class="token operator">=</span> second_emb<span class="token punctuation">(</span>v_i<span class="token punctuation">)</span>
+    v_j_context_emb <span class="token operator">=</span> context_emb<span class="token punctuation">(</span>v_j<span class="token punctuation">)</span>
+
+    first <span class="token operator">=</span> Lambda<span class="token punctuation">(</span><span class="token keyword">lambda</span> x<span class="token punctuation">:</span> tf<span class="token punctuation">.</span>reduce_sum<span class="token punctuation">(</span>
+        x<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token operator">*</span>x<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> axis<span class="token operator">=</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> keep_dims<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">)</span><span class="token punctuation">,</span> name<span class="token operator">=</span><span class="token string">'first_order'</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">[</span>v_i_emb<span class="token punctuation">,</span> v_j_emb<span class="token punctuation">]</span><span class="token punctuation">)</span>
+    second <span class="token operator">=</span> Lambda<span class="token punctuation">(</span><span class="token keyword">lambda</span> x<span class="token punctuation">:</span> tf<span class="token punctuation">.</span>reduce_sum<span class="token punctuation">(</span>
+        x<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token operator">*</span>x<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> axis<span class="token operator">=</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> keep_dims<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">)</span><span class="token punctuation">,</span> name<span class="token operator">=</span><span class="token string">'second_order'</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">[</span>v_i_emb_second<span class="token punctuation">,</span> v_j_context_emb<span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+    <span class="token keyword">if</span> order <span class="token operator">==</span> <span class="token string">'first'</span><span class="token punctuation">:</span>
+        output_list <span class="token operator">=</span> <span class="token punctuation">[</span>first<span class="token punctuation">]</span>
+    <span class="token keyword">elif</span> order <span class="token operator">==</span> <span class="token string">'second'</span><span class="token punctuation">:</span>
+        output_list <span class="token operator">=</span> <span class="token punctuation">[</span>second<span class="token punctuation">]</span>
+    <span class="token keyword">else</span><span class="token punctuation">:</span>
+        output_list <span class="token operator">=</span> <span class="token punctuation">[</span>first<span class="token punctuation">,</span> second<span class="token punctuation">]</span>
+
+    model <span class="token operator">=</span> Model<span class="token punctuation">(</span>inputs<span class="token operator">=</span><span class="token punctuation">[</span>v_i<span class="token punctuation">,</span> v_j<span class="token punctuation">]</span><span class="token punctuation">,</span> outputs<span class="token operator">=</span>output_list<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="顶点负采样和边采样"><a href="#顶点负采样和边采样" class="headerlink" title="顶点负采样和边采样"></a>顶点负采样和边采样</h3><p>下面的函数功能是创建顶点负采样和边采样需要的采样表。中规中矩，主要就是做一些预处理，然后创建alias算法需要的两个表。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">_gen_sampling_table</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+
+    <span class="token comment" spellcheck="true"># create sampling table for vertex</span>
+    power <span class="token operator">=</span> <span class="token number">0.75</span>
+    numNodes <span class="token operator">=</span> self<span class="token punctuation">.</span>node_size
+    node_degree <span class="token operator">=</span> np<span class="token punctuation">.</span>zeros<span class="token punctuation">(</span>numNodes<span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># out degree</span>
+    node2idx <span class="token operator">=</span> self<span class="token punctuation">.</span>node2idx
+
+    <span class="token keyword">for</span> edge <span class="token keyword">in</span> self<span class="token punctuation">.</span>graph<span class="token punctuation">.</span>edges<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        node_degree<span class="token punctuation">[</span>node2idx<span class="token punctuation">[</span>edge<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">]</span>
+                    <span class="token punctuation">]</span> <span class="token operator">+=</span> self<span class="token punctuation">.</span>graph<span class="token punctuation">[</span>edge<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">[</span>edge<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">.</span>get<span class="token punctuation">(</span><span class="token string">'weight'</span><span class="token punctuation">,</span> <span class="token number">1.0</span><span class="token punctuation">)</span>
+
+    total_sum <span class="token operator">=</span> sum<span class="token punctuation">(</span><span class="token punctuation">[</span>math<span class="token punctuation">.</span>pow<span class="token punctuation">(</span>node_degree<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span> power<span class="token punctuation">)</span>
+                        <span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span>numNodes<span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+    norm_prob <span class="token operator">=</span> <span class="token punctuation">[</span>float<span class="token punctuation">(</span>math<span class="token punctuation">.</span>pow<span class="token punctuation">(</span>node_degree<span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">,</span> power<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">/</span>
+                    total_sum <span class="token keyword">for</span> j <span class="token keyword">in</span> range<span class="token punctuation">(</span>numNodes<span class="token punctuation">)</span><span class="token punctuation">]</span>
+
+    self<span class="token punctuation">.</span>node_accept<span class="token punctuation">,</span> self<span class="token punctuation">.</span>node_alias <span class="token operator">=</span> create_alias_table<span class="token punctuation">(</span>norm_prob<span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true"># create sampling table for edge</span>
+    numEdges <span class="token operator">=</span> self<span class="token punctuation">.</span>graph<span class="token punctuation">.</span>number_of_edges<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    total_sum <span class="token operator">=</span> sum<span class="token punctuation">(</span><span class="token punctuation">[</span>self<span class="token punctuation">.</span>graph<span class="token punctuation">[</span>edge<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">[</span>edge<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">.</span>get<span class="token punctuation">(</span><span class="token string">'weight'</span><span class="token punctuation">,</span> <span class="token number">1.0</span><span class="token punctuation">)</span>
+                        <span class="token keyword">for</span> edge <span class="token keyword">in</span> self<span class="token punctuation">.</span>graph<span class="token punctuation">.</span>edges<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+    norm_prob <span class="token operator">=</span> <span class="token punctuation">[</span>self<span class="token punctuation">.</span>graph<span class="token punctuation">[</span>edge<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">[</span>edge<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">.</span>get<span class="token punctuation">(</span><span class="token string">'weight'</span><span class="token punctuation">,</span> <span class="token number">1.0</span><span class="token punctuation">)</span> <span class="token operator">*</span>
+                    numEdges <span class="token operator">/</span> total_sum <span class="token keyword">for</span> edge <span class="token keyword">in</span> self<span class="token punctuation">.</span>graph<span class="token punctuation">.</span>edges<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+
+    self<span class="token punctuation">.</span>edge_accept<span class="token punctuation">,</span> self<span class="token punctuation">.</span>edge_alias <span class="token operator">=</span> create_alias_table<span class="token punctuation">(</span>norm_prob<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="GraRep"><a href="#GraRep" class="headerlink" title="GraRep"></a>GraRep</h1><p>原论文：<a href="https://www.researchgate.net/profile/Qiongkai-Xu/publication/301417811_GraRep/links/5847ecdb08ae8e63e633b5f2/GraRep.pdf" target="_blank" rel="noopener">GraRep: Learning Graph Representations with Global Structural Information</a></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902201616450.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902201641708.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902201706333.png" alt=""></p>
+<h2 id="模型-1"><a href="#模型-1" class="headerlink" title="模型"></a>模型</h2><p><img src="/images/loading.gif" data-original="../images/ML/image-20210902201738183.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902201818431.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902201840081.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902201904257.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902201922651.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902201940531.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902202014308.png" alt=""></p>
+<h2 id="GraRep-vs-SGNS"><a href="#GraRep-vs-SGNS" class="headerlink" title="GraRep vs SGNS"></a>GraRep vs SGNS</h2><p><img src="/images/loading.gif" data-original="../images/ML/image-20210902202109598.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902202126046.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902202141741.png" alt=""></p>
+<h1 id="TADW"><a href="#TADW" class="headerlink" title="TADW"></a>TADW</h1><p>原论文：<a href="https://www.aaai.org/ocs/index.php/IJCAI/IJCAI15/paper/viewPaper/11098" target="_blank" rel="noopener">Network Representation Learning with Rich Text Information</a></p>
+<p>大多数网络表示学习方法仅仅研究网络结构。事实上，网络顶点包含了丰富的信息（如文本内容和其它元数据），而这些方法都无法利用到这些信息。</p>
+<p>利用顶点的文本信息的一个直接方法是：分别独立学习文本特征<code>representation</code> 和网络顶点<code>representation</code>，然后将二者拼接在一起。这种方法没有考虑网络结构和文本信息之间的复杂交互，因此通常效果一般。</p>
+<p>论文<code>《Network Representation Learning with Rich Text Information》</code> 提出了 <code>text-associated DeepWalk:TADW</code> 模型，该模型在矩阵分解的框架下将顶点的文本信息纳入网络表示学习中。</p>
+<h2 id="模型-2"><a href="#模型-2" class="headerlink" title="模型"></a>模型</h2><p><img src="/images/loading.gif" data-original="../images/ML/image-20210902202536643.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902202607960.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902202635400.png" alt=""></p>
+<h1 id="DNGR"><a href="#DNGR" class="headerlink" title="DNGR"></a>DNGR</h1><p>原论文：<a href="https://ojs.aaai.org/index.php/AAAI/article/view/10179" target="_blank" rel="noopener">Deep Neural Networks for Learning Graph Representations</a></p>
+<p>虽然 <code>DeepWalk</code> 可以有效的学习无权图的顶点<code>representation</code> ，但是它存在两个缺点：</p>
+<ul>
+<li><p>获得<code>vertex-context</code> 的采样过程效率太低，且无法对带权图进行采样。</p>
+</li>
+<li><p><code>SGNS</code> 等价于对 <code>PPMI</code> 矩阵进行矩阵分解，目前广泛使用的 <code>SVD</code> 本质是一种降维工具。</p>
+<p>事实上 <code>SVD</code> 是一种线性降维，无法捕获原始高维空间和<code>representation</code> 低维空间之间的非线性关系。<code>Levy</code> 也证明了：从 <code>SVD</code> 方法中学到的<code>representation</code> 不一定优于 <code>PPMI</code> 矩阵本身作为 <code>representation</code>（参考 <code>word representation</code> 章节）。</p>
+</li>
+</ul>
+<p>针对这两个问题，论文 <code>《Deep Neural Networks for Learning Graph Representations》</code> 提出了 <code>DNGR</code> 模型，该模型主要做了两点改进：</p>
+<ul>
+<li>采用基于随机游走模型 <code>random surfing model</code> 来直接构建<code>Graph</code> 的结构信息，抛弃了基于随机游走<code>random walk</code>策略生成线性序列的方式。</li>
+<li>引入<code>stacked denoising autoencoder:SDAE</code> 堆叠式降噪自编码器来分解 <code>PPMI</code> 矩阵，从而进行非线性降维，从而捕获顶点之间的潜在复杂的非线性关系。</li>
+</ul>
+<h2 id="模型-3"><a href="#模型-3" class="headerlink" title="模型"></a>模型</h2><p><img src="/images/loading.gif" data-original="../images/ML/image-20210902203321719.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902203353304.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902203416056.png" alt=""></p>
+<h1 id="Node2Vec"><a href="#Node2Vec" class="headerlink" title="Node2Vec"></a>Node2Vec</h1><p>原论文：<a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5108654/pdf/nihms825755.pdf" target="_blank" rel="noopener">node2vec: Scalable Feature Learning for Networks</a></p>
+<ol>
+<li><p><code>feature learning</code> 的挑战是如何定义恰当的目标函数，这涉及计算效率和预测准确率之间的平衡。</p>
+<ul>
+<li>一方面可以直接优化下游监督任务的目标函数。<ul>
+<li>优点：预测准确率高。</li>
+<li>缺点：需要估计的参数数量激增，训练时间复杂度较高；且学到的<code>feature representation</code> 是任务相关的，无法广泛应用于其它类型的任务。</li>
+</ul>
+</li>
+<li>另一方面可以精心设计独立于下游监督任务的目标函数。<ul>
+<li>优点：计算效率较高；且<code>feature representation</code> 是任务无关的，可以广泛应用于下游各种类型的任务。</li>
+<li>缺点：应用于下游监督学习任务时预测准确率稍低。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>当前的模型和方法无法为无监督学习 <code>graph feature learning</code> 定义一个合理目标函数。</p>
+<ul>
+<li><p>基于线性和非线性的经典无监督学习算法，如 <code>PCA,MDS,IsoMap</code> 及其扩展算法，它们最大化的目标函数为：原始数据在低维空间<code>representation</code> 的方差。</p>
+<p>这些算法具有两个主要缺点：</p>
+<ul>
+<li><p>算法涉及矩阵的特征分解，这对于大型<code>Graph</code> 代价太大，因此可扩展性很差。</p>
+</li>
+<li><p>这些算法的目标函数隐含着对 <code>Graph</code> 结构的各种假设，如同质性 <code>homophily</code> 或者结构对等性 <code>structural equivalence</code> ，这些假设不一定适合各种类型的 <code>Graph</code> 。</p>
+<p>例如谱聚类的目标函数就有很强的同质假设：图的割<code>cut</code> 有助于分类。该假设在很多场景下是合理的，但是无法推广到所有的 <code>Graph</code> 。</p>
+</li>
+</ul>
+</li>
+<li><p>基于邻域关系的无监督学习算法，如 <code>DeepWalk, LINE</code> 及其扩展算法，它们最大化的目标函数为：尽可能在低维空间中保留原始空间中的顶点邻域关系 <code>neighborhood</code> ，即在低维空间中尽可能相似。</p>
+<p>不同的采样策略将导致不同的邻域关系，因此学到不同的顶点表达。实际上并没有一个明确的、更好的采样策略使得采样到的领域关系适合所有网络以及所有任务。这也是 <code>DeepWalk,LINE</code> 等工作的主要缺点：无法为采样过程提供任何的灵活性。</p>
+</li>
+</ul>
+</li>
+</ol>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902203718534.png" alt=""></p>
+<p>论文 <code>《node2vec: Scalable Feature Learning for Networks》</code> 提出了 <code>node2vec</code> 模型，该模型的目标函数也是：尽可能在低维空间中保留原始空间中的顶点邻域关系 <code>neighborhood</code> 。但是 <code>node2vec</code> 重新定义了邻居这一概念，认为灵活地探索顶点领居是学习更加丰富的顶点表达的关键。</p>
+<p><code>node2vec</code> 通过一个有偏随机游走过程<code>biased random walk procedure</code> 来探索各种类型的邻居，从而能够灵活的根据顶点所属的社区或者顶点在网络中的角色来学习顶点表达。</p>
+<p><code>node2vec</code> 是 <code>DeepWalk,LINE</code> 等算法的进一步扩展。与 <code>DeepWalk,LINE</code> 等死板的搜索方法相比，<code>node2vec</code> 可以通过调节超参数来控制搜索空间，从而产生更加灵活的算法。该超参数具有直观的解释，并决定了不同不同的搜索策略。</p>
+<ul>
+<li>在多标签分类任务中<code>node2vec</code> 优于最新的方法最高达 <code>26.7%</code>；在链接预测任务中 <code>node2vec</code> 优于最新的方法最高达 <code>12.6%</code> 。</li>
+<li>在计算效率上 <code>node2vec</code> 主要计算阶段很容易并行化，可以在几个小时内计算扩展到数百万个结点的大型网络。</li>
+</ul>
+<p><code>node2vec</code> 还将单个顶点的表达扩展到成对顶点的表达，即边的表达，使得<code>node2vec</code> 能够同时进行基于顶点的预测任务、基于边的预测任务。</p>
+<h2 id="模型-4"><a href="#模型-4" class="headerlink" title="模型"></a>模型</h2><p><img src="/images/loading.gif" data-original="../images/ML/image-20210902204058567.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902204128960.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902204213034.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902204244418.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902204307604.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902204329356.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902204351261.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902204426645.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902204445495.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902204531793.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902204548399.png" alt=""></p>
+<h2 id="边的representation"><a href="#边的representation" class="headerlink" title="边的representation"></a>边的representation</h2><p><img src="/images/loading.gif" data-original="../images/ML/image-20210902204642547.png" alt=""></p>
+<h2 id="算法-1"><a href="#算法-1" class="headerlink" title="算法"></a>算法</h2><p><img src="/images/loading.gif" data-original="../images/ML/image-20210902204844494.png" alt=""></p>
+<h2 id="node2vec核心代码"><a href="#node2vec核心代码" class="headerlink" title="node2vec核心代码"></a>node2vec核心代码</h2><h3 id="node2vecWalk"><a href="#node2vecWalk" class="headerlink" title="node2vecWalk"></a>node2vecWalk</h3><p>通过上面的伪代码可以看到，node2vec和deepwalk非常类似，主要区别在于顶点序列的采样策略不同，所以这里我们主要关注<strong>node2vecWalk</strong>的实现。</p>
+<p>由于采样时需要考虑前面2步访问过的顶点，所以当访问序列中只有1个顶点时，直接使用当前顶点和邻居顶点之间的边权作为采样依据。 当序列多余2个顶点时，使用文章提到的有偏采样。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">node2vec_walk</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> walk_length<span class="token punctuation">,</span> start_node<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    G <span class="token operator">=</span> self<span class="token punctuation">.</span>G    
+    alias_nodes <span class="token operator">=</span> self<span class="token punctuation">.</span>alias_nodes    
+    alias_edges <span class="token operator">=</span> self<span class="token punctuation">.</span>alias_edges
+    walk <span class="token operator">=</span> <span class="token punctuation">[</span>start_node<span class="token punctuation">]</span>
+    <span class="token keyword">while</span> len<span class="token punctuation">(</span>walk<span class="token punctuation">)</span> <span class="token operator">&lt;</span> walk_length<span class="token punctuation">:</span>        
+        cur <span class="token operator">=</span> walk<span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span>        
+        cur_nbrs <span class="token operator">=</span> list<span class="token punctuation">(</span>G<span class="token punctuation">.</span>neighbors<span class="token punctuation">(</span>cur<span class="token punctuation">)</span><span class="token punctuation">)</span>        
+        <span class="token keyword">if</span> len<span class="token punctuation">(</span>cur_nbrs<span class="token punctuation">)</span> <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">:</span>            
+            <span class="token keyword">if</span> len<span class="token punctuation">(</span>walk<span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">:</span>                
+                walk<span class="token punctuation">.</span>append<span class="token punctuation">(</span>cur_nbrs<span class="token punctuation">[</span>alias_sample<span class="token punctuation">(</span>alias_nodes<span class="token punctuation">[</span>cur<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> alias_nodes<span class="token punctuation">[</span>cur<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">)</span>            
+            <span class="token keyword">else</span><span class="token punctuation">:</span>                
+                prev <span class="token operator">=</span> walk<span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">2</span><span class="token punctuation">]</span>                
+                edge <span class="token operator">=</span> <span class="token punctuation">(</span>prev<span class="token punctuation">,</span> cur<span class="token punctuation">)</span>                
+                next_node <span class="token operator">=</span> cur_nbrs<span class="token punctuation">[</span>alias_sample<span class="token punctuation">(</span>alias_edges<span class="token punctuation">[</span>edge<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span>alias_edges<span class="token punctuation">[</span>edge<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">]</span>                
+                walk<span class="token punctuation">.</span>append<span class="token punctuation">(</span>next_node<span class="token punctuation">)</span>        
+        <span class="token keyword">else</span><span class="token punctuation">:</span>            
+            <span class="token keyword">break</span>
+    <span class="token keyword">return</span> walk<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="构造采样表"><a href="#构造采样表" class="headerlink" title="构造采样表"></a>构造采样表</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20210902205019470.png" alt=""></p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">get_alias_edge</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> t<span class="token punctuation">,</span> v<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    G <span class="token operator">=</span> self<span class="token punctuation">.</span>G    
+    p <span class="token operator">=</span> self<span class="token punctuation">.</span>p    
+    q <span class="token operator">=</span> self<span class="token punctuation">.</span>q
+    unnormalized_probs <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>    
+    <span class="token keyword">for</span> x <span class="token keyword">in</span> G<span class="token punctuation">.</span>neighbors<span class="token punctuation">(</span>v<span class="token punctuation">)</span><span class="token punctuation">:</span>        
+        weight <span class="token operator">=</span> G<span class="token punctuation">[</span>v<span class="token punctuation">]</span><span class="token punctuation">[</span>x<span class="token punctuation">]</span><span class="token punctuation">.</span>get<span class="token punctuation">(</span><span class="token string">'weight'</span><span class="token punctuation">,</span> <span class="token number">1.0</span><span class="token punctuation">)</span><span class="token comment" spellcheck="true"># w_vx        </span>
+        <span class="token keyword">if</span> x <span class="token operator">==</span> t<span class="token punctuation">:</span><span class="token comment" spellcheck="true"># d_tx == 0            </span>
+            unnormalized_probs<span class="token punctuation">.</span>append<span class="token punctuation">(</span>weight<span class="token operator">/</span>p<span class="token punctuation">)</span>        
+        <span class="token keyword">elif</span> G<span class="token punctuation">.</span>has_edge<span class="token punctuation">(</span>x<span class="token punctuation">,</span> t<span class="token punctuation">)</span><span class="token punctuation">:</span><span class="token comment" spellcheck="true"># d_tx == 1            </span>
+            unnormalized_probs<span class="token punctuation">.</span>append<span class="token punctuation">(</span>weight<span class="token punctuation">)</span>        
+        <span class="token keyword">else</span><span class="token punctuation">:</span><span class="token comment" spellcheck="true"># d_tx == 2            </span>
+            unnormalized_probs<span class="token punctuation">.</span>append<span class="token punctuation">(</span>weight<span class="token operator">/</span>q<span class="token punctuation">)</span>    
+    norm_const <span class="token operator">=</span> sum<span class="token punctuation">(</span>unnormalized_probs<span class="token punctuation">)</span>    
+    normalized_probs <span class="token operator">=</span> <span class="token punctuation">[</span>float<span class="token punctuation">(</span>u_prob<span class="token punctuation">)</span><span class="token operator">/</span>norm_const <span class="token keyword">for</span> u_prob <span class="token keyword">in</span> unnormalized_probs<span class="token punctuation">]</span>
+    <span class="token keyword">return</span> create_alias_table<span class="token punctuation">(</span>normalized_probs<span class="token punctuation">)</span>
+
+<span class="token keyword">def</span> <span class="token function">preprocess_transition_probs</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    G <span class="token operator">=</span> self<span class="token punctuation">.</span>G
+    alias_nodes <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>    
+    <span class="token keyword">for</span> node <span class="token keyword">in</span> G<span class="token punctuation">.</span>nodes<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>        
+        unnormalized_probs <span class="token operator">=</span> <span class="token punctuation">[</span>G<span class="token punctuation">[</span>node<span class="token punctuation">]</span><span class="token punctuation">[</span>nbr<span class="token punctuation">]</span><span class="token punctuation">.</span>get<span class="token punctuation">(</span><span class="token string">'weight'</span><span class="token punctuation">,</span> <span class="token number">1.0</span><span class="token punctuation">)</span> <span class="token keyword">for</span> nbr <span class="token keyword">in</span> G<span class="token punctuation">.</span>neighbors<span class="token punctuation">(</span>node<span class="token punctuation">)</span><span class="token punctuation">]</span>        
+        norm_const <span class="token operator">=</span> sum<span class="token punctuation">(</span>unnormalized_probs<span class="token punctuation">)</span>        
+        normalized_probs <span class="token operator">=</span> <span class="token punctuation">[</span>float<span class="token punctuation">(</span>u_prob<span class="token punctuation">)</span><span class="token operator">/</span>norm_const <span class="token keyword">for</span> u_prob <span class="token keyword">in</span> unnormalized_probs<span class="token punctuation">]</span>                 
+        alias_nodes<span class="token punctuation">[</span>node<span class="token punctuation">]</span> <span class="token operator">=</span> create_alias_table<span class="token punctuation">(</span>normalized_probs<span class="token punctuation">)</span>
+    alias_edges <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+    <span class="token keyword">for</span> edge <span class="token keyword">in</span> G<span class="token punctuation">.</span>edges<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>        
+        alias_edges<span class="token punctuation">[</span>edge<span class="token punctuation">]</span> <span class="token operator">=</span> self<span class="token punctuation">.</span>get_alias_edge<span class="token punctuation">(</span>edge<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> edge<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+    self<span class="token punctuation">.</span>alias_nodes <span class="token operator">=</span> alias_nodes    
+    self<span class="token punctuation">.</span>alias_edges <span class="token operator">=</span> alias_edges
+    <span class="token keyword">return</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="WALKLETS"><a href="#WALKLETS" class="headerlink" title="WALKLETS"></a>WALKLETS</h1><p>原论文：<a href="https://arxiv.org/pdf/1605.02115.pdf" target="_blank" rel="noopener">Don’t Walk, Skip! Online Learning of Multi-scale Network Embeddings</a></p>
+<ol>
+<li><p>社交网络本质都是分层的，每个人（顶点）都属于多个社区，这些社区范围从小型社区（如家庭、朋友）、中型社区（如学校、企业）到大型社区（如民族、国家），代表了不同尺度 <code>scale</code> 的关系。</p>
+<p>随着关系尺度的变化，网络的拓扑结构也发生变化。如下图所示：</p>
+<ul>
+<li>当考虑家庭、朋友关系这一尺度时只有黄色部分构成一个社区。</li>
+<li>当考虑学校、企业关系这一尺度时只有蓝色部分（包括黄色部分）构成一个社区。</li>
+<li>当考虑民族、国家关系这一尺度时所有顶点都构成一个社区。</li>
+</ul>
+<p>在这个过程中尺度扮演者关键的角色，它决定了社区的规模以及顶点归属到哪些社区。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/7e80b401dcd01801e8cc935aa59dab0d.png" alt=""></p>
+</li>
+<li><p>在网络<code>representation</code> 学习的任务中，大多数方法都是一刀切：每个顶点得到一个融合了所有尺度的<code>representation</code> ，无法明确的捕获网络内结点之间的多尺度关系，因此无法区分网络在各个尺度上的差异。</p>
+<p><code>GraRep</code> 方法显式的建模多尺度关系，但是计算复杂度太高从而无法扩展到真实世界的大型网络。</p>
+<p>论文 <code>《Don’t Walk, Skip! Online Learning of Multi-scale Network Embeddings》</code> 提出了 <code>WALKLETS</code> 模型，该模型是一种在线的图<code>reprensentation</code> 学习方法，可以捕获网络顶点之间的多尺度关系，并且可扩展性强，支持扩展到百万顶点的大型网络。</p>
+<p><code>WALKLETS</code> 将每个顶点映射到低维<code>reprensentation</code> 向量，该向量捕获了顶点所属社区的潜在层次结构。在预测时可以用单个尺度 <code>representationi</code> 或者组合多个尺度 <code>representation</code> 来提供顶点更全面的社区关系。</p>
+<p>下图来自于 <code>Cora</code> 引用网络的一个子网络的二维可视化，中心的红色顶点表示源点，顶点颜色代表该顶点和源点的距离：距离越近颜色越红，距离越远颜色越蓝。</p>
+<ul>
+<li>左图给出了细粒度 <code>representation</code> 相似度的结果。在这一尺度下，只有源点的直系邻居才是相似的。</li>
+<li>右图给出了粗粒度 <code>representation</code> 相似度的结果。在这一尺度下，源点附近的很多顶点都是相似的。</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/02913fd4128806cf52f830663bc86c8e.png" alt=""></p>
+</li>
+<li><p>我们受到一个事实的启发：通过一个结点可能同时隶属于不同层次的圈子，如家庭、学校、公司等等。针对这些不同的社区进行建模和预测不仅对于了解网络结构至关重要，而且还具有重要的商业价值，如更有效的广告定向。</p>
+</li>
+</ol>
+<h2 id="模型-5"><a href="#模型-5" class="headerlink" title="模型"></a>模型</h2><p><img src="/images/loading.gif" data-original="../images/ML/image-20210902212147316.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902212200941.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902212226964.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902212243492.png" alt=""></p>
+<h1 id="SDNE"><a href="#SDNE" class="headerlink" title="SDNE"></a>SDNE</h1><p>原论文：<a href="http://www.shichuan.org/hin/time/2016.%20Structural%20Deep%20Network%20Embedding.pdf" target="_blank" rel="noopener">Structural Deep Network Embedding</a></p>
+<ol>
+<li><p>网络 <code>representation</code> 学习有以下几个主要挑战：</p>
+<ul>
+<li>高度非线性 <code>non-linear</code>：网络的底层结构是高度非线性的，如何设计模型来捕获这种高度非线性相当困难。</li>
+<li>保留结构 <code>structure-preserving</code>：如何在低维空间种保留原始网络的全局结构和局部结构也是一个难点。</li>
+<li>网络稀疏性 <code>sparsity</code> ：大多数现实世界的网络非常稀疏，仅利用已观察到的有限链接不足以获得效果较好的 <code>representation</code> </li>
+</ul>
+</li>
+<li><p>高度非线性：过去的几十年提出了很多基于浅层模型的网络<code>embedding</code> 方法，如 <code>IsoMap, Laplacian Eigenmaps(LE), LINE</code> 。由于浅层模型的表达能力有限，所以这些方法很难捕获高度非线性的网络结构，因此得到的是次优（非最优）的网络<code>representation</code> 。</p>
+<p>尽管可以采用核技巧来捕获非线性，但是核技巧本身也是浅层的。</p>
+</li>
+<li><p>保留结构：有一些方法，如 <code>LINE, GraRep,WALKLETS</code> 尝试分别使用一阶邻近度和高阶邻近度来保留局部结构和全局结构。其做法是分别学习一阶<code>representation</code> 和高阶 <code>representation</code>，然后简单的将二者拼接在一起。</p>
+<p>与在一个统一模型中同时建模局部网络结构和全局网络结构相比，这种方法不是最优的。</p>
+</li>
+<li><p>论文 <code>《Structural Deep Network Embedding》</code> 提出了 <code>SDNE</code> 模型。</p>
+<ul>
+<li><p>模型利用多个非线性层来捕获非线性的网络结构。这些非线性层的组合将原始数据映射到高度非线性的潜在低维空间中，从而能够捕获到网络结构的高度非线性。</p>
+</li>
+<li><p>一阶邻近度是直接相连的两个顶点之间的局部的、成对的相似性，它刻画了网络的局部结构。但是由于网络的稀疏性，很多真实存在的链接由于未被观察到所以缺失，这导致仅依赖一阶邻近度不足以描述整个网络。二阶邻近度表示顶点邻域结构的相似性，它刻画了网络的全局结构。</p>
+<p>通过一阶邻近度和二阶邻近度，我们可以很好的刻画网络本地结构和网络全局结构。而 <code>SDNE</code> 模型就利用一阶邻近度和二阶邻近度来保留网络结构。其中使用无监督学习来利用二阶邻近度从而捕获全局网络结构，使用监督学习来利用一阶邻近度从而捕获局部网络结构。</p>
+<p>通过在一个优化目标中同时优化这两者，<code>SDNE</code> 既可以保留局部网络结构，又可以保留全局网络结构。</p>
+<p>同时，由于网络二阶邻近度非零的顶点对比一阶邻近度数量多得多，因此采用二阶邻近度可以提供更多的网络结构信息，这有助于解决网络稀疏性问题。</p>
+<p>如下图所示，二阶邻近度顶点对的数量与一阶邻近度顶点对数量对比：</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/87209df52b77fc3c78d8d7607eddca78.png" alt=""></p>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="模型-6"><a href="#模型-6" class="headerlink" title="模型"></a>模型</h2><p><img src="/images/loading.gif" data-original="../images/ML/image-20210902212614549.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902212648981.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902212706055.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902212727575.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902212742583.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902213012388.png" alt=""></p>
+<p>C为误差权值</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902213105630.png" alt=""></p>
+<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><h3 id="损失函数定义"><a href="#损失函数定义" class="headerlink" title="损失函数定义"></a>损失函数定义</h3><p><code>l_2nd</code>是2阶相似度对应的损失函数，参数<code>beta</code>控制着非零元素的惩罚项系数。<code>y_true</code>和<code>y_pred</code>分别是输入的邻接矩阵和网络重构出的邻接矩阵。</p>
+<p><code>l_1st</code>是1阶相似度对应的损失函数，参数<code>alpha</code>控制着其在整体损失函数中的占比。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">l_2nd</span><span class="token punctuation">(</span>beta<span class="token punctuation">)</span><span class="token punctuation">:</span>    
+    <span class="token keyword">def</span> <span class="token function">loss_2nd</span><span class="token punctuation">(</span>y_true<span class="token punctuation">,</span> y_pred<span class="token punctuation">)</span><span class="token punctuation">:</span>        
+        b_ <span class="token operator">=</span> np<span class="token punctuation">.</span>ones_like<span class="token punctuation">(</span>y_true<span class="token punctuation">)</span>        
+        b_<span class="token punctuation">[</span>y_true <span class="token operator">!=</span> <span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> beta        
+        x <span class="token operator">=</span> K<span class="token punctuation">.</span>square<span class="token punctuation">(</span><span class="token punctuation">(</span>y_true <span class="token operator">-</span> y_pred<span class="token punctuation">)</span> <span class="token operator">*</span> b_<span class="token punctuation">)</span>        
+        t <span class="token operator">=</span> K<span class="token punctuation">.</span>sum<span class="token punctuation">(</span>x<span class="token punctuation">,</span> axis<span class="token operator">=</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token punctuation">)</span>        
+        <span class="token keyword">return</span> K<span class="token punctuation">.</span>mean<span class="token punctuation">(</span>t<span class="token punctuation">)</span>
+    <span class="token keyword">return</span> loss_2nd
+
+<span class="token keyword">def</span> <span class="token function">l_1st</span><span class="token punctuation">(</span>alpha<span class="token punctuation">)</span><span class="token punctuation">:</span>    
+    <span class="token keyword">def</span> <span class="token function">loss_1st</span><span class="token punctuation">(</span>y_true<span class="token punctuation">,</span> y_pred<span class="token punctuation">)</span><span class="token punctuation">:</span>        
+        L <span class="token operator">=</span> y_true        
+        Y <span class="token operator">=</span> y_pred        
+        batch_size <span class="token operator">=</span> tf<span class="token punctuation">.</span>to_float<span class="token punctuation">(</span>K<span class="token punctuation">.</span>shape<span class="token punctuation">(</span>L<span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span>        
+        <span class="token keyword">return</span> alpha <span class="token operator">*</span> <span class="token number">2</span> <span class="token operator">*</span> tf<span class="token punctuation">.</span>linalg<span class="token punctuation">.</span>trace<span class="token punctuation">(</span>tf<span class="token punctuation">.</span>matmul<span class="token punctuation">(</span>tf<span class="token punctuation">.</span>matmul<span class="token punctuation">(</span>Y<span class="token punctuation">,</span> L<span class="token punctuation">,</span> transpose_a<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span><span class="token punctuation">,</span> Y<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">/</span> batch_size    
+    <span class="token keyword">return</span> loss_1st<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="模型定义"><a href="#模型定义" class="headerlink" title="模型定义"></a>模型定义</h3><p><code>create_model</code>函数创建SDNE模型，<code>l1</code>和<code>l2</code>分别为模型的正则化项系数，模型的输入<code>A</code>为邻接矩阵，<code>L</code>为拉普拉斯矩阵。输出<code>A_</code>为重构后的邻接矩阵，<code>Y</code>为顶点的embedding向量。</p>
+<p>函数中两个<code>for</code>循环分别对应<code>encoder</code>和<code>decoder</code>结构。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">create_model</span><span class="token punctuation">(</span>node_size<span class="token punctuation">,</span> hidden_size<span class="token operator">=</span><span class="token punctuation">[</span><span class="token number">256</span><span class="token punctuation">,</span> <span class="token number">128</span><span class="token punctuation">]</span><span class="token punctuation">,</span> l1<span class="token operator">=</span><span class="token number">1e</span><span class="token operator">-</span><span class="token number">5</span><span class="token punctuation">,</span> l2<span class="token operator">=</span><span class="token number">1e</span><span class="token operator">-</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">:</span>    
+    A <span class="token operator">=</span> Input<span class="token punctuation">(</span>shape<span class="token operator">=</span><span class="token punctuation">(</span>node_size<span class="token punctuation">,</span><span class="token punctuation">)</span><span class="token punctuation">)</span>    
+    L <span class="token operator">=</span> Input<span class="token punctuation">(</span>shape<span class="token operator">=</span><span class="token punctuation">(</span>None<span class="token punctuation">,</span><span class="token punctuation">)</span><span class="token punctuation">)</span>    
+    fc <span class="token operator">=</span> A    
+    <span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span>len<span class="token punctuation">(</span>hidden_size<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>        
+        <span class="token keyword">if</span> i <span class="token operator">==</span> len<span class="token punctuation">(</span>hidden_size<span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">:</span>            
+            fc <span class="token operator">=</span> Dense<span class="token punctuation">(</span>hidden_size<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span> activation<span class="token operator">=</span><span class="token string">'relu'</span><span class="token punctuation">,</span>kernel_regularizer<span class="token operator">=</span>l1_l2<span class="token punctuation">(</span>l1<span class="token punctuation">,</span> l2<span class="token punctuation">)</span><span class="token punctuation">,</span>name<span class="token operator">=</span><span class="token string">'1st'</span><span class="token punctuation">)</span><span class="token punctuation">(</span>fc<span class="token punctuation">)</span>
+        <span class="token keyword">else</span><span class="token punctuation">:</span>            
+            fc <span class="token operator">=</span> Dense<span class="token punctuation">(</span>hidden_size<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span> activation<span class="token operator">=</span><span class="token string">'relu'</span><span class="token punctuation">,</span>kernel_regularizer<span class="token operator">=</span>l1_l2<span class="token punctuation">(</span>l1<span class="token punctuation">,</span> l2<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">(</span>fc<span class="token punctuation">)</span>    
+    Y <span class="token operator">=</span> fc    
+    <span class="token keyword">for</span> i <span class="token keyword">in</span> reversed<span class="token punctuation">(</span>range<span class="token punctuation">(</span>len<span class="token punctuation">(</span>hidden_size<span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>        
+        fc <span class="token operator">=</span> Dense<span class="token punctuation">(</span>hidden_size<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span> activation<span class="token operator">=</span><span class="token string">'relu'</span><span class="token punctuation">,</span>kernel_regularizer<span class="token operator">=</span>l1_l2<span class="token punctuation">(</span>l1<span class="token punctuation">,</span> l2<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">(</span>fc<span class="token punctuation">)</span>
+    A_ <span class="token operator">=</span> Dense<span class="token punctuation">(</span>node_size<span class="token punctuation">,</span> <span class="token string">'relu'</span><span class="token punctuation">,</span> name<span class="token operator">=</span><span class="token string">'2nd'</span><span class="token punctuation">)</span><span class="token punctuation">(</span>fc<span class="token punctuation">)</span>    
+    model <span class="token operator">=</span> Model<span class="token punctuation">(</span>inputs<span class="token operator">=</span><span class="token punctuation">[</span>A<span class="token punctuation">,</span> L<span class="token punctuation">]</span><span class="token punctuation">,</span> outputs<span class="token operator">=</span><span class="token punctuation">[</span>A_<span class="token punctuation">,</span> Y<span class="token punctuation">]</span><span class="token punctuation">)</span>    
+    <span class="token keyword">return</span> model<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="EOE"><a href="#EOE" class="headerlink" title="EOE"></a>EOE</h1><p>原论文：<a href="https://dl.acm.org/doi/pdf/10.1145/3018661.3018723" target="_blank" rel="noopener">Embedding of Embedding (EOE) : Joint Embedding for Coupled Heterogeneous Networks</a></p>
+<ol>
+<li><p>大数据时代有大量的相关信息可用，这些信息可以融合成一个耦合的异构网络，其中每种类型的信息可以表示为单个同构子网络。</p>
+<p>这里我们定义耦合异构网络为：两个不同类型但是相互关联的子网络组成的网络。这些子网络通过子网络之间的链接来相互连接。</p>
+<p>例如：</p>
+<ul>
+<li>论文引用网络中的<code>author</code> 和 <code>word</code> ：作者可以通过作者之间的交互来链接，单词可以通过单词共现来链接，作者可以通过他们文章的单词来链接。</li>
+<li>社交网络中的 <code>user</code> 和 <code>word</code>：类似于论文引用网络中的 <code>author</code> 和 <code>word</code> 。</li>
+<li>观影网络中的 <code>customer</code> 和 <code>movie</code>：观众可以通过观众之间的关系来链接，电影可以通过共同的演员或者导演来链接，观众可以通过他们观看的电影来链接。</li>
+<li>基因和化合物：基因可以通过基因之间的相互作用来链接，化合物可以通过具有相同的基团关系来链接，基因可以通过 <code>binding</code> 关系和化合物链接。</li>
+</ul>
+<p>为直观说明这个概念，下图实现了<code>author</code> 和 <code>word</code> 网络的例子。其中作者通过 <code>co-authorship</code> 关系来链接，单词通过标题中的共现关系来链接。我们从 <code>DBLP</code> 数据集进行采样，采样的 <code>author</code> 包含 <code>2000 ~2003</code> 年在两个数据挖掘会议 <code>KDD,IDCM</code> 以及两个数据库会议 <code>SIGMOD,VLDB</code> 上发表论文的作者。<code>author</code> 和 <code>word</code> 之间链接用黑线表示。为了更清晰的展示，我们忽略了<code>author</code> 网络内部的边以及 <code>word</code> 网络内部的边，并且绘制的顶点大小和它的 <code>degree</code> 成正比。</p>
+<p>可以看到：</p>
+<ul>
+<li><p><code>author</code> 形成了两个聚类，<code>word</code> 也形成了两个聚类。这些聚类可以通过社团检测算法来生成。</p>
+</li>
+<li><p>数据挖掘专家到数据挖掘领域单词之间的边，要比数据挖掘专家到数据库领域单词的边更多。</p>
+<p>数据库专家到数据库领域单词之间的边，要比数据库专家到数据挖掘领域单词之变的边更多。</p>
+</li>
+</ul>
+<p>这说明：作者和单词之间的链接可以在存在作者之间链接的基础上，额外提供补充信息。这是因为相同领域的作者更有可能在其领域内的单词上存在链接，这使得仅仅从作者之间的链接学到的<code>embedding</code> 更加全面和准确。</p>
+<p>当作者之间缺乏链接时（如冷启动时），这种补充信息尤为重要。</p>
+<p>学习单词的<code>embedding</code> 的情况也是类似的。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/0fd3bfec1e31ec6c37e28515761fad17.png" alt=""></p>
+</li>
+<li><p>目前存在一些分别作用于<code>author</code> 网络或者<code>word</code> 网络的 <code>embedding</code> 方法，但是从单个网络的 <code>embedding</code> 方法扩展到用于耦合异构网络的 <code>embedding</code> 并不容易。主要挑战在于两个不同网络的异构性，这将导致两个异构的潜在空间<code>latent space</code>，而这两个空间的特征不能直接匹配。</p>
+<p>为解决该问题，论文 <code>《Embedding of Embedding (EOE) : Joint Embedding for Coupled Heterogeneous Networks》</code> 提出了<code>Embedding of Embedding : EOE</code> 方法，该方法通过引入一个调和嵌入矩阵 <code>harmonious embedding matrix</code> 从而将<code>embedding</code> 从一个潜在空间进一步嵌入到另一个潜在空间。</p>
+<p>作为一种 <code>embedding</code> 方法，<code>EOE</code> 使得存在链接的顶点在潜在空间中尽可能接近。但是和现有 <code>embedding</code> 方法相比，<code>EOE</code> 的关键区别在于：在 <code>EOE</code> 方法中存在两个子网络、三种类型的链接、两个潜在空间。此外 <code>EOE</code> 必须同时学习两个子网络的潜在特征，因为任一侧特征都可以通过网络间的链接向另一侧子网络提供补充信息。</p>
+</li>
+<li><p><code>EOE</code> 模型存在三种类型的参数：两个子网络的 <code>embedding</code> 参数以及调和嵌入矩阵。为了优化目标函数，<code>EOE</code> 提出了一种交替优化算法，其中每次仅针对其中某一种类型的参数进行优化。</p>
+<p>通过这种交替优化的方式，<code>EOE</code> 可以用一系列简单的优化代替对三种参数的比较困难的联合优化。</p>
+</li>
+<li><p><code>DeepWalk</code> 的随机游走可能会更跨多个社区，这违背了保持网络结构的目标。</p>
+</li>
+</ol>
+<h1 id="CANE"><a href="#CANE" class="headerlink" title="CANE"></a>CANE</h1><p>原论文：<a href="https://aclanthology.org/P17-1158.pdf" target="_blank" rel="noopener">CANE: Context-Aware Network Embedding for Relation Modeling</a></p>
+<ol>
+<li><p>一个顶点在和不同的邻居顶点交互时，通常表现出不同的形象<code>aspect</code> 。例如：</p>
+<ul>
+<li><p>一个学者可以和不同的合作者<code>partner</code> 就不同的研究方向进行合作。</p>
+<p>如下图所示：红色、蓝色、绿色字体分别表述左侧学者、右侧学者以及所有学者都关注的研究方向。</p>
+</li>
+<li><p>一个自媒体作者可以和不同的朋友就不同的兴趣进行分享。</p>
+</li>
+<li><p>一个网页可以可以因为不同的目的而链接到不同的其它网页。</p>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/9d6922e47b354053cd5b4f5319043237.png" alt=""></p>
+</li>
+<li><p>目前的大多数 <code>GraphEmbedding</code> 方法忽略了顶点交互过程中每个顶点的各种角色，仅为每个顶点分配一个统一的向量，这带来两个问题：</p>
+<ul>
+<li><p>它们无法处理顶点针对不同的邻居交互呈现不同<code>aspect</code> 的问题。</p>
+</li>
+<li><p>它们往往强迫顶点的不同邻居之间的 <code>embedding</code> 也是彼此靠近的，然而事实并非总是如此。</p>
+<p>如上图所示：左侧学者和中间学者的距离较近，右侧学者和中间学者的距离也较近。但是，事实上左侧学者和右侧学者的距离是较远的，因为二者之间共同关注的主题很少。而传统的模型认为它们是彼此接近的，仅仅因为它们都和中间顶点相连。</p>
+</li>
+</ul>
+<p>这使得顶点的 <code>embedding</code> 没有区分度，无法区分顶点的链接是刻画哪个 <code>aspect</code> 。</p>
+<p>为解决该问题，论文 <code>《CANE: Context-Aware Network Embedding for Relation Modeling》</code> 提出了 <code>Context-Aware Network Embedding:CANE</code> 框架来精确建模顶点之间的关系。</p>
+<p><code>CANE</code> 假设一个顶点在和不同的邻居顶点交互时表现出不同的角色从而产生不同的 <code>embedding</code>。</p>
+<p>具体而言，<code>CANE</code> 考虑每个顶点包含的丰富的外部信息，如：文本、标签以及其它元数据。传统的<code>Graph embedding</code> 模型忽略了这些上下文信息，因此每个顶点都是静态的<code>embedding</code> 向量。<code>CANE</code> 根据和顶点交互的不同邻居为顶点动态分配一个<code>embedding</code> 向量，这被称作 <code>context-aware embedding</code> 上下文感知向量。<code>CANE</code> 通过<code>attentioin</code> 机制学习顶点的上下文感知向量，从而精确的建模顶点之间的语义关系。</p>
+</li>
+<li><p>本文仅考虑外部信息为文本的文本信息网络，但是 <code>CANE</code> 可以轻松扩展到其它类型的信息网络。</p>
+</li>
+</ol>
+<h1 id="metapath2vec"><a href="#metapath2vec" class="headerlink" title="metapath2vec"></a>metapath2vec</h1><p>原论文：<a href="https://dl.acm.org/doi/pdf/10.1145/3097983.3098036" target="_blank" rel="noopener">metapath2vec: Scalable Representation Learning for Heterogeneous Networks</a></p>
+<ol>
+<li><p>目前为止绝大多数<code>embedding</code> 方法都集中在异质网络的表示学习<code>representation learning</code> 上，即网络的顶点类型是单一的，边的类型也是单一的。但是大量的社交网络以及其它信息网络本质上是异质<code>heterogeneous</code>的，网络包含多种顶点类型，也包含多种边的类型。因此异质网络表示学习的挑战在于：网络中存在多种类型的顶点和边。</p>
+<p>传统的 <code>embedding</code> 模型将不同类型的顶点和边采用相同的处理方式，这将导致为异质顶点生成没有类型区分的表示。因此这些异质网络是专门为同质<code>homogeneous</code>网络设计的 <code>embedding</code> 模型无法解决的。</p>
+<p>论文 <code>《metapath2vec: Scalable Representation Learning for Heterogeneous Networks》</code> 首先形式化异质网络的表示学习问题，然后提出了 <code>metapath2vec</code> 框架，及其扩展的 <code>metapath2vec ++</code> 框架来解决异质网络的表示学习问题。</p>
+</li>
+<li><p>异质网络表示学习的目的是同时学习多种类型顶点的低维 <code>embedding</code> 。<code>metapath2vec</code> 框架基于<code>meta-path</code> 的随机游走从而构造顶点的异质邻域，然后利用异质 <code>skip-gram</code> 模型来执行顶点 <code>embedding</code> 。<code>metapath2vec</code> 的目标是最大化的保留给定异质网络的结构关系和语义关系。</p>
+<p>而 <code>metapath2vec ++</code> 在 <code>metapath2vec</code> 的基础上使用了一种基于异质负采样的方法，称作 <code>metapath2vec ++</code> ，该方法可以有效并且准确的预测顶点的异质邻域。</p>
+<p>大量实验表明，<code>metapath2vec</code> 和 <code>metapath2vec ++</code> 不仅能够超越各种异质网络挖掘任务的 <code>SOA</code> 的 <code>embedding</code> 模型，还能够识别不同顶点之间的结构相关性和语义相关性。</p>
+</li>
+<li><p><code>metapath2vec</code> 和 <code>metapath2vec ++</code> 不同于传统的网络 <code>embedding</code> 模型，后者专注于同质网络。</p>
+<p><code>metapath2vec</code> 和 <code>metapath2vec++</code> 在某些方面也不同于 <code>Predictive Text Embedding:PTE</code> 模型。</p>
+<ul>
+<li>首先 <code>PTE</code> 是一种半监督学习模型，其中包含文本数据的标签信息。</li>
+<li>其次，<code>PTE</code> 中的异质性来自于文本网络，网络中存在了单词到单词的链接、单词到它所属文档的链接、单词及其 <code>label</code> 的链接。 因此本质上 <code>PTE</code> 的原始输入为单词，输出是每个单词的 <code>embedding</code> ，而不是多种类型的输入。</li>
+</ul>
+</li>
+</ol>
+<h1 id="GraphGAN"><a href="#GraphGAN" class="headerlink" title="GraphGAN"></a>GraphGAN</h1><p>原论文：<a href="https://ojs.aaai.org/index.php/AAAI/article/view/11872" target="_blank" rel="noopener">GraphGAN: Graph Representation Learning with Generative Adversarial Nets</a></p>
+<h1 id="Struc2Vec"><a href="#Struc2Vec" class="headerlink" title="Struc2Vec"></a>Struc2Vec</h1><p>原论文：<a href="https://arxiv.org/pdf/1704.03165.pdf" target="_blank" rel="noopener">struc2vec: Learning Node Representations from Structural Identity</a></p>
+<p>1.几乎所有网络中的顶点都具有一个或者多个角色，这些角色很大程度上决定了顶点在网络中的功能。如：社交网络中的成员具有社交角色或者社会地位，而蛋白质网络中的蛋白质具有特定的功能。直觉上看，这些网络中的不同顶点可能具有相同的角色从而发挥相似的作用。如：公司社交网络中的实习生<code>intern</code> 角色，蛋白质网络中的催化剂<code>catalyst</code> 角色。因此，可以根据顶点在网络中的角色来将顶点划分为等效的类别<code>equivalent classe</code> 。</p>
+<p>通常识别顶点的角色需要利用顶点的特征或者边的特征，但是仅仅依靠网络结构来识别顶点角色，这更有挑战性。此时，顶点的角色仅仅取决于顶点之间的链接。</p>
+<p>确定顶点结构角色的常用方法是基于距离的方法或者基于递归的方法：</p>
+<ul>
+<li>基于距离的方法：根据每个顶点的邻域信息（如邻域大小，邻域形状）来计算每对顶点之间的距离（邻域越相似则距离越小），然后通过聚类、规则匹配等方式来确定顶点的等效类别。</li>
+<li>基于递归的方法：构造基于邻域的递归，然后不停迭代直到收敛，并采用最终迭代的结果来确定顶点的等效类别。如 <code>Weisfeiler-Lehman</code> 算法。</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902225406031.png" alt=""></p>
+<p>为什么这些<code>embedding</code> 方法（如 <code>DeepWalk/node2vec</code> 在分类任务中大获成功，但是在结构等效<code>structural equivalence</code> 任务中难以奏效？原因是大多数真实网络结构中，很多顶点的特征都表现出很强的同质性。如：两个具有相同政治偏好的博客更有可能被连接，而不是随机性的连接。网络中相邻的顶点更可能具有相同的特征，因此在 <code>embedding</code> 空间中趋于靠近；网络中相距较远的顶点可能具有迥异的特征，因此在<code>embedding</code> 空间中趋于分离。这</p>
+<p>种性质和顶点的局部结构无关，因此这些 <code>embedding</code> 方法无法捕获结构等效性。因此如果任务更依赖于结构等效性而不是同质性，则这些 <code>embedding</code> 方法容易失败。</p>
+<p>论文 <code>《struc2vec: Learning Node Representations from Structural Identity》</code> 提出了一个学习顶点结构等效性的无监督学习框架 <code>struc2vec</code>，它可以根据顶点的局部网络结构来识别<code>structural identity</code> 结构角色。</p>
+<p><code>struc2vec</code> 的关键思想是：</p>
+<ul>
+<li>不依赖于顶点特征、边的特征、顶点的位置，仅仅依赖于顶点的局部结构来衡量顶点之间的结构相似性。我们也不需要网络是连通的，我们可以识别不同连通分量<code>connected componet</code> 中结构相似的顶点。</li>
+<li>对结构相似性进行分层 <code>hierarchy</code> ，随着层次的提高结构相似越严格。在层次的底部，<code>degree</code> 相近的顶点之间是结构相似的；在层次的顶部，需要整个网络相似的顶点之间才是结构相似的。</li>
+<li>采用加权随机遍历一个 <code>multi-layer</code> 图来生成每个顶点的随机上下文。这个 <code>multi-layer</code> 是根据原始网络生成的，<code>multi-layer</code> 图中的边是根据原始图中顶点结构相似性得到。因此有相似上下文的两个顶点很可能具有相似的结构。</li>
+</ul>
+<p>2.<code>DeepWalk</code> 使用随机游走从网络中生成顶点序列，并基于 <code>SkipGram</code> 学习顶点 <code>embedding</code> 。网络中接近的顶点将具有相似的上下文，因此具有相似的 <code>embedding</code> 。</p>
+<p><code>node2vec</code> 通过一个有偏的二阶随机游走模型来扩展了这个想法，从而在生成顶点上下文时提供了更大的灵活性。特别的，可以通过设计边的权重从而尝试捕获顶点的同质性和结构等效性。</p>
+<p>但是 <code>DeepWalk</code> 和 <code>node2vec</code> 等方法的一个基本缺陷是：结构上相似的顶点如何其距离大于 <code>SkipGram</code> 窗口的大小，则它们永远不会共享相同的上下文。</p>
+<p><code>RolX</code> 是一种仅利用网络结构来明确标识顶点角色的方法。这种无监督方法基于枚举顶点的各种结构特征，然后找到联合特征空间的基向量<code>basis vector</code>，并为每个顶点赋予一个角色分布，这允许顶点具有多个混合的角色。在没有明确考虑顶点结构相似性的情况下，<code>RolX</code> 可能会遗漏结构相似的顶点<code>pair</code> 对。</p>
+<h2 id="模型-7"><a href="#模型-7" class="headerlink" title="模型"></a>模型</h2><p>考虑捕获网络中结构相似性的顶点<code>representation</code> 学习方法，它应该具有预期的特点：</p>
+<ul>
+<li>顶点之间结构越相似，则顶点的<code>embedding</code> 距离越近。因此如果两个顶点的局部网络结构相同，则它们应该具有相同的 <code>embedding</code> 。</li>
+<li><code>embedding</code> 的学习不依赖于任何顶点的特征、边的特征、顶点的 <code>label</code>、顶点的位置，仅仅依赖于顶点的局部网络结构。</li>
+</ul>
+<p>考虑这两个特点，我们提出了 <code>struc2vec</code>框架，该框架由四个部分组成：</p>
+<ul>
+<li>结构相似性度量：确定图中每对顶点之间不同大小邻域的结构相似性。这在结构相似性度量中引入了层次 <code>hierarchy</code> ，从而在不同层次水平上衡量结构相似性。</li>
+<li>加权 <code>multi-layer</code> 图：该图的每一层都包含原始图的所有顶点，每一层对应于<code>hierarchy</code> 结构相似性中的某个层级。层内顶点之间边的权重与结构相似度成反比。</li>
+<li>上下文生成：基于 <code>multi-layer</code> 图上的有偏随机游走来生成顶点序列，然后为每个顶点生成上下文。这些随机游走序列更可能包含结构相似的顶点。</li>
+<li>学习<code>embedding</code>：采用一种技术（如 <code>SkipGram</code> ）从顶点序列中学到顶点的 <code>embedding</code> 。</li>
+</ul>
+<p><code>struc2vec</code> 非常灵活，它不要求任何特定的结构相似性度量或者表示学习方法。</p>
+<h3 id="相似度定义"><a href="#相似度定义" class="headerlink" title="相似度定义"></a>相似度定义</h3><h3 id="顶点对距离定义"><a href="#顶点对距离定义" class="headerlink" title="顶点对距离定义"></a>顶点对距离定义</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20210902230306294.png" alt=""></p>
+<h3 id="构建层次带权图"><a href="#构建层次带权图" class="headerlink" title="构建层次带权图"></a>构建层次带权图</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20210902230330854.png" alt=""></p>
+<h3 id="采样获取顶点序列"><a href="#采样获取顶点序列" class="headerlink" title="采样获取顶点序列"></a>采样获取顶点序列</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20210902230354879.png" alt=""></p>
+<h3 id="三个时空复杂度优化技巧"><a href="#三个时空复杂度优化技巧" class="headerlink" title="三个时空复杂度优化技巧"></a>三个时空复杂度优化技巧</h3><h4 id="OPT1-有序度序列长度优化"><a href="#OPT1-有序度序列长度优化" class="headerlink" title="OPT1 有序度序列长度优化"></a>OPT1 有序度序列长度优化</h4><p><img src="/images/loading.gif" data-original="../images/ML/image-20210902230434816.png" alt=""></p>
+<h4 id="OPT2-相似度计算优化"><a href="#OPT2-相似度计算优化" class="headerlink" title="OPT2 相似度计算优化"></a>OPT2 相似度计算优化</h4><p><img src="/images/loading.gif" data-original="../images/ML/image-20210902230459719.png" alt=""></p>
+<h4 id="OPT3-限制层次带权图层数"><a href="#OPT3-限制层次带权图层数" class="headerlink" title="OPT3 限制层次带权图层数"></a>OPT3 限制层次带权图层数</h4><p><img src="/images/loading.gif" data-original="../images/ML/image-20210902230520969.png" alt=""></p>
+<h2 id="核心代码"><a href="#核心代码" class="headerlink" title="核心代码"></a>核心代码</h2><p>Struc2Vec的实现相比于前面的几个算法稍微复杂一些，这里我主要说下大体思路，对一些细节有疑问的同学可以邮件或者私信我~</p>
+<p>根据前面的算法原理介绍，首先确定一下我们要做哪些事情 1. 获取每一层的顶点对距离 2. 根据顶点对距离构建带权层次图 3. 在带权层次图中随机游走采样顶点序列</p>
+<h3 id="顶点对距离计算"><a href="#顶点对距离计算" class="headerlink" title="顶点对距离计算"></a>顶点对距离计算</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20210902230645393.png" alt=""></p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">_get_order_degreelist_node</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> root<span class="token punctuation">,</span> max_num_layers<span class="token operator">=</span>None<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">if</span> max_num_layers <span class="token keyword">is</span> None<span class="token punctuation">:</span>
+        max_num_layers <span class="token operator">=</span> float<span class="token punctuation">(</span><span class="token string">'inf'</span><span class="token punctuation">)</span>
+
+    ordered_degree_sequence_dict <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+    visited <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token boolean">False</span><span class="token punctuation">]</span> <span class="token operator">*</span> len<span class="token punctuation">(</span>self<span class="token punctuation">.</span>graph<span class="token punctuation">.</span>nodes<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    queue <span class="token operator">=</span> deque<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    level <span class="token operator">=</span> <span class="token number">0</span>
+    queue<span class="token punctuation">.</span>append<span class="token punctuation">(</span>root<span class="token punctuation">)</span>
+    visited<span class="token punctuation">[</span>root<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token boolean">True</span>
+
+    <span class="token keyword">while</span> <span class="token punctuation">(</span>len<span class="token punctuation">(</span>queue<span class="token punctuation">)</span> <span class="token operator">></span> <span class="token number">0</span> <span class="token operator">and</span> level <span class="token operator">&lt;=</span> max_num_layers<span class="token punctuation">)</span><span class="token punctuation">:</span>
+
+        count <span class="token operator">=</span> len<span class="token punctuation">(</span>queue<span class="token punctuation">)</span>
+        <span class="token keyword">if</span> self<span class="token punctuation">.</span>opt1_reduce_len<span class="token punctuation">:</span>
+            degree_list <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+        <span class="token keyword">else</span><span class="token punctuation">:</span>
+            degree_list <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+        <span class="token keyword">while</span> <span class="token punctuation">(</span>count <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+
+            top <span class="token operator">=</span> queue<span class="token punctuation">.</span>popleft<span class="token punctuation">(</span><span class="token punctuation">)</span>
+            node <span class="token operator">=</span> self<span class="token punctuation">.</span>idx2node<span class="token punctuation">[</span>top<span class="token punctuation">]</span>
+            degree <span class="token operator">=</span> len<span class="token punctuation">(</span>self<span class="token punctuation">.</span>graph<span class="token punctuation">[</span>node<span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+            <span class="token keyword">if</span> self<span class="token punctuation">.</span>opt1_reduce_len<span class="token punctuation">:</span>
+                degree_list<span class="token punctuation">[</span>degree<span class="token punctuation">]</span> <span class="token operator">=</span> degree_list<span class="token punctuation">.</span>get<span class="token punctuation">(</span>degree<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">1</span>
+            <span class="token keyword">else</span><span class="token punctuation">:</span>
+                degree_list<span class="token punctuation">.</span>append<span class="token punctuation">(</span>degree<span class="token punctuation">)</span>
+
+            <span class="token keyword">for</span> nei <span class="token keyword">in</span> self<span class="token punctuation">.</span>graph<span class="token punctuation">[</span>node<span class="token punctuation">]</span><span class="token punctuation">:</span>
+                nei_idx <span class="token operator">=</span> self<span class="token punctuation">.</span>node2idx<span class="token punctuation">[</span>nei<span class="token punctuation">]</span>
+                <span class="token keyword">if</span> <span class="token operator">not</span> visited<span class="token punctuation">[</span>nei_idx<span class="token punctuation">]</span><span class="token punctuation">:</span>
+                    visited<span class="token punctuation">[</span>nei_idx<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token boolean">True</span>
+                    queue<span class="token punctuation">.</span>append<span class="token punctuation">(</span>nei_idx<span class="token punctuation">)</span>
+            count <span class="token operator">-=</span> <span class="token number">1</span>
+        <span class="token keyword">if</span> self<span class="token punctuation">.</span>opt1_reduce_len<span class="token punctuation">:</span>
+            orderd_degree_list <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">(</span>degree<span class="token punctuation">,</span> freq<span class="token punctuation">)</span>
+                                  <span class="token keyword">for</span> degree<span class="token punctuation">,</span> freq <span class="token keyword">in</span> degree_list<span class="token punctuation">.</span>items<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+            orderd_degree_list<span class="token punctuation">.</span>sort<span class="token punctuation">(</span>key<span class="token operator">=</span><span class="token keyword">lambda</span> x<span class="token punctuation">:</span> x<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+        <span class="token keyword">else</span><span class="token punctuation">:</span>
+            orderd_degree_list <span class="token operator">=</span> sorted<span class="token punctuation">(</span>degree_list<span class="token punctuation">)</span>
+        ordered_degree_sequence_dict<span class="token punctuation">[</span>level<span class="token punctuation">]</span> <span class="token operator">=</span> orderd_degree_list
+        level <span class="token operator">+=</span> <span class="token number">1</span>
+
+    <span class="token keyword">return</span> ordered_degree_sequence_dict
+
+<span class="token keyword">def</span> <span class="token function">_compute_ordered_degreelist</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> max_num_layers<span class="token punctuation">)</span><span class="token punctuation">:</span>
+
+    degreeList <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+    vertices <span class="token operator">=</span> self<span class="token punctuation">.</span>idx  <span class="token comment" spellcheck="true"># self.g.nodes()</span>
+    <span class="token keyword">for</span> v <span class="token keyword">in</span> vertices<span class="token punctuation">:</span>
+        degreeList<span class="token punctuation">[</span>v<span class="token punctuation">]</span> <span class="token operator">=</span> self<span class="token punctuation">.</span>_get_order_degreelist_node<span class="token punctuation">(</span>v<span class="token punctuation">,</span> max_num_layers<span class="token punctuation">)</span>
+    <span class="token keyword">return</span> degreeList<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902230711205.png" alt=""></p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">compute_dtw_dist</span><span class="token punctuation">(</span>part_list<span class="token punctuation">,</span> degreeList<span class="token punctuation">,</span> dist_func<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    dtw_dist <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+    <span class="token keyword">for</span> v1<span class="token punctuation">,</span> nbs <span class="token keyword">in</span> part_list<span class="token punctuation">:</span>
+        lists_v1 <span class="token operator">=</span> degreeList<span class="token punctuation">[</span>v1<span class="token punctuation">]</span>  <span class="token comment" spellcheck="true"># lists_v1 :orderd degree list of v1</span>
+        <span class="token keyword">for</span> v2 <span class="token keyword">in</span> nbs<span class="token punctuation">:</span>
+            lists_v2 <span class="token operator">=</span> degreeList<span class="token punctuation">[</span>v2<span class="token punctuation">]</span>  <span class="token comment" spellcheck="true"># lists_v1 :orderd degree list of v2</span>
+            max_layer <span class="token operator">=</span> min<span class="token punctuation">(</span>len<span class="token punctuation">(</span>lists_v1<span class="token punctuation">)</span><span class="token punctuation">,</span> len<span class="token punctuation">(</span>lists_v2<span class="token punctuation">)</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># valid layer</span>
+            dtw_dist<span class="token punctuation">[</span>v1<span class="token punctuation">,</span> v2<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+            <span class="token keyword">for</span> layer <span class="token keyword">in</span> range<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> max_layer<span class="token punctuation">)</span><span class="token punctuation">:</span>
+                dist<span class="token punctuation">,</span> path <span class="token operator">=</span> fastdtw<span class="token punctuation">(</span>
+                    lists_v1<span class="token punctuation">[</span>layer<span class="token punctuation">]</span><span class="token punctuation">,</span> lists_v2<span class="token punctuation">[</span>layer<span class="token punctuation">]</span><span class="token punctuation">,</span> radius<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span> dist<span class="token operator">=</span>dist_func<span class="token punctuation">)</span>
+                dtw_dist<span class="token punctuation">[</span>v1<span class="token punctuation">,</span> v2<span class="token punctuation">]</span><span class="token punctuation">[</span>layer<span class="token punctuation">]</span> <span class="token operator">=</span> dist
+    <span class="token keyword">return</span> dtw_dist
+
+<span class="token keyword">def</span> <span class="token function">_compute_structural_distance</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> max_num_layers<span class="token punctuation">,</span> workers<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span> verbose<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+
+    <span class="token keyword">if</span> os<span class="token punctuation">.</span>path<span class="token punctuation">.</span>exists<span class="token punctuation">(</span>self<span class="token punctuation">.</span>temp_path<span class="token operator">+</span><span class="token string">'structural_dist.pkl'</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        structural_dist <span class="token operator">=</span> pd<span class="token punctuation">.</span>read_pickle<span class="token punctuation">(</span>
+            self<span class="token punctuation">.</span>temp_path<span class="token operator">+</span><span class="token string">'structural_dist.pkl'</span><span class="token punctuation">)</span>
+    <span class="token keyword">else</span><span class="token punctuation">:</span>
+        <span class="token keyword">if</span> self<span class="token punctuation">.</span>opt1_reduce_len<span class="token punctuation">:</span>
+            dist_func <span class="token operator">=</span> cost_max
+        <span class="token keyword">else</span><span class="token punctuation">:</span>
+            dist_func <span class="token operator">=</span> cost
+
+        <span class="token keyword">if</span> os<span class="token punctuation">.</span>path<span class="token punctuation">.</span>exists<span class="token punctuation">(</span>self<span class="token punctuation">.</span>temp_path <span class="token operator">+</span> <span class="token string">'degreelist.pkl'</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+            degreeList <span class="token operator">=</span> pd<span class="token punctuation">.</span>read_pickle<span class="token punctuation">(</span>self<span class="token punctuation">.</span>temp_path <span class="token operator">+</span> <span class="token string">'degreelist.pkl'</span><span class="token punctuation">)</span>
+        <span class="token keyword">else</span><span class="token punctuation">:</span>
+            degreeList <span class="token operator">=</span> self<span class="token punctuation">.</span>_compute_ordered_degreelist<span class="token punctuation">(</span>max_num_layers<span class="token punctuation">)</span>
+            pd<span class="token punctuation">.</span>to_pickle<span class="token punctuation">(</span>degreeList<span class="token punctuation">,</span> self<span class="token punctuation">.</span>temp_path <span class="token operator">+</span> <span class="token string">'degreelist.pkl'</span><span class="token punctuation">)</span>
+
+        <span class="token keyword">if</span> self<span class="token punctuation">.</span>opt2_reduce_sim_calc<span class="token punctuation">:</span>
+            degrees <span class="token operator">=</span> self<span class="token punctuation">.</span>_create_vectors<span class="token punctuation">(</span><span class="token punctuation">)</span>
+            degreeListsSelected <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+            vertices <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+            n_nodes <span class="token operator">=</span> len<span class="token punctuation">(</span>self<span class="token punctuation">.</span>idx<span class="token punctuation">)</span>
+            <span class="token keyword">for</span> v <span class="token keyword">in</span> self<span class="token punctuation">.</span>idx<span class="token punctuation">:</span>  <span class="token comment" spellcheck="true"># c:list of vertex</span>
+                nbs <span class="token operator">=</span> get_vertices<span class="token punctuation">(</span>
+                    v<span class="token punctuation">,</span> len<span class="token punctuation">(</span>self<span class="token punctuation">.</span>graph<span class="token punctuation">[</span>self<span class="token punctuation">.</span>idx2node<span class="token punctuation">[</span>v<span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">,</span> degrees<span class="token punctuation">,</span> n_nodes<span class="token punctuation">)</span>
+                vertices<span class="token punctuation">[</span>v<span class="token punctuation">]</span> <span class="token operator">=</span> nbs  <span class="token comment" spellcheck="true"># store nbs</span>
+                degreeListsSelected<span class="token punctuation">[</span>v<span class="token punctuation">]</span> <span class="token operator">=</span> degreeList<span class="token punctuation">[</span>v<span class="token punctuation">]</span>  <span class="token comment" spellcheck="true"># store dist</span>
+                <span class="token keyword">for</span> n <span class="token keyword">in</span> nbs<span class="token punctuation">:</span>
+                    <span class="token comment" spellcheck="true"># store dist of nbs</span>
+                    degreeListsSelected<span class="token punctuation">[</span>n<span class="token punctuation">]</span> <span class="token operator">=</span> degreeList<span class="token punctuation">[</span>n<span class="token punctuation">]</span>
+        <span class="token keyword">else</span><span class="token punctuation">:</span>
+            vertices <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+            <span class="token keyword">for</span> v <span class="token keyword">in</span> degreeList<span class="token punctuation">:</span>
+                vertices<span class="token punctuation">[</span>v<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span>vd <span class="token keyword">for</span> vd <span class="token keyword">in</span> degreeList<span class="token punctuation">.</span>keys<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">if</span> vd <span class="token operator">></span> v<span class="token punctuation">]</span>
+
+
+        results <span class="token operator">=</span> Parallel<span class="token punctuation">(</span>n_jobs<span class="token operator">=</span>workers<span class="token punctuation">,</span> verbose<span class="token operator">=</span>verbose<span class="token punctuation">,</span><span class="token punctuation">)</span><span class="token punctuation">(</span>
+            delayed<span class="token punctuation">(</span>compute_dtw_dist<span class="token punctuation">)</span><span class="token punctuation">(</span>part_list<span class="token punctuation">,</span> degreeList<span class="token punctuation">,</span> dist_func<span class="token punctuation">)</span> <span class="token keyword">for</span> part_list <span class="token keyword">in</span> partition_dict<span class="token punctuation">(</span>vertices<span class="token punctuation">,</span> workers<span class="token punctuation">)</span><span class="token punctuation">)</span>
+        dtw_dist <span class="token operator">=</span> dict<span class="token punctuation">(</span>ChainMap<span class="token punctuation">(</span><span class="token operator">*</span>results<span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+        structural_dist <span class="token operator">=</span> convert_dtw_struc_dist<span class="token punctuation">(</span>dtw_dist<span class="token punctuation">)</span>
+        pd<span class="token punctuation">.</span>to_pickle<span class="token punctuation">(</span>structural_dist<span class="token punctuation">,</span> self<span class="token punctuation">.</span>temp_path <span class="token operator">+</span>
+                     <span class="token string">'structural_dist.pkl'</span><span class="token punctuation">)</span>
+
+    <span class="token keyword">return</span> structural_dist<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="构建带权层次图"><a href="#构建带权层次图" class="headerlink" title="构建带权层次图"></a>构建带权层次图</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20210902230747830.png" alt=""></p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">_get_transition_probs</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> layers_adj<span class="token punctuation">,</span> layers_distances<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    layers_alias <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+    layers_accept <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+
+    <span class="token keyword">for</span> layer <span class="token keyword">in</span> layers_adj<span class="token punctuation">:</span>
+
+        neighbors <span class="token operator">=</span> layers_adj<span class="token punctuation">[</span>layer<span class="token punctuation">]</span>
+        layer_distances <span class="token operator">=</span> layers_distances<span class="token punctuation">[</span>layer<span class="token punctuation">]</span>
+        node_alias_dict <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+        node_accept_dict <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+        norm_weights <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+
+        <span class="token keyword">for</span> v<span class="token punctuation">,</span> neighbors <span class="token keyword">in</span> neighbors<span class="token punctuation">.</span>items<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+            e_list <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+            sum_w <span class="token operator">=</span> <span class="token number">0.0</span>
+
+            <span class="token keyword">for</span> n <span class="token keyword">in</span> neighbors<span class="token punctuation">:</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span>v<span class="token punctuation">,</span> n<span class="token punctuation">)</span> <span class="token keyword">in</span> layer_distances<span class="token punctuation">:</span>
+                    wd <span class="token operator">=</span> layer_distances<span class="token punctuation">[</span>v<span class="token punctuation">,</span> n<span class="token punctuation">]</span>
+                <span class="token keyword">else</span><span class="token punctuation">:</span>
+                    wd <span class="token operator">=</span> layer_distances<span class="token punctuation">[</span>n<span class="token punctuation">,</span> v<span class="token punctuation">]</span>
+                w <span class="token operator">=</span> np<span class="token punctuation">.</span>exp<span class="token punctuation">(</span><span class="token operator">-</span>float<span class="token punctuation">(</span>wd<span class="token punctuation">)</span><span class="token punctuation">)</span>
+                e_list<span class="token punctuation">.</span>append<span class="token punctuation">(</span>w<span class="token punctuation">)</span>
+                sum_w <span class="token operator">+=</span> w
+
+            e_list <span class="token operator">=</span> <span class="token punctuation">[</span>x <span class="token operator">/</span> sum_w <span class="token keyword">for</span> x <span class="token keyword">in</span> e_list<span class="token punctuation">]</span>
+            norm_weights<span class="token punctuation">[</span>v<span class="token punctuation">]</span> <span class="token operator">=</span> e_list
+            accept<span class="token punctuation">,</span> alias <span class="token operator">=</span> create_alias_table<span class="token punctuation">(</span>e_list<span class="token punctuation">)</span>
+            node_alias_dict<span class="token punctuation">[</span>v<span class="token punctuation">]</span> <span class="token operator">=</span> alias
+            node_accept_dict<span class="token punctuation">[</span>v<span class="token punctuation">]</span> <span class="token operator">=</span> accept
+
+        pd<span class="token punctuation">.</span>to_pickle<span class="token punctuation">(</span>
+            norm_weights<span class="token punctuation">,</span> self<span class="token punctuation">.</span>temp_path <span class="token operator">+</span> <span class="token string">'norm_weights_distance-layer-'</span> <span class="token operator">+</span> str<span class="token punctuation">(</span>layer<span class="token punctuation">)</span><span class="token operator">+</span><span class="token string">'.pkl'</span><span class="token punctuation">)</span>
+
+        layers_alias<span class="token punctuation">[</span>layer<span class="token punctuation">]</span> <span class="token operator">=</span> node_alias_dict
+        layers_accept<span class="token punctuation">[</span>layer<span class="token punctuation">]</span> <span class="token operator">=</span> node_accept_dict
+
+    <span class="token keyword">return</span> layers_accept<span class="token punctuation">,</span> layers_alias<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902230809158.png" alt=""></p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">prepare_biased_walk</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+
+    sum_weights <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+    sum_edges <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+    average_weight <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+    gamma <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+    layer <span class="token operator">=</span> <span class="token number">0</span>
+    <span class="token keyword">while</span> <span class="token punctuation">(</span>os<span class="token punctuation">.</span>path<span class="token punctuation">.</span>exists<span class="token punctuation">(</span>self<span class="token punctuation">.</span>temp_path<span class="token operator">+</span><span class="token string">'norm_weights_distance-layer-'</span> <span class="token operator">+</span> str<span class="token punctuation">(</span>layer<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        probs <span class="token operator">=</span> pd<span class="token punctuation">.</span>read_pickle<span class="token punctuation">(</span>
+            self<span class="token punctuation">.</span>temp_path<span class="token operator">+</span><span class="token string">'norm_weights_distance-layer-'</span> <span class="token operator">+</span> str<span class="token punctuation">(</span>layer<span class="token punctuation">)</span><span class="token punctuation">)</span>
+        <span class="token keyword">for</span> v<span class="token punctuation">,</span> list_weights <span class="token keyword">in</span> probs<span class="token punctuation">.</span>items<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+            sum_weights<span class="token punctuation">.</span>setdefault<span class="token punctuation">(</span>layer<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span>
+            sum_edges<span class="token punctuation">.</span>setdefault<span class="token punctuation">(</span>layer<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span>
+            sum_weights<span class="token punctuation">[</span>layer<span class="token punctuation">]</span> <span class="token operator">+=</span> sum<span class="token punctuation">(</span>list_weights<span class="token punctuation">)</span>
+            sum_edges<span class="token punctuation">[</span>layer<span class="token punctuation">]</span> <span class="token operator">+=</span> len<span class="token punctuation">(</span>list_weights<span class="token punctuation">)</span>
+
+        average_weight<span class="token punctuation">[</span>layer<span class="token punctuation">]</span> <span class="token operator">=</span> sum_weights<span class="token punctuation">[</span>layer<span class="token punctuation">]</span> <span class="token operator">/</span> sum_edges<span class="token punctuation">[</span>layer<span class="token punctuation">]</span>
+
+        gamma<span class="token punctuation">.</span>setdefault<span class="token punctuation">(</span>layer<span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+        <span class="token keyword">for</span> v<span class="token punctuation">,</span> list_weights <span class="token keyword">in</span> probs<span class="token punctuation">.</span>items<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+            num_neighbours <span class="token operator">=</span> <span class="token number">0</span>
+            <span class="token keyword">for</span> w <span class="token keyword">in</span> list_weights<span class="token punctuation">:</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span>w <span class="token operator">></span> average_weight<span class="token punctuation">[</span>layer<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+                    num_neighbours <span class="token operator">+=</span> <span class="token number">1</span>
+            gamma<span class="token punctuation">[</span>layer<span class="token punctuation">]</span><span class="token punctuation">[</span>v<span class="token punctuation">]</span> <span class="token operator">=</span> num_neighbours
+
+        layer <span class="token operator">+=</span> <span class="token number">1</span>
+
+    pd<span class="token punctuation">.</span>to_pickle<span class="token punctuation">(</span>average_weight<span class="token punctuation">,</span> self<span class="token punctuation">.</span>temp_path <span class="token operator">+</span> <span class="token string">'average_weight'</span><span class="token punctuation">)</span>
+    pd<span class="token punctuation">.</span>to_pickle<span class="token punctuation">(</span>gamma<span class="token punctuation">,</span> self<span class="token punctuation">.</span>temp_path <span class="token operator">+</span> <span class="token string">'gamma.pkl'</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="随机游走采样"><a href="#随机游走采样" class="headerlink" title="随机游走采样"></a>随机游走采样</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20210902230833244.png" alt=""></p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">_exec_random_walk</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> graphs<span class="token punctuation">,</span> layers_accept<span class="token punctuation">,</span>layers_alias<span class="token punctuation">,</span> v<span class="token punctuation">,</span> walk_length<span class="token punctuation">,</span> gamma<span class="token punctuation">,</span> stay_prob<span class="token operator">=</span><span class="token number">0.3</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    initialLayer <span class="token operator">=</span> <span class="token number">0</span>
+    layer <span class="token operator">=</span> initialLayer
+
+    path <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+    path<span class="token punctuation">.</span>append<span class="token punctuation">(</span>self<span class="token punctuation">.</span>idx2node<span class="token punctuation">[</span>v<span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+    <span class="token keyword">while</span> len<span class="token punctuation">(</span>path<span class="token punctuation">)</span> <span class="token operator">&lt;</span> walk_length<span class="token punctuation">:</span>
+        r <span class="token operator">=</span> random<span class="token punctuation">.</span>random<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token keyword">if</span><span class="token punctuation">(</span>r <span class="token operator">&lt;</span> stay_prob<span class="token punctuation">)</span><span class="token punctuation">:</span>  <span class="token comment" spellcheck="true"># same layer</span>
+            v <span class="token operator">=</span> chooseNeighbor<span class="token punctuation">(</span>v<span class="token punctuation">,</span> graphs<span class="token punctuation">,</span> layers_alias<span class="token punctuation">,</span>
+                               layers_accept<span class="token punctuation">,</span> layer<span class="token punctuation">)</span>
+            path<span class="token punctuation">.</span>append<span class="token punctuation">(</span>self<span class="token punctuation">.</span>idx2node<span class="token punctuation">[</span>v<span class="token punctuation">]</span><span class="token punctuation">)</span>
+        <span class="token keyword">else</span><span class="token punctuation">:</span>  <span class="token comment" spellcheck="true"># different layer</span>
+            r <span class="token operator">=</span> random<span class="token punctuation">.</span>random<span class="token punctuation">(</span><span class="token punctuation">)</span>
+            <span class="token keyword">try</span><span class="token punctuation">:</span>
+                x <span class="token operator">=</span> math<span class="token punctuation">.</span>log<span class="token punctuation">(</span>gamma<span class="token punctuation">[</span>layer<span class="token punctuation">]</span><span class="token punctuation">[</span>v<span class="token punctuation">]</span> <span class="token operator">+</span> math<span class="token punctuation">.</span>e<span class="token punctuation">)</span>
+                p_moveup <span class="token operator">=</span> <span class="token punctuation">(</span>x <span class="token operator">/</span> <span class="token punctuation">(</span>x <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+            <span class="token keyword">except</span><span class="token punctuation">:</span>
+                <span class="token keyword">print</span><span class="token punctuation">(</span>layer<span class="token punctuation">,</span> v<span class="token punctuation">)</span>
+                <span class="token keyword">raise</span> ValueError<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+            <span class="token keyword">if</span><span class="token punctuation">(</span>r <span class="token operator">></span> p_moveup<span class="token punctuation">)</span><span class="token punctuation">:</span>
+                <span class="token keyword">if</span><span class="token punctuation">(</span>layer <span class="token operator">></span> initialLayer<span class="token punctuation">)</span><span class="token punctuation">:</span>
+                    layer <span class="token operator">=</span> layer <span class="token operator">-</span> <span class="token number">1</span>
+            <span class="token keyword">else</span><span class="token punctuation">:</span>
+                <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token punctuation">(</span>layer <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token keyword">in</span> graphs <span class="token operator">and</span> v <span class="token keyword">in</span> graphs<span class="token punctuation">[</span>layer <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+                    layer <span class="token operator">=</span> layer <span class="token operator">+</span> <span class="token number">1</span>
+
+    <span class="token keyword">return</span> path<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="GraphWave"><a href="#GraphWave" class="headerlink" title="GraphWave"></a>GraphWave</h1><p>原论文：<a href="https://arxiv.org/pdf/1710.10321.pdf" target="_blank" rel="noopener">Learning Structural Node Embeddings via DiffusionWavelets</a></p>
+<h1 id="NetMF"><a href="#NetMF" class="headerlink" title="NetMF"></a>NetMF</h1><p>原论文：<a href="https://arxiv.org/pdf/1710.02971.pdf" target="_blank" rel="noopener">Network Embedding as Matrix Factorization: Unifying DeepWalk, LINE, PTE, and node2vec</a></p>
+<h1 id="NetSMF"><a href="#NetSMF" class="headerlink" title="NetSMF"></a>NetSMF</h1><p>原论文：<a href="https://arxiv.org/pdf/1906.11156.pdf" target="_blank" rel="noopener">NetSMF: Large-Scale Network Embedding as Sparse Matrix Factorization</a></p>
+<h1 id="PTE"><a href="#PTE" class="headerlink" title="PTE"></a>PTE</h1><p>原论文：<a href="https://arxiv.org/pdf/1508.00200.pdf" target="_blank" rel="noopener">PTE:Predictive Text Embedding through Large-scale Heterogeneous Text Networks</a></p>
+<ol>
+<li><p>传统的词袋模型<code>bag-of-word:BOW</code> 忽略了不同单词之间的语义相关性，因此存在诸如数据稀疏性<code>sparsity</code> 、一词多义<code>polysemy</code>、同义词<code>synonymy</code> 之类的问题。单词的分布式 <code>representation</code> 通过在低维空间中嵌入单词来有效缓解该问题。</p>
+<p>单词的<code>embedding</code> 有两种方式：</p>
+<ul>
+<li>基于无监督学习的文本 <code>embedding</code> 通用性更强，可应用于各种类型的任务中。典型的无监督文本 <code>embedding</code> 方法包括 <code>SkipGram</code>、<code>Paragraph Vector</code> 等。</li>
+<li>基于监督学习的文本 <code>embedding</code> 效果更好，因为它可以充分利用<code>task-specific</code> 的标记信息。典型的监督学习方法有 <code>CNN</code> 神经网络。</li>
+</ul>
+<p>无监督文本 <code>embedding</code> 方法具有很多优点：</p>
+<ul>
+<li>首先，深度神经网络，尤其是 <code>CNN</code>，在训练中需要大量的计算。</li>
+<li>其次，<code>CNN</code> 网络通常需要大量的标记数据，而这在很多任务中是不现实的。</li>
+<li>最后，<code>CNN</code> 的训练需要对很多超参数进行调优，这对专家而言非常耗时、对非专家而言甚至不可行。</li>
+</ul>
+<p>但是和监督学习相比，无监督文本 <code>embedding</code> 方法在 <code>task-specific</code> 上的预测效果较差。原因是这些文本 <code>embedding</code> 在学习文本<code>embedding</code> 过程中没有利用任务中的任何标记信息。</p>
+</li>
+<li><p>论文 <code>《PTE:Predictive Text Embedding through Large-scale Heterogeneous Text Networks》</code> 提出了 <code>Predictive Text Embedding:PTE</code> 方法，它同时具有无监督文本 <code>embedding</code> 计算量小、标记数据需求低、无需复杂调参的优点，同时也利用了<code>task-specific</code> 标记信息。</p>
+<p><code>PTE</code> 是一种半监督学习方法，它可以从有限的标记数据和大量的未标记数据中共同学习单词的有效低维 <code>representation</code>。</p>
+</li>
+<li><p><code>PTE</code> 首先通过 <code>word-word</code>、<code>word-doc</code>、<code>word-label</code> 不同<code>level</code> 级别的共现构建一个大规模的异质文本网络 <code>Heterogeneous Text Network</code> ，然后将该异质网络嵌入到低维向量空间。<code>PTE</code> 通过在低维向量空间中保持顶点之间的二阶邻近度来学习顶点的 <code>embedding</code> 。</p>
+<p>这种低维 <code>embedding</code> 不仅保留了单词和文档之间的语义关系，还对<code>task-specific</code> 具有很好的预测能力。</p>
+<p>一旦学到单词的 <code>embedding</code>，我们可以将句子/文档中单词 <code>embedding</code> 的均值作为句子/文档的 <code>embedding</code> 。</p>
+<p>我们在真实语料库上进行广泛实验，结果表明：</p>
+<ul>
+<li>在各种文本分类任务中，<code>PTE</code> 的文本 <code>embedding</code> 都远远优于最新的无监督 <code>embedding</code> 方法</li>
+<li>在和 <code>CNN</code> 的对比中，<code>PTE</code> 在长文本上效果更好、在短文本上效果和 <code>CNN</code> 相差无几。但是 <code>PTE</code> 计算效率更高、可以有效应用大规模未标记数据，并且对模型的超参数敏感性较低。</li>
+</ul>
+</li>
+<li><p>监督学习方法和无监督学习方法的主要区别在于如何在学习阶段利用标记信息和未标记信息。在 <code>representation learning</code> 阶段：</p>
+<ul>
+<li><p>无监督学习不包含任何标记信息，仅在学到数据的<code>representation</code> 之后，才使用标记信息来训练下游的分类器。</p>
+</li>
+<li><p>监督学习直接在学习过程中使用标记信息。</p>
+<p>另外，监督学习也可以间接地使用未标记数据：通过无监督方法来预训练单词的 <code>embedding</code> 。</p>
+</li>
+</ul>
+<p>和这两种方式相比，<code>PTE</code> 通过半监督方法来学习文本 <code>embedding</code> ：在学习阶段直接利用少量的标记数据和大量的未标记数据。</p>
+</li>
+<li><p><code>DeepWalk</code> 和 <code>LINE</code> 均为无监督学习方法，它们只能处理同质网络。<code>PTE</code> 扩展了 <code>LINE</code> 方法从而能够处理异质网络，并且能够融合监督信息。</p>
+</li>
+</ol>
+<h2 id="模型-8"><a href="#模型-8" class="headerlink" title="模型"></a>模型</h2><p><img src="/images/loading.gif" data-original="../images/ML/image-20210902222823149.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902222901401.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902222942562.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902223015066.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902223031731.png" alt=""></p>
+<h1 id="HNE"><a href="#HNE" class="headerlink" title="HNE"></a>HNE</h1><p>原论文：<a href="https://www.researchgate.net/profile/Guo-Jun-Qi/publication/299970490_Heterogeneous_Network_Embedding_via_Deep_Architectures/links/5cb84989a6fdcc1d499cbe66/Heterogeneous-Network-Embedding-via-Deep-Architectures.pdf" target="_blank" rel="noopener">Heterogeneous Network Embedding via Deep Architecture</a></p>
+<p>社交网络中包含<code>Graph</code> 以及相关的数据，如何学到数据的<code>representation</code> 具有挑战：</p>
+<ul>
+<li>首先，社交网络上的数据规模呈指数型增长</li>
+<li>其次，社交网络上的数据类型多种多样，不仅包含文本，还有图像、视频。</li>
+<li>最后，社交网络上的数据并不是孤立的，而是相互产生关联。这些关联可以通过数据之间的链接来显式或隐式的构成：<ul>
+<li>显式关联：如果文本和图像出现在同一个网页中，则该文本和图像之间构成显式关联；如果两个网页之间存在超链接，则这两个网页之间存在显式关联。</li>
+<li>隐式关联：用户的活动可以视为隐式反馈，它提供了数据之间的隐式关联。例如，如果用户使用相似的 <code>tag</code> 描述了多张图片，那么这些图片之间存在隐式的语义关联。</li>
+</ul>
+</li>
+</ul>
+<p>因此，如此大规模的数据导致异常复杂的异质网络<code>heterogeneous network</code>，这对学习数据的统一表达提出了巨大挑战。</p>
+<p>为解决该问题，论文 <code>《Heterogeneous Network Embedding via Deep Architectures》</code> 提出了一种被称作异质网络嵌入 <code>Heterogeneous Network Embedding:HNE</code> 的新的方法来学习学习网络的<code>representatioin</code> 。</p>
+<ul>
+<li><code>HNE</code> 方法同时考虑顶点的内容信息和顶点之间的链接信息。</li>
+<li><code>HNE</code> 将不同的异质顶点映射到一个统一的潜在空间中，以便可以直接比较不同类型的顶点。</li>
+</ul>
+<h2 id="模型-9"><a href="#模型-9" class="headerlink" title="模型"></a>模型</h2><p><img src="/images/loading.gif" data-original="../images/ML/image-20210902223623572.png" alt=""></p>
+<h3 id="线性-HNE"><a href="#线性-HNE" class="headerlink" title="线性 HNE"></a>线性 HNE</h3><p><img src="/images/loading.gif" data-original="../images/ML/image-20210902223700791.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902223731394.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902223747593.png" alt=""></p>
+<h3 id="深度-HNE"><a href="#深度-HNE" class="headerlink" title="深度 HNE"></a>深度 HNE</h3><ol>
+<li><p>在前面的介绍中，我们将不同的异质顶点映射到统一的低维潜在空间。但是，这类 <code>embedding</code> 函数是线性的，缺乏对复杂网络进行建模的能力。这里我们引入深度学习框架。</p>
+<p>前面部分我们的解决方案可以分为两个步骤：</p>
+<ul>
+<li>手动构造顶点的特征表示：对于文本顶点，使用其 <code>TF-IDF</code> 向量；对于图像顶点，使用其原始 <code>RGB</code> 像素点拼接而成的向量。</li>
+<li>将不同的特征表示嵌入到公共的低维空间中。</li>
+</ul>
+<p>这里我们通过深度学习将特征表示的学习、公共空间的嵌入合并为一步。</p>
+</li>
+</ol>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902224015149.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902224037358.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902224138979.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902224150729.png" alt=""></p>
+<h1 id="AANE"><a href="#AANE" class="headerlink" title="AANE"></a>AANE</h1><p>原论文：<a href="https://epubs.siam.org/doi/pdf/10.1137/1.9781611974973.71" target="_blank" rel="noopener">Accelerated Attributed Network Embedding</a></p>
+<p>在很多实际应用中，网络顶点通常会伴随着一组丰富的属性或特征，即属性网络 <code>attributed network</code>。因此，在对顶点<code>embedding</code> 建模的过程中考虑顶点属性会有所帮助，即 <code>attributed network embedding:ANE</code> 。但是，<code>ANE</code> 在以下三个方面具有挑战性：</p>
+<ul>
+<li><p>算法复杂度：较高的算法复杂度限制了某些 <code>ANE</code> 算法在实际任务中的应用。已有一些算法基于网络的结构信息和属性信息来学习顶点<code>embedding</code>，但是这些算法要么在每个迭代<code>step</code> 中使用了 O(n^3) 复杂度的特征值分解， 要么使用了收敛速度很慢的梯度下降。</p>
+</li>
+<li><p><code>heterogeneous</code> 异质信息：由于同时引入了结构信息和属性信息，因此如何在网络的结构和属性的联合空间中评估顶点的邻近度（即距离）是一个挑战。</p>
+<p>另外，随着网络规模的扩大，顶点的属性邻近度矩阵通常非常庞大，难以存储到单台计算机上，更别提对它进行操作。</p>
+</li>
+<li><p>噪音：网络结构信息和顶点属性信息可能都是残缺的、带噪音的，这进一步加入了顶点 <code>embedding</code> 学习的难度。</p>
+</li>
+</ul>
+<p>因此，现有方法无法直接应用于 <code>scalable</code> 的 <code>attributed network embedding</code> 。为解决该问题，论文 <code>《Accelerated Attributed Network Embedding》</code> 提出了一种加速属性网络 <code>embedding</code> 算法 <code>accelerated attributed network embedding:AANE</code> 。</p>
+<p>一方面， <code>AANE</code> 将顶点属性纳入到顶点 <code>embedding</code> 过程中；另一方面，<code>AANE</code> 提出了一种分布式优化算法，该算法将复杂的建模和优化过程分解为很多子问题，从而能够以分布式方式完成联合学习。</p>
+<h2 id="模型-10"><a href="#模型-10" class="headerlink" title="模型"></a>模型</h2><p><img src="/images/loading.gif" data-original="../images/ML/image-20210902224410288.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902224426031.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902224442729.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902224458404.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902224526770.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902224547956.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902224606867.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20210902224619562.png" alt=""></p>
+<script>
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return; }
+            const img = document.createElement('img');
+            img.style = 'display:none !important;';
+            img.src = el.dataset.src;
+            img.addEventListener('error', () => {
+              img.remove();
+              el.style.color = 'inherit';
+              el.style.backgroundImage = 'none';
+              el.style.background = 'none';
+            });
+            img.addEventListener('load', () => {
+              img.remove();
+            });
+            document.body.appendChild(img);
+          });
+      </script>
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://jackhcc.github.io" rel="external nofollow noreferrer">杰克成</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://jackhcc.github.io/posts/graph-embedding.html">https://jackhcc.github.io/posts/graph-embedding.html</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="https://jackhcc.github.io" target="_blank">杰克成</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/GNN/">
+                                    <span class="chip bg-color">GNN</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/reward/aliqr.png" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/reward/wxqr.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+            
+        </div>
+    </div>
+
+    
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/gitalk/gitalk.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/my-gitalk.css">
+
+<div class="card gitalk-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="gitalk-container" class="card-content"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/gitalk/gitalk.min.js"></script>
+<script>
+    let gitalk = new Gitalk({
+        clientID: '3821a0bbb773038a51fc',
+        clientSecret: '4b30b507d67ec5497ec0e77f43f80cb3e0d7dd3a',
+        repo: 'JackHCC.github.io',
+        owner: 'JackHCC',
+        admin: "JackHCC",
+        id: '2021-09-01T21-44-10',
+        distractionFreeMode: false  // Facebook-like distraction free mode
+    });
+
+    gitalk.render('gitalk-container');
+</script>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/posts/word-embedding.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/10.jpg" class="responsive-img" alt="Word Embedding详解">
+                        
+                        <span class="card-title">Word Embedding详解</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            Word Embedding方法汇总
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-09-02
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Deep-Learning/" class="post-category">
+                                    Deep Learning
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/NLP/">
+                        <span class="chip bg-color">NLP</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/posts/blog-python16.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/22.jpg" class="responsive-img" alt="Python-Selenium & BeautifulSoup详解">
+                        
+                        <span class="card-title">Python-Selenium & BeautifulSoup详解</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            Selenium与BeautifulSoup 网页自动化&爬虫
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-08-29
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Python/" class="post-category">
+                                    Python
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Selenium-BeautifulSoup/">
+                        <span class="chip bg-color">Selenium | BeautifulSoup</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeShrink.js"></script>
+
+
+<!-- 代码块折行 -->
+
+<style type="text/css">
+code[class*="language-"], pre[class*="language-"] { white-space: pre !important; }
+</style>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('4'),
+            headingSelector: 'h1, h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h1, h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+    <footer class="page-footer bg-color">
+    <div class="container row center-align" style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            <span id="year">2020</span>
+            <a href="https://jackhcc.github.io" target="_blank">杰克成</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                class="white-color">3303.6k</span>&nbsp;字
+            
+            
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;人
+            </span>
+            
+            <br>
+            
+            <span id="sitetime">载入运行时间...</span>
+            <script>
+                function siteTime() {
+                    var seconds = 1000;
+                    var minutes = seconds * 60;
+                    var hours = minutes * 60;
+                    var days = hours * 24;
+                    var years = days * 365;
+                    var today = new Date();
+                    var startYear = "2020";
+                    var startMonth = "2";
+                    var startDate = "27";
+                    var startHour = "6";
+                    var startMinute = "30";
+                    var startSecond = "0";
+                    var todayYear = today.getFullYear();
+                    var todayMonth = today.getMonth() + 1;
+                    var todayDate = today.getDate();
+                    var todayHour = today.getHours();
+                    var todayMinute = today.getMinutes();
+                    var todaySecond = today.getSeconds();
+                    var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                    var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                    var diff = t2 - t1;
+                    var diffYears = Math.floor(diff / years);
+                    var diffDays = Math.floor((diff / days) - diffYears * 365);
+                    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+                    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) /
+                        minutes);
+                    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours -
+                        diffMinutes * minutes) / seconds);
+                    if (startYear == todayYear) {
+                        document.getElementById("year").innerHTML = todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffDays + " 天 " + diffHours +
+                            " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    } else {
+                        document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffYears + " 年 " + diffDays +
+                            " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    }
+                }
+                setInterval(siteTime, 1000);
+            </script>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/JackHCC" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:jackcc0701@163.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+    <a href="https://www.facebook.com/profile.php?id=100046343443643" class="tooltipped" target="_blank" data-tooltip="关注我的Facebook: https://www.facebook.com/profile.php?id=100046343443643" data-position="top" data-delay="50">
+        <i class="fab fa-facebook-f"></i>
+    </a>
+
+
+
+    <a href="https://twitter.com/JackChe66021834" class="tooltipped" target="_blank" data-tooltip="关注我的Twitter: https://twitter.com/JackChe66021834" data-position="top" data-delay="50">
+        <i class="fab fa-twitter"></i>
+    </a>
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=2508074836" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 2508074836" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+    <a href="https://weibo.com/u/6885584679" class="tooltipped" target="_blank" data-tooltip="关注我的微博: https://weibo.com/u/6885584679" data-position="top" data-delay="50">
+        <i class="fab fa-weibo"></i>
+    </a>
+
+
+
+    <a href="https://www.zhihu.com/people/8f8482f01f0d6a04e844efe32e0f0710" class="tooltipped" target="_blank" data-tooltip="关注我的知乎: https://www.zhihu.com/people/8f8482f01f0d6a04e844efe32e0f0710" data-position="top" data-delay="50">
+        <i class="fab fa-zhihu1">知</i>
+    </a>
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/materialize/materialize.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/aos/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/js/matery.js"></script>
+
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+    <script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script type="text/javascript" src="/js/fireworks.js"></script>
+
+    <script type="text/javascript">
+        //只在桌面版网页启用特效
+        var windowWidth = $(window).width();
+        if (windowWidth > 768) {
+            document.write('<script type="text/javascript" src="/js/sakura.js"><\/script>'); }
+    </script>
+
+    <!-- weather -->
+	<script type="text/javascript">
+	WIDGET = {FID: 'TToslpmkVO'}
+	</script>
+	<script type="text/javascript" src="https://apip.weatherdt.com/float/static/js/r.js?v=1111"></script>
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <!-- Baidu Analytics -->
+
+<script>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+    <!-- Baidu Push -->
+
+    
+    
+    <script async src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+        <script src="//code.tidio.co/kqhlkxviiccyoa0czpfpu4ijuey9hfre.js"></script>
+        <script> 
+            $(document).ready(function () {
+                setInterval(change_Tidio, 50);  
+                function change_Tidio() { 
+                    var tidio=$("#tidio-chat iframe");
+                    if(tidio.css("display")=="block"&& $(window).width()>977 ){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" &&$(window).width()>977)>0? "-40px" : ($("div.toc-title").length&&$(window).width()>977)>0?"85px":"20px";   
+                        document.getElementById("tidio-chat-iframe").style.right="-15px";   
+                        document.getElementById("tidio-chat-iframe").style.height=parseInt(tidio.css("height"))>=520?"520px":tidio.css("height");
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    } 
+                    else if(tidio.css("display")=="block"&&$(window).width()>601 &&$(window).width()<992 ){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" && 601< $(window).width()<992)>0? "-40px":"20px" ;   
+                        document.getElementById("tidio-chat-iframe").style.right="-15px"; 
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    }
+                    else if(tidio.css("display")=="block"&&$(window).width()<601 && parseInt(tidio.css("height"))<230){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" && $(window).width()<601)>0? "-10px":"45px" ;   
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    }
+                    if( tidio.css("display")=="block"&&$(window).width()<601 && parseInt(tidio.css("height"))>=230){
+                        document.getElementById("tidio-chat-iframe").style.zIndex="998";
+                    }
+                } 
+            }); 
+        </script>
+    
+
+    
+
+    
+    <script type="text/javascript" color="0,0,255"
+        pointColor="0,0,255" opacity='0.7'
+        zIndex="-1" count="99"
+        src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/background/canvas-nest.js"></script>
+    
+
+    
+
+    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/background/ribbon-dynamic.js" async="async"></script>
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/instantpage/instantpage.js" type="module"></script>
+    
+<script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script>
+        <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
+        <script>
+        $('a').each(function() {
+          const $this = $(this);
+          const href = $this.attr('href');
+          if (href && href.match('^((http|https|thunder|qqdl|ed2k|Flashget|qbrowser|ftp|rtsp|mms)://)')) {
+            const strs = href.split('/');
+            if (strs.length >= 3) {
+                const host = strs[2];
+                if (host !== 'your_domain' || window.location.host) {
+                    $this.attr('href', '/go.html?u='+Base64.encode(href)+'').attr('rel', 'external nofollow noopener noreferrer');
+                    if (true) {
+                        $this.attr('target', '_blank');
+                    }
+                }
+            }
+          }
+        });
+        </script></body>
+
+</html>
+

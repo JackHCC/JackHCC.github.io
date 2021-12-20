@@ -1,0 +1,1657 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="DL专栏5-Feature Selection, JackHCC">
+    <meta name="description" content="特征选择基本方法【附数据标注】">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>DL专栏5-Feature Selection | JackHCC</title>
+    <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/my.css">
+    
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/jquery/jquery.min.js"></script>
+    
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper head-container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/me.jpg" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">JackHCC</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>留言板</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>友情链接</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/me.jpg" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">JackHCC</div>
+        <div class="logo-desc">
+            
+            Make the world betterrrr!!!
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			留言板
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			友情链接
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/JackHCC/JackHCC.github.io" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/JackHCC/JackHCC.github.io" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/18.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">DL专栏5-Feature Selection</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        height: calc(100vh - 250px);
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 30px;
+        bottom: 146px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/DataSet/">
+                                <span class="chip bg-color">DataSet</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/Deep-Learning/" class="post-category">
+                                Deep Learning
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2021-10-08
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2021-11-18
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    8.6k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    33 分
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h2 id="特征选择基本方法"><a href="#特征选择基本方法" class="headerlink" title="特征选择基本方法"></a>特征选择基本方法</h2><p>好的特征选择能够提升模型的性能，更能帮助我们理解数据的特点、底层结构，这对进一步改善模型、算法都有着重要作用。</p>
+<h3 id="一、去掉取值变化小的特征"><a href="#一、去掉取值变化小的特征" class="headerlink" title="一、去掉取值变化小的特征"></a><strong>一、去掉取值变化小的特征</strong></h3><p>英文：Removing features with low variance</p>
+<p>这应该是最简单的特征选择方法了：假设某特征的特征值只有0和1，并且在所有输入样本中，95%的实例的该特征取值都是1，那就可以认为这个特征作用不大。如果100%都是1，那这个特征就没意义了。当特征值都是离散型变量的时候这种方法才能用，如果是连续型变量，就需要将连续变量离散化之后才能用，而且实际当中，一般不太会有95%以上都取某个值的特征存在，所以这种方法虽然简单但是不太好用。可以把它作为特征选择的预处理，先去掉那些取值变化小的特征，然后再从接下来提到的的特征选择方法中选择合适的进行进一步的特征选择。</p>
+<h3 id="二、单变量特征选择"><a href="#二、单变量特征选择" class="headerlink" title="二、单变量特征选择"></a><strong>二、单变量特征选择</strong></h3><p>英文：Univariate feature selection。</p>
+<p>单变量特征选择能够对每一个特征进行测试，衡量该特征和响应变量之间的关系，根据得分扔掉不好的特征。对于回归和分类问题可以采用卡方检验等方式对特征进行测试。</p>
+<p>这种方法比较简单，易于运行，易于理解，通常对于理解数据有较好的效果（但对特征优化、提高泛化能力来说不一定有效）；这种方法有许多改进的版本、变种。</p>
+<h4 id="Pearson相关系数"><a href="#Pearson相关系数" class="headerlink" title="Pearson相关系数"></a><strong>Pearson相关系数</strong></h4><p>英文：Pearson Correlation</p>
+<p>皮尔森相关系数是一种最简单的，能帮助理解特征和响应变量之间关系的方法，该方法衡量的是变量之间的线性相关性，结果的取值区间为[-1，1]，-1表示完全的负相关(这个变量下降，那个就会上升)，+1表示完全的正相关，0表示没有线性相关。</p>
+<p>Pearson Correlation速度快、易于计算，经常在拿到数据(经过清洗和特征提取之后的)之后第一时间就执行。Scipy的pearsonr方法能够同时计算相关系数和p-value，</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> numpy <span class="token keyword">as</span> np
+<span class="token keyword">from</span> scipy<span class="token punctuation">.</span>stats <span class="token keyword">import</span> pearsonr
+np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>seed<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
+size <span class="token operator">=</span> <span class="token number">300</span>
+x <span class="token operator">=</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>normal<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> size<span class="token punctuation">)</span>
+<span class="token keyword">print</span> <span class="token string">"Lower noise"</span><span class="token punctuation">,</span> pearsonr<span class="token punctuation">(</span>x<span class="token punctuation">,</span> x <span class="token operator">+</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>normal<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> size<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span> <span class="token string">"Higher noise"</span><span class="token punctuation">,</span> pearsonr<span class="token punctuation">(</span>x<span class="token punctuation">,</span> x <span class="token operator">+</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>normal<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">,</span> size<span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007143314977.png" alt=""></p>
+<p>这个例子中，我们比较了变量在加入噪音之前和之后的差异。当噪音比较小的时候，相关性很强，p-value很低。</p>
+<p>Scikit-learn提供的f_regrssion方法能够批量计算特征的p-value，非常方便，参考sklearn的pipeline。</p>
+<p>Pearson相关系数的一个明显缺陷是，作为特征排序机制，他只对线性关系敏感。如果关系是非线性的，即便两个变量具有一一对应的关系，Pearson相关性也可能会接近0。</p>
+<pre class="line-numbers language-python"><code class="language-python">x <span class="token operator">=</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>uniform<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">100000</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span> pearsonr<span class="token punctuation">(</span>x<span class="token punctuation">,</span> x<span class="token operator">**</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>
+
+<span class="token operator">>></span><span class="token operator">></span> <span class="token operator">-</span><span class="token number">0.00230804707612</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>更多类似的例子参考sample plots。另外，如果仅仅根据相关系数这个值来判断的话，有时候会具有很强的误导性，如Anscombe’s quartet，最好把数据可视化出来，以免得出错误的结论。</p>
+<h4 id="互信息和最大信息系数"><a href="#互信息和最大信息系数" class="headerlink" title="互信息和最大信息系数"></a><strong>互信息和最大信息系数</strong></h4><p>英文：Mutual information and maximal information coefficient (MIC)</p>
+<p>以上就是经典的互信息公式了。想把互信息直接用于特征选择其实不是太方便：1、它不属于度量方式，也没有办法归一化，在不同数据及上的结果无法做比较；2、对于连续变量的计算不是很方便（X和Y都是集合，x，y都是离散的取值），通常变量需要先离散化，而互信息的结果对离散化的方式很敏感。</p>
+<p>最大信息系数克服了这两个问题。它首先寻找一种最优的离散化方式，然后把互信息取值转换成一种度量方式，取值区间在[0，1]。minepy提供了MIC功能。</p>
+<p>反过头来看y=x^2这个例子，MIC算出来的互信息值为1(最大的取值)。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> minepy <span class="token keyword">import</span> MINE
+m <span class="token operator">=</span> MINE<span class="token punctuation">(</span><span class="token punctuation">)</span>
+x <span class="token operator">=</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>uniform<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">10000</span><span class="token punctuation">)</span>
+m<span class="token punctuation">.</span>compute_score<span class="token punctuation">(</span>x<span class="token punctuation">,</span> x<span class="token operator">**</span><span class="token number">2</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span> m<span class="token punctuation">.</span>mic<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>1.0</p>
+<p>MIC的统计能力遭到了一些质疑，当零假设不成立时，MIC的统计就会受到影响。在有的数据集上不存在这个问题，但有的数据集上就存在这个问题。</p>
+<h4 id="距离相关系数"><a href="#距离相关系数" class="headerlink" title="距离相关系数"></a><strong>距离相关系数</strong></h4><p>英文：Distance correlation</p>
+<p>距离相关系数是为了克服Pearson相关系数的弱点而生的。在x和x^2这个例子中，即便Pearson相关系数是0，我们也不能断定这两个变量是独立的（有可能是非线性相关）；但如果距离相关系数是0，那么我们就可以说这两个变量是独立的。</p>
+<p>R的energy包里提供了距离相关系数的实现，另外这是Python gist的实现。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#R-code</span>
+<span class="token operator">></span> x <span class="token operator">=</span> runif <span class="token punctuation">(</span><span class="token number">1000</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span>
+<span class="token operator">></span> dcor<span class="token punctuation">(</span>x<span class="token punctuation">,</span> x<span class="token operator">**</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> 
+
+<span class="token operator">>></span><span class="token operator">></span> <span class="token number">0.4943864</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>尽管有MIC和距离相关系数在了，但当变量之间的关系接近线性相关的时候，Pearson相关系数仍然是不可替代的。第一、Pearson相关系数计算速度快，这在处理大规模数据的时候很重要。第二、Pearson相关系数的取值区间是[-1，1]，而MIC和距离相关系数都是[0，1]。这个特点使得Pearson相关系数能够表征更丰富的关系，符号表示关系的正负，绝对值能够表示强度。当然，Pearson相关性有效的前提是两个变量的变化关系是单调的。</p>
+<h4 id="基于学习模型的特征排序"><a href="#基于学习模型的特征排序" class="headerlink" title="基于学习模型的特征排序"></a><strong>基于学习模型的特征排序</strong></h4><p>英文：Model based ranking</p>
+<p>这种方法的思路是直接使用你要用的机器学习算法，针对每个单独的特征和响应变量建立预测模型。其实Pearson相关系数等价于线性回归里的标准化回归系数。假如某个特征和响应变量之间的关系是非线性的，可以用基于树的方法（决策树、随机森林）、或者扩展的线性模型等。基于树的方法比较易于使用，因为他们对非线性关系的建模比较好，并且不需要太多的调试。但要注意过拟合问题，因此树的深度最好不要太大，再就是运用交叉验证。</p>
+<p>在波士顿房价数据集上使用sklearn的随机森林回归给出一个单变量选择的例子：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>cross_validation <span class="token keyword">import</span> cross_val_score<span class="token punctuation">,</span> ShuffleSplit
+<span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>datasets <span class="token keyword">import</span> load_boston
+<span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>ensemble <span class="token keyword">import</span> RandomForestRegressor
+
+<span class="token comment" spellcheck="true">#Load boston housing dataset as an example</span>
+boston <span class="token operator">=</span> load_boston<span class="token punctuation">(</span><span class="token punctuation">)</span>
+X <span class="token operator">=</span> boston<span class="token punctuation">[</span><span class="token string">"data"</span><span class="token punctuation">]</span>
+Y <span class="token operator">=</span> boston<span class="token punctuation">[</span><span class="token string">"target"</span><span class="token punctuation">]</span>
+names <span class="token operator">=</span> boston<span class="token punctuation">[</span><span class="token string">"feature_names"</span><span class="token punctuation">]</span>
+
+rf <span class="token operator">=</span> RandomForestRegressor<span class="token punctuation">(</span>n_estimators<span class="token operator">=</span><span class="token number">20</span><span class="token punctuation">,</span> max_depth<span class="token operator">=</span><span class="token number">4</span><span class="token punctuation">)</span>
+scores <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span>X<span class="token punctuation">.</span>shape<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">:</span>     
+    score <span class="token operator">=</span> cross_val_score<span class="token punctuation">(</span>rf<span class="token punctuation">,</span> X<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> i<span class="token punctuation">:</span>i<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> Y<span class="token punctuation">,</span> scoring<span class="token operator">=</span><span class="token string">"r2"</span><span class="token punctuation">,</span>                                                          cv<span class="token operator">=</span>ShuffleSplit<span class="token punctuation">(</span>len<span class="token punctuation">(</span>X<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span>     
+    scores<span class="token punctuation">.</span>append<span class="token punctuation">(</span><span class="token punctuation">(</span>round<span class="token punctuation">(</span>np<span class="token punctuation">.</span>mean<span class="token punctuation">(</span>score<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">,</span> names<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span> sorted<span class="token punctuation">(</span>scores<span class="token punctuation">,</span> reverse<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007143901979.png" alt=""></p>
+<h3 id="三、线性模型和正则化"><a href="#三、线性模型和正则化" class="headerlink" title="三、线性模型和正则化"></a><strong>三、线性模型和正则化</strong></h3><p>单变量特征选择方法独立的衡量每个特征与响应变量之间的关系，另一种主流的特征选择方法是基于机器学习模型的方法。有些机器学习方法本身就具有对特征进行打分的机制，或者很容易将其运用到特征选择任务中，例如回归模型，SVM，决策树，随机森林等等。说句题外话，这种方法好像在一些地方叫做wrapper类型，大概意思是说，特征排序模型和机器学习模型是耦盒在一起的，对应的非wrapper类型的特征选择方法叫做filter类型。</p>
+<p>下面将介绍如何用回归模型的系数来选择特征。越是重要的特征在模型中对应的系数就会越大，而跟输出变量越是无关的特征对应的系数就会越接近于0。在噪音不多的数据上，或者是数据量远远大于特征数的数据上，如果特征之间相对来说是比较独立的，那么即便是运用最简单的线性回归模型也一样能取得非常好的效果。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>linear_model <span class="token keyword">import</span> LinearRegression
+<span class="token keyword">import</span> numpy <span class="token keyword">as</span> np
+
+np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>seed<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
+size <span class="token operator">=</span> <span class="token number">5000</span>
+<span class="token comment" spellcheck="true">#A dataset with 3 features</span>
+X <span class="token operator">=</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>normal<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>size<span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">#Y = X0 + 2*X1 + noise</span>
+Y <span class="token operator">=</span> X<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">+</span> <span class="token number">2</span><span class="token operator">*</span>X<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">+</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>normal<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> size<span class="token punctuation">)</span>
+lr <span class="token operator">=</span> LinearRegression<span class="token punctuation">(</span><span class="token punctuation">)</span>
+lr<span class="token punctuation">.</span>fit<span class="token punctuation">(</span>X<span class="token punctuation">,</span> Y<span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true">#A helper method for pretty-printing linear models</span>
+<span class="token keyword">def</span> <span class="token function">pretty_print_linear</span><span class="token punctuation">(</span>coefs<span class="token punctuation">,</span> names <span class="token operator">=</span> None<span class="token punctuation">,</span> sort <span class="token operator">=</span> <span class="token boolean">False</span><span class="token punctuation">)</span><span class="token punctuation">:</span>    
+    <span class="token keyword">if</span> names <span class="token operator">==</span> None<span class="token punctuation">:</span>        
+        names <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"X%s"</span> <span class="token operator">%</span> x <span class="token keyword">for</span> x <span class="token keyword">in</span> range<span class="token punctuation">(</span>len<span class="token punctuation">(</span>coefs<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">]</span>    
+    lst <span class="token operator">=</span> zip<span class="token punctuation">(</span>coefs<span class="token punctuation">,</span> names<span class="token punctuation">)</span>    
+    <span class="token keyword">if</span> sort<span class="token punctuation">:</span>        
+        lst <span class="token operator">=</span> sorted<span class="token punctuation">(</span>lst<span class="token punctuation">,</span>  key <span class="token operator">=</span> <span class="token keyword">lambda</span> x<span class="token punctuation">:</span><span class="token operator">-</span>np<span class="token punctuation">.</span>abs<span class="token punctuation">(</span>x<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span>    
+    <span class="token keyword">return</span> <span class="token string">" + "</span><span class="token punctuation">.</span>join<span class="token punctuation">(</span><span class="token string">"%s * %s"</span> <span class="token operator">%</span> <span class="token punctuation">(</span>round<span class="token punctuation">(</span>coef<span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">,</span> name<span class="token punctuation">)</span>                                   
+                                <span class="token keyword">for</span> coef<span class="token punctuation">,</span> name <span class="token keyword">in</span> lst<span class="token punctuation">)</span>
+
+<span class="token keyword">print</span> <span class="token string">"Linear model:"</span><span class="token punctuation">,</span> pretty_print_linear<span class="token punctuation">(</span>lr<span class="token punctuation">.</span>coef_<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007144403091.png" alt=""></p>
+<p>在这个例子当中，尽管数据中存在一些噪音，但这种特征选择模型仍然能够很好的体现出数据的底层结构。当然这也是因为例子中的这个问题非常适合用线性模型来解：特征和响应变量之间全都是线性关系，并且特征之间均是独立的。</p>
+<p>在很多实际的数据当中，往往存在多个互相关联的特征，这时候模型就会变得不稳定，数据中细微的变化就可能导致模型的巨大变化（模型的变化本质上是系数，或者叫参数，可以理解成W），这会让模型的预测变得困难，这种现象也称为多重共线性。例如，假设我们有个数据集，它的真实模型应该是Y=X1+X2，当我们观察的时候，发现Y’=X1+X2+e，e是噪音。如果X1和X2之间存在线性关系，例如X1约等于X2，这个时候由于噪音e的存在，我们学到的模型可能就不是Y=X1+X2了，有可能是Y=2X1，或者Y=-X1+3X2。</p>
+<p>下边这个例子当中，在同一个数据上加入了一些噪音，用随机森林算法进行特征选择。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>linear_model <span class="token keyword">import</span> LinearRegression
+
+size <span class="token operator">=</span> <span class="token number">100</span>
+np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>seed<span class="token punctuation">(</span>seed<span class="token operator">=</span><span class="token number">5</span><span class="token punctuation">)</span>
+
+X_seed <span class="token operator">=</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>normal<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> size<span class="token punctuation">)</span>
+X1 <span class="token operator">=</span> X_seed <span class="token operator">+</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>normal<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token number">1</span><span class="token punctuation">,</span> size<span class="token punctuation">)</span>
+X2 <span class="token operator">=</span> X_seed <span class="token operator">+</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>normal<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token number">1</span><span class="token punctuation">,</span> size<span class="token punctuation">)</span>
+X3 <span class="token operator">=</span> X_seed <span class="token operator">+</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>normal<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token number">1</span><span class="token punctuation">,</span> size<span class="token punctuation">)</span>
+
+Y <span class="token operator">=</span> X1 <span class="token operator">+</span> X2 <span class="token operator">+</span> X3 <span class="token operator">+</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>normal<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">,</span> size<span class="token punctuation">)</span>
+X <span class="token operator">=</span> np<span class="token punctuation">.</span>array<span class="token punctuation">(</span><span class="token punctuation">[</span>X1<span class="token punctuation">,</span> X2<span class="token punctuation">,</span> X3<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">.</span>T
+
+lr <span class="token operator">=</span> LinearRegression<span class="token punctuation">(</span><span class="token punctuation">)</span>
+lr<span class="token punctuation">.</span>fit<span class="token punctuation">(</span>X<span class="token punctuation">,</span>Y<span class="token punctuation">)</span>
+<span class="token keyword">print</span> <span class="token string">"Linear model:"</span><span class="token punctuation">,</span> pretty_print_linear<span class="token punctuation">(</span>lr<span class="token punctuation">.</span>coef_<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007144442079.png" alt=""></p>
+<p>系数之和接近3，基本上和上上个例子的结果一致，应该说学到的模型对于预测来说还是不错的。但是，如果从系数的字面意思上去解释特征的重要性的话，X3对于输出变量来说具有很强的正面影响，而X1具有负面影响，而实际上所有特征与输出变量之间的影响是均等的。</p>
+<p>同样的方法和套路可以用到类似的线性模型上，比如逻辑回归。</p>
+<h4 id="正则化模型"><a href="#正则化模型" class="headerlink" title="正则化模型"></a><strong>正则化模型</strong></h4><p>正则化就是把额外的约束或者惩罚项加到已有模型（损失函数）上，以防止过拟合并提高泛化能力。损失函数由原来的E(X,Y)变为E(X,Y)+alpha||w||，w是模型系数组成的向量（有些地方也叫参数parameter，coefficients），||·||一般是L1或者L2范数，alpha是一个可调的参数，控制着正则化的强度。当用在线性模型上时，L1正则化和L2正则化也称为Lasso和Ridge。</p>
+<h4 id="L1正则化-Lasso"><a href="#L1正则化-Lasso" class="headerlink" title="L1正则化/Lasso"></a><strong>L1正则化/Lasso</strong></h4><p>L1正则化将系数w的l1范数作为惩罚项加到损失函数上，由于正则项非零，这就迫使那些弱的特征所对应的系数变成0。因此L1正则化往往会使学到的模型很稀疏（系数w经常为0），这个特性使得L1正则化成为一种很好的特征选择方法。</p>
+<p>Scikit-learn为线性回归提供了Lasso，为分类提供了L1逻辑回归。</p>
+<p>下面的例子在波士顿房价数据上运行了Lasso，其中参数alpha是通过grid search进行优化的。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>linear_model <span class="token keyword">import</span> Lasso
+<span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>preprocessing <span class="token keyword">import</span> StandardScaler
+<span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>datasets <span class="token keyword">import</span> load_boston
+
+boston <span class="token operator">=</span> load_boston<span class="token punctuation">(</span><span class="token punctuation">)</span>
+scaler <span class="token operator">=</span> StandardScaler<span class="token punctuation">(</span><span class="token punctuation">)</span>
+X <span class="token operator">=</span> scaler<span class="token punctuation">.</span>fit_transform<span class="token punctuation">(</span>boston<span class="token punctuation">[</span><span class="token string">"data"</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+Y <span class="token operator">=</span> boston<span class="token punctuation">[</span><span class="token string">"target"</span><span class="token punctuation">]</span>
+names <span class="token operator">=</span> boston<span class="token punctuation">[</span><span class="token string">"feature_names"</span><span class="token punctuation">]</span>
+
+lasso <span class="token operator">=</span> Lasso<span class="token punctuation">(</span>alpha<span class="token operator">=</span><span class="token punctuation">.</span><span class="token number">3</span><span class="token punctuation">)</span>
+lasso<span class="token punctuation">.</span>fit<span class="token punctuation">(</span>X<span class="token punctuation">,</span> Y<span class="token punctuation">)</span>
+
+<span class="token keyword">print</span> <span class="token string">"Lasso model: "</span><span class="token punctuation">,</span> pretty_print_linear<span class="token punctuation">(</span>lasso<span class="token punctuation">.</span>coef_<span class="token punctuation">,</span> names<span class="token punctuation">,</span> sort <span class="token operator">=</span> <span class="token boolean">True</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007144536814.png" alt=""></p>
+<p>可以看到，很多特征的系数都是0。如果继续增加alpha的值，得到的模型就会越来越稀疏，即越来越多的特征系数会变成0。</p>
+<p>然而，L1正则化像非正则化线性模型一样也是不稳定的，如果特征集合中具有相关联的特征，当数据发生细微变化时也有可能导致很大的模型差异。</p>
+<h4 id="L2正则化-Ridge-regression"><a href="#L2正则化-Ridge-regression" class="headerlink" title="L2正则化/Ridge regression"></a><strong>L2正则化/Ridge regression</strong></h4><p>L2正则化将系数向量的L2范数添加到了损失函数中。由于L2惩罚项中系数是二次方的，这使得L2和L1有着诸多差异，最明显的一点就是，L2正则化会让系数的取值变得平均。对于关联特征，这意味着他们能够获得更相近的对应系数。还是以Y=X1+X2为例，假设X1和X2具有很强的关联，如果用L1正则化，不论学到的模型是Y=X1+X2还是Y=2X1，惩罚都是一样的，都是2alpha。但是对于L2来说，第一个模型的惩罚项是2alpha，但第二个模型的是4*alpha。可以看出，系数之和为常数时，各系数相等时惩罚是最小的，所以才有了L2会让各个系数趋于相同的特点。</p>
+<p>可以看出，L2正则化对于特征选择来说一种稳定的模型，不像L1正则化那样，系数会因为细微的数据变化而波动。所以L2正则化和L1正则化提供的价值是不同的，L2正则化对于特征理解来说更加有用：表示能力强的特征对应的系数是非零。</p>
+<p>回过头来看看3个互相关联的特征的例子，分别以10个不同的种子随机初始化运行10次，来观察L1和L2正则化的稳</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>linear_model <span class="token keyword">import</span> Ridge
+<span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>metrics <span class="token keyword">import</span> r2_score
+size <span class="token operator">=</span> <span class="token number">100</span>
+
+<span class="token comment" spellcheck="true">#We run the method 10 times with different random seeds</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">print</span> <span class="token string">"Random seed %s"</span> <span class="token operator">%</span> i
+    np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>seed<span class="token punctuation">(</span>seed<span class="token operator">=</span>i<span class="token punctuation">)</span>
+    X_seed <span class="token operator">=</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>normal<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> size<span class="token punctuation">)</span>
+    X1 <span class="token operator">=</span> X_seed <span class="token operator">+</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>normal<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token number">1</span><span class="token punctuation">,</span> size<span class="token punctuation">)</span>
+    X2 <span class="token operator">=</span> X_seed <span class="token operator">+</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>normal<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token number">1</span><span class="token punctuation">,</span> size<span class="token punctuation">)</span>
+    X3 <span class="token operator">=</span> X_seed <span class="token operator">+</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>normal<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token number">1</span><span class="token punctuation">,</span> size<span class="token punctuation">)</span>
+    Y <span class="token operator">=</span> X1 <span class="token operator">+</span> X2 <span class="token operator">+</span> X3 <span class="token operator">+</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>normal<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> size<span class="token punctuation">)</span>
+    X <span class="token operator">=</span> np<span class="token punctuation">.</span>array<span class="token punctuation">(</span><span class="token punctuation">[</span>X1<span class="token punctuation">,</span> X2<span class="token punctuation">,</span> X3<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">.</span>T
+
+
+    lr <span class="token operator">=</span> LinearRegression<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    lr<span class="token punctuation">.</span>fit<span class="token punctuation">(</span>X<span class="token punctuation">,</span>Y<span class="token punctuation">)</span>
+    <span class="token keyword">print</span> <span class="token string">"Linear model:"</span><span class="token punctuation">,</span> pretty_print_linear<span class="token punctuation">(</span>lr<span class="token punctuation">.</span>coef_<span class="token punctuation">)</span>
+
+    ridge <span class="token operator">=</span> Ridge<span class="token punctuation">(</span>alpha<span class="token operator">=</span><span class="token number">10</span><span class="token punctuation">)</span>
+    ridge<span class="token punctuation">.</span>fit<span class="token punctuation">(</span>X<span class="token punctuation">,</span>Y<span class="token punctuation">)</span>
+    <span class="token keyword">print</span> <span class="token string">"Ridge model:"</span><span class="token punctuation">,</span> pretty_print_linear<span class="token punctuation">(</span>ridge<span class="token punctuation">.</span>coef_<span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007144609979.png" alt=""></p>
+<p>可以看出，不同的数据上线性回归得到的模型（系数）相差甚远，但对于L2正则化模型来说，结果中的系数非常的稳定，差别较小，都比较接近于1，能够反映出数据的内在结构。</p>
+<h3 id="四、随机森林"><a href="#四、随机森林" class="headerlink" title="四、随机森林"></a><strong>四、随机森林</strong></h3><p>随机森林具有准确率高、鲁棒性好、易于使用等优点，这使得它成为了目前最流行的机器学习算法之一。随机森林提供了两种特征选择的方法：mean decrease impurity和mean decrease accuracy。</p>
+<h4 id="平均不纯度减少"><a href="#平均不纯度减少" class="headerlink" title="平均不纯度减少"></a><strong>平均不纯度减少</strong></h4><p>英文：mean decrease impurity</p>
+<p>随机森林由多个决策树构成。决策树中的每一个节点都是关于某个特征的条件，为的是将数据集按照不同的响应变量一分为二。利用不纯度可以确定节点（最优条件），对于分类问题，通常采用基尼不纯度或者信息增益，对于回归问题，通常采用的是方差或者最小二乘拟合。当训练决策树的时候，可以计算出每个特征减少了多少树的不纯度。对于一个决策树森林来说，可以算出每个特征平均减少了多少不纯度，并把它平均减少的不纯度作为特征选择的值。</p>
+<p>下边的例子是sklearn中基于随机森林的特征重要度度量方法：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>datasets <span class="token keyword">import</span> load_boston
+<span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>ensemble <span class="token keyword">import</span> RandomForestRegressor
+<span class="token keyword">import</span> numpy <span class="token keyword">as</span> np
+
+<span class="token comment" spellcheck="true">#Load boston housing dataset as an example</span>
+boston <span class="token operator">=</span> load_boston<span class="token punctuation">(</span><span class="token punctuation">)</span>
+X <span class="token operator">=</span> boston<span class="token punctuation">[</span><span class="token string">"data"</span><span class="token punctuation">]</span>
+Y <span class="token operator">=</span> boston<span class="token punctuation">[</span><span class="token string">"target"</span><span class="token punctuation">]</span>
+names <span class="token operator">=</span> boston<span class="token punctuation">[</span><span class="token string">"feature_names"</span><span class="token punctuation">]</span>
+rf <span class="token operator">=</span> RandomForestRegressor<span class="token punctuation">(</span><span class="token punctuation">)</span>
+rf<span class="token punctuation">.</span>fit<span class="token punctuation">(</span>X<span class="token punctuation">,</span> Y<span class="token punctuation">)</span>
+<span class="token keyword">print</span> <span class="token string">"Features sorted by their score:"</span>
+<span class="token keyword">print</span> sorted<span class="token punctuation">(</span>zip<span class="token punctuation">(</span>map<span class="token punctuation">(</span><span class="token keyword">lambda</span> x<span class="token punctuation">:</span> round<span class="token punctuation">(</span>x<span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">,</span> rf<span class="token punctuation">.</span>feature_importances_<span class="token punctuation">)</span><span class="token punctuation">,</span> names<span class="token punctuation">)</span><span class="token punctuation">,</span> 
+             reverse<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007144713127.png" alt=""></p>
+<p>这里特征得分实际上采用的是Gini Importance。使用基于不纯度的方法的时候，要记住：1、这种方法存在偏向，对具有更多类别的变量会更有利；2、对于存在关联的多个特征，其中任意一个都可以作为指示器（优秀的特征），并且一旦某个特征被选择之后，其他特征的重要度就会急剧下降，因为不纯度已经被选中的那个特征降下来了，其他的特征就很难再降低那么多不纯度了，这样一来，只有先被选中的那个特征重要度很高，其他的关联特征重要度往往较低。在理解数据时，这就会造成误解，导致错误的认为先被选中的特征是很重要的，而其余的特征是不重要的，但实际上这些特征对响应变量的作用确实非常接近的（这跟Lasso是很像的）。</p>
+<p>特征随机选择方法稍微缓解了这个问题，但总的来说并没有完全解决。下面的例子中，X0、X1、X2是三个互相关联的变量，在没有噪音的情况下，输出变量是三者之和。</p>
+<pre class="line-numbers language-python"><code class="language-python">size <span class="token operator">=</span> <span class="token number">10000</span>
+np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>seed<span class="token punctuation">(</span>seed<span class="token operator">=</span><span class="token number">10</span><span class="token punctuation">)</span>
+X_seed <span class="token operator">=</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>normal<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> size<span class="token punctuation">)</span>
+X0 <span class="token operator">=</span> X_seed <span class="token operator">+</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>normal<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token number">1</span><span class="token punctuation">,</span> size<span class="token punctuation">)</span>
+X1 <span class="token operator">=</span> X_seed <span class="token operator">+</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>normal<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token number">1</span><span class="token punctuation">,</span> size<span class="token punctuation">)</span>
+X2 <span class="token operator">=</span> X_seed <span class="token operator">+</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>normal<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token number">1</span><span class="token punctuation">,</span> size<span class="token punctuation">)</span>
+X <span class="token operator">=</span> np<span class="token punctuation">.</span>array<span class="token punctuation">(</span><span class="token punctuation">[</span>X0<span class="token punctuation">,</span> X1<span class="token punctuation">,</span> X2<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">.</span>T
+Y <span class="token operator">=</span> X0 <span class="token operator">+</span> X1 <span class="token operator">+</span> X2
+
+rf <span class="token operator">=</span> RandomForestRegressor<span class="token punctuation">(</span>n_estimators<span class="token operator">=</span><span class="token number">20</span><span class="token punctuation">,</span> max_features<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">)</span>
+rf<span class="token punctuation">.</span>fit<span class="token punctuation">(</span>X<span class="token punctuation">,</span> Y<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">print</span> <span class="token string">"Scores for X0, X1, X2:"</span><span class="token punctuation">,</span> map<span class="token punctuation">(</span><span class="token keyword">lambda</span> x<span class="token punctuation">:</span>round <span class="token punctuation">(</span>x<span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+                                    rf<span class="token punctuation">.</span>feature_importances_<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007144739946.png" alt=""></p>
+<p>当计算特征重要性时，可以看到X1的重要度比X2的重要度要高出10倍，但实际上他们真正的重要度是一样的。尽管数据量已经很大且没有噪音，且用了20棵树来做随机选择，但这个问题还是会存在。</p>
+<p>需要注意的一点是，关联特征的打分存在不稳定的现象，这不仅仅是随机森林特有的，大多数基于模型的特征选择方法都存在这个问题。</p>
+<h4 id="平均精确率减少"><a href="#平均精确率减少" class="headerlink" title="平均精确率减少"></a><strong>平均精确率减少</strong></h4><p>英文：Mean decrease accuracy</p>
+<p>另一种常用的特征选择方法就是直接度量每个特征对模型精确率的影响。主要思路是打乱每个特征的特征值顺序，并且度量顺序变动对模型的精确率的影响。很明显，对于不重要的变量来说，打乱顺序对模型的精确率影响不会太大，但是对于重要的变量来说，打乱顺序就会降低模型的精确率。</p>
+<p>这个方法sklearn中没有直接提供，但是很容易实现，下面继续在波士顿房价数据集上进行实现。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>cross_validation <span class="token keyword">import</span> ShuffleSplit
+<span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>metrics <span class="token keyword">import</span> r2_score
+<span class="token keyword">from</span> collections <span class="token keyword">import</span> defaultdict
+
+X <span class="token operator">=</span> boston<span class="token punctuation">[</span><span class="token string">"data"</span><span class="token punctuation">]</span>
+Y <span class="token operator">=</span> boston<span class="token punctuation">[</span><span class="token string">"target"</span><span class="token punctuation">]</span>
+
+rf <span class="token operator">=</span> RandomForestRegressor<span class="token punctuation">(</span><span class="token punctuation">)</span>
+scores <span class="token operator">=</span> defaultdict<span class="token punctuation">(</span>list<span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true">#crossvalidate the scores on a number of different random splits of the data</span>
+<span class="token keyword">for</span> train_idx<span class="token punctuation">,</span> test_idx <span class="token keyword">in</span> ShuffleSplit<span class="token punctuation">(</span>len<span class="token punctuation">(</span>X<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">100</span><span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    X_train<span class="token punctuation">,</span> X_test <span class="token operator">=</span> X<span class="token punctuation">[</span>train_idx<span class="token punctuation">]</span><span class="token punctuation">,</span> X<span class="token punctuation">[</span>test_idx<span class="token punctuation">]</span>
+    Y_train<span class="token punctuation">,</span> Y_test <span class="token operator">=</span> Y<span class="token punctuation">[</span>train_idx<span class="token punctuation">]</span><span class="token punctuation">,</span> Y<span class="token punctuation">[</span>test_idx<span class="token punctuation">]</span>
+    r <span class="token operator">=</span> rf<span class="token punctuation">.</span>fit<span class="token punctuation">(</span>X_train<span class="token punctuation">,</span> Y_train<span class="token punctuation">)</span>
+    acc <span class="token operator">=</span> r2_score<span class="token punctuation">(</span>Y_test<span class="token punctuation">,</span> rf<span class="token punctuation">.</span>predict<span class="token punctuation">(</span>X_test<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span>X<span class="token punctuation">.</span>shape<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        X_t <span class="token operator">=</span> X_test<span class="token punctuation">.</span>copy<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>shuffle<span class="token punctuation">(</span>X_t<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> i<span class="token punctuation">]</span><span class="token punctuation">)</span>
+        shuff_acc <span class="token operator">=</span> r2_score<span class="token punctuation">(</span>Y_test<span class="token punctuation">,</span> rf<span class="token punctuation">.</span>predict<span class="token punctuation">(</span>X_t<span class="token punctuation">)</span><span class="token punctuation">)</span>
+        scores<span class="token punctuation">[</span>names<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">.</span>append<span class="token punctuation">(</span><span class="token punctuation">(</span>acc<span class="token operator">-</span>shuff_acc<span class="token punctuation">)</span><span class="token operator">/</span>acc<span class="token punctuation">)</span>
+<span class="token keyword">print</span> <span class="token string">"Features sorted by their score:"</span>
+<span class="token keyword">print</span> sorted<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">(</span>round<span class="token punctuation">(</span>np<span class="token punctuation">.</span>mean<span class="token punctuation">(</span>score<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">,</span> feat<span class="token punctuation">)</span> <span class="token keyword">for</span>
+              feat<span class="token punctuation">,</span> score <span class="token keyword">in</span> scores<span class="token punctuation">.</span>items<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">,</span> reverse<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007144825522.png" alt=""></p>
+<p>在这个例子当中，LSTAT和RM这两个特征对模型的性能有着很大的影响，打乱这两个特征的特征值使得模型的性能下降了73%和57%。注意，尽管这些我们是在所有特征上进行了训练得到了模型，然后才得到了每个特征的重要性测试，这并不意味着我们扔掉某个或者某些重要特征后模型的性能就一定会下降很多，因为即便某个特征删掉之后，其关联特征一样可以发挥作用，让模型性能基本上不变。</p>
+<h3 id="五、两种顶层特征选择算法"><a href="#五、两种顶层特征选择算法" class="headerlink" title="五、两种顶层特征选择算法"></a><strong>五、两种顶层特征选择算法</strong></h3><p>之所以叫做顶层，是因为他们都是建立在基于模型的特征选择方法基础之上的，例如回归和SVM，在不同的子集上建立模型，然后汇总最终确定特征得分。</p>
+<h4 id="稳定性选择"><a href="#稳定性选择" class="headerlink" title="稳定性选择"></a><strong>稳定性选择</strong></h4><p>稳定性选择是一种基于二次抽样和选择算法相结合较新的方法，选择算法可以是回归、SVM或其他类似的方法。它的主要思想是在不同的数据子集和特征子集上运行特征选择算法，不断的重复，最终汇总特征选择结果，比如可以统计某个特征被认为是重要特征的频率（被选为重要特征的次数除以它所在的子集被测试的次数）。理想情况下，重要特征的得分会接近100%。稍微弱一点的特征得分会是非0的数，而最无用的特征得分将会接近于0。</p>
+<p>sklearn在随机lasso和随机逻辑回归中有对稳定性选择的实现。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>linear_model <span class="token keyword">import</span> RandomizedLasso
+<span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>datasets <span class="token keyword">import</span> load_boston
+boston <span class="token operator">=</span> load_boston<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true">#using the Boston housing data. </span>
+<span class="token comment" spellcheck="true">#Data gets scaled automatically by sklearn's implementation</span>
+X <span class="token operator">=</span> boston<span class="token punctuation">[</span><span class="token string">"data"</span><span class="token punctuation">]</span>
+Y <span class="token operator">=</span> boston<span class="token punctuation">[</span><span class="token string">"target"</span><span class="token punctuation">]</span>
+names <span class="token operator">=</span> boston<span class="token punctuation">[</span><span class="token string">"feature_names"</span><span class="token punctuation">]</span>
+
+rlasso <span class="token operator">=</span> RandomizedLasso<span class="token punctuation">(</span>alpha<span class="token operator">=</span><span class="token number">0.025</span><span class="token punctuation">)</span>
+rlasso<span class="token punctuation">.</span>fit<span class="token punctuation">(</span>X<span class="token punctuation">,</span> Y<span class="token punctuation">)</span>
+
+<span class="token keyword">print</span> <span class="token string">"Features sorted by their score:"</span>
+<span class="token keyword">print</span> sorted<span class="token punctuation">(</span>zip<span class="token punctuation">(</span>map<span class="token punctuation">(</span><span class="token keyword">lambda</span> x<span class="token punctuation">:</span> round<span class="token punctuation">(</span>x<span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">,</span> rlasso<span class="token punctuation">.</span>scores_<span class="token punctuation">)</span><span class="token punctuation">,</span> 
+                 names<span class="token punctuation">)</span><span class="token punctuation">,</span> reverse<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007144904578.png" alt=""></p>
+<p>在上边这个例子当中，最高的3个特征得分是1.0，这表示他们总会被选作有用的特征（当然，得分会收到正则化参数alpha的影响，但是sklearn的随机lasso能够自动选择最优的alpha）。接下来的几个特征得分就开始下降，但是下降的不是特别急剧，这跟纯lasso的方法和随机森林的结果不一样。能够看出稳定性选择对于克服过拟合和对数据理解来说都是有帮助的：总的来说，好的特征不会因为有相似的特征、关联特征而得分为0，这跟Lasso是不同的。对于特征选择任务，在许多数据集和环境下，稳定性选择往往是性能最好的方法之一。</p>
+<h4 id="递归特征消除"><a href="#递归特征消除" class="headerlink" title="递归特征消除"></a><strong>递归特征消除</strong></h4><p>递归特征消除的主要思想是反复的构建模型（如SVM或者回归模型）然后选出最好的（或者最差的）的特征（可以根据系数来选），把选出来的特征放到一遍，然后在剩余的特征上重复这个过程，直到所有特征都遍历了。这个过程中特征被消除的次序就是特征的排序。因此，这是一种寻找最优特征子集的贪心算法。</p>
+<p>RFE的稳定性很大程度上取决于在迭代的时候底层用哪种模型。例如，假如RFE采用的普通的回归，没有经过正则化的回归是不稳定的，那么RFE就是不稳定的；假如采用的是Ridge，而用Ridge正则化的回归是稳定的，那么RFE就是稳定的。</p>
+<p>Sklearn提供了RFE包，可以用于特征消除，还提供了RFECV，可以通过交叉验证来对的特征进行排序。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>feature_selection <span class="token keyword">import</span> RFE
+<span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>linear_model <span class="token keyword">import</span> LinearRegression
+
+boston <span class="token operator">=</span> load_boston<span class="token punctuation">(</span><span class="token punctuation">)</span>
+X <span class="token operator">=</span> boston<span class="token punctuation">[</span><span class="token string">"data"</span><span class="token punctuation">]</span>
+Y <span class="token operator">=</span> boston<span class="token punctuation">[</span><span class="token string">"target"</span><span class="token punctuation">]</span>
+names <span class="token operator">=</span> boston<span class="token punctuation">[</span><span class="token string">"feature_names"</span><span class="token punctuation">]</span>
+
+<span class="token comment" spellcheck="true">#use linear regression as the model</span>
+lr <span class="token operator">=</span> LinearRegression<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">#rank all features, i.e continue the elimination until the last one</span>
+rfe <span class="token operator">=</span> RFE<span class="token punctuation">(</span>lr<span class="token punctuation">,</span> n_features_to_select<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">)</span>
+rfe<span class="token punctuation">.</span>fit<span class="token punctuation">(</span>X<span class="token punctuation">,</span>Y<span class="token punctuation">)</span>
+
+<span class="token keyword">print</span> <span class="token string">"Features sorted by their rank:"</span>
+<span class="token keyword">print</span> sorted<span class="token punctuation">(</span>zip<span class="token punctuation">(</span>map<span class="token punctuation">(</span><span class="token keyword">lambda</span> x<span class="token punctuation">:</span> round<span class="token punctuation">(</span>x<span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">,</span> rfe<span class="token punctuation">.</span>ranking_<span class="token punctuation">)</span><span class="token punctuation">,</span> names<span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007145117949.png" alt=""></p>
+<h3 id="六、一个完整的例子"><a href="#六、一个完整的例子" class="headerlink" title="六、一个完整的例子"></a><strong>六、一个完整的例子</strong></h3><p>下面将本文所有提到的方法进行实验对比，数据集采用Friedman #1 回归数据（这篇论文中的数据）。数据是用这个公式产生的：</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007145145364.png" alt=""></p>
+<p>X1到X5是由单变量分布生成的，e是标准正态变量N(0,1)。另外，原始的数据集中含有5个噪音变量 X5,…,X10，跟响应变量是独立的。我们增加了4个额外的变量X11,…X14，分别是X1,…,X4的关联变量，通过f(x)=x+N(0,0.01)生成，这将产生大于0.999的关联系数。这样生成的数据能够体现出不同的特征排序方法应对关联特征时的表现。</p>
+<p>接下来将会在上述数据上运行所有的特征选择方法，并且将每种方法给出的得分进行归一化，让取值都落在0-1之间。对于RFE来说，由于它给出的是顺序而不是得分，我们将最好的5个的得分定为1，其他的特征的得分均匀的分布在0-1之间。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>datasets <span class="token keyword">import</span> load_boston
+<span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>linear_model <span class="token keyword">import</span> <span class="token punctuation">(</span>LinearRegression<span class="token punctuation">,</span> Ridge<span class="token punctuation">,</span> 
+                                  Lasso<span class="token punctuation">,</span> RandomizedLasso<span class="token punctuation">)</span>
+<span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>feature_selection <span class="token keyword">import</span> RFE<span class="token punctuation">,</span> f_regression
+<span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>preprocessing <span class="token keyword">import</span> MinMaxScaler
+<span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>ensemble <span class="token keyword">import</span> RandomForestRegressor
+<span class="token keyword">import</span> numpy <span class="token keyword">as</span> np
+<span class="token keyword">from</span> minepy <span class="token keyword">import</span> MINE
+
+np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>seed<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
+
+size <span class="token operator">=</span> <span class="token number">750</span>
+X <span class="token operator">=</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>uniform<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>size<span class="token punctuation">,</span> <span class="token number">14</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true">#"Friedamn #1” regression problem</span>
+Y <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">10</span> <span class="token operator">*</span> np<span class="token punctuation">.</span>sin<span class="token punctuation">(</span>np<span class="token punctuation">.</span>pi<span class="token operator">*</span>X<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token operator">*</span>X<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">20</span><span class="token operator">*</span><span class="token punctuation">(</span>X<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">-</span> <span class="token punctuation">.</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token operator">**</span><span class="token number">2</span> <span class="token operator">+</span>
+     <span class="token number">10</span><span class="token operator">*</span>X<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">]</span> <span class="token operator">+</span> <span class="token number">5</span><span class="token operator">*</span>X<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span><span class="token number">4</span><span class="token punctuation">]</span> <span class="token operator">+</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>normal<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">#Add 3 additional correlated variables (correlated with X1-X3)</span>
+X<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span><span class="token number">10</span><span class="token punctuation">:</span><span class="token punctuation">]</span> <span class="token operator">=</span> X<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span><span class="token punctuation">:</span><span class="token number">4</span><span class="token punctuation">]</span> <span class="token operator">+</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>normal<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token number">025</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>size<span class="token punctuation">,</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+names <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"x%s"</span> <span class="token operator">%</span> i <span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">15</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+
+ranks <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+
+<span class="token keyword">def</span> <span class="token function">rank_to_dict</span><span class="token punctuation">(</span>ranks<span class="token punctuation">,</span> names<span class="token punctuation">,</span> order<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    minmax <span class="token operator">=</span> MinMaxScaler<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    ranks <span class="token operator">=</span> minmax<span class="token punctuation">.</span>fit_transform<span class="token punctuation">(</span>order<span class="token operator">*</span>np<span class="token punctuation">.</span>array<span class="token punctuation">(</span><span class="token punctuation">[</span>ranks<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">.</span>T<span class="token punctuation">)</span><span class="token punctuation">.</span>T<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>
+    ranks <span class="token operator">=</span> map<span class="token punctuation">(</span><span class="token keyword">lambda</span> x<span class="token punctuation">:</span> round<span class="token punctuation">(</span>x<span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">,</span> ranks<span class="token punctuation">)</span>
+    <span class="token keyword">return</span> dict<span class="token punctuation">(</span>zip<span class="token punctuation">(</span>names<span class="token punctuation">,</span> ranks <span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+lr <span class="token operator">=</span> LinearRegression<span class="token punctuation">(</span>normalize<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
+lr<span class="token punctuation">.</span>fit<span class="token punctuation">(</span>X<span class="token punctuation">,</span> Y<span class="token punctuation">)</span>
+ranks<span class="token punctuation">[</span><span class="token string">"Linear reg"</span><span class="token punctuation">]</span> <span class="token operator">=</span> rank_to_dict<span class="token punctuation">(</span>np<span class="token punctuation">.</span>abs<span class="token punctuation">(</span>lr<span class="token punctuation">.</span>coef_<span class="token punctuation">)</span><span class="token punctuation">,</span> names<span class="token punctuation">)</span>
+
+ridge <span class="token operator">=</span> Ridge<span class="token punctuation">(</span>alpha<span class="token operator">=</span><span class="token number">7</span><span class="token punctuation">)</span>
+ridge<span class="token punctuation">.</span>fit<span class="token punctuation">(</span>X<span class="token punctuation">,</span> Y<span class="token punctuation">)</span>
+ranks<span class="token punctuation">[</span><span class="token string">"Ridge"</span><span class="token punctuation">]</span> <span class="token operator">=</span> rank_to_dict<span class="token punctuation">(</span>np<span class="token punctuation">.</span>abs<span class="token punctuation">(</span>ridge<span class="token punctuation">.</span>coef_<span class="token punctuation">)</span><span class="token punctuation">,</span> names<span class="token punctuation">)</span>
+
+
+lasso <span class="token operator">=</span> Lasso<span class="token punctuation">(</span>alpha<span class="token operator">=</span><span class="token punctuation">.</span><span class="token number">05</span><span class="token punctuation">)</span>
+lasso<span class="token punctuation">.</span>fit<span class="token punctuation">(</span>X<span class="token punctuation">,</span> Y<span class="token punctuation">)</span>
+ranks<span class="token punctuation">[</span><span class="token string">"Lasso"</span><span class="token punctuation">]</span> <span class="token operator">=</span> rank_to_dict<span class="token punctuation">(</span>np<span class="token punctuation">.</span>abs<span class="token punctuation">(</span>lasso<span class="token punctuation">.</span>coef_<span class="token punctuation">)</span><span class="token punctuation">,</span> names<span class="token punctuation">)</span>
+
+
+rlasso <span class="token operator">=</span> RandomizedLasso<span class="token punctuation">(</span>alpha<span class="token operator">=</span><span class="token number">0.04</span><span class="token punctuation">)</span>
+rlasso<span class="token punctuation">.</span>fit<span class="token punctuation">(</span>X<span class="token punctuation">,</span> Y<span class="token punctuation">)</span>
+ranks<span class="token punctuation">[</span><span class="token string">"Stability"</span><span class="token punctuation">]</span> <span class="token operator">=</span> rank_to_dict<span class="token punctuation">(</span>np<span class="token punctuation">.</span>abs<span class="token punctuation">(</span>rlasso<span class="token punctuation">.</span>scores_<span class="token punctuation">)</span><span class="token punctuation">,</span> names<span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true">#stop the search when 5 features are left (they will get equal scores)</span>
+rfe <span class="token operator">=</span> RFE<span class="token punctuation">(</span>lr<span class="token punctuation">,</span> n_features_to_select<span class="token operator">=</span><span class="token number">5</span><span class="token punctuation">)</span>
+rfe<span class="token punctuation">.</span>fit<span class="token punctuation">(</span>X<span class="token punctuation">,</span>Y<span class="token punctuation">)</span>
+ranks<span class="token punctuation">[</span><span class="token string">"RFE"</span><span class="token punctuation">]</span> <span class="token operator">=</span> rank_to_dict<span class="token punctuation">(</span>map<span class="token punctuation">(</span>float<span class="token punctuation">,</span> rfe<span class="token punctuation">.</span>ranking_<span class="token punctuation">)</span><span class="token punctuation">,</span> names<span class="token punctuation">,</span> order<span class="token operator">=</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span>
+
+rf <span class="token operator">=</span> RandomForestRegressor<span class="token punctuation">(</span><span class="token punctuation">)</span>
+rf<span class="token punctuation">.</span>fit<span class="token punctuation">(</span>X<span class="token punctuation">,</span>Y<span class="token punctuation">)</span>
+ranks<span class="token punctuation">[</span><span class="token string">"RF"</span><span class="token punctuation">]</span> <span class="token operator">=</span> rank_to_dict<span class="token punctuation">(</span>rf<span class="token punctuation">.</span>feature_importances_<span class="token punctuation">,</span> names<span class="token punctuation">)</span>
+
+
+f<span class="token punctuation">,</span> pval  <span class="token operator">=</span> f_regression<span class="token punctuation">(</span>X<span class="token punctuation">,</span> Y<span class="token punctuation">,</span> center<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
+ranks<span class="token punctuation">[</span><span class="token string">"Corr."</span><span class="token punctuation">]</span> <span class="token operator">=</span> rank_to_dict<span class="token punctuation">(</span>f<span class="token punctuation">,</span> names<span class="token punctuation">)</span>
+
+mine <span class="token operator">=</span> MINE<span class="token punctuation">(</span><span class="token punctuation">)</span>
+mic_scores <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span>X<span class="token punctuation">.</span>shape<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    mine<span class="token punctuation">.</span>compute_score<span class="token punctuation">(</span>X<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span> Y<span class="token punctuation">)</span>
+    m <span class="token operator">=</span> mine<span class="token punctuation">.</span>mic<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    mic_scores<span class="token punctuation">.</span>append<span class="token punctuation">(</span>m<span class="token punctuation">)</span>
+
+ranks<span class="token punctuation">[</span><span class="token string">"MIC"</span><span class="token punctuation">]</span> <span class="token operator">=</span> rank_to_dict<span class="token punctuation">(</span>mic_scores<span class="token punctuation">,</span> names<span class="token punctuation">)</span>
+
+
+r <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+<span class="token keyword">for</span> name <span class="token keyword">in</span> names<span class="token punctuation">:</span>
+    r<span class="token punctuation">[</span>name<span class="token punctuation">]</span> <span class="token operator">=</span> round<span class="token punctuation">(</span>np<span class="token punctuation">.</span>mean<span class="token punctuation">(</span><span class="token punctuation">[</span>ranks<span class="token punctuation">[</span>method<span class="token punctuation">]</span><span class="token punctuation">[</span>name<span class="token punctuation">]</span> 
+                             <span class="token keyword">for</span> method <span class="token keyword">in</span> ranks<span class="token punctuation">.</span>keys<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span>
+
+methods <span class="token operator">=</span> sorted<span class="token punctuation">(</span>ranks<span class="token punctuation">.</span>keys<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+ranks<span class="token punctuation">[</span><span class="token string">"Mean"</span><span class="token punctuation">]</span> <span class="token operator">=</span> r
+methods<span class="token punctuation">.</span>append<span class="token punctuation">(</span><span class="token string">"Mean"</span><span class="token punctuation">)</span>
+
+<span class="token keyword">print</span> <span class="token string">"\t%s"</span> <span class="token operator">%</span> <span class="token string">"\t"</span><span class="token punctuation">.</span>join<span class="token punctuation">(</span>methods<span class="token punctuation">)</span>
+<span class="token keyword">for</span> name <span class="token keyword">in</span> names<span class="token punctuation">:</span>
+    <span class="token keyword">print</span> <span class="token string">"%s\t%s"</span> <span class="token operator">%</span> <span class="token punctuation">(</span>name<span class="token punctuation">,</span> <span class="token string">"\t"</span><span class="token punctuation">.</span>join<span class="token punctuation">(</span>map<span class="token punctuation">(</span>str<span class="token punctuation">,</span> 
+                         <span class="token punctuation">[</span>ranks<span class="token punctuation">[</span>method<span class="token punctuation">]</span><span class="token punctuation">[</span>name<span class="token punctuation">]</span> <span class="token keyword">for</span> method <span class="token keyword">in</span> methods<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007145223913.png" alt=""></p>
+<p>从以上结果中可以找到一些有趣的发现：</p>
+<p>特征之间存在线性关联关系，每个特征都是独立评价的，因此X1,…X4的得分和X11,…X14的得分非常接近，而噪音特征X5,…,X10正如预期的那样和响应变量之间几乎没有关系。由于变量X3是二次的，因此X3和响应变量之间看不出有关系（除了MIC之外，其他方法都找不到关系）。这种方法能够衡量出特征和响应变量之间的线性关系，但若想选出优质特征来提升模型的泛化能力，这种方法就不是特别给力了，因为所有的优质特征都不可避免的会被挑出来两次。</p>
+<p>Lasso能够挑出一些优质特征，同时让其他特征的系数趋于0。当如需要减少特征数的时候它很有用，但是对于数据理解来说不是很好用。（例如在结果表中，X11,X12,X13的得分都是0，好像他们跟输出变量之间没有很强的联系，但实际上不是这样的）</p>
+<p>MIC对特征一视同仁，这一点上和关联系数有点像，另外，它能够找出X3和响应变量之间的非线性关系。</p>
+<p>随机森林基于不纯度的排序结果非常鲜明，在得分最高的几个特征之后的特征，得分急剧的下降。从表中可以看到，得分第三的特征比第一的小4倍。而其他的特征选择算法就没有下降的这么剧烈。</p>
+<p>Ridge将回归系数均匀的分摊到各个关联变量上，从表中可以看出，X11,…,X14和X1,…,X4的得分非常接近。</p>
+<p>稳定性选择常常是一种既能够有助于理解数据又能够挑出优质特征的这种选择，在结果表中就能很好的看出。像Lasso一样，它能找到那些性能比较好的特征（X1，X2，X4，X5），同时，与这些特征关联度很强的变量也得到了较高的得分。</p>
+<h3 id="七、总结"><a href="#七、总结" class="headerlink" title="七、总结"></a><strong>七、总结</strong></h3><p>对于理解数据、数据的结构、特点来说，单变量特征选择是个非常好的选择。尽管可以用它对特征进行排序来优化模型，但由于它不能发现冗余（例如假如一个特征子集，其中的特征之间具有很强的关联，那么从中选择最优的特征时就很难考虑到冗余的问题）。</p>
+<p>正则化的线性模型对于特征理解和特征选择来说是非常强大的工具。L1正则化能够生成稀疏的模型，对于选择特征子集来说非常有用；相比起L1正则化，L2正则化的表现更加稳定，由于有用的特征往往对应系数非零，因此L2正则化对于数据的理解来说很合适。由于响应变量和特征之间往往是非线性关系，可以采用basis expansion的方式将特征转换到一个更加合适的空间当中，在此基础上再考虑运用简单的线性模型。</p>
+<p>随机森林是一种非常流行的特征选择方法，它易于使用，一般不需要feature engineering、调参等繁琐的步骤，并且很多工具包都提供了平均不纯度下降方法。它的两个主要问题，1是重要的特征有可能得分很低（关联特征问题），2是这种方法对特征变量类别多的特征越有利（偏向问题）。尽管如此，这种方法仍然非常值得在你的应用中试一试。</p>
+<p>特征选择在很多机器学习和数据挖掘场景中都是非常有用的。在使用的时候要弄清楚自己的目标是什么，然后找到哪种方法适用于自己的任务。当选择最优特征以提升模型性能的时候，可以采用交叉验证的方法来验证某种方法是否比其他方法要好。当用特征选择的方法来理解数据的时候要留心，特征选择模型的稳定性非常重要，稳定性差的模型很容易就会导致错误的结论。对数据进行二次采样然后在子集上运行特征选择算法能够有所帮助，如果在各个子集上的结果是一致的，那就可以说在这个数据集上得出来的结论是可信的，可以用这种特征选择模型的结果来理解数据。</p>
+<h2 id="附：标记数据基本方式"><a href="#附：标记数据基本方式" class="headerlink" title="附：标记数据基本方式"></a>附：标记数据基本方式</h2><h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><p>机器学习中的注释（Annotation）是标记数据的过程，可以是文本，视频，图像或音频等形式。在计算机视觉任务中，图像注释有助于计算机更好的理解图像，计算机尝试在带注释的数据中学习出适用于新数据识别的相似的规则。</p>
+<p>有着以下几种不同类型的标注方式，具体使用那种标注方式还需要根据您的具体任务目标而定。</p>
+<ul>
+<li>边界框标注（Bounding Box Annotation）</li>
+<li>多边形标注（Polygonal Annotation）</li>
+<li>landmark或关键点标注（Landmark or Key-point Annotation）</li>
+<li>线标注（Line Annotation）</li>
+<li>长方体标注（Cuboid Annotation）</li>
+<li>语义分割（Semantic Segmentation）</li>
+</ul>
+<h3 id="边界框标注（Bounding-Box-Annotation）"><a href="#边界框标注（Bounding-Box-Annotation）" class="headerlink" title="边界框标注（Bounding Box Annotation）"></a><strong>边界框标注（Bounding Box Annotation）</strong></h3><p>边界框是最常见的图像标注类型。正如其字面意思一样，标注者需要根据具体要求在目标物体周围画一个方框。可以使用边界框来训练目标检测模型。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007131323884.png" alt=""></p>
+<h3 id="多边形标注（Polygonal-Annotation）"><a href="#多边形标注（Polygonal-Annotation）" class="headerlink" title="多边形标注（Polygonal Annotation）"></a><strong>多边形标注（Polygonal Annotation）</strong></h3><p>多边形掩膜（mask）主要用于标注具有不规则形状的目标。标注者必须以高精度标注出图像中目标的边界，从而清楚地了解目标的形状和大小。不同于标注框标注方式，可以框选目标周围不必要区域从而有可能在某些任务中影响模型的训练，多边形标注由于有着较高的标注精度其在任务中可以获得更准确的定位结果。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007131350949.png" alt=""></p>
+<h3 id="landmark或关键点标注（Landmark-or-Key-point-Annotation）"><a href="#landmark或关键点标注（Landmark-or-Key-point-Annotation）" class="headerlink" title="landmark或关键点标注（Landmark or Key-point Annotation）"></a><strong>landmark或关键点标注（Landmark or Key-point Annotation）</strong></h3><p>Landmark标注主要适用于检测形状变化和小物体的视觉任务，其有助于更好地理解目标物体中每个点的运动变化。关键点标注可以帮助实现手势和面部识别，并且还可以用于检测人体部位并准确估计他们的姿势。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007131414166.png" alt=""></p>
+<h3 id="线标注（Line-Annotation）"><a href="#线标注（Line-Annotation）" class="headerlink" title="线标注（Line Annotation）"></a><strong>线标注（Line Annotation）</strong></h3><p>线标注是通过绘制车道线注释以适用于训练用于车道检测的车辆感知模型任务。与边界框不同，它避免了许多空白空间和额外的噪音。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007131432183.png" alt=""></p>
+<h3 id="长方体标注（Cuboid-Annotation）"><a href="#长方体标注（Cuboid-Annotation）" class="headerlink" title="长方体标注（Cuboid Annotation）"></a><strong>长方体标注（Cuboid Annotation）</strong></h3><p>3D长方体标注用于计算目标物体深度的视觉任务，如车辆，建筑物甚至人类，从而获得其总体积。它主要用于建筑和自动驾驶车辆系统领域。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007131450540.png" alt=""></p>
+<h3 id="语义分割（Semantic-Segmentation）"><a href="#语义分割（Semantic-Segmentation）" class="headerlink" title="语义分割（Semantic Segmentation）"></a><strong>语义分割（Semantic Segmentation）</strong></h3><p>在语义分割或像素级注释中，我们将具有相似属性的像素组合在一起。它适用于像素级特定目标的检测和定位视觉任务。与用于检测特定目标对象（或感兴趣区域）的多边形分割不同，语义分割提供了对图像中场景每个像素的完整理解。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211007131506819.png" alt=""></p>
+<script>
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return; }
+            const img = document.createElement('img');
+            img.style = 'display:none !important;';
+            img.src = el.dataset.src;
+            img.addEventListener('error', () => {
+              img.remove();
+              el.style.color = 'inherit';
+              el.style.backgroundImage = 'none';
+              el.style.background = 'none';
+            });
+            img.addEventListener('load', () => {
+              img.remove();
+            });
+            document.body.appendChild(img);
+          });
+      </script>
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://jackhcc.github.io" rel="external nofollow noreferrer">杰克成</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://jackhcc.github.io/posts/dl-series5.html">https://jackhcc.github.io/posts/dl-series5.html</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="https://jackhcc.github.io" target="_blank">杰克成</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/DataSet/">
+                                    <span class="chip bg-color">DataSet</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/reward/aliqr.png" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/reward/wxqr.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+            
+        </div>
+    </div>
+
+    
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/gitalk/gitalk.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/my-gitalk.css">
+
+<div class="card gitalk-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="gitalk-container" class="card-content"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/gitalk/gitalk.min.js"></script>
+<script>
+    let gitalk = new Gitalk({
+        clientID: '3821a0bbb773038a51fc',
+        clientSecret: '4b30b507d67ec5497ec0e77f43f80cb3e0d7dd3a',
+        repo: 'JackHCC.github.io',
+        owner: 'JackHCC',
+        admin: "JackHCC",
+        id: '2021-10-08T13-10-07',
+        distractionFreeMode: false  // Facebook-like distraction free mode
+    });
+
+    gitalk.render('gitalk-container');
+</script>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/posts/dl-series6.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/9.jpg" class="responsive-img" alt="DL专栏6-Probability Distributions">
+                        
+                        <span class="card-title">DL专栏6-Probability Distributions</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            深度学习概率分布原理与实现
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-10-09
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Deep-Learning/" class="post-category">
+                                    Deep Learning
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Distributions/">
+                        <span class="chip bg-color">Distributions</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/posts/dl-series4.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/0.jpg" class="responsive-img" alt="DL专栏4-Feature Scaling">
+                        
+                        <span class="card-title">DL专栏4-Feature Scaling</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            特征归一化/标准化【附项目展示】
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-10-07
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Deep-Learning/" class="post-category">
+                                    Deep Learning
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Feature-Scaling/">
+                        <span class="chip bg-color">Feature Scaling</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeShrink.js"></script>
+
+
+<!-- 代码块折行 -->
+
+<style type="text/css">
+code[class*="language-"], pre[class*="language-"] { white-space: pre !important; }
+</style>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('4'),
+            headingSelector: 'h1, h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h1, h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+    <footer class="page-footer bg-color">
+    <div class="container row center-align" style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            <span id="year">2020</span>
+            <a href="https://jackhcc.github.io" target="_blank">杰克成</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                class="white-color">3303.6k</span>&nbsp;字
+            
+            
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;人
+            </span>
+            
+            <br>
+            
+            <span id="sitetime">载入运行时间...</span>
+            <script>
+                function siteTime() {
+                    var seconds = 1000;
+                    var minutes = seconds * 60;
+                    var hours = minutes * 60;
+                    var days = hours * 24;
+                    var years = days * 365;
+                    var today = new Date();
+                    var startYear = "2020";
+                    var startMonth = "2";
+                    var startDate = "27";
+                    var startHour = "6";
+                    var startMinute = "30";
+                    var startSecond = "0";
+                    var todayYear = today.getFullYear();
+                    var todayMonth = today.getMonth() + 1;
+                    var todayDate = today.getDate();
+                    var todayHour = today.getHours();
+                    var todayMinute = today.getMinutes();
+                    var todaySecond = today.getSeconds();
+                    var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                    var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                    var diff = t2 - t1;
+                    var diffYears = Math.floor(diff / years);
+                    var diffDays = Math.floor((diff / days) - diffYears * 365);
+                    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+                    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) /
+                        minutes);
+                    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours -
+                        diffMinutes * minutes) / seconds);
+                    if (startYear == todayYear) {
+                        document.getElementById("year").innerHTML = todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffDays + " 天 " + diffHours +
+                            " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    } else {
+                        document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffYears + " 年 " + diffDays +
+                            " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    }
+                }
+                setInterval(siteTime, 1000);
+            </script>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/JackHCC" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:jackcc0701@163.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+    <a href="https://www.facebook.com/profile.php?id=100046343443643" class="tooltipped" target="_blank" data-tooltip="关注我的Facebook: https://www.facebook.com/profile.php?id=100046343443643" data-position="top" data-delay="50">
+        <i class="fab fa-facebook-f"></i>
+    </a>
+
+
+
+    <a href="https://twitter.com/JackChe66021834" class="tooltipped" target="_blank" data-tooltip="关注我的Twitter: https://twitter.com/JackChe66021834" data-position="top" data-delay="50">
+        <i class="fab fa-twitter"></i>
+    </a>
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=2508074836" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 2508074836" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+    <a href="https://weibo.com/u/6885584679" class="tooltipped" target="_blank" data-tooltip="关注我的微博: https://weibo.com/u/6885584679" data-position="top" data-delay="50">
+        <i class="fab fa-weibo"></i>
+    </a>
+
+
+
+    <a href="https://www.zhihu.com/people/8f8482f01f0d6a04e844efe32e0f0710" class="tooltipped" target="_blank" data-tooltip="关注我的知乎: https://www.zhihu.com/people/8f8482f01f0d6a04e844efe32e0f0710" data-position="top" data-delay="50">
+        <i class="fab fa-zhihu1">知</i>
+    </a>
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/materialize/materialize.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/aos/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/js/matery.js"></script>
+
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+    <script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script type="text/javascript" src="/js/fireworks.js"></script>
+
+    <script type="text/javascript">
+        //只在桌面版网页启用特效
+        var windowWidth = $(window).width();
+        if (windowWidth > 768) {
+            document.write('<script type="text/javascript" src="/js/sakura.js"><\/script>'); }
+    </script>
+
+    <!-- weather -->
+	<script type="text/javascript">
+	WIDGET = {FID: 'TToslpmkVO'}
+	</script>
+	<script type="text/javascript" src="https://apip.weatherdt.com/float/static/js/r.js?v=1111"></script>
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <!-- Baidu Analytics -->
+
+<script>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+    <!-- Baidu Push -->
+
+    
+    
+    <script async src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+        <script src="//code.tidio.co/kqhlkxviiccyoa0czpfpu4ijuey9hfre.js"></script>
+        <script> 
+            $(document).ready(function () {
+                setInterval(change_Tidio, 50);  
+                function change_Tidio() { 
+                    var tidio=$("#tidio-chat iframe");
+                    if(tidio.css("display")=="block"&& $(window).width()>977 ){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" &&$(window).width()>977)>0? "-40px" : ($("div.toc-title").length&&$(window).width()>977)>0?"85px":"20px";   
+                        document.getElementById("tidio-chat-iframe").style.right="-15px";   
+                        document.getElementById("tidio-chat-iframe").style.height=parseInt(tidio.css("height"))>=520?"520px":tidio.css("height");
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    } 
+                    else if(tidio.css("display")=="block"&&$(window).width()>601 &&$(window).width()<992 ){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" && 601< $(window).width()<992)>0? "-40px":"20px" ;   
+                        document.getElementById("tidio-chat-iframe").style.right="-15px"; 
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    }
+                    else if(tidio.css("display")=="block"&&$(window).width()<601 && parseInt(tidio.css("height"))<230){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" && $(window).width()<601)>0? "-10px":"45px" ;   
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    }
+                    if( tidio.css("display")=="block"&&$(window).width()<601 && parseInt(tidio.css("height"))>=230){
+                        document.getElementById("tidio-chat-iframe").style.zIndex="998";
+                    }
+                } 
+            }); 
+        </script>
+    
+
+    
+
+    
+    <script type="text/javascript" color="0,0,255"
+        pointColor="0,0,255" opacity='0.7'
+        zIndex="-1" count="99"
+        src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/background/canvas-nest.js"></script>
+    
+
+    
+
+    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/background/ribbon-dynamic.js" async="async"></script>
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/instantpage/instantpage.js" type="module"></script>
+    
+<script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script>
+        <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
+        <script>
+        $('a').each(function() {
+          const $this = $(this);
+          const href = $this.attr('href');
+          if (href && href.match('^((http|https|thunder|qqdl|ed2k|Flashget|qbrowser|ftp|rtsp|mms)://)')) {
+            const strs = href.split('/');
+            if (strs.length >= 3) {
+                const host = strs[2];
+                if (host !== 'your_domain' || window.location.host) {
+                    $this.attr('href', '/go.html?u='+Base64.encode(href)+'').attr('rel', 'external nofollow noopener noreferrer');
+                    if (true) {
+                        $this.attr('target', '_blank');
+                    }
+                }
+            }
+          }
+        });
+        </script></body>
+
+</html>
+

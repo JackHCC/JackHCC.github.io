@@ -1,0 +1,1582 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="DL专栏9-Summary of Deep Learning, JackHCC">
+    <meta name="description" content="高性能深度学习综述">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>DL专栏9-Summary of Deep Learning | JackHCC</title>
+    <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/my.css">
+    
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/jquery/jquery.min.js"></script>
+    
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper head-container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/me.jpg" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">JackHCC</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>留言板</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>友情链接</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/me.jpg" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">JackHCC</div>
+        <div class="logo-desc">
+            
+            Make the world betterrrr!!!
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			留言板
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			友情链接
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/JackHCC/JackHCC.github.io" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/JackHCC/JackHCC.github.io" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/11.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">DL专栏9-Summary of Deep Learning</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        height: calc(100vh - 250px);
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 30px;
+        bottom: 146px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/Deep-Learning/">
+                                <span class="chip bg-color">Deep Learning</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/Deep-Learning/" class="post-category">
+                                Deep Learning
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2021-10-12
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2021-12-18
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    13.9k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    49 分
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h2 id="High-Performance-Deep-Learning"><a href="#High-Performance-Deep-Learning" class="headerlink" title="High Performance Deep Learning"></a>High Performance Deep Learning</h2><p>深度学习技术的突破性进展彰显了其令人难以置信的潜力，提供了让人兴奋的新的 AI 增强软件和系统。</p>
+<p>但是，从财政、计算再到环境等几个角度上考虑，训练最强大的模型是极其昂贵的。</p>
+<p>提高这些模型的效率会在很多领域产生深远的影响，因此，基于这一需求，未来所开发的模型只会有助于进一步扩大深度学习所提供的范围、适用性和价值。</p>
+<h3 id="深度学习模型的快速增长"><a href="#深度学习模型的快速增长" class="headerlink" title="深度学习模型的快速增长"></a><strong>深度学习模型的快速增长</strong></h3><p>如今，无数应用中都有着机器学习的身影。过去十年中，采用神经网络的深度学习一直是训练新机器学习模型的主要方法。</p>
+<p>它的崛起通常要归功于 2012 年举办的 ImageNet 竞赛。就在同年，多伦多大学的一支团队提交了一个名为 AlexNet （以首席开发人员 Alex Krizhevsky 命名）的深度卷积网络（deep convolutional network），比接下来提交的最好成绩还要高出 41%。</p>
+<p>在此之前，人们曾尝试过深度和卷积的网络，但不知为何从未兑现承诺。</p>
+<p>90 年代，卷积层的概念最早由 LeCun 等人提出。类似地，若干神经网络也在 80 年代、90 年代陆续地进入大众视野。究竟是何原因让深度网络花费如此长的时间才超越手工调优的特征工程（feature-engineered）模型呢？</p>
+<p>这其中结合了多种因素：</p>
+<ol>
+<li><p>计算（Compute）：AlexNet 是早期依赖图形处理单元（GPU, Graphics Processing Units）进行训练的模型之一。</p>
+</li>
+<li><p>算法（Algorithms）：采用 ReLU 作为激活函数，使得梯度反向传播地更深。先前的深度网络迭代采用的是 Sigmoid 或 Tanh 激活函数，除了很小的输入范围外，在 1.0 或 - 1.0 处达到饱和。因此，改变输入变量会导致非常微小的梯度，而当存在很多层时，梯度基本上就消失了。</p>
+<p>简言之，ReLU 不会出现梯度消失的问题，而且从计算的角度上看，Sigmoid 和 Tanh 激活函数均需要计算指数，复杂度高，而 ReLU 通过简单的阈值便可得到激活值。</p>
+</li>
+<li><p>数据（Data）：ImageNet（全球最大的图像识别数据库）包含有 &gt; 1M 的数千个类型、数百张有标注的图像。随着互联网产品的出现，从用户行为中收集标注数据的成本也不断降低。</p>
+</li>
+</ol>
+<p>鉴于这一开拓性的工作，人们竞相使用越来越多的参数来创建更深层的网络。如 VGGNet、Inception,、ResNet 等模型架构，在随后的几年里相继打破了以往 ImageNet 的竞赛记录。如今，这些模型也已在现实世界中进行了部署。</p>
+<p>我们在自然语言理解（NLU, Natural Language Understanding）领域也看到了类似的效果，Transformer 架构在 GLUE 任务上显著优于之前的基准测试。</p>
+<p>随后，BERT 和 GPT 模型都演示了在 NLP 相关任务上的改进，并且 BERT 衍生了几个相关的模型架构，对其各个方面进行了优化。而 GPT-3 只需要给定的提示便可续写生动逼真的故事，作为最强的文本生成模型成功地引发了人们的关注。</p>
+<p>上述两个模型都已部署到现实的生产中。</p>
+<p>在谷歌搜索引擎（Google Search）中使用 BERT 可以提高结果的相关性，而 GPT-3 可作为 API 供感兴趣的用户使用。</p>
+<p>可以推断，深度学习研究一直关注于改善现有的技术水平，因此，我们看到了在图像分类、文本分类等基准上的不断优化。神经网络的每一次新突破都会导致网络复杂性、参数数量、训练网络所需的训练资源数量以及预测延迟等方面的增加。</p>
+<p>现在，诸如 GPT-3 的自然语言模型仅训练一次迭代都要花费数百万美元，而且其中还不包括尝试不同的超参组合（微调）或手动 / 自动运行调试模型架构的成本。毫不夸张地说，这些模型的参数数量高达数十亿甚至数万亿。</p>
+<p>与此同时，这些模型令人难以置信的性能也催生出将其应用于新任务的需求，力求突破现有的技术瓶颈。这就产生了一个有趣的问题，这些模型的传播速度会受其效率的限制。</p>
+<p>更具体地说，随着深度学习新时代的到来，以及模型变得越来越大并在不同的领域传播，我们难免会面临着以下问题：</p>
+<ol>
+<li><p>可持续的服务器端扩展（Sustainable Server-Side Scaling）：训练和部署大型深度学习模型的成本很高。虽然训练可能只是一次性成本（如果使用预训练的模型可能是免费的），但是部署和让推理持续很长时间段仍可能很昂贵。此外，对用于培训和部署这些大型模型的数据中心的碳足迹（carbon footprint），也是一种非常现实的担忧。像谷歌、Facebook、亚马逊等大型组织每年在其数据中心上的资本支出高达数十亿美元。因此，任何效率的提高都是非常显著的。</p>
+</li>
+<li><p>启用设备部署（Enabling On-Device Deployment）：随着智能手机和物联网设备（IoT devices）的出现，其上部署的应用程序必须是实时的。因此，对设备上的 ML 模型便产生了一定的需求（其中模型推理直接发生在设备上），这就使得优化它们将要运行设备的模型成为当务之急。</p>
+</li>
+<li><p>隐私和数据敏感性（Privacy &amp; Data Sensitivity）：当用户数据可能对处理 / 受到各种限制（如欧洲 GDPR 法律）敏感时，能够使用少量数据进行训练是至关重要的。因此，用一小部分数据有效地训练模型就意味着需要更少的数据收集。类似地，启用设备上的模型意味着模型推理可以完全在用户的设备上运行，而无需再将输入数据发送到服务器端。</p>
+</li>
+<li><p>新应用程序（New Applications）：效率还可以启用在现有资源约束下无法执行的应用程序。</p>
+</li>
+<li><p>模型爆炸（Explosion of Models）：通常，在同一设备上可能并发地提供多个 ML 模型。这便进一步减少了单个模型的可用资源。这可能发生在服务器端，其中多个模型可能位于同一台机器上，也可能位于用于不同功能的不同模型的应用程序中。</p>
+</li>
+</ol>
+<h3 id="高效深度学习"><a href="#高效深度学习" class="headerlink" title="高效深度学习"></a>高效深度学习</h3><p>我们所确定的核心挑战是效率。效率可能是一个看似宽泛的术语，我们此处明确了需要重点调查研究的两个方面。</p>
+<ol>
+<li><p>推理效率（Inference Efficiency）：这主要处理部署用于推理的模型（依据给定输入计算模型输出）的人可能会提及的问题。比如，这种模型小吗？快不快？具体来说，这个模型包含多少参数？磁盘大小、推理阶段的 RAM 消耗、推理延迟各为多少呢？</p>
+</li>
+<li><p>训练效率（Training Efficiency）：这涉及到训练模型的人可能提问的问题，比如模型训练需要多长时间？训练需要多少设备？模型能适应内存吗？此外，还可能包括以下问题，模型需要多少数据才能在给定任务上实现预期的性能呢？</p>
+</li>
+</ol>
+<p>如果在给定的任务上有两个同样出色的模型，可能想要选择其中一个更好地、更为理想的模型，在上述两个方面都可以做到最佳。</p>
+<p>如果要在推理受到限制的设备（如移动和嵌入式设备）或昂贵的设备（云服务器）上部署模型，则需要注意推理效率。同样地，如果一个人要用有限或昂贵的训练资源上从头开始训练一个大型模型，那么开发旨在提高训练效率的模型将会有所帮助。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211010204429588.png" alt=""></p>
+<p>无论优化的目标是什么，我们都希望达到最佳效果。这意味着，选择的任何模型对于所关注的权衡而言都是最好的。作为上图中的一个例子，绿点表示帕累托最优（pareto-optimal）模型，其中没有其他模型（红点）在相同推理延迟或相反的情况下获得更高的准确性。与此同时，帕累托最优模型（绿点）形成所谓的帕累托边界。根据定义，帕累托边界模型比其他模型更有效，因为它们在给定的权衡下表现最好。因此，当寻求效率时，更应该将帕累托相关的最新发现和进展放在考虑范围之内。</p>
+<p>反过来，高效的深度学习可被定义为一组算法、技术、工具和基础结构的集合，它们可以协同工作，允许用户训练和部署帕累托最优模型，这些模型只需花费更少的资源来训练和 / 或部署，同时实现类似的结果。</p>
+<p>那么，影响深度学习效率的关键所在又是哪些？</p>
+<h3 id="深度学习模型效率的核心领域之一：建模-4-大支柱"><a href="#深度学习模型效率的核心领域之一：建模-4-大支柱" class="headerlink" title="深度学习模型效率的核心领域之一：建模 4 大支柱"></a>深度学习模型效率的核心领域之一：建模 4 大支柱</h3><p>在关注模型质量的同时，其效率方面也不容忽视。当一个组织开始考虑构建高效的深度学习模型，以通过方案提高交付能力时，这些执行方案所需的软件和硬件工具便是实现高性能的基础。</p>
+<p>接下来，本文将大致分为以下两部分进行介绍：首先是建模技术的四大支柱 —— 压缩技术（Compression Techniques）、学习技巧（Learning Techniques）、自动化（Automation）、高效模型的架构和层（Efficient Model Architectures &amp; Layers），然后是已有的基础设施与硬件基础。</p>
+<h4 id="1、压缩技术"><a href="#1、压缩技术" class="headerlink" title="1、压缩技术"></a><strong>1、压缩技术</strong></h4><p>如先前所述，压缩技术作为通用技术可以帮助神经网络实现一层或多层的更有效表示，但可能会在质量上有所取舍。效率可以来自于改进一个或多个足迹指标，如模型大小、推理延迟、收敛所需的训练时间等，以尽可能换取少的质量损失。通常，模型可能被过度参数化（over-parameterized）。在这种情况下，这些技术还有助于改进对未知数据的泛化。</p>
+<p>（1）剪枝（Pruning）：这是一种流行的压缩技术，我们可以对无关紧要的网络连接进行剪枝，从而使网络变得稀疏。LeCun 等人在其所发表的题为 “最优脑损伤”（OBD, Optimal Brain Damage）的论文中，将神经网络中的参数（层间连接）减少了 4 倍，同时还提高了推理速度和泛化能力。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211010204733115.png" alt=""></p>
+<p>Hassibi 等人和 Zhu 等人在 OBD 方法的基础上提出了 Optimal Brain Surgeon 工作，这是一种性能较好的网络剪枝技术，利用误差函数的二次导数信息，解析预测权值扰动对函数的影响程度，以自顶向下的方式削弱或消除部分连接权，实现网络的结构化。这些方法采用预训练到合理质量的网络，然后迭代删除显著性得分最低的参数，显著性得分用于衡量特定连接的重要性，这样对验证损失的影响就会最小化。一旦剪枝结束，网络就会用剩余的参数进行微调。重复这个过程，直到网络被剪枝到所需的级别。</p>
+<p>在剪枝的各种工作中，差异主要体现在以下几个方面：</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211010204754987.png" alt=""></p>
+<p>l 显著性（Saliency）：这是决定应该剪枝哪个连接的启发式方法。这可以基于连接权相对于损失函数的二阶导数，连接权的大小等等。</p>
+<p>l 非结构化 v/s 结构化（Unstructured v/s Structured）：非结构化剪枝是剪枝方法中最灵活的一种，对于所有给定的参数都是 “一视同仁”。而在结构化剪枝中，参数在 size&gt; 1 的块中进行修剪（例如在权矩阵中进行 row-wise 修剪或在卷积滤波器中进行 channel-wise 修剪）。结构化剪枝允许在大小和延迟方面更容易地利用推理时间，因为这些修剪后的参数块可以被智能地跳过以进行存储和推理。</p>
+<p>l 分布（Distribution）：可以在每层设置相同的剪枝预算，或者在每层的基础上进行分配。经验直觉告诉我们，某些层相对来说更容易剪枝一些。例如，通常情况下，前几层如果足够小，则无法容忍显著的稀疏。</p>
+<p>l 调度（Scheduling）：然而，额外的标准是该剪枝多少以及何时进行呢？我们是想在每轮中修剪等量的参数，还是在剪枝开始时较快，然后逐渐放慢呢？</p>
+<p>l 再生（Regrwth）：在某些情况下，允许网络再生剪枝的连接，这样网络就会以相同百分比的连接剪枝不断运行。</p>
+<p>就实际使用而言，具备有意义的块大小的结构化剪枝可以辅助提高延迟。在保留相同 Top-1 精度的情况下，Elsen 等人构建的稀疏卷积网络使用约 66% 的参数，比稠密网络高出 1.3 - 2.4 倍。他们通过其库将 NHWC（输入数据格式：channels-last）标准密集表示转换为特殊的 NCHW（channels-first）“块压缩稀疏行” （BCSR, Block Compressed Sparse Row）表示，这适用于使用其高速内核在 ARM 设备、WebAssembly（相对 JavaScript 而言的另一种可以在浏览器中执行的编程语言）等上的进行快速推理。尽管他们也引入了一些约束以限制可加速的稀疏网络类型，但总的来说，这是朝着实际改进剪枝网络的足迹指标迈出的有希望的一步。</p>
+<p>（2）量化（Quantization）：量化是另一种非常流行的压缩技术。它沿用了这样一种思路，即典型网络中几乎所有权值都是 32 位浮点值，如果我们愿意降低一些模型质量的话，如准确率、精度、召回率等指标，便可实现以较低精度的格式（16 位、8 位、4 位等）来存储这些值。</p>
+<p>例如，当模型持久化时，以将权值矩阵（weight matrix）中的最小值映射为 0，而将最大值映射为2^b-1（其中 b 是精度位数），并线性地将它们之间的所有值外推（extrapolate）为整数。通常，这足以减少模型的大小。例如，如果 b = 8，则将 32 位浮点权值映射为 8 位无符号整数（unsigned integers），该操作可以将空间减少 4 倍。在进行推理（计算模型预测）时，我们可以使用数组的量化值和最小 &amp; 最大浮点值恢复原始浮点值（由于舍入误差）的有损表示（lossy representation）。鉴于要量化模型的权重，于是此步被称为权重量化（Weight Quantization）。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211010204909015.png" alt=""></p>
+<p>由于大量的参数，有损表示和舍入误差对于内置冗余的大型网络可能问题不大，但对于小型网络而言，由于其对误差的敏感性强，可能会降低精度。</p>
+<p>可以以实验的方式模拟训练过程中权重量化的舍入行为来解决这个问题。通过在模型训练图中添加节点来量化和反量化（dequantize）激活函数和权重矩阵，这样神经网络操作的训练时间输入看起来与推理阶段相同。这种节点称为伪量化（Fake Quantization）节点。这种训练方式使得网络对推理模式下的量化行为具有更强的鲁棒性。请注意，现在正在训练中进行激活量化（Activation Quantization）和权重量化。Jacob 等人和 krishnamoori 等人详细描述了训练时间模拟量化这一步骤。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211010204932100.png" alt=""></p>
+<p>由于权值和激活都是在模拟的量化模式下运行的，这意味着所有层接收的输入都可以以较低的精度表示，在模型经过训练后，它应该具备很强的鲁棒性，能够直接在低精度下执行数学运算。例如，如果我们训练模型在 8 位域中复制量化，则可以部署该模型对 8 位整数执行矩阵乘法和其他操作。</p>
+<p>在诸如移动、嵌入式和物联网设备之类的资源受限的设备上，使用 GEMMLOWP 等库可以将 8 位操作提速 1.5 - 2 倍，这些库依赖于硬件支持，如 ARM 处理器上的 Neon intrinsic。此外，Tensorflow Lite 等框架允许用户直接使用量化操作，而不必为底层实现而烦恼。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211010204952202.png" alt=""></p>
+<p>除了剪枝和量化，还有其他一些技术，如低秩矩阵分解、K-Means 聚类、权值共享等等，这些技术在模型压缩领域也十分活跃。</p>
+<p>总的来说，压缩技术可以用来减少模型的足迹（大小、延迟等），同时换取一些质量（准确性、精度、召回率等）的提升。</p>
+<h4 id="2、学习技巧"><a href="#2、学习技巧" class="headerlink" title="2、学习技巧"></a><strong>2、学习技巧</strong></h4><p>（1）蒸馏（Distillation）：如前所述，学习技术尝试以不同的方式训练模型，以获得最佳性能。例如，Hinton 等人在其开创性工作中探索了如何教会小型网络从大型网络 / 大型网络的集合中提取暗知识（dark knowledge| Hinton said: “Dark knowledge is the most of what deep learning methods actually learn”）。他们使用一个更大的教师模型（teacher model）在现有标签数据生成软标签。</p>
+<p>软标签为原始数据中的每个可能的类别分配概率，而不是硬二进制值。直觉上，这些软标签捕获了模型可以学习的不同类之间的关系。例如，卡车更像汽车而非苹果，这一模型可能无法直接从硬标签中学习。学生网络（student network）学习最小化这些软标签的交叉熵损失（cross-entropy loss），以及原始真实的硬标签。损失函数的每个权重可以根据实验结果进行缩放。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211010205038550.png" alt=""></p>
+<p>Hinton 等人曾在论文中表示，能够用一个蒸馏模型来接近 10 个模型集成的语音识别任务的准确性。其他综合研究表明，小型模型质量有着显著提高。简单举个例子，Sanh 等人能够蒸馏一个学生模型，该模型保留了 BERT-Base 97% 的性能，同时在 CPU 上的占用率要少 40%，而速度上快约 60%。</p>
+<p>（2）数据增强（Data Augmentation）：通常对于大型模型和复杂任务来说，拥有的数据越多，改进模型性能的机会就越大。然而，常常采用 “人在回路”（human in the loop）的解决办法，所以获取高质量的标记数据通常既缓慢又昂贵。监督学习就是从这些人工标注的数据中学习。当有资源支付标注费用的时候，它非常有效，但我们能够且应该做得更好。</p>
+<p>数据增强主要指在计算机视觉领域中对图像进行数据增强，从而弥补训练图像数据集不足，达到对训练数据扩充的目的，进而提升模型的性能。通常，它涉及到对数据进行转换，这样就不需要重新标注，该过程成为标签不变转换（label-invariant transformations）。例如，如果您正在教神经网络对包含狗或猫的图像进行分类，旋转图像将不会改变标签。此外，其他的转换形式还有水平 / 垂直翻转、拉伸、裁剪、添加高斯噪声等。类似地，如果您正在检测给定文本的情感倾向性，引入拼写错误可能不会改变标签。</p>
+<p>这种标签不变转换已经在流行的深度学习模型中广泛使用。当您有大量的类和 / 或特定类的示例很少时，它们尤其方便。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211010205105361.png" alt=""></p>
+<p>还有其他转换方式，如 Mixup，它以加权的方式混合来自两个不同类的输入，并将标签视为两个类的类似加权组合。其思想是，模型应该能够提取出与这两个类相关的特性。</p>
+<p>这些技术将数据效率引入到 pipeline 中。这和教孩子在不同的上下文中识别现实生活中的物体实质上没有太大的区别。</p>
+<p>（3）自监督学习（Self-Supervised Learning）：在邻近的领域有了快速的进展，我们可以学习一些通用模型，这些模型完全不需要使用标注来从数据中提取意义。采用对比学习（contrastive learning）这样的方法，我们可以训练一个模型，使它学习输入的表示，这样类似的输入将有类似的表示，而不相关的输入会生成明显差异的表示。其中，这些表示是 n 维向量（embeddings），在我们可能没有足够的数据来从头训练模型的其他任务中，它可以作为有用的特征。我们可以把使用未标注数据的第一步看作是预训练，下一步视为微调。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211010205129749.png" alt=""></p>
+<p>这种对未标注数据进行预训练和对标注数据进行微调的两步过程也迅速得到了 NLP 社区的认可。ULMFiT 率先提出了训练通用语言模型的想法，该模型学习如何解决预测给定句子中的下一个单词的任务。</p>
+<p>我们发现，使用大量预处理但未标注的数据，如 WikiText-103（源自英文维基百科页面），是预训练步骤的一个不错的选择。这就足以让模型学习语言的一般属性。此外，对于二进制分类问题，微调这种预训练模型只需要 100 个标注示例，而相比之下，其他情况则需要 10000 个标注的示例。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211010205158349.png" alt=""></p>
+<p>该想法也在 BERT 模型中进行了探索，其中预训练步骤涉及学习双向掩码语言模型（Masked Language Model），使得模型必须在句子中预测缺失的单词。</p>
+<p>总的来说，学习技术有助于我们在不影响足迹的情况下提高模型质量。这可以用于改进部署的模型质量。如果原始模型的质量令人满意的话，你还可以通过简单地减少网络中的参数数量来交换新获得的质量收益，以改进模型大小和延迟，直到回到最低可行的模型质量。</p>
+<p>有了正确的软件、硬件和技术以后，有效地开发高性能模型的能力，现在取决于如何利用自动化来加速实验过程，并构建最高效的数据模型架构。</p>
+<h4 id="3、自动化"><a href="#3、自动化" class="headerlink" title="3、自动化"></a><strong>3、自动化</strong></h4><p>如果让自动化帮助网络设计和调优，它将大大减少人类的参与成本和随之而来的偏见。然而，其随之而来的代价是计算成本增加。</p>
+<p>（1）超参数优化（Hyper-Parameter Optimization）：属于此类工作的常用方法之一是超参数优化（HPO, Hyper-Parameter Optimization）。调整超参数（如初始学习率，权值衰减等）对于加快收敛速度至关重要。当然，还有一些决定网络架构的参数，比如全连接层的数量，卷积层中的过滤器数量等等。虽然我们可以通过实验建立直觉思维，但找到最佳超参数值需要手动搜索能够优化给定目标函数的准确值，往往是验证集上的损失值。</p>
+<p>如果用户之前对超参数调优有经验，那么可以使用网格搜索算法（Grid Search，也称为参数扫描）来自动化 HPO。在这种情况下，根据用户提供的每个参数的有效范围搜索给定超参数的所有独特且有效的组合。例如，如果学习率（lr, learning rate）的可能值为 {0.01,0.05}，权重衰减（weight decay）的可能值为 {0.1,0.2}，则有 4 种可能的组合：{lr=0.01, decay=0.1}、{lr=0.01, decay=0.2}、{lr=0.05, decay=0.1} 和 {lr=0.05, decay=0.2}。</p>
+<p>以上每种组合都是一次试验，然后每次试验都可以并行运行。一旦所有试验完成，超参数的最优组合便被找到。由于该方法会尝试所有可能的组合，尝试总数增长非常快，因此遭受维度的诅咒。</p>
+<p>另一种方法是随机搜索（Random Search），其中从用户提供的可能值范围所构建的搜索空间中进行随机采样试验。类似于网格搜索，每个试验仍然是独立并行运行。然而，鉴于试验独立同分布（iid,  independently and identically distributed）的特点，随机搜索很容易根据可用的计算能力进行扩展，从而找到最优试验的可能性随着试验次数的增加而增加。如果到目前为止最好的试验足够好，这就允许预先搜索。整个超参搜索的过程可视为一个在有限资源限制下的优化问题，在资源分配方面，类似于随机搜索的典型算法有 SHA（succession Halving）和 HyperBand，可以把更多的资源分配给精度更高或者优化速度更快的算法。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211010205232388.png" alt=""></p>
+<p>基于贝叶斯优化（BO, Bayesian Optimization）的搜索是一种更好的调优方法，它保留了一个单独的模型以用于预测给定的试验是否有可能改进到目前为止发现的最佳试验。该模型学会根据过去试验的表现来预测可能性。BO 优于随机搜索，因为前者具有一定的导向性。因此，需要更少的试验就可以达到最佳。由于试验的选择依赖于过去试验的结果，因此该方法是顺序的。然而，与纯粹逻辑的 BO 相比，可以在同一时间并行地产生多个试验（基于相同的估计），这可能引发更快的收敛，其代价可能是一些浪费的试验。</p>
+<p>在实际使用方面，HPO 可以通过几个软件工具包提供给用户，这些工具包包括算法本身以及一个易于使用的界面（指定超参数及其范围），包括 Vizier [8]（一个内部谷歌工具，也可以通过谷歌云进行黑箱调优）。亚马逊提供了 Sagemaker，其功能类似，也可以作为 AWS（Amazon Web Services）服务访问。NNI、Tune 和 Advisor 是其他可以在本地使用的开源 HPO 软件包。这些工具包为不乐观的早期停止策略提供了一个选项。Vizier 使用中位数停止规则，如果一个试验在时间步长 t 上的性能低于所有试验运行到该时间点的中位数性能，则终止试验。</p>
+<p>（2）神经架构搜索（NAS, Neural Architecture Search）：可以把 NAS 看作是 HPO 的扩展版本，在其中搜索改变网络架构本身的参数。NAS 可考虑由以下部分组成：</p>
+<p>丨搜索空间（Search Space）：卷积、全连接、池化等操作及其相互连接是图中允许的神经网络操作。这都是由用户提供的。</p>
+<p>丨搜索算法和状态（Search Algorithm &amp; State）：这是控制架构搜索本身的算法。通常，适用于 HPO 的标准算法（网格搜索、随机搜索、贝叶斯优化和进化算法等）也同样可用于 NAS，以及强化学习（Reinforcement Learning）和梯度下降（Gradient Descent）。</p>
+<p>丨评估策略（Evaluation Strategy）：这定义了用于评估模型适合的度量指标。它可以是简单的常规度量，如验证损失（validation loss）、准确性（accuracy）等；或者也可以是一个复合度量（compound metric），如 MNasNet，可以根据精度和模型延迟创建单一的定制度量指标。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211010205303041.png" alt=""></p>
+<p>具有搜索空间和状态的搜索算法可被视为生成样本候选网络的 “控制器”。评估阶段对生成的候选进行适合的训练和评估，然后将这个适应值（fitness value）作为反馈传递给搜索算法，该算法将使用它来生成更好的候选对象。</p>
+<p>Zoph 等人在 2016 年发表的论文中证明，端到端神经网络架构可以通过强化学习生成。在这种情况下，控制器本身就是一个递归神经网络（RNN, Recurrent Neural Network），它一次生成一层前馈网络的架构超参数，如滤波器数量、步幅、滤波器大小等。训练控制器本身很昂贵（需要 22400 个 GPU 小时），因为整个候选网络必须从头开始训练，才能实现单一的梯度更新。在后续论文中，作者改进了搜索空间以搜索单元（cells）：一个 “正常单元”（Normal Cell），可以接收输入，处理并返回相同空间维度的输出。“缩减单元”（Reduction Cell）处理其输入并返回其空间维度按比例缩小 2 倍的输出。每个单元都是𝐵块的组合。控制器的 RNN 每次生成一个块，它选择过去两个块的输出，分别进行操作并将其组合为单个输出。正常和缩减单元堆积以交替的方式堆叠，用于构建 CIFAR-10 和 ImageNet 的端到端网络。</p>
+<p>与中的端到端网络搜索相比，单独学习这些单元而不是学习整个网络似乎可以将搜索时间提高 7 倍，同时击败当时 CIFAR-10 的最先进的搜索技术。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211010205325583.png" alt=""></p>
+<p>其他方法，如进化技术（evolutionary techniques）、可区分架构搜索（differentiable architecture search）、渐进式搜索（progressive search）、，参数共享（parameter sharing）等，这些方法的共同之处在于试图降低架构搜索的成本。</p>
+<p>在评估候选网络时，不仅要关注质量，还要关注模型大小、延迟等内存占用指标。架构搜索可以辅助实现多目标搜索和优化。例如，MNasNet 将模型在目标移动设备上的延迟直接合并到目标函数中，如下所示：</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211010210037086.png" alt=""></p>
+<p>其中，𝑚是候选模型，𝐴𝐶𝐶是准确率指标，𝐿𝐴𝑇给定模型在设备上的延迟，𝑇表示目标延迟。𝑤的取值建议设为−0.07。</p>
+<p>概括来说，自动化对模型的效率起着至关重要的作用。HPO 现在是训练模型的自然步骤，可以提取显著的质量改进，同时最大限度地减少人工参与。而且 HPO 也可以在独立的软件库以及云服务中使用。类似地，NAS 的最新进展也使得以学习的方式构建体系结构成为可能，同时对质量和内存空间都有限制。假设 NAS 运行完成需要 GPU 的运行时长达数百小时，并且在领先的云计算服务上，GPU 每小时的成本约为 3 美元，这使得使用 NAS 方法完全经济可行，并且在针对多个目标进行优化时，成本上与模型体系结构的手动实验不同。</p>
+<h4 id="4、高效架构（模型-amp-层）"><a href="#4、高效架构（模型-amp-层）" class="headerlink" title="4、高效架构（模型 &amp; 层）"></a><strong>4、高效架构（模型 &amp; 层）</strong></h4><p>另一个常见主题是重新设计比基线更好的高效层和模型，这些层和模型可以用于特定任务或作为一般的黑盒。</p>
+<p>（1）视觉（Vision）：视觉领域中高效层的经典示例之一是使用了卷积层，它改进了视觉模型中的全连接（FC, Fully Connected）层。不过，FC 层存在两个主要问题：</p>
+<p>丨 FC 层忽略输入像素的空间信息。直观地说，很难通过孤立地观察单个像素值来构建对给定输入的理解。此外，还忽略了邻域的空间局部性。</p>
+<p>丨使用 FC 层还会在处理中等大小的输入时导致参数数量的激增。一个 100 × 100 的 RGB 图像有 3 个通道，第一层的每个神经元有 3 × 104 个连接，这使得网络也容易过度拟合（overfitting）。</p>
+<p>卷积层通过学习过滤器来避免这种情况，每个过滤器都是固定大小的 3D 权重矩阵（3×3，5×5等），第三维与输入通道的数量相同。每个过滤器都对输入进行卷积操作，生成给定过滤器的特征映射。每个过滤器都可以学习检测边缘等特征（水平、垂直、对角线等），从而在特征映射中发现该特征存在的更高值。总的来说，单个卷积层的特征映射可以从图像中提取有意义的信息。堆叠在上面的卷积层将使用前一层生成的特征映射作为输入，逐步学习更复杂的特征。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211010210234892.png" alt=""></p>
+<p>卷积层效率背后的核心思想是，在图像的任何位置都使用相同的过滤器，不论应用在哪。让我们再回到带 3 个通道的 100×100 RGB 图像的例子，5 × 5 滤波器意味着总共有 75 个（5 × 5 × 3）参数。每一层都可以学习多个独特的过滤器，并且仍处在非常合理的参数预算之内。这还具有正则化的效果，其中参数数量的显著减少，可以更容易的优化和更好的泛化。</p>
+<p>（2）深度可分离卷积层（Depth-Separable Convolutional Layers）：在卷积操作中，每个滤波器用于在两个空间维度和第三通道维度上进行卷积。由此看来，每个过滤器的大小是Sx× Sy× input_channels，其中Sx， Sy通常是相等的。针对每个滤波器都是同样的操作，因此卷积操作同时发生在 x 和 y 维度的空间，并在 z 维度中向纵深处进行。</p>
+<p>深度可分离卷积将此划分为两个步骤：</p>
+<p>丨 用 1 x 1 个过滤器进行逐点卷积（point-wise convolution），这样得到的特征映射现在达到 output_channels 的深度。</p>
+<p>丨在x和y维度使用Sx× Sy过滤器进行空间卷积。</p>
+<p>这两种操作堆叠在一起（有任何中间非线性激活）会得到与常规卷积相同形状的输出，但参数要少得多。类似地，计算量减少了一个数量级，因为逐点卷积对每个输入通道的深度卷积要便宜得多。Xception 模型架构演示了在 Inception 体系结构中使用深度可分离卷积，允许在保持参数数量相同的情况下，实现更快地收敛，并在 ImageNet 数据集上获取更高的精度。</p>
+<p>MobileNet 模型架构是为移动和嵌入式设备设计的，它也使用深度可分离层而不是常规的卷积层。这有助于减少 7-10 倍的参数数量和乘法运算，并允许在移动端部署计算机视觉（CV, Computer Vision）任务。用户可以预期 10-100 毫秒之间的延迟，只不过具体还得取决于模型。MobileNet 还通过深度倍增器（depth multiplier）提供了一个旋钮（knob），用于扩展网络，使用户能够在准确性和延迟之间进行权衡。</p>
+<p>（3）注意力机制（Attention Mechanism）：在自然语言方面，我们也看到了快速的进步。对于序列到序列（sequence-to-sequence）模型，一个持久存在的问题是信息瓶颈（information-bottleneck）。这些模型通常由编码器（Encoder）和解码器（Decoder）构成。其中，编码器对应输入序列，负责将信息编码到上下文向量中；而解码器对应输出序列，响应生成上下文的输出序列。这类任务的一个典型例子是机器翻译，其中输入序列是源语言中的句子，输出序列是目标语言中的句子。</p>
+<p>传统的做法是在编码器和解码器中都使用 RNN。然而，第一个解码器层只能看到最终编码器步骤的隐藏状态。这就造成了一种 “瓶颈”，因为解码器的第一步必须从最终隐藏状态中提取所有信息。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211010210424794.png" alt=""></p>
+<p>Bahdanau 等人最初在机器翻译中引入了注意力机制，使解码器能够看到编码器的所有状态，目前已成为神经网络结构的重要组成部分。这是一种根据序列与另一向量（即 query vector）的相似性来突出输入序列的相关部分并将输入序列压缩为上下文向量的方法。在机器翻译等序列到序列任务中，这允许基于所有编码器状态（表示为 keys 和 values）和解码器以前的隐藏状态（query vector）来裁剪（tailoring）解码器的输入。上下文向量是基于解码器先前隐藏状态的编码器状态的加权和。由于 Attention 创建了编码器状态的加权和，因此权重也可以用于可视化网络的行为。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211010210440848.png" alt=""></p>
+<p>（4）Transformer &amp; Friends：Transformer 架构是 Google 于 2017 年在发布的经典文章 “Attention is all you need” 中提出，该模型致力于解决 sequence to sequence 问题，掀起了对解码器和编码器的重点关注。在编码器中，它们采用自注意机制（self-attention），其中键、值和查询向量都是从前面的编码器层派生而来。更重要的是，Transformer 网络的训练成本比可与之媲美的替代方案要低两个数量级。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211010210501239.png" alt=""></p>
+<p>另一个核心思想是，self-attention 允许并行化获取输入序列中 tokens 之间关系的过程。RNN 固有地迫使过程一步一步地发生。例如，在 RNN 中，token 的上下文可能只有在处理了整个序列之后才能完全理解。而有了注意力，所有的 tokens 都被一起处理，并且可以学习成对的关系。这就使得利用优化的训练设备（如 GPUs 和 TPUs）变得更容易。</p>
+<p>正如在上文所介绍的，BERT 模型架构在几个 NLU 基准测试中击败了最先进的水平。BERT 的网络架构使用的就是多层的 Transformer 结构，通过注意力机制有效的解决了 NLP 中棘手的长期依赖问题，更彻底的捕捉语句中的双向关系。当然，它也可以用作通用编码器，更好地处理其他任务。与之相类似的模型，如 GPT 家族也在许多 NLU 任务上得到了广泛的应用。</p>
+<h3 id="现有基础设施"><a href="#现有基础设施" class="headerlink" title="现有基础设施"></a>现有基础设施</h3><p>在介绍完上述的四个重点领域（压缩技术、学习方法、自动化和高效架构）之后，本文将以对训练和部署高性能模型至关重要的基础设施简介作为结束。</p>
+<p>为了能够有效地训练和运行推理，必须有强大的软件和硬件基础设施基础。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211010210525059.png" alt=""></p>
+<h4 id="1、软件生态系统"><a href="#1、软件生态系统" class="headerlink" title="1、软件生态系统"></a><strong>1、软件生态系统</strong></h4><p>（1）Tensorflow 生态系统：</p>
+<p>Tensorflow (TF) 是一种流行的机器学习框架，已被许多大型企业用于实际的生产过程。它为模型效率提供了最广泛的软件支持。</p>
+<p>Tensorflow Lite for On-Device Use Cases：Tensorflow Lite (TFLite) 是一组工具和库，旨在用于边缘设备等低资源环境中的推理。</p>
+<p>TensorflowJS (TF.JS) 是 TF 生态系统中的一个库，可用于在浏览器中或使用 Node.js 训练和运行神经网络。这些模型也可以通过 WebGL 接口通过 GPU 加速 。它既支持导入在 TF 中训练的模型，也支持在 TF.JS 中从头开始创建新模型。还有 TF 模型优化工具包 ，它提供在模型图中添加量化、稀疏性、权重聚类等。</p>
+<p>用于服务器端加速的 XLA：XLA（加速线性代数）是一种图形编译器，它可以通过为图形定制的操作（内核）生成新的实现来优化模型中的线性代数计算。</p>
+<p>（2）PyTorch 生态系统： </p>
+<p>PyTorch 是学术界和工业界都在使用的另一个流行的机器学习平台，它在可用性和功能方面可以与 Tensorflow 相媲美。</p>
+<p>设备上用例：PyTorch 还具有一个轻量级解释器，可以在移动设备上运行 PyTorch 模型。PyTorch 还提供训练后量化和其他图优化。</p>
+<p>通用模型优化：PyTorch 提供了即时 (JIT) 编译工具，用于从 TorchScript 中的代码生成模型的可序列化中间表示，TorchScript 是 Python 的一个子集，并添加了类型等功能 - 检查。它帮助在用于研究和开发的灵活 PyTorch 代码与可部署用于生产推理的表示之间建立桥梁。这是在移动设备上执行 PyTorch 模型的主要方式。</p>
+<p>PyTorch 中 ，XLA 的替代品似乎是 Glow 和 TensorComprehension 编译器。它们有助于生成从更高级别的 IR（如 TorchScript）派生的较低级别的中间表示 (IR)。</p>
+<p>PyTorch 还提供了一个模型调整指南，其中详细介绍了 ML 从业者可以使用的各种方法。其中的一些核心思想是：</p>
+<p>丨使用 PyTorch JIT 融合逐点运算（加、减、乘、除等）。</p>
+<p>丨启用缓冲区检查点允许仅将某些层的输出保留在内存中，并在向后传递期间计算其余层。这特别有助于廉价计算具有大输出（如激活）的层。</p>
+<p>丨启用特定于设备的优化，例如 cuDNN 库和使用 NVIDIA GPU 的混合精度训练（在 GPU 小节中解释）。</p>
+<p>丨 Train with Distributed Data Parallel Training，适用于数据量大，有多个 GPU 进行训练的情况。</p>
+<p>（3）硬件优化库</p>
+<p>可以通过优化运行神经网络的硬件的软件堆栈来进一步提高效率。例如，ARM 的 Cortex 系列处理器支持 SIMD（单指令多数据）指令，该指令允许使用 Neon 指令集对操作（处理批量数据）进行矢量化。QNNPACK 和 XNNPACK  库针对移动和嵌入式设备的 ARM Neon 以及 x86 SSE2、AVX 架构等进行了优化。前者用于 PyTorch 的量化推理模式，后者支持 32 位浮点 - 点模型和 TFLite 的 16 位浮点。同样，还有其他低级库，如 Accelerate for iOS 和 NNAPI for Android，它们试图从更高级别的 ML 框架中抽象出硬件级加速决策。</p>
+<h4 id="2、硬件"><a href="#2、硬件" class="headerlink" title="2、硬件"></a><strong>2、硬件</strong></h4><p>GPU：图形处理单元 (GPU) 虽然最初设计用于加速计算机图形，但在 2007 年之后， CUDA 库的可用性扩大。AlexNet 在 2012 年赢得了 ImageNet 竞赛标准化 GPU 在深度学习模型中的使用。从那以后，英伟达发布了多次迭代的 GPU 微架构，越来越关注深度学习性能。它还引入了 Tensor Cores，这是一种专用的执行单元，支持一系列精度（fp32、TensorFloat32、fp16、bfloat16、int8、int4）的训练和推理。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211010210613517.png" alt=""></p>
+<p>Tensor Cores 优化了标准的乘法累加 (MAC) 操作，A = (B × C) + D。其中，B 和 C 的精度降低（fp16、bfloat16、TensorFloat32），而 A 和 D 的精度为 fp32 . 根据模型架构和所选 GPU，NVIDIA 报告称，通过这种降低精度的 MAC 操作，训练速度提高了 1 到 15 倍。</p>
+<p>NVIDIA 最新的 Ampere 架构 GPU 中的 Tensor Cores 还支持更快的稀疏推理。他们展示了推理时间高达 1.5 倍的加速，以及单个层高达 1.8 倍的加速。除此之外，NVidia 还提供了 cuDNN 库 ，其中包含标准神经网络操作的优化版本，例如完全连接、卷积、激活等等。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211010210635406.png" alt=""></p>
+<p>TPU：TPU 是专用集成电路 (ASIC)，由谷歌设计用于使用 Tensorflow 加速深度学习应用程序，并经过微调以并行化和加速线性代数运算。TPU 架构支持使用 TPU 进行训练和推理，并可通过其 Google Cloud 服务向公众开放。</p>
+<p>TPU 芯片的核心架构利用了 Systolic Array 设计，其中将大量计算拆分为网状拓扑，每个单元计算部分结果并将其按顺序传递给下一个单元，每个时钟 - step（以类似于心脏收缩节律的有节奏方式），无需将中间结果存储在内存中。</p>
+<p>每个 TPU 芯片有两个 Tensor Cores，每个都有一个脉动阵列网格。一块 TPU 板上有 4 个相互连接的 TPU 芯片。为了进一步扩展训练和推理，可以在网状拓扑中连接更多数量的 TPU 板以形成 “pod”。根据公开发布的数字，每个 TPU 芯片 (v3) 可以达到 420 teraflops，而一个 TPU pod 可以达到 100+ petaflops。TPU 已在 Google 内部用于诸如 Google 搜索训练模型、通用 BERT 模型、DeepMind 的 AlphaGo 和 AlphaZero 等应用。与 GPU 类似，TPU 支持 bfloat16 数据类型，这是一种以全浮点 32 位精度训练的低精度替代方案。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211010210717690.png" alt=""></p>
+<p>EdgeTPU：</p>
+<p>EdgeTPU 也是谷歌设计的定制 ASIC 芯片。与 TPU 类似，它专门用于加速线性代数运算，但仅用于推理，并且在边缘设备上的计算预算要低得多。它进一步仅限于操作的子集，并且仅适用于 int8 量化 Tensorflow Lite 模型。EdgeTPU 芯片本身比 1 美分硬币还小，因此适合部署在多种物联网设备中。它已部署在类似 Raspberry Pi 的开发板中，在 Pixel 4 智能手机中作为 Pixel Neural Core，也可以独立焊接到 PCB 上。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/image-20211010210737732.png" alt=""></p>
+<p>Jetson：Jetson 是 Nvidia 的一系列加速器，用于为嵌入式和物联网设备启用深度学习应用程序。它包括 Nano，这是一个为轻量级部署而设计的低功耗 “模块系统”（SoM），以及更强大的 Xavier 和 TX 变体，它们基于 NVidia Volta 和 Pascal GPU 架构。Nano 适用于家庭自动化等应用，其余适用于工业机器人等计算密集型应用。</p>
+<h2 id="经典综述阅读"><a href="#经典综述阅读" class="headerlink" title="经典综述阅读"></a>经典综述阅读</h2><ul>
+<li><a href="https://mp.weixin.qq.com/s/WbXKlBtkAMDSuG4ky44Eyw" target="_blank" rel="noopener">NLP千亿预训练模型的“第四范式”之Prompt Learning介绍分享</a></li>
+<li><a href="https://mp.weixin.qq.com/s/LAJvn0GjvAYqYgLOSj_Qlg" target="_blank" rel="noopener">命名实体识别（NER）的过去和现在</a><ul>
+<li>命名实体识别（NER, Named Entity Recognition），是指识别文本中具有特定意义的实体，主要包括人名、地名、机构名、专有名词等。</li>
+</ul>
+</li>
+<li><a href="https://mp.weixin.qq.com/s/Xq7SWZUY9mhxNo3l2cfJVw" target="_blank" rel="noopener">一文回顾深度学习发展史上最重要经典模型</a></li>
+<li><a href="https://mp.weixin.qq.com/s/1YB3JqhIMwCnOuoScZxsAA" target="_blank" rel="noopener">多模态知识图谱前沿进展</a></li>
+<li><a href="https://mp.weixin.qq.com/s/VRGn-7QhdAQ1Z4z8vqGDcg" target="_blank" rel="noopener">深度学习加速综述：算法、编译器、体系结构与硬件设计</a><ul>
+<li>NeurlPS2019 大会的「Efficient Processing of Deep Neural Network: from Algorithms to Hardware Architectures」的演讲</li>
+</ul>
+</li>
+<li><a href="https://mp.weixin.qq.com/s/cOY8vMbpGdH7m2dj2_1qhA" target="_blank" rel="noopener">综述｜计算机视觉中的注意力机制</a><ul>
+<li>Attention是一种资源分配的机制，在视觉方面，其核心思想是突出对象的某些重要特征。本文主要介绍了多种注意力机制的基本结构和实现过程。</li>
+</ul>
+</li>
+<li><a href="https://mp.weixin.qq.com/s/n8x41vTV-See5XK33ttqQQ" target="_blank" rel="noopener">Self-Attention 加速方法一览：ISSA、CCNet、CGNL、Linformer</a><ul>
+<li>视觉任务中的self-attention模块通常需要进行大矩阵的矩阵乘法，显存占用大且比较耗时。所以近年有许多优化self-attention模块速度的方法，这篇笔记主要讨论几篇相关方法。</li>
+</ul>
+</li>
+<li><a href="https://mp.weixin.qq.com/s/Cfdzg_UgrJDqRSyuJsAdQQ" target="_blank" rel="noopener">Zero / Few-shot Learning最新研究进展整理分享</a><ul>
+<li>小样本学习主要研究如何通过少量样本学习识别模型。目前学术界普遍研究的是N-way-K-shot问题，即进行N个类别的识别，每类有K个样本。训练过程以task为单位，会用到两个数据集：Support set S 和 Query set Q 。</li>
+</ul>
+</li>
+<li><a href="https://mp.weixin.qq.com/s/Y_r2mIeLV-2p1JYVpaoRGg" target="_blank" rel="noopener">【200篇文献总结】深度强化学习探索算法最新综述，揭示挑战和未来方向</a></li>
+<li><a href="https://mp.weixin.qq.com/s/TNN3coaIbbIv6s5eUVY1WQ" target="_blank" rel="noopener">综述｜深度学习中的注意力机制</a><ul>
+<li>Attention是一种资源分配的机制，在视觉方面，其核心思想就是突出对象的某些重要特征</li>
+</ul>
+</li>
+<li><a href="https://mp.weixin.qq.com/s/_th7rXfZDuSu2xo7gdPp0w" target="_blank" rel="noopener">2021.11最新视觉Transformer综述</a></li>
+<li><a href="https://mp.weixin.qq.com/s/qsWOX75wPcDrZ7vEcCyJAA" target="_blank" rel="noopener">综述 | 卷积神经网络：从基础技术到研究前景</a></li>
+<li><a href="https://mp.weixin.qq.com/s/itR5Vz7KL5J4qTwYGGsPbw" target="_blank" rel="noopener">综述推荐 | CV视觉中GAN的调研和分类</a><ul>
+<li>将GAN应用于实际问题，仍存在挑战，在此本文重点关注其中三个：（1）高质量的图像生成；（2）图像生成的多样性；（3）稳定的训练。</li>
+</ul>
+</li>
+<li><a href="https://zhuanlan.zhihu.com/p/432198920" target="_blank" rel="noopener">深度强化学习综述！近200篇参考文献</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/311204026" target="_blank" rel="noopener">开源巨献：27个深度强化学习算法的实例项目</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/66215918" target="_blank" rel="noopener">CNN系列模型发展简述（附github代码——已全部跑通）</a></li>
+<li><a href="https://mp.weixin.qq.com/s/EtZjr9M28vGdWWScGuVxoA" target="_blank" rel="noopener">【39页综述】强化学习的泛化性：A Survey of Generalisation in Deep RL</a></li>
+<li><a href="https://mp.weixin.qq.com/s/EXDrrc4XuEchgLbhd8SkaQ" target="_blank" rel="noopener">综述：PyTorch显存机制分析</a></li>
+<li><a href="https://mp.weixin.qq.com/s/qwocd0A0nNXAsJYCLvF75Q" target="_blank" rel="noopener">何恺明MAE大火之后，想梳理下视觉Transformer？这篇综述帮你梳理了100多个</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/438766442" target="_blank" rel="noopener">深度神经网络中的持续学习 [ICML2021 Tutorial]</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/390784659" target="_blank" rel="noopener">复旦邱锡鹏组最新Transformer综述</a></li>
+<li><a href="https://mp.weixin.qq.com/s/-5wuji1rD6tWa2wqJTLOZA" target="_blank" rel="noopener">综述：如何给模型加入先验知识</a></li>
+<li><a href="https://mp.weixin.qq.com/s/GBSFp6o4RwwCqjprDr28_g" target="_blank" rel="noopener">实例分割研究综述总结</a></li>
+<li><a href="https://mp.weixin.qq.com/s/uiNrXCl9OeO72MLkY3rr6g" target="_blank" rel="noopener">万字长文详述对话推荐系统的逻辑与演化</a></li>
+<li><a href="https://mp.weixin.qq.com/s/Ai95YS6yYCJs80AwL9qOng" target="_blank" rel="noopener">浅谈问题生成（Question Generation）</a></li>
+<li><a href="https://mp.weixin.qq.com/s/b4A7ca6_ST3fQv0f_C_OEg" target="_blank" rel="noopener">轻量级姿态估计技巧综述</a></li>
+<li><a href="https://mp.weixin.qq.com/s/Ie2BdBvYJM9kDTZKUclzMQ" target="_blank" rel="noopener">最新21页《注意力机制》综述论文</a></li>
+</ul>
+<h2 id="深度学习好文阅读"><a href="#深度学习好文阅读" class="headerlink" title="深度学习好文阅读"></a>深度学习好文阅读</h2><ul>
+<li><a href="https://mp.weixin.qq.com/s/p3_sdlXM6ge9x0E1GRrC1A" target="_blank" rel="noopener">NeurIPS 2021 | 助力YOLOv5涨点！Alpha-IoU：IoU Loss大一统</a></li>
+<li><a href="https://mp.weixin.qq.com/s/ODIuVCk6Dh644AOUxaU6gQ" target="_blank" rel="noopener">Transformers仓库做语言生成的解码方法介绍</a></li>
+<li><a href="https://mp.weixin.qq.com/s/_hml4r6lhAFsqvmmoIIQ4g" target="_blank" rel="noopener">Papers &amp; Radios | 解决量子卷积网络贫瘠高原现象；全批量GD媲美SGD</a><ul>
+<li>克服量子 AI 一大难题——量子卷积网络中的「贫瘠高原」现象，以及全批量的梯度下降算法（GD）可以达到与 SGD 不相上下的测试准确率的研究</li>
+</ul>
+</li>
+<li><a href="https://mp.weixin.qq.com/s/2MAiskAwlY9No5fL19-v5w" target="_blank" rel="noopener">空中悬停、翻滚转身、成功着陆，我用强化学习「回收」了SpaceX的火箭</a><ul>
+<li>项目主页：<a href="https://jiupinjia.github.io/rocket-recycling/" target="_blank" rel="noopener">https://jiupinjia.github.io/rocket-recycling/</a></li>
+<li>GitHub 地址：<a href="https://github.com/jiupinjia/rocket-recycling" target="_blank" rel="noopener">https://github.com/jiupinjia/rocket-recycling</a></li>
+</ul>
+</li>
+<li><a href="https://mp.weixin.qq.com/s/-zCFoOrcTf1h1gVCrgzPmg" target="_blank" rel="noopener">聚类 | 超详细的性能度量和相似度方法总结</a><ul>
+<li>聚类性能度量根据训练数据是否包含标记数据分为两类，一类是将聚类结果与标记数据进行比较，称为“外部指标”；另一类是直接分析聚类结果，称为内部指标。</li>
+</ul>
+</li>
+<li><a href="https://zhuanlan.zhihu.com/p/376925457" target="_blank" rel="noopener">深度学习模型参数量/计算量和推理速度计算</a></li>
+<li><a href="https://mp.weixin.qq.com/s/CNu0L76-2iiR0twdFcQ-Rw" target="_blank" rel="noopener">自然语言处理中数据增强（Data Augmentation）技术最全盘点</a><ul>
+<li>与“计算机视觉”中使用图像数据增强的标准做法不同，在NLP中，文本数据的增强非常少见。</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p><a href="https://mp.weixin.qq.com/s/GZ_QBPF9iZt_QbziS95WWQ" target="_blank" rel="noopener">实践教程｜PyTorch训练加速技巧</a></p>
+</li>
+<li><p><a href="https://mp.weixin.qq.com/s/4TDmgY__e5LWusUFJzzWrg" target="_blank" rel="noopener">正则化方法小结</a></p>
+</li>
+<li><p><a href="https://mp.weixin.qq.com/s/WDoI_r4XfqHHRhFPrHVd3w" target="_blank" rel="noopener">超详细图解 Swin Transformer</a></p>
+</li>
+<li><p><a href="https://zhuanlan.zhihu.com/p/66215918" target="_blank" rel="noopener">CNN系列模型发展简述（附github代码——已全部跑通）</a></p>
+<ul>
+<li>各大视觉模型复现汇总</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><a href="https://www.zhihu.com/question/54504471/answer/2197371271" target="_blank" rel="noopener">如何理解 Graph Convolutional Network（GCN）？</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/416179021" target="_blank" rel="noopener">Pytorch代码实现斯坦福CS224N课程模型！自然语言处理领域！</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/416144621" target="_blank" rel="noopener">量化交易、人工智能、运筹优化、数理计量资源库</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/146744389" target="_blank" rel="noopener">GNN基础知识、数据集和开源平台全面介绍</a></li>
+<li><a href="https://mp.weixin.qq.com/s/FbLOgc26REwaBVoUvwE7FQ" target="_blank" rel="noopener">一文总结词向量的计算、评估与优化</a></li>
+<li><a href="https://mp.weixin.qq.com/s/mRqh4lXYBIVZyZNZgajznw" target="_blank" rel="noopener">7 Papers &amp; Radios | 机器人「造孩子」；谷歌裸眼3D全息视频聊天技术公开</a></li>
+<li><a href="https://mp.weixin.qq.com/s/ufzWpGGq30Rt78n5QWPv2A" target="_blank" rel="noopener">小样本学习中的一些基本概念</a></li>
+<li><a href="https://mp.weixin.qq.com/s/JLyk7LBPb1qnZ1qXJzj_5Q" target="_blank" rel="noopener">英伟达PyTorch优化神器TensorRT重磅更新！10亿参数大模型实时运行，GPT推理加速21倍</a></li>
+<li><a href="https://mp.weixin.qq.com/s/IloqN8XOVQM8LzFU0EPK6w" target="_blank" rel="noopener">一文打尽目标检测NMS | 精度提升篇</a></li>
+<li><a href="https://mp.weixin.qq.com/s/EMjXG_pnBCYKANxqWvE3Lg" target="_blank" rel="noopener">一文读懂机器学习模型评估</a></li>
+<li><a href="https://mp.weixin.qq.com/s/9OhZIL3e-aTSMb256BUV4g" target="_blank" rel="noopener">小目标检测相关技巧总结</a></li>
+<li><a href="https://mp.weixin.qq.com/s/Vp1B8ztspa9eJdK-CHJINA" target="_blank" rel="noopener">全球最大中文单体模型来了！2600亿参数，AI产业规模化应用可期</a></li>
+<li><a href="https://mp.weixin.qq.com/s/dXJ4-0wJw3ox_dnX7XhdNA" target="_blank" rel="noopener">详解Batch Normalization及其反向传播</a></li>
+<li><a href="https://mp.weixin.qq.com/s/SbM4MPyh8w4TMulbn11CYA" target="_blank" rel="noopener">真正的即插即用！盘点11种CNN网络设计中精巧通用的“小”插件</a></li>
+<li><a href="https://mp.weixin.qq.com/s/lzQ_bREPZ7rBKWHMLLTS0w" target="_blank" rel="noopener">拿什么拯救我的 4G 显卡： PyTorch 节省显存的策略总结</a></li>
+<li><a href="https://mp.weixin.qq.com/s/k_v8FG26VGKlZypIdyw5lQ" target="_blank" rel="noopener">魔改nnU-Net夺冠！2021 BraTS 脑肿瘤分割竞赛第一名解决方案</a></li>
+<li><a href="https://mp.weixin.qq.com/s/Bif0An_yFOsIBDVX8hdUFQ" target="_blank" rel="noopener">计算机视觉中的传统特征提取方法总结</a></li>
+</ul>
+<h2 id="论文研读"><a href="#论文研读" class="headerlink" title="论文研读"></a>论文研读</h2><ul>
+<li><a href="https://mp.weixin.qq.com/s/GtveMDzlXPn0ODbxrJsaJw" target="_blank" rel="noopener">ICLR 2022 评审出炉！来看看得分最高8均分的31篇论文是什么！</a></li>
+<li><a href="https://mp.weixin.qq.com/s/LAkQWPh8QT1vUN8PXdDOYw" target="_blank" rel="noopener">ICICS 2021 论文录用列表</a></li>
+<li><a href="https://mp.weixin.qq.com/s/-yFPw11kR4Fcur9pmcMuwQ" target="_blank" rel="noopener">Github热榜：2021年33篇最酷AI论文综述！</a></li>
+<li><a href="https://mp.weixin.qq.com/s/aNAVzruZk5w1s_tk_QWDtA" target="_blank" rel="noopener">何恺明团队新作！Transformer遇见Mask R-CNN哪家强？</a></li>
+<li><a href="https://mp.weixin.qq.com/s/zebyu4-fFgxb6h6l6dZHJg" target="_blank" rel="noopener">横扫40+个SOTA！22位华人共同打造佛罗伦萨模型，一统图像视频文本，含9亿图像-文本对</a></li>
+<li><a href="https://mp.weixin.qq.com/s/bi1FBn4V84itt0p2rAnW2A" target="_blank" rel="noopener">颜水成发了个「简单到令人尴尬」的视觉模型，证明Transformer威力源自其整体架构</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/44958351" target="_blank" rel="noopener">研习U-Net</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/427388113" target="_blank" rel="noopener">全网最强ViT (Vision Transformer)原理及代码解析</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/408899259" target="_blank" rel="noopener">我总结了70篇论文的方法，帮你透彻理解神经网络的剪枝算法</a></li>
+<li><a href="https://mp.weixin.qq.com/s/1h9KoZ0FOhzdDISFoGwO4w" target="_blank" rel="noopener">即插即用！5行代码实现NAM注意力机制，让ResNet轻松涨点！</a></li>
+<li><a href="https://mp.weixin.qq.com/s/7FYqP46CoJ7pNCR0bmIp-Q" target="_blank" rel="noopener">TransMix：给视觉Transformer进行数据增强</a></li>
+<li><a href="https://mp.weixin.qq.com/s/vgEU3fGoUzUN-nHenxFGzw" target="_blank" rel="noopener">未来的「造物者」？AI版「女娲」来了！文字生成图像、视频，8类任务一个模型搞定</a></li>
+<li><a href="https://mp.weixin.qq.com/s/yn7ybL7uFxl6-xSkJ0ADkg" target="_blank" rel="noopener">AAAI 2022 | 腾讯优图提出Evo-ViT：高性能Transformer加速方法</a></li>
+<li><a href="https://mp.weixin.qq.com/s/SMe-nt0N028-ShaL1IzR1Q" target="_blank" rel="noopener">机器学习领域各领域必读经典综述论文整理分享</a></li>
+<li><a href="https://mp.weixin.qq.com/s/BrNXZtz6FeDfABBqkngZbg" target="_blank" rel="noopener">顶刊TPAMI 2021！跨域人脸表情识别新基准</a></li>
+<li><a href="https://mp.weixin.qq.com/s/P4Nw1R576zZexhudzvl-LQ" target="_blank" rel="noopener">清华提出ACmix：自注意力和CNN的融合！性能速度全面提升！</a></li>
+<li><a href="https://mp.weixin.qq.com/s/USEgvDLCBzgBMW9lCtEEUg" target="_blank" rel="noopener">视觉Transformer BERT预训练新方式：中科大、MSRA等提出PeCo，优于MAE、BEiT</a></li>
+<li><a href="https://mp.weixin.qq.com/s/m6syd0Bm01LJEnyQx5E91Q" target="_blank" rel="noopener">NeurIPS 2021 | 微软提出S3：自动搜索视觉Transformer的搜索空间</a></li>
+<li><a href="https://mp.weixin.qq.com/s/2jMYxswVpq_xc1jeiYcD8A" target="_blank" rel="noopener">屠榜目标跟踪！SwinTrack：Transformer跟踪的简单而强大的基线</a></li>
+</ul>
+<h2 id="经验贴"><a href="#经验贴" class="headerlink" title="经验贴"></a>经验贴</h2><ul>
+<li><a href="https://mp.weixin.qq.com/s/4T2yLbnZFWhWC2SAwlQhCQ" target="_blank" rel="noopener">大厂里的算法岗和开发岗有什么区别</a></li>
+<li><a href="https://mp.weixin.qq.com/s/QoZbJxeRcrqZC6rV06zmRg" target="_blank" rel="noopener">论文写作中注意这些细节，能显著提升成稿质量</a></li>
+<li><a href="https://mp.weixin.qq.com/s/5xdsPrEAtqcvmxR5lTGBKQ" target="_blank" rel="noopener">我的PhD总结暨关于PhD的十个问题</a></li>
+<li><a href="https://www.zhihu.com/question/299434830/answer/1677664738" target="_blank" rel="noopener">实验室一块GPU都没有怎么做深度学习？</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/384932562" target="_blank" rel="noopener">sci投稿全过程信件模板一览</a><ul>
+<li>信件模板！！！</li>
+</ul>
+</li>
+<li><a href="https://zhuanlan.zhihu.com/p/273580093" target="_blank" rel="noopener">不要上手就学深度学习！超详细的人工智能专家路线图，GitHub数天获2.1k星</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/422080662" target="_blank" rel="noopener">博后师姐强烈推荐，英文学术论文重写工具！</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/338449666" target="_blank" rel="noopener">SCI期刊 VS 核心，该如何投稿？</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/259626565" target="_blank" rel="noopener">SCI论文 Introduction常用句式总结（上）</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/261293787" target="_blank" rel="noopener">SCI论文 Introduction常用句式总结（下）</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/186827310" target="_blank" rel="noopener">SCI论文中Materials &amp; Methods常用句式总结</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/171447362" target="_blank" rel="noopener">SCI论文 Conclusion 常用句式总结</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/175861205" target="_blank" rel="noopener">SCI论文中Results &amp; Discussion常用句式总结</a></li>
+<li><a href="https://mp.weixin.qq.com/s/ul_qsB9NdIeJQYbVFrOu7A" target="_blank" rel="noopener">互联网大厂秋招版吐槽大会</a></li>
+<li><a href="https://mp.weixin.qq.com/s/Y10iQMJ6lWCvvq7ph9H5TA" target="_blank" rel="noopener">写深度学习代码是先写model还是dataset还是train呢，有个一般化的顺序吗？</a></li>
+<li><a href="https://mp.weixin.qq.com/s/7xh25qxqNRsRkoD9UiO66Q" target="_blank" rel="noopener">让你的模型acc更上一层楼：模型trick和数据方法总结</a></li>
+</ul>
+<script>
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return; }
+            const img = document.createElement('img');
+            img.style = 'display:none !important;';
+            img.src = el.dataset.src;
+            img.addEventListener('error', () => {
+              img.remove();
+              el.style.color = 'inherit';
+              el.style.backgroundImage = 'none';
+              el.style.background = 'none';
+            });
+            img.addEventListener('load', () => {
+              img.remove();
+            });
+            document.body.appendChild(img);
+          });
+      </script>
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://jackhcc.github.io" rel="external nofollow noreferrer">杰克成</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://jackhcc.github.io/posts/dl-series9.html">https://jackhcc.github.io/posts/dl-series9.html</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="https://jackhcc.github.io" target="_blank">杰克成</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/Deep-Learning/">
+                                    <span class="chip bg-color">Deep Learning</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/reward/aliqr.png" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/reward/wxqr.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+            
+        </div>
+    </div>
+
+    
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/gitalk/gitalk.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/my-gitalk.css">
+
+<div class="card gitalk-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="gitalk-container" class="card-content"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/gitalk/gitalk.min.js"></script>
+<script>
+    let gitalk = new Gitalk({
+        clientID: '3821a0bbb773038a51fc',
+        clientSecret: '4b30b507d67ec5497ec0e77f43f80cb3e0d7dd3a',
+        repo: 'JackHCC.github.io',
+        owner: 'JackHCC',
+        admin: "JackHCC",
+        id: '2021-10-12T20-31-23',
+        distractionFreeMode: false  // Facebook-like distraction free mode
+    });
+
+    gitalk.render('gitalk-container');
+</script>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/posts/dl-series10.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/8.jpg" class="responsive-img" alt="DL专栏10-Token构建词表">
+                        
+                        <span class="card-title">DL专栏10-Token构建词表</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            Tokenize分词
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-10-13
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Deep-Learning/" class="post-category">
+                                    Deep Learning
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/NLP/">
+                        <span class="chip bg-color">NLP</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/posts/dl-series8.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/0.jpg" class="responsive-img" alt="DL专栏8-TensorFlow Tricks">
+                        
+                        <span class="card-title">DL专栏8-TensorFlow Tricks</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            TensorFlow基本使用技巧
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-10-11
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Deep-Learning/" class="post-category">
+                                    Deep Learning
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/TensorFlow/">
+                        <span class="chip bg-color">TensorFlow</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeShrink.js"></script>
+
+
+<!-- 代码块折行 -->
+
+<style type="text/css">
+code[class*="language-"], pre[class*="language-"] { white-space: pre !important; }
+</style>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('4'),
+            headingSelector: 'h1, h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h1, h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+    <footer class="page-footer bg-color">
+    <div class="container row center-align" style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            <span id="year">2020</span>
+            <a href="https://jackhcc.github.io" target="_blank">杰克成</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                class="white-color">3303.6k</span>&nbsp;字
+            
+            
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;人
+            </span>
+            
+            <br>
+            
+            <span id="sitetime">载入运行时间...</span>
+            <script>
+                function siteTime() {
+                    var seconds = 1000;
+                    var minutes = seconds * 60;
+                    var hours = minutes * 60;
+                    var days = hours * 24;
+                    var years = days * 365;
+                    var today = new Date();
+                    var startYear = "2020";
+                    var startMonth = "2";
+                    var startDate = "27";
+                    var startHour = "6";
+                    var startMinute = "30";
+                    var startSecond = "0";
+                    var todayYear = today.getFullYear();
+                    var todayMonth = today.getMonth() + 1;
+                    var todayDate = today.getDate();
+                    var todayHour = today.getHours();
+                    var todayMinute = today.getMinutes();
+                    var todaySecond = today.getSeconds();
+                    var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                    var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                    var diff = t2 - t1;
+                    var diffYears = Math.floor(diff / years);
+                    var diffDays = Math.floor((diff / days) - diffYears * 365);
+                    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+                    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) /
+                        minutes);
+                    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours -
+                        diffMinutes * minutes) / seconds);
+                    if (startYear == todayYear) {
+                        document.getElementById("year").innerHTML = todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffDays + " 天 " + diffHours +
+                            " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    } else {
+                        document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffYears + " 年 " + diffDays +
+                            " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    }
+                }
+                setInterval(siteTime, 1000);
+            </script>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/JackHCC" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:jackcc0701@163.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+    <a href="https://www.facebook.com/profile.php?id=100046343443643" class="tooltipped" target="_blank" data-tooltip="关注我的Facebook: https://www.facebook.com/profile.php?id=100046343443643" data-position="top" data-delay="50">
+        <i class="fab fa-facebook-f"></i>
+    </a>
+
+
+
+    <a href="https://twitter.com/JackChe66021834" class="tooltipped" target="_blank" data-tooltip="关注我的Twitter: https://twitter.com/JackChe66021834" data-position="top" data-delay="50">
+        <i class="fab fa-twitter"></i>
+    </a>
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=2508074836" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 2508074836" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+    <a href="https://weibo.com/u/6885584679" class="tooltipped" target="_blank" data-tooltip="关注我的微博: https://weibo.com/u/6885584679" data-position="top" data-delay="50">
+        <i class="fab fa-weibo"></i>
+    </a>
+
+
+
+    <a href="https://www.zhihu.com/people/8f8482f01f0d6a04e844efe32e0f0710" class="tooltipped" target="_blank" data-tooltip="关注我的知乎: https://www.zhihu.com/people/8f8482f01f0d6a04e844efe32e0f0710" data-position="top" data-delay="50">
+        <i class="fab fa-zhihu1">知</i>
+    </a>
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/materialize/materialize.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/aos/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/js/matery.js"></script>
+
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+    <script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script type="text/javascript" src="/js/fireworks.js"></script>
+
+    <script type="text/javascript">
+        //只在桌面版网页启用特效
+        var windowWidth = $(window).width();
+        if (windowWidth > 768) {
+            document.write('<script type="text/javascript" src="/js/sakura.js"><\/script>'); }
+    </script>
+
+    <!-- weather -->
+	<script type="text/javascript">
+	WIDGET = {FID: 'TToslpmkVO'}
+	</script>
+	<script type="text/javascript" src="https://apip.weatherdt.com/float/static/js/r.js?v=1111"></script>
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <!-- Baidu Analytics -->
+
+<script>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+    <!-- Baidu Push -->
+
+    
+    
+    <script async src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+        <script src="//code.tidio.co/kqhlkxviiccyoa0czpfpu4ijuey9hfre.js"></script>
+        <script> 
+            $(document).ready(function () {
+                setInterval(change_Tidio, 50);  
+                function change_Tidio() { 
+                    var tidio=$("#tidio-chat iframe");
+                    if(tidio.css("display")=="block"&& $(window).width()>977 ){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" &&$(window).width()>977)>0? "-40px" : ($("div.toc-title").length&&$(window).width()>977)>0?"85px":"20px";   
+                        document.getElementById("tidio-chat-iframe").style.right="-15px";   
+                        document.getElementById("tidio-chat-iframe").style.height=parseInt(tidio.css("height"))>=520?"520px":tidio.css("height");
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    } 
+                    else if(tidio.css("display")=="block"&&$(window).width()>601 &&$(window).width()<992 ){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" && 601< $(window).width()<992)>0? "-40px":"20px" ;   
+                        document.getElementById("tidio-chat-iframe").style.right="-15px"; 
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    }
+                    else if(tidio.css("display")=="block"&&$(window).width()<601 && parseInt(tidio.css("height"))<230){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" && $(window).width()<601)>0? "-10px":"45px" ;   
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    }
+                    if( tidio.css("display")=="block"&&$(window).width()<601 && parseInt(tidio.css("height"))>=230){
+                        document.getElementById("tidio-chat-iframe").style.zIndex="998";
+                    }
+                } 
+            }); 
+        </script>
+    
+
+    
+
+    
+    <script type="text/javascript" color="0,0,255"
+        pointColor="0,0,255" opacity='0.7'
+        zIndex="-1" count="99"
+        src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/background/canvas-nest.js"></script>
+    
+
+    
+
+    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/background/ribbon-dynamic.js" async="async"></script>
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/instantpage/instantpage.js" type="module"></script>
+    
+<script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script>
+        <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
+        <script>
+        $('a').each(function() {
+          const $this = $(this);
+          const href = $this.attr('href');
+          if (href && href.match('^((http|https|thunder|qqdl|ed2k|Flashget|qbrowser|ftp|rtsp|mms)://)')) {
+            const strs = href.split('/');
+            if (strs.length >= 3) {
+                const host = strs[2];
+                if (host !== 'your_domain' || window.location.host) {
+                    $this.attr('href', '/go.html?u='+Base64.encode(href)+'').attr('rel', 'external nofollow noopener noreferrer');
+                    if (true) {
+                        $this.attr('target', '_blank');
+                    }
+                }
+            }
+          }
+        });
+        </script></body>
+
+</html>
+

@@ -1,0 +1,1585 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="Reinforcement Learning强化学习, JackHCC">
+    <meta name="description" content="Reinforcement Learning强化学习详解">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Reinforcement Learning强化学习 | JackHCC</title>
+    <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/my.css">
+    
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/jquery/jquery.min.js"></script>
+    
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper head-container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/me.jpg" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">JackHCC</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>留言板</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>友情链接</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/me.jpg" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">JackHCC</div>
+        <div class="logo-desc">
+            
+            Make the world betterrrr!!!
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			留言板
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			友情链接
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/JackHCC/JackHCC.github.io" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/JackHCC/JackHCC.github.io" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/19.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">Reinforcement Learning强化学习</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        height: calc(100vh - 250px);
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 30px;
+        bottom: 146px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/Reinforcement-Learning/">
+                                <span class="chip bg-color">Reinforcement Learning</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/Deep-Learning/" class="post-category">
+                                Deep Learning
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2021-08-28
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2021-09-11
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    8.6k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    31 分
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <p>参考资料：</p>
+<p><a href="https://github.com/ddbourgin/numpy-ml/tree/master/numpy_ml/rl_models" target="_blank" rel="noopener">纯numpy实现非Deep的RL算法</a> </p>
+<p><a href="https://github.com/openai/spinningup/tree/master/docs" target="_blank" rel="noopener">OpenAI tutorial</a></p>
+<h1 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1. Introduction"></a>1. Introduction</h1><p><img src="/images/loading.gif" data-original="../images/ML/075034.png" alt=""></p>
+<p>这门课的学习路线如上，强化学习是作为单独一个模块介绍。李宏毅老师讲这门课不是从MDP开始讲起，而是从如何获得最大化奖励出发，直接引出Policy Gradient（以及PPO），再讲Q-learning（原始Q-learning，DQN，各种DQN的升级），然后是A2C（以及A3C, DDPG），紧接着介绍了一些Reward Shaping的方法（主要是Curiosity，Curriculum Learning ，Hierarchical RL），最后介绍Imitation Learning (Inverse RL)。比较全面的展现了深度强化学习的核心内容，也比较直观。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/075024.png" alt=""></p>
+<p>首先强化学习是一种解决序列决策问题的方法，他是通过与环境交互进行学习。首先会有一个Env，给agent一个state，agent根据得到的state执行一个action，这个action会改变Env，使自己跳转到下一个state，同时Env会反馈给agent一个reward，agent学习的目标就是通过采取action，使得reward的期望最大化。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/075050.png" alt=""></p>
+<p>在alpha go的例子中，state（又称observation）为所看到的棋盘，action就是落子，reward通过围棋的规则给出，如果最终赢了，得1，输了，得-1。</p>
+<p>下面从2个例子中看强化学习与有监督学习的区别。RL不需要给定标签，但需要有reward。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/075057.png" alt=""></p>
+<p>实际上alphgo是从提前收集的数据上进行有监督学习，效果不错后，再去做强化学习，提高水平。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/075104.png" alt=""></p>
+<p>人没有告诉机器人具体哪里说错了，机器需要根据最终的评价自己总结，一般需要对话好多次。所以通常训练对话模型会训练2个agent互相对话</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/075108.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/075112.png" alt=""></p>
+<p>一个难点是怎么判断对话的效果，一般会设置一些预先定义的规则。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/075117.png" alt=""></p>
+<p>强化学习还有很多成功的应用，凡是序列决策问题，大多数可以用RL解决。</p>
+<h1 id="2-Policy-Gradient"><a href="#2-Policy-Gradient" class="headerlink" title="2. Policy Gradient"></a>2. Policy Gradient</h1><h2 id="2-1-Origin-Policy-Gradient"><a href="#2-1-Origin-Policy-Gradient" class="headerlink" title="2.1 Origin Policy Gradient"></a>2.1 Origin Policy Gradient</h2><p><img src="/images/loading.gif" data-original="../images/ML/075626.jpg" alt=""></p>
+<p>在alpha go场景中，actor决定下哪个位置，env就是你的对手，reward是围棋的规则。强化学习三大基本组件里面，env和reward是事先给定的，我们唯一能做的就是通过调整actor，使得到的累积reward最大化。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/075657.jpg" alt=""></p>
+<p>一般把actor的策略定义成Policy，数学符号为$\pi$，参数是$\theta$，本质是一个NN（神经网络）。</p>
+<p>那么针对Atari游戏：输入游戏的画面，Policy $\pi$输出各个动作的概率，agent根据这个概率分布采取行动。通过调整$\theta$, 我们就可以调整策略的输出。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/075712.jpg" alt=""></p>
+<p>每次采取一个行动会有一个reward</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/075809.jpg" alt=""></p>
+<p>玩一场游戏叫做一个episode，actor存在的目的就是最大化所能得到的return，这个return指的是每一个时间步得到的reward之和。注意我们期望最大化的是return，不是一个时刻的reward。</p>
+<p>如果max的目标是当下时刻的reward，那么在Atari游戏中如果agent在某个s下执行开火，得到了较大的reward，那么可能agent就会一直选择开火。并不代表，最终能够取得游戏的胜利。</p>
+<p>那么，怎么得到这个actor呢？</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/075903.jpg" alt=""></p>
+<p>先定义玩一次游戏，即一个episode的游戏记录为trajectory $\tau$，内容如图所示，是s-a组成的序列对。</p>
+<p>假设actor的参数$\theta$已经给定，则可以得到每个$\tau$出现的概率。这个概率取决于两部分，$p\left(s_{t+1} | s_{t}, a_{t}\right)$部分由env的机制决定，actor没法控制，我们能控制的是$p_{\theta}\left(a_{t} | s_{t}\right)$ 由$\pi$的参数$\theta$决定。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/075918.jpg" alt=""></p>
+<p>定义$R(\tau)$ 为一个episode的总的reward，即每个时间步下的即时reward相加，我习惯表述为return。</p>
+<p>定义$\bar{R}_{\theta}$ 为$R(\tau)$的期望，等价于将每一个轨迹$\tau$出现的概率乘与其return，再求和。</p>
+<p>由于$R(\tau)$是一个随机变量，因为actor本身在给定同样的state下会采取什么行为具有随机性，env在给定行为下输出什么state，也是随机的，所以只能算$R(\tau)$的期望。</p>
+<p>我们的目标就变成了最大化Expected Reward，那么如何最大化？</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/075954.jpg" alt=""></p>
+<p>优化算法是梯度更新，首先我们先计算出$\bar{R}_{\theta}$ 对$\theta$的梯度。</p>
+<p>从公式中可以看出$R(\tau)$可以是不可微的，因为与参数无关，不需要求导。</p>
+<p>第一个改写（红色部分）：将加权求和写成期望的形式。</p>
+<p>第二个近似：实际上没有办法把所有可能的轨迹（游戏记录）都求出来，所以一般是采样N个轨迹</p>
+<p>第三个改写：将$p_{\theta}\left(\tau^{n}\right)$的表达式展开(前2页slide)，去掉跟$\theta$无关的项（不需要求导），则可达到最终的简化结果。具体如下：首先用actor采集一个游戏记录</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-080254.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-080301.png" alt=""></p>
+<p>最终得到的公式相当的直觉，在s下采取了a导致最终结果赢了，那么return就是正的，也就是会增加相应的s-a出现的概率P。</p>
+<p>上面的公式推导中可能会有疑问，为什么要引入log？再乘一个概率除一个概率？原因非常的直觉，如下：如果动作b本来出现的次数就多，那么在加权平均所有的episode后，参数会偏好执行动作b，而实际上动作b得到的return比a低，所以除掉自身出现的概率，以降低其对训练的影响。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-080313.png" alt=""></p>
+<p>那么，到底是怎么更新参数的呢？</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/080148.jpg" alt=""></p>
+<p>首先会拿agent跟环境互动，收集大量游戏记录，然后把每一个游戏记录拿到右边，计算一个参数theta的更新值，更新参数后，再拿新的actor去收集游戏记录，不断循环。</p>
+<p>注意：一般采样的数据只会用一次，用完就丢弃</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-080339.jpg" alt=""></p>
+<p>具体实现：可当成一个分类任务，只是分类的结果不是识别object，是给出actor要执行的动作。</p>
+<p>如何构建训练集？ 采样得到的a，作为ground truth。然后去最小化loss function。</p>
+<p>一般的分类问题loss function是交叉熵，在强化学习里面，只需要在前面乘一个weight，即交叉熵乘一个return。</p>
+<p>实现的过程中还有一些tips可以提高效果：</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-080618.jpg" alt=""></p>
+<p>如果 reward都是正的，那么理想的情况下：reward从大到小 b&gt;a&gt;c, 出现次数 b&gt;a&gt;c, 经过训练以后，reward值高的a，c会提高出现的概率，b会降低。但如果a没有采样到，则a出现的概率最终可能会下降，尽管a的reward高。</p>
+<p>解决方法：增加一个baseline，用r-b作为新的reward，让其有正有负。最简单的做法是b取所有轨迹的平均回报。</p>
+<p>一般r-b叫做优势函数Advantage Functions。我们不需要描述一个行动的绝对好坏，而只需要知道它相对于平均水平的优势。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-080716.jpg" alt=""></p>
+<p>在这个公式里面，对于一个轨迹，每一个s-a的pair都会乘同一个weight，显然不公平，因为一局游戏里面往往有好的pair，有对结果不好的pair。所以我们希望给每一个pair乘不同的weight。整场游戏结果是好的，不代表每一个pair都是好的。如果sample次数够多，则不存在这个问题。</p>
+<p>解决思路：在执行当下action之前的事情跟其没有关系，无论得到多少功劳都跟它没有关系，只考虑在当下执行pair之后的reward，这才是它真正的贡献。把原来的总的return，换成未来的return。</p>
+<p>如图：对于第一组数据，在($s_a$,$a_1$)时候总的return是+3，那么如果对每一个pair都乘3，则($s_b$,$a_2$)会认为是有效的，但如果使用改进的思路，将其乘之后的return，即-2，则能有效抑制该pair对结果的贡献。</p>
+<p>再改进：加一个折扣系数，如果时间拖得越长，对于越之后的reward，当下action的功劳越小。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-080806.jpg" alt=""></p>
+<p>我们将R-b 记为 A，意义就是评价当前s执行动作a，相比于采取其他的a，它有多好。之后我们会用一个critic网络来估计这个评价值。</p>
+<h2 id="2-2-PPO"><a href="#2-2-PPO" class="headerlink" title="2.2 PPO"></a>2.2 PPO</h2><p>PPO算法是PG算法的变形,目的是把在线的学习变成离线的学习。</p>
+<p>核心的idea是对每一条经验（又称轨迹，即一个episode的游戏记录）不止使用一次。</p>
+<p>简单理解：在线学习就是一边玩一边学，离线学习就是先看着别人玩进行学习，之后再自己玩</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-080842.jpg" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-080853.jpg" alt=""></p>
+<p>Motivation：每次用$\pi_\theta$去采样数据之后，$\pi_\theta$都会更新，接下来又要采样新的数据。以至于PG算法大部分时间都在采样数据。那么能不能将这些数据保存下来，由另一个$\pi_{\theta’}$去更新参数？那么策略$\pi_\theta$采样的数据就能被$\pi_{\theta’}$多次利用。引入统计学中的经典方法：</p>
+<p>重要性采样：如果想求一个函数的期望，但无法积分，则可以通过采样求平均的方法来近似，但是如果p分布不知道（无法采样），我们知道q分布，则如上图通过一个重要性权重，用q分布来替代p分布进行采样。这个重要性权重的作用就是修正两个分布的差异。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-080922.jpg" alt=""></p>
+<p>存在的问题：如果p跟q的差异比较大，则方差会很大</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-080951.jpg" alt=""></p>
+<p>如果sample的次数不够多，比如按原分布p进行采样，最终f的期望值是负数（大部分概率都在左侧，左侧f是负值），如果按q分布进行sample，只sample到右边，则f就一直是正的，严重偏离原来的分布。当然采样次数够多的时候，q也sample到了左边，则p/q这个负weight非常大，会平衡掉右边的正值，会导致最终计算出的期望值仍然是负值。但实际上采样的次数总是有限的，出现这种问题的概率也很大。</p>
+<p>先忽略这个问题，加入重要性采样之后，训练变成了离线的</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-081110.jpg" alt=""></p>
+<p>离线训练的实现：用另一个policy2与环境做互动，采集数据，然后在这个数据上训练policy1。尽管2个采集的数据分布不一样，但加入一个重要性的weights，可以修正其差异。等policy1训练的差不多以后，policy2再去采集数据，不断循环。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-081122.jpg" alt=""></p>
+<p>由于我们得到的$A^{\theta}\left(s_{t}, a_{t}\right)$（执行当下action后得到reward-baseline）是由policy2采集的数据观察得到的，所以 $A^{\theta}\left(s_{t}, a_{t}\right)$的参数得修正为$\theta’$</p>
+<p>根据$\nabla f(x)=f(x) \nabla \log f(x)$反推目标函数$J$，注意要优化的参数是$\theta$ ，$\theta’$只负责采集数据。</p>
+<p>利用 $\theta’$采集的数据来训练$\theta$，会不会有问题？（虽然有修正，但毕竟还是不同） 答案是我们需要保证他们的差异尽可能的小，那么在刚刚的公式里再加入一些限制保证其差异足够小，则诞生了 PPO算法。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-081210.jpg" alt=""></p>
+<p>引入函数KL，KL衡量两个分布的距离。注意：不是参数上的距离，是2个$\pi$给同样的state之后基于各自参数输出的action space的距离</p>
+<p>加入KL的公式直觉的理解：如果我们学习出来的$\theta$跟$\theta’$越像，则KL越小，J越大。我们的学习目标还是跟原先的PG算法一样，用梯度上升训练，最大化J。这个操作有点像正则化，用来解决重要性采样存在的问题。</p>
+<p>TRPO是PPO是前身，把KL这个限制条件放在优化的目标函数外面。对于梯度上升的优化过程，这种限制比较难处理，使优化变得复杂，一般不用。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-081228.jpg" alt=""></p>
+<p>实现过程：初始化policy参数，在每一个迭代里面，用$theta^k$采集很多数据，同时计算出奖励A值，接着train这个数据，更新$\theta$优化J。由于是离线训练，可以多次更新后，再去采集新的数据。</p>
+<p>有一个trick是KL的权重beta也可以调整，使其更加的adaptive。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-081245.jpg" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-081315.jpg" alt=""></p>
+<p>实际上KL也是比较难计算的，所以有了PPO2算法，不计算KL，通过clip达到同样效果。</p>
+<p>clip(a, b, c): if a&lt;b =&gt; b  If a&gt;c =&gt; c If b&lt;a&lt;c =&gt; a</p>
+<p>看图：绿色：min里面的第一项，蓝色：min里面的第二项，红色 min的输出</p>
+<p>这个公式的直觉理解：希望$\theta$与$\theta^k$在优化之后不要差距太大。如果A&gt;0，即这个state-action是好的，所以需要增加这个pair出现的几率，所以在max J的过程中会增大$\frac{p_{\theta}\left(a_{t} | s_{t}\right)}{p_{\theta^{k}}\left(a_{t} | s_{t}\right)}$, 但最大不要超过1+eplison，如果A&lt;0，不断减小，小到1-eplison，始终不会相差太大。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-081323.jpg" alt=""></p>
+<p>PG算法效果非常不稳定，自从有了PPO，PG的算法可以在很多任务上work。</p>
+<h1 id="3-Q-Learning"><a href="#3-Q-Learning" class="headerlink" title="3. Q - Learning"></a>3. Q - Learning</h1><h2 id="3-1-Q-learning"><a href="#3-1-Q-learning" class="headerlink" title="3.1 Q-learning"></a>3.1 Q-learning</h2><p>在之前的policy-based算法里，我们的目标是learn 一个actor，value-based的强化学习算法目标是learn一个critic。 </p>
+<p>定义一个Critic，也就是状态值函数$V^{\pi}(s)$，它的值是：当使用策略$\pi$进行游戏时，在观察到一个state s之后，环境输出的累积的reward值的期望。注意取决于两个值，一个是state s，一个是actor$\pi$。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-081510.jpg" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-081524.jpg" alt=""></p>
+<p>如果是不同的actor，在同样的state下，critic给出的值也是不同的。那么怎么估计出这个函数V呢？</p>
+<p>主要有MC和TD的方法，实际上还有DP的方法，但是用DP求解需要整个环境都是已知的。而在强化学习的大部分任务里，都是model-free的，需要agent自己去探索环境。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-081539.jpg" alt=""></p>
+<p>MC：直接让agent与环境互动，统计计算出在$S_a$之后直到一个episode结束的累积reward作为$G_a$。</p>
+<p>训练的目标就是让$V^{\pi}(s)$的输出尽可能的接近$G_a$。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-081554.jpg" alt=""></p>
+<p>MC每次必须把游戏玩到结束，TD不需要把游戏玩到底，只需要玩了一次游戏，有一个状态的变化。</p>
+<p>那么训练的目标就是让$V^{\pi}(s_t)$  和$V^{\pi}(s_t+1)$的差接近$r_t$</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-081607.jpg" alt=""></p>
+<p>MC方差大，因为$r$是一个随机变量，MC方法中的$G$是$r$之和，而TD方法只有$r$是随机变量，r的方差比G小。但TD方法的$V^{\pi}$有可能估计的不准。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-081621.jpg" alt=""></p>
+<p>用MC和TD估计的结果不一样</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-081633.jpg" alt=""></p>
+<p>定义另一种Critic，状态-动作值函数$Q^{\pi}(s,a)$，有的地方叫做Q-function，输入是一个pair $(s,a)$，意思是用$\pi$玩游戏时，在s状态下强制执行动作a（策略$\pi$在s下不一定会执行a），所得到的累积reward。</p>
+<p>有两种写法，输入pair，输出Q，此时的Q是一个标量。</p>
+<p>另一种是输入s，输出所有可能的action的Q值，此时Q是一个向量。</p>
+<p>那么Critic到底怎么用呢？</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-081645.jpg" alt=""></p>
+<p>Q-learning的过程：</p>
+<p>初始化一个actor $\pi$去收集数据，然后learn一个基于$ \pi$的Q-function，接着寻找一个新的比原来的$\pi$要好actor , 找到后更新$\pi$，再去寻找新的Q-function，不断循环，得到更好的policy。</p>
+<p>可见Q-learning的核心思想是先找到最优的Q-function，再通过这个Q-function得出最优策略。而Policy-based的算法是直接去学习策略。这是本质区别。</p>
+<p>那么，怎么样才算比原来的好？</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-081701.jpg" alt=""></p>
+<p>定义好的策略：对所有可能的s而言，$V_\pi(s)$一定小于$V_\pi’(s)$，则$V_\pi’(s)$就是更好的策略。</p>
+<p>$\pi’(s)$的本质：假设已经学习到了一个actor $\pi$的Q-function，给一个state，把所有可能的action都代入Q，执行那个可以让Q最大的action。</p>
+<p>注意：实际上，给定一个s，$ \pi$不一定会执行a，现在的做法是强制执行a，计算执行之后玩下去得到的reward进行比较。</p>
+<p>在实现的时候$\pi’$没有额外的参数，依赖于Q。并且当动作是连续值的时候，无法进行argmax。</p>
+<p>那么， 为什么actor $\pi’$能被找到？</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-081720.jpg" alt=""></p>
+<p>上面是为了证明：只要你估计出了一个actor的Q-function，则一定可以找到一个更好的actor。</p>
+<p>核心思想：在一个episode中某一步把$\pi$换成了$ \pi’$比完全follow $ \pi$，得到的奖励期望值会更大。</p>
+<p>注意$r_{t+1}$指的是在执行当下$a_t$得到的奖励，有的文献也会写成$r_t$</p>
+<p>训练的时候有一些Tips可以提高效率：</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-081740.jpg" alt=""></p>
+<p>Tips 1 引入target网络</p>
+<p>训练的时候，每次需要两个Q function（两个的输入不同）一起更新，不稳定。 一般会固定一个Q作为Target，产生回归任务的label，在训练N次之后，再更新target的参数。回归任务的目标，让$Q^\pi(s_t,a_t)$与$\mathrm{Q}^{\pi}\left(s_{t+1}, \pi\left(s_{t+1}\right)\right))+r$越来越接近，即降低mse。最终希望训练得到的$Q^\pi$能直接估计出这个$(s_t,a_t)$未来的一个累积奖励。</p>
+<p>注意：target网络的参数不需要训练，直接每隔N次复制Q的参数。训练的目标只有一个 Q。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-081754.jpg" alt=""></p>
+<p>Tips2 改进探索机制</p>
+<p>PG算法，每次都会sample新的action，随机性比较大，大概率会尽可能的覆盖所有的动作。而之前的Q-learning，策略的本质是绝对贪婪策略，那么如果有的action没有被sample到，则可能之后再也不会选择这样的action。这种探索的机制（收集数据的方法）不好，所以改进贪心算法，让actor每次会$\varepsilon$的概率执行随机动作。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-081820.jpg" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-081833.jpg" alt=""></p>
+<p>Tips 3 引入记忆池机制</p>
+<p>将采集到的一些数据收集起来，放入replay buffer。好处：</p>
+<p>1.可重复使用过去的policy采集的数据，降低agent与环境互动的次数，加快训练效率 。</p>
+<p>2.replay buffer里面包含了不同actor采集的数据，这样每次随机抽取一个batch进行训练的时候，每个batch内的数据会有较大的差异（数据更加diverse），有助于训练。</p>
+<p>那么，当我们训练的目标是$ \pi$的Q-function，训练数据混杂了$\pi’$,$\pi’’$,$\pi’’’$采集的数据 有没有问题呢？没有，不是因为这些$ \pi$很像，主要原因是我们采样的不是一个轨迹，只是采样了一笔experience($s_t,a_t,r_t,s_{t+1}$)。这个理论上证明是没有问题的，很难解释…</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-081844.jpg" alt=""></p>
+<p>采用了3个Tips的Q-learning训练过程如图：</p>
+<p>注意图中省略了一个循环，即存储了很多笔experience之后才会进行sample。相比于原始的Q-learning，每次sample是从replay buff里面随机抽一个batch，然后计算用绝对贪心策略得到Q-target的值作为label，接着在回归任务中更新Q的参数。每训练多步后，更新Q-target的参数。</p>
+<h2 id="3-2-Tips-of-Q-learning"><a href="#3-2-Tips-of-Q-learning" class="headerlink" title="3.2 Tips of Q-learning"></a>3.2 Tips of Q-learning</h2><p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-081854.jpg" alt=""></p>
+<p>DQN估计出的值一般都高于实际的值，double DQN估计出的值与实际值比较接近。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-081906.jpg" alt=""></p>
+<p>Q是一个估计值，被高估的越多，越容易被选择。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-081948.jpg" alt=""></p>
+<p>Double的思想有点像行政跟立法分权。</p>
+<p>用要训练的Q-network去选择动作，用固定不动的target-network去做估计，相比于DQN,只需要改一行代码！</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-081958.jpg" alt=""></p>
+<p>改了network架构，其他没动。每个网络结构的输出是一个标量+一个向量</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-082009.jpg" alt=""></p>
+<p>比如下一时刻，我们需要把3-&gt;4, 0-&gt;-1,那么Dueling结构里会倾向于不修改A，只调整V来达到目的，这样只需要把V中 0-&gt;1, 如果Q中的第三行-2没有被sample到，也进行了更新，提高效率，减少训练次数。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-082019.jpg" alt=""></p>
+<p>实际实现的时候，通过添加了限制条件，也就是把A normalize，使得其和为0，这样只会更新V。</p>
+<p>这种结构让DQN也能处理连续的动作空间。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-082253.jpg" alt=""></p>
+<p>加入权重的replay buffer</p>
+<p>motivation：TD error大的数据应该更可能被采样到</p>
+<p>注意论文原文实现的细节里，也修改了参数更新的方法</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-082300.jpg" alt=""></p>
+<p>原来收集一条experience是执行一个step，现在变成执行N个step。相比TD的好处：之前只sample一个$(s_t,a_t)$pair，现在sample多个才估测Q值，估计的误差会更小。坏处，与MC一样，reward的项数比较多，相加的方差更大。 调N就是一个trade-off的过程。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-082309.jpg" alt=""></p>
+<p>在Q-function的参数空间上+noise</p>
+<p>比较有意思的是，OpenAI DeepMind几乎在同一个时间发布了Noisy Net思想的论文。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-082316.jpg" alt=""></p>
+<p>在同一个episode里面，在动作空间上加噪声，会导致相同state下执行的action不一样。而在参数空间加噪声，则在相同或者相似的state下，会采取同一个action。 注意加噪声只是为了在不同的episode的里面，train Q的时候不会针对特定的一个state永远只执行一个特定的action。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-082325.jpg" alt=""></p>
+<p>带分布的Q-function</p>
+<p>Motivation：原来计算Q-function的值是通过累积reward的期望，也就是均值，但实际上累积的reward可能在不同的分布下会得到相同的Q值。</p>
+<p>注意：每个Q-function的本质都是一个概率分布。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-082332.jpg" alt=""></p>
+<p>让$Q^ \pi$直接输出每一个Q-function的分布，但实际上选择action的时候还是会根据mean值大的选。不过拥有了这个分布，可以计算方差，这样如果有的任务需要在追求回报最大的同时降低风险，则可以利用这个分布。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-082339.jpg" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-082345.jpg" alt=""></p>
+<p>Rainbow：集成了7种升级技术的DQN</p>
+<p>上图是一个一个改进拿掉之后的效果，看紫色似乎double 没啥用，实际上是因为有Q-function的分布存在，一般不会过高估计Q值，所以double 意义不大。</p>
+<p>直觉的理解：使用分布DQN，即时Q值被高估很多，由于最终只会映射到对应的分布区间，所以最终的输出值也不会过大。</p>
+<h2 id="3-3-Q-learning-in-continuous-actions"><a href="#3-3-Q-learning-in-continuous-actions" class="headerlink" title="3.3 Q-learning in continuous actions"></a>3.3 Q-learning in continuous actions</h2><p>在出现PPO之前, PG的算法非常不稳定。DQN 比较稳定，也容易train，因为DQN是只要估计出Q-function，就能得到好的policy，而估计Q-function就是一个回归问题，回归问题比较容易判断learn的效果，看mse。问题是Q-learning不太容易处理连续动作空间。比如汽车的速度，是一个连续变量。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-082354.jpg" alt=""></p>
+<p>当动作值是连续时，怎么解argmax：</p>
+<ol>
+<li><p>通过映射，强行离散化</p>
+</li>
+<li><p>使用梯度上升解这个公式，这相当于每次train完Q后，在选择action的时候又要train一次网络，比较耗时间。</p>
+</li>
+</ol>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-082404.jpg" alt=""></p>
+<ol start="3">
+<li>设计特定的网络，使得输出还是一个标量。</li>
+</ol>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-082433.jpg" alt=""></p>
+<p>最有效的解决方法是，针对连续动作空间，不要使用Q-learning。使用AC算法！</p>
+<h1 id="4-Actor-Critic"><a href="#4-Actor-Critic" class="headerlink" title="4. Actor Critic"></a>4. Actor Critic</h1><h2 id="4-1-Advantage-Actor-Critic-A2C"><a href="#4-1-Advantage-Actor-Critic-A2C" class="headerlink" title="4.1 Advantage Actor-Critic (A2C)"></a>4.1 Advantage Actor-Critic (A2C)</h2><p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-082605.jpg" alt=""></p>
+<p>由于每次在执行PG算法之前，一般只能采样少量的数据，导致对于同一个$(s_t,a_t)$，得到的$G$的值方差很大，不稳定。那么能不能直接估计出期望值，来替代采样的结果？</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-082530.jpg" alt=""></p>
+<p>回顾下Q-learning中的定义，我们发现：</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-082602.jpg" alt=""></p>
+<p>PG算法中G的期望的定义恰好也是Q-learning算法中$Q^\pi(s,a)$的定义： 假设现在的policy是$ \pi$的情况下，在某一个s，采取某一个a以后得到的累积reward的期望值。</p>
+<p>因此在这里将Q-learning引入到预估reward中，也即policy gradient和q-learning的结合,叫做Actor-Critic。</p>
+<p>把原来的reward和baseline分别替换，PG算法中的减法就变成了$Q^{\pi_{\theta}}\left(s_{t}^{n}, a_{t}^{n}\right)-V^{\pi_{\theta}}\left(s_{t}^{n}\right)$。似乎我们需要训练2个网络？</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-082629.jpg" alt=""></p>
+<p>实际上Q与V可以互相转化，我们只需要训练V。转化公式中为什么要加期望？在s下执行a得到的$ r_t$和$s_{t+1}$是随机的。</p>
+<p>实际将Q变成V的操作中，我们会去掉期望，使得只需要训练（估计）状态值函数$V^\pi$，这样会导致一点偏差，但比同时估计两个function导致的偏差要好。（A3C原始paper通过实验验证了这一点）。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-082641.jpg" alt=""></p>
+<p>A2C的训练流程：收集数据，估计出状态值函数$V^\pi(s)$，套用公式更新策略$\pi$，再利用新的$\pi$与环境互动收集新的数据，不断循环。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-082652.jpg" alt=""></p>
+<p>训练过程中的2个Tips：</p>
+<ol>
+<li>Actor与Critic的前几层一般会共用参数，因为输入都是state</li>
+<li>正则化：让采用不同action的概率尽量平均，希望有更大的entropy，这样能够探索更多情况。</li>
+</ol>
+<h2 id="4-2-Asynchronous-Advantage-Actor-Critic-A3C"><a href="#4-2-Asynchronous-Advantage-Actor-Critic-A3C" class="headerlink" title="4.2 Asynchronous Advantage Actor-Critic (A3C)"></a>4.2 Asynchronous Advantage Actor-Critic (A3C)</h2><p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-082709.jpg" alt=""></p>
+<p>A3C算法的motivation：开分身学习~</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-082718.jpg" alt=""></p>
+<p>训练过程：每个agent复制一份全局参数，然后各自采样数据，计算梯度，更新这份全局参数，然后将结果传回，复制一份新的参数。</p>
+<p>注意：</p>
+<ol>
+<li><p>初始条件会尽量的保证多样性(Diverse)，让每个agent探索的情况更加不一样。</p>
+</li>
+<li><p>所有的actor都是平行跑的，每个worker把各自的参数传回去然后复制一份新的全局参数。此时可能这份全局参数已经发生了改变，没有关系。</p>
+</li>
+</ol>
+<h2 id="4-3-Pathwise-Derivative-Policy-Gradient-PDPG"><a href="#4-3-Pathwise-Derivative-Policy-Gradient-PDPG" class="headerlink" title="4.3 Pathwise Derivative Policy Gradient (PDPG)"></a>4.3 Pathwise Derivative Policy Gradient (PDPG)</h2><p>在之前Actor-Critic框架里，Critic的作用是评估agent所执行的action好不好？那么Critic能不能不止给出评价，还给出指导意见呢？即告诉actor要怎样做才能更好？于是有了DPG算法：</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-082731.jpg" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-082746.jpg" alt=""></p>
+<p>在上面介绍A2C算法的motivation，主要是从改进PG算法引入。那么从Q-learning的角度来看，PDPG相当于learn一个actor，来解决argmax这个优化问题，以处理连续动作空间，直接根据输入的状态输出动作。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-082759.jpg" alt=""></p>
+<p>Actor+Critic连成一个大的网络，训练过程中也会采取TD-target的技巧，固定住Critic $\pi’$，使用梯度上升优化Actor</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-082809.jpg" alt=""></p>
+<p>训练过程：Actor会学到策略$\pi$，使基于策略$\pi$，输入s可以获得能够最大化Q的action，天然地能够处理continuous的情况。当actor生成的$Q^\pi$效果比较好时，重新采样生成新的Q。有点像GAN中的判别器与生成器。</p>
+<p>注意：从算法的流程可知，Actor 网络和 Critic 网络是分开训练的，但是两者的输入输出存在联系，Actor 网络输出的 action 是 Critic 网络的输入，同时 Critic 网络的输出会被用到 Actor 网路进行反向传播。</p>
+<p>由于Critic模块是基于Q-learning算法，所以Q learning的技巧，探索机制，回忆缓冲都可以用上。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-082820.jpg" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-082830.jpg" alt=""></p>
+<p>与Q-learning相比的改进：</p>
+<ul>
+<li>不通过Q-function输出动作，直接用learn一个actor网络输出动作（Policy-based的算法的通用特性）。</li>
+<li>对于连续变量，不好解argmax的优化问题，转化成了直接选择$\pi-target$ 输出的动作，再基于Q-target得出y。<ul>
+<li>引入$\pi-target$，也使得actor网络不会频繁更新，会通过采样一批数据训练好后再更新，提高训练效率。</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-082845.jpg" alt=""></p>
+<p>总结下：最基础的 Policy Gradient 是回合更新的，通过引入 Critic 后变成了单步更新，而这种结合了 policy 和 value 的方法也叫 Actor-Critic，Critic 有多种可选的方法。A3C在A2C的基础上引入了多个 agent 对网络进行异步更新。对于输出动作为连续值的情形，原始的输出动作概率分布的PG算法不能解决，同时Q-learning算法也不能处理这类问题，因此提出了 DPG 。</p>
+<h1 id="5-Sparse-Reward"><a href="#5-Sparse-Reward" class="headerlink" title="5. Sparse Reward"></a>5. Sparse Reward</h1><p>大多数RL的任务中，是没法得到reward，reward=0，导致reward空间非常的sparse。</p>
+<p>比如我们需要赢得一局游戏才能知道胜负得到reward，那么玩这句游戏的很长一段时间内，我们得不到reward。比如如果机器人要将东西放入杯子才能得到一个reward，尝试了很多动作很有可能都是0。</p>
+<p>但是人可以在非常sprse的环境下进行学习，所以这一章节提出的很多算法与人的一些学习机制比较类似。</p>
+<h2 id="5-1-Reward-Shaping"><a href="#5-1-Reward-Shaping" class="headerlink" title="5.1 Reward Shaping"></a>5.1 Reward Shaping</h2><p>手动设计新的reward，让agent做的更好。但有些比较复杂的任务，需要domain knowledge去设计新的reward。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-082912.jpg" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-082928.jpg" alt=""></p>
+<h2 id="5-2-Curiosity"><a href="#5-2-Curiosity" class="headerlink" title="5.2 Curiosity"></a>5.2 Curiosity</h2><p>好奇心机制非常的直觉，也非常的强大。有个案例：<a href="https://github.com/pathak22/noreward-rl" target="_blank" rel="noopener">Happy Bird</a></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-082959.jpg" alt=""></p>
+<p>好奇心也是reward shaping的一种，引入一个新的reward ：ICM，同时优化2个reward。如何设计一个ICM模块，使agent拥有好奇心？</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-083015.jpg" alt=""></p>
+<p>单独训练一个状态估计的模型，如果在某个state下采取某个action得到的下一个state难以预测，则鼓励agent进行尝试这个action。 不过有的state很难预测，但不重要。比如说某个游戏里面背景是树叶飘动，很难预测，接下来agent一直不动看着树叶飘动，没有意义。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-083031.jpg" alt=""></p>
+<p>再设计一个moudle，判断环境中state的重要性：learn一个feature ext的网络，去掉环境中与action关系不大的state。</p>
+<p>原理：输入两个处理过的state，预测action，使逼近真实的action。这样使得处理之后的state都是跟agent要采取的action相关的。</p>
+<h2 id="5-3-Curriculum-Learning"><a href="#5-3-Curriculum-Learning" class="headerlink" title="5.3 Curriculum Learning"></a>5.3 Curriculum Learning</h2><p>课程学习：为learning做规划，通常由易到难。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-092656.jpg" alt=""></p>
+<p>设计不同难度的课程，一开始直接把板子放入柱子，则agent只要把板子压下去就能获得reward，接着把板子的初始位置提高一些，agent有可能把板子抽出则无法获得reward，接着更general的情况，把板子放倒柱子外面，再让agent去学习。</p>
+<p>生成课程的方法通常如下：从目标反推，越靠近目标的state越简单，不断生成难度更高的state。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-092702.jpg" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-092658.jpg" alt=""></p>
+<h2 id="5-4-Hierarchical-RL"><a href="#5-4-Hierarchical-RL" class="headerlink" title="5.4 Hierarchical RL"></a>5.4 Hierarchical RL</h2><p>分层学习：把大的任务拆解成小任务</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-092745.jpg" alt=""></p>
+<p>上层的agent给下层的agent提供一个愿景，如果下层的达不到目标，会获得惩罚。如果下层的agent得到的错误的目标，那么它会假设最初的目标也是错的。</p>
+<h1 id="6-Imitation-Learning"><a href="#6-Imitation-Learning" class="headerlink" title="6. Imitation Learning"></a>6. Imitation Learning</h1><p>模仿学习，又叫学徒学习，反向强化学习</p>
+<p>之前介绍的强化学习都有一个reward function，但生活中大多数任务无法定义reward，或者难以定义。但是这些任务中如果收集很厉害的范例（专家经验）比较简单，则可以用模仿学习解决。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-092747.jpg" alt=""></p>
+<h2 id="6-1-Behavior-Cloning"><a href="#6-1-Behavior-Cloning" class="headerlink" title="6.1 Behavior Cloning"></a>6.1 Behavior Cloning</h2><p>本质是有监督学习</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-092759.jpg" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-092817.jpg" alt=""></p>
+<p>存在问题：training data里面没有撞墙的case，则agent遇到这种情况不知如何决策</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-092821.jpg" alt=""></p>
+<p>一个直觉的解决方法是数据增强：每次通过牺牲一个专家，学会了一种新的case，策略$\pi$得到了增强。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-092831.jpg" alt=""></p>
+<p>行为克隆还存在一个关键问题：agent不知道哪些行为对结局重要，哪些不重要。由于是采样学习，有可能只记住了多余的无用的行为。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-092847.jpg" alt=""></p>
+<p>同时也由于RL的训练数据不是独立同分布，当下的action会影响之后的state，所以不能直接套用监督学习的框架。</p>
+<p>为了解决这些问题，就有了反向强化学习，现在一般说模仿学习指的就是反向强化学习。</p>
+<h2 id="6-2-Inverse-RL"><a href="#6-2-Inverse-RL" class="headerlink" title="6.2 Inverse RL"></a>6.2 Inverse RL</h2><p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-092859.jpg" alt=""></p>
+<p>之前的强化学习是reard和env通过RL 学到一个最优的actor。</p>
+<p>反向强化学习是，假设有一批expert的数据，通过env和IRL推导expert因为什么样子的reward function才会采取这样的行为。</p>
+<p>好处：也许expert的行为复杂但reward function很简单。拿到这个reward function后我们就可以训练出好的agent。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-092907.jpg" alt=""></p>
+<p>IRL的框架：先射箭 再画靶。</p>
+<p>具体过程：</p>
+<p>Expert先跟环境互动，玩N场游戏，存储记录，我们的actor $ \pi$也去互动，生成N场游戏记录。接下来定义一个reward function $R$，保证expert的$R$比我们的actor的$R$大就行。再根据定义的的$R$用RL的方法去学习一个新的actor ，这个过程也会采集新的游戏记录，等训练好这个actor，也就是当这个actor可以基于$R$获得高分的时候，重新定义一个新的reward function$R’$，让expert的$R’$大于agent，不断循环。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-092917.jpg" alt=""></p>
+<p>IRL与GAN的框架是一样的，学习 一个 reward function相当于学习一个判别器，这个判别器给expert高分，给我们的actor低分。</p>
+<p>一个有趣的事实是给不同的expert，我们的agent最终也会学会不同的策略风格。如下蓝色是expert的行为，红色是学习到的actor的行为。</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-092932.jpg" alt=""></p>
+<p>针对训练robot的任务：</p>
+<p>IRL有个好处是不需要定义规则让robot执行动作，人给robot示范一下动作即可。但robot学习时候的视野跟它执行该动作时候的视野不一致，怎么把它在第三人称视野学到的策略泛化到第一人称视野呢？</p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-092943.jpg" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/ML/2019-11-06-092953.jpg" alt=""></p>
+<p>解决思路跟好奇心机制类似，抽出视野中不重要的因素，让第一人称和第三人称视野中的state都是有用的，与action强相关的。</p>
+<script>
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return; }
+            const img = document.createElement('img');
+            img.style = 'display:none !important;';
+            img.src = el.dataset.src;
+            img.addEventListener('error', () => {
+              img.remove();
+              el.style.color = 'inherit';
+              el.style.backgroundImage = 'none';
+              el.style.background = 'none';
+            });
+            img.addEventListener('load', () => {
+              img.remove();
+            });
+            document.body.appendChild(img);
+          });
+      </script>
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://jackhcc.github.io" rel="external nofollow noreferrer">杰克成</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://jackhcc.github.io/posts/reinforcement-learning.html">https://jackhcc.github.io/posts/reinforcement-learning.html</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="https://jackhcc.github.io" target="_blank">杰克成</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/Reinforcement-Learning/">
+                                    <span class="chip bg-color">Reinforcement Learning</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/reward/aliqr.png" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/reward/wxqr.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+            
+        </div>
+    </div>
+
+    
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/gitalk/gitalk.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/my-gitalk.css">
+
+<div class="card gitalk-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="gitalk-container" class="card-content"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/gitalk/gitalk.min.js"></script>
+<script>
+    let gitalk = new Gitalk({
+        clientID: '3821a0bbb773038a51fc',
+        clientSecret: '4b30b507d67ec5497ec0e77f43f80cb3e0d7dd3a',
+        repo: 'JackHCC.github.io',
+        owner: 'JackHCC',
+        admin: "JackHCC",
+        id: '2021-08-28T12-59-23',
+        distractionFreeMode: false  // Facebook-like distraction free mode
+    });
+
+    gitalk.render('gitalk-container');
+</script>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/posts/meta-learning.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/20.jpg" class="responsive-img" alt="Meta Learning元学习">
+                        
+                        <span class="card-title">Meta Learning元学习</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            Meta Learning元学习详解
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-08-28
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Deep-Learning/" class="post-category">
+                                    Deep Learning
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Meta-Learning/">
+                        <span class="chip bg-color">Meta Learning</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/posts/adversarial-attack.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/5.jpg" class="responsive-img" alt="Adversarial-Attack与Explainable-AI">
+                        
+                        <span class="card-title">Adversarial-Attack与Explainable-AI</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            Adversarial-Attack与Explainable-AI学习记录
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-08-27
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Deep-Learning/" class="post-category">
+                                    Deep Learning
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Adversarial-Attack/">
+                        <span class="chip bg-color">Adversarial Attack</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeShrink.js"></script>
+
+
+<!-- 代码块折行 -->
+
+<style type="text/css">
+code[class*="language-"], pre[class*="language-"] { white-space: pre !important; }
+</style>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('4'),
+            headingSelector: 'h1, h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h1, h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+<script src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script>
+    MathJax.Hub.Config({
+        tex2jax: {inlineMath: [['$', '$'], ['\(', '\)']]}
+    });
+</script>
+
+
+    <footer class="page-footer bg-color">
+    <div class="container row center-align" style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            <span id="year">2020</span>
+            <a href="https://jackhcc.github.io" target="_blank">杰克成</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                class="white-color">3303.6k</span>&nbsp;字
+            
+            
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;人
+            </span>
+            
+            <br>
+            
+            <span id="sitetime">载入运行时间...</span>
+            <script>
+                function siteTime() {
+                    var seconds = 1000;
+                    var minutes = seconds * 60;
+                    var hours = minutes * 60;
+                    var days = hours * 24;
+                    var years = days * 365;
+                    var today = new Date();
+                    var startYear = "2020";
+                    var startMonth = "2";
+                    var startDate = "27";
+                    var startHour = "6";
+                    var startMinute = "30";
+                    var startSecond = "0";
+                    var todayYear = today.getFullYear();
+                    var todayMonth = today.getMonth() + 1;
+                    var todayDate = today.getDate();
+                    var todayHour = today.getHours();
+                    var todayMinute = today.getMinutes();
+                    var todaySecond = today.getSeconds();
+                    var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                    var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                    var diff = t2 - t1;
+                    var diffYears = Math.floor(diff / years);
+                    var diffDays = Math.floor((diff / days) - diffYears * 365);
+                    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+                    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) /
+                        minutes);
+                    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours -
+                        diffMinutes * minutes) / seconds);
+                    if (startYear == todayYear) {
+                        document.getElementById("year").innerHTML = todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffDays + " 天 " + diffHours +
+                            " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    } else {
+                        document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffYears + " 年 " + diffDays +
+                            " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    }
+                }
+                setInterval(siteTime, 1000);
+            </script>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/JackHCC" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:jackcc0701@163.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+    <a href="https://www.facebook.com/profile.php?id=100046343443643" class="tooltipped" target="_blank" data-tooltip="关注我的Facebook: https://www.facebook.com/profile.php?id=100046343443643" data-position="top" data-delay="50">
+        <i class="fab fa-facebook-f"></i>
+    </a>
+
+
+
+    <a href="https://twitter.com/JackChe66021834" class="tooltipped" target="_blank" data-tooltip="关注我的Twitter: https://twitter.com/JackChe66021834" data-position="top" data-delay="50">
+        <i class="fab fa-twitter"></i>
+    </a>
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=2508074836" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 2508074836" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+    <a href="https://weibo.com/u/6885584679" class="tooltipped" target="_blank" data-tooltip="关注我的微博: https://weibo.com/u/6885584679" data-position="top" data-delay="50">
+        <i class="fab fa-weibo"></i>
+    </a>
+
+
+
+    <a href="https://www.zhihu.com/people/8f8482f01f0d6a04e844efe32e0f0710" class="tooltipped" target="_blank" data-tooltip="关注我的知乎: https://www.zhihu.com/people/8f8482f01f0d6a04e844efe32e0f0710" data-position="top" data-delay="50">
+        <i class="fab fa-zhihu1">知</i>
+    </a>
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/materialize/materialize.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/aos/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/js/matery.js"></script>
+
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+    <script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script type="text/javascript" src="/js/fireworks.js"></script>
+
+    <script type="text/javascript">
+        //只在桌面版网页启用特效
+        var windowWidth = $(window).width();
+        if (windowWidth > 768) {
+            document.write('<script type="text/javascript" src="/js/sakura.js"><\/script>'); }
+    </script>
+
+    <!-- weather -->
+	<script type="text/javascript">
+	WIDGET = {FID: 'TToslpmkVO'}
+	</script>
+	<script type="text/javascript" src="https://apip.weatherdt.com/float/static/js/r.js?v=1111"></script>
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <!-- Baidu Analytics -->
+
+<script>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+    <!-- Baidu Push -->
+
+    
+    
+    <script async src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+        <script src="//code.tidio.co/kqhlkxviiccyoa0czpfpu4ijuey9hfre.js"></script>
+        <script> 
+            $(document).ready(function () {
+                setInterval(change_Tidio, 50);  
+                function change_Tidio() { 
+                    var tidio=$("#tidio-chat iframe");
+                    if(tidio.css("display")=="block"&& $(window).width()>977 ){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" &&$(window).width()>977)>0? "-40px" : ($("div.toc-title").length&&$(window).width()>977)>0?"85px":"20px";   
+                        document.getElementById("tidio-chat-iframe").style.right="-15px";   
+                        document.getElementById("tidio-chat-iframe").style.height=parseInt(tidio.css("height"))>=520?"520px":tidio.css("height");
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    } 
+                    else if(tidio.css("display")=="block"&&$(window).width()>601 &&$(window).width()<992 ){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" && 601< $(window).width()<992)>0? "-40px":"20px" ;   
+                        document.getElementById("tidio-chat-iframe").style.right="-15px"; 
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    }
+                    else if(tidio.css("display")=="block"&&$(window).width()<601 && parseInt(tidio.css("height"))<230){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" && $(window).width()<601)>0? "-10px":"45px" ;   
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    }
+                    if( tidio.css("display")=="block"&&$(window).width()<601 && parseInt(tidio.css("height"))>=230){
+                        document.getElementById("tidio-chat-iframe").style.zIndex="998";
+                    }
+                } 
+            }); 
+        </script>
+    
+
+    
+
+    
+    <script type="text/javascript" color="0,0,255"
+        pointColor="0,0,255" opacity='0.7'
+        zIndex="-1" count="99"
+        src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/background/canvas-nest.js"></script>
+    
+
+    
+
+    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/background/ribbon-dynamic.js" async="async"></script>
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/instantpage/instantpage.js" type="module"></script>
+    
+<script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script>
+        <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
+        <script>
+        $('a').each(function() {
+          const $this = $(this);
+          const href = $this.attr('href');
+          if (href && href.match('^((http|https|thunder|qqdl|ed2k|Flashget|qbrowser|ftp|rtsp|mms)://)')) {
+            const strs = href.split('/');
+            if (strs.length >= 3) {
+                const host = strs[2];
+                if (host !== 'your_domain' || window.location.host) {
+                    $this.attr('href', '/go.html?u='+Base64.encode(href)+'').attr('rel', 'external nofollow noopener noreferrer');
+                    if (true) {
+                        $this.attr('target', '_blank');
+                    }
+                }
+            }
+          }
+        });
+        </script></body>
+
+</html>
+
