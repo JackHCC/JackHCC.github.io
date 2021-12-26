@@ -459,7 +459,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-11-06
+                    2021-12-26
                 </div>
                 
 
@@ -3483,85 +3483,42 @@ endmodule</code></pre><p><strong>将上述修改的 Moore 状态机例化到 3 �
 <p>由图可知，输出信号已经和 3 段式 Mealy 型状态机一致。</p>
 <p><img src="/images/loading.gif" data-original="../images/language/gpEFw1qJbdvRLDhS.png" alt=""></p>
 <h2 id="Verilog-竞争与冒险"><a href="#Verilog-竞争与冒险" class="headerlink" title="Verilog 竞争与冒险"></a>Verilog 竞争与冒险</h2><h3 id="关键字：竞争，冒险，书写规范"><a href="#关键字：竞争，冒险，书写规范" class="headerlink" title="关键字：竞争，冒险，书写规范"></a>关键字：竞争，冒险，书写规范</h3><h3 id="产生原因"><a href="#产生原因" class="headerlink" title="产生原因"></a>产生原因</h3><p>数字电路中，信号传输与状态变换时都会有一定的延时。</p>
-<ul>
-<li><p>在组合逻辑电路中，不同路径的输入信号变化传输到同一点门级电路时，在时间上有先有后，这种先后所形成的时间差称为竞争（Competition）。</p>
-</li>
-<li><p>由于竞争的存在，输出信号需要经过一段时间才能达到期望状态，过渡时间内可能产生瞬间的错误输出，例如尖峰脉冲。这种现象被称为冒险（Hazard）。</p>
-</li>
-<li><p>竞争不一定有冒险，但冒险一定会有竞争。</p>
-</li>
-<li><p>例如，对于给定逻辑F = A &amp; A’，电路如左下图所示。</p>
-</li>
-<li><p>由于反相器电路的存在，信号 <strong>A’</strong> 传递到与门输入端的时间相对于信号 <strong>A</strong> 会滞后，这就可能导致与门最后的输出结果 <strong>F</strong> 会出现干扰脉冲。如右下图所示。</p>
-</li>
-<li><p><img src="/images/loading.gif" data-original="../images/language/UIYHpuq1MQk1qSRJ.png" alt=""></p>
-</li>
-<li><p><img src="/images/loading.gif" data-original="../images/language/1ENpirJR5XTPq4Jt.png" alt=""></p>
-</li>
-<li><p>其实实际硬件电路中，只要门电路各个输入端延时不同，就有可能产生竞争与冒险。</p>
-</li>
-<li><p>例如一个简单的与门，输入信号源不一定是同一个信号变换所来，由于硬件工艺、其他延迟电路的存在，也可能产生竞争与冒险，如下图所示。</p>
-</li>
-<li><p><img src="/images/loading.gif" data-original="../images/language/52NhfykVOdwPDphm.png" alt=""></p>
-</li>
-<li><h3 id="判断方法"><a href="#判断方法" class="headerlink" title="判断方法"></a>判断方法</h3></li>
-<li><p><strong>代数法</strong></p>
-</li>
-<li><p>在逻辑表达式，保持一个变量固定不动，将剩余其他变量用 0 或 1 代替，如果最后逻辑表达式能化简成</p>
-</li>
-<li><pre><code>Y = A + A'</code></pre></li>
-<li><p>或</p>
-</li>
-<li><pre><code>Y = A · A'</code></pre></li>
-<li><p>的形式，则可判定此逻辑存在竞争与冒险。</p>
-</li>
-<li><p>例如逻辑表达式 <strong>Y = AB + A’C</strong>，在 <strong>B=C=1</strong> 的情况下，可化简为 <strong>Y = A + A’</strong>。显然，<strong>A</strong> 状态的改变，势必会造成电路存在竞争冒险。</p>
-</li>
-<li><p><strong>卡诺图法</strong></p>
-</li>
-<li><p>有两个相切的卡诺圈，并且相切处没有其他卡诺圈包围，可能会出现竞争与冒险现象。</p>
-</li>
-<li><p>例如左下图所存在竞争与冒险，右下图则没有。</p>
-</li>
-<li><p><img src="/images/loading.gif" data-original="../images/language/riZgKcXReVPbPn0Q.png" alt=""></p>
-</li>
-<li><p>其实，卡诺图本质上还是对逻辑表达式的一个分析，只是可以进行直观的判断。</p>
-</li>
-<li><p>例如，左上图逻辑表达式可以简化为 <strong>Y = A’B’ + AC</strong>，当 <strong>B=0</strong> 且 <strong>C=1</strong> 时，此逻辑表达式又可以表示为 <strong>Y = A’ + A</strong>。所以肯定会存在竞争与冒险。</p>
-</li>
-<li><p>右上图逻辑表达式可以简化为 <strong>Y = A’B’ + AB</strong>，显然 <strong>B</strong> 无论等于 <strong>1</strong> 还是 <strong>0</strong>，此式都不会化简成 <strong>Y = A’ + A</strong>。所以此逻辑不存在竞争与冒险。</p>
-</li>
-<li><p>需要注意的是，卡诺图是首尾相临的。如下图所示，虽然看起来两个卡诺圈并没有相切，但实际上，m6 与 m4 也是相邻的，所以下面卡诺图所代表的数字逻辑也会产生竞争与冒险。</p>
-</li>
-<li><p><img src="/images/loading.gif" data-original="../images/language/jUY4EoeWZhAm5lbT.png" alt=""></p>
-</li>
-<li><p><strong>其他较为复杂的情况，可能需要采用 “计算机辅助分析 + 实验” 的方法。</strong></p>
-</li>
-<li><h2 id="消除方法"><a href="#消除方法" class="headerlink" title="消除方法"></a>消除方法</h2></li>
-<li><p>对数字电路来说，常见的避免竞争与冒险的方法主要有 4 种。</p>
-</li>
-<li><h3 id="1）增加滤波电容，滤除窄脉冲"><a href="#1）增加滤波电容，滤除窄脉冲" class="headerlink" title="1）增加滤波电容，滤除窄脉冲"></a>1）增加滤波电容，滤除窄脉冲</h3></li>
-<li><p>此种方法需要在输出端并联一个小电容，将尖峰脉冲的幅度削弱至门电路阈值以下。</p>
-</li>
-<li><p>此方法虽然简单，但是会增加输出电压的翻转时间，易破坏波形。</p>
-</li>
-<li><h3 id="2）修改逻辑，增加冗余项"><a href="#2）修改逻辑，增加冗余项" class="headerlink" title="2）修改逻辑，增加冗余项"></a>2）修改逻辑，增加冗余项</h3></li>
-<li><p>利用卡诺图，在两个相切的圆之间，增加一个卡诺圈，并加在逻辑表达式之中。</p>
-</li>
-<li><p>如下图所示，对数字逻辑 <strong>Y = A’B’ + AC</strong> 增加冗余项 <strong>B’C</strong>，则此电路逻辑可以表示为 <strong>Y = A’B’ + AC + B’C</strong>。此时电路就不会再存在竞争与冒险。</p>
-</li>
-<li><p><img src="/images/loading.gif" data-original="../images/language/Me1Nfse1Cmcjinur.png" alt=""></p>
-</li>
-<li><h3 id="3）使用时钟同步电路，利用触发器进行打拍延迟"><a href="#3）使用时钟同步电路，利用触发器进行打拍延迟" class="headerlink" title="3）使用时钟同步电路，利用触发器进行打拍延迟"></a>3）使用时钟同步电路，利用触发器进行打拍延迟</h3></li>
-<li><p>同步电路信号的变化都发生在时钟边沿。对于触发器的 D 输入端，只要毛刺不出现在时钟的上升沿并且不满足数据的建立和保持时间，就不会对系统造成危害，因此可认为 D 触发器的 D 输入端对毛刺不敏感。 利用此特性，在时钟边沿驱动下，对一个组合逻辑信号进行延迟打拍，可消除竞争冒险。</p>
-</li>
-<li><p>延迟一拍时钟时，会一定概率的减少竞争冒险的出现。实验表明，最安全的打拍延迟周期是 3 拍，可有效减少竞争冒险的出现。</p>
-</li>
-<li><p>当然，最终还是需要根据自己的设计需求，对信号进行合理的打拍延迟。</p>
-</li>
-<li><p><strong>为说明对信号进行打拍延迟可以消除竞争冒险，我们建立下面的代码模型。</strong></p>
-</li>
-<li><pre><code>module competition_hazard
+<p>在组合逻辑电路中，不同路径的输入信号变化传输到同一点门级电路时，在时间上有先有后，这种先后所形成的时间差称为竞争（Competition）。</p>
+<p>由于竞争的存在，输出信号需要经过一段时间才能达到期望状态，过渡时间内可能产生瞬间的错误输出，例如尖峰脉冲。这种现象被称为冒险（Hazard）。</p>
+<p>竞争不一定有冒险，但冒险一定会有竞争。</p>
+<p>例如，对于给定逻辑F = A &amp; A’，电路如左下图所示。</p>
+<p>由于反相器电路的存在，信号 <strong>A’</strong> 传递到与门输入端的时间相对于信号 <strong>A</strong> 会滞后，这就可能导致与门最后的输出结果 <strong>F</strong> 会出现干扰脉冲。如右下图所示。</p>
+<p><img src="/images/loading.gif" data-original="../images/language/UIYHpuq1MQk1qSRJ.png" alt=""></p>
+<p><img src="/images/loading.gif" data-original="../images/language/1ENpirJR5XTPq4Jt.png" alt=""></p>
+<p>其实实际硬件电路中，只要门电路各个输入端延时不同，就有可能产生竞争与冒险。</p>
+<p>例如一个简单的与门，输入信号源不一定是同一个信号变换所来，由于硬件工艺、其他延迟电路的存在，也可能产生竞争与冒险，如下图所示。</p>
+<p><img src="/images/loading.gif" data-original="../images/language/52NhfykVOdwPDphm.png" alt=""></p>
+<h3 id="判断方法"><a href="#判断方法" class="headerlink" title="判断方法"></a>判断方法</h3><p><strong>代数法</strong></p>
+<p>在逻辑表达式，保持一个变量固定不动，将剩余其他变量用 0 或 1 代替，如果最后逻辑表达式能化简成</p>
+<pre><code>Y = A + A'</code></pre><p>或</p>
+<pre><code>Y = A · A'</code></pre><p>的形式，则可判定此逻辑存在竞争与冒险。</p>
+<p>例如逻辑表达式 <strong>Y = AB + A’C</strong>，在 <strong>B=C=1</strong> 的情况下，可化简为 <strong>Y = A + A’</strong>。显然，<strong>A</strong> 状态的改变，势必会造成电路存在竞争冒险。</p>
+<p><strong>卡诺图法</strong></p>
+<p>有两个相切的卡诺圈，并且相切处没有其他卡诺圈包围，可能会出现竞争与冒险现象。</p>
+<p>例如左下图所存在竞争与冒险，右下图则没有。</p>
+<p><img src="/images/loading.gif" data-original="../images/language/riZgKcXReVPbPn0Q.png" alt=""></p>
+<p>其实，卡诺图本质上还是对逻辑表达式的一个分析，只是可以进行直观的判断。</p>
+<p>例如，左上图逻辑表达式可以简化为 <strong>Y = A’B’ + AC</strong>，当 <strong>B=0</strong> 且 <strong>C=1</strong> 时，此逻辑表达式又可以表示为 <strong>Y = A’ + A</strong>。所以肯定会存在竞争与冒险。</p>
+<p>右上图逻辑表达式可以简化为 <strong>Y = A’B’ + AB</strong>，显然 <strong>B</strong> 无论等于 <strong>1</strong> 还是 <strong>0</strong>，此式都不会化简成 <strong>Y = A’ + A</strong>。所以此逻辑不存在竞争与冒险。</p>
+<p>需要注意的是，卡诺图是首尾相临的。如下图所示，虽然看起来两个卡诺圈并没有相切，但实际上，m6 与 m4 也是相邻的，所以下面卡诺图所代表的数字逻辑也会产生竞争与冒险。</p>
+<p><img src="/images/loading.gif" data-original="../images/language/jUY4EoeWZhAm5lbT.png" alt=""></p>
+<p><strong>其他较为复杂的情况，可能需要采用 “计算机辅助分析 + 实验” 的方法。</strong></p>
+<h2 id="消除方法"><a href="#消除方法" class="headerlink" title="消除方法"></a>消除方法</h2><p>对数字电路来说，常见的避免竞争与冒险的方法主要有 4 种。</p>
+<h3 id="1）增加滤波电容，滤除窄脉冲"><a href="#1）增加滤波电容，滤除窄脉冲" class="headerlink" title="1）增加滤波电容，滤除窄脉冲"></a>1）增加滤波电容，滤除窄脉冲</h3><p>此种方法需要在输出端并联一个小电容，将尖峰脉冲的幅度削弱至门电路阈值以下。</p>
+<p>此方法虽然简单，但是会增加输出电压的翻转时间，易破坏波形。</p>
+<h3 id="2）修改逻辑，增加冗余项"><a href="#2）修改逻辑，增加冗余项" class="headerlink" title="2）修改逻辑，增加冗余项"></a>2）修改逻辑，增加冗余项</h3><p>利用卡诺图，在两个相切的圆之间，增加一个卡诺圈，并加在逻辑表达式之中。</p>
+<p>如下图所示，对数字逻辑 <strong>Y = A’B’ + AC</strong> 增加冗余项 <strong>B’C</strong>，则此电路逻辑可以表示为 <strong>Y = A’B’ + AC + B’C</strong>。此时电路就不会再存在竞争与冒险。</p>
+<p><img src="/images/loading.gif" data-original="../images/language/Me1Nfse1Cmcjinur.png" alt=""></p>
+<h3 id="3）使用时钟同步电路，利用触发器进行打拍延迟"><a href="#3）使用时钟同步电路，利用触发器进行打拍延迟" class="headerlink" title="3）使用时钟同步电路，利用触发器进行打拍延迟"></a>3）使用时钟同步电路，利用触发器进行打拍延迟</h3><p>同步电路信号的变化都发生在时钟边沿。对于触发器的 D 输入端，只要毛刺不出现在时钟的上升沿并且不满足数据的建立和保持时间，就不会对系统造成危害，因此可认为 D 触发器的 D 输入端对毛刺不敏感。 利用此特性，在时钟边沿驱动下，对一个组合逻辑信号进行延迟打拍，可消除竞争冒险。</p>
+<p>延迟一拍时钟时，会一定概率的减少竞争冒险的出现。实验表明，最安全的打拍延迟周期是 3 拍，可有效减少竞争冒险的出现。</p>
+<p>当然，最终还是需要根据自己的设计需求，对信号进行合理的打拍延迟。</p>
+<p><strong>为说明对信号进行打拍延迟可以消除竞争冒险，我们建立下面的代码模型。</strong></p>
+<pre><code>module competition_hazard
     (
       input             clk ,
       input             rstn ,
@@ -3580,10 +3537,8 @@ endmodule</code></pre><p><strong>将上述修改的 Moore 状态机例化到 3 �
         end
     end
 
-endmodule</code></pre></li>
-<li><p><strong>testbench 描述如下：</strong></p>
-</li>
-<li><pre><code>`timescale 1ns/1ns
+endmodule</code></pre><p><strong>testbench 描述如下：</strong></p>
+<pre><code>`timescale 1ns/1ns
 
 module test ;
     reg          clk, rstn ;
@@ -3623,18 +3578,12 @@ module test ;
         end
     end
 
-endmodule // test</code></pre></li>
-<li><p><strong>仿真结果如下:</strong></p>
-</li>
-<li><p>由图可知，信号 condition 出现了一个尖峰脉冲，这是由于信号 din_rvs 与信号 en 相对于模块内部时钟都是异步的，所以到达内部门电路时的延时是不同的，就有可能造成竞争冒险。</p>
-</li>
-<li><p>虽然最后的仿真结果 flag 一直为 0，似乎是我们想要的结果。但是实际电路中，这个尖峰脉冲在时间上非常靠近时钟边沿，就有可能被时钟采集到而产生错误结果。</p>
-</li>
-<li><p><img src="/images/loading.gif" data-original="../images/language/N6KSCoLSRxjCf9TB.png" alt=""></p>
-</li>
-<li><p>下面我们对模型进行改进，增加打拍延时的逻辑，如下：</p>
-</li>
-<li><pre><code>module clap_delay
+endmodule // test</code></pre><p><strong>仿真结果如下:</strong></p>
+<p>由图可知，信号 condition 出现了一个尖峰脉冲，这是由于信号 din_rvs 与信号 en 相对于模块内部时钟都是异步的，所以到达内部门电路时的延时是不同的，就有可能造成竞争冒险。</p>
+<p>虽然最后的仿真结果 flag 一直为 0，似乎是我们想要的结果。但是实际电路中，这个尖峰脉冲在时间上非常靠近时钟边沿，就有可能被时钟采集到而产生错误结果。</p>
+<p><img src="/images/loading.gif" data-original="../images/language/N6KSCoLSRxjCf9TB.png" alt=""></p>
+<p>下面我们对模型进行改进，增加打拍延时的逻辑，如下：</p>
+<pre><code>module clap_delay
     (
       input             clk ,
       input             rstn ,
@@ -3667,43 +3616,22 @@ endmodule // test</code></pre></li>
         end
     end // always @ (posedge clk or negedge !rstn)
 
-endmodule</code></pre></li>
-<li></li>
-<li><p><strong>将此模块例化到上述 testbench 中，得到如下仿真结果。</strong></p>
-</li>
-<li><p>由图可知，信号 condition 没有尖峰脉冲的干扰了，仿真结果中 flag 为 0 也如预期。</p>
-</li>
-<li><p>其实，输入信号与时钟边沿非常接近的情况下，时钟对输入信号的采样也存在不确定性，但是不会出现尖峰脉冲的现象。对输入信号多打 2 拍，是更好的处理方式，对竞争与冒险有更好的抑制作用。</p>
-</li>
-<li><p><img src="/images/loading.gif" data-original="../images/language/R3sSRc0sMKZuLFVQ.png" alt=""></p>
-</li>
-<li><h3 id="4）采用格雷码计数器"><a href="#4）采用格雷码计数器" class="headerlink" title="4）采用格雷码计数器"></a>4）采用格雷码计数器</h3></li>
-<li><p>递加的多 bit 位计数器，计数值有时候会发生多个 bit 位的跳变。</p>
-</li>
-<li><p>例如计数器变量 counter 从 5 计数到 6 时， 对应二进制数字为 4’b101 到 4’b110 的转换。因为各 bit 数据位的延时，counter 的变换过程可能是： <strong>4’b101 -&gt; 4’b111 -&gt; 4’b110</strong>。如果有以下逻辑描述，则信号 cout 可能出现短暂的尖峰脉冲，这显然是与设计相悖的。</p>
-</li>
-<li><pre><code>cout = counter[3:0] == 4'd7 ; </code></pre></li>
-<li><p>而格雷码计数器，计数时相邻的数之间只有一个数据 bit 发生了变化，所以能有效的避免竞争冒险。</p>
-</li>
-<li><p>好在 Verilog 设计时，计数器大多都是同步设计。即便计数时存在多个 bit 同时翻转的可能性，但在时钟驱动的触发器作用下，只要信号间满足时序要求，就能消除掉 100% 的竞争与冒险。</p>
-</li>
-<li><p><strong>小结</strong></p>
-</li>
-<li><p>一般来说，为消除竞争冒险，增加滤波电容和逻辑冗余，都不是 Verilog 设计所考虑的。</p>
-</li>
-<li><p>计数采用格雷码计数器，大多数也是应用在高速时钟下减少信号翻转率来降低功耗的场合。</p>
-</li>
-<li><p>利用触发器在时钟同步电路下对异步信号进行打拍延时，是 Verilog 设计中经常用到的方法。</p>
-</li>
-<li><p>除此之外，为消除竞争冒险，Verilog 编码时还需要注意一些问题，详见下一小节。</p>
-</li>
-</ul>
+endmodule</code></pre><p><strong>将此模块例化到上述 testbench 中，得到如下仿真结果。</strong></p>
+<p>由图可知，信号 condition 没有尖峰脉冲的干扰了，仿真结果中 flag 为 0 也如预期。</p>
+<p>其实，输入信号与时钟边沿非常接近的情况下，时钟对输入信号的采样也存在不确定性，但是不会出现尖峰脉冲的现象。对输入信号多打 2 拍，是更好的处理方式，对竞争与冒险有更好的抑制作用。</p>
+<p><img src="/images/loading.gif" data-original="../images/language/R3sSRc0sMKZuLFVQ.png" alt=""></p>
+<h3 id="4）采用格雷码计数器"><a href="#4）采用格雷码计数器" class="headerlink" title="4）采用格雷码计数器"></a>4）采用格雷码计数器</h3><p>递加的多 bit 位计数器，计数值有时候会发生多个 bit 位的跳变。</p>
+<p>例如计数器变量 counter 从 5 计数到 6 时， 对应二进制数字为 4’b101 到 4’b110 的转换。因为各 bit 数据位的延时，counter 的变换过程可能是： <strong>4’b101 -&gt; 4’b111 -&gt; 4’b110</strong>。如果有以下逻辑描述，则信号 cout 可能出现短暂的尖峰脉冲，这显然是与设计相悖的。</p>
+<pre><code>cout = counter[3:0] == 4'd7 ; </code></pre><p>而格雷码计数器，计数时相邻的数之间只有一个数据 bit 发生了变化，所以能有效的避免竞争冒险。</p>
+<p>好在 Verilog 设计时，计数器大多都是同步设计。即便计数时存在多个 bit 同时翻转的可能性，但在时钟驱动的触发器作用下，只要信号间满足时序要求，就能消除掉 100% 的竞争与冒险。</p>
+<p><strong>小结</strong></p>
+<p>一般来说，为消除竞争冒险，增加滤波电容和逻辑冗余，都不是 Verilog 设计所考虑的。</p>
+<p>计数采用格雷码计数器，大多数也是应用在高速时钟下减少信号翻转率来降低功耗的场合。</p>
+<p>利用触发器在时钟同步电路下对异步信号进行打拍延时，是 Verilog 设计中经常用到的方法。</p>
+<p>除此之外，为消除竞争冒险，Verilog 编码时还需要注意一些问题，详见下一小节。</p>
 <hr>
+<h2 id="Verilog-书写规范"><a href="#Verilog-书写规范" class="headerlink" title="Verilog 书写规范"></a>Verilog 书写规范</h2><p>在编程时多注意以下几点，也可以避免大多数的竞争与冒险问题。</p>
 <ul>
-<li><h2 id="Verilog-书写规范"><a href="#Verilog-书写规范" class="headerlink" title="Verilog 书写规范"></a>Verilog 书写规范</h2></li>
-<li><p>在编程时多注意以下几点，也可以避免大多数的竞争与冒险问题。</p>
-</li>
-<li><ul>
 <li>1）时序电路建模时，用非阻塞赋值。</li>
 <li>2）组合逻辑建模时，用阻塞赋值。</li>
 <li>3）在同一个 always 块中建立时序和组合逻辑模型时，用非阻塞赋值。</li>
@@ -3711,97 +3639,60 @@ endmodule</code></pre></li>
 <li>5）不要在多个 always 块中为同一个变量赋值。</li>
 <li>6）避免 latch 产生。</li>
 </ul>
-</li>
-<li><p>下面，对以上注意事项逐条分析。</p>
-</li>
-<li><h3 id="1）时序电路建模时，用非阻塞赋值"><a href="#1）时序电路建模时，用非阻塞赋值" class="headerlink" title="1）时序电路建模时，用非阻塞赋值"></a>1）时序电路建模时，用非阻塞赋值</h3></li>
-<li><p>前面讲述非阻塞赋值时就陈述过，时序电路中非阻塞赋值可以消除竞争冒险。</p>
-</li>
-<li><p>例如下面代码描述，由于无法确定 a 与 b 阻塞赋值的操作顺序，就有可能带来竞争冒险。</p>
-</li>
-<li><pre><code>always @(posedge clk) begin
+<p>下面，对以上注意事项逐条分析。</p>
+<h3 id="1）时序电路建模时，用非阻塞赋值"><a href="#1）时序电路建模时，用非阻塞赋值" class="headerlink" title="1）时序电路建模时，用非阻塞赋值"></a>1）时序电路建模时，用非阻塞赋值</h3><p>前面讲述非阻塞赋值时就陈述过，时序电路中非阻塞赋值可以消除竞争冒险。</p>
+<p>例如下面代码描述，由于无法确定 a 与 b 阻塞赋值的操作顺序，就有可能带来竞争冒险。</p>
+<pre><code>always @(posedge clk) begin
     a = b ;
     b = a ;
-end</code></pre></li>
-<li><p>而使用非阻塞赋值时，赋值操作是同时进行的，所以就不会带来竞争冒险，如以下代码描述。</p>
-</li>
-<li><pre><code>always @(posedge clk) begin
+end</code></pre><p>而使用非阻塞赋值时，赋值操作是同时进行的，所以就不会带来竞争冒险，如以下代码描述。</p>
+<pre><code>always @(posedge clk) begin
     a &lt;= b ;
     b &lt;= a ;
-end</code></pre></li>
-<li><h3 id="2）组合逻辑建模时，用阻塞赋值"><a href="#2）组合逻辑建模时，用阻塞赋值" class="headerlink" title="2）组合逻辑建模时，用阻塞赋值"></a>2）组合逻辑建模时，用阻塞赋值</h3></li>
-<li><p>例如，我们想实现 C = A&amp;B, F=C&amp;D 的组合逻辑功能，用非阻塞赋值语句如下。</p>
-</li>
-<li><p>两条赋值语句同时赋值，F &lt;= C &amp; D 中使用的是信号 C 的旧值，所以导致此时的逻辑是错误的，F 的逻辑值不等于 A&amp;B&amp;D。</p>
-</li>
-<li><p>而且，此时要求信号 C 具有存储功能，但不是时钟驱动，所以 C 可能会被综合成锁存器（latch），导致竞争冒险。</p>
-</li>
-<li><pre><code>always @(*) begin
+end</code></pre><h3 id="2）组合逻辑建模时，用阻塞赋值"><a href="#2）组合逻辑建模时，用阻塞赋值" class="headerlink" title="2）组合逻辑建模时，用阻塞赋值"></a>2）组合逻辑建模时，用阻塞赋值</h3><p>例如，我们想实现 C = A&amp;B, F=C&amp;D 的组合逻辑功能，用非阻塞赋值语句如下。</p>
+<p>两条赋值语句同时赋值，F &lt;= C &amp; D 中使用的是信号 C 的旧值，所以导致此时的逻辑是错误的，F 的逻辑值不等于 A&amp;B&amp;D。</p>
+<p>而且，此时要求信号 C 具有存储功能，但不是时钟驱动，所以 C 可能会被综合成锁存器（latch），导致竞争冒险。</p>
+<pre><code>always @(*) begin
     C &lt;= A &amp; B ;
     F &lt;= C &amp; D ;
-end</code></pre></li>
-<li><p>对代码进行如下修改，F = C &amp; D 的操作一定是在 C = A &amp; B 之后，此时 F 的逻辑值等于 A&amp;B&amp;D，符合设计。</p>
-</li>
-<li><pre><code>always @(*) begin
+end</code></pre><p>对代码进行如下修改，F = C &amp; D 的操作一定是在 C = A &amp; B 之后，此时 F 的逻辑值等于 A&amp;B&amp;D，符合设计。</p>
+<pre><code>always @(*) begin
     C = A &amp; B ;
     F = C &amp; D ;
-end</code></pre></li>
-<li><h3 id="3）在同一个-always-块中建立时序和组合逻辑模型时，用非阻塞赋值"><a href="#3）在同一个-always-块中建立时序和组合逻辑模型时，用非阻塞赋值" class="headerlink" title="3）在同一个 always 块中建立时序和组合逻辑模型时，用非阻塞赋值"></a>3）在同一个 always 块中建立时序和组合逻辑模型时，用非阻塞赋值</h3></li>
-<li><p>虽然时序电路中可能涉及组合逻辑，但是如果赋值操作使用非阻塞赋值，仍然会导致如规范 1 中所涉及的类似问题。</p>
-</li>
-<li><p>例如在时钟驱动下完成一个与门的逻辑功能，代码参考如下。</p>
-</li>
-<li><pre><code>always @(posedge clk or negedge rst_n)
+end</code></pre><h3 id="3）在同一个-always-块中建立时序和组合逻辑模型时，用非阻塞赋值"><a href="#3）在同一个-always-块中建立时序和组合逻辑模型时，用非阻塞赋值" class="headerlink" title="3）在同一个 always 块中建立时序和组合逻辑模型时，用非阻塞赋值"></a>3）在同一个 always 块中建立时序和组合逻辑模型时，用非阻塞赋值</h3><p>虽然时序电路中可能涉及组合逻辑，但是如果赋值操作使用非阻塞赋值，仍然会导致如规范 1 中所涉及的类似问题。</p>
+<p>例如在时钟驱动下完成一个与门的逻辑功能，代码参考如下。</p>
+<pre><code>always @(posedge clk or negedge rst_n)
     if (!rst_n) begin
         q &lt;= 1'b0;
     end
     else begin
         q &lt;= a &amp; b;  //即便有组合逻辑，也不要写成：q = a &amp; b
      end
-end</code></pre></li>
-<li><h3 id="4）在同一个-always-块中不要既使用阻塞赋值又使用非阻塞赋值"><a href="#4）在同一个-always-块中不要既使用阻塞赋值又使用非阻塞赋值" class="headerlink" title="4）在同一个 always 块中不要既使用阻塞赋值又使用非阻塞赋值"></a>4）在同一个 always 块中不要既使用阻塞赋值又使用非阻塞赋值</h3></li>
-<li><p>always 涉及的组合逻辑中，既有阻塞赋值又有非阻塞赋值时，会导致意外的结果，例如下面代码描述。</p>
-</li>
-<li><p>此时信号 C 阻塞赋值完毕以后，信号 F 才会被非阻塞赋值，仿真结果可能正确。</p>
-</li>
-<li><p>但如果 F 信号有其他的负载，F 的最新值并不能马上传递出去，数据有效时间还是在下一个触发时刻。此时要求 F 具有存储功能，可能会被综合成 latch，导致竞争冒险。</p>
-</li>
-<li><pre><code>always @(*) begin
+end</code></pre><h3 id="4）在同一个-always-块中不要既使用阻塞赋值又使用非阻塞赋值"><a href="#4）在同一个-always-块中不要既使用阻塞赋值又使用非阻塞赋值" class="headerlink" title="4）在同一个 always 块中不要既使用阻塞赋值又使用非阻塞赋值"></a>4）在同一个 always 块中不要既使用阻塞赋值又使用非阻塞赋值</h3><p>always 涉及的组合逻辑中，既有阻塞赋值又有非阻塞赋值时，会导致意外的结果，例如下面代码描述。</p>
+<p>此时信号 C 阻塞赋值完毕以后，信号 F 才会被非阻塞赋值，仿真结果可能正确。</p>
+<p>但如果 F 信号有其他的负载，F 的最新值并不能马上传递出去，数据有效时间还是在下一个触发时刻。此时要求 F 具有存储功能，可能会被综合成 latch，导致竞争冒险。</p>
+<pre><code>always @(*) begin
     C = A &amp; B ;
     F &lt;= C &amp; D ;
-end</code></pre></li>
-<li><p>如下代码描述，仿真角度看，信号 C 被非阻塞赋值，下一个触发时刻才会有效。而 F = C &amp; D 虽然是阻塞赋值，但是信号 C 不是阻塞赋值，所以 F 逻辑中使用的还是 C 的旧值。</p>
-</li>
-<li><pre><code>always @(*) begin
+end</code></pre><p>如下代码描述，仿真角度看，信号 C 被非阻塞赋值，下一个触发时刻才会有效。而 F = C &amp; D 虽然是阻塞赋值，但是信号 C 不是阻塞赋值，所以 F 逻辑中使用的还是 C 的旧值。</p>
+<pre><code>always @(*) begin
     C &lt;= A &amp; B ;
     F = C &amp; D ;
-end</code></pre></li>
-<li><p>下面分析假如在时序电路里既有阻塞赋值，又有非阻塞赋值会怎样，代码如下。</p>
-</li>
-<li><p>假如复位端与时钟同步，那么由于复位导致的信号 q 为 0，是在下一个时钟周期才有效。</p>
-</li>
-<li><p>而如果是信号 a 或 b 导致的 q 为 0，则在当期时钟周期内有效。</p>
-</li>
-<li><p>如果 q 还有其他负载，就会导致 q 的时序特别混乱，显然不符合设计需求。</p>
-</li>
-<li><pre><code>always @(posedge clk or negedge rst_n)
+end</code></pre><p>下面分析假如在时序电路里既有阻塞赋值，又有非阻塞赋值会怎样，代码如下。</p>
+<p>假如复位端与时钟同步，那么由于复位导致的信号 q 为 0，是在下一个时钟周期才有效。</p>
+<p>而如果是信号 a 或 b 导致的 q 为 0，则在当期时钟周期内有效。</p>
+<p>如果 q 还有其他负载，就会导致 q 的时序特别混乱，显然不符合设计需求。</p>
+<pre><code>always @(posedge clk or negedge rst_n)
     if (!rst_n) begin  //假设复位与时钟同步
         q &lt;= 1'b0;
     end
     else begin
         q = a &amp; b;  
     end
-end</code></pre></li>
-<li><p>需要说明的是，很多编译器都支持这么写，上述的分析也都是建立在仿真角度上。实际中如果阻塞赋值和非阻塞赋值混合编写，综合后的电路时序将是错乱的，不利于分析调试。</p>
-</li>
-<li><h3 id="5）不要在多个-always-块中为同一个变量赋值"><a href="#5）不要在多个-always-块中为同一个变量赋值" class="headerlink" title="5）不要在多个 always 块中为同一个变量赋值"></a>5）不要在多个 always 块中为同一个变量赋值</h3></li>
-<li><p>与 C 语言有所不同，Verilog 中不允许在多个 always 块中为同一个变量赋值。此时信号拥有多驱动端（Multiple Driver），是禁止的。当然，也不允许 assign 语句为同一个变量进行多次连线赋值。 从信号角度来讲，多驱动时，同一个信号变量在很短的时间内进行多次不同的赋值结果，就有可能产生竞争冒险。</p>
-</li>
-<li><p>从语法来讲，很多编译器检测到多驱动时，也会报 Error。</p>
-</li>
-<li><h3 id="6）避免-latch-产生"><a href="#6）避免-latch-产生" class="headerlink" title="6）避免 latch 产生"></a>6）避免 latch 产生</h3></li>
-</ul>
-<h2 id="Verilog-避免-Latch"><a href="#Verilog-避免-Latch" class="headerlink" title="Verilog 避免 Latch"></a>Verilog 避免 Latch</h2><h3 id="关键词：触发器，锁存器"><a href="#关键词：触发器，锁存器" class="headerlink" title="关键词：触发器，锁存器"></a>关键词：触发器，锁存器</h3><h3 id="Latch-的含义"><a href="#Latch-的含义" class="headerlink" title="Latch 的含义"></a>Latch 的含义</h3><p>锁存器（Latch），是电平触发的存储单元，数据存储的动作取决于输入时钟（或者使能）信号的电平值。仅当锁存器处于使能状态时，输出才会随着数据输入发生变化。</p>
+end</code></pre><p>需要说明的是，很多编译器都支持这么写，上述的分析也都是建立在仿真角度上。实际中如果阻塞赋值和非阻塞赋值混合编写，综合后的电路时序将是错乱的，不利于分析调试。</p>
+<h3 id="5）不要在多个-always-块中为同一个变量赋值"><a href="#5）不要在多个-always-块中为同一个变量赋值" class="headerlink" title="5）不要在多个 always 块中为同一个变量赋值"></a>5）不要在多个 always 块中为同一个变量赋值</h3><p>与 C 语言有所不同，Verilog 中不允许在多个 always 块中为同一个变量赋值。此时信号拥有多驱动端（Multiple Driver），是禁止的。当然，也不允许 assign 语句为同一个变量进行多次连线赋值。 从信号角度来讲，多驱动时，同一个信号变量在很短的时间内进行多次不同的赋值结果，就有可能产生竞争冒险。</p>
+<p>从语法来讲，很多编译器检测到多驱动时，也会报 Error。</p>
+<h3 id="6）避免-latch-产生"><a href="#6）避免-latch-产生" class="headerlink" title="6）避免 latch 产生"></a>6）避免 latch 产生</h3><h2 id="Verilog-避免-Latch"><a href="#Verilog-避免-Latch" class="headerlink" title="Verilog 避免 Latch"></a>Verilog 避免 Latch</h2><h3 id="关键词：触发器，锁存器"><a href="#关键词：触发器，锁存器" class="headerlink" title="关键词：触发器，锁存器"></a>关键词：触发器，锁存器</h3><h3 id="Latch-的含义"><a href="#Latch-的含义" class="headerlink" title="Latch 的含义"></a>Latch 的含义</h3><p>锁存器（Latch），是电平触发的存储单元，数据存储的动作取决于输入时钟（或者使能）信号的电平值。仅当锁存器处于使能状态时，输出才会随着数据输入发生变化。</p>
 <p>当电平信号无效时，输出信号随输入信号变化，就像通过了缓冲器；当电平有效时，输出信号被锁存。激励信号的任何变化，都将直接引起锁存器输出状态的改变，很有可能会因为瞬态特性不稳定而产生振荡现象。</p>
 <p>锁存器示意图如下：</p>
 <p><img src="/images/loading.gif" data-original="../images/language/UEro1jQtpyTQS4BI.png" alt=""></p>
@@ -7264,7 +7155,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">3316.5k</span>&nbsp;字
+                class="white-color">3322k</span>&nbsp;字
             
             
             
@@ -7502,7 +7393,7 @@ $(function () {
     
     <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/instantpage/instantpage.js" type="module"></script>
     
-<script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script>
+
         <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
         <script>
         $('a').each(function() {
@@ -7521,7 +7412,7 @@ $(function () {
             }
           }
         });
-        </script></body>
+        </script><script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script></body>
 
 </html>
 
