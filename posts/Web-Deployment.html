@@ -452,28 +452,28 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-01-03
+                    2021-12-05
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2022-01-03
+                    2022-01-05
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.5k
+                    3.4k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    6 分
+                    14 分
                 </div>
                 
 
@@ -525,7 +525,121 @@
 <li>使用</li>
 </ul>
 <pre class="line-numbers language-bash"><code class="language-bash">tree<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<h3 id="远程连接配置"><a href="#远程连接配置" class="headerlink" title="远程连接配置"></a>远程连接配置</h3><h4 id="SSH-Server安装"><a href="#SSH-Server安装" class="headerlink" title="SSH Server安装"></a>SSH Server安装</h4><p>注意：ssh默认端口是22</p>
+<h3 id="查看公网IP"><a href="#查看公网IP" class="headerlink" title="查看公网IP"></a>查看公网IP</h3><h4 id="通过访问ipconfig-co来查看"><a href="#通过访问ipconfig-co来查看" class="headerlink" title="通过访问ipconfig.co来查看"></a><strong>通过访问ipconfig.co来查看</strong></h4><pre class="line-numbers language-bash"><code class="language-bash"><span class="token comment" spellcheck="true">#更多用法访问ifconfig.co</span>
+<span class="token function">wget</span> -qO - ifconfig.co<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h4 id="通过curl来获取IP"><a href="#通过curl来获取IP" class="headerlink" title="通过curl来获取IP"></a><strong>通过curl来获取IP</strong></h4><p>如果没有curl，要先下载安装curl</p>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">sudo</span> apt <span class="token function">install</span> curl<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>其次，使用下列命令中得一个来获取本地地址</p>
+<pre class="line-numbers language-bash"><code class="language-bash">curl cip.cc
+curl http://members.3322.org/dyndns/getip
+curl ip.6655.com/ip.aspx
+curl ifconfig.me
+curl icanhazip.com
+curl ident.me
+curl ipecho.net/plain
+curl whatismyip.akamai.com
+curl myip.dnsomatic.com<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>也可以查看ip和地区</p>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token comment" spellcheck="true">#返回IP和地区</span>
+curl ip.6655.com/ip.aspx?area<span class="token operator">=</span>1
+curl cip.cc<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<h3 id="静态私有IP配置"><a href="#静态私有IP配置" class="headerlink" title="静态私有IP配置"></a>静态私有IP配置</h3><p><strong>配置Linux系统的IP地址的方法，主要有以下三种：</strong></p>
+<ul>
+<li>ifconfig</li>
+<li>setup</li>
+<li>修改网卡的配置文件</li>
+</ul>
+<h4 id="1-ifconfig"><a href="#1-ifconfig" class="headerlink" title="1. ifconfig"></a>1. ifconfig</h4><pre><code>命令名称：ifconfig
+基本语法：ifconfig [网卡标识] [IP地址]
+英文原意：interface configuration
+执行权限：root
+功能描述：查看或临时配置网卡信息</code></pre><p>说明： ifconfig 命令主要是用来查看网卡的配置信息，因为用它来配置网卡的IP地址时，只会临时生效（Linux服务器重启后就会失效）。要想使本地网卡（eth0）的配置永久生效，需要修改其配置文件/etc/sysconfig/network-scripts/ifcfg-eth0。</p>
+<p>先用ifconfig命令查看一下网卡的基本信息。</p>
+<pre><code>ifconfig
+查看Linux服务器的网卡的相关信息。</code></pre><p>结果如下：</p>
+<pre><code>[root@localhost ~]# ifconfig
+eth0      Link encap:Ethernet  HWaddr 00:0C:29:3E:9C:06  
+          inet addr:192.168.200.128  Bcast:192.168.200.255  Mask:255.255.255.0
+          inet6 addr: fe80::20c:29ff:fe3e:9c06/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:2326 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:520 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:161222 (157.4 KiB)  TX bytes:51780 (50.5 KiB)
+          Interrupt:19 Base address:0x2000 
+
+lo        Link encap:Local Loopback  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0 
+          RX bytes:0 (0.0 b)  TX bytes:0 (0.0 b)</code></pre><p><strong>说明：</strong></p>
+<pre><code>eth0 表示第1块本地网卡，它是按照数字顺序来命名的。
+如果有第2块本地网卡，就叫eth1。
+通常，我们主要会查看本地网卡的mac地址（HWaddr 00:0C:29:3E:9C:06）和IP地址（inet addr:192.168.200.128）。
+
+lo 表示本地回环网卡。
+
+如果你在查看网卡信息时，没有本地网卡eth0这一项。很可能是因为本地网卡默认没有启动。
+可先修改它的配置文件/etc/sysconfig/network-scripts/ifcfg-eth0。
+
+加上如下代码，来启动Linux主机的本地网卡：
+ONBOOT=yes
+
+保存退出后，运行下面的命令，重启网络服务，使网卡配置文件立即生效：
+service network restart
+再来运行ifconfig即可。</code></pre><p>如果本地网卡eth0已经启动，就可以用下面的命令临时设置IP地址：</p>
+<pre><code>ifconfig eth0 192.168.1.3
+临时配置本地网卡eth0的IP地址，Linux重启就会失效。
+
+这种配置ip的方式只能设置IP和子网掩码，估只适合内网（局域网）使用。
+如果想连通外网，还必须设置网关和DNS。</code></pre><h4 id="2-setup"><a href="#2-setup" class="headerlink" title="2. setup"></a>2. setup</h4><p>setup 命令是 redhat 系列的linux系统（如CentOS）中专有的命令工具。</p>
+<p>可以使用 setup 命令，来对网络配置中的IP地址、子网掩码、默认网关、DNS服务器进行设置。而且，setup 网络配置工具设置的IP地址会永久生效。</p>
+<pre><code>命令名称：setup
+命令所在路径：/usr/sbin/setup
+执行权限：root
+功能描述：配置网络
+基本语法：setup</code></pre><p>setup 命令是 redhat 系列的linux系统（如CentOS）中专有的命令工具。</p>
+<p>使用 setup 命令来配置网络，会出现一个图形化的界面，操作起来非常方便。而且它支持的功能更多，除了网络配置外，还支持防火墙配置、系统服务和验证配置。</p>
+<p>可以使用 setup 命令，来对网络配置中的IP地址、子网掩码、默认网关、DNS服务器进行设置。当然，你也可以使用DHCP（将该项的值设置为 * 即可）来自动获取IP、子网掩码和网关，前提是你家的路由器已经开启了DHCP服务（通常，路由器的DHCP服务都是默认开启的）。</p>
+<p>使用 setup 命令修改了网络配置后，需要重启网络服务，使修改立即生效。命令如下：</p>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">service</span> network restart<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>使用 setup 命令保存的网络配置，会永久生效。</p>
+<h4 id="3-修改网卡的配置文件"><a href="#3-修改网卡的配置文件" class="headerlink" title="3. 修改网卡的配置文件"></a>3. 修改网卡的配置文件</h4><p>本地网卡的配置文件为/etc/sysconfig/network-scripts/ifcfg-eth0。</p>
+<p>直接修改网卡的配置文件，设置方法有两种：</p>
+<ul>
+<li>自动获取动态IP地址</li>
+<li>手工配置静态的IP地址</li>
+</ul>
+<p><strong>自动获取动态IP地址</strong></p>
+<p>也就是通过路由器的DHCP功能，使Linux主机自动获取IP地址。</p>
+<p>设置方法如下：</p>
+<pre><code>vi /etc/sysconfig/network-scripts/ifcfg-eth0
+编辑本地网卡的配置文件</code></pre><p>主要查看下面这两项是否和下面给出的一致即可。</p>
+<pre><code>ONBOOT=yes
+BOOTPROTO=dhcp</code></pre><p>第一项是确保本地网卡eth0开启。</p>
+<p>第二项是使用dhcp，自动获取IP地址、子网掩码、网关和DNS。</p>
+<p>然后，执行下面的命令，重启网络服务即可。</p>
+<pre><code>service network restart     
+重启网络服务，使配置文件生效</code></pre><p><strong>手工配置静态的IP地址</strong></p>
+<p>也就是手工配置IP地址、子网掩码、网关和DNS。</p>
+<p>设置方法如下：</p>
+<pre><code>vi /etc/sysconfig/network-scripts/ifcfg-eth0
+编辑本地网卡的配置文件</code></pre><p>主要查看下面这几项是否和下面给出的一致即可。</p>
+<pre><code>ONBOOT=yes
+BOOTPROTO=none
+IPADDR=192.168.1.66
+NETMASK=255.255.255.0
+GATEWAY=192.168.1.1
+DNS1=192.168.1.1</code></pre><p>第二项表示不使用dhcp服务，如果是手动配置静态的ip地址，BOOTPROTO的值可以为none或者static。</p>
+<p>第三项表示设置IP地址。</p>
+<p>第四项表示设置子网掩码。</p>
+<p>第五项表示设置网关。</p>
+<p>第六项表示设置首选DNS服务器，其实DNS有自己的配置文件/etc/resolv.conf，在这里设置DNS，就是把它写入了DNS的配置文件/etc/resolv.conf。</p>
+<p>然后，执行下面的命令，重启网络服务即可。</p>
+<pre><code>service network restart </code></pre><h3 id="远程连接配置"><a href="#远程连接配置" class="headerlink" title="远程连接配置"></a>远程连接配置</h3><h4 id="SSH-Server安装"><a href="#SSH-Server安装" class="headerlink" title="SSH Server安装"></a>SSH Server安装</h4><p>注意：ssh默认端口是22</p>
 <ul>
 <li>安装</li>
 </ul>
@@ -724,6 +838,56 @@ cd /usr/local/nginx/sbin
 </ul>
 </li>
 </ul>
+<h2 id="查看硬件信息"><a href="#查看硬件信息" class="headerlink" title="查看硬件信息"></a>查看硬件信息</h2><ul>
+<li>系统</li>
+</ul>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">uname</span> -a               <span class="token comment" spellcheck="true"># 查看内核/操作系统/CPU信息</span>
+<span class="token function">head</span> -n 1 /etc/issue   <span class="token comment" spellcheck="true"># 查看操作系统版本</span>
+<span class="token function">cat</span> /proc/cpuinfo      <span class="token comment" spellcheck="true"># 查看CPU信息</span>
+<span class="token function">hostname</span>               <span class="token comment" spellcheck="true"># 查看计算机名</span>
+lspci -tv              <span class="token comment" spellcheck="true"># 列出所有PCI设备</span>
+lsusb -tv              <span class="token comment" spellcheck="true"># 列出所有USB设备</span>
+lsmod                  <span class="token comment" spellcheck="true"># 列出加载的内核模块</span>
+<span class="token function">env</span>                    <span class="token comment" spellcheck="true"># 查看环境变量</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li>网络</li>
+</ul>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">ifconfig</span>               <span class="token comment" spellcheck="true"># 查看所有网络接口的属性</span>
+iptables -L            <span class="token comment" spellcheck="true"># 查看防火墙设置</span>
+route -n               <span class="token comment" spellcheck="true"># 查看路由表</span>
+<span class="token function">netstat</span> -lntp          <span class="token comment" spellcheck="true"># 查看所有监听端口</span>
+<span class="token function">netstat</span> -antp          <span class="token comment" spellcheck="true"># 查看所有已经建立的连接</span>
+<span class="token function">netstat</span> -s             <span class="token comment" spellcheck="true"># 查看网络统计信息</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li>GPU</li>
+</ul>
+<pre class="line-numbers language-bash"><code class="language-bash">lspci  <span class="token operator">|</span> <span class="token function">grep</span> -i vga
+lspci <span class="token operator">|</span> <span class="token function">grep</span> -i nvidia    <span class="token comment" spellcheck="true">#Nvidia显卡</span>
+lspci -v -s 00:0f.0        <span class="token comment" spellcheck="true">#查看指定显卡的详细信息用以下指令</span>
+nvidia-smi                <span class="token comment" spellcheck="true">#Nvidia自带一个命令行工具可以查看显存的使用情况</span>
+<span class="token function">sudo</span> dpkg --list <span class="token operator">|</span> <span class="token function">grep</span> nvidia-*    <span class="token comment" spellcheck="true">#查看NVIDIA驱动版本</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="其他操作"><a href="#其他操作" class="headerlink" title="其他操作"></a>其他操作</h2><ul>
+<li>添加用户</li>
+</ul>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">useradd</span> name<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ul>
+<li>设置用户密码</li>
+</ul>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">passwd</span> name<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h3 id="重装系统"><a href="#重装系统" class="headerlink" title="重装系统"></a>重装系统</h3><ul>
+<li>U盘启动盘进入BOIS<ul>
+<li><strong>Dell</strong>：F2</li>
+<li><strong>HP</strong>：F10</li>
+<li><strong>联想</strong>：由联想收购IBM而来的think pad系列，一般热键是Enter或者F1，有些比较老的机器是Del和F2.</li>
+<li><strong>Acer和Asus</strong>：一般都是F2</li>
+</ul>
+</li>
+</ul>
+<h3 id="Linux查看序列号"><a href="#Linux查看序列号" class="headerlink" title="Linux查看序列号"></a>Linux查看序列号</h3><pre class="line-numbers language-bash"><code class="language-bash">dmidecode -t1<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ul>
+<li>内网穿透</li>
+</ul>
+<p>参考：<a href="https://bbs.deepin.org/zh/post/217702" target="_blank" rel="noopener">https://bbs.deepin.org/zh/post/217702</a></p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -977,7 +1141,7 @@ cd /usr/local/nginx/sbin
         repo: 'JackHCC.github.io',
         owner: 'JackHCC',
         admin: "JackHCC",
-        id: '2022-01-03T16-17-13',
+        id: '2021-12-05T16-17-13',
         distractionFreeMode: false  // Facebook-like distraction free mode
     });
 
@@ -998,48 +1162,46 @@ cd /usr/local/nginx/sbin
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="far fa-dot-circle"></i>&nbsp;本篇
-            </div>
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/posts/Web-Deployment.html">
+                <a href="/posts/SpringBoot.html">
                     <div class="card-image">
                         
                         
-                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/10.jpg" class="responsive-img" alt="Web部署指南">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/21.jpg" class="responsive-img" alt="Spring Boot基础">
                         
-                        <span class="card-title">Web部署指南</span>
+                        <span class="card-title">Spring Boot基础</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            网站部署全流程记录
+                            Spring Boot学习记录
                         
                     </div>
                     <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-01-03
-                            </span>
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-12-08
+                        </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/Basic/" class="post-category">
-                                    Basic
+                            <a href="/categories/Development/" class="post-category">
+                                    Development
                                 </a>
                             
                             
                         </span>
                     </div>
                 </div>
-
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/Deployment/">
-                        <span class="chip bg-color">Deployment</span>
+                    <a href="/tags/Spring-Boot/">
+                        <span class="chip bg-color">Spring Boot</span>
                     </a>
                     
                 </div>
@@ -1053,31 +1215,31 @@ cd /usr/local/nginx/sbin
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/posts/Swagger.html">
+                <a href="/posts/Awesome-Tools.html">
                     <div class="card-image">
                         
                         
-                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/17.jpg" class="responsive-img" alt="Swagger官方API">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/6.jpg" class="responsive-img" alt="Awesome Tools">
                         
-                        <span class="card-title">Swagger官方API</span>
+                        <span class="card-title">Awesome Tools</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            Swagger(OpenAPI)文档
+                            好用的工具合集
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-12-19
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-11-20
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/API/" class="post-category">
-                                    API
+                            <a href="/categories/Awesome/" class="post-category">
+                                    Awesome
                                 </a>
                             
                             
@@ -1087,8 +1249,8 @@ cd /usr/local/nginx/sbin
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/Swagger/">
-                        <span class="chip bg-color">Swagger</span>
+                    <a href="/tags/Tools/">
+                        <span class="chip bg-color">Tools</span>
                     </a>
                     
                 </div>
@@ -1239,7 +1401,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">3330.8k</span>&nbsp;字
+                class="white-color">3332.7k</span>&nbsp;字
             
             
             
