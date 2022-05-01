@@ -1,0 +1,1909 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="neo4j基础, JackHCC">
+    <meta name="description" content="neo4j学习笔记">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>neo4j基础 | JackHCC</title>
+    <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/my.css">
+    
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/jquery/jquery.min.js"></script>
+    
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="JackHCC" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-hopscotch.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper head-container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/me.jpg" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">JackHCC</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>留言板</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>友情链接</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/me.jpg" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">JackHCC</div>
+        <div class="logo-desc">
+            
+            Make the world betterrrr!!!
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			留言板
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			友情链接
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/JackHCC/JackHCC.github.io" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/JackHCC/JackHCC.github.io" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/cryptojs/crypto-js.min.js"></script>
+<script>
+    (function() {
+        let pwd = '';
+        if (pwd && pwd.length > 0) {
+            if (pwd !== CryptoJS.SHA256(prompt('请输入访问本文章的密码')).toString(CryptoJS.enc.Hex)) {
+                alert('密码错误，将返回主页！');
+                location.href = '/';
+            }
+        }
+    })();
+</script>
+
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/12.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">neo4j基础</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        height: calc(100vh - 250px);
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 30px;
+        bottom: 146px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/Neo4j/">
+                                <span class="chip bg-color">Neo4j</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/Database/" class="post-category">
+                                Database
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2022-04-30
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2022-05-01
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    6.7k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    26 分
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h1 id="Neo4j"><a href="#Neo4j" class="headerlink" title="Neo4j"></a>Neo4j</h1><ul>
+<li>官方文档：<a href="https://neo4j.com/docs/" target="_blank" rel="noopener">https://neo4j.com/docs/</a></li>
+</ul>
+<h1 id="Cypher"><a href="#Cypher" class="headerlink" title="Cypher"></a>Cypher</h1><h2 id="什么是-Cypher？"><a href="#什么是-Cypher？" class="headerlink" title="什么是 Cypher？"></a><strong>什么是 Cypher？</strong></h2><p>Cypher 是一种声明式图查询语言，它允许对图进行表达性和高效的<strong><a href="https://neo4j.com/docs/cypher-manual/current/introduction/quering-updating-administering/" target="_blank" rel="noopener">查询、更新和管理</a></strong>。它旨在适用于开发人员和运营专业人员。Cypher 设计简单但功能强大；可以轻松表达高度复杂的数据库查询，使您能够专注于您的领域，而不是迷失在数据库访问中。</p>
+<p><strong>结构</strong></p>
+<p>Cypher 借鉴了 SQL 的结构——查询是使用各种子句构建的。</p>
+<p>子句链接在一起，它们在彼此之间提供中间结果集。例如，一个子句中的匹配变量<code>MATCH</code>将是下一个子句所在的上下文。</p>
+<p>以下是一些用于从图中读取的子句示例：</p>
+<ul>
+<li><code>MATCH</code>：要匹配的图形模式。这是从图表中获取数据的最常用方法。</li>
+<li><code>WHERE</code>: 本身不是一个子句，而是<code>MATCH</code>,<code>OPTIONAL MATCH</code>和的一部分<code>WITH</code>。向模式添加约束，或过滤通过<code>WITH</code>.</li>
+<li><code>RETURN</code>: 返回什么。</li>
+</ul>
+<p>让我们看看<code>MATCH</code>并<code>RETURN</code>采取行动。</p>
+<pre class="line-numbers language-python"><code class="language-python">CREATE <span class="token punctuation">(</span>john<span class="token punctuation">:</span>Person <span class="token punctuation">{</span>name<span class="token punctuation">:</span> <span class="token string">'John'</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+CREATE <span class="token punctuation">(</span>joe<span class="token punctuation">:</span>Person <span class="token punctuation">{</span>name<span class="token punctuation">:</span> <span class="token string">'Joe'</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+CREATE <span class="token punctuation">(</span>steve<span class="token punctuation">:</span>Person <span class="token punctuation">{</span>name<span class="token punctuation">:</span> <span class="token string">'Steve'</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+CREATE <span class="token punctuation">(</span>sara<span class="token punctuation">:</span>Person <span class="token punctuation">{</span>name<span class="token punctuation">:</span> <span class="token string">'Sara'</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+CREATE <span class="token punctuation">(</span>maria<span class="token punctuation">:</span>Person <span class="token punctuation">{</span>name<span class="token punctuation">:</span> <span class="token string">'Maria'</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+CREATE <span class="token punctuation">(</span>john<span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token punctuation">:</span>FRIEND<span class="token punctuation">]</span><span class="token operator">-</span><span class="token operator">></span><span class="token punctuation">(</span>joe<span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token punctuation">:</span>FRIEND<span class="token punctuation">]</span><span class="token operator">-</span><span class="token operator">></span><span class="token punctuation">(</span>steve<span class="token punctuation">)</span>
+CREATE <span class="token punctuation">(</span>john<span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token punctuation">:</span>FRIEND<span class="token punctuation">]</span><span class="token operator">-</span><span class="token operator">></span><span class="token punctuation">(</span>sara<span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token punctuation">:</span>FRIEND<span class="token punctuation">]</span><span class="token operator">-</span><span class="token operator">></span><span class="token punctuation">(</span>maria<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/development/image-20220501110555174.png" alt=""></p>
+<pre class="line-numbers language-python"><code class="language-python">MATCH <span class="token punctuation">(</span>john <span class="token punctuation">{</span>name<span class="token punctuation">:</span> <span class="token string">'John'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token punctuation">:</span>FRIEND<span class="token punctuation">]</span><span class="token operator">-</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token punctuation">:</span>FRIEND<span class="token punctuation">]</span><span class="token operator">-</span><span class="token operator">></span><span class="token punctuation">(</span>fof<span class="token punctuation">)</span>
+RETURN john<span class="token punctuation">.</span>name<span class="token punctuation">,</span> fof<span class="token punctuation">.</span>name<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>返回结果：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token operator">+</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token operator">|</span> john<span class="token punctuation">.</span>name <span class="token operator">|</span> fof<span class="token punctuation">.</span>name <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token operator">|</span> <span class="token string">"John"</span>    <span class="token operator">|</span> <span class="token string">"Maria"</span>  <span class="token operator">|</span>
+<span class="token operator">|</span> <span class="token string">"John"</span>    <span class="token operator">|</span> <span class="token string">"Steve"</span>  <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token number">2</span> rows<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>接下来，我们将添加过滤以设置更多运动部分：</p>
+<p>我们获取一个用户名列表，并从该列表中找到具有名称的所有节点，匹配他们的朋友并仅返回那些具有以<strong>‘S’</strong>开头的<strong>‘name’</strong>属性的被关注用户。</p>
+<pre class="line-numbers language-python"><code class="language-python">MATCH <span class="token punctuation">(</span>user<span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token punctuation">:</span>FRIEND<span class="token punctuation">]</span><span class="token operator">-</span><span class="token operator">></span><span class="token punctuation">(</span>follower<span class="token punctuation">)</span>
+WHERE user<span class="token punctuation">.</span>name IN <span class="token punctuation">[</span><span class="token string">'Joe'</span><span class="token punctuation">,</span> <span class="token string">'John'</span><span class="token punctuation">,</span> <span class="token string">'Sara'</span><span class="token punctuation">,</span> <span class="token string">'Maria'</span><span class="token punctuation">,</span> <span class="token string">'Steve'</span><span class="token punctuation">]</span> AND follower<span class="token punctuation">.</span>name <span class="token operator">=</span><span class="token operator">~</span> <span class="token string">'S.*'</span>
+RETURN user<span class="token punctuation">.</span>name<span class="token punctuation">,</span> follower<span class="token punctuation">.</span>name
+<span class="token operator">+</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token operator">|</span> user<span class="token punctuation">.</span>name <span class="token operator">|</span> follower<span class="token punctuation">.</span>name <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token operator">|</span> <span class="token string">"John"</span>    <span class="token operator">|</span> <span class="token string">"Sara"</span>        <span class="token operator">|</span>
+<span class="token operator">|</span> <span class="token string">"Joe"</span>     <span class="token operator">|</span> <span class="token string">"Steve"</span>       <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">+</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这些是用于更新图形的子句示例：</p>
+<ul>
+<li><code>CREATE</code>（和<code>DELETE</code>）：创建（和删除）节点和关系。</li>
+<li><code>SET</code>（和<code>REMOVE</code>）：为属性设置值并在节点上添加标签 using<code>SET</code>和 use<code>REMOVE</code>删除它们。</li>
+<li><code>MERGE</code>：匹配现有的或创建新的节点和模式。这与独特的约束一起特别有用。</li>
+</ul>
+<h3 id="Neo4j-数据库和图表"><a href="#Neo4j-数据库和图表" class="headerlink" title="Neo4j 数据库和图表"></a><strong>Neo4j 数据库和图表</strong></h3><p>Cypher 查询是针对 Neo4j 数据库执行的，但通常适用于特定的图。重要的是要理解这些术语的含义，以及当图形不是数据库时的确切含义。</p>
+<p><strong><em>数据库管理系统</em></strong></p>
+<p>Neo4j 数据库管理系统能够包含和管理数据库中包含的多个图。客户端应用程序将连接到 DBMS 并针对它打开会话。客户端会话提供对 DBMS 中任何图形的访问。</p>
+<p><strong><em>图形</em></strong></p>
+<p>这是数据库中的数据模型。通常每个数据库中只有一个图，并且许多引用特定图的<strong><a href="https://neo4j.com/docs/cypher-manual/current/introduction/quering-updating-administering/" target="_blank" rel="noopener">管理命令使用数据库名称来执行此操作。</a></strong> 在会话中执行的 Cypher 查询可以声明它们适用于哪个图，或使用会话给出的默认值。 在 Neo4j Fabric 中，可以在同一个查询中引用多个图。</p>
+<p><strong><em>数据库</em></strong></p>
+<p>数据库是一种存储和检索机制，用于在磁盘和内存的定义空间中收集数据。</p>
+<p>大多数情况下，Cypher 查询是<strong><a href="https://neo4j.com/docs/cypher-manual/current/introduction/quering-updating-administering/" target="_blank" rel="noopener">读取或更新查询</a></strong>，这些查询是针对图运行的。还有一些适用于数据库或整个 DBMS 的管理命令。管理命令不能在连接到普通用户数据库的会话中运行，而是需要在连接到<em>系统</em>数据库的会话中运行。</p>
+<p><strong>1系统数据库和默认数据库</strong></p>
+<p>所有 Neo4j 服务器都包含一个名为 的内置数据库<code>system</code>，它的行为与所有其他数据库不同。数据库存储系统数据，<code>system</code>您无法对其执行图形查询。</p>
+<p>Neo4j 的全新安装包括两个数据库：</p>
+<ul>
+<li><code>system</code>上述系统数据库，包含有关 DBMS 和安全配置的元数据。</li>
+<li><code>neo4j</code>默认数据库，使用配置选项命名<code>dbms.default_database=neo4j</code>。</li>
+</ul>
+<h3 id="查询、更新和管理"><a href="#查询、更新和管理" class="headerlink" title="查询、更新和管理"></a><strong>查询、更新和管理</strong></h3><p><strong>更新查询的结构</strong></p>
+<p>如果您的查询只执行读取，Cypher 在您询问结果之前不会真正匹配模式。在更新查询中，语义是<em>所有</em>读取都将在执行任何写入之前完成。</p>
+<p>查询部分是隐式的唯一模式是当您首先读取然后写入时 - 任何其他顺序，您必须明确查询部分。使用<code>WITH</code>语句分隔部分。 <code>WITH</code>就像一个事件视界——它是一个计划和该计划的完成执行之间的障碍。</p>
+<p>当您想使用聚合数据进行过滤时，您必须将两个阅读查询部分链接在一起——第一个进行聚合，第二个过滤来自第一个的结果。</p>
+<pre class="line-numbers language-python"><code class="language-python">MATCH <span class="token punctuation">(</span>n <span class="token punctuation">{</span>name<span class="token punctuation">:</span> <span class="token string">'John'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token punctuation">:</span>FRIEND<span class="token punctuation">]</span><span class="token operator">-</span><span class="token punctuation">(</span>friend<span class="token punctuation">)</span>
+WITH n<span class="token punctuation">,</span> count<span class="token punctuation">(</span>friend<span class="token punctuation">)</span> AS friendsCount
+WHERE friendsCount <span class="token operator">></span> <span class="token number">3</span>
+RETURN n<span class="token punctuation">,</span> friendsCount<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>使用<code>WITH</code>，您可以指定聚合发生的方式，并且聚合必须在 Cypher 开始过滤之前完成。</p>
+<p>这是一个更新图表的示例，将聚合数据写入图表：</p>
+<pre class="line-numbers language-python"><code class="language-python">MATCH <span class="token punctuation">(</span>n <span class="token punctuation">{</span>name<span class="token punctuation">:</span> <span class="token string">'John'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token punctuation">:</span>FRIEND<span class="token punctuation">]</span><span class="token operator">-</span><span class="token punctuation">(</span>friend<span class="token punctuation">)</span>
+WITH n<span class="token punctuation">,</span> count<span class="token punctuation">(</span>friend<span class="token punctuation">)</span> AS friendsCount
+SET n<span class="token punctuation">.</span>friendsCount <span class="token operator">=</span> friendsCount
+RETURN n<span class="token punctuation">.</span>friendsCount<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>返回数据</strong></p>
+<p>任何查询都可以返回数据。如果查询只读取，它必须返回数据。如果读取查询不返回任何数据，则它没有任何用途，因此不是有效的 Cypher 查询。更新图表的查询不必返回任何内容，但它们可以。</p>
+<p>在查询的所有部分之后是最后一个<code>RETURN</code>子句。 <code>RETURN</code>不是任何查询部分的一部分——它是查询末尾的句点符号。该<code>RETURN</code>条款附带三个子条款：<code>SKIP</code>/<code>LIMIT</code>和<code>ORDER BY</code>.</p>
+<p>如果您从刚刚删除它们的查询中返回节点或关系 - 请注意，您持有的指针不再有效。</p>
+<h3 id="Cypher路径匹配"><a href="#Cypher路径匹配" class="headerlink" title="Cypher路径匹配"></a><strong>Cypher路径匹配</strong></h3><p><strong>Neo4j Cypher</strong>利用<strong>关系同构</strong>进行路径匹配，是减少结果集大小和防止无限遍历的一种非常有效的方法。</p>
+<p>在 Neo4j 中，所有的关系都有一个方向。但是，您可以在查询时拥有无向关系的概念。</p>
+<p>在可变长度模式表达式的情况下，进行约束检查尤为重要，否则可能会找到无限数量的结果记录。</p>
+<p>为了更好地理解这一点，让我们考虑一些替代方案：</p>
+<ul>
+<li><strong><em>同态：</em></strong>路径匹配没有限制。</li>
+<li><strong><em>节点同构：</em></strong>对于每个路径匹配记录，不能多次返回同一节点。</li>
+<li><strong><em>关系同构：</em></strong>对于每个路径匹配记录，不能多次返回相同的关系。Cypher 利用关系同构进行路径匹配。</li>
+</ul>
+<ol>
+<li><strong>同态</strong></li>
+</ol>
+<p>该图仅由两个节点<code>(a)</code>和组成<code>(b)</code>，由一个关系连接，<code>(a:Node)-[r:R]-&gt;(b:Node)</code>。</p>
+<p>如果查询正在寻找长度路径<code>n</code>并且不关心方向，<code>n</code>则将返回一个长度路径，一遍又一遍地重复两个节点。</p>
+<p>例如，查找所有具有 5 个关系的路径并且不关心关系方向：</p>
+<pre class="line-numbers language-python"><code class="language-python">MATCH p <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token operator">*</span><span class="token number">5</span><span class="token punctuation">]</span><span class="token operator">-</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+RETURN nodes<span class="token punctuation">(</span>p<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p><strong>如果使用同态</strong>，这将返回两个结果记录<code>[a,b,a,b,a,b]</code>，以及<code>[b,a,b,a,b,a]</code>。</p>
+<ol>
+<li><strong>节点同构</strong></li>
+</ol>
+<p>在另一个双节点示例中，例如<code>(a:Node)-[r:R]-&gt;(b:Node)</code>; 使用节点同构约束只能找到长度为 1 的路径。</p>
+<p>该图仅由两个节点<code>(a)</code>和组成<code>(b)</code>，由一个关系连接，<code>(a:Node)-[r:R]-&gt;(b:Node)</code>。</p>
+<pre class="line-numbers language-python"><code class="language-python">MATCH p <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token operator">*</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token operator">-</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+RETURN nodes<span class="token punctuation">(</span>p<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p><strong>如果使用节点同构</strong>，这将返回两个结果记录<code>[a, b]</code>，以及<code>[b, a]</code>。</p>
+<ol>
+<li><strong>关系同构</strong></li>
+</ol>
+<p>在另一个双节点示例中，例如<code>(a:Node)-[r:R]-&gt;(b:Node)</code>; 使用关系同构约束只能找到长度为 1 的路径。</p>
+<p>该图仅由两个节点<code>(a)</code>和组成<code>(b)</code>，由一个关系连接，<code>(a:Node)-[r:R]-&gt;(b:Node)</code>。</p>
+<pre class="line-numbers language-python"><code class="language-python">MATCH p <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token operator">*</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token operator">-</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+RETURN nodes<span class="token punctuation">(</span>p<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>这将返回两个结果记录<code>[a, b]</code>，以及<code>[b, a]</code>.</p>
+<ol>
+<li><strong>Cypher 路径匹配示例</strong></li>
+</ol>
+<p>Cypher 利用关系同构进行路径匹配。</p>
+<p>寻找用户的朋友的朋友不应该返回说用户。</p>
+<p>为了证明这一点，让我们创建一些节点和关系：</p>
+<p><strong>查询1，创建数据。</strong></p>
+<pre class="line-numbers language-python"><code class="language-python">CREATE
+  <span class="token punctuation">(</span>adam<span class="token punctuation">:</span>User <span class="token punctuation">{</span>name<span class="token punctuation">:</span> <span class="token string">'Adam'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token punctuation">(</span>pernilla<span class="token punctuation">:</span>User <span class="token punctuation">{</span>name<span class="token punctuation">:</span> <span class="token string">'Pernilla'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token punctuation">(</span>david<span class="token punctuation">:</span>User <span class="token punctuation">{</span>name<span class="token punctuation">:</span> <span class="token string">'David'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token punctuation">(</span>adam<span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token punctuation">:</span>FRIEND<span class="token punctuation">]</span><span class="token operator">-</span><span class="token operator">></span><span class="token punctuation">(</span>pernilla<span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token punctuation">(</span>pernilla<span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token punctuation">:</span>FRIEND<span class="token punctuation">]</span><span class="token operator">-</span><span class="token operator">></span><span class="token punctuation">(</span>david<span class="token punctuation">)</span>
+Nodes created<span class="token punctuation">:</span> <span class="token number">3</span>
+Relationships created<span class="token punctuation">:</span> <span class="token number">2</span>
+Properties set<span class="token punctuation">:</span> <span class="token number">3</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/development/image-20220501110656907.png" alt=""></p>
+<p>现在让我们寻找Adam朋友的朋友：</p>
+<p><strong>查询 2，亚当的朋友的朋友。</strong></p>
+<pre class="line-numbers language-python"><code class="language-python">MATCH <span class="token punctuation">(</span>user<span class="token punctuation">:</span>User <span class="token punctuation">{</span>name<span class="token punctuation">:</span> <span class="token string">'Adam'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span>r1<span class="token punctuation">:</span>FRIEND<span class="token punctuation">]</span><span class="token operator">-</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span>r2<span class="token punctuation">:</span>FRIEND<span class="token punctuation">]</span><span class="token operator">-</span><span class="token punctuation">(</span>friend_of_a_friend<span class="token punctuation">)</span>
+RETURN friend_of_a_friend<span class="token punctuation">.</span>name AS fofName
+<span class="token operator">+</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token operator">|</span> fofName <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token operator">|</span> <span class="token string">"David"</span> <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">+</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>在此查询中，Cypher 确保不返回模式关系<code>r1</code>并<code>r2</code>指向相同图形关系的匹配项。</p>
+<p>然而，这并不总是需要的。如果查询应该返回用户，则可以将匹配分布在多个<code>MATCH</code>子句中，如下所示：</p>
+<p><strong>查询 3，多个 MATCH 子句。</strong></p>
+<pre class="line-numbers language-python"><code class="language-python">MATCH <span class="token punctuation">(</span>user<span class="token punctuation">:</span>User <span class="token punctuation">{</span>name<span class="token punctuation">:</span> <span class="token string">'Adam'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span>r1<span class="token punctuation">:</span>FRIEND<span class="token punctuation">]</span><span class="token operator">-</span><span class="token punctuation">(</span>friend<span class="token punctuation">)</span>
+MATCH <span class="token punctuation">(</span>friend<span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span>r2<span class="token punctuation">:</span>FRIEND<span class="token punctuation">]</span><span class="token operator">-</span><span class="token punctuation">(</span>friend_of_a_friend<span class="token punctuation">)</span>
+RETURN friend_of_a_friend<span class="token punctuation">.</span>name AS fofName
+<span class="token operator">+</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token operator">|</span> fofName <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token operator">|</span> <span class="token string">"David"</span> <span class="token operator">|</span>
+<span class="token operator">|</span> <span class="token string">"Adam"</span>  <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">+</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>请注意，虽然下面的<strong>查询 4</strong>看起来与<strong>查询 3</strong>相似，但它实际上等同于<strong>查询 2</strong>。</p>
+<p><strong>查询 4，相当于查询 2。</strong></p>
+<pre class="line-numbers language-python"><code class="language-python">MATCH
+  <span class="token punctuation">(</span>user<span class="token punctuation">:</span>User <span class="token punctuation">{</span>name<span class="token punctuation">:</span> <span class="token string">'Adam'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span>r1<span class="token punctuation">:</span>FRIEND<span class="token punctuation">]</span><span class="token operator">-</span><span class="token punctuation">(</span>friend<span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token punctuation">(</span>friend<span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span>r2<span class="token punctuation">:</span>FRIEND<span class="token punctuation">]</span><span class="token operator">-</span><span class="token punctuation">(</span>friend_of_a_friend<span class="token punctuation">)</span>
+RETURN friend_of_a_friend<span class="token punctuation">.</span>name AS fofName<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>在这里，<code>MATCH</code>子句有一个带有两个路径的模式，而前面的查询有两个不同的模式。</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token operator">+</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token operator">|</span> fofName <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token operator">|</span> <span class="token string">"David"</span> <span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">+</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="Syntax句法"><a href="#Syntax句法" class="headerlink" title="Syntax句法"></a>Syntax<strong>句法</strong></h2><h3 id="值和类型"><a href="#值和类型" class="headerlink" title="值和类型"></a><strong>值和类型</strong></h3><p><strong><em>属性类型</em></strong></p>
+<p>Integer、Float、String、Boolean、Point、Date、Time、LocalTime、DateTime、LocalDateTime 和 Duration。</p>
+<p><strong><em>结构类型</em></strong></p>
+<p>Node, Relationship, and Path(节点、关系和路径)</p>
+<p><strong><em>复合类型</em></strong></p>
+<p>List和Map。</p>
+<h3 id="命名规则和建议"><a href="#命名规则和建议" class="headerlink" title="命名规则和建议"></a><strong>命名规则和建议</strong></h3><p><strong>命名规则</strong></p>
+<ul>
+<li>字母字符：<ul>
+<li>名称应以字母字符开头。</li>
+<li>这包括“非英语”字符，例如<code>å</code>, <code>ä</code>,<code>ö</code>等<code>ü</code>。</li>
+</ul>
+</li>
+<li>数字：<ul>
+<li>名称不应以数字开头。</li>
+<li>举例来说，<code>1first</code>不允许，而<code>first1</code>允许。</li>
+</ul>
+</li>
+<li>符号：<ul>
+<li>名称不应包含符号，下划线除外，如 中<code>my_variable</code>，或<code>$</code>作为表示<strong><a href="https://neo4j.com/docs/cypher-manual/current/syntax/parameters/" target="_blank" rel="noopener">参数</a></strong>的第一个字符，如 给出<code>$myParam</code>。</li>
+</ul>
+</li>
+<li>长度：<ul>
+<li>可以很长，最多为<code>65535</code>( <code>2^16 - 1</code>) 或<code>65534</code>字符，具体取决于 Neo4j 的版本。</li>
+</ul>
+</li>
+<li>区分大小写：<ul>
+<li>名称区分大小写，因此 ,<code>:PERSON</code>和<code>:Person</code>是<code>:person</code>三个不同的标签，<code>n</code>和<code>N</code>是两个不同的变量。</li>
+</ul>
+</li>
+<li>空白字符：<ul>
+<li>前导和尾随空白字符将被自动删除。例如，<code>MATCH ( a ) RETURN a</code>等价于<code>MATCH (a) RETURN a</code>。</li>
+</ul>
+</li>
+</ul>
+<p>非字母字符，包括数字、符号和空格字符，<strong>可以</strong>在名称中使用，但<strong>必须</strong>使用反引号进行转义。例如：<code>^n</code>、<code>1first</code>、<code>$$n</code>和<code>my variable has spaces</code>。数据库名称是一个例外，可能包含点而不需要转义。例如：命名数据库<code>foo.bar.baz</code>是完全有效的。</p>
+<p><strong>范围和命名空间规则</strong></p>
+<ul>
+<li>节点标签、关系类型和属性名称可以重用名称。<ul>
+<li>以下查询（带有<code>a</code>标签、类型和属性名称）是有效的：<code>CREATE (a:a {a: 'a'})-[r:a]-&gt;(b:a {a: 'a'})</code>.</li>
+</ul>
+</li>
+<li>节点和关系的变量不得在同一查询范围内重复使用名称。<ul>
+<li>以下查询无效，因为节点和关系都具有名称<code>a</code>: <code>CREATE (a)-[a]-&gt;(b)</code>。</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/loading.gif" data-original="../images/development/image-20220501110724193.png" alt=""></p>
+<h3 id="表达式"><a href="#表达式" class="headerlink" title="表达式"></a><strong>表达式</strong></h3><p><strong>一般表达</strong></p>
+<p>Cypher 中的大多数表达式计算<code>null</code>其内部表达式是否为<code>null</code>. 值得注意的例外是运算符<code>IS NULL</code>和<code>IS NOT NULL</code>.</p>
+<p>Cypher 中的表达式可以是：</p>
+<ul>
+<li>十进制（整数或浮点数）文字：<code>13</code>, <code>40000</code>,<code>3.14</code></li>
+<li>科学记数法的十进制（整数或浮点数）文字：<code>6.022E23</code>.</li>
+<li>十六进制整数文字（以 开头<code>0x</code>）：<code>0x13af</code>, <code>0xFC3A9</code>, <code>0x66eff</code>.</li>
+<li>八进制整数文字（以<code>0o</code>or开头<code>0</code>）：<code>0o1372</code>, <code>02127</code>, <code>0o5671</code>.</li>
+<li>字符串文字：<code>'Hello'</code>, <code>"World"</code>.</li>
+<li>布尔文字：<code>true</code>, <code>false</code>.</li>
+<li>一个变量：<code>n</code>, <code>x</code>, <code>rel</code>, <code>myFancyVariable</code>, <code>A name with weird stuff in it[]!</code>.</li>
+<li>一个属性：<code>n.prop</code>, <code>x.prop</code>, <code>rel.thisProperty</code>, <code>myFancyVariable.</code>(weird property name)``.</li>
+<li>动态属性：<code>n["prop"]</code>, <code>rel[n.city + n.zip]</code>, <code>map[coll[0]]</code>.</li>
+<li>一个参数：<code>$param</code>, <code>$0</code>.</li>
+<li>表达式列表：<code>['a', 'b']</code>, <code>[1, 2, 3]</code>, <code>['a', 2, n.property, $param]</code>, <code>[]</code>.</li>
+<li>一个函数调用：<code>length(p)</code>, <code>nodes(p)</code>.</li>
+<li>一个聚合函数：<code>avg(x.prop)</code>, <code>count(*)</code>.</li>
+<li>路径模式：<code>(a)-[r]-&gt;(b)</code>, <code>(a)-[r]-(b)</code>, <code>(a)--(b)</code>, <code>(a)--&gt;()&lt;--(b)</code>.</li>
+<li>运算符应用程序：<code>1 + 2</code>, <code>3 &lt; 4</code>.</li>
+<li>谓词表达式是返回真或假的表达式：<code>a.prop = 'Hello'</code>, <code>length(p) &gt; 10</code>, <code>a.name IS NOT NULL</code>.</li>
+<li>存在子查询是返回 true 或 false: 的表达式 <code>EXISTS { MATCH (n)-[r]→(p) WHERE p.name = 'Sven' }</code>。</li>
+<li>一个正则表达式：<code>a.name =~ 'Tim.*'</code>.</li>
+<li>区分大小写的字符串匹配表达式：<code>a.surname STARTS WITH 'Sven'</code>,<code>a.surname ENDS WITH 'son'</code>或<code>a.surname CONTAINS 'son'</code>.</li>
+<li>一个<code>CASE</code>表达。</li>
+</ul>
+<p><strong>关于字符串字面量的注意事项</strong></p>
+<p><img src="/images/loading.gif" data-original="../images/development/image-20220501110740512.png" alt=""></p>
+<p><strong><code>CASE</code>表达式</strong></p>
+<p>通用条件表达式可以使用<code>CASE</code>构造来表达。Cypher中存在两种变体<code>CASE</code>：简单形式，允许将表达式与多个值进行比较，以及通用形式，允许表达多个条件语句。</p>
+<p>如果您想在后续子句或语句中使用结果，则 CASE 只能用作 RETURN 或 WITH 的一部分。</p>
+<p><img src="/images/loading.gif" data-original="../images/development/image-20220501110753698.png" alt=""></p>
+<p><strong>**简单<code>CASE</code>形式：将表达式与多个值进行比较</strong></p>
+<p>计算表达式，并按顺序与<code>WHEN</code>子句进行比较，直到找到匹配项。如果未找到匹配项，<code>ELSE</code>则返回子句中的表达式。但是，如果没有<code>ELSE</code>case 并且没有找到匹配项，<code>null</code>则会返回。</p>
+<pre class="line-numbers language-python"><code class="language-python">CASE test
+  WHEN value THEN result
+  <span class="token punctuation">[</span>WHEN <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">]</span>
+  <span class="token punctuation">[</span>ELSE default<span class="token punctuation">]</span>
+END<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="/images/loading.gif" data-original="../images/development/image-20220501110809675.png" alt=""></p>
+<pre class="line-numbers language-python"><code class="language-python">MATCH <span class="token punctuation">(</span>n<span class="token punctuation">)</span>
+RETURN
+CASE n<span class="token punctuation">.</span>eyes
+  WHEN <span class="token string">'blue'</span>  THEN <span class="token number">1</span>
+  WHEN <span class="token string">'brown'</span> THEN <span class="token number">2</span>
+  ELSE <span class="token number">3</span>
+END AS result<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>**通用<code>CASE</code>形式：允许表达多个条件</strong></p>
+<p>谓词按顺序计算，直到<code>true</code>找到一个值，并使用结果值。如果未找到匹配项，<code>ELSE</code>则返回子句中的表达式。但是，如果没有<code>ELSE</code>大小写且未找到匹配项，<code>null</code>则将返回。</p>
+<pre class="line-numbers language-python"><code class="language-python">CASE
+  WHEN predicate THEN result
+  <span class="token punctuation">[</span>WHEN <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">]</span>
+  <span class="token punctuation">[</span>ELSE default<span class="token punctuation">]</span>
+END
+MATCH <span class="token punctuation">(</span>n<span class="token punctuation">)</span>
+RETURN
+CASE
+  WHEN n<span class="token punctuation">.</span>eyes <span class="token operator">=</span> <span class="token string">'blue'</span> THEN <span class="token number">1</span>
+  WHEN n<span class="token punctuation">.</span>age <span class="token operator">&lt;</span> <span class="token number">40</span>      THEN <span class="token number">2</span>
+  ELSE <span class="token number">3</span>
+END AS result<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>**区分何时使用简单形式和通用<code>CASE</code>形式</strong></p>
+<p>由于两种形式的语法非常相似，有时可能一开始就不清楚使用哪种形式。我们通过以下查询来说明这种情况，其中有一个期望<code>age_10_years_ago</code>是<code>-1</code>if <code>n.age</code>is <code>null</code>：</p>
+<pre class="line-numbers language-python"><code class="language-python">MATCH <span class="token punctuation">(</span>n<span class="token punctuation">)</span>
+RETURN n<span class="token punctuation">.</span>name<span class="token punctuation">,</span>
+CASE n<span class="token punctuation">.</span>age
+  WHEN n<span class="token punctuation">.</span>age IS NULL THEN <span class="token operator">-</span><span class="token number">1</span>
+  ELSE n<span class="token punctuation">.</span>age <span class="token operator">-</span> <span class="token number">10</span>
+END AS age_10_years_ago<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>但是，由于此查询是使用简单<code>CASE</code>形式编写的，而不是<code>age_10_years_ago</code>针对<code>-1</code>名为 的节点<code>Daniel</code>，它是<code>null</code>. <code>n.age</code>这是因为在和之间进行了比较<code>n.age IS NULL</code>。由于<code>n.age IS NULL</code>是布尔值，并且<code>n.age</code>是整数值，因此<code>WHEN n.age IS NULL THEN -1</code>永远不会采用分支。这导致<code>ELSE n.age - 10</code>分支被取而代之，返回<code>null</code>.</p>
+<p>正确的查询，如预期的那样，由以下通用<code>CASE</code>形式给出：</p>
+<pre class="line-numbers language-python"><code class="language-python">MATCH <span class="token punctuation">(</span>n<span class="token punctuation">)</span>
+RETURN n<span class="token punctuation">.</span>name<span class="token punctuation">,</span>
+CASE
+  WHEN n<span class="token punctuation">.</span>age IS NULL THEN <span class="token operator">-</span><span class="token number">1</span>
+  ELSE n<span class="token punctuation">.</span>age <span class="token operator">-</span> <span class="token number">10</span>
+END AS age_10_years_ago<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>**<code>CASE</code>在随后的子句或语句中使用结果</strong></p>
+<p>您可以使用 的结果<code>CASE</code>来设置节点或关系的属性。例如，您可以为表达式选择的节点设置属性，而不是直接指定节点：</p>
+<pre class="line-numbers language-python"><code class="language-python">MATCH <span class="token punctuation">(</span>n<span class="token punctuation">)</span>
+WITH n<span class="token punctuation">,</span>
+CASE n<span class="token punctuation">.</span>eyes
+  WHEN <span class="token string">'blue'</span>  THEN <span class="token number">1</span>
+  WHEN <span class="token string">'brown'</span> THEN <span class="token number">2</span>
+  ELSE <span class="token number">3</span>
+END AS colourCode
+SET n<span class="token punctuation">.</span>colourCode <span class="token operator">=</span> colourCode<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h3><p>当您引用模式或查询的某些部分时，您可以通过命名它们来实现。您给不同部分的名称称为变量。</p>
+<p>在这个例子中：</p>
+<pre class="line-numbers language-python"><code class="language-python">MATCH <span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">></span><span class="token punctuation">(</span>b<span class="token punctuation">)</span>
+RETURN b<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>变量是<code>n</code>和<code>b</code>。</p>
+<h3 id="保留关键字"><a href="#保留关键字" class="headerlink" title="保留关键字"></a><strong>保留关键字</strong></h3><p>保留关键字是在 Cypher 中具有特殊含义的词。保留关键字的列表按从中提取它们的类别进行分组。除此之外，还有许多关键字保留供将来使用。</p>
+<p>在以下情况下，不允许将保留关键字用作标识符：</p>
+<ul>
+<li>变量</li>
+<li>函数名称</li>
+<li>参数</li>
+</ul>
+<p><strong>1. Clauses</strong></p>
+<ul>
+<li><code>CALL</code></li>
+<li><code>CREATE</code></li>
+<li><code>DELETE</code></li>
+<li><code>DETACH</code></li>
+<li><code>EXISTS</code></li>
+<li><code>FOREACH</code></li>
+<li><code>LOAD</code></li>
+<li><code>MATCH</code></li>
+<li><code>MERGE</code></li>
+<li><code>OPTIONAL</code></li>
+<li><code>REMOVE</code></li>
+<li><code>RETURN</code></li>
+<li><code>SET</code></li>
+<li><code>START</code></li>
+<li><code>UNION</code></li>
+<li><code>UNWIND</code></li>
+<li><code>WITH</code></li>
+</ul>
+<p><strong>2. Subclauses</strong></p>
+<ul>
+<li><code>LIMIT</code></li>
+<li><code>ORDER</code></li>
+<li><code>SKIP</code></li>
+<li><code>WHERE</code></li>
+<li><code>YIELD</code></li>
+</ul>
+<p><strong>3. Modifiers</strong></p>
+<ul>
+<li><code>ASC</code></li>
+<li><code>ASCENDING</code></li>
+<li><code>ASSERT</code></li>
+<li><code>BY</code></li>
+<li><code>CSV</code></li>
+<li><code>DESC</code></li>
+<li><code>DESCENDING</code></li>
+<li><code>ON</code></li>
+</ul>
+<p><strong>4. Expressions</strong></p>
+<ul>
+<li><code>ALL</code></li>
+<li><code>CASE</code></li>
+<li><code>ELSE</code></li>
+<li><code>END</code></li>
+<li><code>THEN</code></li>
+<li><code>WHEN</code></li>
+</ul>
+<p><strong>5. Operators</strong></p>
+<ul>
+<li><code>AND</code></li>
+<li><code>AS</code></li>
+<li><code>CONTAINS</code></li>
+<li><code>DISTINCT</code></li>
+<li><code>ENDS</code></li>
+<li><code>IN</code></li>
+<li><code>IS</code></li>
+<li><code>NOT</code></li>
+<li><code>OR</code></li>
+<li><code>STARTS</code></li>
+<li><code>XOR</code></li>
+</ul>
+<p><strong>6. Schema</strong></p>
+<ul>
+<li><code>CONSTRAINT</code></li>
+<li><code>CREATE</code></li>
+<li><code>DROP</code></li>
+<li><code>EXISTS</code></li>
+<li><code>INDEX</code></li>
+<li><code>NODE</code></li>
+<li><code>KEY</code></li>
+<li><code>UNIQUE</code></li>
+</ul>
+<p><strong>7. Hints</strong></p>
+<ul>
+<li><code>INDEX</code></li>
+<li><code>JOIN</code></li>
+<li><code>PERIODIC</code></li>
+<li><code>COMMIT</code></li>
+<li><code>SCAN</code></li>
+<li><code>USING</code></li>
+</ul>
+<p><strong>8. Literals</strong></p>
+<ul>
+<li><code>false</code></li>
+<li><code>null</code></li>
+<li><code>true</code></li>
+</ul>
+<p><strong>9. Reserved for future use</strong></p>
+<ul>
+<li><code>ADD</code></li>
+<li><code>DO</code></li>
+<li><code>FOR</code></li>
+<li><code>MANDATORY</code></li>
+<li><code>OF</code></li>
+<li><code>REQUIRE</code></li>
+<li><code>SCALAR</code></li>
+</ul>
+<h3 id="Comments注释"><a href="#Comments注释" class="headerlink" title="Comments注释"></a><strong>Comments注释</strong></h3><p>注释以双斜杠 ( ) 开头<code>//</code>并一直到行尾。评论不会执行，它们是供人类阅读的。</p>
+<h3 id="Parameters参数"><a href="#Parameters参数" class="headerlink" title="Parameters参数"></a><strong>Parameters</strong>参数</h3><h3 id="Operators操作"><a href="#Operators操作" class="headerlink" title="Operators操作"></a><strong>Operators</strong>操作</h3><h3 id="Pattern模式"><a href="#Pattern模式" class="headerlink" title="Pattern模式"></a>Pattern模式</h3><p>模式和模式匹配是 Cypher 的核心，因此要有效使用 Cypher 需要对模式有很好的理解。</p>
+<p>使用模式，您可以描述您正在寻找的数据的形状。例如，在<code>MATCH</code>子句中，您使用模式描述形状，Cypher 将找出如何为您获取该数据。</p>
+<p>该模式使用一种非常类似于通常在白板上绘制属性图数据形状的形式来描述数据：通常用圆圈（表示节点）和它们之间的箭头来表示关系。</p>
+<p>模式出现在 Cypher 中的多个位置：在<code>MATCH</code>,<code>CREATE</code>和<code>MERGE</code>子句中，以及在模式表达式中。</p>
+<ol>
+<li><strong>节点模式</strong></li>
+</ol>
+<p>可以在模式中描述的最简单的“形状”是节点。使用一对括号来描述节点，并且通常被赋予一个名称。例如：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>这个简单的模式描述了一个节点，并使用变量命名该节点<code>a</code>。****</p>
+<ol>
+<li><strong>相关节点的模式</strong></li>
+</ol>
+<p>更强大的构造是描述多个节点和它们之间的关系的模式。Cypher 模式通过在两个节点之间使用箭头来描述关系。例如：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">></span><span class="token punctuation">(</span>b<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>此模式描述了一个非常简单的数据形状：两个节点，以及从一个节点到另一个节点的单一关系。在这个例子中，两个节点都分别命名为<code>a</code>和<code>b</code>，关系是“有向的”：从<code>a</code>到<code>b</code>。</p>
+<p>这种描述节点和关系的方式可以扩展到覆盖任意数量的节点和它们之间的关系，例如：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">></span><span class="token punctuation">(</span>b<span class="token punctuation">)</span><span class="token operator">&lt;</span><span class="token operator">-</span><span class="token operator">-</span><span class="token punctuation">(</span>c<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>这样一系列连接的节点和关系称为“路径”。</p>
+<p>请注意，仅当需要再次引用同一节点时，才需要在这些模式中命名节点，无论是在模式的后期还是在 Cypher 查询的其他地方。如果这不是必需的，则可以省略名称，如下所示：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">&lt;</span><span class="token operator">-</span><span class="token operator">-</span><span class="token punctuation">(</span>c<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ol>
+<li><strong>标签图案</strong></li>
+</ol>
+<p>除了简单地描述模式中节点的形状外，还可以描述属性。模式中可以描述的最简单的属性是节点必须具有的标签。例如：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token punctuation">(</span>a<span class="token punctuation">:</span>User<span class="token punctuation">)</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">></span><span class="token punctuation">(</span>b<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>还可以描述具有多个标签的节点：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token punctuation">(</span>a<span class="token punctuation">:</span>User<span class="token punctuation">:</span>Admin<span class="token punctuation">)</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">></span><span class="token punctuation">(</span>b<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ol>
+<li><strong>指定属性</strong></li>
+</ol>
+<p>节点和关系是图中的基本结构。Neo4j 使用这两个属性来支持更丰富的模型。</p>
+<p>属性可以使用 map-construct 以模式表示：围绕多个键-表达式对的花括号，用逗号分隔。例如，具有两个属性的节点看起来像：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token punctuation">(</span>a <span class="token punctuation">{</span>name<span class="token punctuation">:</span> <span class="token string">'Andy'</span><span class="token punctuation">,</span> sport<span class="token punctuation">:</span> <span class="token string">'Brazilian Ju-Jitsu'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>与期望的关系由下式给出：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token punctuation">{</span>blocked<span class="token punctuation">:</span> false<span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token operator">-</span><span class="token operator">></span><span class="token punctuation">(</span>b<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>当属性出现在模式中时，它们会为数据的形状添加额外的约束。在<code>CREATE</code>子句的情况下，将在新创建的节点和关系中设置属性。在<code>MERGE</code>子句的情况下，属性将用作任何现有数据必须具有的形状的附加约束（指定的属性必须与图中的任何现有数据完全匹配）。如果没有找到匹配的数据，则<code>MERGE</code>行为类似<code>CREATE</code>，并将在新创建的节点和关系中设置属性。</p>
+<p>请注意，提供给的模式<code>CREATE</code>可能使用单个参数来指定属性，例如：<code>CREATE (node $paramName)</code>. 这对于其他子句中使用的模式是不可能的，因为 Cypher 需要在编译查询时知道属性名称，以便可以有效地进行匹配。</p>
+<ol>
+<li><strong>关系模式</strong></li>
+</ol>
+<p>描述关系的最简单方法是使用两个节点之间的箭头，如前面的示例所示。使用这种技术，您可以描述应该存在的关系及其方向性。如果不关心关系的方向，可以省略箭头，例如：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token operator">-</span><span class="token operator">-</span><span class="token punctuation">(</span>b<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>与节点一样，关系也可以被命名。在这种情况下，使用一对方括号来分隔箭头，并将变量放置在它们之间。例如：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span>r<span class="token punctuation">]</span><span class="token operator">-</span><span class="token operator">></span><span class="token punctuation">(</span>b<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>就像节点上的标签一样，关系也可以有类型。要描述与特定类型的关系，您可以按如下方式指定：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span>r<span class="token punctuation">:</span>REL_TYPE<span class="token punctuation">]</span><span class="token operator">-</span><span class="token operator">></span><span class="token punctuation">(</span>b<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>与标签不同，关系只能有一种类型。但是，如果我们想描述一些数据，使得关系可以具有一组类型中的任何一种，那么它们都可以在模式中列出，用管道符号分隔它们，<code>|</code>如下所示：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span>r<span class="token punctuation">:</span>TYPE1<span class="token operator">|</span>TYPE2<span class="token punctuation">]</span><span class="token operator">-</span><span class="token operator">></span><span class="token punctuation">(</span>b<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>请注意，这种形式的模式只能用于描述现有数据（即，当使用带有<code>MATCH</code>或作为表达式的模式时）。它不适用于<code>CREATE</code>or <code>MERGE</code>，因为不可能创建具有多种类型的关系。</p>
+<p>与节点一样，关系的名称总是可以省略，例如：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token punctuation">:</span>REL_TYPE<span class="token punctuation">]</span><span class="token operator">-</span><span class="token operator">></span><span class="token punctuation">(</span>b<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ol>
+<li><strong>变长模式匹配</strong></li>
+</ol>
+<p>不是使用模式中的许多节点和关系描述的序列来描述长路径，而是可以通过在模式的关系描述中指定长度来描述许多关系（和中间节点）。例如：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token operator">*</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token operator">-</span><span class="token operator">></span><span class="token punctuation">(</span>b<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>这描述了三个节点和两个关系的图，都在一个路径中（长度为 2 的路径）。这相当于：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">></span><span class="token punctuation">(</span>b<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>还可以指定长度范围：这种关系模式称为“可变长度关系”。例如：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token operator">*</span><span class="token number">3</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token number">5</span><span class="token punctuation">]</span><span class="token operator">-</span><span class="token operator">></span><span class="token punctuation">(</span>b<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>最小长度为 3，最大长度为 5。它描述了一个由 4 个节点和 3 个关系、5 个节点和 4 个关系或 6 个节点和 5 个关系组成的图，所有这些都在一条路径中连接在一起。</p>
+<p>任何一个边界都可以省略。例如，要描述长度为 3 或更多的路径，请使用：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token operator">*</span><span class="token number">3</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">]</span><span class="token operator">-</span><span class="token operator">></span><span class="token punctuation">(</span>b<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>要描述长度为 5 或更短的路径，请使用：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token operator">*</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token number">5</span><span class="token punctuation">]</span><span class="token operator">-</span><span class="token operator">></span><span class="token punctuation">(</span>b<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>省略两个边界等效于指定最小值 1，允许描述任何正长度的路径：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token operator">*</span><span class="token punctuation">]</span><span class="token operator">-</span><span class="token operator">></span><span class="token punctuation">(</span>b<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>作为一个简单的例子，让我们看下面的图表和查询：</p>
+<p><img src="/images/loading.gif" data-original="../images/development/image-20220501110833141.png" alt=""></p>
+<pre class="line-numbers language-python"><code class="language-python">MATCH <span class="token punctuation">(</span>me<span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token punctuation">:</span>KNOWS<span class="token operator">*</span><span class="token number">1</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token operator">-</span><span class="token punctuation">(</span>remote_friend<span class="token punctuation">)</span>
+WHERE me<span class="token punctuation">.</span>name <span class="token operator">=</span> <span class="token string">'Filipa'</span>
+RETURN remote_friend<span class="token punctuation">.</span>name
+remote_friend<span class="token punctuation">.</span>name
+<span class="token string">"Dilshad"</span>
+<span class="token string">"Anders"</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>此查询在图形中查找形状符合模式的数据：特别是一个节点（具有名称属性<strong>‘Filipa’</strong>），然后是<code>KNOWS</code>一两跳之外的相关节点。这是寻找一级和二级朋友的典型例子。</p>
+<ol>
+<li><strong>分配给路径变量</strong></li>
+</ol>
+<p>如上所述，一系列连接的节点和关系称为“路径”。Cypher 允许使用标识符命名路径，例如：</p>
+<pre class="line-numbers language-python"><code class="language-python">p <span class="token operator">=</span> <span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token operator">*</span><span class="token number">3</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token number">5</span><span class="token punctuation">]</span><span class="token operator">-</span><span class="token operator">></span><span class="token punctuation">(</span>b<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>您可以在<code>MATCH</code>,<code>CREATE</code>和中执行此操作<code>MERGE</code>，但在将模式用作表达式时则不行。</p>
+<h3 id="Temporal-Date-Time-values"><a href="#Temporal-Date-Time-values" class="headerlink" title="Temporal (Date/Time) values"></a><strong>Temporal (Date/Time) values</strong></h3><h3 id="Lists"><a href="#Lists" class="headerlink" title="Lists"></a><strong>Lists</strong></h3><h3 id="Maps"><a href="#Maps" class="headerlink" title="Maps"></a>Maps</h3><h3 id="Working-with-null"><a href="#Working-with-null" class="headerlink" title="Working with null"></a><strong>Working with <code>null</code></strong></h3><h2 id="Clauses从句"><a href="#Clauses从句" class="headerlink" title="Clauses从句"></a><strong>Clauses从句</strong></h2><ul>
+<li><p>MATCH</p>
+</li>
+<li><p>OPTIONAL MATCH</p>
+<ul>
+<li><code>OPTIONAL MATCH</code>将模式与您的图形数据库匹配，就像这样<code>MATCH</code>做一样。不同之处在于，如果没有找到匹配项，<code>OPTIONAL MATCH</code>将使用 a<code>null</code>来表示模式的缺失部分。 <code>OPTIONAL MATCH</code>可以被认为是 SQL 中外连接的 Cypher 等价物。</li>
+</ul>
+</li>
+<li><p>RETURN</p>
+</li>
+<li><p>WITH</p>
+<ul>
+<li>使用<code>WITH</code>，您可以在将输出传递到以下查询部分之前对其进行操作。可以对结果集中的条目的形状和/或数量进行操作。一种常见用法<code>WITH</code>是限制传递给其他<code>MATCH</code>子句的条目数。通过组合<code>ORDER BY</code>和<code>LIMIT</code>，可以通过某些标准获得前 X 个条目，然后从图中引入额外的数据。</li>
+</ul>
+</li>
+<li><p>UNWIND</p>
+<ul>
+<li>使用<code>UNWIND</code>，您可以将任何列表转换回单独的行。这些列表可以是传入的参数、先前<code>collect</code>编辑的结果或其他列表表达式。unwind 的一种常见用法是创建不同的列表。另一种方法是从提供给查询的参数列表中创建数据。<code>UNWIND</code>要求您为内部值指定一个新名称。</li>
+</ul>
+</li>
+<li><p><strong>WHERE</strong></p>
+</li>
+<li><p><strong>ORDER BY</strong></p>
+</li>
+<li><p><strong>SKIP</strong></p>
+<ul>
+<li>通过使用<code>SKIP</code>，结果集将从顶部开始修剪。请注意，除非查询指定<code>ORDER BY</code>子句，否则不保证结果的顺序。 <code>SKIP</code>接受任何计算结果为正整数的表达式 - 但是该表达式不能引用节点或关系。</li>
+<li>要返回结果的子集，从第四个结果开始，使用以下语法：</li>
+</ul>
+<pre class="line-numbers language-python"><code class="language-python">MATCH <span class="token punctuation">(</span>n<span class="token punctuation">)</span>
+RETURN n<span class="token punctuation">.</span>name
+ORDER BY n<span class="token punctuation">.</span>name
+SKIP <span class="token number">3</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li>返回中间两行</li>
+</ul>
+<pre class="line-numbers language-python"><code class="language-python">MATCH <span class="token punctuation">(</span>n<span class="token punctuation">)</span>
+RETURN n<span class="token punctuation">.</span>name
+ORDER BY n<span class="token punctuation">.</span>name
+SKIP <span class="token number">1</span>
+LIMIT <span class="token number">2</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p><strong>LIMIT</strong></p>
+</li>
+<li><p><strong>CREATE</strong></p>
+</li>
+<li><p><strong>DELETE</strong></p>
+</li>
+<li><p><strong>SET</strong></p>
+</li>
+<li><p><strong>REMOVE</strong></p>
+</li>
+<li><p><strong>FOREACH</strong></p>
+<ul>
+<li>列表和路径是 Cypher 中的关键概念。该<code>FOREACH</code>子句可用于更新数据，例如对路径中的元素或聚合创建的列表执行更新命令。</li>
+<li>括号内的变量上下文与<code>FOREACH</code>括号外的上下文是分开的。这意味着如果您<code>CREATE</code>是 a 中的节点变量<code>FOREACH</code>，您将<em>无法</em>在 foreach 语句之外使用它，除非您匹配找到它。</li>
+<li>在<code>FOREACH</code>括号内，您可以执行任何更新命令 -  <code>SET</code>、<code>REMOVE</code>、<code>CREATE</code>、<code>MERGE</code>、<code>DELETE</code>和<code>FOREACH</code>。</li>
+<li>如果要为<code>MATCH</code>列表中的每个元素执行附加操作，则该<strong><code>[UNWIND](&lt;https://neo4j.com/docs/cypher-manual/current/clauses/unwind/&gt;)</code></strong>子句将是更合适的命令。</li>
+</ul>
+<pre class="line-numbers language-python"><code class="language-python">MATCH p<span class="token operator">=</span><span class="token punctuation">(</span>start<span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token operator">*</span><span class="token punctuation">]</span><span class="token operator">-</span><span class="token operator">></span><span class="token punctuation">(</span>finish<span class="token punctuation">)</span>
+WHERE start<span class="token punctuation">.</span>name <span class="token operator">=</span> <span class="token string">'A'</span> AND finish<span class="token punctuation">.</span>name <span class="token operator">=</span> <span class="token string">'D'</span>
+FOREACH <span class="token punctuation">(</span>n IN nodes<span class="token punctuation">(</span>p<span class="token punctuation">)</span> <span class="token operator">|</span> SET n<span class="token punctuation">.</span>marked <span class="token operator">=</span> true<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>MERGE</p>
+</li>
+<li><p><strong>CALL {} (subquery)</strong></p>
+<ul>
+<li>类似于函数</li>
+</ul>
+</li>
+<li><p><strong>CALL procedure</strong></p>
+</li>
+<li><p><strong>UNION</strong></p>
+</li>
+<li><p><strong>USE</strong></p>
+</li>
+<li><p><strong>LOAD CSV</strong></p>
+<ul>
+<li>从 CSV 文件导入数据，要将数据从 CSV 文件导入 Neo4j，您可以使用<code>LOAD CSV</code>将数据放入查询中。然后使用 Cypher 的正常更新子句将其写入数据库。</li>
+</ul>
+<p><strong>artists.csv：</strong></p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token number">1</span><span class="token punctuation">,</span>ABBA<span class="token punctuation">,</span><span class="token number">1992</span>
+<span class="token number">2</span><span class="token punctuation">,</span>Roxette<span class="token punctuation">,</span><span class="token number">1986</span>
+<span class="token number">3</span><span class="token punctuation">,</span>Europe<span class="token punctuation">,</span><span class="token number">1979</span>
+<span class="token number">4</span><span class="token punctuation">,</span>The Cardigans<span class="token punctuation">,</span><span class="token number">1992</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-python"><code class="language-python">LOAD CSV FROM <span class="token string">'file:///artists.csv'</span> AS line
+CREATE <span class="token punctuation">(</span><span class="token punctuation">:</span>Artist <span class="token punctuation">{</span>name<span class="token punctuation">:</span> line<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> year<span class="token punctuation">:</span> toInteger<span class="token punctuation">(</span>line<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<ul>
+<li><strong>Import data from a CSV file containing headers</strong></li>
+</ul>
+<p><strong>artists-with-headers.csv:</strong></p>
+<pre class="line-numbers language-python"><code class="language-python">Id<span class="token punctuation">,</span>Name<span class="token punctuation">,</span>Year
+<span class="token number">1</span><span class="token punctuation">,</span>ABBA<span class="token punctuation">,</span><span class="token number">1992</span>
+<span class="token number">2</span><span class="token punctuation">,</span>Roxette<span class="token punctuation">,</span><span class="token number">1986</span>
+<span class="token number">3</span><span class="token punctuation">,</span>Europe<span class="token punctuation">,</span><span class="token number">1979</span>
+<span class="token number">4</span><span class="token punctuation">,</span>The Cardigans<span class="token punctuation">,</span><span class="token number">1992</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-python"><code class="language-python">LOAD CSV WITH HEADERS FROM <span class="token string">'file:///artists-with-headers.csv'</span> AS line
+CREATE <span class="token punctuation">(</span><span class="token punctuation">:</span>Artist <span class="token punctuation">{</span>name<span class="token punctuation">:</span> line<span class="token punctuation">.</span>Name<span class="token punctuation">,</span> year<span class="token punctuation">:</span> toInteger<span class="token punctuation">(</span>line<span class="token punctuation">.</span>Year<span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<ul>
+<li><strong>使用自定义字段分隔符从 CSV 文件导入数据</strong></li>
+</ul>
+<p>artists-fieldterminator.csv:</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token number">1</span><span class="token punctuation">;</span>ABBA<span class="token punctuation">;</span><span class="token number">1992</span>
+<span class="token number">2</span><span class="token punctuation">;</span>Roxette<span class="token punctuation">;</span><span class="token number">1986</span>
+<span class="token number">3</span><span class="token punctuation">;</span>Europe<span class="token punctuation">;</span><span class="token number">1979</span>
+<span class="token number">4</span><span class="token punctuation">;</span>The Cardigans<span class="token punctuation">;</span><span class="token number">1992</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-python"><code class="language-python">LOAD CSV FROM <span class="token string">'file:///artists-fieldterminator.csv'</span> AS line FIELDTERMINATOR <span class="token string">';'</span>
+CREATE <span class="token punctuation">(</span><span class="token punctuation">:</span>Artist <span class="token punctuation">{</span>name<span class="token punctuation">:</span> line<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> year<span class="token punctuation">:</span> toInteger<span class="token punctuation">(</span>line<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<ul>
+<li><strong>导入大量数据</strong></li>
+</ul>
+<p>如果 CSV 文件包含大量行（接近数十万或数百万），<code>USING PERIODIC COMMIT</code>可用于指示 Neo4j 在多行后执行提交。这减少了事务状态的内存开销。默认情况下，提交每 1000 行发生一次。</p>
+<pre class="line-numbers language-python"><code class="language-python">USING PERIODIC COMMIT LOAD CSV FROM <span class="token string">'file:///artists.csv'</span> AS line
+CREATE <span class="token punctuation">(</span><span class="token punctuation">:</span>Artist <span class="token punctuation">{</span>name<span class="token punctuation">:</span> line<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> year<span class="token punctuation">:</span> toInteger<span class="token punctuation">(</span>line<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<ul>
+<li><strong>设置周期性提交的速率</strong></li>
+</ul>
+<pre class="line-numbers language-python"><code class="language-python">USING PERIODIC COMMIT <span class="token number">500</span> LOAD CSV FROM <span class="token string">'file:///artists.csv'</span> AS line
+CREATE <span class="token punctuation">(</span><span class="token punctuation">:</span>Artist <span class="token punctuation">{</span>name<span class="token punctuation">:</span> line<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> year<span class="token punctuation">:</span> toInteger<span class="token punctuation">(</span>line<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<ul>
+<li><strong>将 linenumber() 与 LOAD CSV 一起使用</strong></li>
+</ul>
+<pre class="line-numbers language-python"><code class="language-python">LOAD CSV FROM <span class="token string">'file:///artists.csv'</span> AS line
+RETURN linenumber<span class="token punctuation">(</span><span class="token punctuation">)</span> AS number<span class="token punctuation">,</span> line<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<ul>
+<li><strong>将 file() 与 LOAD CSV 一起使用</strong></li>
+</ul>
+<pre class="line-numbers language-python"><code class="language-python">LOAD CSV FROM <span class="token string">'file:///artists.csv'</span> AS line
+RETURN DISTINCT file<span class="token punctuation">(</span><span class="token punctuation">)</span> AS path<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+</li>
+<li><p><strong>SHOW FUNCTIONS</strong></p>
+</li>
+<li><p><strong>SHOW PROCEDURES</strong></p>
+</li>
+<li><p><strong>SHOW TRANSACTIONS</strong></p>
+</li>
+</ul>
+<h2 id="Functions函数"><a href="#Functions函数" class="headerlink" title="Functions函数"></a>Functions函数</h2><h2 id="Indexes-for-search-performance"><a href="#Indexes-for-search-performance" class="headerlink" title="Indexes for search performance"></a><strong>Indexes for search performance</strong></h2><h2 id="Full-text-search-index"><a href="#Full-text-search-index" class="headerlink" title="Full-text search index"></a><strong>Full-text search index</strong></h2><h2 id="Constraints"><a href="#Constraints" class="headerlink" title="Constraints"></a><strong>Constraints</strong></h2><h2 id="Database-management"><a href="#Database-management" class="headerlink" title="Database management"></a><strong>Database management</strong></h2><h2 id="Access-control"><a href="#Access-control" class="headerlink" title="Access control"></a><strong>Access control</strong></h2><h2 id="Query-tuning"><a href="#Query-tuning" class="headerlink" title="Query tuning"></a><strong>Query tuning</strong></h2><h2 id="Execution-plans"><a href="#Execution-plans" class="headerlink" title="Execution plans"></a><strong>Execution plans</strong></h2><script>
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return; }
+            const img = document.createElement('img');
+            img.style = 'display:none !important;';
+            img.src = el.dataset.src;
+            img.addEventListener('error', () => {
+              img.remove();
+              el.style.color = 'inherit';
+              el.style.backgroundImage = 'none';
+              el.style.background = 'none';
+            });
+            img.addEventListener('load', () => {
+              img.remove();
+            });
+            document.body.appendChild(img);
+          });
+      </script>
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://jackhcc.github.io" rel="external nofollow noreferrer">杰克成</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://jackhcc.github.io/posts/neo4j.html">https://jackhcc.github.io/posts/neo4j.html</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="https://jackhcc.github.io" target="_blank">杰克成</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/Neo4j/">
+                                    <span class="chip bg-color">Neo4j</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/reward/aliqr.png" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/reward/wxqr.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+            
+        </div>
+    </div>
+
+    
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/gitalk/gitalk.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/css/my-gitalk.css">
+
+<div class="card gitalk-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="gitalk-container" class="card-content"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/gitalk/gitalk.min.js"></script>
+<script>
+    let gitalk = new Gitalk({
+        clientID: '3821a0bbb773038a51fc',
+        clientSecret: '4b30b507d67ec5497ec0e77f43f80cb3e0d7dd3a',
+        repo: 'JackHCC.github.io',
+        owner: 'JackHCC',
+        admin: "JackHCC",
+        id: '2022-04-30T11-03-13',
+        distractionFreeMode: false  // Facebook-like distraction free mode
+    });
+
+    gitalk.render('gitalk-container');
+</script>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/posts/transformers-lib.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/0.jpg" class="responsive-img" alt="Transformers包详解">
+                        
+                        <span class="card-title">Transformers包详解</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            Transformers实践手册
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2022-05-01
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Transformers/" class="post-category">
+                                    Transformers
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Deep-Learning/">
+                        <span class="chip bg-color">Deep Learning</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/posts/blog-python29.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/images/loading.gif" data-original="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/medias/featureimages/17.jpg" class="responsive-img" alt="Python-Re详解">
+                        
+                        <span class="card-title">Python-Re详解</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            Python正则模块基本使用
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-04-28
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Python/" class="post-category">
+                                    Python
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Re/">
+                        <span class="chip bg-color">Re</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/codeBlock/codeShrink.js"></script>
+
+
+<!-- 代码块折行 -->
+
+<style type="text/css">
+code[class*="language-"], pre[class*="language-"] { white-space: pre !important; }
+</style>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('4'),
+            headingSelector: 'h1, h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h1, h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+    <footer class="page-footer bg-color">
+    <div class="container row center-align" style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            <span id="year">2020</span>
+            <a href="https://jackhcc.github.io" target="_blank">杰克成</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                class="white-color">3590.4k</span>&nbsp;字
+            
+            
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;人
+            </span>
+            
+            <br>
+            
+            <span id="sitetime">载入运行时间...</span>
+            <script>
+                function siteTime() {
+                    var seconds = 1000;
+                    var minutes = seconds * 60;
+                    var hours = minutes * 60;
+                    var days = hours * 24;
+                    var years = days * 365;
+                    var today = new Date();
+                    var startYear = "2020";
+                    var startMonth = "2";
+                    var startDate = "27";
+                    var startHour = "6";
+                    var startMinute = "30";
+                    var startSecond = "0";
+                    var todayYear = today.getFullYear();
+                    var todayMonth = today.getMonth() + 1;
+                    var todayDate = today.getDate();
+                    var todayHour = today.getHours();
+                    var todayMinute = today.getMinutes();
+                    var todaySecond = today.getSeconds();
+                    var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                    var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                    var diff = t2 - t1;
+                    var diffYears = Math.floor(diff / years);
+                    var diffDays = Math.floor((diff / days) - diffYears * 365);
+                    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+                    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) /
+                        minutes);
+                    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours -
+                        diffMinutes * minutes) / seconds);
+                    if (startYear == todayYear) {
+                        document.getElementById("year").innerHTML = todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffDays + " 天 " + diffHours +
+                            " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    } else {
+                        document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffYears + " 年 " + diffDays +
+                            " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    }
+                }
+                setInterval(siteTime, 1000);
+            </script>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/JackHCC" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:jackcc0701@163.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+    <a href="https://www.facebook.com/profile.php?id=100046343443643" class="tooltipped" target="_blank" data-tooltip="关注我的Facebook: https://www.facebook.com/profile.php?id=100046343443643" data-position="top" data-delay="50">
+        <i class="fab fa-facebook-f"></i>
+    </a>
+
+
+
+    <a href="https://twitter.com/JackChe66021834" class="tooltipped" target="_blank" data-tooltip="关注我的Twitter: https://twitter.com/JackChe66021834" data-position="top" data-delay="50">
+        <i class="fab fa-twitter"></i>
+    </a>
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=2508074836" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 2508074836" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+    <a href="https://weibo.com/u/6885584679" class="tooltipped" target="_blank" data-tooltip="关注我的微博: https://weibo.com/u/6885584679" data-position="top" data-delay="50">
+        <i class="fab fa-weibo"></i>
+    </a>
+
+
+
+    <a href="https://www.zhihu.com/people/8f8482f01f0d6a04e844efe32e0f0710" class="tooltipped" target="_blank" data-tooltip="关注我的知乎: https://www.zhihu.com/people/8f8482f01f0d6a04e844efe32e0f0710" data-position="top" data-delay="50">
+        <i class="fab fa-zhihu1">知</i>
+    </a>
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/materialize/materialize.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/aos/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/js/matery.js"></script>
+
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+    <script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script type="text/javascript" src="/js/fireworks.js"></script>
+
+    <script type="text/javascript">
+        //只在桌面版网页启用特效
+        var windowWidth = $(window).width();
+        if (windowWidth > 768) {
+            document.write('<script type="text/javascript" src="/js/sakura.js"><\/script>'); }
+    </script>
+
+    <!-- weather -->
+	<script type="text/javascript">
+	WIDGET = {FID: 'TToslpmkVO'}
+	</script>
+	<script type="text/javascript" src="https://apip.weatherdt.com/float/static/js/r.js?v=1111"></script>
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <!-- Baidu Analytics -->
+
+<script>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+    <!-- Baidu Push -->
+
+    
+    
+    <script async src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+        <script src="//code.tidio.co/kqhlkxviiccyoa0czpfpu4ijuey9hfre.js"></script>
+        <script> 
+            $(document).ready(function () {
+                setInterval(change_Tidio, 50);  
+                function change_Tidio() { 
+                    var tidio=$("#tidio-chat iframe");
+                    if(tidio.css("display")=="block"&& $(window).width()>977 ){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" &&$(window).width()>977)>0? "-40px" : ($("div.toc-title").length&&$(window).width()>977)>0?"85px":"20px";   
+                        document.getElementById("tidio-chat-iframe").style.right="-15px";   
+                        document.getElementById("tidio-chat-iframe").style.height=parseInt(tidio.css("height"))>=520?"520px":tidio.css("height");
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    } 
+                    else if(tidio.css("display")=="block"&&$(window).width()>601 &&$(window).width()<992 ){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" && 601< $(window).width()<992)>0? "-40px":"20px" ;   
+                        document.getElementById("tidio-chat-iframe").style.right="-15px"; 
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    }
+                    else if(tidio.css("display")=="block"&&$(window).width()<601 && parseInt(tidio.css("height"))<230){
+                        document.getElementById("tidio-chat-iframe").style.bottom= ($("div#backTop.top-scroll").css("display")=="none" && $(window).width()<601)>0? "-10px":"45px" ;   
+                        document.getElementById("tidio-chat-iframe").style.zIndex="997";
+                    }
+                    if( tidio.css("display")=="block"&&$(window).width()<601 && parseInt(tidio.css("height"))>=230){
+                        document.getElementById("tidio-chat-iframe").style.zIndex="998";
+                    }
+                } 
+            }); 
+        </script>
+    
+
+    
+
+    
+    <script type="text/javascript" color="0,0,255"
+        pointColor="0,0,255" opacity='0.7'
+        zIndex="-1" count="99"
+        src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/background/canvas-nest.js"></script>
+    
+
+    
+
+    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/background/ribbon-dynamic.js" async="async"></script>
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/gh/JackHCC/JackHCC.github.io/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+        <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
+        <script>
+        $('a').each(function() {
+          const $this = $(this);
+          const href = $this.attr('href');
+          if (href && href.match('^((http|https|thunder|qqdl|ed2k|Flashget|qbrowser|ftp|rtsp|mms)://)')) {
+            const strs = href.split('/');
+            if (strs.length >= 3) {
+                const host = strs[2];
+                if (host !== 'your_domain' || window.location.host) {
+                    $this.attr('href', '/go.html?u='+Base64.encode(href)+'').attr('rel', 'external nofollow noopener noreferrer');
+                    if (true) {
+                        $this.attr('target', '_blank');
+                    }
+                }
+            }
+          }
+        });
+        </script><script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script></body>
+
+</html>
+
